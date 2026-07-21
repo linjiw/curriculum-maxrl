@@ -140,6 +140,17 @@ than proportional. (Expect γ_opt to shrink with task diversity — many
 independent chains dilute compounding; γ is now a config knob, default 4
 on chain-structured pools, 1–2 on flat pools.)
 
+**V6b — mechanism isolated in a minimal ODE model.** Abstract the chain to
+skill parameters θ₁..θ_L with p_j = Π_{i≤j} σ(θᵢ) and shared-skill
+gradients (training level j updates all θ_{i≤j} ∝ q_j·u(p_j)). This
+two-line model reproduces the γ effect quantitatively: chain AUC
+0.320→0.415→0.426 at γ=1→4→8 (saturation at γ≈4–8, exactly as the full
+testbed) — while on a *flat* pool (no shared skills, heterogeneous
+difficulty) the effect nearly vanishes (0.409→0.426→0.427 with *worse*
+finals at high γ). **Compounding through shared structure is the cause of
+γ>1's advantage, not an artifact of Thompson noise or the estimator**;
+prescription confirmed: γ tracks task-graph connectivity.
+
 ## V7 — Full stack vs the oracle
 
 | config | AUC (5 seeds) |

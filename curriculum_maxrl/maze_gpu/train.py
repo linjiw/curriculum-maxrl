@@ -114,12 +114,16 @@ class FrontierALPTeacher(FrontierTeacher):
 
     utility = u_N(p) + alp_coef * |Δ ema_pass|.  The |ΔLP| term re-injects
     levels whose competence is *changing* — including regressions on mastered
-    levels, which pure u_N(p) would retire (its u -> 0 as p -> 1)."""
+    levels, which pure u_N(p) would retire (its u -> 0 as p -> 1).
+
+    power (VALIDATION.md V6): sample ∝ utility^power; sharper-than-
+    proportional concentration compounds on ordered level structures."""
 
     def __init__(self, n_rollouts: int, seed: int, floor: float = 0.1,
-                 alp_coef: float = 2.0):
+                 alp_coef: float = 2.0, power: float = 1.0):
         super().__init__(n_rollouts, seed, floor)
         self.alp_coef = alp_coef
+        self.power = power
         self.ema = np.zeros(len(LEVELS))
         self.alp = np.zeros(len(LEVELS))
         self.seen = np.zeros(len(LEVELS), dtype=bool)
@@ -135,6 +139,7 @@ class FrontierALPTeacher(FrontierTeacher):
     def distribution(self) -> np.ndarray:
         p = self.rng.beta(self.alpha, self.beta)
         u = (1.0 - (1.0 - p) ** self.n_rollouts) * (1.0 - p) + self.alp_coef * self.alp
+        u = np.maximum(u, 0.0) ** self.power
         if u.sum() <= 1e-12:
             u[:] = 1.0
         probs = u / u.sum()
@@ -279,6 +284,8 @@ def main():
                          "matching distance level (curriculum rides hindsight gains)")
     ap.add_argument("--save-ckpt", type=str, default=None,
                     help="save the final model state_dict to this path")
+    ap.add_argument("--teacher-power", type=float, default=1.0,
+                    help="sample levels ∝ utility^power (V6: 4 for ordered levels)")
     ap.add_argument("--out", type=str, default=None)
     ap.add_argument("--sft-ckpt", type=str, default="sft_warmstart.pt")
     args = ap.parse_args()
@@ -309,7 +316,10 @@ def main():
     eval_rng = random.Random(12345)
     eval_tasks = {l: [sample_task(l, eval_rng) for _ in range(16)] for l in LEVELS}
 
-    teacher = TEACHERS[args.teacher](n_rollouts=args.rollouts, seed=args.seed + 77)
+    teacher_kwargs = {"n_rollouts": args.rollouts, "seed": args.seed + 77}
+    if args.teacher == "frontier_alp" and args.teacher_power != 1.0:
+        teacher_kwargs["power"] = args.teacher_power
+    teacher = TEACHERS[args.teacher](**teacher_kwargs)
     est = ESTIMATORS[args.estimator]
 
     out_path = args.out or f"log_{args.teacher}_{args.estimator}_s{args.seed}.jsonl"
