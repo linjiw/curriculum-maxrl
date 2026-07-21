@@ -353,11 +353,13 @@ the teacher and the objective share the same compute knob.</p>
 <div class="card">
 <ol class="loop">
   <li><strong>Track.</strong> Keep a decayed Beta(α, β) posterior over each prompt's pass rate,
-  updated from every group's observed successes (decay ≈ 0.9 tracks the moving policy).</li>
+  updated from every group's observed successes (decay 0.7 — validated below: the posterior's job
+  is <em>tracking</em> the moving student, not remembering).</li>
   <li><strong>Score.</strong> Thompson-sample p̃ from each posterior; compute
   u(p̃) = (1−(1−p̃)<sup>N</sup>) − p̃. Sampling from the posterior gives optimism on
   rarely-visited prompts for free.</li>
-  <li><strong>Sample.</strong> Draw the next batch of prompts ∝ u, mixed with a uniform floor
+  <li><strong>Sample.</strong> Draw the next batch of prompts ∝ u<sup>γ</sup> (γ≈4 when tasks share
+  skills, 1 on flat pools — see the compounding result below), mixed with a uniform floor
   (default 10%) — the floor is the anti-forgetting/replay channel and keeps posteriors fresh.</li>
   <li><strong>Allocate (optional).</strong> Split the rollout budget by greedy water-filling on the
   marginal mass p̃(1−p̃)<sup>N</sup> — the probability the next rollout is the group's
@@ -370,7 +372,32 @@ the teacher and the objective share the same compute knob.</p>
 <p>In the <a href="https://github.com/linjiw/curriculum-maxrl">repo</a> this is
 <code>FrontierTeacher</code> + <code>CurriculumSampler</code>: ~150 lines, wired into the official
 MaxRL/verl trainer behind <code>+data.curriculum.enable=true</code>, with teacher state
-checkpointed alongside the model.</p>
+checkpointed alongside the model — and packaged environment-agnostically in
+<a href="https://github.com/linjiw/curriculum-maxrl/tree/main/frontier_rl"><code>frontier_rl/</code></a>
+for gym and robotics tasks.</p>
+
+<h3 id="proof">The two-line proof (Proposition 1)</h3>
+<div class="card">
+<p>Condition on the number of successes K. For K ≥ 1, the MaxRL weights are
+w<sub>succ</sub> = 1/K − 1/N (K of them) and w<sub>fail</sub> = −1/N (N−K of them), so the total
+magnitude telescopes:</p>
+<div class="math">
+  <span class="rm">Σ</span>|w| <span class="rm">=</span> K(<span class="frac"><span class="num rm">1</span><span class="den rm">K</span></span> − <span class="frac"><span class="num rm">1</span><span class="den rm">N</span></span>) + <span class="frac"><span class="num rm">N−K</span><span class="den rm">N</span></span>
+  <span class="rm">=</span> 2(1 − <span class="frac"><span class="num rm">K</span><span class="den rm">N</span></span>)
+  <span class="rm">&nbsp;&nbsp;(and 0 when K=0)</span>
+</div>
+<p>Taking expectations with K ~ Binomial(N, p):</p>
+<div class="math">
+  𝔼[<span class="rm">Σ</span>|w|] <span class="rm">=</span> 2·(P(K≥1) − 𝔼[K]/N)
+  <span class="rm">=</span> 2·((1−(1−p)<sup>N</sup>) − p)
+  <span class="rm">=</span> 2·(<span class="rm">pass@</span>N − <span class="rm">pass@</span>1) <span class="rm">∎</span>
+</div>
+<p>Every claim on this page traces to identities of this kind — seven propositions with proofs in
+<a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/PROOFS.md">PROOFS.md</a>
+(peak location, water-filling optimality, RLOO ≡ learnability, the ~N× frontier-signal ratio,
+the hindsight conditional-law characterization), each Monte-Carlo verified in
+<a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/run_validation.py">run_validation.py</a>.</p>
+</div>
 
 <!-- ============================================================ -->
 <h2 id="results">4 · What we verified (and what failed)</h2>
@@ -470,23 +497,51 @@ igniting learnability within ~400 groups, then going silent as natural successes
 <p>Two late results sharpened the method. First, sampling ∝ u(p)<sup>γ</sup> with γ≈4 beats
 proportional sampling (AUC 0.782 vs 0.728): the mass functional is the right <em>ordering</em>,
 but learning <em>compounds</em> on structured task pools — steps on the highest-mass task unlock
-the next — so the optimal temperature is sharper than proportional. Second, the headline:</p>
-<table>
-  <thead><tr><th>Teacher (CPU, 5 seeds)</th><th class="num">AUC</th></tr></thead>
-  <tbody>
-    <tr><td>Thompson posterior, γ=1</td><td class="num">0.728</td></tr>
-    <tr><td>Oracle (true pass rates — best possible <em>sampler</em>)</td><td class="num">0.851</td></tr>
-    <tr><td><strong>Thompson γ=4 + dense hindsight</strong></td><td class="num"><strong>0.890 ± 0.002</strong></td></tr>
-  </tbody>
-</table>
-<p><strong>The full stack beats the oracle.</strong> The oracle bound constrains sampling policies
-only — it allocates groups perfectly but can only collect what natural successes emit. Hindsight
-changes the game itself by manufacturing verified signal from failures. The method's advantage is
-not better allocation of the standard signal; it is access to signal the best possible allocator
-cannot reach. On the GPU maze, dense hindsight (relabel every deep-enough failed rollout, ~16
+the next — so the optimal temperature is sharper than proportional. (A two-line ODE model
+isolates the cause: with shared skills the γ effect reproduces quantitatively; on a flat pool it
+vanishes.) Second, the headline:</p>
+
+<figure>
+  <div class="chart-card" id="chart3card">
+    <p class="chart-title">Learning speed (AUC) by teacher — the oracle line is the ceiling for pure samplers</p>
+    <p class="chart-sub">Skill-chain testbed, 5 seeds. Hover a bar for the value and what the config means.</p>
+    <svg id="chart3" viewBox="0 0 800 340" role="img" aria-label="Horizontal bar chart of AUC by teacher configuration; the full stack with hindsight exceeds the oracle sampler's ceiling"></svg>
+    <div class="tooltip" id="tt3"></div>
+    <details><summary>Table view</summary><div id="table3"></div></details>
+  </div>
+  <figcaption>
+    <strong>The full stack beats the oracle.</strong> The oracle knows every true pass rate and
+    allocates groups perfectly — but it can only collect what natural successes emit. Hindsight
+    changes the game itself, manufacturing verified signal from failures. The method's advantage
+    is not better allocation of the standard signal; it is access to signal the best possible
+    allocator cannot reach.
+  </figcaption>
+</figure>
+
+<p>On the GPU maze, dense hindsight (relabel every deep-enough failed rollout, ~16
 relabels/step) is likewise the new champion (final 0.258, best 0.269 at matched wall-clock),
 while routing relabeled successes into the teacher's posterior inflated it (p̂ 0.81 vs true 0.47)
 and was dropped — the posterior should see only requested-task evidence.</p>
+
+<h3>Hindsight gradients are exact, not approximate</h3>
+<p>The load-bearing question for hindsight: is a relabeled gradient a real ML gradient or
+plausible noise? On the skill chain we can compute the <em>true</em> success-conditioned ML
+gradient exactly and measure alignment. Result — relabeled (hindsight) groups are exactly as
+well-aligned as unbiased fresh groups sampled directly on the relabeled task, and the mean
+hindsight gradient converges to the truth:</p>
+<table>
+  <thead><tr><th>Relabel depth j</th><th class="num">groups</th><th class="num">hindsight cosine</th><th class="num">fresh-group cosine</th><th class="num">cosine of mean</th></tr></thead>
+  <tbody>
+    <tr><td>8</td><td class="num">1,811</td><td class="num">0.861 ± 0.071</td><td class="num">0.854 ± 0.078</td><td class="num"><strong>1.000</strong></td></tr>
+    <tr><td>9</td><td class="num">1,876</td><td class="num">0.948 ± 0.016</td><td class="num">0.946 ± 0.017</td><td class="num"><strong>1.000</strong></td></tr>
+    <tr><td>10</td><td class="num">276</td><td class="num">0.956 ± 0.012</td><td class="num">0.958 ± 0.007</td><td class="num"><strong>1.000</strong></td></tr>
+  </tbody>
+</table>
+<p>The catch (Proposition 6, learned the hard way on a goal-conditioned gridworld): if
+trajectories embed the goal, the relabel must <em>rewrite the conditioning</em> to the achieved
+goal — skipping the rewrite makes hindsight <em>hurt</em> (AUC 0.600 vs 0.658 teacher-only);
+with it, hindsight wins (0.703). This is HER's observation-rewrite, surfaced as a measured
+interface contract in <code>frontier_rl</code>.</p>
 
 <h3>Honest negatives &amp; open items</h3>
 <table>
@@ -511,7 +566,45 @@ and was dropped — the posterior should see only requested-task evidence.</p>
 </table>
 
 <!-- ============================================================ -->
-<h2 id="insights">5 · Insights we took from the paper</h2>
+<h2 id="framework">5 · One schedule, any environment: <span class="mono">frontier_rl</span></h2>
+
+<p>The validated schedule is packaged as an environment-agnostic framework
+(<a href="https://github.com/linjiw/curriculum-maxrl/tree/main/frontier_rl"><code>frontier_rl/</code></a>,
+numpy-only core). You implement four methods — task bins, group rollout, hindsight relabel, and
+one weighted policy update — and the teacher, estimator, and hindsight logic come for free. The
+same code reproduces the validated numbers on the skill chain (regression anchor) and transfers
+to real Gymnasium environments:</p>
+
+<table>
+  <thead><tr><th>Environment (AUC, matched budgets)</th><th class="num">uniform</th><th class="num">teacher</th><th class="num">teacher + hindsight</th></tr></thead>
+  <tbody>
+    <tr><td>Skill chain (regression anchor, 5 seeds)</td><td class="num">0.650</td><td class="num">0.728</td><td class="num"><strong>0.890</strong></td></tr>
+    <tr><td>Gridworld reach (goal-conditioned, 3 seeds)</td><td class="num">0.592</td><td class="num">0.658</td><td class="num"><strong>0.703</strong></td></tr>
+    <tr><td>Gymnasium <strong>MountainCar</strong> — positional curriculum (3 seeds)</td><td class="num">0.216</td><td class="num">0.228</td><td class="num"><strong>0.246</strong></td></tr>
+    <tr><td>Gymnasium <strong>CartPole</strong> — survival curriculum (3 seeds)</td><td class="num">0.190</td><td class="num">0.225</td><td class="num"><strong>0.246</strong></td></tr>
+  </tbody>
+</table>
+
+<p>MountainCar is the deliberate stress test: sparse flag-success is the classic hard-exploration
+task — the real-world twin of the frontier-heavy regime where pure samplers score exactly zero.
+Its curriculum ("reach x ≥ x*, walking x* from the valley to the flag") is the template for
+robotics reach tasks: swap position bins for end-effector distance bands and the adapter carries
+over. The ordering <em>uniform &lt; teacher &lt; teacher+hindsight</em> holds on every
+environment tested.</p>
+
+<pre><code># the whole integration surface
+class MyEnv:                                   # TaskSpace
+    n_tasks: int                               # difficulty bins
+    def rollout_group(task_id, n) -> GroupResult
+    def relabel(group) -> (task', rewards', trajs') | None
+
+class MyPolicy:                                # Policy
+    def update(task_id, trajectories, weights) # your PPO/REINFORCE step
+
+FrontierTrainer(MyEnv(), MyPolicy(), TrainerConfig(hindsight=True)).train(500)</code></pre>
+
+<!-- ============================================================ -->
+<h2 id="insights">6 · Insights we took from the paper</h2>
 
 <div class="grid2">
   <div class="card">
@@ -795,7 +888,99 @@ and was dropped — the posterior should see only requested-task evidence.</p>
       xs2, series, sx, function (x) { return x.toPrecision(2); });
   }
 
-  function drawAll() { drawChart1(); drawChart2(); }
+  /* ---------- chart 3: oracle-gap horizontal bars ---------- */
+  var BARS = [
+    { name: "uniform (no teacher)", auc: 0.650, color: "--series-2",
+      note: "flat sampling; 65% of groups dead" },
+    { name: "Thompson teacher, γ=1", auc: 0.728, color: "--series-1",
+      note: "advantage-mass utility, proportional" },
+    { name: "Thompson teacher, γ=4", auc: 0.782, color: "--series-1",
+      note: "sharper concentration — compounding" },
+    { name: "ORACLE (true pass rates)", auc: 0.851, color: "--series-4",
+      note: "best possible pure sampler — the ceiling" },
+    { name: "Thompson γ=4 + dense hindsight", auc: 0.890, color: "--series-1",
+      note: "signal creation beats perfect allocation" }
+  ];
+
+  function drawChart3() {
+    var svg = document.getElementById("chart3");
+    if (!svg) return;
+    svg.textContent = "";
+    var W3 = 800, H3 = 340;
+    var M3 = { top: 14, right: 80, bottom: 34, left: 250 };
+    var IW3 = W3 - M3.left - M3.right, IH3 = H3 - M3.top - M3.bottom;
+    var X0 = 0.5, X1 = 0.95;
+    function sx(v) { return M3.left + IW3 * (v - X0) / (X1 - X0); }
+    [0.5, 0.6, 0.7, 0.8, 0.9].forEach(function (v) {
+      svg.appendChild(el("line", { x1: sx(v), x2: sx(v), y1: M3.top, y2: M3.top + IH3,
+        stroke: cssVar("--grid"), "stroke-width": 1 }));
+      svg.appendChild(el("text", { x: sx(v), y: H3 - 12, "text-anchor": "middle" }, v.toFixed(1)));
+    });
+    svg.appendChild(el("text", { x: M3.left + IW3 / 2, y: H3 + 2, "text-anchor": "middle" }, ""));
+    var bandH = IH3 / BARS.length, barH = Math.min(24, bandH - 10);
+    var oracleX = sx(0.851);
+    BARS.forEach(function (b, i) {
+      var y = M3.top + i * bandH + (bandH - barH) / 2;
+      var isOracle = b.name.indexOf("ORACLE") === 0;
+      var r = el("rect", { x: sx(X0), y: y, width: Math.max(sx(b.auc) - sx(X0), 0),
+        height: barH, rx: 4, fill: cssVar(b.color),
+        opacity: isOracle ? 0.55 : 1 });
+      svg.appendChild(r);
+      svg.appendChild(el("text", { x: M3.left - 10, y: y + barH / 2 + 4,
+        "text-anchor": "end", class: "dl" }, b.name));
+      svg.appendChild(el("text", { x: sx(b.auc) + 8, y: y + barH / 2 + 4, class: "dl" },
+        b.auc.toFixed(3)));
+      /* hover: whole band is the hit target */
+      var hit = el("rect", { x: 0, y: M3.top + i * bandH, width: W3, height: bandH,
+        fill: "transparent" });
+      hit.addEventListener("pointermove", function () {
+        var tt = document.getElementById("tt3");
+        tt.textContent = "";
+        var xd = document.createElement("div"); xd.className = "tt-x";
+        xd.textContent = b.name; tt.appendChild(xd);
+        var row = document.createElement("div"); row.className = "row";
+        var nm = document.createElement("span"); nm.textContent = b.note; row.appendChild(nm);
+        var v = document.createElement("span"); v.className = "v";
+        v.textContent = "AUC " + b.auc.toFixed(3); row.appendChild(v);
+        tt.appendChild(row);
+        tt.style.display = "block";
+        tt.style.left = "60px";
+        tt.style.top = (70 + i * 44) + "px";
+        r.setAttribute("opacity", isOracle ? 0.75 : 0.85);
+      });
+      hit.addEventListener("pointerleave", function () {
+        document.getElementById("tt3").style.display = "none";
+        r.setAttribute("opacity", isOracle ? 0.55 : 1);
+      });
+      svg.appendChild(hit);
+    });
+    /* the oracle ceiling line */
+    svg.appendChild(el("line", { x1: oracleX, x2: oracleX, y1: M3.top - 4, y2: M3.top + IH3,
+      stroke: cssVar("--series-4"), "stroke-width": 1.5, "stroke-dasharray": "none",
+      opacity: 0.9 }));
+    svg.appendChild(el("text", { x: oracleX, y: M3.top - 2, "text-anchor": "middle", class: "dl" },
+      "sampler ceiling"));
+    /* table view */
+    var host = document.getElementById("table3");
+    host.textContent = "";
+    var t = document.createElement("table");
+    var tr0 = document.createElement("tr");
+    ["config", "AUC (5 seeds)"].forEach(function (h) {
+      var th = document.createElement("th"); th.textContent = h; tr0.appendChild(th);
+    });
+    var thead = document.createElement("thead"); thead.appendChild(tr0); t.appendChild(thead);
+    var tb = document.createElement("tbody");
+    BARS.forEach(function (b) {
+      var tr = document.createElement("tr");
+      var td1 = document.createElement("td"); td1.textContent = b.name; tr.appendChild(td1);
+      var td2 = document.createElement("td"); td2.className = "num";
+      td2.textContent = b.auc.toFixed(3); tr.appendChild(td2);
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); host.appendChild(t);
+  }
+
+  function drawAll() { drawChart1(); drawChart2(); drawChart3(); }
   document.getElementById("tSlider").addEventListener("input", drawChart1);
   document.getElementById("nSlider").addEventListener("input", drawChart2);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
