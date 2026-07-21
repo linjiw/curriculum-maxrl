@@ -177,6 +177,23 @@ it is not an unbiased estimator of the relabeled task's truncated-ML gradient
 at LLM scale the analogue is goal/prefix relabeling where verifiers admit it
 (maze goals, sub-goals in multi-step proofs, partial-credit unit tests).
 
+**Ablations (advmass teacher, 5 seeds).** Hindsight weight scale is monotone
+on the toy — AUC 0.805 / 0.840 / 0.883 / 0.908 / 0.928 / 0.943 at scale
+0.25→8 — because the toy's relabeled subtask is *exactly* correct and
+gradients are exact; expect a knee (then collapse) on real models where
+over-weighted imitation of self-generated prefixes can entrench errors and
+kill diversity. Default stays 1.0 (the natural K=1 group weight); treat scale
+as the imitation-strength knob the GPU/LLM runs must tune.
+
+**Interaction with the teacher (16-level regime).** Hindsight partially
+*substitutes* for the teacher: uniform+hindsight reaches 0.970 vs
+advmass-alone 0.961 — recycling dead groups fixes much of what prompt
+selection was avoiding. But they still stack (advmass+hindsight 0.978, best
+in every regime tested), and the teacher retains its wall-clock advantage on
+real models (it avoids *generating* doomed rollouts at all; hindsight only
+salvages them after paying generation cost). Division of labor: teacher =
+don't waste compute; hindsight = salvage what still fails.
+
 ## 6. Verification snippet
 
 ```python

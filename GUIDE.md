@@ -109,6 +109,13 @@ rather than needing an external heuristic.
   on learning speed (AUC +0.22 vs +0.05) and stacking with it. The teacher
   *avoids* wasting compute beyond the frontier; hindsight *recycles* whatever
   still lands there.
+- **Ablations:** weight scale is monotone on the toy (AUC 0.805→0.943 at scale
+  0.25→8) — expect a knee on real models (over-weighted self-imitation
+  entrenches errors); default 1.0 = the natural K=1 group weight. In the
+  16-level regime hindsight *partially substitutes* for the teacher
+  (uniform+hs 0.970 > advmass-alone 0.961) but they still stack
+  (advmass+hs 0.978 best everywhere); the teacher keeps its wall-clock edge on
+  real models since it avoids generating doomed rollouts at all.
 - **Bias caveat:** relabeled groups are conditioned on the achieved outcome —
   an auxiliary HER-style term, not an unbiased truncated-ML gradient. Helps
   uniformly on the toy; GPU maze version (goal ← deepest cell legally reached,
