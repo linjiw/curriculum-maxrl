@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curriculum-MaxRL — a teacher curriculum derived from the MaxRL objective</title>
+<meta name="description" content="How Maximum Likelihood RL works, why it is an implicit curriculum, and how we derive an explicit teacher curriculum from the estimator's own algebra.">
+<style>
+:root {
+  color-scheme: light;
+  --page:          #f9f9f7;
+  --surface-1:     #fcfcfb;
+  --text-primary:  #0b0b0b;
+  --text-secondary:#52514e;
+  --text-muted:    #898781;
+  --grid:          #e1e0d9;
+  --baseline:      #c3c2b7;
+  --border:        rgba(11,11,11,0.10);
+  --series-1:      #2a78d6;  /* blue   — MaxRL / ours */
+  --series-2:      #008300;  /* green  — RL / reference */
+  --series-3:      #e87ba4;  /* magenta— GRPO */
+  --series-4:      #eda100;  /* yellow — ML */
+  --seq-250:       #86b6ef;
+  --seq-350:       #5598e7;
+  --seq-450:       #2a78d6;
+  --seq-550:       #1c5cab;
+  --seq-650:       #104281;
+  --accent-wash:   rgba(42,120,214,0.10);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:          #0d0d0d;
+  --surface-1:     #1a1a19;
+  --text-primary:  #ffffff;
+  --text-secondary:#c3c2b7;
+  --text-muted:    #898781;
+  --grid:          #2c2c2a;
+  --baseline:      #383835;
+  --border:        rgba(255,255,255,0.10);
+  --series-1:      #3987e5;
+  --series-2:      #008300;
+  --series-3:      #d55181;
+  --series-4:      #c98500;
+  --seq-250:       #b7d3f6;
+  --seq-350:       #86b6ef;
+  --seq-450:       #5598e7;
+  --seq-550:       #2a78d6;
+  --seq-650:       #184f95;
+  --accent-wash:   rgba(57,135,229,0.14);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page:          #0d0d0d;
+    --surface-1:     #1a1a19;
+    --text-primary:  #ffffff;
+    --text-secondary:#c3c2b7;
+    --text-muted:    #898781;
+    --grid:          #2c2c2a;
+    --baseline:      #383835;
+    --border:        rgba(255,255,255,0.10);
+    --series-1:      #3987e5;
+    --series-2:      #008300;
+    --series-3:      #d55181;
+    --series-4:      #c98500;
+    --seq-250:       #b7d3f6;
+    --seq-350:       #86b6ef;
+    --seq-450:       #5598e7;
+    --seq-550:       #2a78d6;
+    --seq-650:       #184f95;
+    --accent-wash:   rgba(57,135,229,0.14);
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--page); color: var(--text-primary);
+  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main { max-width: 880px; margin: 0 auto; padding: 0 20px 96px; }
+header.hero { max-width: 880px; margin: 0 auto; padding: 72px 20px 8px; }
+h1 { font-size: 2.1rem; line-height: 1.2; margin: 0 0 10px; letter-spacing: -0.02em; }
+h2 { font-size: 1.45rem; margin: 64px 0 8px; letter-spacing: -0.01em; }
+h3 { font-size: 1.08rem; margin: 32px 0 6px; }
+p, li { color: var(--text-secondary); }
+strong { color: var(--text-primary); }
+a { color: var(--series-1); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.lede { font-size: 1.12rem; color: var(--text-secondary); max-width: 46em; }
+.links { margin: 18px 0 4px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.links a.btn {
+  display: inline-block; padding: 7px 14px; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--surface-1); color: var(--text-primary);
+  font-size: 0.92rem; font-weight: 600;
+}
+.links a.btn:hover { text-decoration: none; border-color: var(--series-1); }
+#themeToggle {
+  margin-left: auto; padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface-1); color: var(--text-secondary); font-size: 0.85rem; cursor: pointer;
+}
+.eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 6px; }
+.card {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px 22px; margin: 20px 0;
+}
+.math {
+  font-family: Georgia, "Times New Roman", serif; font-style: italic;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 18px; margin: 14px 0; overflow-x: auto;
+  color: var(--text-primary); font-size: 1.05rem; line-height: 1.9;
+}
+.math .rm { font-style: normal; }
+.math sub, .math sup { font-size: 0.72em; }
+.frac { display: inline-block; vertical-align: middle; text-align: center; margin: 0 2px; }
+.frac > .num { display: block; padding: 0 4px; border-bottom: 1px solid currentColor; }
+.frac > .den { display: block; padding: 0 4px; }
+code, .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+code { background: var(--accent-wash); border-radius: 4px; padding: 1px 5px; color: var(--text-primary); }
+pre {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; overflow-x: auto; line-height: 1.5;
+}
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.94rem; }
+th { text-align: left; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; }
+th, td { padding: 7px 10px; border-bottom: 1px solid var(--grid); }
+td { color: var(--text-secondary); }
+td:first-child { color: var(--text-primary); }
+tbody tr:last-child td { border-bottom: none; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.status { font-weight: 700; }
+.status.ok  { color: var(--series-2); }
+.status.no  { color: #d03b3b; }
+.status.run { color: var(--text-muted); }
+figure { margin: 26px 0; }
+figure .chart-card {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px 18px 10px; position: relative;
+}
+figcaption { font-size: 0.88rem; color: var(--text-muted); margin-top: 10px; max-width: 60em; }
+.chart-title { font-weight: 600; font-size: 0.98rem; margin: 0 0 2px; color: var(--text-primary); }
+.chart-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 10px; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0 2px; font-size: 0.85rem; color: var(--text-secondary); }
+.legend .key { display: inline-flex; align-items: center; gap: 6px; }
+.legend .swatch-line { width: 18px; height: 0; border-top: 3px solid; border-radius: 2px; }
+svg text { font: 12px system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--text-muted); }
+svg .dl { font-weight: 600; fill: var(--text-secondary); }
+.slider-row { display: flex; align-items: center; gap: 12px; margin: 6px 0 4px; font-size: 0.9rem; color: var(--text-secondary); flex-wrap: wrap; }
+.slider-row input[type=range] { width: 220px; accent-color: var(--series-1); }
+.slider-row .val { font-weight: 700; color: var(--text-primary); min-width: 64px; font-variant-numeric: tabular-nums; }
+.tooltip {
+  position: absolute; pointer-events: none; background: var(--surface-1);
+  border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+  font-size: 0.82rem; box-shadow: 0 2px 10px rgba(0,0,0,0.12); display: none; z-index: 5;
+  min-width: 150px;
+}
+.tooltip .tt-x { color: var(--text-muted); margin-bottom: 4px; }
+.tooltip .row { display: flex; align-items: center; gap: 7px; line-height: 1.5; }
+.tooltip .lk { width: 12px; border-top: 3px solid; border-radius: 2px; flex: none; }
+.tooltip .v { font-weight: 700; color: var(--text-primary); margin-left: auto; font-variant-numeric: tabular-nums; }
+details { margin: 8px 0 0; font-size: 0.88rem; }
+details summary { cursor: pointer; color: var(--text-muted); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+.gap-card { border-left: 3px solid var(--series-1); padding-left: 16px; margin: 16px 0; }
+.gap-card h3 { margin: 0 0 4px; }
+.gap-card p { margin: 0; }
+ol.loop { counter-reset: step; list-style: none; padding: 0; }
+ol.loop li {
+  position: relative; padding: 10px 0 10px 44px; border-bottom: 1px solid var(--grid);
+}
+ol.loop li:last-child { border-bottom: none; }
+ol.loop li::before {
+  counter-increment: step; content: counter(step);
+  position: absolute; left: 0; top: 10px; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent-wash); color: var(--series-1); font-weight: 700;
+  display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+}
+.footnote { font-size: 0.85rem; color: var(--text-muted); }
+hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL</p>
+  <h1>A teacher curriculum derived from the MaxRL objective's own algebra</h1>
+  <p class="lede">
+    Maximum Likelihood RL (MaxRL) reweights gradients toward hard prompts — an
+    <em>implicit curriculum</em>. But it goes silent exactly where a curriculum matters most:
+    prompts whose rollout groups all fail. We show the fix falls out of the estimator's
+    own math: the expected learning signal a prompt receives is exactly
+    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>, and sampling prompts by that quantity is the
+    curriculum. This page explains how MaxRL works, what we propose, and what we verified.
+  </p>
+  <div class="links">
+    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
+    <a class="btn" href="https://arxiv.org/abs/2602.02710">MaxRL paper (arXiv:2602.02710) ↗</a>
+    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/GUIDE.md">Design guide ↗</a>
+    <button id="themeToggle" type="button">Toggle theme</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================ -->
+<h2 id="maxrl">1 · How MaxRL works, in three steps</h2>
+
+<p><strong>Step 1 — RL and maximum likelihood optimize different things.</strong>
+For a prompt <span class="mono">x</span>, let <em>p</em> be the model's probability of producing a
+verified-correct answer (its <em>pass rate</em>). Standard RL maximizes the expected reward
+E[<em>p</em>]; maximum likelihood maximizes E[log&nbsp;<em>p</em>]. Their gradients differ by one factor:</p>
+
+<div class="math">
+  ∇J<sub class="rm">RL</sub> <span class="rm">=</span> 𝔼<sub>x</sub>[ ∇p ]
+  &nbsp;&nbsp;&nbsp;<span class="rm">vs.</span>&nbsp;&nbsp;&nbsp;
+  ∇J<sub class="rm">ML</sub> <span class="rm">=</span> 𝔼<sub>x</sub>[ <span class="frac"><span class="num rm">1</span><span class="den">p</span></span> ∇p ]
+</div>
+
+<p>That <em>1/p</em> is the whole story: maximum likelihood pours learning signal into hard,
+low-pass-rate prompts, while plain RL treats every prompt equally. In differentiable
+supervised learning this is why cross-entropy works so well — but with sampled rollouts and a
+binary verifier you cannot compute ∇log&nbsp;<em>p</em> directly.</p>
+
+<p><strong>Step 2 — the Maclaurin bridge.</strong> The paper's key identity expands log&nbsp;<em>p</em> in
+failure events, turning the intractable objective into an infinite mixture of pass@k objectives:</p>
+
+<div class="math">
+  <span class="rm">log</span> p <span class="rm">=</span> −<span class="rm">Σ</span><sub>k≥1</sub>
+  <span class="frac"><span class="num">(1−p)<sup>k</sup></span><span class="den">k</span></span>
+  &nbsp;&nbsp;⇒&nbsp;&nbsp;
+  ∇J<sub class="rm">ML</sub> <span class="rm">=</span> <span class="rm">Σ</span><sub>k≥1</sub>
+  <span class="frac"><span class="num rm">1</span><span class="den">k</span></span> ∇<span class="rm">pass@</span>k
+</div>
+
+<p>Plain RL keeps only the k=1 term — it is a <em>first-order approximation</em> of maximum
+likelihood. Truncating the series at order <em>T</em> gives a family of objectives that
+interpolates from RL (T=1) to ML (T→∞).</p>
+
+<p><strong>Step 3 — a one-line estimator.</strong> Sample N rollouts, count K successes.
+REINFORCE averages score functions over all N samples; MaxRL averages over the K
+<em>successful</em> ones (and skips the prompt when K=0). Theorem 2 of the paper: this simple
+change is unbiased for the truncated objective with <strong>T&nbsp;=&nbsp;N</strong>. So extra rollouts
+don't just cut variance — they raise the fidelity of the objective itself. In the practical
+algorithm it is literally one line: normalize the advantage by the group's <em>mean reward</em>
+(instead of the std as in GRPO, or nothing as in RLOO).</p>
+
+<!-- Chart 1: weight functions -->
+<figure>
+  <div class="chart-card" id="chart1card">
+    <p class="chart-title">Who gets the gradient? Population weight functions w(p)</p>
+    <p class="chart-sub">Every method's gradient is 𝔼[w(p)·∇p]. The curves differ in how hard they lean into low-pass-rate prompts. Drag T.</p>
+    <div class="slider-row">
+      <label for="tSlider">MaxRL truncation T</label>
+      <input type="range" id="tSlider" min="0" max="7" step="1" value="4">
+      <span class="val" id="tVal">T = 16</span>
+    </div>
+    <div class="legend" id="legend1"></div>
+    <svg id="chart1" viewBox="0 0 800 420" role="img" aria-label="Log-log line chart of weight functions w(p) for RL, GRPO, MaxRL and maximum likelihood versus pass rate p"></svg>
+    <div class="tooltip" id="tt1"></div>
+    <details><summary>Table view</summary><div id="table1"></div></details>
+  </div>
+  <figcaption>
+    Weight functions on log–log axes (Section 5 of the paper, our re-derivation).
+    RL is flat. ML is 1/p. MaxRL's w(p)&nbsp;=&nbsp;(1−(1−p)<sup>T</sup>)/p climbs toward ML as T grows —
+    but saturates at T for p&nbsp;≲&nbsp;1/T. Note GRPO's curve <em>turns back up as p→1</em>:
+    it upweights already-mastered prompts, the paper's conjectured driver of pass@k collapse.
+  </figcaption>
+</figure>
+
+<!-- ============================================================ -->
+<h2 id="gaps">2 · Where the implicit curriculum goes silent</h2>
+
+<p>The weight-function view is a <em>population</em> (infinite-sample) statement. With finite
+groups of N rollouts, three gaps open up — and they are precisely the gaps a data-level
+teacher can close:</p>
+
+<div class="gap-card">
+  <h3>Dead prompts (K = 0)</h3>
+  <p>If p ≪ 1/N, all N rollouts fail with probability (1−p)<sup>N</sup> ≈ 1. The group is dropped:
+  zero gradient, wasted generation compute. No choice of w(p) can put signal where the group dies.
+  In our maze experiments, <strong>uniform sampling wasted ~65% of all rollout groups</strong> this way.</p>
+</div>
+<div class="gap-card">
+  <h3>Mastered prompts (p → 1)</h3>
+  <p>∇p → 0, so rollouts are spent re-confirming what the model knows. GRPO is actively worse here:
+  its w(p) inverts and <em>upweights</em> easy prompts, sharpening the distribution.</p>
+</div>
+<div class="gap-card">
+  <h3>Uniform rollout budgets</h3>
+  <p>The paper uses a fixed N per prompt. But since the truncation order is tied to the group size
+  (T = N), harder prompts would benefit from larger groups twice over: more chance of a first
+  success, and a higher-order approximation of the ML objective.</p>
+</div>
+
+<p>A striking finite-sample fact we verified: at p&nbsp;=&nbsp;0.01, N&nbsp;=&nbsp;32, GRPO's population
+curve promises weight ≈ 0.199, but the <em>realized</em> expected signal is 0.100 — half —
+because 72% of groups are all-fail and contribute nothing. Population weight curves describe a
+limit no finite-group trainer lives in.</p>
+
+<!-- ============================================================ -->
+<h2 id="idea">3 · Our proposal: read the curriculum off the estimator</h2>
+
+<p>Instead of importing a curriculum heuristic (difficulty bands, learning-progress bandits),
+we asked: <em>how much learning signal does the MaxRL estimator actually emit on a prompt, in
+expectation?</em> Define the <strong>advantage mass</strong> of a group as the total magnitude of
+its advantage weights, Σ|w|. For MaxRL's variance-reduced estimator
+(w<sub>succ</sub>&nbsp;=&nbsp;1/K&nbsp;−&nbsp;1/N, w<sub>fail</sub>&nbsp;=&nbsp;−1/N, group dropped at K=0),
+the algebra collapses to something exact and interpretable:</p>
+
+<div class="math">
+  𝔼[ <span class="rm">Σ</span>|w| ] <span class="rm">=</span> 2·( <span class="rm">pass@</span>N(p) − <span class="rm">pass@</span>1(p) )
+  <span class="rm">=</span> 2·( (1−(1−p)<sup>N</sup>) − p )
+</div>
+
+<p><strong>The expected learning signal on a prompt is twice the probability that it is solvable
+within N attempts but not within one.</strong> That is a compute-indexed formalization of the
+zone of proximal development, produced by the estimator itself. It vanishes at both ends —
+beyond-frontier prompts (group dies) and mastered prompts (no headroom) — and peaks at</p>
+
+<div class="math">
+  p<sup>★</sup> <span class="rm">=</span> 1 − N<sup>−1/(N−1)</sup> <span class="rm">≈</span>
+  <span class="frac"><span class="num rm">ln N</span><span class="den rm">N</span></span>
+</div>
+
+<p>so larger group sizes automatically shift the optimal curriculum band toward harder prompts —
+the teacher and the objective share the same compute knob.</p>
+
+<!-- Chart 2: advantage mass -->
+<figure>
+  <div class="chart-card" id="chart2card">
+    <p class="chart-title">The derived teacher utility: expected advantage mass vs. pass rate</p>
+    <p class="chart-sub">u(p) = pass@N − pass@1. Drag N and watch the ZPD band widen toward harder prompts; the dot marks the peak p<sup>★</sup> ≈ ln N / N.</p>
+    <div class="slider-row">
+      <label for="nSlider">Group size N</label>
+      <input type="range" id="nSlider" min="0" max="7" step="1" value="5">
+      <span class="val" id="nVal">N = 32</span>
+    </div>
+    <div class="legend" id="legend2"></div>
+    <svg id="chart2" viewBox="0 0 800 420" role="img" aria-label="Line chart of the advantage-mass utility versus pass rate for a chosen group size N, compared with the learnability curve p times one minus p"></svg>
+    <div class="tooltip" id="tt2"></div>
+    <details><summary>Table view</summary><div id="table2"></div></details>
+  </div>
+  <figcaption>
+    x is log-scaled to expose the low-p regime. The green reference is SFL's
+    “learnability” p(1−p) — exactly our utility at N=1, and (we prove) exactly ½ the advantage
+    mass of the RLOO estimator. The learnability-curriculum literature and the estimator algebra
+    are the same object seen from two sides.
+  </figcaption>
+</figure>
+
+<h3>The teacher loop</h3>
+<div class="card">
+<ol class="loop">
+  <li><strong>Track.</strong> Keep a decayed Beta(α, β) posterior over each prompt's pass rate,
+  updated from every group's observed successes (decay ≈ 0.9 tracks the moving policy).</li>
+  <li><strong>Score.</strong> Thompson-sample p̃ from each posterior; compute
+  u(p̃) = (1−(1−p̃)<sup>N</sup>) − p̃. Sampling from the posterior gives optimism on
+  rarely-visited prompts for free.</li>
+  <li><strong>Sample.</strong> Draw the next batch of prompts ∝ u, mixed with a uniform floor
+  (default 10%) — the floor is the anti-forgetting/replay channel and keeps posteriors fresh.</li>
+  <li><strong>Allocate (optional).</strong> Split the rollout budget by greedy water-filling on the
+  marginal mass p̃(1−p̃)<sup>N</sup> — the probability the next rollout is the group's
+  <em>first success</em>. Total mass is concave in each N<sub>i</sub>, so greedy is optimal.</li>
+  <li><strong>Train.</strong> MaxRL advantages, unchanged — the estimator was never modified,
+  so all of the paper's unbiasedness results carry over untouched.</li>
+</ol>
+</div>
+
+<p>In the <a href="https://github.com/linjiw/curriculum-maxrl">repo</a> this is
+<code>FrontierTeacher</code> + <code>CurriculumSampler</code>: ~150 lines, wired into the official
+MaxRL/verl trainer behind <code>+data.curriculum.enable=true</code>, with teacher state
+checkpointed alongside the model.</p>
+
+<!-- ============================================================ -->
+<h2 id="results">4 · What we verified (and what failed)</h2>
+
+<h3>Exact formulas, Monte-Carlo checked</h3>
+<table>
+  <thead><tr><th>Estimator</th><th>E[Σ|w|] (exact)</th><th>Reading</th><th class="num">Status</th></tr></thead>
+  <tbody>
+    <tr><td>MaxRL</td><td class="mono">2(pass@N − pass@1)</td><td>solvable in N tries but not in one — the derived teacher utility</td><td class="num"><span class="status ok">✓ 200k-trial MC</span></td></tr>
+    <tr><td>RLOO</td><td class="mono">2p(1−p)</td><td>identical to SFL “learnability” — two literatures, one object</td><td class="num"><span class="status ok">✓ exact</span></td></tr>
+    <tr><td>GRPO</td><td class="mono">≈2√(p(1−p))·P(K∉{0,N})</td><td>realized signal on hard prompts ~2× below the population curve</td><td class="num"><span class="status ok">✓ binomial sum</span></td></tr>
+  </tbody>
+</table>
+
+<h3>CPU skill-chain testbed — teacher × estimator (36 tasks, initial pass rates 10<sup>−level</sup>, 5 seeds)</h3>
+<table>
+  <thead><tr><th>Finding</th><th>Evidence</th></tr></thead>
+  <tbody>
+    <tr><td>MaxRL is an implicit curriculum</td><td>a teacher lifts GRPO by +0.23 final mean-pass but MaxRL by only +0.01 on moderate distributions</td></tr>
+    <tr><td>Teacher × MaxRL are complementary where it counts</td><td>beyond-frontier-heavy regime: combination 0.961 vs 0.871 (MaxRL alone) vs 0.847 (teacher+GRPO)</td></tr>
+    <tr><td>Derived utility ≥ hand-tuned ZPD band</td><td>AUC 0.704–0.712 vs 0.688, with zero band hyperparameters</td></tr>
+    <tr><td>Fastest to the deepest level</td><td>frontier+maxrl: 206 steps vs 248 (uniform+maxrl) vs 262 (zpd+grpo)</td></tr>
+  </tbody>
+</table>
+
+<h3>GPU maze testbed — 1.26M-param transformer, 17×17 mazes, 13 goal-distance levels</h3>
+<table>
+  <thead><tr><th>Finding</th><th>Evidence</th></tr></thead>
+  <tbody>
+    <tr><td>Uniform sampling wastes most of MaxRL's compute</td><td>5.2 of 8 groups/step dead (K=0) → 3.9 with the frontier teacher, 2.6 with learnability</td></tr>
+    <tr><td>Teachers are ~2× faster per step in wall-clock</td><td>frontier-band rollouts terminate early; fixed-step comparisons silently handicap teachers → we use matched wall-clock budgets</td></tr>
+    <tr><td>Teacher posterior tracks truth</td><td>p̂ within ±0.03 of held-out eval pass rates; 60% of sampling mass on the true frontier band</td></tr>
+    <tr><td>Curriculum axes must respect generalization reach</td><td>maze <em>size</em> as difficulty has a hard cliff (0/1024 on 9×9 after 7×7 SFT); goal <em>distance</em> in a fixed maze transfers smoothly</td></tr>
+  </tbody>
+</table>
+
+<h3>Honest negatives &amp; open items</h3>
+<table>
+  <thead><tr><th>Approach</th><th>Outcome</th><th class="num">Status</th></tr></thead>
+  <tbody>
+    <tr><td>Adaptive truncation T<sub>i</sub> ≈ 1/p̂<sub>i</sub> (decoupled from N via the repo's subset estimator)</td>
+        <td>slightly <em>under</em>performs fixed T=N (AUC 0.698 vs 0.704) — at N=16–32 variance isn't binding, so lowering T only weakens hard-prompt upweighting</td>
+        <td class="num"><span class="status no">✗ negative</span></td></tr>
+    <tr><td>Learning-progress (|Δp̂|) teachers</td>
+        <td>underperform pass-rate-band teachers here — the signal is noisy at N=16 and lags the moving frontier</td>
+        <td class="num"><span class="status no">✗ weak</span></td></tr>
+    <tr><td>H6: teacher patches GRPO's inversion (less pass@k collapse for frontier+grpo vs uniform+grpo)</td>
+        <td>matched wall-clock GPU sweep</td>
+        <td class="num"><span class="status run">⟳ running</span></td></tr>
+    <tr><td>SmolLM2-360M + GSM8K, curriculum × {maxrl, grpo}</td>
+        <td>launch script ready (<code>verl_integration/</code>); needs a multi-GPU node</td>
+        <td class="num"><span class="status run">⟳ queued</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="insights">5 · Insights we took from the paper</h2>
+
+<div class="grid2">
+  <div class="card">
+    <h3>Compute changes the objective, not just the variance</h3>
+    <p>For REINFORCE, more rollouts = lower variance on the same objective. For MaxRL, more
+    rollouts = a strictly better objective (T = N). Any curriculum that reallocates rollouts is
+    therefore also reallocating <em>objective fidelity</em> — which is why rollout allocation
+    deserves to be a first-class curriculum axis.</p>
+  </div>
+  <div class="card">
+    <h3>The zero-gradient zone is structural, not a bug</h3>
+    <p>Dropping K=0 groups is what makes the estimator unbiased for the truncated objective.
+    So MaxRL <em>cannot</em> be patched at the loss level to learn from all-fail prompts — the fix
+    has to live in the sampling distribution. That is the cleanest argument we know for pairing
+    it with a teacher.</p>
+  </div>
+  <div class="card">
+    <h3>Population curves mislead at finite N</h3>
+    <p>The elegant w(p) table is an infinite-sample statement. Realized signal is throttled by
+    pass@N for every estimator; on hard prompts GRPO delivers half of what its curve promises.
+    Curriculum design should target the finite-sample quantity — which is exactly what
+    advantage mass is.</p>
+  </div>
+  <div class="card">
+    <h3>Existing curricula are special cases</h3>
+    <p>SFL's learnability p(1−p) is our utility at N=1 and RLOO's exact advantage mass; SEC's
+    empirical-|advantage| bandit reward has our formulas as its exact expectation. The
+    advantage-mass teacher is “oracle SEC for MaxRL” — same target, computable from a posterior
+    before a prompt is ever visited.</p>
+  </div>
+</div>
+
+<hr>
+
+<p class="footnote">
+  Built on the official <a href="https://arxiv.org/abs/2602.02710">MaxRL</a> codebase
+  (Tajwar, Zeng, et&nbsp;al., ICML 2026 — a verl fork). Curriculum design draws on PLR, PAIRED,
+  ALP-GMM, and SFL learnability; see the
+  <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/RESEARCH.md">verified literature synthesis</a>.
+  Full derivations: <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/THEORY.md">THEORY.md</a>.
+  Method-by-method verification status: <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/GUIDE.md">GUIDE.md</a>.
+</p>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- theme toggle ---------- */
+  var root = document.documentElement;
+  document.getElementById("themeToggle").addEventListener("click", function () {
+    var dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+    drawAll();
+  });
+
+  function cssVar(name) {
+    return getComputedStyle(document.body).getPropertyValue(name).trim();
+  }
+
+  /* ---------- shared chart scaffolding ---------- */
+  var W = 800, H = 420, M = { top: 18, right: 96, bottom: 44, left: 62 };
+  var IW = W - M.left - M.right, IH = H - M.top - M.bottom;
+
+  function el(tag, attrs, text) {
+    var e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.appendChild(document.createTextNode(text));
+    return e;
+  }
+
+  function fmt(v) {
+    if (v >= 100) return v.toFixed(0);
+    if (v >= 1) return v.toFixed(1);
+    if (v >= 0.01) return v.toFixed(2);
+    return v.toExponential(0).replace("e-", "e-");
+  }
+
+  function buildLegend(id, series) {
+    var box = document.getElementById(id);
+    box.textContent = "";
+    series.forEach(function (s) {
+      var key = document.createElement("span");
+      key.className = "key";
+      var sw = document.createElement("span");
+      sw.className = "swatch-line";
+      sw.style.borderTopColor = cssVar(s.color);
+      key.appendChild(sw);
+      key.appendChild(document.createTextNode(s.name));
+      box.appendChild(key);
+    });
+  }
+
+  function buildTable(id, xLabel, xs, series, xFmt) {
+    var host = document.getElementById(id);
+    host.textContent = "";
+    var t = document.createElement("table");
+    var thead = document.createElement("thead");
+    var hr = document.createElement("tr");
+    var th0 = document.createElement("th"); th0.textContent = xLabel; hr.appendChild(th0);
+    series.forEach(function (s) {
+      var th = document.createElement("th"); th.className = "num"; th.textContent = s.name; hr.appendChild(th);
+    });
+    thead.appendChild(hr); t.appendChild(thead);
+    var tb = document.createElement("tbody");
+    xs.forEach(function (x, i) {
+      if (i % Math.ceil(xs.length / 12) !== 0) return;
+      var tr = document.createElement("tr");
+      var td0 = document.createElement("td"); td0.textContent = xFmt(x); tr.appendChild(td0);
+      series.forEach(function (s) {
+        var td = document.createElement("td"); td.className = "num";
+        td.textContent = fmt(s.ys[i]); tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); host.appendChild(t);
+  }
+
+  function attachHover(svg, card, tt, xs, series, sx, xFmtFn) {
+    var hair = el("line", { y1: M.top, y2: M.top + IH, stroke: cssVar("--baseline"), "stroke-width": 1, opacity: 0 });
+    svg.appendChild(hair);
+    function move(ev) {
+      var r = svg.getBoundingClientRect();
+      var px = (ev.clientX - r.left) * (W / r.width);
+      if (px < M.left || px > M.left + IW) { leave(); return; }
+      var best = 0, bd = 1e9;
+      for (var i = 0; i < xs.length; i++) {
+        var d = Math.abs(sx(xs[i]) - px);
+        if (d < bd) { bd = d; best = i; }
+      }
+      var cx = sx(xs[best]);
+      hair.setAttribute("x1", cx); hair.setAttribute("x2", cx); hair.setAttribute("opacity", 0.8);
+      tt.textContent = "";
+      var xd = document.createElement("div"); xd.className = "tt-x";
+      xd.textContent = "p = " + xFmtFn(xs[best]); tt.appendChild(xd);
+      series.forEach(function (s) {
+        var row = document.createElement("div"); row.className = "row";
+        var lk = document.createElement("span"); lk.className = "lk";
+        lk.style.borderTopColor = cssVar(s.color); row.appendChild(lk);
+        var nm = document.createElement("span"); nm.textContent = s.name; row.appendChild(nm);
+        var v = document.createElement("span"); v.className = "v";
+        v.textContent = fmt(s.ys[best]); row.appendChild(v);
+        tt.appendChild(row);
+      });
+      tt.style.display = "block";
+      var cr = card.getBoundingClientRect();
+      var lx = (cx / W) * cr.width + 14;
+      if (lx + 170 > cr.width) lx = (cx / W) * cr.width - 184;
+      tt.style.left = lx + "px";
+      tt.style.top = "90px";
+    }
+    function leave() { hair.setAttribute("opacity", 0); tt.style.display = "none"; }
+    svg.addEventListener("pointermove", move);
+    svg.addEventListener("pointerleave", leave);
+  }
+
+  /* ---------- chart 1: weight functions, log-log ---------- */
+  var T_STEPS = [1, 2, 4, 8, 16, 32, 64, 128];
+  var P_MIN = 1e-3, P_MAX = 1;
+  var xs1 = [];
+  for (var i = 0; i <= 160; i++) xs1.push(Math.pow(10, -3 + 3 * i / 160) * 0.999);
+
+  function wRL() { return 1; }
+  function wGRPO(p) { return 1 / Math.sqrt(p * (1 - p) + 1e-12); }
+  function wML(p) { return 1 / p; }
+  function wMaxRL(p, T) { return (1 - Math.pow(1 - p, T)) / p; }
+
+  function drawChart1() {
+    var T = T_STEPS[+document.getElementById("tSlider").value];
+    document.getElementById("tVal").textContent = "T = " + T;
+    var svg = document.getElementById("chart1");
+    svg.textContent = "";
+
+    var Y_MIN = 0.8, Y_MAX = 1200;
+    function sx(p) { return M.left + IW * (Math.log10(p) - Math.log10(P_MIN)) / (Math.log10(P_MAX) - Math.log10(P_MIN)); }
+    function sy(v) {
+      var c = Math.min(Math.max(v, Y_MIN), Y_MAX);
+      return M.top + IH * (1 - (Math.log10(c) - Math.log10(Y_MIN)) / (Math.log10(Y_MAX) - Math.log10(Y_MIN)));
+    }
+
+    [1, 10, 100, 1000].forEach(function (v) {
+      svg.appendChild(el("line", { x1: M.left, x2: M.left + IW, y1: sy(v), y2: sy(v), stroke: cssVar("--grid"), "stroke-width": 1 }));
+      svg.appendChild(el("text", { x: M.left - 8, y: sy(v) + 4, "text-anchor": "end" }, v.toLocaleString()));
+    });
+    [0.001, 0.01, 0.1, 1].forEach(function (p) {
+      svg.appendChild(el("text", { x: sx(p), y: M.top + IH + 20, "text-anchor": "middle" }, p >= 1 ? "1" : p.toString()));
+      svg.appendChild(el("line", { x1: sx(p), x2: sx(p), y1: M.top + IH, y2: M.top + IH + 4, stroke: cssVar("--baseline") }));
+    });
+    svg.appendChild(el("line", { x1: M.left, x2: M.left + IW, y1: M.top + IH, y2: M.top + IH, stroke: cssVar("--baseline"), "stroke-width": 1 }));
+    svg.appendChild(el("text", { x: M.left + IW / 2, y: H - 6, "text-anchor": "middle" }, "pass rate p (log)"));
+    svg.appendChild(el("text", { x: 14, y: M.top + IH / 2, transform: "rotate(-90 14 " + (M.top + IH / 2) + ")", "text-anchor": "middle" }, "weight w(p) (log)"));
+
+    var series = [
+      { name: "RL / REINFORCE", color: "--series-2", f: wRL },
+      { name: "GRPO", color: "--series-3", f: wGRPO },
+      { name: "MaxRL (T=" + T + ")", color: "--series-1", f: function (p) { return wMaxRL(p, T); } },
+      { name: "Maximum likelihood", color: "--series-4", f: wML }
+    ];
+    series.forEach(function (s) {
+      s.ys = xs1.map(s.f);
+      var d = "";
+      xs1.forEach(function (p, j) { d += (j ? "L" : "M") + sx(p).toFixed(1) + "," + sy(s.ys[j]).toFixed(1); });
+      svg.appendChild(el("path", { d: d, fill: "none", stroke: cssVar(s.color), "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    });
+    /* selective direct labels — ML/RL at the left edge, MaxRL mid-curve,
+       GRPO at its distinctive right-edge inversion */
+    var lx = sx(1.3e-3);
+    svg.appendChild(el("text", { x: lx, y: sy(wML(1.3e-3)) - 8, class: "dl" }, "ML = 1/p"));
+    svg.appendChild(el("text", { x: lx, y: sy(1) - 8, class: "dl" }, "RL = 1"));
+    if (T > 2) { /* at T<=2 the curve hugs RL and the label would collide */
+      var gap = Math.abs(Math.log10(wGRPO(1.3e-3)) - Math.log10(T));
+      var dy = gap < 0.35 ? 20 : -8; /* dodge the GRPO line when the plateau is near it */
+      svg.appendChild(el("text", { x: lx, y: sy(wMaxRL(1.3e-3, T)) + dy, class: "dl" }, "MaxRL plateau ≈ T"));
+    }
+    var gx = 0.9985;
+    svg.appendChild(el("text", { x: sx(gx) - 6, y: sy(wGRPO(gx)) - 8, "text-anchor": "end", class: "dl" }, "GRPO inverts →"));
+
+    buildLegend("legend1", series);
+    buildTable("table1", "p", xs1, series, function (x) { return x.toPrecision(2); });
+    attachHover(svg, document.getElementById("chart1card"), document.getElementById("tt1"),
+      xs1, series, sx, function (x) { return x.toPrecision(2); });
+  }
+
+  /* ---------- chart 2: advantage mass, log-x linear-y ---------- */
+  var N_STEPS = [1, 2, 4, 8, 16, 32, 64, 128];
+  var xs2 = [];
+  for (var j = 0; j <= 160; j++) xs2.push(Math.pow(10, -4 + 4 * j / 160) * 0.999);
+
+  function uMass(p, N) { return (1 - Math.pow(1 - p, N)) - p; }
+  function uLearn(p) { return p * (1 - p); }
+
+  function drawChart2() {
+    var N = N_STEPS[+document.getElementById("nSlider").value];
+    document.getElementById("nVal").textContent = "N = " + N;
+    var svg = document.getElementById("chart2");
+    svg.textContent = "";
+
+    var XMIN = 1e-4, XMAX = 1;
+    function sx(p) { return M.left + IW * (Math.log10(p) - Math.log10(XMIN)) / (Math.log10(XMAX) - Math.log10(XMIN)); }
+    function sy(v) { return M.top + IH * (1 - v); }
+
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (v) {
+      svg.appendChild(el("line", { x1: M.left, x2: M.left + IW, y1: sy(v), y2: sy(v), stroke: cssVar("--grid"), "stroke-width": 1 }));
+      svg.appendChild(el("text", { x: M.left - 8, y: sy(v) + 4, "text-anchor": "end" }, v.toString()));
+    });
+    [0.0001, 0.001, 0.01, 0.1, 1].forEach(function (p) {
+      svg.appendChild(el("text", { x: sx(p), y: M.top + IH + 20, "text-anchor": "middle" }, p >= 1 ? "1" : p.toString()));
+      svg.appendChild(el("line", { x1: sx(p), x2: sx(p), y1: M.top + IH, y2: M.top + IH + 4, stroke: cssVar("--baseline") }));
+    });
+    svg.appendChild(el("line", { x1: M.left, x2: M.left + IW, y1: M.top + IH, y2: M.top + IH, stroke: cssVar("--baseline"), "stroke-width": 1 }));
+    svg.appendChild(el("text", { x: M.left + IW / 2, y: H - 6, "text-anchor": "middle" }, "pass rate p (log)"));
+    svg.appendChild(el("text", { x: 14, y: M.top + IH / 2, transform: "rotate(-90 14 " + (M.top + IH / 2) + ")", "text-anchor": "middle" }, "utility u(p) = pass@N − pass@1"));
+
+    var series = [
+      { name: "Advantage mass (N=" + N + ")", color: "--series-1", f: function (p) { return uMass(p, N); } },
+      { name: "Learnability p(1−p) — SFL / RLOO", color: "--series-2", f: uLearn }
+    ];
+    series.forEach(function (s, si) {
+      s.ys = xs2.map(s.f);
+      var d = "";
+      xs2.forEach(function (p, k) { d += (k ? "L" : "M") + sx(p).toFixed(1) + "," + sy(s.ys[k]).toFixed(1); });
+      if (si === 0) {
+        var area = d + "L" + sx(XMAX).toFixed(1) + "," + sy(0) + "L" + sx(XMIN).toFixed(1) + "," + sy(0) + "Z";
+        svg.appendChild(el("path", { d: area, fill: cssVar(s.color), opacity: 0.10, stroke: "none" }));
+      }
+      svg.appendChild(el("path", { d: d, fill: "none", stroke: cssVar(s.color), "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    });
+
+    /* peak marker with surface ring */
+    var pStar = N === 1 ? 0.5 : 1 - Math.pow(N, -1 / (N - 1));
+    var px = sx(pStar), py = sy(uMass(pStar, N));
+    svg.appendChild(el("circle", { cx: px, cy: py, r: 6, fill: cssVar("--series-1"), stroke: cssVar("--surface-1"), "stroke-width": 2 }));
+    svg.appendChild(el("text", { x: px, y: py - 12, "text-anchor": "middle", class: "dl" },
+      "p★ = " + (pStar < 0.01 ? pStar.toPrecision(2) : pStar.toFixed(2))));
+
+    buildLegend("legend2", series);
+    buildTable("table2", "p", xs2, series, function (x) { return x.toPrecision(2); });
+    attachHover(svg, document.getElementById("chart2card"), document.getElementById("tt2"),
+      xs2, series, sx, function (x) { return x.toPrecision(2); });
+  }
+
+  function drawAll() { drawChart1(); drawChart2(); }
+  document.getElementById("tSlider").addEventListener("input", drawChart1);
+  document.getElementById("nSlider").addEventListener("input", drawChart2);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
+  drawAll();
+})();
+</script>
+</body>
+</html>
