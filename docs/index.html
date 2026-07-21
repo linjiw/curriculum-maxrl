@@ -184,24 +184,73 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 
 <header class="hero">
   <p class="eyebrow">Research notes · curriculum learning × MaxRL</p>
-  <h1>A teacher curriculum derived from the MaxRL objective's own algebra</h1>
+  <h1>The estimator is the curriculum</h1>
   <p class="lede">
-    Maximum Likelihood RL (MaxRL) reweights gradients toward hard prompts — an
-    <em>implicit curriculum</em>. But it goes silent exactly where a curriculum matters most:
-    prompts whose rollout groups all fail. We show the fix falls out of the estimator's
-    own math: the expected learning signal a prompt receives is exactly
-    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>, and sampling prompts by that quantity is the
-    curriculum. This page explains how MaxRL works, what we propose, and what we verified.
+    In RL with verifiable rewards, rollout compute is wasted twice: on prompts the model has
+    mastered (nothing left to learn) and on prompts it can't touch (every rollout fails —
+    group estimators emit <em>zero gradient</em>). We measured it: under uniform sampling,
+    <strong>65–75% of rollout groups produce no learning signal</strong>. The fix needs no new
+    machinery. We prove MaxRL's expected learning signal on a prompt is exactly
+    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong> — solvable in N tries but not in one — and
+    that formula <em>is</em> the curriculum: sample by it, and the first waste disappears. For
+    all-fail prompts no sampling rule can help, so we <em>recycle</em>: a failed rollout is a
+    verified success for the goal it actually reached. Together they beat an <strong>oracle</strong>
+    that knows every true pass rate — because the oracle can only allocate signal that exists,
+    while recycling creates signal that didn't.
   </p>
+  <div class="card" style="margin-top:18px">
+    <p class="eyebrow" style="margin-bottom:8px">The one-sentence pitch</p>
+    <p style="margin:0"><strong>Read the curriculum off the estimator's own algebra, and salvage
+    what the estimator throws away.</strong> No difficulty-band hyperparameters — the rollout
+    budget N you already chose sets the band (peak difficulty ≈ ln&nbsp;N&nbsp;/&nbsp;N); the
+    estimator is never modified, so every unbiasedness result of the base paper carries over.</p>
+  </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
-    <a class="btn" href="https://arxiv.org/abs/2602.02710">MaxRL paper (arXiv:2602.02710) ↗</a>
+    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/PAPER.md">Paper draft ↗</a>
+    <a class="btn" href="https://arxiv.org/abs/2602.02710">MaxRL paper ↗</a>
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/GUIDE.md">Design guide ↗</a>
     <button id="themeToggle" type="button">Toggle theme</button>
   </div>
 </header>
 
 <main>
+
+<!-- ============================================================ -->
+<h2 id="why">0 · Why this direction</h2>
+
+<p>MaxRL's weight-function view (below) shows the likelihood objective already pours gradient
+into hard prompts — an <em>implicit curriculum</em>. That raises a question with a non-obvious
+answer: <strong>if the objective already reweights toward hard prompts, is there anything left
+for a curriculum to do?</strong> Either curricula are redundant with likelihood-based RL (a
+useful negative result), or they do something gradient reweighting cannot (a useful positive
+one).</p>
+
+<p>The answer is sharply the second, for a structural reason: <strong>weights act on prompts
+only after they are sampled, and only when at least one rollout succeeds.</strong> However
+w(p) is shaped, it cannot rescue a prompt whose group came back all-fail — the group is
+dropped, and that drop is precisely what makes the estimator unbiased — and it cannot un-spend
+compute burned re-confirming mastered prompts. So the curriculum's real job is not "emphasize
+hard prompts" (the objective does that); it is to manage <em>exactly the two regimes the
+estimator is blind to</em>. That reframing — <strong>the estimator's blind spots define the
+curriculum's job description</strong> — is the origin of everything on this page.</p>
+
+<div class="grid2">
+  <div class="card">
+    <h3>Insight 1 → the teacher</h3>
+    <p>The estimator learns only from successes (Theorem 1 of the paper), so its expected
+    signal per prompt has a closed form — and that form, 2·(pass@N − pass@1), is a
+    zone-of-proximal-development functional the estimator was computing implicitly all along.
+    Sampling by it is the curriculum. Zero new hyperparameters: N sets the band.</p>
+  </div>
+  <div class="card">
+    <h3>Insight 2 → the recycler</h3>
+    <p>If the estimator only learns from successes, <em>manufacture successes</em>. A failed
+    rollout is a verified success for the goal it actually reached; relabeling dead groups
+    yields gradients we prove (and measure) to be as exact as fresh unbiased ones. This is the
+    part no sampling policy — not even an oracle — can replicate.</p>
+  </div>
+</div>
 
 <!-- ============================================================ -->
 <h2 id="maxrl">1 · How MaxRL works, in three steps</h2>
@@ -604,7 +653,55 @@ class MyPolicy:                                # Policy
 FrontierTrainer(MyEnv(), MyPolicy(), TrainerConfig(hindsight=True)).train(500)</code></pre>
 
 <!-- ============================================================ -->
-<h2 id="insights">6 · Insights we took from the paper</h2>
+<h2 id="benefits">6 · What you actually get</h2>
+
+<p><strong>The measured benefits:</strong></p>
+<table>
+  <thead><tr><th>Benefit</th><th>Number</th></tr></thead>
+  <tbody>
+    <tr><td>More optimization per GPU-hour (dead groups avoided + frontier rollouts terminate early)</td>
+        <td>22–35% more steps at matched wall-clock, gains landing on frontier tasks</td></tr>
+    <tr><td>Coverage grows instead of collapsing</td>
+        <td>pass@8 ↑ 0.316→0.348 every seed (GRPO's ↓ 0.308→0.271 every seed)</td></tr>
+    <tr><td>Frontier-heavy regimes: impossible → solved</td>
+        <td>0.00 → 0.98 at equal compute (uniform, DAPO, and plain teacher all score exactly 0)</td></tr>
+    <tr><td>Beats perfect allocation when recycling is available</td>
+        <td>AUC 0.890 vs oracle 0.851</td></tr>
+  </tbody>
+</table>
+
+<p><strong>The hidden benefits — quieter, arguably worth more:</strong></p>
+<div class="grid2">
+  <div class="card">
+    <h3>Zero difficulty hyperparameters</h3>
+    <p>ADARFT-style bands need targets and widths tuned per task. Here the band is
+    <em>derived</em>: the rollout budget N you already chose sets the peak (≈ ln N / N) and the
+    width. Doubling N moves the curriculum harder automatically — the compute knob and the
+    curriculum knob are the same knob.</p>
+  </div>
+  <div class="card">
+    <h3>A safety diagnosis, not just a method</h3>
+    <p>The same algebra that builds the teacher predicts when a curriculum will
+    <em>backfire</em>: GRPO's inverted weight function relies on easy prompts for maintenance,
+    so a frontier curriculum amplifies its collapse. Negative knowledge that saves other
+    people's compute — verified per-seed, not anecdotal.</p>
+  </div>
+  <div class="card">
+    <h3>Conceptual compression</h3>
+    <p>Learnability curricula (p(1−p)), DAPO-style dynamic filtering, and HER stop being three
+    separate tricks: they are the N=1 slice, the sampling shadow, and the success-manufacturing
+    complement of <em>one identity</em>. Fewer moving parts to tune, one theory to reason with.</p>
+  </div>
+  <div class="card">
+    <h3>Free telemetry</h3>
+    <p>The teacher's posterior is a live difficulty map of your task pool — mastered / frontier /
+    dead fractions per training step, at no extra cost. In our runs it tracked held-out truth
+    within ±0.03 and diagnosed a failure mode (posterior inflation) before it hurt.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="insights">7 · Insights we took from the paper</h2>
 
 <div class="grid2">
   <div class="card">
