@@ -120,6 +120,45 @@ DAPO-style dynamic sampling = redraw prompts until the group is live
    nothing in frontier-heavy. The teacher-with-hindsight subsumes its
    benefit in every regime at the same compute.
 
+## V6 — Utility concentration: the linear mass rule under-exploits
+
+Sampling ∝ u(p)^γ (Thompson draws, decay 0.7, 5 seeds):
+
+| γ (power) | 1 | 2 | 4 | 8 | top-k hard selection |
+|---|---|---|---|---|---|
+| AUC | 0.728 | 0.764 | **0.782** | 0.782 | 0.771 |
+
+Sharper concentration beats proportional sampling, saturating at γ≈4;
+hard top-k is slightly worse than soft γ=4 (loses Thompson's uncertainty
+probing). **Why theory and practice differ:** Prop. 1 makes u(p) the
+expected signal *per group*, so ∝u sampling maximizes collected mass per
+draw — but *learning* compounds: gradient steps on the single
+highest-mass task advance the frontier, which unlocks the next task, and
+the compounding favors concentrating beyond linear. The mass functional
+is the right *ordering*; the optimal *temperature* over it is sharper
+than proportional. (Expect γ_opt to shrink with task diversity — many
+independent chains dilute compounding; γ is now a config knob, default 4
+on chain-structured pools, 1–2 on flat pools.)
+
+## V7 — Full stack vs the oracle
+
+| config | AUC (5 seeds) |
+|---|---|
+| Thompson teacher, γ=1 | 0.728 |
+| Thompson teacher, γ=4 | 0.782 |
+| oracle teacher (true pass rates), γ=1 | 0.851 |
+| Thompson γ=1 + hindsight | 0.880 |
+| **Thompson γ=4 + hindsight** | **0.890 ± 0.002** |
+
+**The full stack beats the oracle.** The oracle bound in V2 is a bound on
+*sampling* policies — it perfectly allocates groups but only collects what
+natural successes emit. Hindsight changes the game itself: it manufactures
+signal from failures, breaking the information ceiling the oracle respects.
+Concentration (γ=4) and hindsight compound (+0.010 over hindsight alone).
+This is the strongest statement the CPU testbed can make: **the proposed
+method's advantage is not better allocation of the standard signal — it is
+access to signal the best possible allocator cannot reach.**
+
 ## Consolidated design updates
 
 1. **Posterior decay 0.9 → 0.7** in the teachers and verl

@@ -277,6 +277,8 @@ def main():
     ap.add_argument("--hindsight-to-teacher", action="store_true",
                     help="relabeled successes update the teacher posterior at the "
                          "matching distance level (curriculum rides hindsight gains)")
+    ap.add_argument("--save-ckpt", type=str, default=None,
+                    help="save the final model state_dict to this path")
     ap.add_argument("--out", type=str, default=None)
     ap.add_argument("--sft-ckpt", type=str, default="sft_warmstart.pt")
     args = ap.parse_args()
@@ -449,6 +451,9 @@ def main():
     print(f"FINAL step {step} mean_eval={np.mean(list(ev.values())):.3f} "
           f"mean_pass@8={np.mean([v.get(8, 0.0) for v in passk.values()]):.3f} "
           f"({time.time()-t0:.0f}s)", flush=True)
+    if args.save_ckpt:
+        torch.save(model.state_dict(), args.save_ckpt)
+        print(f"saved checkpoint to {args.save_ckpt}", flush=True)
     log_f.close()
 
 

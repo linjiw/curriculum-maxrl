@@ -49,9 +49,11 @@ from torch.utils.data import Sampler
 
 class FrontierTeacher:
     def __init__(self, n_prompts, n_rollouts=16, decay=0.7, floor=0.1, seed=0,
-                 success_threshold=0.5, utility="advmass"):
+                 success_threshold=0.5, utility="advmass", power=1.0):
         # decay=0.7 validated in VALIDATION.md V2b: the oracle-vs-Thompson gap
         # is a tracking problem; faster forgetting closes ~19% of it.
+        # power: sample ∝ u^power (V6) — sharper concentration compounds on
+        # chain-structured pools (γ≈4); keep 1.0 for flat prompt sets (GSM8K).
         assert utility in ("advmass", "frontier"), utility
         self.n_prompts = n_prompts
         self.n_rollouts = n_rollouts
@@ -59,6 +61,7 @@ class FrontierTeacher:
         self.floor = floor
         self.success_threshold = success_threshold
         self.utility_kind = utility
+        self.power = power
         self.rng = np.random.default_rng(seed)
         self.alpha = np.ones(n_prompts, dtype=np.float64)
         self.beta = np.ones(n_prompts, dtype=np.float64)
@@ -98,6 +101,8 @@ class FrontierTeacher:
             u = np.maximum(pass_at_n - p, 0.0)
         else:  # frontier
             u = pass_at_n * (1.0 - p)
+        if self.power != 1.0:
+            u = u ** self.power
         total = u.sum()
         if total <= 1e-12:
             return np.full(self.n_prompts, 1.0 / self.n_prompts)

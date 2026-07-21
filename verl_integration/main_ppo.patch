@@ -1,8 +1,8 @@
 diff --git a/verl/trainer/main_ppo.py b/verl/trainer/main_ppo.py
-index 432b437..a935b37 100644
+index 432b437..d5c8faa 100644
 --- a/verl/trainer/main_ppo.py
 +++ b/verl/trainer/main_ppo.py
-@@ -185,7 +185,25 @@ class TaskRunner:
+@@ -185,7 +185,26 @@ class TaskRunner:
          # Create training and validation datasets.
          train_dataset = create_rl_dataset(config.data.train_files, config.data, tokenizer, processor)
          val_dataset = create_rl_dataset(config.data.val_files, config.data, tokenizer, processor)
@@ -21,6 +21,7 @@ index 432b437..a935b37 100644
 +                seed=config.data.get("seed", 1),
 +                success_threshold=curriculum_cfg.get("success_threshold", 0.5),
 +                utility=curriculum_cfg.get("utility", "advmass"),
++                power=curriculum_cfg.get("power", 1.0),
 +            )
 +            train_sampler = CurriculumSampler(train_dataset, curriculum_teacher, seed=config.data.get("seed", 1))
 +            print(f"Curriculum sampling enabled over {len(train_dataset)} prompts (floor={curriculum_teacher.floor}, decay={curriculum_teacher.decay})")
@@ -29,7 +30,7 @@ index 432b437..a935b37 100644
  
          # Initialize the PPO trainer.
          trainer = RayPPOTrainer(
-@@ -203,6 +221,8 @@ class TaskRunner:
+@@ -203,6 +222,8 @@ class TaskRunner:
              train_sampler=train_sampler,
              device_name=config.trainer.device,
          )

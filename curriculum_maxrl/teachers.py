@@ -162,13 +162,19 @@ class AdvMassTeacher(Teacher):
     solvable within N attempts but not within one.  Sampling proportional to
     this quantity maximizes expected learning signal per group.  Thompson
     sampling over the Beta posterior supplies optimism.
+
+    ``power`` (VALIDATION.md V6): sample ∝ u^power.  Proportional sampling
+    (power=1) maximizes mass per draw, but learning compounds — steps on the
+    highest-mass task unlock the next — so sharper concentration wins on
+    chain-structured pools (γ≈4 saturates); use 1–2 on flat pools.
     """
 
     def __init__(self, n_tasks: int, seed: int = 0, n_rollouts: int = 16,
-                 explore_frac: float = 0.1):
+                 explore_frac: float = 0.1, power: float = 1.0):
         super().__init__(n_tasks, seed)
         self.n_rollouts = n_rollouts
         self.explore_frac = explore_frac
+        self.power = power
 
     def distribution(self) -> np.ndarray:
         w = np.zeros(self.n_tasks)
@@ -176,7 +182,7 @@ class AdvMassTeacher(Teacher):
             a, b = st.alpha_beta
             p = self.rng.beta(a, b)
             w[i] = (1.0 - (1.0 - p) ** self.n_rollouts) - p
-        w = np.maximum(w, 0.0)
+        w = np.maximum(w, 0.0) ** self.power
         if w.sum() <= 1e-12:
             w[:] = 1.0
         probs = w / w.sum()
