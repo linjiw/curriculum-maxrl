@@ -48,8 +48,10 @@ from torch.utils.data import Sampler
 
 
 class FrontierTeacher:
-    def __init__(self, n_prompts, n_rollouts=16, decay=0.9, floor=0.1, seed=0,
+    def __init__(self, n_prompts, n_rollouts=16, decay=0.7, floor=0.1, seed=0,
                  success_threshold=0.5, utility="advmass"):
+        # decay=0.7 validated in VALIDATION.md V2b: the oracle-vs-Thompson gap
+        # is a tracking problem; faster forgetting closes ~19% of it.
         assert utility in ("advmass", "frontier"), utility
         self.n_prompts = n_prompts
         self.n_rollouts = n_rollouts

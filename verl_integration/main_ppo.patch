@@ -1,5 +1,5 @@
 diff --git a/verl/trainer/main_ppo.py b/verl/trainer/main_ppo.py
-index 432b437..e2b6893 100644
+index 432b437..a935b37 100644
 --- a/verl/trainer/main_ppo.py
 +++ b/verl/trainer/main_ppo.py
 @@ -185,7 +185,25 @@ class TaskRunner:
@@ -16,7 +16,7 @@ index 432b437..e2b6893 100644
 +            curriculum_teacher = FrontierTeacher(
 +                n_prompts=len(train_dataset),
 +                n_rollouts=config.actor_rollout_ref.rollout.n,
-+                decay=curriculum_cfg.get("decay", 0.9),
++                decay=curriculum_cfg.get("decay", 0.7),
 +                floor=curriculum_cfg.get("floor", 0.1),
 +                seed=config.data.get("seed", 1),
 +                success_threshold=curriculum_cfg.get("success_threshold", 0.5),

@@ -55,7 +55,7 @@ class Teacher:
         self.alpha = np.ones(len(LEVELS))
         self.beta = np.ones(len(LEVELS))
 
-    def observe(self, level: int, rewards: np.ndarray, decay: float = 0.95):
+    def observe(self, level: int, rewards: np.ndarray, decay: float = 0.7):
         k, n = rewards.sum(), len(rewards)
         self.alpha[level] = 1.0 + (self.alpha[level] - 1.0) * decay + k
         self.beta[level] = 1.0 + (self.beta[level] - 1.0) * decay + (n - k)
@@ -124,7 +124,7 @@ class FrontierALPTeacher(FrontierTeacher):
         self.alp = np.zeros(len(LEVELS))
         self.seen = np.zeros(len(LEVELS), dtype=bool)
 
-    def observe(self, level: int, rewards: np.ndarray, decay: float = 0.95):
+    def observe(self, level: int, rewards: np.ndarray, decay: float = 0.7):
         super().observe(level, rewards, decay)
         m = rewards.mean()
         prev = self.ema[level] if self.seen[level] else m
