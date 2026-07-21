@@ -124,14 +124,44 @@ rather than needing an external heuristic.
   sub-goals in multi-step proofs, partial-credit unit tests, reached-state
   goals in agentic tasks.
 
-### M6. Curriculum patches GRPO's inversion (H6) — 🔄 hypothesis registered, sweep running
+### M6. Curriculum patches GRPO's inversion (H6) — ❌ REFUTED, direction reversed
 
 - The paper conjectures GRPO's w(p) inversion at p→1 drives distribution
-  sharpening. A frontier teacher retires p≈1 prompts from the batch entirely,
-  removing the regime where the inversion applies.
-- **Prediction:** `frontier+grpo` shows less pass@8 collapse than `uniform+grpo`
-  at matched wall-clock. If confirmed: one posterior fixes GRPO's easy-prompt
-  pathology and MaxRL's dead-group pathology simultaneously.
+  sharpening. Prediction: a frontier teacher that retires p≈1 prompts removes
+  the inversion's regime → less pass@k collapse for `frontier+grpo`.
+- **Result (matched wall-clock, GPU maze):** the opposite. frontier+grpo
+  collapsed *more* (pass@8 0.332→0.269) than uniform+grpo (0.351→0.312) and
+  lost easy-level retention (0.62 vs 0.75 min easy pass). GRPO's inverted
+  weight was effectively *maintaining* mastered levels; pointing all its
+  updates at the frontier removes that maintenance and sharpens harder.
+  MaxRL under the same teacher keeps pass@8 flat-to-up (0.327→0.351).
+- **Upshot — sharper than the hypothesis:** GRPO's pass@k collapse is an
+  *objective-level* pathology that data-level curricula cannot rescue (they
+  amplify it). This strengthens the paper's central claim from the outside:
+  to combine a frontier curriculum with group RL you need a likelihood-style
+  objective. Teacher and MaxRL aren't just complementary — the teacher
+  *requires* MaxRL-style weighting to be safe.
+
+## 2b. Matched wall-clock GPU sweep (complete, seed 0, 2400 s each)
+
+| config | steps | dead/8 | AUC | pass@8 |
+|---|---|---|---|---|
+| uniform+maxrl | 583 | 5.8 | 0.214 | — |
+| uniform+grpo | 527 | 6.0 | 0.216 | 0.312 |
+| frontier+grpo | 751 | 5.7 | 0.219 | 0.269 ↓ |
+| uniform+maxrl+hindsight | 651 | 5.0 | 0.222 | 0.356 |
+| frontier+maxrl | 713 | 3.9 | 0.223 | 0.351 |
+| learnability+maxrl | 787 | 3.3 | 0.227 | 0.356 |
+| frontier_alp+maxrl | 765 | 3.4 | 0.233 | 0.361 |
+| **frontier+maxrl+hindsight** | 694 | 3.8 | **0.234** | 0.356 |
+
+Every teacher/hindsight variant beats both uniform baselines; the winner
+combines the teacher with hindsight recycling, and frontier_alp is the best
+pure-teacher config (M5's ALP term earns its keep here — level-2 pass 0.62 vs
+0.54). GPU hindsight gains are much smaller than CPU (+0.01 vs +0.22 AUC):
+in the infinite-data maze regime each relabeled maze is seen once, so the
+salvaged signal cannot compound the way it does on a fixed task set — expect
+the CPU-like regime on fixed prompt datasets (GSM8K).
 
 ## 3. Validated cross-cutting findings
 

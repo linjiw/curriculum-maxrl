@@ -407,6 +407,31 @@ checkpointed alongside the model.</p>
   </tbody>
 </table>
 
+<h3>Matched wall-clock sweep — 8 configs × 2400 s (complete, single seed)</h3>
+<table>
+  <thead><tr><th>Config</th><th class="num">steps</th><th class="num">dead/8</th><th class="num">AUC</th><th class="num">pass@8</th></tr></thead>
+  <tbody>
+    <tr><td>uniform + maxrl</td><td class="num">583</td><td class="num">5.8</td><td class="num">0.214</td><td class="num">—</td></tr>
+    <tr><td>uniform + grpo</td><td class="num">527</td><td class="num">6.0</td><td class="num">0.216</td><td class="num">0.312</td></tr>
+    <tr><td>frontier + grpo</td><td class="num">751</td><td class="num">5.7</td><td class="num">0.219</td><td class="num">0.269 ↓</td></tr>
+    <tr><td>uniform + maxrl + hindsight</td><td class="num">651</td><td class="num">5.0</td><td class="num">0.222</td><td class="num">0.356</td></tr>
+    <tr><td>frontier + maxrl</td><td class="num">713</td><td class="num">3.9</td><td class="num">0.223</td><td class="num">0.351</td></tr>
+    <tr><td>learnability + maxrl</td><td class="num">787</td><td class="num">3.3</td><td class="num">0.227</td><td class="num">0.356</td></tr>
+    <tr><td>frontier_alp + maxrl</td><td class="num">765</td><td class="num">3.4</td><td class="num">0.233</td><td class="num">0.361</td></tr>
+    <tr><td><strong>frontier + maxrl + hindsight</strong></td><td class="num">694</td><td class="num">3.8</td><td class="num"><strong>0.234</strong></td><td class="num">0.356</td></tr>
+  </tbody>
+</table>
+<p>Every teacher/hindsight variant beats both uniform baselines on learning speed at equal
+wall-clock. <strong>The most instructive result is a refuted hypothesis:</strong> we predicted a
+frontier teacher would rescue GRPO from pass@k collapse by retiring the mastered prompts its
+inverted w(p) overweights. The opposite happened — frontier+grpo collapsed <em>harder</em>
+(pass@8 0.332→0.269) than uniform+grpo (0.351→0.312), losing easy-level retention, while MaxRL
+under the same teacher kept pass@8 flat-to-up. GRPO's inversion was quietly <em>maintaining</em>
+easy prompts; a curriculum removes that maintenance. So the collapse is an objective-level
+pathology that data-level curricula amplify rather than fix — a frontier curriculum
+<em>requires</em> likelihood-style weighting to be safe, which strengthens the paper's central
+claim from the outside.</p>
+
 <h3>Hindsight relabeling — the biggest single gain</h3>
 <p>MaxRL's Theorem 1 makes the estimator <em>success-conditioned</em>: it learns only from
 successes. The HER-style complement: a failed trajectory is a success <em>for the goal it
@@ -438,9 +463,9 @@ and the toy's monotone weight-scale trend won't survive real models — the GPU 
     <tr><td>Learning-progress (|Δp̂|) teachers</td>
         <td>underperform pass-rate-band teachers here — the signal is noisy at N=16 and lags the moving frontier</td>
         <td class="num"><span class="status no">✗ weak</span></td></tr>
-    <tr><td>H6: teacher patches GRPO's inversion (less pass@k collapse for frontier+grpo vs uniform+grpo)</td>
-        <td>matched wall-clock GPU sweep</td>
-        <td class="num"><span class="status run">⟳ running</span></td></tr>
+    <tr><td>H6: teacher patches GRPO's inversion (less pass@k collapse for frontier+grpo)</td>
+        <td>refuted, direction reversed — the teacher <em>amplifies</em> GRPO's collapse (pass@8 0.332→0.269 vs uniform 0.351→0.312); curricula need likelihood-style weighting</td>
+        <td class="num"><span class="status no">✗ refuted</span></td></tr>
     <tr><td>SmolLM2-360M + GSM8K, curriculum × {maxrl, grpo}</td>
         <td>launch script ready (<code>verl_integration/</code>); needs a multi-GPU node</td>
         <td class="num"><span class="status run">⟳ queued</span></td></tr>

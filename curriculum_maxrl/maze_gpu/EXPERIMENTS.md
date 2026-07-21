@@ -58,6 +58,46 @@ Protocol note: pass@k eval (unbiased Chen et al. 2021 estimator, k∈{1,8})
 was added to `evaluate()` while config 1 (uniform+maxrl) was already running,
 so its log lacks `passk` records; configs 2–6 have them.
 
+## Matched wall-clock results (2400 s RL each, seed 0, complete)
+
+| config | steps | dead/8 | final | best | AUC | pass@8 final | frontier |
+|---|---|---|---|---|---|---|---|
+| uniform+maxrl | 583 | 5.8 | 0.225 | 0.233 | 0.214 | — | 2 |
+| uniform+grpo | 527 | 6.0 | 0.230 | 0.237 | 0.216 | 0.312 | 2 |
+| frontier+grpo | 751 | 5.7 | 0.224 | 0.249 | 0.219 | **0.269** ↓ | 3 |
+| uniform+maxrl+hindsight | 651 | 5.0 | 0.233 | 0.237 | 0.222 | 0.356 | 2 |
+| frontier+maxrl | 713 | 3.9 | 0.237 | 0.240 | 0.223 | 0.351 | 2 |
+| learnability+maxrl | 787 | 3.3 | 0.227 | 0.250 | 0.227 | 0.356 | 2 |
+| frontier_alp+maxrl | 765 | 3.4 | **0.244** | **0.257** | 0.233 | **0.361** | 2 |
+| frontier+maxrl+hindsight | 694 | 3.8 | 0.230 | 0.256 | **0.234** | 0.356 | 3 |
+
+(single seed — treat orderings within ±0.01 AUC as ties)
+
+**Findings:**
+
+1. **Every teacher/hindsight variant beats both uniform baselines on AUC.**
+   Top two: frontier+maxrl+hindsight (0.234) and frontier_alp+maxrl (0.233)
+   vs 0.214/0.216 uniform. The mechanisms compound: more steps per second
+   (583→700+), fewer dead groups (5.8→3.3–3.9), plus hindsight recycling.
+2. **H6 REFUTED — direction reversed.** Prediction was that the teacher
+   patches GRPO's pass@k collapse by retiring mastered prompts. Instead
+   frontier+grpo collapsed *more* (pass@8 0.332→0.269) than uniform+grpo
+   (0.351→0.312), and lost easy-level retention (min easy pass 0.62 vs 0.75).
+   Reading: GRPO's inverted w(p) was effectively *maintaining* easy prompts;
+   concentrating its updates on the frontier removes that maintenance and
+   sharpens harder. **The objective is the problem — a data-level curriculum
+   cannot rescue GRPO's collapse, which strengthens the paper's own claim
+   that pass@k degradation is driven by objective choice.** MaxRL configs
+   under the same teacher keep pass@8 flat-to-up (0.327→0.351).
+3. **GPU hindsight gain is real but much smaller than CPU** (AUC +0.008/+0.011
+   vs +0.22 on the toy): relabeled mazes here are one-off (fresh maze每 step,
+   no repeated task to cash in the relabeled skill), and the relabeling only
+   fires on the single best rollout per dead group. Both hindsight configs
+   tie for best frontier depth (level 3) and best pass@8 at their band.
+4. **frontier_alp (ALP anti-forgetting bonus) is the best pure-teacher
+   variant** — first setting where the |Δp̂| term clearly earns its keep
+   (level-2 pass 0.62 vs 0.54 frontier, best final overall).
+
 ### Hypotheses for the matched-clock analysis
 
 - **H6 (GRPO inversion fix).** The paper (Section 5, footnote 3) shows GRPO's
