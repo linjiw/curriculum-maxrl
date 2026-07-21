@@ -268,6 +268,15 @@ def main():
     ap.add_argument("--hindsight", action="store_true",
                     help="relabel dead (K=0) groups to the deepest cell reached")
     ap.add_argument("--hindsight-scale", type=float, default=1.0)
+    ap.add_argument("--hindsight-dense", action="store_true",
+                    help="relabel EVERY failed rollout (depth >= --hindsight-min-depth) "
+                         "to its reached cell, not just the group's best")
+    ap.add_argument("--hindsight-min-depth", type=int, default=6)
+    ap.add_argument("--hindsight-cap", type=int, default=16,
+                    help="max relabeled trajectories per step (compute bound)")
+    ap.add_argument("--hindsight-to-teacher", action="store_true",
+                    help="relabeled successes update the teacher posterior at the "
+                         "matching distance level (curriculum rides hindsight gains)")
     ap.add_argument("--out", type=str, default=None)
     ap.add_argument("--sft-ckpt", type=str, default="sft_warmstart.pt")
     args = ap.parse_args()
@@ -329,7 +338,7 @@ def main():
 
         step_stats = {"dead_groups": 0, "mean_reward": [], "relabeled": 0}
         keep_rows, keep_w = [], []
-        hs_prompts, hs_resps = [], []  # hindsight-relabeled (prompt, response)
+        hs_prompts, hs_resps, hs_depths = [], [], []  # hindsight-relabeled
         for g, (lv, task) in enumerate(zip(levels, tasks)):
             rows = range(g * args.rollouts, (g + 1) * args.rollouts)
             rewards = np.array([
@@ -341,7 +350,20 @@ def main():
             w = est(rewards)
             if not np.any(w != 0):
                 step_stats["dead_groups"] += 1
-                if args.hindsight:
+                if args.hindsight_dense:
+                    # relabel every rollout whose legal prefix is deep enough:
+                    # each becomes a success for the cell it reached
+                    for j in rows:
+                        if len(hs_prompts) >= args.hindsight_cap:
+                            break
+                        toks = [int(x) for x in resp[j] if int(x) != PAD]
+                        n_ok, pos = simulate_prefix(task.grid, toks)
+                        if n_ok >= args.hindsight_min_depth and pos != (1, 1):
+                            hs_prompts.append(encode_prompt(task.grid, pos))
+                            hs_resps.append(toks[:n_ok] + [EOS])
+                            hs_depths.append(n_ok)
+                            step_stats["relabeled"] += 1
+                elif args.hindsight:
                     # relabel: goal <- deepest cell legally reached in group
                     best_n, best_pos, best_j = 0, None, None
                     for j in rows:
@@ -353,6 +375,7 @@ def main():
                         toks = [int(x) for x in resp[best_j] if int(x) != PAD]
                         hs_prompts.append(encode_prompt(task.grid, best_pos))
                         hs_resps.append(toks[:best_n] + [EOS])
+                        hs_depths.append(best_n)
                         step_stats["relabeled"] += 1
                 continue
             keep_rows.extend(rows)
@@ -385,6 +408,17 @@ def main():
                 loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             opt.step()
+
+        if args.hindsight_to_teacher and hs_depths:
+            # relabeled successes nudge the matching level's posterior so the
+            # curriculum advances with hindsight gains instead of waiting for
+            # natural successes.  NOTE: deliberately optimistic evidence — the
+            # model reached SOME cell at distance d, not a requested one; the
+            # posterior decay corrects any overshoot within a few groups.
+            from maze_env import LEVEL_DIST
+            for d in hs_depths:
+                lv_match = min(LEVELS, key=lambda l: abs(LEVEL_DIST[l] - d))
+                teacher.observe(lv_match, np.array([1.0]))
 
         if step % args.eval_every == 0 or step == args.steps - 1:
             ev = evaluate(model, eval_tasks)

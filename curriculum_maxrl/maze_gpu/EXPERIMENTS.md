@@ -124,6 +124,38 @@ Seeds share their SFT warmstart, so per-seed deltas are paired comparisons.
    separate on *coverage* (pass@8) and on how they respond to a curriculum,
    not on average performance.
 
+## FrontierMax v2: closing the frontier gap (design + rationale)
+
+**Diagnosis of the wall.** Best config (frontier_alp) ends at
+p̂ ≈ [0.94, 0.87, 0.55, 0.35, 0.27, 0.07, ~0…]: level 6+ never leaves 0.
+At the observed level-6 pass rate (~0.005), even pass@128 ≈ 0.47 — brute
+rollouts can't cross. But the raw material is there: 33% of failed level-6
+rollouts legally reach depth ≥ 10, and the current sparse hindsight harvests
+only **1 relabel per dead group (3.6/step)** out of up to 32.
+
+**v2 changes (all in `train.py`):**
+
+1. `--hindsight-dense`: relabel *every* failed rollout with legal prefix
+   ≥ `--hindsight-min-depth` (default 6) to the cell it reached, capped at
+   `--hindsight-cap` (16) per step → ~10× more salvaged signal per dead
+   group, each an exact verified (prompt, trajectory) pair.
+2. `--hindsight-to-teacher`: relabeled successes update the teacher
+   posterior at the matching distance level. Rationale: hindsight teaches
+   deep-navigation skill that the teacher's posterior never sees (it only
+   observes original-task rewards), so the curriculum lags the student's
+   true frontier. Deliberately optimistic (reached *some* cell at distance
+   d, not a requested one); posterior decay corrects overshoot.
+3. CPU A/B on goal selection: relabeling to the *deepest* reached prefix
+   beats picking the advantage-mass-optimal prefix (AUC 0.863 vs 0.848) —
+   when signal is free, take the most of it; mass-optimality matters only
+   when allocation is the scarce resource. GPU version keeps deepest-cell.
+
+**A/B/C protocol (matched 2400 s, frontier_alp teacher):**
+A = sparse hindsight (current), B = dense, C = dense + teacher feedback.
+Success criterion: level-6 pass rate leaves 0 and/or AUC > 0.234 (current
+best); watch for the failure mode where optimistic posterior updates drag
+sampling beyond the true frontier (dead-group rate would rise).
+
 ### Hypotheses for the matched-clock analysis
 
 - **H6 (GRPO inversion fix).** The paper (Section 5, footnote 3) shows GRPO's
