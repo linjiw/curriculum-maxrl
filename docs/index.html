@@ -432,6 +432,14 @@ pathology that data-level curricula amplify rather than fix — a frontier curri
 <em>requires</em> likelihood-style weighting to be safe, which strengthens the paper's central
 claim from the outside.</p>
 
+<p><strong>Multi-seed confirmation (seeds 0–2, paired via shared per-seed warmstarts):</strong>
+both teacher variants beat uniform+maxrl on AUC in <em>every</em> seed (6/6 paired deltas
+positive); frontier_alp+maxrl wins final mean-pass with the tightest spread
+(0.246&nbsp;±&nbsp;0.002 vs 0.230&nbsp;±&nbsp;0.015). The coverage divergence is systematic, not
+seed noise: GRPO's pass@8 <em>decays</em> in every seed (mean 0.308→0.271) while teacher+MaxRL
+<em>grows</em> it (0.316→0.348) — the paper's coverage-collapse dynamic reproduced at 1.26M
+scale, with the curriculum widening the gap in both directions.</p>
+
 <h3>Hindsight relabeling — the biggest single gain</h3>
 <p>MaxRL's Theorem 1 makes the estimator <em>success-conditioned</em>: it learns only from
 successes. The HER-style complement: a failed trajectory is a success <em>for the goal it

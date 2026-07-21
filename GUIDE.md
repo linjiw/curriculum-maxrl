@@ -163,6 +163,16 @@ in the infinite-data maze regime each relabeled maze is seen once, so the
 salvaged signal cannot compound the way it does on a fixed task set — expect
 the CPU-like regime on fixed prompt datasets (GSM8K).
 
+**Multi-seed confirmation (seeds 0–2, paired via shared per-seed SFT
+warmstart):** both teacher variants beat uniform+maxrl on AUC in **every**
+seed (6/6 paired deltas positive; frontier_alp +0.019/+0.004/+0.006,
+frontier+hindsight +0.020/+0.002/+0.013), frontier_alp wins final mean-pass
+with the tightest spread (0.246 ± 0.002 vs 0.230 ± 0.015). The pass@k
+divergence is systematic: GRPO decays coverage in every seed (pass@8 mean
+0.308→0.271) while teacher+MaxRL grows it (0.316→0.348) — the paper's
+coverage-collapse dynamic reproduced at 1.26M scale, with our addition that
+a curriculum widens the gap in both directions.
+
 ## 3. Validated cross-cutting findings
 
 - **Complementarity (H3):** in beyond-frontier-heavy regimes each ingredient alone

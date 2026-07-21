@@ -98,6 +98,32 @@ so its log lacks `passk` records; configs 2–6 have them.
    variant** — first setting where the |Δp̂| term clearly earns its keep
    (level-2 pass 0.62 vs 0.54 frontier, best final overall).
 
+## Multi-seed confirmation (seeds 0–2, matched 2400 s, key configs)
+
+| config | AUC (3 seeds) | final | pass@8 first→last | ΔAUC vs uniform+maxrl per seed |
+|---|---|---|---|---|
+| uniform+maxrl | 0.211 ± 0.011 | 0.230 ± 0.015 | 0.310 → 0.300 | — |
+| uniform+grpo | 0.213 ± 0.006 | 0.230 ± 0.001 | 0.308 → **0.271** ↓ | mixed (+0.003, −0.005, +0.008) |
+| frontier_alp+maxrl | 0.221 ± 0.013 | **0.246 ± 0.002** | 0.306 → 0.338 ↑ | **all positive** (+0.019, +0.004, +0.006) |
+| frontier+maxrl+hindsight | **0.223 ± 0.010** | 0.234 ± 0.005 | 0.316 → **0.348** ↑ | **all positive** (+0.020, +0.002, +0.013) |
+
+Seeds share their SFT warmstart, so per-seed deltas are paired comparisons.
+
+**Confirmed across seeds:**
+
+1. **Both teacher variants beat uniform+maxrl on AUC in every seed** (6/6
+   paired deltas positive). Effect size is modest (~+0.01 AUC, ~5%) but the
+   sign is consistent; frontier_alp also wins final mean-pass with the
+   tightest spread (0.246 ± 0.002 vs 0.230 ± 0.015).
+2. **The pass@k divergence is systematic, not seed noise:** GRPO *decays*
+   coverage in every seed (mean 0.308 → 0.271) while teacher+MaxRL configs
+   *grow* it (0.306→0.338, 0.316→0.348). This is the paper's Takeaway-5
+   dynamic reproduced at 1.26M scale, plus our addition: the curriculum
+   widens the gap in both directions (helps MaxRL coverage, hurts GRPO's).
+3. uniform+grpo ≈ uniform+maxrl on mean pass at this scale — the estimators
+   separate on *coverage* (pass@8) and on how they respond to a curriculum,
+   not on average performance.
+
 ### Hypotheses for the matched-clock analysis
 
 - **H6 (GRPO inversion fix).** The paper (Section 5, footnote 3) shows GRPO's
