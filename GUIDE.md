@@ -116,6 +116,15 @@ rather than needing an external heuristic.
   (uniform+hs 0.970 > advmass-alone 0.961) but they still stack
   (advmass+hs 0.978 best everywhere); the teacher keeps its wall-clock edge on
   real models since it avoids generating doomed rollouts at all.
+- **GPU A/B/C (matched 2400 s, frontier_alp teacher) — dense wins, feedback
+  dropped:** sparse hindsight ties the no-hindsight baseline (AUC 0.234 vs
+  0.233); **dense hindsight** (relabel every failed rollout with prefix ≥ 6,
+  cap 16/step, 3.6→16 relabels/step) is the new GPU champion — final 0.258,
+  best 0.269, shallow levels lifted across the board (0.99/0.87/0.68/0.45).
+  Teacher feedback (C) confirmed V4's pre-registration: AUC tie, worse final,
+  visible posterior inflation (p̂ 0.81 vs eval 0.47 at level 2) pushing
+  sampling deeper prematurely. **Ship dense hindsight; keep the posterior on
+  requested-task evidence only.**
 - **Bias caveat:** relabeled groups are conditioned on the achieved outcome —
   an auxiliary HER-style term, not an unbiased truncated-ML gradient. Helps
   uniformly on the toy; GPU maze version (goal ← deepest cell legally reached,

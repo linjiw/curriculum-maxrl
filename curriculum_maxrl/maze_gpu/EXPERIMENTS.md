@@ -156,6 +156,33 @@ Success criterion: level-6 pass rate leaves 0 and/or AUC > 0.234 (current
 best); watch for the failure mode where optimistic posterior updates drag
 sampling beyond the true frontier (dead-group rate would rise).
 
+**A/B/C RESULTS (complete):**
+
+| config | final | best | AUC | pass@8 | frontier | relabeled/step |
+|---|---|---|---|---|---|---|
+| baseline (frontier_alp, no hs) | 0.244 | 0.257 | 0.233 | 0.361 | 2 | 0 |
+| A sparse hindsight | 0.226 | 0.254 | 0.234 | 0.365 | 2 | 3.6 |
+| **B dense hindsight** | **0.258** | **0.269** | 0.236 | 0.361 | 2 | **16.0** |
+| C dense + teacher feedback | 0.242 | 0.260 | **0.237** | 0.361 | **3** | 15.9 |
+
+1. **Dense hindsight (B) is the new champion**: best final (0.258) and best
+   peak (0.269) of every GPU config to date; level-0–3 pass rates all
+   improve simultaneously (0.99/0.87/0.68/0.45) — the relabeled gradients
+   strengthen shallow navigation without sacrificing the frontier.
+   Harvest rate went 3.6 → 16.0 relabels/step (the cap), exactly the
+   ~4.4× the design predicted.
+2. **Teacher feedback (C) behaves exactly as V4 pre-registered**: AUC ties B
+   (0.237 vs 0.236, noise), final is lower (0.242), and the mechanism's
+   signature is visible — C's posterior at level 2 inflates to p̂=0.81 vs
+   eval 0.47 (B tracks: 0.54 vs 0.64), pushing sampling mass deeper
+   (earning the only frontier=3 flag) at the cost of consolidating level 2.
+   Mild optimism inflation, no runaway (dead rate 4.9 < B's 5.3). Verdict:
+   **keep dense hindsight, drop teacher feedback** — the posterior should
+   see only requested-task evidence.
+3. Level 6 still ≈ 0.01–0.02: dense hindsight lifts the *approach* to the
+   frontier but one 2400 s budget doesn't cash it out at distance 16+.
+   The efficiency study + longer runs are the follow-up.
+
 ### Hypotheses for the matched-clock analysis
 
 - **H6 (GRPO inversion fix).** The paper (Section 5, footnote 3) shows GRPO's

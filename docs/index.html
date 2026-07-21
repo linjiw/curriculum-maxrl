@@ -466,6 +466,28 @@ teacher+hindsight reaches 0.98 — reallocating compute among unlearnable tasks 
 hindsight <em>creates</em> the missing signal by inventing the curriculum below the pool,
 igniting learnability within ~400 groups, then going silent as natural successes take over.</p>
 
+<h3>Beating the oracle — and the concentration surprise</h3>
+<p>Two late results sharpened the method. First, sampling ∝ u(p)<sup>γ</sup> with γ≈4 beats
+proportional sampling (AUC 0.782 vs 0.728): the mass functional is the right <em>ordering</em>,
+but learning <em>compounds</em> on structured task pools — steps on the highest-mass task unlock
+the next — so the optimal temperature is sharper than proportional. Second, the headline:</p>
+<table>
+  <thead><tr><th>Teacher (CPU, 5 seeds)</th><th class="num">AUC</th></tr></thead>
+  <tbody>
+    <tr><td>Thompson posterior, γ=1</td><td class="num">0.728</td></tr>
+    <tr><td>Oracle (true pass rates — best possible <em>sampler</em>)</td><td class="num">0.851</td></tr>
+    <tr><td><strong>Thompson γ=4 + dense hindsight</strong></td><td class="num"><strong>0.890 ± 0.002</strong></td></tr>
+  </tbody>
+</table>
+<p><strong>The full stack beats the oracle.</strong> The oracle bound constrains sampling policies
+only — it allocates groups perfectly but can only collect what natural successes emit. Hindsight
+changes the game itself by manufacturing verified signal from failures. The method's advantage is
+not better allocation of the standard signal; it is access to signal the best possible allocator
+cannot reach. On the GPU maze, dense hindsight (relabel every deep-enough failed rollout, ~16
+relabels/step) is likewise the new champion (final 0.258, best 0.269 at matched wall-clock),
+while routing relabeled successes into the teacher's posterior inflated it (p̂ 0.81 vs true 0.47)
+and was dropped — the posterior should see only requested-task evidence.</p>
+
 <h3>Honest negatives &amp; open items</h3>
 <table>
   <thead><tr><th>Approach</th><th>Outcome</th><th class="num">Status</th></tr></thead>
@@ -479,6 +501,9 @@ igniting learnability within ~400 groups, then going silent as natural successes
     <tr><td>H6: teacher patches GRPO's inversion (less pass@k collapse for frontier+grpo)</td>
         <td>refuted, direction reversed — the teacher <em>amplifies</em> GRPO's collapse (pass@8 0.332→0.269 vs uniform 0.351→0.312); curricula need likelihood-style weighting</td>
         <td class="num"><span class="status no">✗ refuted</span></td></tr>
+    <tr><td>Hindsight→teacher posterior feedback</td>
+        <td>AUC tie with dense hindsight but worse final; posterior inflates (p̂ 0.81 vs eval 0.47) — dropped; posterior sees requested-task evidence only</td>
+        <td class="num"><span class="status no">✗ dropped</span></td></tr>
     <tr><td>SmolLM2-360M + GSM8K, curriculum × {maxrl, grpo}</td>
         <td>launch script ready (<code>verl_integration/</code>); needs a multi-GPU node</td>
         <td class="num"><span class="status run">⟳ queued</span></td></tr>
