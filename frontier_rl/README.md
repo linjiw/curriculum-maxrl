@@ -60,14 +60,24 @@ the exact relabeled gradient into noise):
 |---|---|---|
 | `skill_chain` | regression anchor vs the validated testbed | 0.650 → 0.728 → **0.890** (matches REPORT.md) |
 | `grid_reach` | goal-conditioned robotics pattern (goal bins = distance rings, relabel = reached cell, REINFORCE tabular policy) | 0.592 → 0.658 → **0.703** |
+| `gym_classic` | **real gymnasium envs**: MountainCar positional curriculum (hard exploration) + CartPole survival curriculum | MC: 0.216 → 0.228 → **0.246**; CP: 0.190 → 0.225 → **0.246** (3 seeds) |
 | `gym_goal` | gymnasium GoalEnv skeleton: where reset/step/is_success go, how to bin continuous goals, HER-style relabel via `achieved_goal` | (skeleton — bring your env) |
+
+The gymnasium results reproduce the validated ordering
+(uniform < teacher < teacher+hindsight) on real environments with a
+deliberately weak tile-coded REINFORCE policy — MountainCar's sparse flag
+success is the real-world twin of our frontier-heavy regime, and its
+positional curriculum ("reach x ≥ x*, walking x* from valley to flag") is
+exactly the pattern to copy for robotics reach tasks. Budgets in the demo
+are small (~10 min CPU); scale `steps` for stronger separations.
 
 Run them:
 
 ```bash
-python3 frontier_rl/test_framework.py            # unit tests
-python3 frontier_rl/examples/run_skill_chain.py  # regression anchor (~2 min)
-python3 frontier_rl/examples/run_grid_reach.py   # robotics-style demo (~3 min)
+python3 frontier_rl/test_framework.py                 # unit tests
+python3 frontier_rl/examples/run_skill_chain.py       # regression anchor (~2 min)
+python3 frontier_rl/examples/run_grid_reach.py        # robotics-style demo (~3 min)
+python3 frontier_rl/examples/run_gym_benchmark.py     # gymnasium benchmark (~10 min, pip install gymnasium)
 ```
 
 ## Mapping to robotics / gym in practice
