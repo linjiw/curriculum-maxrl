@@ -30,7 +30,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from maze_env import (LEVELS, MOVE_BUDGET, PAD, EOS,
-                      sample_task, sft_example, verify)
+                      sample_task, sft_example, verify, simulate_prefix,
+                      encode_prompt)
 from model import TinyTransformer
 from estimators import weights_reinforce, weights_rloo, weights_grpo, weights_maxrl
 
@@ -264,6 +265,9 @@ def main():
     ap.add_argument("--eval-every", type=int, default=25)
     ap.add_argument("--max-seconds", type=int, default=None,
                     help="stop after this much RL wall-clock (matched-compute comparisons)")
+    ap.add_argument("--hindsight", action="store_true",
+                    help="relabel dead (K=0) groups to the deepest cell reached")
+    ap.add_argument("--hindsight-scale", type=float, default=1.0)
     ap.add_argument("--out", type=str, default=None)
     ap.add_argument("--sft-ckpt", type=str, default="sft_warmstart.pt")
     args = ap.parse_args()
@@ -323,8 +327,9 @@ def main():
         prompts, plens = pad_batch(flat_prompts, DEVICE)
         resp = model.generate(prompts, plens, max_new, EOS)
 
-        step_stats = {"dead_groups": 0, "mean_reward": []}
+        step_stats = {"dead_groups": 0, "mean_reward": [], "relabeled": 0}
         keep_rows, keep_w = [], []
+        hs_prompts, hs_resps = [], []  # hindsight-relabeled (prompt, response)
         for g, (lv, task) in enumerate(zip(levels, tasks)):
             rows = range(g * args.rollouts, (g + 1) * args.rollouts)
             rewards = np.array([
@@ -336,20 +341,47 @@ def main():
             w = est(rewards)
             if not np.any(w != 0):
                 step_stats["dead_groups"] += 1
+                if args.hindsight:
+                    # relabel: goal <- deepest cell legally reached in group
+                    best_n, best_pos, best_j = 0, None, None
+                    for j in rows:
+                        toks = [int(x) for x in resp[j] if int(x) != PAD]
+                        n_ok, pos = simulate_prefix(task.grid, toks)
+                        if n_ok > best_n and pos != (1, 1):
+                            best_n, best_pos, best_j = n_ok, pos, j
+                    if best_j is not None and best_n >= 4:
+                        toks = [int(x) for x in resp[best_j] if int(x) != PAD]
+                        hs_prompts.append(encode_prompt(task.grid, best_pos))
+                        hs_resps.append(toks[:best_n] + [EOS])
+                        step_stats["relabeled"] += 1
                 continue
             keep_rows.extend(rows)
             keep_w.extend(w)
 
-        if keep_rows:
-            rows_t = torch.tensor(keep_rows, device=DEVICE)
-            w_t = torch.tensor(np.array(keep_w), device=DEVICE, dtype=torch.float32)
+        if keep_rows or hs_prompts:
             opt.zero_grad()
-            # micro-batch the backward pass to bound memory
-            mb = 128
-            for i in range(0, len(keep_rows), mb):
-                sel = rows_t[i:i + mb]
-                lp, _ = response_logprobs(model, prompts[sel], plens[sel], resp[sel])
-                loss = -(w_t[i:i + mb] * lp).sum() / args.tasks_per_step
+            if keep_rows:
+                rows_t = torch.tensor(keep_rows, device=DEVICE)
+                w_t = torch.tensor(np.array(keep_w), device=DEVICE, dtype=torch.float32)
+                # micro-batch the backward pass to bound memory
+                mb = 128
+                for i in range(0, len(keep_rows), mb):
+                    sel = rows_t[i:i + mb]
+                    lp, _ = response_logprobs(model, prompts[sel], plens[sel], resp[sel])
+                    loss = -(w_t[i:i + mb] * lp).sum() / args.tasks_per_step
+                    loss.backward()
+            if hs_prompts:
+                # each relabeled trajectory acts as a K=1 MaxRL group:
+                # w_succ = 1 - 1/N, scaled
+                hp, hlens = pad_batch(hs_prompts, DEVICE)
+                max_r = max(len(r) for r in hs_resps)
+                hr = torch.full((len(hs_resps), max_r), PAD, dtype=torch.long,
+                                device=DEVICE)
+                for b, rr in enumerate(hs_resps):
+                    hr[b, :len(rr)] = torch.tensor(rr, device=DEVICE)
+                w_hs = args.hindsight_scale * (1.0 - 1.0 / args.rollouts)
+                lp, _ = response_logprobs(model, hp, hlens, hr)
+                loss = -(w_hs * lp).sum() / args.tasks_per_step
                 loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             opt.step()
@@ -361,6 +393,7 @@ def main():
                    "teacher_p_hat": teacher.p_hat().round(3).tolist(),
                    "teacher_dist": teacher.distribution().round(3).tolist(),
                    "dead_groups": step_stats["dead_groups"],
+                   "relabeled": step_stats["relabeled"],
                    "train_mean_reward": float(np.mean(step_stats["mean_reward"])),
                    "elapsed": time.time() - t0}
             log_f.write(json.dumps(rec) + "\n")

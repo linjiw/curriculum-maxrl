@@ -88,6 +88,35 @@ rather than needing an external heuristic.
   in the matched GPU sweep. The uniform floor already covers most anti-forgetting
   duty in our regimes.
 
+### M7. Hindsight relabeling for dead groups — ✅ validated (CPU), 🔄 GPU sweep queued
+
+- **Idea:** MaxRL's Theorem 1 makes the estimator success-conditioned — it learns
+  *only from successes*, which is why K=0 groups are dead weight. HER's move is
+  the complement: a failed trajectory is a success **for the goal it actually
+  reached**. Where task structure admits relabeling, every dead group converts
+  into a live group for an easier related task at zero extra generation cost.
+- **CPU result (5 seeds, skill-chain; failed level-l rollout with correct prefix
+  j = success of nested level-j task):**
+
+  | config | final | AUC |
+  |---|---|---|
+  | uniform+maxrl | 0.966 | 0.653 |
+  | uniform+maxrl+**hindsight** | 0.978 | **0.878** |
+  | advmass+maxrl | 0.979 | 0.704 |
+  | advmass+maxrl+**hindsight** | 0.984 | **0.883** |
+
+  **Largest single improvement in the project** — bigger than the teacher itself
+  on learning speed (AUC +0.22 vs +0.05) and stacking with it. The teacher
+  *avoids* wasting compute beyond the frontier; hindsight *recycles* whatever
+  still lands there.
+- **Bias caveat:** relabeled groups are conditioned on the achieved outcome —
+  an auxiliary HER-style term, not an unbiased truncated-ML gradient. Helps
+  uniformly on the toy; GPU maze version (goal ← deepest cell legally reached,
+  `--hindsight` in `maze_gpu/train.py`) is queued behind sweep 1.
+- **LLM analogue:** goal/prefix relabeling wherever verifiers admit it —
+  sub-goals in multi-step proofs, partial-credit unit tests, reached-state
+  goals in agentic tasks.
+
 ### M6. Curriculum patches GRPO's inversion (H6) — 🔄 hypothesis registered, sweep running
 
 - The paper conjectures GRPO's w(p) inversion at p→1 drives distribution

@@ -170,3 +170,25 @@ def sample_task(level: int, rng: random.Random) -> MazeTask:
 def sft_example(level: int, rng: random.Random) -> tuple[list[int], list[int]]:
     task = sample_task(level, rng)
     return task.prompt, task.solution + [EOS]
+
+
+def simulate_prefix(grid: np.ndarray, response: list[int]) -> tuple[int, tuple]:
+    """Longest legal move prefix of a response and the cell it reaches.
+
+    Returns (n_legal_moves, final_pos).  Stops at the first illegal move,
+    non-move token, or EOS.  A rollout's legal prefix is always a valid path
+    from (1,1) to final_pos — the basis for hindsight goal relabeling.
+    """
+    size = grid.shape[0]
+    pos = (1, 1)
+    n = 0
+    for tok in response:
+        if tok not in MOVE_DELTA:
+            break
+        dx, dy = MOVE_DELTA[tok]
+        nxt = (pos[0] + dx, pos[1] + dy)
+        if not (0 <= nxt[0] < size and 0 <= nxt[1] < size) or grid[nxt] == 1:
+            break
+        pos = nxt
+        n += 1
+    return n, pos

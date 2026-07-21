@@ -143,7 +143,41 @@ manageable, so shrinking T just weakens the beneficial hard-prompt
 upweighting. Adaptive-T remains interesting only for regimes with very small
 groups or extreme p̂ spreads — deprioritized.
 
-## 5. Verification snippet
+## 5. Hindsight relabeling: manufacturing successes for the success-conditioned estimator
+
+MaxRL's Theorem 1 says the ML gradient is the expected score function
+*conditioned on success*. The estimator therefore learns **only from
+successes** — which is precisely why K=0 groups are dead weight. Hindsight
+Experience Replay (HER) offers the complementary move: a failed trajectory is
+a *success for the goal it actually reached*. Where task structure admits
+relabeling (goal-conditioned tasks, nested prefixes), each dead group can be
+converted into a live group for an easier related task, at zero extra
+generation cost.
+
+On the skill-chain testbed (a failed level-l rollout with correct prefix j is
+a success of the nested level-j task; relabel dead groups to the deepest
+prefix achieved, apply the same success-conditioned weights):
+
+| config | final (5 seeds) | AUC | relabeled groups |
+|---|---|---|---|
+| uniform+maxrl | 0.966 | 0.653 | 0 |
+| **uniform+maxrl+hindsight** | 0.978 | **0.878** | 145 |
+| advmass+maxrl | 0.979 | 0.704 | 0 |
+| **advmass+maxrl+hindsight** | 0.984 | **0.883** | 129 |
+
+**Largest single improvement found in this project** — bigger than the
+teacher itself on learning speed (AUC +0.22 vs +0.05), and stacking with it.
+Interpretation: the teacher *avoids* spending compute beyond the frontier;
+hindsight *recycles* whatever still lands there. Together they make the
+frontier band effectively wider.
+
+Bias caveat: the relabeled group is conditioned on the achieved outcome, so
+it is not an unbiased estimator of the relabeled task's truncated-ML gradient
+(same status as HER's auxiliary goals). Empirically it helps uniformly here;
+at LLM scale the analogue is goal/prefix relabeling where verifiers admit it
+(maze goals, sub-goals in multi-step proofs, partial-credit unit tests).
+
+## 6. Verification snippet
 
 ```python
 import numpy as np
