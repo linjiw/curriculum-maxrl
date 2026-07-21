@@ -173,6 +173,26 @@ divergence is systematic: GRPO decays coverage in every seed (pass@8 mean
 coverage-collapse dynamic reproduced at 1.26M scale, with our addition that
 a curriculum widens the gap in both directions.
 
+## 2c. Baseline head-to-head + regime map (V5, matched generation budget)
+
+Against DAPO-style dynamic sampling (redraw until 0<K<N, paying for every
+draw), 5 seeds, 3 task-pool regimes — AUC:
+
+| regime | uniform | DAPO | teacher | **teacher+hindsight** |
+|---|---|---|---|---|
+| easy-heavy | 0.946 | 0.929 | 0.953 | **0.975** |
+| balanced | 0.734 | 0.825 | 0.784 | **0.931** |
+| frontier-heavy | 0.000 | 0.000 | 0.000 | **0.928** |
+
+The frontier-heavy row is categorical: with max pool pass rate 10⁻⁵, uniform,
+DAPO, and the plain teacher all flatline at exactly 0 — reallocating compute
+among unlearnable tasks cannot help. Only hindsight *creates* signal: traced,
+it relabels dead groups to prefix tasks (inventing the missing curriculum
+below the given pool), ignites in-pool learnability within ~400 groups, then
+goes nearly silent as natural successes take over. It is a cold-start
+igniter, not a permanent crutch. DAPO helps only in the balanced regime and
+is subsumed by teacher+hindsight everywhere at equal compute.
+
 ## 3. Validated cross-cutting findings
 
 - **Complementarity (H3):** in beyond-frontier-heavy regimes each ingredient alone

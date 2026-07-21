@@ -457,9 +457,14 @@ wasted compute into live MaxRL groups:</p>
 <p>Division of labor: the <strong>teacher avoids</strong> spending compute beyond the frontier;
 <strong>hindsight salvages</strong> whatever still fails there. In the hard 16-level regime hindsight
 alone (0.970) even beats the teacher alone (0.961), and the combination stays best (0.978).
-Caveat: relabeled groups are HER-style auxiliary terms, not unbiased truncated-ML gradients,
-and the toy's monotone weight-scale trend won't survive real models — the GPU maze run
-(<code>--hindsight</code>) is queued.</p>
+Two later validation results sharpened this: <strong>the hindsight gradient is exact
+on-structure</strong> — per-group cosine to the true success-conditioned ML gradient equals that
+of unbiased fresh groups (0.956 vs 0.958), and the mean relabeled gradient converges to cosine
+1.000 (Prop. 6 + V1); and in a <strong>frontier-heavy regime</strong> (max pool pass rate 10⁻⁵)
+uniform, DAPO dynamic sampling, and the plain teacher all flatline at exactly 0 while
+teacher+hindsight reaches 0.98 — reallocating compute among unlearnable tasks cannot help;
+hindsight <em>creates</em> the missing signal by inventing the curriculum below the pool,
+igniting learnability within ~400 groups, then going silent as natural successes take over.</p>
 
 <h3>Honest negatives &amp; open items</h3>
 <table>

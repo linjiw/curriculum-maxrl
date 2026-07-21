@@ -82,6 +82,44 @@ mechanism is safe but redundant on this testbed. Prediction for the GPU
 A/B/C: feedback matters only if natural successes lag relabeled competence
 (long-horizon regimes); treat C ≤ B on the maze as consistent with this.
 
+## V5 — Head-to-head vs DAPO dynamic sampling + regime map (`run_baselines.py`)
+
+Matched *generation* budget (3200 groups, discarded draws count), 5 seeds.
+DAPO-style dynamic sampling = redraw prompts until the group is live
+(0 < K < N), paying for every draw. Three task-pool regimes:
+
+| regime | uniform+maxrl | dapo+maxrl | teacher+maxrl | **teacher+maxrl+hindsight** |
+|---|---|---|---|---|
+| easy-heavy (levels 1–6), AUC | 0.946 | 0.929 | 0.953 | **0.975** |
+| balanced (1–12), AUC | 0.734 | 0.825 | 0.784 | **0.931** |
+| frontier-heavy (5–12), AUC | 0.000 | 0.000 | 0.000 | **0.928** |
+| frontier-heavy, final | 0.000 | 0.000 | 0.000 | **0.981** |
+
+**Findings:**
+
+1. **The full method dominates every regime**, and its margin *grows with
+   difficulty*: +0.03 AUC easy-heavy, +0.11 vs best baseline balanced,
+   and **0.93 vs 0.00 frontier-heavy**.
+2. **The frontier-heavy result is categorical, not incremental.** With max
+   initial pool pass rate 10⁻⁵, the expected number of live groups in the
+   whole budget is ≈0.5 — uniform, DAPO, and the plain teacher all flatline
+   at exactly 0 because there is *nothing to sample toward*: DAPO's redraws
+   and the teacher's predictions both only reallocate compute among tasks
+   none of which can produce a success. Only hindsight *creates* signal.
+3. **The bootstrapping mechanism, traced:** in the first ~140 groups
+   hindsight relabels dead groups to prefix tasks (61 below the pool — i.e.
+   it *invents the missing curriculum* below the given distribution — and
+   81 in-pool); those prefix gradients raise in-pool pass rates into
+   learnability; by draw 400 there are already 257 live groups and normal
+   MaxRL takes over; hindsight then goes almost silent (81→81 relabels from
+   draw 800 to 3200). It is a cold-start igniter, not a永-running crutch.
+4. **DAPO comparison nuance:** dynamic sampling helps in the balanced regime
+   (0.825 vs 0.734 uniform — its redraws effectively concentrate on live
+   tasks) but *hurts* in easy-heavy (0.929, discarding all-pass groups
+   wastes budget that uniform spends on still-useful gradients) and does
+   nothing in frontier-heavy. The teacher-with-hindsight subsumes its
+   benefit in every regime at the same compute.
+
 ## Consolidated design updates
 
 1. **Posterior decay 0.9 → 0.7** in the teachers and verl
