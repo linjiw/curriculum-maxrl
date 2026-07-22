@@ -126,6 +126,62 @@ python3 frontier_rl/examples/run_gym_benchmark.py     # gymnasium benchmark (~10
   level, but its guarantees are for the MaxRL weights; if you swap in a PPO
   update keep the weights as advantages and stay near-on-policy.
 
+## Design: one schedule, five execution shapes
+
+The algorithm is deliberately factored so each piece can be swapped to match
+the training regime without touching the others — the flexibility is the
+design, not an accident:
+
+| training regime | teacher variant | evidence stream | hindsight | validated on |
+|---|---|---|---|---|
+| episodic groups, fixed task pool (RLVR/LLM prompts) | `FrontierTeacher` (Beta rows, Thompson) | group (task, K of N) | dense relabel via `TaskSpace.relabel` | skill chain, maze GPU, verl integration |
+| episodic groups, procedural tasks | `StreamingFrontierTeacher` (kernel posterior) | (difficulty, K of N) | same | continuous-goal reach |
+| goal-conditioned control (gym/robotics) | `FrontierTeacher` over goal bins | group | relabel + conditioning rewrite | gridworld, MountainCar, CartPole |
+| massively parallel sim (IsaacLab, 4096 envs) | `FrontierBinTeacher` (vectorized, evidence-scaled decay, deterministic optimism) | per-reset Bernoulli stream | statistics-half only (occupancy credit) | adapter + unit tests; SONIC design doc |
+| dense-reward PPO | any of the above with `utility="learnability"` | termination flag as verifier | usually skip (dense reward is the partial credit) | SONIC_RESPONSE.md analysis |
+
+The swap points and what fixes each choice:
+
+- **utility** — `advmass` when a real group size N exists (the band is then
+  *derived*, peak ≈ ln N/N); `learnability` when evidence is a reset/hazard
+  stream with no N (SONIC Q2).
+- **posterior** — Beta rows for fixed pools; kernel over a difficulty axis
+  for procedural sources; vectorized arrays with half-life-in-episode-
+  equivalents decay when throughput varies by orders of magnitude (Q4).
+- **optimism** — Thompson when stochasticity is fine; `mean + k·std` under
+  determinism guardrails (Q3). Both validated equivalent when a floor exists.
+- **γ** — 4 on tight chains (compounding), 1 everywhere else (measured,
+  including the negative transfer on broad pools).
+- **hindsight** — full trajectory relabel where the env verifies exactly and
+  conditioning can be rewritten; statistics-only credit where it can't
+  (on-policy PPO); off where dense reward already carries partial credit.
+
+## IsaacLab / massively-parallel sim adapter
+
+`adapters/isaaclab_curriculum.py` provides `FrontierBinTeacher`, mapping the
+teacher onto IsaacLab's ManagerBasedRLEnv pattern (verified against a
+production humanoid-tracking fork): task bins live in the *command manager*,
+success lives in the *termination manager*, and the teacher consumes the
+**reset stream** — every episode reset is one Bernoulli observation
+(bin, terminated-early?). No groups needed; no isaaclab import required (the
+curriculum-term wrapper imports it lazily), so the module unit-tests on CPU.
+
+```python
+teacher = FrontierBinTeacher(n_bins=n_motion_bins, utility="learnability",
+                             decay_half_life=2048)   # episode-equivalents
+# termination hook (each step or on resets):
+teacher.observe_resets(bin_of_env[reset_ids], terminated_early[reset_ids])
+# command hook (assigning tasks to reset envs):
+new_bins = teacher.sample_bins(len(reset_ids))
+```
+
+Key adaptations for the parallel-sim regime, each traced to the SONIC
+analysis: evidence-scaled decay (half-life invariant to env count — exact:
+10 successes age to 5.0 after one half-life of events), deterministic
+optimism bonus, learnability default, and a `max_prob` tripwire instead of a
+shaping cap. See `SONIC_RESPONSE.md` for the full design rationale including
+the closed-loop threshold-curriculum stability rules.
+
 ## Streaming / procedural task sources
 
 `streaming.py` provides `StreamingFrontierTeacher` for sources with **no

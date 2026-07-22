@@ -680,6 +680,37 @@ robotics reach tasks: swap position bins for end-effector distance bands and the
 over. The ordering <em>uniform &lt; teacher &lt; teacher+hindsight</em> holds on every
 environment tested.</p>
 
+<h3>Real training curves — performance rising while the curriculum walks</h3>
+<figure>
+  <div class="chart-card" id="curvecard">
+    <p class="chart-title">Left: mean pass rate over training (line = seed mean, band = seed min–max).
+    Right: the teacher's sampling distribution over the same run — darker = more sampling mass.</p>
+    <div class="slider-row">
+      <label for="envSel">Environment</label>
+      <select id="envSel" style="padding:5px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface-1);color:var(--text-primary)">
+        <option value="skill_chain">Skill chain</option>
+        <option value="grid_reach">Gridworld reach</option>
+        <option value="mountaincar">MountainCar</option>
+        <option value="cartpole">CartPole</option>
+      </select>
+    </div>
+    <div class="legend">
+      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-2)"></span>uniform</span>
+      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-1)"></span>teacher</span>
+      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-6)"></span>teacher + hindsight</span>
+    </div>
+    <svg id="curvesvg" viewBox="0 0 800 400" role="img" aria-label="Training curves for three methods with seed bands, next to a heatmap of the teacher's sampling distribution over tasks and time"></svg>
+  </div>
+  <figcaption>
+    Data exported from the actual runs (<code>frontier_rl/examples/export_curves.py</code>,
+    <code>docs/curves.json</code>) — not a mock. The heatmap makes the mechanism visible: the dark
+    band of sampling mass starts on easy tasks and <em>walks rightward</em> (harder) as the policy
+    improves — performance and curriculum are two views of one process. On MountainCar the
+    per-bin-parameter variant is shown (the flag needs the shared policy, see the case study
+    below), so teacher gains are muted there — the honest picture.
+  </figcaption>
+</figure>
+
 <div class="card">
   <h3>Case study: MountainCar's flag, solved — with clean controls</h3>
   <p>With a <em>shared</em> goal-conditioned policy (150 steps, 3 seeds, weak tabular learner):
@@ -1295,7 +1326,87 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   });
   drawAnim();
 
-  function drawAll() { drawChart1(); drawChart2(); drawChart3(); drawAnim(); }
+  /* ---------- real training curves + curriculum heatmap ---------- */
+  var CURVES = null;
+  function loadCurves() {
+    fetch("curves.json").then(function (r) { return r.json(); })
+      .then(function (d) { CURVES = d; drawCurves(); })
+      .catch(function () { /* file:// or offline — leave panel empty */ });
+  }
+  function drawCurves() {
+    var svg = document.getElementById("curvesvg");
+    if (!svg || !CURVES) return;
+    svg.textContent = "";
+    drawCurves._labelYs = [];
+    var envName = document.getElementById("envSel").value;
+    var env = CURVES[envName];
+    if (!env) return;
+    var W5 = 800, H5 = 400;
+    // left panel: curves
+    var L = { top: 16, left: 52, w: 360, h: 320 };
+    var methods = [["uniform", "--series-2"], ["teacher", "--series-1"], ["hindsight", "--series-6"]];
+    var maxLen = 0, maxV = 0;
+    methods.forEach(function (mm) {
+      var e = env.methods[mm[0]];
+      maxLen = Math.max(maxLen, e.mean.length);
+      maxV = Math.max(maxV, Math.max.apply(null, e.hi));
+    });
+    maxV = Math.min(Math.ceil(maxV * 10) / 10 + 0.05, 1);
+    function sx(i) { return L.left + L.w * i / Math.max(maxLen - 1, 1); }
+    function sy(v) { return L.top + L.h * (1 - v / maxV); }
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
+      var v = f * maxV;
+      svg.appendChild(el("line", { x1: L.left, x2: L.left + L.w, y1: sy(v), y2: sy(v), stroke: cssVar("--grid"), "stroke-width": 1 }));
+      svg.appendChild(el("text", { x: L.left - 6, y: sy(v) + 4, "text-anchor": "end" }, v.toFixed(2)));
+    });
+    methods.forEach(function (mm) {
+      var e = env.methods[mm[0]], color = cssVar(mm[1]);
+      var band = "";
+      for (var i = 0; i < e.mean.length; i++) band += (i ? "L" : "M") + sx(i).toFixed(1) + "," + sy(e.hi[i]).toFixed(1);
+      for (i = e.mean.length - 1; i >= 0; i--) band += "L" + sx(i).toFixed(1) + "," + sy(e.lo[i]).toFixed(1);
+      svg.appendChild(el("path", { d: band + "Z", fill: color, opacity: 0.12, stroke: "none" }));
+      var d = "";
+      for (i = 0; i < e.mean.length; i++) d += (i ? "L" : "M") + sx(i).toFixed(1) + "," + sy(e.mean[i]).toFixed(1);
+      svg.appendChild(el("path", { d: d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
+      var last = e.mean[e.mean.length - 1];
+      var ly = sy(last) + 4;
+      while (drawCurves._labelYs.some(function (y) { return Math.abs(y - ly) < 14; })) ly += 14;
+      drawCurves._labelYs.push(ly);
+      svg.appendChild(el("text", { x: sx(e.mean.length - 1) + 4, y: ly, class: "dl" }, last.toFixed(2)));
+    });
+    svg.appendChild(el("line", { x1: L.left, x2: L.left + L.w, y1: L.top + L.h, y2: L.top + L.h, stroke: cssVar("--baseline") }));
+    svg.appendChild(el("text", { x: L.left + L.w / 2, y: H5 - 22, "text-anchor": "middle" },
+      "training step (eval every " + env.eval_every + ")"));
+    svg.appendChild(el("text", { x: 14, y: L.top + L.h / 2, transform: "rotate(-90 14 " + (L.top + L.h / 2) + ")", "text-anchor": "middle" }, "mean pass rate"));
+    // right panel: teacher-distribution heatmap (hindsight arm's teacher)
+    var Hm = { left: 490, top: 16, w: 280, h: 320 };
+    var src = env.methods.hindsight.dist || env.methods.teacher.dist;
+    if (src && src.length) {
+      var Tn = src[0].length, S = src.length;
+      var cw = Hm.w / S, ch = Hm.h / Tn;
+      var vmax = 0;
+      src.forEach(function (col) { col.forEach(function (v) { vmax = Math.max(vmax, v); }); });
+      for (var s = 0; s < S; s++) {
+        for (var t = 0; t < Tn; t++) {
+          var v = src[s][t] / vmax;
+          if (v < 0.04) continue;
+          svg.appendChild(el("rect", { x: Hm.left + s * cw, y: Hm.top + t * ch,
+            width: Math.max(cw - 0.5, 0.5), height: Math.max(ch - 0.5, 0.5),
+            fill: cssVar("--series-1"), opacity: Math.min(0.15 + 0.85 * v, 1) }));
+        }
+      }
+      svg.appendChild(el("rect", { x: Hm.left, y: Hm.top, width: Hm.w, height: Hm.h,
+        fill: "none", stroke: cssVar("--grid") }));
+      svg.appendChild(el("text", { x: Hm.left + Hm.w / 2, y: H5 - 22, "text-anchor": "middle" }, "training step →"));
+      svg.appendChild(el("text", { x: Hm.left - 8, y: Hm.top + 10, "text-anchor": "end" }, "easy"));
+      svg.appendChild(el("text", { x: Hm.left - 8, y: Hm.top + Hm.h, "text-anchor": "end" }, "hard"));
+      svg.appendChild(el("text", { x: Hm.left + Hm.w / 2, y: Hm.top - 4, "text-anchor": "middle", class: "dl" }, "teacher sampling mass"));
+    }
+  }
+  document.getElementById("envSel").addEventListener("change", drawCurves);
+  loadCurves();
+
+  function drawAll() { drawChart1(); drawChart2(); drawChart3(); drawAnim(); drawCurves(); }
   document.getElementById("tSlider").addEventListener("input", drawChart1);
   document.getElementById("nSlider").addEventListener("input", drawChart2);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
