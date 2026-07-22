@@ -279,6 +279,40 @@ methodology (measure q, predict reach geometrically) is itself a
 contribution — it predicted both the stall and where capacity's gain would
 land (throughput, not depth-execution).
 
+## P1: efficiency of the long-horizon and wide checkpoints
+
+Samples-to-target-coverage (same protocol as E4), plus the deep-frontier
+coverage the training metrics can't see:
+
+| level (target) | GRPO 2400s | champion 2400s | long 9600s | wide 2400s |
+|---|---|---|---|---|
+| 2 (85%) | 7.5 | 6.4 | >64 † | **1.3** |
+| 3 (75%) | 39.3 | 14.8 | **4.0** | 28.9 |
+| 4 (45%) | 6.7 | 12.8 | **3.2** | 7.4 |
+| 5 (25%) | 64.0 | 5.8 | 6.1 | 64.0 |
+| **L6 coverage @ k=64** | 0.125 | 0.188 | 0.312 | **0.438** |
+
+† the long run's L2 regressed below 85% even at k=64 — the frontier-following
+teacher had moved on from shallow levels by step 2381 and the floor alone
+didn't fully maintain them (an ALP-retention data point at long horizons).
+
+Two findings:
+
+1. **The deep frontier is moving after all — in coverage currency.** Training
+   pass@1 said L6 ≈ 0.01–0.05 everywhere; coverage@64 tells a different story:
+   GRPO 0.125 → champion 0.188 → long 0.312 → **wide 0.438 (3.5× GRPO)**.
+   The wide model at matched 2400 s puts nearly half of L6 within reach of
+   64-sample inference with a verifier. The frontier march did not stall —
+   it moved into the tail of the distribution where pass@1 can't see it.
+   This is precisely the paper's diversity/coverage thesis at work in our
+   own stack.
+2. **Training regime specializes the inference profile.** The long run
+   dominates mid-levels (L3/L4 at 4.0/3.2 samples — 10×/2× vs GRPO) but paid
+   for it at L2; the wide model dominates shallow+deep (L2 at 1.3, L6 at
+   0.438) with a mid-level dip. Budget shape (duration vs capacity) is itself
+   a curriculum-outcome knob. For deployment: pick the checkpoint by the
+   difficulty band you'll serve — or ensemble the two.
+
 ## F1/F2 verdicts (final sweep)
 
 **F1 — level 6 is NOT (just) a duration question.** 4× budget (9600 s, 2381
