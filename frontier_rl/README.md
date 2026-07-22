@@ -126,10 +126,21 @@ python3 frontier_rl/examples/run_gym_benchmark.py     # gymnasium benchmark (~10
   level, but its guarantees are for the MaxRL weights; if you swap in a PPO
   update keep the weights as advantages and stay near-on-policy.
 
-## What this does NOT do
+## Streaming / procedural task sources
 
-- Continuous task spaces without binning (subclass the teacher with a
-  parametric density — ALP-GMM-style — if you need it).
+`streaming.py` provides `StreamingFrontierTeacher` for sources with **no
+fixed task pool** (every task fresh: generated mazes, sampled goals,
+synthetic problems with a difficulty parameter d ∈ [0,1]). It replaces the
+per-task Beta rows with a kernel (Nadaraya-Watson) pass-rate posterior over
+the difficulty axis + Thompson sampling on a difficulty grid, with optional
+isotonic projection when d orders pass rates. Validated on a continuous-goal
+reach task (5 seeds, matched budgets): streaming **matches the discrete-bin
+teacher exactly** (AUC 0.684 vs 0.684; final 0.922 vs 0.919; uniform 0.648)
+— you lose nothing by dropping the pool assumption. Use it when your
+task generator has a difficulty dial; use bins when you have a fixed
+prompt set.
+
+## What this does NOT do
 - Replace your RL optimizer: `Policy.update` is yours; this package decides
   *what to train on and with what advantage weights*, not how to descend.
 - GRPO-style std-normalized advantages under a curriculum — measured to

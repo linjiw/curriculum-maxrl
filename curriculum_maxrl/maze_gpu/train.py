@@ -286,6 +286,9 @@ def main():
                     help="save the final model state_dict to this path")
     ap.add_argument("--teacher-power", type=float, default=1.0,
                     help="sample levels ∝ utility^power (V6: 4 for ordered levels)")
+    ap.add_argument("--d-model", type=int, default=128,
+                    help="model width (capacity probe: per-step legality ceiling)")
+    ap.add_argument("--n-layers", type=int, default=6)
     ap.add_argument("--out", type=str, default=None)
     ap.add_argument("--sft-ckpt", type=str, default="sft_warmstart.pt")
     args = ap.parse_args()
@@ -294,7 +297,7 @@ def main():
     rng = random.Random(args.seed)
     np.random.seed(args.seed)
 
-    model = TinyTransformer().to(DEVICE)
+    model = TinyTransformer(d_model=args.d_model, n_layers=args.n_layers).to(DEVICE)
     n_params = sum(p.numel() for p in model.parameters())
     print(f"model params: {n_params/1e6:.2f}M", flush=True)
 

@@ -226,6 +226,35 @@ uniform on every metric. Coverage ties between the two teacher variants
 (0.335 vs 0.338). The fixed-prompt-set regime (GSM8K) remains where dense
 hindsight should show CPU-like compounding.
 
+## Depth-mechanism study: the stall at distance 16, diagnosed
+
+Probes on the long-horizon checkpoint answer F1's open question:
+
+- **H-a (move budget binds): REFUTED.** Doubling the budget adds zero
+  successes (L6: 0/128 both ways); 0/128 rollouts die by running out of
+  budget — 124/128 die on an *illegal move*, 4 on premature EOS.
+- **H-c (representation reach): CONFIRMED, quantitatively.** Per-step move
+  legality is ≈0.87 after the opening (1.00 at move 0, 0.43–0.84 in moves
+  2–10). Reach is therefore geometric: mean legal prefix 6.4–7.7, p90 ≈
+  8–14, max ever observed 12–14 — matching E[reach] ≈ q/(1−q) ≈ 6.7 at
+  q=0.87. **P(reach 16) ≈ q¹⁶ ≈ 1–3%**: the frontier march stalls exactly
+  where compounding per-step error says it must.
+- **Contributing factor:** SFT exposure was geometric (decay 0.5), so only
+  1.6% of warmstart examples had length ≥ 16; RL+hindsight then mostly
+  reinforces shallow segments (relabels land at depth 6–10, the reach
+  distribution's mass).
+
+**Conclusion: the stall is a per-step-accuracy (capacity/supervision)
+ceiling, not a curriculum failure.** The curriculum correctly walked the
+frontier to the edge of what the policy can execute; going deeper requires
+raising per-step legality (q=0.87 → ≥0.95 for distance 16). This is the
+compounding-error regime imitation learning knows well — and it sharpens
+the paper story: a teacher can place signal optimally, but *cannot create
+per-step competence beyond the model's ceiling*. Candidate fixes, in test
+order: (1) capacity probe (wider model, same schedule — decisive single
+run), (2) denser hindsight supervision (train all prefixes of a relabeled
+trajectory, not just the endpoint).
+
 ## F1/F2 verdicts (final sweep)
 
 **F1 — level 6 is NOT (just) a duration question.** 4× budget (9600 s, 2381
