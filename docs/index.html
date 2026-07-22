@@ -240,20 +240,28 @@ curriculum's job description</strong> — is the origin of everything on this pa
 
 <div class="grid2">
   <div class="card">
-    <h3>Insight 1 → the teacher</h3>
+    <h3>Channel 1 → the teacher (waste avoidance)</h3>
     <p>The estimator learns only from successes (Theorem 1 of the paper), so its expected
     signal per prompt has a closed form — and that form, 2·(pass@N − pass@1), is a
     zone-of-proximal-development functional the estimator was computing implicitly all along.
-    Sampling by it is the curriculum. Zero new hyperparameters: N sets the band.</p>
+    Sampling by it is the curriculum. Bounded by the oracle ceiling: allocation only
+    redistributes signal that exists.</p>
   </div>
   <div class="card">
-    <h3>Insight 2 → the recycler</h3>
+    <h3>Channel 2 → the recycler (signal creation)</h3>
     <p>If the estimator only learns from successes, <em>manufacture successes</em>. A failed
-    rollout is a verified success for the goal it actually reached; relabeling dead groups
-    yields gradients we prove (and measure) to be as exact as fresh unbiased ones. This is the
-    part no sampling policy — not even an oracle — can replicate.</p>
+    rollout is a verified success for the goal it actually reached; relabeled gradients measure
+    as exact as fresh unbiased ones. The only channel that breaks the oracle ceiling — and its
+    gain scales with how much a recycled skill can <em>compound</em> (+0.22 AUC on fixed task
+    sets, +0.01 on one-shot streams).</p>
   </div>
 </div>
+<p>There is a third, silent channel: <strong>objective safety</strong>. The identical teacher
+grew coverage under MaxRL in every seed and <em>amplified GRPO's collapse</em> in every seed —
+the objective underneath decides whether a curriculum is safe at all (section 4). Together:
+<strong>the teacher allocates, hindsight creates, the objective decides whether either is
+safe.</strong> The full evidence decomposition, regime map, and practitioner playbook are in
+<a href="https://github.com/linjiw/curriculum-maxrl/blob/main/EVIDENCE.md">EVIDENCE.md</a>.</p>
 
 <!-- ============================================================ -->
 <h2 id="maxrl">1 · How MaxRL works, in three steps</h2>

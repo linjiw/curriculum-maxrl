@@ -119,6 +119,34 @@ floor; live groups train with unmodified MaxRL advantages; dead groups are
 densely relabeled to their achieved sub-goals. The estimator is never
 modified, so every unbiasedness result of the base paper carries over.
 
+## 2b. The three channels (how to think about the method)
+
+Everything the method does flows through three channels, and every experiment
+we ran gains its effect through exactly one of them:
+
+**Channel 1 — waste avoidance (the teacher).** Don't roll out where the
+estimator will emit nothing. Worth a consistent but bounded +0.05–0.08 AUC —
+bounded by the oracle ceiling, because allocation can only redistribute
+signal that exists (a perfect sampler collects just 0.4% more advantage mass
+than our posterior).
+
+**Channel 2 — signal creation (hindsight).** Manufacture verified successes
+from failures already paid for. The only channel that breaks the oracle
+ceiling and the only one that scores in frontier-heavy regimes (0 → 0.98).
+Its gain is proportional to how much a relabeled skill can *compound*:
++0.22 AUC on fixed task sets, +0.01 on one-shot task streams — the single
+most important regime variable we found.
+
+**Channel 3 — objective safety (MaxRL weighting underneath).** Channels 1–2
+are not objective-agnostic add-ons: the identical teacher grew coverage under
+MaxRL in every seed and amplified GRPO's collapse in every seed. The
+objective decides whether a curriculum is safe at all.
+
+One line: **the teacher allocates, hindsight creates, the objective decides
+whether either is safe.** The regime map, practitioner playbook, and graded
+claim inventory live in EVIDENCE.md; the interactive version of this section
+(a live frontier-walk simulation) is on the project site.
+
 ## 3. What problem this actually resolves
 
 **Compute allocation in RLVR.** Rollout generation dominates the cost of RL
