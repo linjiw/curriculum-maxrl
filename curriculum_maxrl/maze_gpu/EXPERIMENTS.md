@@ -206,6 +206,26 @@ solvable subset, buying pass@1 on mid levels at the cost of the tail
 (L5: 0.25 vs our 0.56 at k=64). Note these are single-checkpoint numbers
 (seed 0); the multiplier pattern, not the exact values, is the finding.
 
+## F1/F2 verdicts (final sweep)
+
+**F1 — level 6 is NOT (just) a duration question.** 4× budget (9600 s, 2381
+steps): mean climbs 0.258→0.269 and level 5 doubles (0.17→0.23–0.25), but
+level 6 stays ≈0.01–0.02 the entire run. The frontier march decelerates
+hard between distance 14 and 16. Per the pre-registered decision tree, the
+mechanism needs revision at depth: candidates are (a) move budgets that
+scale with achieved depth (the 4·dist+8 cap may bind exploration wander),
+(b) hindsight-min-depth curriculum, (c) the MountainCar transfer lesson —
+check whether tile/prompt representations even share parameters across
+these depths. CPU-validate before spending GPU.
+
+**F2 — γ=4 does NOT transfer to the maze (as pre-registered possible).**
+AUC 0.231 / best 0.254 vs γ=1's 0.236/0.269. Consistent with the V6b ODE
+account: compounding drives the γ effect, and 13 broad distance-levels with
+a noisy 1.26M policy compound far less than 36 tight chain tasks with exact
+gradients. Decision: γ stays 1 as GPU/verl default; documented as
+CPU/chain-structured effect. (This is the third CPU→GPU transfer test; two
+transferred, one didn't — the ODE model correctly predicted *which* one.)
+
 ### Hypotheses for the matched-clock analysis
 
 - **H6 (GRPO inversion fix).** The paper (Section 5, footnote 3) shows GRPO's
