@@ -20,6 +20,7 @@
   --series-2:      #008300;  /* green  — RL / reference */
   --series-3:      #e87ba4;  /* magenta— GRPO */
   --series-4:      #eda100;  /* yellow — ML */
+  --series-6:      #eb6834;  /* orange — hindsight arm */
   --seq-250:       #86b6ef;
   --seq-350:       #5598e7;
   --seq-450:       #2a78d6;
@@ -41,6 +42,7 @@
   --series-2:      #008300;
   --series-3:      #d55181;
   --series-4:      #c98500;
+  --series-6:      #d95926;
   --seq-250:       #b7d3f6;
   --seq-350:       #86b6ef;
   --seq-450:       #5598e7;
@@ -63,6 +65,7 @@
     --series-2:      #008300;
     --series-3:      #d55181;
     --series-4:      #c98500;
+    --series-6:      #d95926;
     --seq-250:       #b7d3f6;
     --seq-350:       #86b6ef;
     --seq-450:       #5598e7;
@@ -395,6 +398,34 @@ the teacher and the objective share the same compute knob.</p>
     “learnability” p(1−p) — exactly our utility at N=1, and (we prove) exactly ½ the advantage
     mass of the RLOO estimator. The learnability-curriculum literature and the estimator algebra
     are the same object seen from two sides.
+  </figcaption>
+</figure>
+
+<h3>Watch it work: the frontier walk, animated</h3>
+<figure>
+  <div class="chart-card" id="animcard">
+    <p class="chart-title">Live simulation — 24 tasks from easy to impossible, three training schedules</p>
+    <p class="chart-sub">Each bar is a task's pass rate; the ▼ markers show where this step's rollout groups went.
+    Watch <em>uniform</em> waste groups at both ends, the <em>teacher</em> hug the moving frontier, and
+    <em>+hindsight</em> convert dead groups (flashes) into progress on easier tasks.</p>
+    <div class="slider-row">
+      <button id="animBtn" type="button" style="padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:var(--surface-1);color:var(--text-primary);cursor:pointer;font-weight:600">▶ Play</button>
+      <button id="animReset" type="button" style="padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer">Reset</button>
+      <span class="val" id="animStep">step 0</span>
+    </div>
+    <div class="legend">
+      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-2)"></span>uniform</span>
+      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-1)"></span>teacher</span>
+      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-6, #eb6834)"></span>teacher + hindsight</span>
+    </div>
+    <svg id="anim" viewBox="0 0 800 460" role="img" aria-label="Animated simulation of three training schedules over a row of tasks ordered by difficulty, showing sampling positions and pass-rate growth per step"></svg>
+  </div>
+  <figcaption>
+    Same simulation math as the CPU testbed (Beta-posterior teacher, u(p)=pass@N−pass@1 utility,
+    dead-group relabeling to the deepest reachable easier task). The mean-pass counters update
+    live; by ~150 steps the ordering uniform &lt; teacher &lt; teacher+hindsight emerges the same
+    way it does in every real experiment. Reduced-motion users: the Play button steps the
+    simulation; nothing animates unprompted.
   </figcaption>
 </figure>
 
@@ -1098,7 +1129,165 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
     t.appendChild(tb); host.appendChild(t);
   }
 
-  function drawAll() { drawChart1(); drawChart2(); drawChart3(); }
+  /* ---------- animated frontier-walk simulation ---------- */
+  var ANIM = (function () {
+    var T = 24, N = 12, LR = 0.16;
+    var rand = mulberry(42);
+    function mulberry(a) {
+      return function () {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        var t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    function mkState() {
+      // skill-chain-like: task i needs skills 0..i; skill quality in [0,1]
+      var s = [];
+      for (var i = 0; i < T; i++) s.push(0.45); // per-skill success ~0.45^depth: deep tasks truly dead
+      return { uniform: s.slice(), teacher: s.slice(), hind: s.slice(),
+               postA: ones(), postB: ones(), postA2: ones(), postB2: ones(),
+               step: 0, deadFlash: [] };
+    }
+    function ones() { var a = []; for (var i = 0; i < T; i++) a.push(1); return a; }
+    function passRates(skill) {
+      var p = [], acc = 1;
+      for (var i = 0; i < T; i++) { acc *= skill[i]; p.push(acc); }
+      return p;
+    }
+    function trainAt(skill, i, amount) {
+      for (var j = 0; j <= i; j++) skill[j] = Math.min(0.995, skill[j] + amount * (1 - skill[j]));
+    }
+    function betaSample(a, b) { // crude but fine for viz: mean + noise
+      var m = a / (a + b);
+      var v = Math.sqrt(m * (1 - m) / (a + b + 1));
+      return Math.min(0.999, Math.max(0.001, m + (rand() * 2 - 1) * 1.5 * v));
+    }
+    function util(p) { return Math.max((1 - Math.pow(1 - p, N)) - p, 0); }
+    function pick(weights) {
+      var s = 0; for (var i = 0; i < T; i++) s += weights[i];
+      var r = rand() * s;
+      for (var i = 0; i < T; i++) { r -= weights[i]; if (r <= 0) return i; }
+      return T - 1;
+    }
+    var st = mkState();
+    function stepOnce() {
+      st.step++;
+      st.deadFlash = [];
+      // uniform arm
+      for (var g = 0; g < 2; g++) {
+        var i = Math.floor(rand() * T);
+        var p = passRates(st.uniform)[i];
+        var K = binom(N, p);
+        if (K > 0) trainAt(st.uniform, i, LR * (1 - K / N));
+        st.lastUniform = i;
+      }
+      // teacher arm
+      for (g = 0; g < 2; g++) {
+        var w = [];
+        for (var t = 0; t < T; t++) w.push(0.9 * util(betaSample(st.postA[t], st.postB[t])) + 0.1 / T);
+        i = pick(w);
+        p = passRates(st.teacher)[i];
+        K = binom(N, p);
+        st.postA[i] = 1 + (st.postA[i] - 1) * 0.7 + K;
+        st.postB[i] = 1 + (st.postB[i] - 1) * 0.7 + (N - K);
+        if (K > 0) trainAt(st.teacher, i, LR * (1 - K / N));
+        st.lastTeacher = i;
+      }
+      // hindsight arm
+      for (g = 0; g < 2; g++) {
+        w = [];
+        for (t = 0; t < T; t++) w.push(0.9 * util(betaSample(st.postA2[t], st.postB2[t])) + 0.1 / T);
+        i = pick(w);
+        p = passRates(st.hind)[i];
+        K = binom(N, p);
+        st.postA2[i] = 1 + (st.postA2[i] - 1) * 0.7 + K;
+        st.postB2[i] = 1 + (st.postB2[i] - 1) * 0.7 + (N - K);
+        if (K > 0) { trainAt(st.hind, i, LR * (1 - K / N)); }
+        else {
+          // dead group: relabel to deepest prefix with decent per-skill quality
+          var pr = passRates(st.hind);
+          var j = 0;
+          for (t = i; t >= 0; t--) if (pr[t] > 0.15) { j = t; break; }
+          trainAt(st.hind, j, LR * 0.8);
+          st.deadFlash.push([i, j]);
+        }
+        st.lastHind = i;
+      }
+    }
+    function binom(n, p) {
+      var k = 0; for (var i = 0; i < n; i++) if (rand() < p) k++;
+      return k;
+    }
+    return {
+      get state() { return st; },
+      reset: function () { rand = mulberry(42); st = mkState(); },
+      step: stepOnce, T: T
+    };
+  })();
+
+  function drawAnim() {
+    var svg = document.getElementById("anim");
+    if (!svg) return;
+    svg.textContent = "";
+    var W4 = 800, rows = [["uniform", "--series-2"], ["teacher", "--series-1"], ["hind", "--series-6"]];
+    var names = { uniform: "uniform", teacher: "teacher", hind: "teacher + hindsight" };
+    var rowH = 140, top = 16, left = 130, iw = W4 - left - 30;
+    var st = ANIM.state, T = ANIM.T;
+    var bw = iw / T - 3;
+    rows.forEach(function (rr, ri) {
+      var key = rr[0], color = cssVar(rr[1]) || cssVar("--series-4");
+      var y0 = top + ri * rowH, plotH = 86;
+      var skill = st[key];
+      var p = (function (s) { var out = [], acc = 1; for (var i = 0; i < T; i++) { acc *= s[i]; out.push(acc); } return out; })(skill);
+      var mean = p.reduce(function (a, b) { return a + b; }, 0) / T;
+      svg.appendChild(el("text", { x: 8, y: y0 + 14, class: "dl" }, names[key]));
+      svg.appendChild(el("text", { x: 8, y: y0 + 32 }, "mean " + mean.toFixed(3)));
+      svg.appendChild(el("line", { x1: left, x2: left + iw, y1: y0 + plotH, y2: y0 + plotH, stroke: cssVar("--baseline"), "stroke-width": 1 }));
+      for (var i = 0; i < T; i++) {
+        var x = left + (iw / T) * i + 1.5;
+        var h = Math.max(p[i] * plotH, 1);
+        svg.appendChild(el("rect", { x: x, y: y0 + plotH - h, width: bw, height: h, rx: 3, fill: color }));
+      }
+      // sample markers
+      var lastKey = { uniform: "lastUniform", teacher: "lastTeacher", hind: "lastHind" }[key];
+      if (st[lastKey] != null) {
+        var mx = left + (iw / T) * st[lastKey] + 1.5 + bw / 2;
+        svg.appendChild(el("text", { x: mx, y: y0 + plotH + 16, "text-anchor": "middle", class: "dl" }, "▼"));
+      }
+      // hindsight relabel arcs
+      if (key === "hind") {
+        st.deadFlash.forEach(function (df) {
+          var xi = left + (iw / T) * df[0] + bw / 2, xj = left + (iw / T) * df[1] + bw / 2;
+          var midY = y0 + plotH + 30;
+          svg.appendChild(el("path", { d: "M" + xi + "," + (y0 + plotH + 18) + " Q" + ((xi + xj) / 2) + "," + midY + " " + xj + "," + (y0 + plotH + 18),
+            fill: "none", stroke: color, "stroke-width": 2, "stroke-dasharray": "4 3", opacity: 0.9 }));
+          svg.appendChild(el("text", { x: (xi + xj) / 2, y: midY + 12, "text-anchor": "middle" }, "relabel"));
+        });
+      }
+    });
+    svg.appendChild(el("text", { x: left, y: 452 }, "tasks: easy →"));
+    svg.appendChild(el("text", { x: left + iw, y: 452, "text-anchor": "end" }, "→ impossible"));
+    document.getElementById("animStep").textContent = "step " + ANIM.state.step;
+  }
+
+  var animTimer = null;
+  document.getElementById("animBtn").addEventListener("click", function () {
+    var btn = this;
+    if (animTimer) { clearInterval(animTimer); animTimer = null; btn.textContent = "▶ Play"; return; }
+    btn.textContent = "⏸ Pause";
+    animTimer = setInterval(function () {
+      ANIM.step(); drawAnim();
+      if (ANIM.state.step >= 300) { clearInterval(animTimer); animTimer = null; btn.textContent = "▶ Play"; }
+    }, 90);
+  });
+  document.getElementById("animReset").addEventListener("click", function () {
+    if (animTimer) { clearInterval(animTimer); animTimer = null; document.getElementById("animBtn").textContent = "▶ Play"; }
+    ANIM.reset(); drawAnim();
+  });
+  drawAnim();
+
+  function drawAll() { drawChart1(); drawChart2(); drawChart3(); drawAnim(); }
   document.getElementById("tSlider").addEventListener("input", drawChart1);
   document.getElementById("nSlider").addEventListener("input", drawChart2);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
