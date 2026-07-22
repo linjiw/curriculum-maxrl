@@ -162,6 +162,14 @@ Real, measured:
   gains landing on frontier tasks specifically.
 - **Coverage that grows instead of collapsing** (pass@k up in every seed
   where GRPO's falls).
+- **Inference-time sampling efficiency that grows with difficulty**: at
+  matched training compute, our checkpoint needs up to 11× fewer samples
+  than GRPO's to hit target coverage on the hardest evaluated level
+  (1.2×/2.7×/11× at levels 2/3/5) — the MaxRL paper's headline pattern
+  (2.3–19.2×, their Fig. 5) reproduced at 1.26M scale with the teacher on
+  top. GRPO's coverage curves also *flatten* at large k (saturating at
+  0.88/0.56 where ours reach 1.00/0.62): collapse expressed in inference
+  currency — extra samples stop helping.
 - **Frontier-heavy regimes go from impossible to solved** (0 → 0.98 at equal
   compute).
 - **Better than oracle allocation** when recycling is available (0.890 vs

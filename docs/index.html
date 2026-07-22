@@ -663,12 +663,19 @@ FrontierTrainer(MyEnv(), MyPolicy(), TrainerConfig(hindsight=True)).train(500)</
         <td>22–35% more steps at matched wall-clock, gains landing on frontier tasks</td></tr>
     <tr><td>Coverage grows instead of collapsing</td>
         <td>pass@8 ↑ 0.316→0.348 every seed (GRPO's ↓ 0.308→0.271 every seed)</td></tr>
+    <tr><td>Inference-time sampling efficiency vs GRPO (samples to target coverage, perfect verifier)</td>
+        <td>up to <strong>11×</strong> fewer samples on the hardest evaluated level — the speedup grows with difficulty (1.2× / 2.7× / 11× at levels 2/3/5)</td></tr>
     <tr><td>Frontier-heavy regimes: impossible → solved</td>
         <td>0.00 → 0.98 at equal compute (uniform, DAPO, and plain teacher all score exactly 0)</td></tr>
     <tr><td>Beats perfect allocation when recycling is available</td>
         <td>AUC 0.890 vs oracle 0.851</td></tr>
   </tbody>
 </table>
+<p class="footnote">The inference-efficiency pattern reproduces the MaxRL paper's headline
+(their Fig. 5: 2.3–19.2×) at 1.26M scale with our teacher on top; GRPO's coverage curves
+visibly <em>flatten</em> at large k (saturating at 0.88/0.56 where ours reach 1.00/0.62) —
+collapse expressed in inference currency: extra samples stop helping. Single-checkpoint
+numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
 
 <p><strong>The hidden benefits — quieter, arguably worth more:</strong></p>
 <div class="grid2">

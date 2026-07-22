@@ -183,6 +183,29 @@ sampling beyond the true frontier (dead-group rate would rise).
    frontier but one 2400 s budget doesn't cash it out at distance 16+.
    The efficiency study + longer runs are the follow-up.
 
+## Inference-efficiency study (E4, the paper's currency)
+
+Three matched-2400s checkpoints evaluated for samples-to-target-coverage
+(`eval_efficiency.py`, unbiased pass@k from 64 samples × 16 mazes/level):
+
+| level (target) | GRPO k* | MaxRL-uniform k* | ours (teacher+dense-hs) k* | **ours vs GRPO** |
+|---|---|---|---|---|
+| 2 (85%) | 7.5 | 7.2 | 6.4 | 1.2× |
+| 3 (75%) | 39.3 | 13.5 | 14.8 | **2.7×** |
+| 4 (45%) | 6.7 | 10.7 | 12.8 | 0.5× |
+| 5 (25%) | >64 → 64.0 | 10.5 | **5.8** | **11×** |
+
+Same qualitative shape as the MaxRL paper's Fig. 5, reproduced at 1.26M
+scale with our teacher on top: **the harder the level, the larger the
+speedup**, up to 11× at the deepest level where GRPO barely clears the
+target at k=64. GRPO's curves also *flatten* at large k (L2 saturates at
+0.88 vs our 1.00; L4 at 0.56) — coverage collapse visible in inference
+currency: more samples stop helping. The L4 reversal (GRPO 0.5×) is the
+flip side of the same phenomenon — GRPO's distribution sharpens onto its
+solvable subset, buying pass@1 on mid levels at the cost of the tail
+(L5: 0.25 vs our 0.56 at k=64). Note these are single-checkpoint numbers
+(seed 0); the multiplier pattern, not the exact values, is the finding.
+
 ### Hypotheses for the matched-clock analysis
 
 - **H6 (GRPO inversion fix).** The paper (Section 5, footnote 3) shows GRPO's

@@ -8,9 +8,9 @@
 |---|---|---|---|---|
 | E1 ✅ | ck_uniform_maxrl (2400 s + ckpt) | done | efficiency baseline | — |
 | E2 ✅ | ck_uniform_grpo (2400 s + ckpt) | done | efficiency baseline | — |
-| E3 ▶ | ck_frontier_alp_maxrl_hsd (2400 s + ckpt) | running | champion checkpoint | — |
-| E4 | eval_efficiency.py over E1–E3 | ~30 min | **samples-to-90%-coverage per level** — the paper's currency | headline table for site/report |
-| F1 | long_falp_hsdense (9600 s) | 2.7 h | **is level 6+ a duration question?** | if yes: frontier-march story complete; if no: revise mechanism (depth-scaled budgets / min-depth curriculum) |
+| E3 ✅ | ck_frontier_alp_maxrl_hsd (2400 s + ckpt) | done | champion checkpoint | — |
+| E4 ✅ | eval_efficiency over E1–E3 | done | samples-to-coverage | **RESULT: up to 11× vs GRPO at level 5, speedup grows with difficulty (1.2×/2.7×/11×); GRPO curves flatten at large k. Decision: efficiency leads the benefits table on site + PAPER.** |
+| F1 ▶ | long_falp_hsdense (9600 s) | running | **is level 6+ a duration question?** | if yes: frontier-march story complete; if no: revise mechanism (depth-scaled budgets / min-depth curriculum) |
 | F2 | matched_falp_p4_hsdense (2400 s) | 40 min | γ=4 concentration on GPU | promote γ to maze + verl defaults, or record CPU-only |
 | F3–F4 | dense-hindsight seeds 1–2 (2×2400 s) | 1.3 h | champion multi-seed due diligence | error bars on the 0.258 headline |
 
