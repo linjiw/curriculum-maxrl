@@ -206,6 +206,26 @@ solvable subset, buying pass@1 on mid levels at the cost of the tail
 (L5: 0.25 vs our 0.56 at k=64). Note these are single-checkpoint numbers
 (seed 0); the multiplier pattern, not the exact values, is the finding.
 
+## F3/F4 verdict — champion multi-seed (seeds 0–2, matched 2400 s)
+
+| config | final (3 seeds) | AUC (3 seeds) | pass@8 |
+|---|---|---|---|
+| uniform+maxrl | 0.230 ± 0.015 | 0.211 ± 0.011 | 0.300 |
+| frontier_alp+maxrl | 0.246 ± 0.002 | 0.221 ± 0.013 | 0.338 |
+| **champion (falp + dense hindsight)** | **0.252 ± 0.005** | **0.229 ± 0.009** | 0.335 |
+
+Paired per-seed deltas (shared warmstarts), champion − frontier_alp:
+Δfinal = +0.014/+0.002/+0.001, ΔAUC = +0.003/+0.006/+0.014 — **6/6
+positive**, so the champion's edge survives multi-seed, but the *final*
+margin is mostly one seed. Honest read: **dense hindsight's reliable gain
+on the maze is learning speed (AUC) and never being worse; its final-eval
+edge over the plain teacher is small on this infinite-data testbed**
+(consistent with the one-shot-mazes analysis — salvaged skill can't
+compound on a task you never see again). Both teacher configs clearly beat
+uniform on every metric. Coverage ties between the two teacher variants
+(0.335 vs 0.338). The fixed-prompt-set regime (GSM8K) remains where dense
+hindsight should show CPU-like compounding.
+
 ## F1/F2 verdicts (final sweep)
 
 **F1 — level 6 is NOT (just) a duration question.** 4× budget (9600 s, 2381

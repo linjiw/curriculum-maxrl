@@ -203,13 +203,18 @@ thing to check when a curriculum "doesn't work."
 Three testbeds, same ordering everywhere (uniform < teacher <
 teacher+hindsight): a CPU skill-chain with exact gradients (5 seeds; where
 all seven propositions are also Monte-Carlo verified), a 1.26M-parameter
-transformer on procedurally generated mazes at matched wall-clock (17 runs,
-3 seeds on key configs, dense hindsight the champion at final 0.258 / best
-0.269 vs 0.244/0.257 baseline), and real Gymnasium environments through the
-env-agnostic `frontier_rl` package (MountainCar positional curriculum,
-CartPole survival curriculum). Two CPU pre-registrations predicted GPU
-outcomes in advance (the teacher-feedback failure signature and its
-dead-group safety); two honest negatives (adaptive truncation order,
+transformer on procedurally generated mazes at matched wall-clock (>20 runs;
+champion = teacher + dense hindsight at 0.252 ± 0.005 final / 0.229 ± 0.009
+AUC over 3 seeds vs 0.230 ± 0.015 / 0.211 ± 0.011 uniform, paired deltas
+positive in every seed), and real Gymnasium environments through the
+env-agnostic `frontier_rl` package (MountainCar flag 0.000 → 1.000;
+CartPole survival curriculum). Honest per-regime accounting: on the
+infinite-data maze, dense hindsight's reliable gain is learning speed and
+never being worse — its final-eval edge over the plain teacher is small
+(one-shot mazes can't compound salvaged skill), while on fixed task sets
+(CPU, MountainCar) it is decisive. Three CPU pre-registrations were tested
+on GPU: two transferred, one (γ concentration) did not — and the ODE model
+predicted which. Two further honest negatives (adaptive truncation order,
 learning-progress teachers) are documented with diagnoses. Full tables:
 REPORT.md.
 

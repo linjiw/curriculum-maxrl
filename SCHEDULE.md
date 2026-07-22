@@ -12,8 +12,10 @@
 | E4 ✅ | eval_efficiency over E1–E3 | done | samples-to-coverage | **RESULT: up to 11× vs GRPO at level 5, speedup grows with difficulty (1.2×/2.7×/11×); GRPO curves flatten at large k. Decision: efficiency leads the benefits table on site + PAPER.** |
 | F1 ✅ | long_falp_hsdense (9600 s) | done | is level 6+ a duration question? | **NO** — mean 0.258→0.269, L5 doubles, L6 stays ≈0.01. Mechanism revision needed at depth; CPU-validate depth-scaled move budgets / param-sharing check first |
 | F2 ✅ | matched_falp_p4_hsdense (2400 s) | done | γ=4 on GPU | **does not transfer** (AUC 0.231 vs 0.236) — ODE model predicted it (weak compounding at 13 broad levels); γ stays 1 on GPU/verl, CPU/chain-only effect |
-| F3 ▶ | dense-hindsight seed 1 (2400 s) | running | champion multi-seed | error bars on the 0.258 headline |
-| F4 | dense-hindsight seed 2 (2400 s) | 40 min | champion multi-seed | " |
+| F3 ✅ | dense-hindsight seed 1 (2400 s) | done | champion multi-seed | see F4 |
+| F4 ✅ | dense-hindsight seed 2 (2400 s) | done | champion multi-seed | champion 0.252±0.005 final / 0.229±0.009 AUC; paired deltas vs plain teacher 6/6 positive but final margin mostly seed-0; **honest headline: reliable AUC gain + never worse; final edge small in infinite-data regime** |
+
+**GPU QUEUE DRAINED (all E and F runs complete).** Next wave now unblocked.
 
 **Parallel CPU (done): MountainCar categorical result** — flag-only 0.000 →
 uniform-mix 0.889 → teacher 0.944 → **full stack 1.000 every seed**; plus
