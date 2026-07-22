@@ -186,6 +186,18 @@ Quieter, but arguably worth more:
 - **Free telemetry.** The teacher's posterior is a live difficulty map of
   your task pool — mastered/frontier/dead fractions per step at no cost.
 
+**A gym case study — MountainCar's flag, and where curricula actually act.**
+Training on the flag alone (the standard sparse-reward setup) scores exactly
+0.000 — the classic exploration wall. A positional curriculum with a
+*shared* goal-conditioned policy breaks it: uniform mixing reaches flag pass
+0.889, the teacher 0.944, and the full stack **1.000 in every seed** at
+equal compute (150 steps, weak tabular policy). The instructive failure: the
+same curriculum with *per-bin* policy parameters never reaches the flag —
+curricula operate through shared parameters, and difficulty bins must share
+the policy or there is no channel for competence to transfer. That is the
+gym-scale version of our maze-size generalization cliff, and it is the first
+thing to check when a curriculum "doesn't work."
+
 ## 5. Evidence in brief
 
 Three testbeds, same ordering everywhere (uniform < teacher <

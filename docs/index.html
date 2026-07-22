@@ -641,6 +641,20 @@ robotics reach tasks: swap position bins for end-effector distance bands and the
 over. The ordering <em>uniform &lt; teacher &lt; teacher+hindsight</em> holds on every
 environment tested.</p>
 
+<div class="card">
+  <h3>Case study: MountainCar's flag, solved — with clean controls</h3>
+  <p>With a <em>shared</em> goal-conditioned policy (150 steps, 3 seeds, weak tabular learner):
+  training on the flag alone — the standard sparse-reward setup — scores <strong>exactly
+  0.000</strong> (the classic exploration wall); a uniform mixture over easier targets reaches
+  flag pass 0.889; the teacher 0.944; the <strong>full stack 1.000 in every seed</strong> at
+  equal compute. The instructive failure mode: the same curriculum with <em>per-bin</em> policy
+  parameters never reaches the flag at any budget — <strong>curricula operate through shared
+  parameters</strong>; difficulty bins must share the policy (condition on the goal, don't
+  partition by it) or competence has no channel to transfer through. The gym-scale version of
+  our maze-size generalization cliff, and the first thing to check when a curriculum "doesn't
+  work."</p>
+</div>
+
 <pre><code># the whole integration surface
 class MyEnv:                                   # TaskSpace
     n_tasks: int                               # difficulty bins
