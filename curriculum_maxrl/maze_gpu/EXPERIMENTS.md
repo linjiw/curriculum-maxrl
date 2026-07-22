@@ -255,6 +255,30 @@ order: (1) capacity probe (wider model, same schedule — decisive single
 run), (2) denser hindsight supervision (train all prefixes of a relabeled
 trajectory, not just the endpoint).
 
+**Capacity probe verdict (256×8 = ~5M params, champion schedule, matched
+2400 s → only 339 steps at ~2× cost/step):**
+
+| | 128×6 champion | 256×8 wide |
+|---|---|---|
+| AUC | 0.236 | **0.248** (record) |
+| best mean | 0.269 | **0.274** (record) |
+| level 3 final | 0.38–0.45 | **0.55** |
+| level 6 final | 0.01–0.02 | **0.05** |
+| per-step legality (L6) | 0.870 | 0.877 |
+
+Partial confirmation with a twist. Capacity sets new AUC/best records
+*despite 40% fewer steps* — per-step productivity way up, and levels 3–6
+all lift (L6 leaves the 0.01 floor for the first time, ×2.5–5). But
+per-step legality barely moved (0.870→0.877): the wide model is not yet
+*executing* more accurately at depth; it is converting the same schedule
+into better shallow/mid competence faster. Reading: capacity relieves the
+ceiling gradually, not as a step change — level 6 mastery likely needs
+capacity × longer training × deeper SFT exposure together. For the paper:
+"curriculum + capacity" compose (best-ever numbers), and the diagnosis
+methodology (measure q, predict reach geometrically) is itself a
+contribution — it predicted both the stall and where capacity's gain would
+land (throughput, not depth-execution).
+
 ## F1/F2 verdicts (final sweep)
 
 **F1 — level 6 is NOT (just) a duration question.** 4× budget (9600 s, 2381
