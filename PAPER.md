@@ -69,8 +69,17 @@ in 3/9 scale-zero runs, so the optimizer-matched V4B factorial was not
 authorized or run; V4A contributes no hindsight-effect estimate. A fresh V5A
 full-grid feasibility study then completed 27/27 runs, passed all
 learning-outcome-field-blind gates, selected `U*=250`, and independently
-authorized V5B. V5B is in progress and outcome-blinded, so no V5 hindsight
-effect is yet reported. A separate capacity-matched neural MountainCar V1R2
+authorized V5B. V5B subsequently completed all 180 runs with zero run
+failures and passed raw-data integrity checks (53,510 group records, 45,000
+updates, and 1,080 checkpoints), but the frozen independent analyzer failed
+its exact diagnostic-reconstruction rule. The runner used NumPy norm
+reductions while the analyzer used Python scalar reductions; 377 of 720
+diagnostic floats differed by at most `1.9984014443252818e-15` and 11 ULP.
+Although these step norms are diagnostic rather than endpoints, exact
+runner/analyzer dictionary agreement was the predeclared acceptance rule.
+V5B is therefore a procedural NO-GO and no V5B primary contrast or hindsight
+effect is reported. A post-hoc compatibility audit passed the remaining
+checks but is non-authorizing. A separate capacity-matched neural MountainCar V1R2
 development matrix also completed all reconstruction checks but returned
 NO-GO: hardest-goal AUC was zero in all 15 runs and no all-pass groups occurred;
 its confirmatory seeds remain untouched. The retained results therefore
@@ -655,7 +664,7 @@ task transfer, and relabeling can be inspected directly.
 | MountainCar neural V1R2 development | same official dynamics, 8 nested thresholds; shared H64 plus hardest-only and exact total-/active-capacity disjoint controls | 500,000 nominal transitions, `N=16`, 3 paired development seeds × 5 cells | hardest-goal AUC primary; outcome-blind adequacy gate; NO-GO |
 | Acrobot V1/V2 development | official [`Acrobot-v1`](https://gymnasium.farama.org/environments/classic_control/acrobot/) dynamics, one-layer neural actor, 8 nested tip-height thresholds | V1: 3 pilot seeds; V2: 3 paired development seeds x 6 cells, nominal 2,000,000 transitions/cell, `N=16` | normalized target-uniform mean-pass AUC over actual transitions; launch gates, not confirmatory inference |
 | Acrobot V3 verified confirmation | same neural shared-H64 actor; uniform versus frontier-`u_N` teacher at `gamma=1`; hindsight off | 20 sealed paired seeds x 2 cells, nominal 2,000,000 transitions/cell, `N=16` | one predeclared shared-policy AUC contrast; decision supported |
-| Acrobot V5A/V5B | same shared H64 actor; 3 learning rates × 3 hindsight scales | V5A: 27 fresh development runs; V5B: 180 fresh confirmatory runs at selected `U*=250` | V5A feasibility passed; V5B update-indexed AUC family in progress and outcome-blinded |
+| Acrobot V5A/V5B | same shared H64 actor; 3 learning rates × 3 hindsight scales | V5A: 27 fresh development runs; V5B: 180 fresh confirmatory runs at selected `U*=250` | V5A feasibility passed; V5B completed but the frozen exact-reconstruction rule failed, so the primary family is a procedural NO-GO and no contrast is claimed |
 
 Grid evaluation uses 32 fixed episodes per ring and preserves training RNG
 state. The tile-coded MountainCar evaluation uses 64 fixed episodes per
@@ -992,7 +1001,7 @@ repository root the same hash-locked analyzer was run successfully as:
 The invocation correction and its scope are retained in
 `frontier_rl/examples/ACROBOT_HINDSIGHT_V4_ERRATA.md`.
 
-#### V5A passes fresh feasibility; V5B is in progress and outcome-blinded
+#### V5A passes fresh feasibility; completed V5B is a procedural NO-GO
 
 V5 did not revise V4A's stopped rule. It introduced fresh development seeds
 `15000..15002` and ran the complete 3×3 grid of learning-rate multipliers
@@ -1011,14 +1020,36 @@ verification SHA-256 hashes are respectively
 `9cf741c91dcb82218cada9b451b76e0811c67aa4cbf1786ac0ba926806479b0a`,
 and `a46b5e9f732b7f9e1796e2d4a2ff344c9ff738574c464b28631e884faaa6ba19`.
 
-V5B is now executing all nine cells on fresh paired seeds `16000..16019`. Its
+V5B completed all nine cells on fresh paired seeds `16000..16019`: all 180
+runs finished with zero run failures, and an independent raw-integrity audit
+validated 53,510 group records, 45,000 updates, and 1,080 checkpoints. Its
 four update-indexed AUC contrasts, exact `2^20` sign-flip tests, Holm family,
-and `0.03` materiality rules are frozen. The amendment and lock hashes are
+and `0.03` materiality rules were frozen. The amendment and lock hashes are
 `11975381874842bc3019074ea9d8168006c0517982ac11e00ad0b488e7671f36`
-and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`.
-No V5B cell outcome, contrast, or interim direction is reported here. The
-family becomes interpretable only after all 180 runs complete and the
-independent analyzer accepts every run.
+and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`;
+the completed artifact hash is
+`c633886a121906ee2bceb03f3117e4bea5dc20ab314e43f9b702ef8d88f495ac`.
+
+The frozen analyzer nevertheless failed deterministically before authorizing
+the primary family. The runner computed step-norm diagnostics with NumPy
+reductions, whereas the analyzer reconstructed them with Python scalar
+reductions and then required exact equality of the resulting dictionaries.
+An independent root audit found 377 mismatches among 720 diagnostic floats;
+the maximum absolute discrepancy was `1.9984014443252818e-15` and the maximum
+distance was 11 ULP. The protocol classifies step norms as diagnostics, but it
+also makes exact runner/analyzer agreement an all-or-nothing acceptance rule.
+That rule controls: the official V5B primary family is a **procedural NO-GO**,
+and no cell outcome, contrast, sign, or hindsight-effect result is claimed.
+
+A post-hoc tolerance-aware compatibility audit passed the remaining integrity
+and reconstruction checks. It is diagnostic only and cannot rescue or
+authorize the frozen family. A valid follow-up requires a reviewed
+tolerance-aware verifier and a fresh V5C seed block; the existing V5B outcomes
+must not be recycled into that decision. The failure boundary and independent
+diagnostics are recorded in the
+[V5B verification erratum](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md)
+and
+[forensic verification report](frontier_rl/examples/acrobot_hindsight_v5b_forensic_verification.json).
 
 ### 8.7 Neural MountainCar V1R2: verified development NO-GO
 
@@ -1168,8 +1199,9 @@ The experiments isolate several distinct questions.
    ablation has a paired corrected family but unusually low-noise analytic
    evaluation. Acrobot V3 has 20 paired seeds and supports its one registered
    efficacy decision, but it does not power unregistered transfer or hindsight
-   claims. V5A is a feasibility stage, V5B is still outcome-blinded, and neural
-   MountainCar V1R2 did not authorize its 20-seed block.
+   claims. V5A is a feasibility stage; V5B completed but its frozen exact
+   reconstruction rule failed, so its primary family is a procedural NO-GO;
+   and neural MountainCar V1R2 did not authorize its 20-seed block.
 9. **Corrected large-scale tests are missing.** The production integration is
    unit tested and passed a local patch-application check, but that check is not
    retained with an upstream MaxRL commit hash and there is no corrected
@@ -1195,13 +1227,12 @@ The experiments isolate several distinct questions.
 
 The next work should maximize information rather than expand the headline.
 
-1. **Finish and independently analyze the locked V5B factorial:** V5A supplied
-   the fresh passing feasibility stage and selected `U*=250`. Preserve outcome
-   blinding until all 180 V5B runs finish, then apply the frozen all-or-nothing
-   verifier and report the four predeclared contrasts without rescue analyses.
-   Directional contrasts may estimate a local algorithm effect per applied
-   update; restricted-separability contrasts still do not isolate pure semantic
-   data value.
+1. **Design and preregister V5C with a tolerance-aware verifier:** V5B finished
+   180/180 runs with intact raw records, but its frozen analyzer failed exact
+   equality on negligible cross-implementation norm-reduction differences.
+   Preserve V5B as a procedural NO-GO. Review and test a finite/absolute/ULP
+   tolerance contract before sealing fresh seeds; do not tune V5C from V5B
+   cell outcomes or report V5B's frozen primary family post hoc.
 2. **Repair the transfer intervention rather than reinterpret V2:** make the
    disjoint controls learn under an effect-blind development rule, for example
    through architecture-specific optimizer calibration or a longer frozen
@@ -1275,8 +1306,12 @@ reproducible local validation program for testing where that bridge holds.
 V4A adds a transparent feasibility stop: integrity verification passed, but
 the preview-count gate failed, so no V4B hindsight comparison was run and no
 hindsight-effect conclusion follows from V4A. Fresh V5A then passed its stronger
-full-grid gates and authorized V5B, but V5B remains outcome-blinded and adds no
-result yet. Neural MountainCar V1R2 adds a second transparent stop: complete
+full-grid gates and authorized V5B. V5B then completed 180/180 runs with intact
+raw records, but its frozen analyzer failed exact diagnostic equality because
+NumPy and Python scalar norm reductions differed by at most
+`1.9984014443252818e-15` (11 ULP). The all-or-nothing rule makes this a
+procedural NO-GO, so V5B adds no primary contrast or hindsight-effect result.
+Neural MountainCar V1R2 adds a second transparent stop: complete
 reconstruction passed, but the native-goal primary metric and all-pass regime
 were absent, so confirmation remained untouched. Together these gates make the
 current evidence more credible by preserving negative feasibility outcomes
@@ -1309,13 +1344,17 @@ instead of converting them into post-hoc performance claims.
   `frontier_rl/examples/acrobot_hindsight_v4a_feasibility.json`,
   `frontier_rl/examples/acrobot_hindsight_v4a_verification.json`,
   `frontier_rl/examples/ACROBOT_HINDSIGHT_V4_ERRATA.md`
-- Acrobot V5 protocol, V5A lock/artifact/verification, and V5B amendment/lock:
+- Acrobot V5 protocol, V5A lock/artifact/verification, and V5B
+  amendment/lock/completed artifact:
   `frontier_rl/examples/ACROBOT_HINDSIGHT_PROTOCOL_V5.md`,
   `frontier_rl/examples/ACROBOT_HINDSIGHT_V5A_LOCK.json`,
   `frontier_rl/examples/acrobot_hindsight_v5a_feasibility.json`,
   `frontier_rl/examples/acrobot_hindsight_v5a_verification.json`,
   `frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_AMENDMENT.json`,
-  `frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_LOCK.json`
+  `frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_LOCK.json`,
+  `frontier_rl/examples/acrobot_hindsight_v5b_factorial.json`,
+  `frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md`,
+  `frontier_rl/examples/acrobot_hindsight_v5b_forensic_verification.json`
 - Neural MountainCar V1R2 result note, lock, development artifact, and
   verification:
   `frontier_rl/examples/MOUNTAINCAR_NEURAL_TRANSFER_V1_RESULTS.md`,

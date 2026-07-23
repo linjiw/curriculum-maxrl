@@ -165,7 +165,7 @@ The Acrobot evidence is chronological and deliberately claim-narrow:
 | V3 | **registered decision supported** | Twenty paired seeds confirm only positive shared-H64 curriculum efficacy with hindsight off. |
 | V4A | **stopped: feasibility gate failed** | Integrity checks passed and the fallback selected `U*=250`, but gate 3 failed in exactly 3/9 runs; V4B was not authorized or run. |
 | V5A | **all launch gates passed** | Fresh 3×3 feasibility completed across 27 runs, selected `U*=250`, and independently authorized V5B without reading learning-outcome fields. |
-| V5B | **in progress; outcome-blinded** | The locked 20-seed, nine-cell factorial is executing. No performance result or contrast is claimed before all 180 runs complete and the independent analyzer accepts the all-or-nothing family. |
+| V5B | **completed; procedural NO-GO** | All 180 runs and raw-integrity checks passed, but the frozen analyzer failed exact diagnostic reconstruction; the official primary family is not authorized and no performance result or contrast is claimed. |
 
 For V3's normalized target-uniform mean-pass AUC over actual transitions,
 including initialization, uniform scored `0.648669` and the frontier-`u_16`
@@ -216,10 +216,24 @@ V5A replaced neither V4A nor its stopped decision. It used fresh seeds
 `15000..15002`, ran all nine learning-rate×hindsight-scale cells, completed all
 27 runs, passed every outcome-field-blind technical gate, and selected the
 registered fallback `U*=250`. The independently verified launch decision
-authorized V5B. V5B is a fresh 20-seed (`16000..16019`) 3×3 factorial with four
-predeclared contrasts; it is currently in progress and remains outcome-blinded.
-The presence of a partial or terminal artifact on disk must not be interpreted
-as a result until the independent all-or-nothing analysis is complete.
+authorized V5B. V5B used fresh seeds `16000..16019` for a 20-seed 3×3
+factorial with four predeclared contrasts. All 180 runs completed with zero run
+failures; independent raw validation covered 53,510 group records, 45,000
+updates, and 1,080 checkpoints.
+
+The frozen analyzer then failed deterministically: the runner's NumPy
+step-norm reductions and the analyzer's Python scalar reductions differed in
+377 of 720 diagnostic floats. The largest absolute difference was
+`1.9984014443252818e-15`, or 11 ULP. Step norms are diagnostics, but the frozen
+acceptance rule requires exact runner/analyzer dictionary equality. The
+official V5B primary family is therefore a **procedural NO-GO**. No outcome,
+cell ranking, contrast, sign, or hindsight-effect result is claimed. A
+post-hoc tolerance-aware compatibility audit passed the remaining checks but
+is non-authorizing; a reviewed tolerance-aware verifier and fresh V5C seeds
+are required. See the
+[`V5B verification erratum`](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md)
+and
+[`forensic verification report`](frontier_rl/examples/acrobot_hindsight_v5b_forensic_verification.json).
 
 The V5A lock, artifact, and verification hashes are
 `5c277413c5238f5839d281e09810537221a16737f831a498a3e0217ca5b1502e`,
@@ -227,7 +241,9 @@ The V5A lock, artifact, and verification hashes are
 and `a46b5e9f732b7f9e1796e2d4a2ff344c9ff738574c464b28631e884faaa6ba19`.
 The V5B amendment and lock hashes are
 `11975381874842bc3019074ea9d8168006c0517982ac11e00ad0b488e7671f36`
-and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`.
+and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`;
+the completed artifact hash is
+`c633886a121906ee2bceb03f3117e4bea5dc20ab314e43f9b702ef8d88f495ac`.
 
 **Provenance boundary.** “Registered,” “sealed,” and “predeclared” in this
 repository refer to local source/runtime locks created before the corresponding

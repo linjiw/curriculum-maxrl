@@ -33,8 +33,12 @@ This supports positive shared-policy efficacy only on the fixed eight-threshold
 family; it does not establish transfer, capacity effects, hindsight, or general
 Acrobot performance. V5A subsequently passed all seven outcome-field-blind
 feasibility gates on a fresh 27-run 3×3 grid, selected `U*=250`, and authorized
-the fresh V5B factorial. V5B is in progress and outcome-blinded, so it currently
-adds no performance result. A separate capacity-matched neural MountainCar
+the fresh V5B factorial. V5B completed all 180 runs with zero run failures and
+intact raw records, but its frozen analyzer failed exact diagnostic
+reconstruction because NumPy and Python scalar norm reductions differed at
+floating-point roundoff scale. The exact-equality rule makes the primary
+family a procedural NO-GO, so V5B adds no performance result. A separate
+capacity-matched neural MountainCar
 V1R2 development matrix completed all reconstruction checks but stopped at
 NO-GO because all 15 hardest-goal AUCs and the pooled all-pass count were zero;
 its confirmatory seeds remain untouched. Corrected GPU, behaviorally adequate
@@ -585,7 +589,7 @@ family, including null results.
 | Does concentration help chained pools? | `u_N^1` vs `u_N^4` with all else fixed | target score, coverage, entropy, collapse rate | retained local evidence; domain-specific hypothesis |
 | Does hindsight add value? | off vs centered vs success-only | transition-matched target score, relabel validity rate | retained local evidence; distributional exactness unproved |
 | Is centered hindsight better than success-only? | centered vs success-only | paired difference and calibration | tiny chain edge for centered; MountainCar tied; no stable cross-domain ranking |
-| How sensitive is hindsight scale? | declared auxiliary-scale grid plus optimizer-matched control | target score per rollout and per optimizer FLOP | retained chain sweep is monotone through 8; V4A stopped, fresh V5A passed and selected `U*=250`; V5B is running and outcome-blinded |
+| How sensitive is hindsight scale? | declared auxiliary-scale grid plus optimizer-matched control | target score per rollout and per optimizer FLOP | retained chain sweep is monotone through 8; V4A stopped; V5A passed and selected `U*=250`; completed V5B is a procedural NO-GO because its frozen exact-reconstruction rule failed, so fresh V5C is required |
 | Is shared transfer causal? | capacity-matched, behaviorally adequate shared vs per-task parameters, crossed with curriculum vs uniform | curriculum-minus-uniform interaction | tile-coded MountainCar control is confounded; Acrobot V2 controls failed learning; neural MountainCar V1R2 had exact capacity controls but zero primary headroom and stopped; causal test pending |
 | Does shared-policy neural efficacy replicate? | Acrobot shared H64, frontier-`u_N` teacher at `gamma=1` vs uniform | one transition-AUC contrast on 20 sealed paired seeds | V3 independently verified: `Delta=+0.0363524`, CI `[0.0164536,0.0553949]`, exact `p=0.00263977`; registered decision supported |
 | Does neural efficacy transfer to MountainCar? | frontier shared H64 vs uniform/hardest-only, with exact total-/active-capacity controls | hardest-goal transition AUC after an outcome-blind adequacy gate | V1R2 development NO-GO: hardest-goal AUC zero in all 15 runs and no all-pass groups; confirmatory seeds untouched |
@@ -622,7 +626,7 @@ preserves all training state. The chronological evidence ledger is:
 | V3 confirmation | shared H64 uniform vs teacher; 20 sealed paired seeds `12000..12019`; no hindsight | observed `Delta_AUC >= 0.03` and exact two-sided sign-flip `p <= 0.05` | independently verified decision supported; shared-policy efficacy on fixed threshold family only |
 | V4A feasibility | three learning-rate multipliers x three seeds `13000..13002`; hindsight scale zero | six effect-blind feasibility gates; fallback `U*=250` | integrity verification passed, but gate 3 failed in exactly 3/9 runs; V4B not authorized or run |
 | V5A feasibility | 3 learning rates × 3 scales × seeds `15000..15002`; fresh full grid | seven learning-outcome-field-blind technical/natural-relevance gates; fresh `U*` rule | 27/27 runs valid, all gates passed, `U*=250`; independent analyzer authorized V5B |
-| V5B factorial | same nine cells × fresh seeds `16000..16019` | four update-indexed AUC contrasts; exact `2^20` sign flips, Holm family, `0.03` materiality rules | in progress and outcome-blinded; no result until all 180 runs and independent all-or-nothing verification complete |
+| V5B factorial | same nine cells × fresh seeds `16000..16019` | four update-indexed AUC contrasts; exact `2^20` sign flips, Holm family, `0.03` materiality rules | 180/180 completed with raw integrity, but frozen exact diagnostic reconstruction failed; official primary family is a procedural NO-GO and no result is claimed |
 
 The independently verified V3 fields are:
 
@@ -671,8 +675,24 @@ hashes are `5c277413c5238f5839d281e09810537221a16737f831a498a3e0217ca5b1502e`,
 and `a46b5e9f732b7f9e1796e2d4a2ff344c9ff738574c464b28631e884faaa6ba19`.
 The V5B amendment and lock hashes are
 `11975381874842bc3019074ea9d8168006c0517982ac11e00ad0b488e7671f36`
-and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`.
-V5B's presence on disk during execution is not an analyzable result.
+and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`;
+the completed artifact hash is
+`c633886a121906ee2bceb03f3117e4bea5dc20ab314e43f9b702ef8d88f495ac`.
+V5B completed all 180 runs with zero run failures. Independent raw validation
+covered 53,510 group records, 45,000 updates, and 1,080 checkpoints. The frozen
+analyzer then failed its exact dictionary-equality check because runner NumPy
+norm reductions and analyzer Python scalar reductions disagreed in 377 of 720
+diagnostic floats. The maximum absolute difference was
+`1.9984014443252818e-15`, and the maximum distance was 11 ULP. Although the
+step norms are diagnostics, exact runner/analyzer agreement is the registered
+acceptance rule. The V5B primary family is therefore a procedural NO-GO; no
+outcome, cell ordering, sign, contrast, or hindsight-effect result is claimed.
+A post-hoc tolerance-aware compatibility audit passed all remaining checks but
+is non-authorizing. A reviewed tolerance-aware verifier and fresh V5C seeds are
+required. The scoped diagnosis is recorded in
+[`ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md`](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md)
+and
+[`acrobot_hindsight_v5b_forensic_verification.json`](frontier_rl/examples/acrobot_hindsight_v5b_forensic_verification.json).
 
 ### 11.2 MountainCar studies have different evidentiary roles
 
@@ -744,16 +764,18 @@ level.
 
 ## 14. Prioritized next experiments
 
-### Priority 1: finish the frozen V5B all-or-nothing analysis
+### Priority 1: preregister V5C with a tolerance-aware verifier
 
-V5A supplied the fresh passing feasibility study that V4A could not. V5B is
-therefore authorized and running on untouched seeds. Preserve blinding until
-all 180 runs complete, then run the locked independent analyzer. The four
-contrasts, exact sign-flip enumeration, Holm correction, materiality rules, and
-all-or-nothing validity family must not change. Even a supported directional
-contrast would establish only a local update-matched effect of the complete
-relabeling procedure, not unbiasedness, wall-clock efficiency, or general
-hindsight benefit.
+V5A supplied the fresh passing feasibility study that V4A could not. V5B then
+completed 180/180 runs, but its frozen analyzer failed the predeclared exact
+diagnostic-reconstruction rule. Preserve that procedural NO-GO without a
+rescue analysis. Before a new run, specify and independently review finite,
+absolute-error, and ULP tolerance checks; cross-test the runner and verifier on
+adversarial numerical fixtures; then seal fresh V5C seeds. Do not tune the
+tolerance or scientific contrasts from V5B outcomes. Even a future supported
+directional contrast would establish only a local update-matched effect of the
+complete relabeling procedure, not unbiasedness, wall-clock efficiency, or a
+general hindsight benefit.
 
 The direct-path analyzer invocation recorded in the immutable V4A lock has a
 module-import defect. No locked source was changed. From the repository root,
@@ -907,6 +929,9 @@ used to raise the claim ladder.
 - [Acrobot V5A independent verification](frontier_rl/examples/acrobot_hindsight_v5a_verification.json)
 - [Acrobot V5B amendment](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_AMENDMENT.json)
 - [Acrobot V5B lock](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_LOCK.json)
+- [Acrobot V5B completed artifact](frontier_rl/examples/acrobot_hindsight_v5b_factorial.json)
+- [Acrobot V5B verification erratum](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md)
+- [Acrobot V5B non-authorizing forensic verification](frontier_rl/examples/acrobot_hindsight_v5b_forensic_verification.json)
 - [Neural MountainCar V1R2 result note](frontier_rl/examples/MOUNTAINCAR_NEURAL_TRANSFER_V1_RESULTS.md)
 - [Neural MountainCar V1R2 development lock](frontier_rl/examples/MOUNTAINCAR_NEURAL_TRANSFER_V1_LOCK.json)
 - [Neural MountainCar V1R2 development artifact](frontier_rl/examples/mountaincar_neural_transfer_v1_development.json)

@@ -38,14 +38,35 @@ conflated with the new neural MountainCar V1R2 study described below.
 |---|---|---|
 | Acrobot V4A | stopped after one predeclared feasibility gate failed | valid failed calibration; no V4 hindsight effect |
 | Acrobot V5A | 27/27 complete; all technical/natural-relevance gates passed; fresh `U*=250` | optimizer-matched factorial is feasible and V5B was authorized; no efficacy result |
-| Acrobot V5B | 180-run 3×3 factorial in progress and outcome-blinded | no outcome, sign, cell ranking, or contrast may be claimed before completion and independent all-or-nothing verification |
+| Acrobot V5B | 180/180 complete; raw integrity passed; frozen analyzer exact-reconstruction failure | procedural NO-GO: no outcome, sign, cell ranking, contrast, or hindsight-effect result may be claimed |
 | Neural MountainCar V1R2 | 15/15 development runs complete; independent reconstruction passed; feasibility NO-GO | frozen setup lacked native-goal headroom; no efficacy, transfer, or capacity claim; confirmatory seeds untouched |
 
 V5A's authorization used no pass-rate, return, entropy, AUC, final-performance,
 or between-cell performance field. It selected `U*=250`; the projected
-180-run serial runtime was `7.0557400375` hours. V5B uses fresh paired seeds
-`16000..16019` and four frozen update-indexed AUC contrasts. Do not inspect or
-summarize the in-progress `acrobot_hindsight_v5b_factorial.json` as a result.
+180-run serial runtime was `7.0557400375` hours. V5B used fresh paired seeds
+`16000..16019` and four frozen update-indexed AUC contrasts. All 180 runs
+completed with zero run failures. Independent raw validation covered 53,510
+group records, 45,000 updates, and 1,080 checkpoints.
+
+The frozen analyzer did not accept the completed artifact. The runner used
+NumPy reductions for step-norm diagnostics, while the analyzer independently
+used Python scalar reductions and then required exact dictionary equality.
+An independent root audit found 377 mismatches among 720 diagnostic floats;
+the maximum absolute difference was `1.9984014443252818e-15`, and the maximum
+distance was 11 ULP. The protocol labels these step norms as diagnostics, but
+its all-or-nothing acceptance rule requires exact runner/analyzer agreement.
+The official V5B primary family is therefore a procedural NO-GO. Do not report
+or infer any V5B outcome, cell ranking, sign, contrast, or hindsight effect.
+
+A post-hoc tolerance-aware compatibility audit passed the remaining checks.
+It is explicitly non-authorizing: it diagnoses the verifier failure but does
+not rescue the primary family. Review the
+[`verification erratum`](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md)
+and
+[`forensic report`](frontier_rl/examples/acrobot_hindsight_v5b_forensic_verification.json).
+A future primary test requires an independently reviewed tolerance-aware
+verifier and fresh V5C seeds; neither tolerance nor design may be tuned from
+V5B outcomes.
 
 Neural MountainCar V1R2 pooled 1,932 all-fail, 474 mixed, and zero all-pass
 groups. Hardest-goal AUC was zero in all 15 runs, so all four primary
@@ -106,6 +127,12 @@ external registration certification.
   `11975381874842bc3019074ea9d8168006c0517982ac11e00ad0b488e7671f36`
 - V5B lock:
   `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`
+- V5B completed artifact (`frontier_rl/examples/acrobot_hindsight_v5b_factorial.json`):
+  `c633886a121906ee2bceb03f3117e4bea5dc20ab314e43f9b702ef8d88f495ac`
+- V5B frozen-verifier erratum:
+  `frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md`
+- V5B non-authorizing forensic verification:
+  `frontier_rl/examples/acrobot_hindsight_v5b_forensic_verification.json`
 
 ### Neural MountainCar V1R2
 
@@ -128,9 +155,10 @@ external registration certification.
 4. Treat V4A and V5A as chronological feasibility studies. Verify that V5A
    uses fresh seeds and that its authorization projection excludes outcome
    fields.
-5. Review V5B's amendment, four-contrast family, exact sign-flip procedure,
-   Holm rule, `0.03` materiality thresholds, and all-or-nothing validity rule.
-   Defer outcome review until a terminal independently verified artifact exists.
+5. Review V5B's amendment and all-or-nothing validity rule, then reproduce the
+   exact diagnostic mismatch from the erratum and forensic report. Treat the
+   completed artifact as a procedural NO-GO; do not inspect its performance
+   outcomes or attempt to rescue the four-contrast family.
 6. Review neural MountainCar V1R2's raw reconstruction and confirm that the
    missing all-pass regime forces NO-GO irrespective of the supporting deltas.
 7. Only then compare the paper, report, framework, and README against these
@@ -152,9 +180,9 @@ python -m pytest -q \
 
 1. Does coefficient mass remain a useful scheduling proxy once trajectory
    score norms and task-dependent episode lengths are included?
-2. Are V5B's four contrasts sufficient to distinguish a local hindsight effect
-   from the restricted `Y(a,s)=F(a)+G(as)` scale model, without overstating
-   semantic-data causality?
+2. Is the proposed tolerance-aware V5C verifier strict enough to catch genuine
+   reconstruction defects while accepting benign NumPy/Python reduction
+   roundoff, and is it frozen before fresh seeds are exposed?
 3. Is hardest-goal AUC the right primary transfer metric for neural
    MountainCar, and what outcome-blind development rule best creates headroom
    without tuning on the desired method contrast?
