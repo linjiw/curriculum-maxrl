@@ -50,6 +50,7 @@ the next rollout is a group's first success).
 | `curriculum_maxrl/maze_gpu/` | GPU testbed: 1.26M-param transformer on 17×17 mazes, goal-distance curriculum (13 levels), pass@k eval, matched wall-clock sweep protocol + logs |
 | `frontier_rl/` | Reusable grouped trainer, estimator/teacher implementations, CPU/Gym adapters, corrected artifacts, and external-environment protocols |
 | `frontier_rl/examples/UNILAB_ROBOTICS_PROTOCOL_V1.md` | Mac-CPU robotics ladder separating reset-stream PPO curriculum tests from the exact grouped estimator experiment |
+| `frontier_rl/examples/UNILAB_ROBOTICS_RESEARCH_ROADMAP_V2.md` | Root audit of all 40 native UniLab environments, fixed-target `D_8 -> J_7` math, curriculum integrity defects, and the falsifiable Stewart-to-Go2 robotics program |
 | `frontier_rl/examples/UNILAB_STEWART_RESULTS_V1.md` | Audited three-seed development result for the exact grouped Motrix manipulation pilot, including its failed first task axis and next discriminating experiment |
 | `frontier_rl/examples/UNILAB_STEWART_NATIVE_RESULTS_V2.md` | Current native UniLab result: 33 arm runs across target-preserving coefficient-mass and gradient-second-moment studies, mechanism gains, performance null, and next estimation gate |
 | `docs/` | Static project website and curves exported only from retained corrected artifacts |

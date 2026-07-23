@@ -256,6 +256,19 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
   </table>
 </div>
 
+<div class="card" aria-labelledby="robotics-roadmap-title">
+  <p class="eyebrow">Native robotics program · root audit</p>
+  <h3 id="robotics-roadmap-title" style="margin:0 0 6px">Preserve the target, repair the labels, then scale</h3>
+  <p>Across UniLab's 40 registered environments, only
+  <code>StewartBalanceGrouped</code> currently runs the exact grouped estimator.
+  Rough-terrain rows, motion-reference frames, and Go2Arm command ranges are
+  target-changing schedulers; G1 penalty scaling is a reward schedule; and no
+  native case currently implements hindsight relabeling. The staged program
+  closes verifier, configuration, lifecycle, checkpoint, and fixed-evaluation
+  contracts before spending CPU budget on locomotion comparisons.</p>
+  <p style="margin-bottom:0"><a href="https://github.com/linjiw/curriculum-maxrl/blob/main/frontier_rl/examples/UNILAB_ROBOTICS_RESEARCH_ROADMAP_V2.md">Read the 40-environment robotics roadmap ↗</a></p>
+</div>
+
 <!-- ============================================================ -->
 <h2 id="why">0 · Why this direction</h2>
 
