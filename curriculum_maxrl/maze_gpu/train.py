@@ -76,7 +76,7 @@ class UniformTeacher(Teacher):
 
 
 class FrontierTeacher(Teacher):
-    """u_N(p) = (1-(1-p)^N)(1-p) with Thompson-sampled p, uniform floor."""
+    """Legacy heuristic u_N(p) = pass@N(p)(1-p), with Thompson sampling."""
 
     def __init__(self, n_rollouts: int, seed: int, floor: float = 0.15):
         super().__init__(n_rollouts, seed)
@@ -93,7 +93,7 @@ class FrontierTeacher(Teacher):
 
 
 class LearnabilityTeacher(Teacher):
-    """SFL-style u(p) = p(1-p) — the N=1 special case of frontier utility."""
+    """SFL u(p)=p(1-p), the N=1 member of the legacy heuristic above."""
 
     def __init__(self, n_rollouts: int, seed: int, floor: float = 0.15):
         super().__init__(n_rollouts, seed)

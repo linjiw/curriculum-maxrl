@@ -8,7 +8,7 @@ Files to integrate the curriculum teacher into the official MaxRL codebase
   and CurriculumSampler (weighted sampler, re-draws weights each epoch).
 - `main_ppo.patch` — enables the sampler behind `+data.curriculum.enable=true`.
 - `ray_trainer.patch` — observe hook after reward computation, wandb metrics,
-  teacher state persisted/restored with checkpoints.
+  and coupled teacher/sampler RNG state persisted/restored with checkpoints.
 - `smollm_curriculum.sh` — SmolLM2-360M + GSM8K launch script (fill in paths).
 
 Apply from the MaxRL repo root:
@@ -17,4 +17,9 @@ Apply from the MaxRL repo root:
     cd <maxrl> && git apply main_ppo.patch ray_trainer.patch
 
 Requires the dataset preprocessor to store the row index in
-`extra_info.index` (the repo's gsm8k.py already does).
+`extra_info.index` (the repo's gsm8k.py already does). Training fails loudly
+if the index or coupled curriculum state is missing.
+
+CPU verification:
+
+    pytest -q verl_integration/test_curriculum.py

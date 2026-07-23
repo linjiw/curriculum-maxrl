@@ -7,8 +7,15 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 import numpy as np
 
-from frontier_rl import (FrontierTeacher, FrontierTrainer, TrainerConfig,
-                         maxrl_weights, grpo_weights, rloo_weights)
+from frontier_rl import (
+    FrontierTeacher,
+    FrontierTrainer,
+    TrainerConfig,
+    grpo_weights,
+    maxrl_eq10_weights,
+    maxrl_weights,
+    rloo_weights,
+)
 from frontier_rl.adapters.skill_chain import SkillChainSpace
 from frontier_rl.adapters.grid_reach import GridReachSpace
 
@@ -18,6 +25,7 @@ def test_estimators():
     w = maxrl_weights(r)
     assert abs(w.sum()) < 1e-12 and abs(w[0] - (0.5 - 0.25)) < 1e-12
     assert not maxrl_weights(np.zeros(4)).any()
+    assert np.allclose(maxrl_eq10_weights(np.zeros(4)), -0.25)
     assert abs(rloo_weights(r).sum()) < 1e-12
     assert abs(grpo_weights(r).sum()) < 1e-12
     print("estimators OK")
@@ -45,10 +53,52 @@ def test_teacher_posterior_and_utility():
 def test_teacher_state_roundtrip():
     t = FrontierTeacher(5, 8, seed=0)
     t.observe(2, np.array([1., 0., 1., 0., 0., 0., 0., 0.]))
+    state = t.state_dict()
+    expected = t.sample_tasks(40)
     t2 = FrontierTeacher(5, 8, seed=0)
-    t2.load_state_dict(t.state_dict())
+    t2.load_state_dict(state)
     assert np.allclose(t.alpha, t2.alpha) and np.allclose(t.beta, t2.beta)
+    assert np.array_equal(t2.sample_tasks(40), expected)
+    try:
+        FrontierTeacher(5, 4, seed=0).load_state_dict(state)
+        raise AssertionError("resume with a different rollout-group size must fail")
+    except ValueError as exc:
+        assert "configuration mismatch" in str(exc)
     print("state roundtrip OK")
+
+
+def test_teacher_rejects_inputs_outside_math_contract():
+    for kwargs in (
+        {"n_tasks": 0},
+        {"n_tasks": 2, "n_rollouts": 1},
+        {"n_tasks": 2, "decay": 1.1},
+        {"n_tasks": 2, "floor": -0.1},
+        {"n_tasks": 2, "gamma": 0.0},
+    ):
+        try:
+            FrontierTeacher(**kwargs)
+            raise AssertionError(f"invalid configuration accepted: {kwargs}")
+        except ValueError:
+            pass
+
+    teacher = FrontierTeacher(2)
+    for task_id, rewards in (
+        (2, np.array([0.0, 1.0])),
+        (0, np.array([])),
+        (0, np.array([0.0, 0.5])),
+        (0, np.array([0.0, np.nan])),
+    ):
+        try:
+            teacher.observe(task_id, rewards)
+            raise AssertionError("invalid teacher evidence was accepted")
+        except ValueError:
+            pass
+    try:
+        teacher.sample_tasks(-1)
+        raise AssertionError("negative sample size was accepted")
+    except ValueError:
+        pass
+    print("teacher input contract OK")
 
 
 def test_trainer_on_skill_chain():
@@ -98,6 +148,7 @@ if __name__ == "__main__":
     test_estimators()
     test_teacher_posterior_and_utility()
     test_teacher_state_roundtrip()
+    test_teacher_rejects_inputs_outside_math_contract()
     test_trainer_on_skill_chain()
     test_hindsight_contract_gridworld()
     test_dead_group_without_relabel_is_skipped()

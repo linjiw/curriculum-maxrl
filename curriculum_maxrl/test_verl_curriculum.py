@@ -1,6 +1,7 @@
 """CPU unit tests for verl_curriculum.py (no torch/verl required)."""
 
 import numpy as np
+import pytest
 
 from verl_curriculum import FrontierTeacher, CurriculumSampler, allocate_rollout_budget
 
@@ -62,6 +63,24 @@ def test_budget_allocation():
     assert n.sum() == 64
     assert n[3] >= n[2] >= n[1] >= n[0]
     assert n.min() >= 4 and n.max() <= 32
+
+
+@pytest.mark.parametrize("budget", [3, 9])
+def test_budget_allocation_rejects_infeasible_budget(budget):
+    with pytest.raises(ValueError, match="infeasible"):
+        allocate_rollout_budget(
+            np.array([0.1, 0.2]), budget, n_min=2, n_max=4
+        )
+
+
+def test_budget_allocation_validates_inputs_and_empty_batch():
+    assert allocate_rollout_budget(np.array([]), 0).size == 0
+    with pytest.raises(ValueError, match="empty"):
+        allocate_rollout_budget(np.array([]), 1)
+    with pytest.raises(ValueError, match=r"\[0, 1\]"):
+        allocate_rollout_budget(np.array([0.2, 1.1]), 8)
+    with pytest.raises(ValueError, match="n_min"):
+        allocate_rollout_budget(np.array([0.2]), 1, n_min=0)
 
 
 def test_teacher_checkpoint_roundtrip():

@@ -70,8 +70,8 @@ curriculum**:
   loss — analogous in intent to regret's frontier targeting.
 - (b) Unlike learnability p(1−p), the 1/p weight grows monotonically as p→0 —
   favoring near-unsolvable prompts that the SFL evidence says carry ~zero
-  learning signal; the Maclaurin truncation (T=N) is exactly what bounds the
-  resulting p≈0 variance explosion.
+  learning signal; Maclaurin truncation bounds the resulting p≈0 variance.
+  Exact Eq. (9)/(10) has T=N; practical dropped-group Algorithm 1 has T=N−1.
 - (c) It **cannot rescue truly all-fail prompts** (K=0 → group dropped): the
   same zero-signal structure as regret-0 levels (UED fixes via teacher
   disincentive) and all-fail groups (DAPO fixes via resampling/filtering).
@@ -86,19 +86,19 @@ DAPO-style p=0 filtering before likelihood reweighting.
 
 ## Key implication discovered during our design work
 
-Our MaxRL-native frontier utility
+The exact MaxRL advantage-mass utility that supersedes the earlier
+`pass@N·(1−p)` heuristic is
 
 ```
-u_N(p) = (1 − (1−p)^N) · (1−p) = pass@N · (1−p)
+u_N(p) = (1 − (1−p)^N) − p = pass@N − pass@1
 ```
 
-**reduces exactly to SFL's learnability p(1−p) at N = 1** and, as N grows,
-shifts its mass toward harder prompts (any p ≳ 1/N stays near-max utility). So
-it is a *compute-indexed generalization of learnability* that widens the ZPD
-band at exactly the rate the MaxRL estimator can absorb it (a group of N
-rollouts produces signal with probability pass@N). The teacher and the
-objective are indexed by the same compute knob — which is the conceptual core
-of the curriculum-MaxRL integration.
+**equals SFL's learnability p(1−p) at N = 2** (and is zero at N=1). As N
+grows, its unique peak moves to
+`p* = 1−N^(−1/(N−1)) ≈ ln(N)/N`, toward harder prompts. It is therefore a
+*compute-indexed generalization of learnability*. The teacher and objective
+are indexed by the same compute knob, which is the conceptual core of the
+curriculum-MaxRL integration.
 
 Remaining gap (from lineage 2): u_N(p) is still a static difficulty signal —
 it cannot detect stagnation or forgetting. A production version should add an

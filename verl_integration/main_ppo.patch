@@ -30,12 +30,13 @@ index 432b437..d5c8faa 100644
  
          # Initialize the PPO trainer.
          trainer = RayPPOTrainer(
-@@ -203,6 +222,8 @@ class TaskRunner:
+@@ -203,6 +222,9 @@ class TaskRunner:
              train_sampler=train_sampler,
              device_name=config.trainer.device,
          )
 +        if curriculum_teacher is not None:
 +            trainer.curriculum_teacher = curriculum_teacher
++            trainer.curriculum_sampler = train_sampler
          # Initialize the workers of the trainer.
          trainer.init_workers()
          # Start the training process.

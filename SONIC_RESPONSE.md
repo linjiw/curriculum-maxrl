@@ -52,8 +52,9 @@ groups of N rollouts on one task*, where "solvable within N attempts" is a real
 event. Your multinomial-over-thousands-of-bins allocation has no such event, so N
 degrades from a derived constant to a free band knob — at which point **you have
 lost the property that made advmass attractive (zero tuned hyperparameters)** and
-learnability `p(1−p)` is the more principled choice: it is the N→1 member of the
-family, needs no knob, and your own forecast shows it *more* aggressive at
+learnability `p(1−p)` is the more principled choice: it is the N=2 member of the
+exact advantage-mass family (the N=1 member is zero), needs no free
+band knob, and your own forecast shows it *more* aggressive at
 discounting impossible bins (0.034–0.058 impossible mass vs advmass's 0.256–0.274)
 — which, per your F2 diagnosis, is the pathology you are fixing. Long-shot
 exploration on near-impossible bins is better funded by the uniform floor
@@ -73,11 +74,12 @@ small pools (24–36 tasks) with per-task rows. You have ~70–thousands of bins
 a 0.1 uniform floor and (at release scale) huge visit counts — the floor already
 guarantees coverage, and the posterior is tight. Our V3 ablation found the floor
 curve flat from 0 to 0.4 *because Thompson self-explores*; the converse also
-holds: with a floor, determinism costs little. A deterministic optimism bonus
-(`mean + k·std` of the Beta, k≈1) is an acceptable substitute and is what we
-would use under your reproducibility guardrail. At 8-env micro scale, note that
-*nothing* discriminates (your F3 and our forecast agree), so the Thompson
-question is moot exactly where it would matter.
+holds: with a floor, determinism costs little. The deterministic substitute
+should maximize utility over the Beta `mean ± k·std` interval (k≈1). Directly
+using `mean + k·std` as p is not optimistic for a non-monotone utility and can
+lower the score. At 8-env micro scale, note that *nothing* discriminates (your
+F3 and our forecast agree), so the Thompson question is moot exactly where it
+would matter.
 
 ## Q4 — Decay semantics: per-evidence-unit, and you are right that it is more principled
 

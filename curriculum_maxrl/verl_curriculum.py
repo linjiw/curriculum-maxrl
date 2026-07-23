@@ -1,4 +1,7 @@
-"""Curriculum teacher + weighted sampler for the verl-based MaxRL trainer.
+"""Legacy heuristic-frontier sampler prototype for the verl-based MaxRL trainer.
+
+The maintained derived-utility integration is ``../verl_integration``. This
+module remains as a CPU-tested research baseline and budget-allocation fixture.
 
 Drop-in integration (see DESIGN.md section 7):
 
@@ -148,24 +151,51 @@ class CurriculumSampler(Sampler):
 def allocate_rollout_budget(p_hat: np.ndarray, total_budget: int,
                             n_min: int = 4, n_max: int = 64) -> np.ndarray:
     """Per-prompt rollout counts N_i ∝ 1/p̂_i within [n_min, n_max], summing to
-    the batch budget.  Because MaxRL's truncation order is T = N_i, this gives
-    harder prompts both a higher chance of a non-dropped group and a
-    higher-order ML approximation.  (Phase-2 feature: requires per-sample ``n``
-    support in the rollout worker.)
+    the batch budget. Under practical dropped-group Algorithm 1, the exact
+    objective order is N_i-1. This legacy inverse-probability rule predates
+    the optimal coefficient-mass water-filling allocator in ``teachers.py``.
+    (Phase-2 feature: requires per-sample ``n`` support in the rollout worker.)
     """
+    p_hat = np.asarray(p_hat, dtype=float)
+    if p_hat.ndim != 1:
+        raise ValueError(f"p_hat must be one-dimensional, got shape {p_hat.shape}")
+    if not np.all(np.isfinite(p_hat)):
+        raise ValueError("p_hat must contain only finite values")
+    if np.any((p_hat < 0.0) | (p_hat > 1.0)):
+        raise ValueError("p_hat values must lie in [0, 1]")
+    if (isinstance(total_budget, (bool, np.bool_))
+            or not isinstance(total_budget, (int, np.integer))
+            or total_budget < 0):
+        raise ValueError(f"total_budget must be a non-negative integer, got {total_budget!r}")
+    if (isinstance(n_min, (bool, np.bool_))
+            or isinstance(n_max, (bool, np.bool_))
+            or not isinstance(n_min, (int, np.integer))
+            or not isinstance(n_max, (int, np.integer))):
+        raise ValueError("n_min and n_max must be integers")
+    if n_min < 1 or n_max < n_min:
+        raise ValueError(f"require 1 <= n_min <= n_max, got {n_min} and {n_max}")
+
+    n_prompts = len(p_hat)
+    if n_prompts == 0:
+        if total_budget == 0:
+            return np.empty(0, dtype=int)
+        raise ValueError("a non-zero budget cannot be allocated to an empty prompt set")
+    min_budget, max_budget = n_min * n_prompts, n_max * n_prompts
+    if not min_budget <= total_budget <= max_budget:
+        raise ValueError(
+            f"total_budget={total_budget} is infeasible for {n_prompts} prompts with "
+            f"bounds [{n_min}, {n_max}]; expected [{min_budget}, {max_budget}]"
+        )
+
     raw = 1.0 / np.maximum(p_hat, 1.0 / n_max)
     scaled = raw / raw.sum() * total_budget
     n = np.clip(np.round(scaled), n_min, n_max).astype(int)
     # settle rounding drift on the hardest prompts still inside [n_min, n_max]
-    order = np.argsort(-raw)  # hardest first
+    order = np.argsort(-raw, kind="stable")  # hardest first
     while n.sum() > total_budget:
         movable = [i for i in order[::-1] if n[i] > n_min]  # easiest first
-        if not movable:
-            break
         n[movable[0]] -= 1
     while n.sum() < total_budget:
         movable = [i for i in order if n[i] < n_max]  # hardest first
-        if not movable:
-            break
         n[movable[0]] += 1
     return n

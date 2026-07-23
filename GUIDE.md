@@ -7,11 +7,12 @@ and `curriculum_maxrl/maze_gpu/EXPERIMENTS.md`.
 
 ## 1. Problem framing
 
-MaxRL's estimator (Algorithm 1 of arXiv:2602.02710) normalizes advantages by the
-per-prompt mean reward, making it unbiased for the T=N-truncated maximum-likelihood
-objective. Its weight function w(p) = (1−(1−p)^T)/p upweights hard prompts — an
-*implicit curriculum at the gradient level*. Three gaps remain that only a
-*data-level* teacher can close:
+MaxRL Eq. (9) averages successful score functions and is unbiased for the
+T=N-truncated maximum-likelihood objective. Full Eq. (10) preserves that
+expectation with an unconditional score control. The practical Algorithm 1,
+which this repository implements, drops the entire K=0 group; its exact
+population objective is T=N-1. It remains an *implicit curriculum at the
+gradient level*. Three gaps remain that only a *data-level* teacher can close:
 
 1. **Dead prompts** — p ≪ 1/N ⇒ all N rollouts fail ⇒ K=0 ⇒ group dropped, zero
    gradient. No choice of w(p) can put signal where groups die.
@@ -19,17 +20,19 @@ objective. Its weight function w(p) = (1−(1−p)^T)/p upweights hard prompts �
    its w(p) *inverts* and upweights p→1, the paper's conjectured cause of pass@k
    collapse).
 3. **Uniform rollout budgets** — the paper uses fixed N per prompt, but harder
-   prompts need larger N both for signal probability and objective fidelity (T=N).
+   prompts need larger N both for signal probability and practical objective
+   fidelity (T=N-1; exact Eq. 10 would give T=N).
 
 Our thesis: **the right curriculum signal falls out of the estimator's own algebra**
 rather than needing an external heuristic.
 
 ## 2. Proposed methods and verification status
 
-### M1. Advantage-mass teacher (core method) — ✅ derived + validated (CPU), 🔄 GPU sweep running
+### M1. Advantage-mass teacher (core method) — ✅ derived + validated (CPU and GPU)
 
-- **Claim (proved, MC-verified 200k trials):** expected total |advantage| a prompt
-  receives from a MaxRL group of N rollouts is exactly `2(pass@N − pass@1)`;
+- **Claim (proved, MC-verified 200k trials):** expected coefficient L1 mass a
+  prompt receives from a MaxRL group of N rollouts is exactly
+  `2(pass@N − pass@1)`;
   peaks at p* ≈ ln(N)/N.
 - **Method:** decayed Beta posterior over each prompt's pass rate, updated from
   observed group rewards; Thompson-sample p; sample prompts ∝ `(1−(1−p)^N) − p`;
@@ -42,7 +45,9 @@ rather than needing an external heuristic.
     concentrates 60% of sampling mass on the true frontier band.
   - Dead-group reduction (GPU maze): 5.2/8 dead groups per step under uniform →
     3.9 (frontier) / 2.6 (learnability-style) under teachers.
-- **Open:** matched-wall-clock GPU comparison (running: 6 configs × 2400 s).
+- **GPU verdict:** the matched-wall-clock sweep and three-seed confirmation are
+  complete. Both teacher configurations beat uniform on final score and AUC;
+  dense hindsight adds a reliable AUC gain over the plain teacher.
 
 ### M2. Greedy rollout allocation — ✅ derived + validated (CPU-level)
 
@@ -69,32 +74,33 @@ rather than needing an external heuristic.
   SEC's signal — the advantage-mass teacher is "oracle SEC for MaxRL," usable
   before a prompt is ever visited.
 
-### M4. Adaptive truncation order T (objective curriculum) — ❌ negative result
+### M4. Adaptive truncation order T (objective curriculum) — ⚠️ exact path untested
 
-- **Setup:** the repo's unpublished `c_sub_TN` subset estimator decouples T from N
-  (we verified: `c_{N,N}(K)=1/K` recovers Algorithm 1; `E[c·K] = 1−(1−p)^T` to 4
-  decimals). Annealed Tᵢ = clip(1/p̂ᵢ, 1, N) per prompt.
-- **Result:** slightly *underperforms* fixed T=N (AUC 0.698 vs 0.704 with advmass
-  teacher; 0.641 vs 0.653 uniform; 5 seeds). At N=16–32 variance is not the binding
-  constraint, so shrinking T only weakens the beneficial hard-prompt upweighting.
-- **Status:** documented, deprioritized. Revisit only for very small groups or
-  extreme p̂ spreads.
+- **Audit result:** `c_sub_TN` makes the success term unbiased for arbitrary
+  T<=N, but the historical `weights_maxrl_t` then dropped the K=0 score
+  control. Its exact multiplier is `w_T(p)-(1-p)^(N-1)`, not `w_T(p)`.
+- **Historical result:** that dropped-group variant slightly underperforms its
+  fixed counterpart (AUC 0.698 vs 0.704 with advmass; 0.641 vs 0.653 uniform).
+  This is a valid negative for the tested heuristic, not for exact adaptive T.
+- **Status:** `weights_maxrl_t_eq10` now retains the control term for K=0 and
+  passes exhaustive finite-N tests. It has no learning experiment yet.
 
 ### M5. ALP anti-forgetting term — ⚠️ implemented, weak evidence
 
 - `FrontierALPTeacher` adds an ALP-GMM-style |Δ ema-pass| bonus to re-inject
-  regressing levels. On the CPU testbed pure-ALP teachers underperformed
-  (|Δp̂| too noisy at N=16 and lags the moving frontier); the additive variant is
-  in the matched GPU sweep. The uniform floor already covers most anti-forgetting
-  duty in our regimes.
+  regressing levels. Pure-ALP teachers underperformed on the CPU testbed, but
+  the additive GPU variant is the best pure teacher: final 0.246 ± 0.002 and
+  AUC 0.221 ± 0.013 over three seeds. Long-horizon easy-level regression shows
+  that the floor alone does not guarantee retention indefinitely.
 
-### M7. Hindsight relabeling for dead groups — ✅ validated (CPU), 🔄 GPU sweep queued
+### M7. Hindsight relabeling for dead groups — ✅ validated (CPU and GPU)
 
-- **Idea:** MaxRL's Theorem 1 makes the estimator success-conditioned — it learns
-  *only from successes*, which is why K=0 groups are dead weight. HER's move is
-  the complement: a failed trajectory is a success **for the goal it actually
-  reached**. Where task structure admits relabeling, every dead group converts
-  into a live group for an easier related task at zero extra generation cost.
+- **Idea:** MaxRL's target is success-conditioned. Its variance-reduced weights
+  include failures as a control variate inside live groups, but K=0 groups have
+  exactly zero update. HER's move is the complement: a failed trajectory can be
+  a success **for the goal it actually reached**. Where task structure admits
+  relabeling, every dead group converts into a live group for an easier related
+  task at zero extra generation cost.
 - **CPU result (5 seeds, skill-chain; failed level-l rollout with correct prefix
   j = success of nested level-j task):**
 
@@ -125,10 +131,12 @@ rather than needing an external heuristic.
   visible posterior inflation (p̂ 0.81 vs eval 0.47 at level 2) pushing
   sampling deeper prematurely. **Ship dense hindsight; keep the posterior on
   requested-task evidence only.**
-- **Bias caveat:** relabeled groups are conditioned on the achieved outcome —
-  an auxiliary HER-style term, not an unbiased truncated-ML gradient. Helps
-  uniformly on the toy; GPU maze version (goal ← deepest cell legally reached,
-  `--hindsight` in `maze_gpu/train.py`) is queued behind sweep 1.
+- **Bias caveat:** relabeled goals are selected from the same dead group, so
+  samples are coupled and success-conditioned — an auxiliary HER-style term,
+  not an unbiased truncated-ML gradient. V1 verifies direction (cosine), not
+  magnitude or equality of joint sampling laws. It helps uniformly on the toy;
+  on the infinite-data GPU maze its reliable gain is AUC rather than final
+  coverage (the three-seed final edge over the plain teacher is small).
 - **LLM analogue:** goal/prefix relabeling wherever verifiers admit it —
   sub-goals in multi-step proofs, partial-credit unit tests, reached-state
   goals in agentic tasks.
@@ -226,23 +234,29 @@ is subsumed by teacher+hindsight everywhere at equal compute.
 
 ## 5. Roadmap
 
-1. **Now:** finish matched-clock GPU sweep → test H6/H7 → update EXPERIMENTS.md.
-2. Multi-seed (≥3) confirmation of the GPU winner configs.
-3. SmolLM2-360M + GSM8K: `curriculum × {maxrl, grpo}` 2×2 via
+1. Finish the Isaac Lab Anymal-C rough-terrain simulator pilot and fixed-grid
+   evaluation; only ladder step 1 is implemented there.
+2. Test deeper supervision/capacity changes for the maze's compounding
+   per-step-error ceiling; longer training alone did not solve level 6 pass@1.
+3. Validate the existing kernel streaming teacher on a real procedural source;
+   it currently has only synthetic continuous-goal evidence.
+4. Add per-prompt rollout counts to the verl rollout worker so M2 can be tested
+   beyond the CPU allocation model.
+5. Re-run adaptive T with the exact Eq. (10) helper before reviving M4.
+6. Run SmolLM2-360M + GSM8K `curriculum × {maxrl, grpo}` via
    `verl_integration/smollm_curriculum.sh` — checks whether the dead-prompt gap the
-   paper shows in its Fig. 7 closes faster with the teacher.
-4. Phase-2 verl: per-prompt rollout budgets (M2) in the rollout worker.
-5. Optional: SEC-style empirical-|advantage| teacher as a baseline against the
-   posterior-based advmass teacher (same signal, different estimation path).
+   paper shows in its Fig. 7 closes faster with the teacher; this remains blocked
+   on an 8-GPU node.
 
 ## 6. Honest limitations
 
 - CPU effect sizes come from a toy with exact gradients; LLM noise (verifier
   errors, nonstationary posteriors) may shrink the teacher's edge — that's exactly
   what the GSM8K run tests.
-- Matched GPU results so far are single-seed.
-- The teacher assumes a fixed finite prompt set (Beta posterior per row index);
-  streaming/procedural prompt sources need a parametric difficulty model
-  (ALP-GMM-style) instead.
+- Main teacher and dense-hindsight comparisons have three seeds; inference
+  efficiency, long-horizon, and wide-model results remain single-seed.
+- The discrete teacher assumes a fixed finite prompt set. The kernel streaming
+  variant removes that assumption but has only synthetic continuous-goal
+  evidence, not a production procedural source.
 - `pass@N − p` targets *this group's* signal, not long-horizon transfer; it has no
   notion of prerequisite structure beyond what the floor + posterior drift capture.

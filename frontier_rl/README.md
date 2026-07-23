@@ -8,18 +8,19 @@ touching the core. numpy-only; no torch/gym dependency in the core.
 
 ```
 teacher:   Beta(α,β) posterior per task (decay 0.7) → Thompson sample p̃
-           → utility u(p̃) = (1−(1−p̃)^N) − p̃    [= MaxRL's expected advantage
-             mass, proved exact; peak at p* ≈ ln N/N]
+           → utility u(p̃) = (1−(1−p̃)^N) − p̃    [= half MaxRL's expected
+             coefficient L1 mass; peak at p* ≈ ln N/N]
            → sample tasks ∝ u^γ  (γ≈4 if tasks share skills, 1 if independent)
            → mixed with a 10% uniform floor
 
 estimator: MaxRL success-conditioned advantages  w_i = r_i/K − 1/N
-           (K=0 groups dropped — this is what makes the teacher necessary)
+           (practical Algorithm 1: K=0 groups dropped; exact expected
+            truncation order N−1, while full paper Eq. 10 has order N)
 
 hindsight: dead groups are relabeled by the ENV to the sub-goal actually
            achieved and trained as successes of that easier task
-           (exact ML gradient where the env's relabel is exact — proved +
-           measured; breaks the information ceiling of any pure sampler)
+           (HER-style auxiliary update; direction validated on the skill
+           chain, not generally unbiased; breaks the sampler-only ceiling)
 ```
 
 ## Plugging in your environment
@@ -41,8 +42,8 @@ trainer = FrontierTrainer(MyEnv(), MyPolicy(),
 trainer.train(steps=500)
 ```
 
-**The two hindsight contracts** (from Proposition 6; violating either turns
-the exact relabeled gradient into noise):
+**The two hindsight contracts** (from Proposition 6; violating either can
+turn the relabeled auxiliary update into noise):
 
 1. **Exactness** — a relabeled success must be a *true* success of the
    relabeled task under the env's own verifier.
@@ -122,9 +123,10 @@ python3 frontier_rl/examples/run_gym_benchmark.py     # gymnasium benchmark (~10
   you keep the teacher benefits and lose only the hindsight term.
 - **Group size N**: the teacher's band targets p ≈ ln N/N. N=16 targets
   ~17% success tasks; raise N to push the curriculum toward harder bins.
-- **On/off-policy**: the schedule is estimator-agnostic at the interface
-  level, but its guarantees are for the MaxRL weights; if you swap in a PPO
-  update keep the weights as advantages and stay near-on-policy.
+- **On/off-policy**: requested groups use the practical MaxRL weights.
+  Hindsight groups are selected and relabeled off the requested-task
+  distribution, so treat them as an auxiliary HER term, not an unbiased
+  on-policy update.
 
 ## Design: one schedule, five execution shapes
 
@@ -148,8 +150,9 @@ The swap points and what fixes each choice:
 - **posterior** — Beta rows for fixed pools; kernel over a difficulty axis
   for procedural sources; vectorized arrays with half-life-in-episode-
   equivalents decay when throughput varies by orders of magnitude (Q4).
-- **optimism** — Thompson when stochasticity is fine; `mean + k·std` under
-  determinism guardrails (Q3). Both validated equivalent when a floor exists.
+- **optimism** — Thompson when stochasticity is fine; under determinism
+  guardrails, maximize utility over the posterior `mean ± k·std` interval
+  (Q3). Substituting `mean + k·std` directly is wrong for non-monotone utility.
 - **γ** — 4 on tight chains (compounding), 1 everywhere else (measured,
   including the negative transfer on broad pools).
 - **hindsight** — full trajectory relabel where the env verifies exactly and

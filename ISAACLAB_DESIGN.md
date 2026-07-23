@@ -56,14 +56,16 @@ worth more than any single-arm result.
 **D3 — Utility: learnability p(1−p), not advantage-mass.** Their §9.1 already
 resolves this per our regime table: no rollout groups ⇒ no N ⇒ the
 advmass band-placement theorem has nothing to bind to, and learnability is
-the N→1 member with zero knobs. (Same call as SONIC Q2 — this is now our
+the N=2 member of the exact advantage-mass family, with zero free band
+knobs. (Same call as SONIC Q2 — this is now our
 standing rule for reset-stream evidence.)
 
-**D4 — Optimism: deterministic mean + 1·std, Thompson off by default.**
+**D4 — Optimism: maximize utility over mean ± 1·std, Thompson off by default.**
 Their determinism pitfall (same seed + same GPU count only) plus our V3
 result (the floor makes Thompson's exploration contribution small) →
 determinism costs little and buys reproducible arms. `thompson=True` remains
-one flag away for an ablation.
+one flag away for an ablation. Because utility is non-monotone, directly
+substituting `p=mean+std` is not optimistic in utility space.
 
 **D5 — Decay: half-life = 2048 episode-equivalents.** Evidence-scaled (per
 SONIC Q4; exact aging verified in tests: 10 → 5.0 after one half-life).
@@ -148,21 +150,22 @@ Register these before any run; they follow from the regime map (EVIDENCE.md §2)
    trajectory hindsight re-enter, since the verifier is real and groups can
    be simulated by episode batching.
 
-## 4. Open items on their side (small)
+## 4. Integration questions resolved
 
-- Confirm the exact registration idiom for a stateful callable term in their
-  fork (`CurrTerm(func=instance)` vs a `ManagerTermBase` subclass shim — the
-  term is written to support either; a 5-line shim if needed).
-- Confirm `success_fn` plumbing for the distance predicate (needs commanded
-  speed at reset time — available from the command manager per their §3.2).
-- Checkpoint hook location for teacher `state_dict` (their runner or an
-  env-side callback — either works; eval must NOT restore teacher state,
-  same rule as their SONIC finding).
+- Stateful terms use a `ManagerTermBase` subclass passed as
+  `CurrTerm(func=<Class>, ...)`.
+- Success predicates are selected by a serializable string key; `tile` is the
+  signal-identical comparison with stock greedy terrain progression.
+- `FrontierOnPolicyRunner` embeds teacher state in the same model checkpoint as
+  policy/optimizer state. Fixed-grid evaluation swaps in a non-adaptive probe.
 
 ---
 
-*Verification status: the refactored adapter passes CPU tests against a stub
-env (torch tensors, 10-level latent difficulty: posterior tracked truth,
-frontier bin found at p≈0.5, origins written, state round-trip). Real-sim
-validation requires the isaac-lab-base container — the ladder above is the
-plan for it.*
+*Verification status (2026-07-23): the adapter and concrete manager terms pass
+CPU tests against a stub env (torch tensors, 10-level latent difficulty,
+posterior tracking, origins, exact RNG/checkpoint resume, and fixed-grid
+readout). The initial five-arm Isaac Sim launch failed at CUDA-context creation.
+An exclusive-GPU retry is now actively training the control arm, but no
+`Training time:` completion artifact exists yet. Therefore no completed
+real-simulator smoke or outcome claim is available; the ladder above remains
+the pre-registered plan.*

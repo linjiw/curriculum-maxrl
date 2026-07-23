@@ -16,8 +16,10 @@ what lets you predict where the method will and won't help.
 ### Channel 1 — WASTE AVOIDANCE (the teacher)
 *"Don't roll out where the estimator will emit nothing."*
 
-- Mechanism: sample ∝ u(p) = pass@N − pass@1 (P1: the estimator's exact
-  expected signal). Zero at mastered (p→1) and unreachable (p→0) tasks.
+- Mechanism: sample ∝ u(p) = pass@N − pass@1 (P1: half the estimator's
+  exact expected coefficient L1 mass). Zero at mastered (p→1) and
+  unreachable (p→0) tasks. Proportional sampling is a soft exploration
+  policy; P1 derives the score, not its sampling temperature.
 - What it buys, measured: dead groups 5.8→3.4 of 8 (maze); 22–35% more
   optimization steps per GPU-hour (frontier rollouts also end earlier);
   6/6 paired-seed wins vs uniform.
@@ -32,9 +34,10 @@ what lets you predict where the method will and won't help.
 *"Manufacture verified successes from the failures you already paid for."*
 
 - Mechanism: a dead group's rollouts are relabeled to the sub-goals they
-  actually achieved; the same success-conditioned weights apply. P6 + V1:
-  where the env's relabel is exact, these gradients are *indistinguishable
-  from fresh unbiased groups* (cosine 0.956 vs 0.958; mean → 1.000).
+  actually achieved; the same practical weights apply. P6 characterizes the
+  joint-law bias; V1 shows directional alignment with fresh groups on the
+  skill chain (cosine 0.956 vs 0.958; mean cosine → 1.000), not unbiased
+  magnitude.
 - What it buys, measured: the only channel that breaks the oracle ceiling
   (0.890 > 0.851); the only channel that scores at all in frontier-heavy
   regimes (0.98 vs exactly 0.00 for every pure sampler including DAPO);
@@ -128,9 +131,9 @@ Decision procedure distilled from every ablation:
 
 | claim | strongest single piece of evidence | grade |
 |---|---|---|
-| u(p) = estimator's exact expected signal | P1 proof + 200k-trial MC | proved |
+| 2u(p) = estimator's exact expected coefficient L1 mass | P1 proof + exact finite-N tests | proved |
 | teacher beats uniform | 6/6 paired seeds, matched clock | multi-seed |
-| hindsight gradients exact on-structure | V1 cosine table (0.956 vs 0.958, mean 1.000) | measured |
+| hindsight direction aligned on skill chain | V1 cosine table (0.956 vs 0.958, mean 1.000) | measured |
 | full stack > oracle sampler | V7: 0.890 vs 0.851, 5 seeds | multi-seed CPU |
 | categorical win where samplers get 0 | V5 frontier-heavy + MountainCar 0→1.000 w/ controls | controlled |
 | curricula require likelihood weighting | H6 reversal, every seed both directions | multi-seed |

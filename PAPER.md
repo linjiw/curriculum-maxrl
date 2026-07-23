@@ -16,8 +16,8 @@ all numbers reproduce from this repository.*
 > learning signal**.
 >
 > Our fix needs no new machinery, because the fix is already inside the
-> estimator. We prove that MaxRL's expected learning signal on a prompt is
-> exactly **2·(pass@N − pass@1)** — the probability the prompt is solvable
+> estimator. We prove that MaxRL's expected coefficient L1 mass on a prompt is
+> exactly **2·(pass@N − pass@1)** — twice the probability the prompt is solvable
 > within N attempts *but not within one*. That formula **is** a curriculum:
 > sample prompts by it (a Thompson posterior makes it practical) and the
 > first kind of waste disappears. For the second kind — all-fail prompts —
@@ -53,8 +53,8 @@ or they do something gradient reweighting cannot (a useful positive). The
 answer turned out to be sharply the second, for a structural reason:
 **weights act on prompts after they are sampled and only when at least one
 rollout succeeds.** However w(p) is shaped, it cannot rescue a prompt whose
-group came back all-fail (the group is dropped — that drop is what makes the
-estimator unbiased, Theorem 2 of the paper), and it cannot un-spend the
+practical Algorithm 1 group came back all-fail (the group is dropped), and it
+cannot un-spend the
 compute burned re-confirming mastered prompts. The curriculum's true job is
 therefore not "emphasize hard prompts" — the objective already does that —
 but to manage exactly the two regimes the estimator is blind to.
@@ -65,15 +65,19 @@ sentence literally.
 
 ## 2. Three insights, one algorithm
 
-**Insight 1 — the estimator only learns from successes.** MaxRL's Theorem 1
-says the ML gradient is the average score function *conditioned on success*;
-the estimator implements this by averaging over successful rollouts only.
-Consequence (a): its behavior on a prompt is a function of the success count
-K alone, so its expected signal has a closed form. Consequence (b): failed
-rollouts are pure waste — *unless something turns them into successes*.
+**Insight 1 — the target is success-conditioned, and all-fail groups are
+silent.** MaxRL's Theorem 1 expresses the ML gradient as an average score
+function conditioned on success. The practical variance-reduced estimator
+uses Eq. (10)-style centering on live groups, so their failures carry
+coefficient `-1/N`; an all-fail group still has exactly zero update. Because
+Algorithm 1 drops that control term at K=0, its exact expected truncation
+order is N−1; the paper's order-N theorem applies to Eq. (9) and full Eq. (10).
+Consequence (a): coefficient mass is a function of success count K alone, so
+its expectation has a closed form. Consequence (b): all-fail groups are pure
+waste unless relabeling turns their trajectories into verified successes.
 
 **Insight 2 — the closed form is a ZPD functional (Proposition 1).**
-Conditioning on K and telescoping, the expected total advantage magnitude a
+Conditioning on K and telescoping, the expected coefficient L1 mass a
 prompt receives from a group of N rollouts is exactly
 
     E[Σ|w|] = 2·(pass@N(p) − pass@1(p)) = 2·((1−(1−p)ᴺ) − p),
@@ -85,31 +89,31 @@ computes it *implicitly on every batch*. A curriculum built on it is not a
 heuristic bolted onto MaxRL; it is MaxRL's own bookkeeping, surfaced. Three
 corollaries fall out of the same algebra:
 
-- RLOO's expected signal is exactly 2p(1−p) — the "learnability" objective
+- RLOO's expected coefficient mass is exactly 2p(1−p) — the "learnability" objective
   of Rutherford et al. (2024). The learnability-curriculum literature and
   the estimator algebra are one object seen from two sides (Prop. 4).
-- MaxRL concentrates ≈(N−1)× more expected signal than RLOO on frontier
+- MaxRL concentrates ≈(N−1)× more expected coefficient mass than RLOO on frontier
   prompts as p→0 (Prop. 5) — the finite-sample mechanism behind the paper's
-  "extracts more learning signal" observation, and the reason a frontier
-  curriculum is *safe* with MaxRL specifically.
+  "extracts more learning signal" observation. The separate H6 experiment,
+  not this coefficient-only identity, establishes curriculum compatibility.
 - Optimal rollout allocation across prompts is greedy water-filling on the
   marginal p(1−p)ᴺ — the probability the next rollout is a group's *first
   success* (Prop. 3).
 
-**Insight 3 — failures are recyclable, and exactly so (Proposition 6).**
-Hindsight Experience Replay meets Theorem 1: if the estimator learns only
-from successes, manufacture successes. A failed trajectory is a verified
-success for the sub-goal it actually achieved; relabeling a dead group to
-that sub-goal and applying the same success-conditioned weights yields — we
-prove — the ML gradient of the relabeled task under a shifted conditional
-law, which is *exact* when the conditional laws match and empirically
-indistinguishable from unbiased fresh groups where they do (measured
-per-group cosine 0.956 vs 0.958 against the true gradient; the mean
-relabeled gradient reaches cosine 1.000). Two contracts keep it exact in
-practice: relabeled successes must be true successes under the env's own
-verifier, and goal-conditioned trajectories must have their conditioning
-rewritten to the achieved goal (skipping the rewrite makes hindsight
-actively hurt — we measured the cost).
+**Insight 3 — failures are recyclable, with a measurable bias contract
+(Proposition 6).**
+Hindsight Experience Replay meets Theorem 1: if an all-fail group has no
+update, manufacture a verified success. A failed trajectory can be a success
+for the sub-goal it actually achieved; relabeling a dead group to
+that sub-goal and applying the same weights yields an HER-style auxiliary
+update drawn from a shifted, group-coupled law. Proposition 6 expresses its
+bias against fresh on-policy groups and bounds it by joint-law divergence.
+On the skill chain its direction is empirically indistinguishable from fresh
+groups (per-group cosine 0.956 vs 0.958; mean cosine to the ML direction
+1.000), but this does not establish unbiased magnitude. Two contracts remain
+necessary: relabeled successes must pass the env's own verifier, and
+goal-conditioned trajectories must rewrite conditioning to the achieved goal
+(skipping the rewrite makes hindsight actively hurt).
 
 **The algorithm (FrontierMax).** A decayed Beta posterior tracks each
 prompt's pass rate from observed group outcomes; Thompson sampling scores
@@ -117,7 +121,9 @@ prompts by u(p̃) = (1−(1−p̃)ᴺ) − p̃, concentrated as u^γ (γ≈4 whe
 skills — learning compounds; γ=1 on flat pools) and mixed with a 10% uniform
 floor; live groups train with unmodified MaxRL advantages; dead groups are
 densely relabeled to their achieved sub-goals. The estimator is never
-modified, so every unbiasedness result of the base paper carries over.
+modified on requested tasks; those groups use the paper's practical Algorithm
+1 behavior. Relabeled groups are explicitly auxiliary and do not inherit an
+unbiasedness theorem.
 
 ## 2b. The three channels (how to think about the method)
 
@@ -154,7 +160,7 @@ post-training, and on hard task distributions most of it buys nothing. Prior
 fixes either pay for the waste differently (DAPO's dynamic sampling redraws
 until a live group appears — the discards still cost GPU-hours), or gate on
 heuristic difficulty bands with their own hyperparameters (ADARFT), or
-target learnability p(1−p) — the right instinct, but the N=1 shadow of the
+target learnability p(1−p) — the right instinct, but only the N=2 member of the
 real functional. Deriving the rule from the estimator's algebra gives the
 band, its width, and its compute-scaling (ln N/N) with **zero new
 hyperparameters**: the rollout budget N you already chose *is* the
@@ -209,7 +215,7 @@ Quieter, but arguably worth more:
   the teacher tells you when a curriculum will backfire (GRPO). Negative
   knowledge that saves other people's compute.
 - **Conceptual compression.** Learnability curricula, DAPO-style filtering,
-  and HER stop being separate tricks: they are the N=1 slice, the sampling
+  and HER stop being separate tricks: they are the N=2 member, the sampling
   shadow, and the success-manufacturing complement of one identity.
 - **Free telemetry.** The teacher's posterior is a live difficulty map of
   your task pool — mastered/frontier/dead fractions per step at no cost.

@@ -1,30 +1,31 @@
 # Advantage-mass analysis: a derived curriculum signal for MaxRL
 
 Deep-dive into the MaxRL paper's math (arXiv:2602.02710, full text) yielding a
-*derived* (not heuristic) teacher utility. All formulas verified by Monte
-Carlo (200k trials) in this repo — see the session logs / reproduce with the
-snippet at the bottom.
+*derived* (not heuristic) teacher utility. Coefficient-mass and expected-
+gradient formulas are verified by exact finite-N enumeration in
+`test_math_claims.py`; the Monte Carlo snippet at the bottom is a quick check.
 
 ## 1. Setup
 
 A prompt with true pass rate `p` gets a group of `N` i.i.d. rollouts with
 `K ~ Binomial(N, p)` successes. Each estimator assigns per-rollout advantage
 weights `w_j`. Define the **advantage mass** of the group as `Σ_j |w_j|` —
-the total magnitude of learning signal the optimizer receives from this
-prompt (the score functions `S_j` are multiplied by these weights, so mass ≈
-the gradient budget the prompt commands).
+the L1 mass of the scalar coefficients multiplying the rollout score
+functions. It is a useful estimator-side surrogate, but not the policy-gradient
+norm: score-vector norms and cancellation can change the realized update.
 
 ## 2. Exact expected advantage mass per estimator
 
-**MaxRL** (Algorithm 1: `w_succ = 1/K − 1/N`, `w_fail = −1/N`, group dropped
-at K=0). For K ≥ 1: `Σ|w| = K(1/K − 1/N) + (N−K)/N = 2(1 − K/N)`. Hence
+**Practical MaxRL Algorithm 1** (`w_succ = 1/K − 1/N`,
+`w_fail = −1/N`, group dropped at K=0). For K ≥ 1:
+`Σ|w| = K(1/K − 1/N) + (N−K)/N = 2(1 − K/N)`. Hence
 
 ```
 E[Σ|w|] = 2·(P(K≥1) − E[K]/N) = 2·(pass@N(p) − p)   —  EXACT
         = 2·(pass@N − pass@1)
 ```
 
-**The expected MaxRL learning signal on a prompt equals twice the
+**The expected MaxRL coefficient mass on a prompt equals twice the
 probability that it is solvable within N attempts but not within one.**
 This is a compute-indexed formalization of the zone of proximal development:
 the estimator, by its own algebra, allocates signal exactly to the band of
@@ -40,10 +41,20 @@ automatically shift the optimal curriculum band toward harder prompts at rate
 ln(N)/N** — the teacher and the objective are indexed by the same compute
 knob, now with an exact constant.
 
+**Objective-order caveat (exact).** The paper's Theorem 2 applies to the
+success-only estimator in Eq. (9). Full Eq. (10) preserves that order-N
+expectation only because its `−1/N` score control remains active when K=0.
+Practical Algorithm 1 explicitly drops both terms at K=0. Exact enumeration
+and Proposition 0 show that this practical variant has population weight
+`w_{N−1}(p)`, so it optimizes the order-(N−1) truncated objective (and is
+identically zero at N=1). The coefficient-mass identity above remains exact
+for the practical coefficients. Full Eq. (10) has expected coefficient mass
+`(1−p)^N + 2(pass@N−p)` because an all-fail group carries mass 1.
+
 **RLOO** (`w_j = (r_j − LOO-mean)/N`): `Σ|w| = 2K(N−K)/(N(N−1))`, hence
 
 ```
-E[Σ|w|] = 2·p·(1−p)·N/(N−1) ≈ 2·p(1−p)   —  EXACT
+E[Σ|w|] = 2·p·(1−p)   —  EXACT for every N ≥ 2
 ```
 
 RLOO's advantage mass **is** SFL's "learnability" p(1−p) (Rutherford et al.
@@ -53,26 +64,30 @@ RLOO estimator are the same object seen from two sides.
 **GRPO** (`w_j = (r_j − mean)/(std+ε)/N`, degenerate groups K∈{0,N} give 0):
 
 ```
-E[Σ|w|] = Σ_{K=1}^{N−1} P(K) · 2·sqrt( K(N−K)/(N(N−1)) ) / N · N ≈ 2·sqrt(p(1−p))·(1 − P(K∈{0,N}))
+Σ|w| | K = 2K(N−K) / (N²·sqrt(K(N−K)/(N(N−1))))   (ε→0)
+E[Σ|w|] = Σ_{K=1}^{N−1} P(K) · [that quantity]
+        → 2·sqrt(p(1−p)) as N→∞ for fixed p∈(0,1)
 ```
 
 Numerically: at p=0.01, N=32 the population weight-function view of the paper
 (`w(p)=1/√(p(1−p))` → mass ≈ 0.199) overstates the realized finite-sample
 mass by 2× (exact: 0.100) because 72% of groups are all-fail and contribute
-nothing. **The paper's population-level w(p) curves describe the
-infinite-sample limit; at finite N every estimator's realized signal on hard
-prompts is throttled by pass@N.** This sharpens the case for a teacher: no
-choice of w(p) can put signal where groups die.
+nothing. Multiplying the population limit by the non-degenerate-group
+probability is not exact because the conditional K distribution also changes
+the mass. **The paper's population-level w(p) curves describe the
+infinite-sample limit; at finite N every estimator's realized coefficient
+mass on hard prompts is throttled by pass@N.**
 
 ## 3. Consequences for the curriculum design
 
 1. **Derived teacher utility.** Replace the heuristic frontier utility
    `u(p) = (1−(1−p)^N)(1−p)` with the exact advantage mass
+   up to an irrelevant factor of two:
    `u(p) = pass@N(p) − p = (1−(1−p)^N) − p`. Numerically the two are nearly
    identical (max deviation ~1% of range), which retroactively explains why
    the heuristic worked; but the derived form is (a) parameter-free, (b) an
-   unbiased target for what the optimizer actually receives, and (c) directly
-   estimable from group statistics.
+   exact target for the practical estimator's coefficient mass, and (c)
+   directly estimable from group statistics.
 
 2. **Connection to SEC (Chen et al. 2025c, cited by the paper).** SEC drives
    a curriculum bandit with the *empirical* |advantage| as reward. For binary
@@ -104,22 +119,32 @@ choice of w(p) can put signal where groups die.
    since MaxRL's advertised advantage (less pass@k collapse) is invisible in
    mean pass.
 
-## 4. The codebase already decouples T from N — enabling a *curriculum over the objective*
+## 4. Decoupling T from N: exact path implemented, old experiment not exact
 
-The paper's Algorithm 1 ties truncation order to group size (T = N). But the
-repo contains an unpublished-in-paper estimator
+The repo contains an unpublished-in-paper success coefficient
 (`oversample_subset_vr_weights` / `c_sub_TN` in
 `verl/trainer/ppo/maclaurin.py`, eq. 51 of the appendix): per-success weight
-`c_{T,N}(K)` such that with N rollouts the estimator is unbiased for the
-**T-truncated** objective for any T ≤ N. Verified numerically here:
+`c_{T,N}(K)` such that with N rollouts the success term is unbiased for the
+**T-truncated** objective for any T ≤ N:
 
-- `c_{N,N}(K) = 1/K` exactly (recovers Algorithm 1 at T = N);
+- `c_{N,N}(K) = 1/K` exactly (recovers Eq. 9's success term);
 - `E[c_{T,N}(K)·K] = 1−(1−p)^T = w_T(p)·p` to 4 decimals for
   T ∈ {1,4,16}, p ∈ {0.05,0.3,0.7}, N = 16 (100k-trial MC).
 
-**Consequence:** T becomes a per-prompt knob independent of the rollout
-budget. This opens a third integration axis beyond prompt selection and
-rollout allocation — a **curriculum over the objective itself**:
+To keep that expectation after variance reduction, the unconditional score
+control must be applied to every group, including K=0. The new
+`weights_maxrl_t_eq10` does this and is exhaustively verified. The historical
+`weights_maxrl_t` function instead dropped the entire K=0 group. Its exact
+population multiplier is
+
+```
+w_T(p) − (1−p)^(N−1),
+```
+
+not `w_T(p)`. At T=N it reduces to practical Algorithm 1's `w_{N−1}`.
+
+The exact helper makes T a per-prompt knob independent of rollout budget and
+opens a third integration axis beyond prompt selection and rollout allocation:
 
 - easy prompts (p̂ high): T = 1 → plain RL weighting, minimal variance;
 - frontier prompts: T = N → full ML weighting where the higher-order
@@ -129,27 +154,27 @@ rollout allocation — a **curriculum over the objective itself**:
   (bounding the 1/p variance blow-up the truncation exists to control).
 
 The teacher already estimates p̂ per prompt, so annealing T_i by difficulty
-is free. This mirrors how the population weight w_T(p) = (1−(1−p)^T)/p is
+is mechanically cheap. This mirrors how the population weight
+w_T(p) = (1−(1−p)^T)/p is
 flat (≈T) for p ≪ 1/T and ≈1/p for p ≫ 1/T: choosing T_i ≈ 1/p̂_i puts every
 prompt at the knee of its own weight curve.
 
-**Empirical status: negative on the CPU testbed.** `weights_maxrl_t`
-(validated: T=N recovers Algorithm 1 in 20 random cases) with
+**Empirical status: unresolved for the exact estimator.** The historical
+experiment used the dropped-group `weights_maxrl_t` variant. With
 T_i = clip(1/p̂_i, 1, N) slightly *underperforms* fixed T=N
 (advmass teacher: AUC 0.698 vs 0.704; uniform: 0.641 vs 0.653; 5 seeds).
-Interpretation: lowering T only helps when the 1/p variance blow-up is the
-binding constraint; on this testbed the group size (16–32) keeps variance
-manageable, so shrinking T just weakens the beneficial hard-prompt
-upweighting. Adaptive-T remains interesting only for regimes with very small
-groups or extreme p̂ spreads — deprioritized.
+That is a valid negative for the tested heuristic, but not evidence about an
+unbiased adaptive-T estimator. Re-running with `weights_maxrl_t_eq10` is
+required before making the objective-curriculum claim.
 
 ## 5. Hindsight relabeling: manufacturing successes for the success-conditioned estimator
 
 MaxRL's Theorem 1 says the ML gradient is the expected score function
-*conditioned on success*. The estimator therefore learns **only from
-successes** — which is precisely why K=0 groups are dead weight. Hindsight
-Experience Replay (HER) offers the complementary move: a failed trajectory is
-a *success for the goal it actually reached*. Where task structure admits
+*conditioned on success*. The implemented variance-reduced estimator uses
+failures as a zero-mean control variate inside live groups, but emits exactly
+zero when K=0. Hindsight Experience Replay (HER) offers the complementary move:
+a failed trajectory can be a *success for the goal it actually reached*. Where
+task structure admits
 relabeling (goal-conditioned tasks, nested prefixes), each dead group can be
 converted into a live group for an easier related task, at zero extra
 generation cost.
@@ -171,11 +196,14 @@ Interpretation: the teacher *avoids* spending compute beyond the frontier;
 hindsight *recycles* whatever still lands there. Together they make the
 frontier band effectively wider.
 
-Bias caveat: the relabeled group is conditioned on the achieved outcome, so
-it is not an unbiased estimator of the relabeled task's truncated-ML gradient
-(same status as HER's auxiliary goals). Empirically it helps uniformly here;
-at LLM scale the analogue is goal/prefix relabeling where verifiers admit it
-(maze goals, sub-goals in multi-step proofs, partial-credit unit tests).
+Bias caveat: the relabeled goal is selected from the same dead group, so the
+group is coupled and conditioned to contain a relabeled success. It is not an
+unbiased estimator of the relabeled task's truncated-ML gradient (same status
+as HER's auxiliary goals). V1 establishes directional alignment on the skill
+chain (mean cosine 1.000), not equality in magnitude or joint sampling law.
+Empirically it helps uniformly here; at LLM scale the analogue is goal/prefix
+relabeling where verifiers admit it (maze goals, sub-goals in multi-step
+proofs, partial-credit unit tests).
 
 **Ablations (advmass teacher, 5 seeds).** Hindsight weight scale is monotone
 on the toy — AUC 0.805 / 0.840 / 0.883 / 0.908 / 0.928 / 0.943 at scale

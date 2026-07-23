@@ -7,9 +7,9 @@ testbed, 5 seeds unless noted.
 ## V1 — Hindsight gradient fidelity (validates Prop. 6)
 
 Probe: a level-11 task at true p = 0.0005 (99% of groups dead). Relabel each
-dead group to its deepest correct prefix j; compare the relabeled gradient to
-the *exact* success-conditioned ML gradient of the level-j task, and to
-fresh unbiased groups sampled directly on that task:
+dead group to its deepest correct prefix j; compare the relabeled update's
+direction to the exact success-conditioned ML direction of level j and to
+fresh practical-Algorithm-1 groups sampled directly on that task:
 
 | prefix j | n groups | hindsight cosine (per-group) | fresh-group cosine | cosine of MEAN hs gradient |
 |---|---|---|---|---|
@@ -17,13 +17,13 @@ fresh unbiased groups sampled directly on that task:
 | 9 | 1876 | 0.948 ± 0.016 | 0.946 ± 0.017 | **1.000** |
 | 10 | 276 | 0.956 ± 0.012 | 0.958 ± 0.007 | **1.000** |
 
-**Reading:** per-group, the hindsight gradient is exactly as well-aligned as
-an unbiased fresh group (same cosine, same spread); in the mean it converges
-to the true gradient with cosine 1.000. On structures where the relabeled
-conditional law matches (Prop. 6a), hindsight is not a biased approximation
-— it *is* the ML gradient of the relabeled task, harvested from compute that
-would otherwise produce zero. The caveat that survives: coverage drift
-(relabeled goals are policy-reachable ones), not gradient direction.
+**Reading:** per-group, the hindsight update is as directionally aligned as a
+fresh practical group (same cosine and spread); its mean reaches cosine 1.000
+to the ML direction. Cosine does not test magnitude, and selecting the deepest
+goal from the same dead group changes the joint sampling law. Proposition 6
+therefore treats hindsight as a biased HER-style auxiliary update and states
+the exact condition for zero bias. The measured result is strong directional
+fidelity on this structure, not an unbiasedness proof.
 
 ## V2 — The oracle gap (what exploration costs)
 
@@ -129,16 +129,15 @@ Sampling ∝ u(p)^γ (Thompson draws, decay 0.7, 5 seeds):
 | AUC | 0.728 | 0.764 | **0.782** | 0.782 | 0.771 |
 
 Sharper concentration beats proportional sampling, saturating at γ≈4;
-hard top-k is slightly worse than soft γ=4 (loses Thompson's uncertainty
-probing). **Why theory and practice differ:** Prop. 1 makes u(p) the
-expected signal *per group*, so ∝u sampling maximizes collected mass per
-draw — but *learning* compounds: gradient steps on the single
-highest-mass task advance the frontier, which unlocks the next task, and
-the compounding favors concentrating beyond linear. The mass functional
-is the right *ordering*; the optimal *temperature* over it is sharper
-than proportional. (Expect γ_opt to shrink with task diversity — many
-independent chains dilute compounding; γ is now a config knob, default 4
-on chain-structured pools, 1–2 on flat pools.)
+hard top-k is slightly worse than soft γ=4 (it loses Thompson uncertainty
+probing and coverage). **What theory does and does not say:** Prop. 1 makes
+u(p) the expected normalized coefficient mass *conditional on selecting a
+task*. For fixed known u, one-step expected mass is linear in the sampling
+distribution and is maximized by selecting argmax u, not by q∝u. The power
+family is therefore an exploration/concentration design choice from the
+start. Learning compounding, posterior uncertainty, diversity, and
+anti-forgetting determine its useful temperature. The experiment selects
+γ≈4 on these chains; use 1–2 as the conservative flat-pool default.
 
 **V6b — mechanism isolated in a minimal ODE model.** Abstract the chain to
 skill parameters θ₁..θ_L with p_j = Π_{i≤j} σ(θᵢ) and shared-skill

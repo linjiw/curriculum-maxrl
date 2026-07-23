@@ -192,8 +192,8 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     In RL with verifiable rewards, rollout compute is wasted twice: on prompts the model has
     mastered (nothing left to learn) and on prompts it can't touch (every rollout fails —
     group estimators emit <em>zero gradient</em>). We measured it: under uniform sampling,
-    <strong>65–75% of rollout groups produce no learning signal</strong>. The fix needs no new
-    machinery. We prove MaxRL's expected learning signal on a prompt is exactly
+    <strong>65–75% of rollout groups produce no coefficient update</strong>. The fix needs no new
+    machinery. We prove MaxRL's expected coefficient L1 mass on a prompt is exactly
     <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong> — solvable in N tries but not in one — and
     that formula <em>is</em> the curriculum: sample by it, and the first waste disappears. For
     all-fail prompts no sampling rule can help, so we <em>recycle</em>: a failed rollout is a
@@ -206,7 +206,8 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     <p style="margin:0"><strong>Read the curriculum off the estimator's own algebra, and salvage
     what the estimator throws away.</strong> No difficulty-band hyperparameters — the rollout
     budget N you already chose sets the band (peak difficulty ≈ ln&nbsp;N&nbsp;/&nbsp;N); the
-    estimator is never modified, so every unbiasedness result of the base paper carries over.</p>
+    requested-task estimator stays the paper's practical Algorithm 1, while hindsight is
+    explicitly treated as an auxiliary HER update rather than an unbiased estimator.</p>
   </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
@@ -232,7 +233,7 @@ one).</p>
 <p>The answer is sharply the second, for a structural reason: <strong>weights act on prompts
 only after they are sampled, and only when at least one rollout succeeds.</strong> However
 w(p) is shaped, it cannot rescue a prompt whose group came back all-fail — the group is
-dropped, and that drop is precisely what makes the estimator unbiased — and it cannot un-spend
+dropped by practical Algorithm 1 — and it cannot un-spend
 compute burned re-confirming mastered prompts. So the curriculum's real job is not "emphasize
 hard prompts" (the objective does that); it is to manage <em>exactly the two regimes the
 estimator is blind to</em>. That reframing — <strong>the estimator's blind spots define the
@@ -241,17 +242,19 @@ curriculum's job description</strong> — is the origin of everything on this pa
 <div class="grid2">
   <div class="card">
     <h3>Channel 1 → the teacher (waste avoidance)</h3>
-    <p>The estimator learns only from successes (Theorem 1 of the paper), so its expected
-    signal per prompt has a closed form — and that form, 2·(pass@N − pass@1), is a
+    <p>The target is success-conditioned (Theorem 1 of the paper), and all-fail groups have
+    zero update, so expected coefficient mass per prompt has a closed form — and that form,
+    2·(pass@N − pass@1), is a
     zone-of-proximal-development functional the estimator was computing implicitly all along.
     Sampling by it is the curriculum. Bounded by the oracle ceiling: allocation only
     redistributes signal that exists.</p>
   </div>
   <div class="card">
     <h3>Channel 2 → the recycler (signal creation)</h3>
-    <p>If the estimator only learns from successes, <em>manufacture successes</em>. A failed
-    rollout is a verified success for the goal it actually reached; relabeled gradients measure
-    as exact as fresh unbiased ones. The only channel that breaks the oracle ceiling — and its
+    <p>If an all-fail group has no update, <em>manufacture verified successes</em>. A failed
+    rollout can be a verified success for the goal it actually reached; relabeled updates are
+    directionally aligned with fresh groups on the skill chain but are not generally unbiased.
+    The only channel that breaks the oracle ceiling — and its
     gain scales with how much a recycled skill can <em>compound</em> (+0.22 AUC on fixed task
     sets, +0.01 on one-shot streams).</p>
   </div>
@@ -299,11 +302,12 @@ interpolates from RL (T=1) to ML (T→∞).</p>
 
 <p><strong>Step 3 — a one-line estimator.</strong> Sample N rollouts, count K successes.
 REINFORCE averages score functions over all N samples; MaxRL averages over the K
-<em>successful</em> ones (and skips the prompt when K=0). Theorem 2 of the paper: this simple
-change is unbiased for the truncated objective with <strong>T&nbsp;=&nbsp;N</strong>. So extra rollouts
-don't just cut variance — they raise the fidelity of the objective itself. In the practical
-algorithm it is literally one line: normalize the advantage by the group's <em>mean reward</em>
-(instead of the std as in GRPO, or nothing as in RLOO).</p>
+<em>successful</em> ones (and skips the prompt when K=0). Theorem 2 says the success-only
+Eq.&nbsp;9 estimator is unbiased for the truncated objective with
+<strong>T&nbsp;=&nbsp;N</strong>; full Eq.&nbsp;10 preserves that expectation by retaining its
+score control at K=0. The practical Algorithm&nbsp;1 drops the whole K=0 group, making its
+exact expected order <strong>N−1</strong>. Extra rollouts still raise objective fidelity, with
+that one-order offset.</p>
 
 <!-- Chart 1: weight functions -->
 <figure>
@@ -348,13 +352,13 @@ teacher can close:</p>
 </div>
 <div class="gap-card">
   <h3>Uniform rollout budgets</h3>
-  <p>The paper uses a fixed N per prompt. But since the truncation order is tied to the group size
-  (T = N), harder prompts would benefit from larger groups twice over: more chance of a first
-  success, and a higher-order approximation of the ML objective.</p>
+  <p>The paper uses a fixed N per prompt. In practical Algorithm&nbsp;1 the expected order is
+  N−1 (full Eq.&nbsp;10 gives N), so harder prompts benefit from larger groups twice over:
+  more chance of a first success and a higher-order likelihood approximation.</p>
 </div>
 
 <p>A striking finite-sample fact we verified: at p&nbsp;=&nbsp;0.01, N&nbsp;=&nbsp;32, GRPO's population
-curve promises weight ≈ 0.199, but the <em>realized</em> expected signal is 0.100 — half —
+curve promises coefficient mass ≈ 0.199, but the <em>realized</em> expectation is 0.100 — half —
 because 72% of groups are all-fail and contribute nothing. Population weight curves describe a
 limit no finite-group trainer lives in.</p>
 
@@ -362,9 +366,9 @@ limit no finite-group trainer lives in.</p>
 <h2 id="idea">3 · Our proposal: read the curriculum off the estimator</h2>
 
 <p>Instead of importing a curriculum heuristic (difficulty bands, learning-progress bandits),
-we asked: <em>how much learning signal does the MaxRL estimator actually emit on a prompt, in
-expectation?</em> Define the <strong>advantage mass</strong> of a group as the total magnitude of
-its advantage weights, Σ|w|. For MaxRL's variance-reduced estimator
+we asked: <em>how much coefficient mass does the MaxRL estimator assign to a prompt, in
+expectation?</em> Define the <strong>coefficient mass</strong> of a group as the L1 mass of
+its scalar score coefficients, Σ|w|. For practical MaxRL Algorithm&nbsp;1
 (w<sub>succ</sub>&nbsp;=&nbsp;1/K&nbsp;−&nbsp;1/N, w<sub>fail</sub>&nbsp;=&nbsp;−1/N, group dropped at K=0),
 the algebra collapses to something exact and interpretable:</p>
 
@@ -373,8 +377,8 @@ the algebra collapses to something exact and interpretable:</p>
   <span class="rm">=</span> 2·( (1−(1−p)<sup>N</sup>) − p )
 </div>
 
-<p><strong>The expected learning signal on a prompt is twice the probability that it is solvable
-within N attempts but not within one.</strong> That is a compute-indexed formalization of the
+<p><strong>The expected coefficient mass on a prompt is twice the probability that it is solvable
+within N attempts but not within one.</strong> This coefficient-only surrogate is a compute-indexed formalization of the
 zone of proximal development, produced by the estimator itself. It vanishes at both ends —
 beyond-frontier prompts (group dies) and mastered prompts (no headroom) — and peaks at</p>
 
@@ -384,12 +388,14 @@ beyond-frontier prompts (group dies) and mastered prompts (no headroom) — and 
 </div>
 
 <p>so larger group sizes automatically shift the optimal curriculum band toward harder prompts —
-the teacher and the objective share the same compute knob.</p>
+the teacher and the practical objective share the same compute knob. This identity is specific
+to dropped-group Algorithm&nbsp;1. Full Eq.&nbsp;10 retains coefficient mass 1 at K=0 and has a
+different mass curve; its expected objective order is N rather than N−1.</p>
 
 <!-- Chart 2: advantage mass -->
 <figure>
   <div class="chart-card" id="chart2card">
-    <p class="chart-title">The derived teacher utility: expected advantage mass vs. pass rate</p>
+    <p class="chart-title">The derived teacher utility: expected coefficient mass vs. pass rate</p>
     <p class="chart-sub">u(p) = pass@N − pass@1. Drag N and watch the ZPD band widen toward harder prompts; the dot marks the peak p<sup>★</sup> ≈ ln N / N.</p>
     <div class="slider-row">
       <label for="nSlider">Group size N</label>
@@ -403,7 +409,7 @@ the teacher and the objective share the same compute knob.</p>
   </div>
   <figcaption>
     x is log-scaled to expose the low-p regime. The green reference is SFL's
-    “learnability” p(1−p) — exactly our utility at N=1, and (we prove) exactly ½ the advantage
+    “learnability” p(1−p) — exactly our utility at N=2, and (we prove) exactly ½ the advantage
     mass of the RLOO estimator. The learnability-curriculum literature and the estimator algebra
     are the same object seen from two sides.
   </figcaption>
@@ -453,7 +459,8 @@ the teacher and the objective share the same compute knob.</p>
   marginal mass p̃(1−p̃)<sup>N</sup> — the probability the next rollout is the group's
   <em>first success</em>. Total mass is concave in each N<sub>i</sub>, so greedy is optimal.</li>
   <li><strong>Train.</strong> MaxRL advantages, unchanged — the estimator was never modified,
-  so all of the paper's unbiasedness results carry over untouched.</li>
+  on requested tasks. Relabeled groups are an auxiliary HER term and do not inherit the
+  paper's unbiasedness theorem.</li>
 </ol>
 </div>
 
@@ -480,9 +487,10 @@ magnitude telescopes:</p>
   <span class="rm">=</span> 2·((1−(1−p)<sup>N</sup>) − p)
   <span class="rm">=</span> 2·(<span class="rm">pass@</span>N − <span class="rm">pass@</span>1) <span class="rm">∎</span>
 </div>
-<p>Every claim on this page traces to identities of this kind — seven propositions with proofs in
+<p>Every mathematical claim on this page traces to identities of this kind — the estimator-order
+audit plus seven propositions in
 <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/PROOFS.md">PROOFS.md</a>
-(peak location, water-filling optimality, RLOO ≡ learnability, the ~N× frontier-signal ratio,
+(peak location, water-filling optimality, RLOO ≡ learnability, the (N−1)× asymptotic coefficient-mass ratio,
 the hindsight conditional-law characterization), each Monte-Carlo verified in
 <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/run_validation.py">run_validation.py</a>.</p>
 </div>
@@ -494,9 +502,9 @@ the hindsight conditional-law characterization), each Monte-Carlo verified in
 <table>
   <thead><tr><th>Estimator</th><th>E[Σ|w|] (exact)</th><th>Reading</th><th class="num">Status</th></tr></thead>
   <tbody>
-    <tr><td>MaxRL</td><td class="mono">2(pass@N − pass@1)</td><td>solvable in N tries but not in one — the derived teacher utility</td><td class="num"><span class="status ok">✓ 200k-trial MC</span></td></tr>
+    <tr><td>Practical MaxRL Algorithm 1</td><td class="mono">2(pass@N − pass@1)</td><td>solvable in N tries but not in one — the derived teacher utility</td><td class="num"><span class="status ok">✓ exact enumeration</span></td></tr>
     <tr><td>RLOO</td><td class="mono">2p(1−p)</td><td>identical to SFL “learnability” — two literatures, one object</td><td class="num"><span class="status ok">✓ exact</span></td></tr>
-    <tr><td>GRPO</td><td class="mono">≈2√(p(1−p))·P(K∉{0,N})</td><td>realized signal on hard prompts ~2× below the population curve</td><td class="num"><span class="status ok">✓ binomial sum</span></td></tr>
+    <tr><td>GRPO</td><td class="mono">finite-N binomial sum over 1≤K&lt;N</td><td>realized signal on hard prompts ~2× below the population curve; population limit × non-degenerate probability is not exact</td><td class="num"><span class="status ok">✓ exact sum</span></td></tr>
   </tbody>
 </table>
 
@@ -556,9 +564,10 @@ seed noise: GRPO's pass@8 <em>decays</em> in every seed (mean 0.308→0.271) whi
 scale, with the curriculum widening the gap in both directions.</p>
 
 <h3>Hindsight relabeling — the biggest single gain</h3>
-<p>MaxRL's Theorem 1 makes the estimator <em>success-conditioned</em>: it learns only from
-successes. The HER-style complement: a failed trajectory is a success <em>for the goal it
-actually reached</em>. Relabeling dead groups to their deepest achieved sub-goal converts
+<p>MaxRL's target is <em>success-conditioned</em>. Failures in live groups enter through the
+variance-reduction control variate, but all-fail groups have zero update. The HER-style
+complement: a failed trajectory can be a success <em>for the goal it actually reached</em>.
+Relabeling dead groups to their deepest achieved sub-goal converts
 wasted compute into live MaxRL groups:</p>
 <table>
   <thead><tr><th>Config (CPU skill-chain, 5 seeds)</th><th class="num">Final</th><th class="num">AUC (speed)</th></tr></thead>
@@ -572,10 +581,11 @@ wasted compute into live MaxRL groups:</p>
 <p>Division of labor: the <strong>teacher avoids</strong> spending compute beyond the frontier;
 <strong>hindsight salvages</strong> whatever still fails there. In the hard 16-level regime hindsight
 alone (0.970) even beats the teacher alone (0.961), and the combination stays best (0.978).
-Two later validation results sharpened this: <strong>the hindsight gradient is exact
-on-structure</strong> — per-group cosine to the true success-conditioned ML gradient equals that
-of unbiased fresh groups (0.956 vs 0.958), and the mean relabeled gradient converges to cosine
-1.000 (Prop. 6 + V1); and in a <strong>frontier-heavy regime</strong> (max pool pass rate 10⁻⁵)
+Two later validation results sharpened this: <strong>the hindsight direction aligns
+on the skill chain</strong> — per-group cosine to the true success-conditioned ML direction
+equals that of fresh practical groups (0.956 vs 0.958), and the mean relabeled update reaches
+cosine 1.000 (Prop. 6 + V1). This does not establish unbiased magnitude. In a
+<strong>frontier-heavy regime</strong> (max pool pass rate 10⁻⁵)
 uniform, DAPO dynamic sampling, and the plain teacher all flatline at exactly 0 while
 teacher+hindsight reaches 0.98 — reallocating compute among unlearnable tasks cannot help;
 hindsight <em>creates</em> the missing signal by inventing the curriculum below the pool,
@@ -585,9 +595,10 @@ igniting learnability within ~400 groups, then going silent as natural successes
 <p>Two late results sharpened the method. First, sampling ∝ u(p)<sup>γ</sup> with γ≈4 beats
 proportional sampling (AUC 0.782 vs 0.728): the mass functional is the right <em>ordering</em>,
 but learning <em>compounds</em> on structured task pools — steps on the highest-mass task unlock
-the next — so the optimal temperature is sharper than proportional. (A two-line ODE model
-isolates the cause: with shared skills the γ effect reproduces quantitatively; on a flat pool it
-vanishes.) Second, the headline:</p>
+the next — so this chain sweep favors sharper concentration. This is not a general optimum:
+the unconstrained one-step mass maximizer is argmax&nbsp;u, while γ controls exploration and
+coverage. A two-line ODE model isolates the chain effect, and γ=4 did not transfer to the
+broad-level GPU maze; γ=1 remains the default there. Second, the headline:</p>
 
 <figure>
   <div class="chart-card" id="chart3card">
@@ -611,12 +622,12 @@ relabels/step) is likewise the new champion (final 0.258, best 0.269 at matched 
 while routing relabeled successes into the teacher's posterior inflated it (p̂ 0.81 vs true 0.47)
 and was dropped — the posterior should see only requested-task evidence.</p>
 
-<h3>Hindsight gradients are exact, not approximate</h3>
-<p>The load-bearing question for hindsight: is a relabeled gradient a real ML gradient or
-plausible noise? On the skill chain we can compute the <em>true</em> success-conditioned ML
-gradient exactly and measure alignment. Result — relabeled (hindsight) groups are exactly as
-well-aligned as unbiased fresh groups sampled directly on the relabeled task, and the mean
-hindsight gradient converges to the truth:</p>
+<h3>Hindsight directions align on the skill chain</h3>
+<p>The load-bearing question for hindsight is whether a relabeled update points in a useful
+direction. On the skill chain we can compute the true success-conditioned ML direction and
+measure cosine alignment. Relabeled groups are as well-aligned as fresh practical groups, and
+the mean reaches cosine 1.000. Because the relabeled goal is selected from the same dead group,
+this test does not establish unbiased magnitude or equality of joint sampling laws:</p>
 <table>
   <thead><tr><th>Relabel depth j</th><th class="num">groups</th><th class="num">hindsight cosine</th><th class="num">fresh-group cosine</th><th class="num">cosine of mean</th></tr></thead>
   <tbody>
@@ -636,8 +647,8 @@ interface contract in <code>frontier_rl</code>.</p>
   <thead><tr><th>Approach</th><th>Outcome</th><th class="num">Status</th></tr></thead>
   <tbody>
     <tr><td>Adaptive truncation T<sub>i</sub> ≈ 1/p̂<sub>i</sub> (decoupled from N via the repo's subset estimator)</td>
-        <td>slightly <em>under</em>performs fixed T=N (AUC 0.698 vs 0.704) — at N=16–32 variance isn't binding, so lowering T only weakens hard-prompt upweighting</td>
-        <td class="num"><span class="status no">✗ negative</span></td></tr>
+        <td>the historical dropped-K=0 wrapper underperforms (AUC 0.698 vs 0.704), but it is not unbiased for the claimed T objective; the exact Eq. 10 helper is finite-N verified and not yet trained</td>
+        <td class="num"><span class="status run">△ unresolved</span></td></tr>
     <tr><td>Learning-progress (|Δp̂|) teachers</td>
         <td>underperform pass-rate-band teachers here — the signal is noisy at N=16 and lags the moving frontier</td>
         <td class="num"><span class="status no">✗ weak</span></td></tr>
@@ -780,7 +791,7 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   <div class="card">
     <h3>Conceptual compression</h3>
     <p>Learnability curricula (p(1−p)), DAPO-style dynamic filtering, and HER stop being three
-    separate tricks: they are the N=1 slice, the sampling shadow, and the success-manufacturing
+    separate tricks: they are the N=2 member, the sampling shadow, and the success-manufacturing
     complement of <em>one identity</em>. Fewer moving parts to tune, one theory to reason with.</p>
   </div>
   <div class="card">
@@ -798,16 +809,16 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   <div class="card">
     <h3>Compute changes the objective, not just the variance</h3>
     <p>For REINFORCE, more rollouts = lower variance on the same objective. For MaxRL, more
-    rollouts = a strictly better objective (T = N). Any curriculum that reallocates rollouts is
-    therefore also reallocating <em>objective fidelity</em> — which is why rollout allocation
-    deserves to be a first-class curriculum axis.</p>
+    rollouts = a higher-order objective: T=N for Eq. 9/full Eq. 10 and T=N−1 for practical
+    Algorithm 1. Any curriculum that reallocates rollouts also reallocates
+    <em>objective fidelity</em>, so rollout allocation deserves to be a first-class axis.</p>
   </div>
   <div class="card">
     <h3>The zero-gradient zone is structural, not a bug</h3>
-    <p>Dropping K=0 groups is what makes the estimator unbiased for the truncated objective.
-    So MaxRL <em>cannot</em> be patched at the loss level to learn from all-fail prompts — the fix
-    has to live in the sampling distribution. That is the cleanest argument we know for pairing
-    it with a teacher.</p>
+    <p>Practical Algorithm 1 intentionally drops K=0 groups and therefore emits no update there.
+    The exact Eq. 10 estimator would retain a score control on those groups, but it is not a
+    verifier success signal and changes the practical algorithm. The deployed dead-group gap
+    is the clean argument for pairing Algorithm 1 with a teacher or verified relabeling.</p>
   </div>
   <div class="card">
     <h3>Population curves mislead at finite N</h3>
@@ -818,7 +829,7 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   </div>
   <div class="card">
     <h3>Existing curricula are special cases</h3>
-    <p>SFL's learnability p(1−p) is our utility at N=1 and RLOO's exact advantage mass; SEC's
+    <p>SFL's learnability p(1−p) is our utility at N=2 and RLOO's exact advantage mass; SEC's
     empirical-|advantage| bandit reward has our formulas as its exact expectation. The
     advantage-mass teacher is “oracle SEC for MaxRL” — same target, computable from a posterior
     before a prompt is ever visited.</p>

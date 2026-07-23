@@ -14,7 +14,7 @@ of `log p`), which acts as an *implicit, gradient-level* curriculum — but it c
 rescue prompts whose rollout groups come back all-fail (K=0 → group dropped, zero
 gradient), and it wastes compute re-rolling mastered prompts. We add an *explicit,
 data-level* teacher whose utility function is **derived from the estimator itself**:
-the expected total |advantage| a prompt receives from a group of N rollouts is exactly
+the expected coefficient L1 mass assigned to a prompt by a group of N rollouts is exactly
 
 ```
 E[Σ|w|] = 2 · (pass@N(p) − pass@1(p)) = 2 · ((1−(1−p)^N) − p)
@@ -22,10 +22,14 @@ E[Σ|w|] = 2 · (pass@N(p) − pass@1(p)) = 2 · ((1−(1−p)^N) − p)
 
 — twice the probability the prompt is *solvable within N attempts but not within one*.
 This is a compute-indexed formalization of the zone of proximal development, peaking at
-p* ≈ ln(N)/N. The teacher Thompson-samples a decayed Beta posterior over each prompt's
-pass rate and samples prompts proportional to this utility; the optimal per-prompt
-rollout allocation is greedy water-filling on the marginal `p(1−p)^N` (the probability
-the next rollout is a group's first success).
+p* ≈ ln(N)/N. This identity is for the practical dropped-group Algorithm 1
+coefficients; that implementation's exact expected objective order is N−1,
+whereas paper Eq. (9) and full Eq. (10) have order N. The teacher
+Thompson-samples a decayed Beta posterior over each prompt's
+pass rate and uses a soft distribution proportional to this utility; this sampling
+temperature is an exploration choice, not implied by the identity. The optimal
+per-prompt rollout allocation is greedy water-filling on the marginal
+`p(1−p)^N` (the probability the next rollout is a group's first success).
 
 ## Repo map
 
@@ -40,7 +44,8 @@ the next rollout is a group's first success).
 | `curriculum_maxrl/RESEARCH.md` | Deep-research synthesis of modern curriculum RL (PAIRED/PLR/ACCEL, ALP-GMM, SFL learnability, RLVR curricula) — 3-vote adversarially verified against primary sources |
 | `curriculum_maxrl/*.py` | CPU prototype: skill-chain testbed, 5 estimators, 5 teachers, experiment runners |
 | `curriculum_maxrl/maze_gpu/` | GPU testbed: 1.26M-param transformer on 17×17 mazes, goal-distance curriculum (13 levels), pass@k eval, matched wall-clock sweep protocol + logs |
-| `verl_integration/` | Production integration for the MaxRL verl fork: `curriculum.py` (drop-in module), patches for `main_ppo.py` / `ray_trainer.py`, SmolLM+GSM8K launch script |
+| `verl_integration/` | Phase-1 integration for the MaxRL verl fork: CPU-tested sampler, exact teacher/sampler resume, trainer patches, and SmolLM+GSM8K launch script; not yet run at LLM scale |
+| `isaaclab_integration/` | RSL-RL Anymal-C rough-terrain ladder: five arms, atomic teacher checkpoints, fixed-grid evaluation, and task-family status |
 
 ## Quick start (CPU, numpy only)
 
@@ -49,6 +54,7 @@ cd curriculum_maxrl
 python3 run_experiment.py --steps 400 --seeds 5   # teacher × estimator sweep, ~1 min
 python3 run_speed.py                              # learning-speed + adaptive-N comparison
 python3 test_verl_curriculum.py                   # unit tests for the verl module
+pytest -q ../verl_integration/test_curriculum.py  # production patch module
 ```
 
 GPU maze testbed (needs torch + one ~24GB GPU):
@@ -73,7 +79,7 @@ python3 analyze.py matched_*.jsonl
 +data.curriculum.utility=advmass      # derived utility; "frontier" = older heuristic
 ```
 
-Teacher state is checkpointed/restored automatically; wandb gets
+Teacher and sampler RNG state are checkpointed/restored together; wandb gets
 `curriculum/visited_frac`, `curriculum/frac_dead_p_lt_0.05`,
 `curriculum/frac_mastered_p_gt_0.9`. See `verl_integration/smollm_curriculum.sh`
 for a full GSM8K recipe.
@@ -94,7 +100,8 @@ On the CPU skill-chain testbed (36 tasks, initial pass rates 10^-level, 5 seeds)
 
 On the GPU maze testbed: uniform sampling wastes ~65% of rollout groups (dead K=0);
 the frontier teacher cuts that to ~49% and runs ~2× more steps in the same wall-clock.
-Matched-wall-clock sweep in progress; see `curriculum_maxrl/maze_gpu/EXPERIMENTS.md`.
+The matched-wall-clock sweep and three-seed teacher confirmation are complete;
+see `curriculum_maxrl/maze_gpu/EXPERIMENTS.md`.
 
 ## Citation / provenance
 

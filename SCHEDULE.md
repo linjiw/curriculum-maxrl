@@ -2,7 +2,7 @@
 
 *Living document — updated as runs complete. Times are A10G wall-clock.*
 
-## Currently executing (GPU queue, in order)
+## Completed GPU queue
 
 | # | run | duration | purpose | decision it feeds |
 |---|---|---|---|---|
@@ -22,41 +22,25 @@ uniform-mix 0.889 → teacher 0.944 → **full stack 1.000 every seed**; plus
 the transfer lesson (per-bin params never reach the flag: curricula operate
 through shared parameters).
 
-Watcher: `watch_gpu.sh` (running) — notifies on stall (>25 min no log growth) or queue completion.
+## Resolved decisions
 
-## Decision tree after the queue drains
-
-```
-E4 efficiency table
-├─ champion shows ≥2× samples-to-coverage on frontier levels
-│    → add efficiency chart to website; lead REPORT with it
-└─ no separation → coverage parity note; keep AUC as headline
-
-F1 long-horizon
-├─ level 6 leaves 0 by 9600 s
-│    → run F1b: same budget, uniform baseline (is it the schedule or just time?)
-└─ still 0 → implement depth-scaled move budgets (hindsight-min-depth
-     curriculum); CPU-validate first, then one 2400 s GPU run
-
-F2 γ=4
-├─ AUC ≥ dense-hindsight baseline +0.003 → set teacher-power=4 default for
-│    level-structured tasks in maze + frontier_rl docs
-└─ tie/worse → document as CPU-only effect (compounding weaker at 13 levels
-     than 36 tasks); keep γ=1 GPU default
-
-F3–F4 seeds
-├─ ordering holds → REPORT tables get ±std; done
-└─ champion within noise of frontier_alp → soften "champion" claim to tie
-```
+- Efficiency improves strongly at selected frontier targets (up to 11× versus
+  GRPO), but reverses at one mid-level; report the full curve.
+- Duration alone does not solve level-6 pass@1. Per-step legality is the binding
+  mechanism; the wide-model probe improves tail coverage, not execution enough
+  for mastery.
+- γ=4 is a CPU chain result only; γ=1 remains the GPU/verl default.
+- Dense hindsight has a reliable AUC gain over the plain teacher across three
+  seeds, while its final-score edge is small.
 
 ## Next wave (planned, not yet queued)
 
 | priority | experiment | est. | prerequisite |
 |---|---|---|---|
-| P1 | **Efficiency eval of F1's long-horizon checkpoint** — does 4× training turn into inference-time speedup at deep levels? | 30 min | F1 |
-| P2 | **MountainCar scaled benchmark** (steps 120→600, 5 seeds, γ ablation) — does hindsight reach the flag (hardest bin > 0)? First *external* env where the full stack could show a categorical win | ~2 h CPU (parallel, no GPU) | none |
-| P3 | **Best-config maze run with all validated knobs** (frontier_alp + dense hs + γ=4 + greedy rollout allocation if F2 passes) — the "everything on" run | 40 min | F2 |
-| P4 | **Streaming-pool teacher prototype** (parametric density over a continuous difficulty axis, ALP-GMM-style) — unblocks procedural/generative task sources; CPU-validate on a continuous-difficulty variant of grid_reach | CPU | none |
+| P1 | **Isaac Lab Anymal-C rough pilot + fixed-grid evaluation** | GPU | live pilot retry |
+| P2 | **Deep-supervision maze ablation** (all verified prefixes or deeper SFT exposure) | GPU | none |
+| P3 | **Streaming-teacher validation on a real procedural source** | CPU/GPU | synthetic prototype complete |
+| P4 | **Per-prompt rollout counts in verl** for greedy allocation | multi-GPU integration | allocator CPU tests |
 | P5 | SmolLM2-360M + GSM8K 2×2 via `verl_integration/` | 8-GPU node | **blocked on hardware** |
 
 ## Standing cadence
@@ -75,6 +59,5 @@ F3–F4 seeds
 - **Seed noise:** finals vary ±0.01–0.015 across seeds; no single-seed claim
   goes in REPORT.md without either multi-seed confirmation or an explicit
   single-seed caveat.
-- **Toy→real gap:** every CPU win must re-prove itself on GPU (γ=4 is the
-  current test case); two CPU pre-registrations have transferred correctly
-  so far.
+- **Toy→real gap:** γ=4 failed to transfer from the chain to the maze; every
+  CPU-only win remains provisional until tested in its target domain.
