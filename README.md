@@ -40,6 +40,7 @@ the next rollout is a group's first success).
 | `GUIDE.md` | Design guide: approaches tried, verification status of each, and what's next |
 | `REPORT.md` | Full experiment report: math→algorithm→evidence chain, findings, goal assessment |
 | `SCHEDULE.md` | Live experiment tracking: executing queue, decision trees, next wave |
+| `REVIEW_NOTES.md` | Reviewer entry point: claim boundaries, lock provenance, current run status, and audit order |
 | `curriculum_maxrl/THEORY.md` | Exact coefficient-mass formulas, derived utility, myopic fixed-p allocation theorem, adaptive-T audit |
 | `curriculum_maxrl/DESIGN.md` | Original integration design, hypotheses H1–H5, CPU validation tables |
 | `curriculum_maxrl/RESEARCH.md` | Deep-research synthesis of modern curriculum RL (PAIRED/PLR/ACCEL, ALP-GMM, SFL learnability, RLVR curricula) — 3-vote adversarially verified against primary sources |
@@ -121,14 +122,26 @@ point is at the tested boundary, and scaling also changes effective auxiliary
 learning rate and optimizer work. Full protocol and raw curves are in
 `frontier_rl/examples/skill_chain_component_ablation.json`.
 
-On the corrected Gymnasium MountainCar study (official dynamics, custom nested
-binary thresholds, at least 500k transitions, ten paired seeds), exact-mass
+On the corrected **tile-coded** Gymnasium MountainCar mechanism study (official
+dynamics, custom nested binary thresholds, at least 500k transitions, ten
+paired seeds), exact-mass
 sampling at `γ=4` improves mean-pass AUC over uniform by +0.141 [95% paired
 bootstrap CI 0.076, 0.202], and success-only hindsight adds +0.197 [0.160,
 0.238]. Both survive Holm correction across nine AUC contrasts. Exact mass at
 `γ=1` is not separated from uniform, the legacy `u_{N+1}` score, or
 learnability; concentration is an empirical ingredient in this shared-policy
 task, not a theorem. See `curriculum_maxrl/VALIDATION.md` V8.
+
+A separate **neural** MountainCar V1R2 development study tested shared H64
+against hardest-only and exact total-/active-capacity disjoint controls. All 15
+runs and all reconstruction checks completed, but the predeclared feasibility
+rule returned **NO-GO**: pooled groups contained 1,932 all-fail, 474 mixed, and
+zero all-pass groups, while hardest-goal AUC was zero in every run. Supporting
+mean-pass AUC deltas were small and descriptive only (`+0.0065104`,
+`+0.0119792`, `+0.00546875`, and `+0.00429688`). Reserved seeds
+`18000..18019` remain untouched. This null-headroom development result is not a
+contradiction of the older positive tile-coded study: the policies, controls,
+primary metrics, and evidentiary roles differ.
 
 On the historical GPU maze testbed, the logged zero-weight-group rate was
 ~65% under uniform and ~49% under the frontier teacher. Because that counter
@@ -151,6 +164,8 @@ The Acrobot evidence is chronological and deliberately claim-narrow:
 | V2 | **failed development gate** | Disjoint controls missed the every-cell learning/headroom gate; no transfer or capacity-control confirmation launched. |
 | V3 | **registered decision supported** | Twenty paired seeds confirm only positive shared-H64 curriculum efficacy with hindsight off. |
 | V4A | **stopped: feasibility gate failed** | Integrity checks passed and the fallback selected `U*=250`, but gate 3 failed in exactly 3/9 runs; V4B was not authorized or run. |
+| V5A | **all launch gates passed** | Fresh 3×3 feasibility completed across 27 runs, selected `U*=250`, and independently authorized V5B without reading learning-outcome fields. |
+| V5B | **in progress; outcome-blinded** | The locked 20-seed, nine-cell factorial is executing. No performance result or contrast is claimed before all 180 runs complete and the independent analyzer accepts the all-or-nothing family. |
 
 For V3's normalized target-uniform mean-pass AUC over actual transitions,
 including initialization, uniform scored `0.648669` and the frontier-`u_16`
@@ -196,6 +211,32 @@ instead recorded by `gates.all_pass=false` and
 command has a module-import defect; the exact working `python -m` invocation is
 recorded in
 [`ACROBOT_HINDSIGHT_V4_ERRATA.md`](frontier_rl/examples/ACROBOT_HINDSIGHT_V4_ERRATA.md).
+
+V5A replaced neither V4A nor its stopped decision. It used fresh seeds
+`15000..15002`, ran all nine learning-rate×hindsight-scale cells, completed all
+27 runs, passed every outcome-field-blind technical gate, and selected the
+registered fallback `U*=250`. The independently verified launch decision
+authorized V5B. V5B is a fresh 20-seed (`16000..16019`) 3×3 factorial with four
+predeclared contrasts; it is currently in progress and remains outcome-blinded.
+The presence of a partial or terminal artifact on disk must not be interpreted
+as a result until the independent all-or-nothing analysis is complete.
+
+The V5A lock, artifact, and verification hashes are
+`5c277413c5238f5839d281e09810537221a16737f831a498a3e0217ca5b1502e`,
+`9cf741c91dcb82218cada9b451b76e0811c67aa4cbf1786ac0ba926806479b0a`,
+and `a46b5e9f732b7f9e1796e2d4a2ff344c9ff738574c464b28631e884faaa6ba19`.
+The V5B amendment and lock hashes are
+`11975381874842bc3019074ea9d8168006c0517982ac11e00ad0b488e7671f36`
+and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`.
+
+**Provenance boundary.** “Registered,” “sealed,” and “predeclared” in this
+repository refer to local source/runtime locks created before the corresponding
+seed block was executed. They are not externally timestamped preregistrations.
+An audit of current bytes finds one historical exception: the V2 lock records
+an earlier `run_acrobot_neural.py` hash, while the current file is the V3-era
+runner. The V2 lock still discloses the expected historical hash, but those
+runner bytes are not present at HEAD. The V3 and later listed source manifests
+match the current checked-in bytes. See `REVIEW_NOTES.md` for the exact scope.
 
 ## Citation / provenance
 

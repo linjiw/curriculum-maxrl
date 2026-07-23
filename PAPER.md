@@ -43,7 +43,7 @@ concentrated teacher. The teacher-by-hindsight and concentration-by-hindsight
 interactions are negative (`-0.0586` and `-0.0420`): the components are
 complementary but subadditive, not synergistic. All five contrasts survive a
 Holm correction over the reported 15-contrast family.
-On a corrected ten-seed Gymnasium MountainCar mechanism study, concentrated
+On a corrected ten-seed tile-coded Gymnasium MountainCar mechanism study, concentrated
 coefficient-mass sampling (`gamma=4`) improves mean-pass AUC over uniform by
 `+0.141` (paired 95% bootstrap CI `[0.076, 0.202]`), and centered and
 success-only hindsight add `+0.191 [0.155, 0.231]` and
@@ -66,11 +66,24 @@ not test or establish transfer, capacity effects, hindsight, or Acrobot
 performance in general. A subsequent effect-blind V4A feasibility study
 passed integrity verification but failed its every-run hindsight-preview gate
 in 3/9 scale-zero runs, so the optimizer-matched V4B factorial was not
-authorized or run; V4A contributes no hindsight-effect estimate. The retained
-results therefore support estimator-derived prioritization, one
+authorized or run; V4A contributes no hindsight-effect estimate. A fresh V5A
+full-grid feasibility study then completed 27/27 runs, passed all
+learning-outcome-field-blind gates, selected `U*=250`, and independently
+authorized V5B. V5B is in progress and outcome-blinded, so no V5 hindsight
+effect is yet reported. A separate capacity-matched neural MountainCar V1R2
+development matrix also completed all reconstruction checks but returned
+NO-GO: hardest-goal AUC was zero in all 15 runs and no all-pass groups occurred;
+its confirmatory seeds remain untouched. The retained results therefore
+support estimator-derived prioritization, one
 narrow neural shared-policy efficacy claim, a still-open transfer-channel
 hypothesis, and verified hindsight recycling as testable components; corrected
 GPU, broader neural, and LLM experiments remain necessary.
+
+Throughout this paper, “registered,” “sealed,” and “predeclared” denote local
+source/runtime locks created before the corresponding seed block. They are not
+externally timestamped preregistrations. The V3 and later manifests match
+current source bytes; the historical V2 lock points to an earlier runner hash
+whose exact bytes are not present at HEAD.
 
 ## 1. Problem statement
 
@@ -119,8 +132,8 @@ The paper makes four contributions:
 3. a verifier and trajectory-law contract for hindsight recycling; and
 4. corrected local experiments that separate score shape, concentration, and
    hindsight estimator, plus an independently implemented neural experiment
-   whose failed gates delimit rather than establish the parameter-sharing
-   claim.
+   and capacity-matched development controls whose failed gates delimit rather
+   than establish parameter-sharing and transfer claims.
 
 ## 2. Motivation and related concepts
 
@@ -638,13 +651,15 @@ task transfer, and relabeling can be inspected directly.
 | exact estimator audit | Bernoulli-logit score, exact binomial sum | multiple `N,p`; no sampling noise | maximum identity error |
 | skill chain | 3 chains x 12 nested tasks, exact tabular score gradients | 400 teacher steps, 8 groups/step, `N=16`, 12 paired seeds | mean of 41 equally spaced checkpoints, including step zero |
 | grid reach | radius-8 goal-conditioned tabular policy; teacher `gamma=4` | 150 group steps, 4 groups/step, `N=16`, 10 seeds | normalized mean-pass AUC over group steps |
-| MountainCar | official [`MountainCar-v0`](https://gymnasium.farama.org/environments/classic_control/mountain_car/) dynamics, shared tile-coded policy, 10 nested position thresholds | at least 500,000 transitions/condition, `N=16`, 10 paired seeds | normalized mean-pass AUC over actual transitions |
+| MountainCar tile-coded mechanism study | official [`MountainCar-v0`](https://gymnasium.farama.org/environments/classic_control/mountain_car/) dynamics, shared tile-coded policy, 10 nested position thresholds | at least 500,000 transitions/condition, `N=16`, 10 paired seeds | normalized mean-pass AUC over actual transitions |
+| MountainCar neural V1R2 development | same official dynamics, 8 nested thresholds; shared H64 plus hardest-only and exact total-/active-capacity disjoint controls | 500,000 nominal transitions, `N=16`, 3 paired development seeds × 5 cells | hardest-goal AUC primary; outcome-blind adequacy gate; NO-GO |
 | Acrobot V1/V2 development | official [`Acrobot-v1`](https://gymnasium.farama.org/environments/classic_control/acrobot/) dynamics, one-layer neural actor, 8 nested tip-height thresholds | V1: 3 pilot seeds; V2: 3 paired development seeds x 6 cells, nominal 2,000,000 transitions/cell, `N=16` | normalized target-uniform mean-pass AUC over actual transitions; launch gates, not confirmatory inference |
 | Acrobot V3 verified confirmation | same neural shared-H64 actor; uniform versus frontier-`u_N` teacher at `gamma=1`; hindsight off | 20 sealed paired seeds x 2 cells, nominal 2,000,000 transitions/cell, `N=16` | one predeclared shared-policy AUC contrast; decision supported |
+| Acrobot V5A/V5B | same shared H64 actor; 3 learning rates × 3 hindsight scales | V5A: 27 fresh development runs; V5B: 180 fresh confirmatory runs at selected `U*=250` | V5A feasibility passed; V5B update-indexed AUC family in progress and outcome-blinded |
 
 Grid evaluation uses 32 fixed episodes per ring and preserves training RNG
-state. MountainCar evaluation uses 64 fixed episodes per threshold and also
-preserves training RNG state. The MountainCar predicates—reach position
+state. The tile-coded MountainCar evaluation uses 64 fixed episodes per
+threshold and also preserves training RNG state. The MountainCar predicates—reach position
 `x >= x*`—are custom binary tasks. Mean-pass AUC and flag pass are not the
 standard Gymnasium return.
 
@@ -657,7 +672,7 @@ completed, and the independent verifier reproduced the source/runtime lock,
 run invariants, paired AUCs, interval, exact test, and decision before the V3
 result entered the retained evidence.
 
-MountainCar reports a family of nine AUC contrasts. We report paired percentile
+The tile-coded MountainCar study reports a family of nine AUC contrasts. We report paired percentile
 bootstrap confidence intervals, exact two-sided sign-flip tests, and
 Holm-adjusted `p` values over that family. Values in result tables are mean
 plus or minus sample standard deviation unless stated otherwise.
@@ -777,7 +792,7 @@ at first hit.
 Full relabeled/fresh joint-law equality is not claimed. This is a tabular
 mechanism replication, not a robotics benchmark.
 
-### 8.5 Corrected Gymnasium MountainCar study
+### 8.5 Corrected tile-coded Gymnasium MountainCar mechanism study
 
 | configuration | mean-pass AUC | final mean pass | final flag pass |
 |---|---:|---:|---:|
@@ -977,7 +992,75 @@ repository root the same hash-locked analyzer was run successfully as:
 The invocation correction and its scope are retained in
 `frontier_rl/examples/ACROBOT_HINDSIGHT_V4_ERRATA.md`.
 
-### 8.7 Historical GPU maze records are not confirmatory evidence
+#### V5A passes fresh feasibility; V5B is in progress and outcome-blinded
+
+V5 did not revise V4A's stopped rule. It introduced fresh development seeds
+`15000..15002` and ran the complete 3×3 grid of learning-rate multipliers
+`{0.5,1,2}` and hindsight scales `{0,1,2}`. All 27 runs completed. The
+independent analyzer reproduced the source/runtime lock, fixtures, schedule,
+first-exact-update prefixes, natural relabel application, dead/mixed/all-pass
+coverage, teacher activity, and runtime projection. Every launch gate passed,
+and the fresh budget rule selected `U*=250`. The projected serial runtime for
+the 180-run confirmatory matrix was `7.0557400375` hours.
+
+The V5A authorization rule read no pass-rate curve, return, entropy, AUC, final
+performance, or scale/learning-rate performance contrast. It therefore
+establishes mechanics and feasibility, not efficacy. Its lock, artifact, and
+verification SHA-256 hashes are respectively
+`5c277413c5238f5839d281e09810537221a16737f831a498a3e0217ca5b1502e`,
+`9cf741c91dcb82218cada9b451b76e0811c67aa4cbf1786ac0ba926806479b0a`,
+and `a46b5e9f732b7f9e1796e2d4a2ff344c9ff738574c464b28631e884faaa6ba19`.
+
+V5B is now executing all nine cells on fresh paired seeds `16000..16019`. Its
+four update-indexed AUC contrasts, exact `2^20` sign-flip tests, Holm family,
+and `0.03` materiality rules are frozen. The amendment and lock hashes are
+`11975381874842bc3019074ea9d8168006c0517982ac11e00ad0b488e7671f36`
+and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`.
+No V5B cell outcome, contrast, or interim direction is reported here. The
+family becomes interpretable only after all 180 runs complete and the
+independent analyzer accepts every run.
+
+### 8.7 Neural MountainCar V1R2: verified development NO-GO
+
+Neural V1R2 was designed as an independent transfer test, not a replication of
+Section 8.5's tile-coded mean-pass mechanism study. It used eight nested
+position thresholds and five conditions: frontier/shared H64,
+uniform/shared H64, hardest-only/shared H64, uniform/disjoint-total H8×8, and
+uniform/disjoint-active H64×8. The shared H64 and disjoint-total models each
+have 384 total parameters; shared H64 and each active disjoint-active slot each
+have 384 active parameters. All uniform conditions consumed an identical
+outcome-independent task-schedule prefix.
+
+All 15 development runs on seeds `17000..17002` completed, and the independent
+analyzer reconstructed sampler traces, uniform schedules, raw rollouts,
+evaluations, common random numbers, transition AUCs, parameter identities, and
+the no-hindsight contract. The technical reconstruction passed, but the
+predeclared feasibility decision was **NO-GO**:
+
+| V1R2 development diagnostic | value |
+|---|---:|
+| pooled all-fail groups | 1,932 |
+| pooled mixed groups | 474 |
+| pooled all-pass groups | 0 |
+| runs with nonzero hardest-goal AUC | 0 of 15 |
+
+All four primary hardest-goal AUC contrasts were therefore exactly zero. The
+supporting mean-pass AUC differences were `+0.0065104` (frontier minus
+uniform), `+0.0119792` (frontier minus hardest-only), `+0.00546875` (uniform
+shared minus disjoint-total), and `+0.00429688` (uniform shared minus
+disjoint-active). These are descriptive development quantities and cannot
+rescue a degenerate primary outcome.
+
+The correct conclusion is not that the curriculum won or lost. The frozen
+actor, optimizer, and 500,000-transition budget produced no native-goal
+headroom and never exercised the all-pass side that coefficient-mass sampling
+should downweight. Reserved confirmatory seeds `18000..18019` remain untouched
+and unauthorized. The lock, development artifact, and verification hashes are
+`b5edbc33048a8d3a8d7dbb992a23178ddf8424dd3c5be3165c87e6dc42a50a5c`,
+`2e4803805009a3323307f6bdcfae17fb625008adb5361dc2310e414a19129180`,
+and `fdefc9e4ee2887953c341d2f44c44001bc336598b089dbdc8035175e430148a0`.
+
+### 8.8 Historical GPU maze records are not confirmatory evidence
 
 Earlier 1.26M-parameter transformer maze runs are retained for provenance, but
 the July 2026 audit found that they used the legacy `u_{N+1}` teacher score,
@@ -1046,6 +1129,11 @@ The experiments isolate several distinct questions.
    independently confirms the narrower shared-policy efficacy claim
    (`Delta=+0.0363524`, exact `p=0.00263977`), but its shared-only design cannot
    identify transfer as the cause.
+10. **Does capacity-matched neural MountainCar establish transfer?** No. V1R2
+    had exact total- and active-capacity controls, but every hardest-goal AUC was
+    zero and no all-pass groups occurred. The development gate correctly
+    stopped confirmation; small positive supporting mean-pass deltas are not a
+    substitute for primary-metric headroom.
 
 ## 10. Limitations
 
@@ -1057,9 +1145,11 @@ The experiments isolate several distinct questions.
    one independently verified neural shared-policy result on a fixed nested
    threshold family. The project does not establish broad neural-control,
    language-model, or real-robot performance.
-3. **The MountainCar metric is custom.** It uses nested binary thresholds on
-   official dynamics, not standard episodic return. The per-bin control is not
-   capacity matched.
+3. **Both MountainCar metrics are custom.** They use nested binary thresholds
+   on official dynamics, not standard episodic return. The positive tile-coded
+   study's per-bin control is not capacity matched. Neural V1R2 adds exact
+   capacity controls but is only a stopped three-seed development study with a
+   zero hardest-goal primary metric.
 4. **Hindsight remains distribution shifted.** Verifier validity, conditioning
    rewrite, and first-hit stopping remove semantic and protocol errors but do
    not imply `Q=P` or moment equality.
@@ -1078,7 +1168,8 @@ The experiments isolate several distinct questions.
    ablation has a paired corrected family but unusually low-noise analytic
    evaluation. Acrobot V3 has 20 paired seeds and supports its one registered
    efficacy decision, but it does not power unregistered transfer or hindsight
-   claims.
+   claims. V5A is a feasibility stage, V5B is still outcome-blinded, and neural
+   MountainCar V1R2 did not authorize its 20-seed block.
 9. **Corrected large-scale tests are missing.** The production integration is
    unit tested and passed a local patch-application check, but that check is not
    retained with an upstream MaxRL commit hash and there is no corrected
@@ -1094,31 +1185,33 @@ The experiments isolate several distinct questions.
     comparably at the frozen budget and rate. V3 resolves shared-policy
     efficacy for its fixed family, but cross-task transfer causality remains
     unresolved.
+13. **Local locks are not external preregistration.** They provide a
+    machine-checkable within-repository chronology but no independent
+    timestamp. Current V3 and later manifests match their files. V2's lock
+    records a historical runner hash that differs from HEAD, so exact V2 runner
+    reconstruction requires bytes not present in the current tree.
 
 ## 11. Next experiments
 
 The next work should maximize information rather than expand the headline.
 
-1. **Respect the V4A stop and preregister a new feasibility design:** V4A
-   selected `U*=250` but failed the every-run preview-count gate in 3/9 runs,
-   so V4B was not authorized and must not be launched under the frozen
-   protocol. Diagnose preview scarcity using development-only seeds, then
-   freeze a new protocol and untouched seed block before repeating feasibility.
-   Only a newly preregistered passing gate may launch an optimizer-matched
-   `3x3` learning-rate-by-scale factorial. Its directional contrasts could
-   estimate local algorithm effects per applied update and its interaction
-   contrasts could diagnose restricted separability; neither would isolate
-   pure semantic data value.
+1. **Finish and independently analyze the locked V5B factorial:** V5A supplied
+   the fresh passing feasibility stage and selected `U*=250`. Preserve outcome
+   blinding until all 180 V5B runs finish, then apply the frozen all-or-nothing
+   verifier and report the four predeclared contrasts without rescue analyses.
+   Directional contrasts may estimate a local algorithm effect per applied
+   update; restricted-separability contrasts still do not isolate pure semantic
+   data value.
 2. **Repair the transfer intervention rather than reinterpret V2:** make the
    disjoint controls learn under an effect-blind development rule, for example
    through architecture-specific optimizer calibration or a longer frozen
    budget, then preregister a new teacher-by-sharing factorial on untouched
    seeds. Calibration must not use the interaction sign.
-3. **Second independent Gymnasium replication:** repeat the registered neural
-   efficacy test on a non-nested sparse-goal or survival task so Acrobot's
-   ordered thresholds are not the only neural task structure. Match actual
-   transitions, include initialization in anchored AUC, and preregister the
-   stopping rule and claim boundary.
+3. **Redesign neural MountainCar adequacy:** keep seeds `18000..18019`
+   untouched. On fresh development seeds, calibrate actor/optimizer/budget with
+   an outcome-blind rule requiring native-goal variation and all-fail, mixed,
+   and all-pass exposure. Retain hardest-goal AUC and both exact capacity
+   controls; only a separately reviewed V2 protocol may authorize confirmation.
 4. **Score-shape factorial on one neural benchmark:** uniform, the `u_N`
    coefficient-mass score, legacy `u_{N+1}`, and learnability at common
    `gamma=1`, floor,
@@ -1181,7 +1274,13 @@ mathematical bridge from a practical estimator to a curriculum, plus a
 reproducible local validation program for testing where that bridge holds.
 V4A adds a transparent feasibility stop: integrity verification passed, but
 the preview-count gate failed, so no V4B hindsight comparison was run and no
-hindsight-effect conclusion follows from V4A.
+hindsight-effect conclusion follows from V4A. Fresh V5A then passed its stronger
+full-grid gates and authorized V5B, but V5B remains outcome-blinded and adds no
+result yet. Neural MountainCar V1R2 adds a second transparent stop: complete
+reconstruction passed, but the native-goal primary metric and all-pass regime
+were absent, so confirmation remained untouched. Together these gates make the
+current evidence more credible by preserving negative feasibility outcomes
+instead of converting them into post-hoc performance claims.
 
 ## Reproducibility pointers
 
@@ -1210,4 +1309,18 @@ hindsight-effect conclusion follows from V4A.
   `frontier_rl/examples/acrobot_hindsight_v4a_feasibility.json`,
   `frontier_rl/examples/acrobot_hindsight_v4a_verification.json`,
   `frontier_rl/examples/ACROBOT_HINDSIGHT_V4_ERRATA.md`
+- Acrobot V5 protocol, V5A lock/artifact/verification, and V5B amendment/lock:
+  `frontier_rl/examples/ACROBOT_HINDSIGHT_PROTOCOL_V5.md`,
+  `frontier_rl/examples/ACROBOT_HINDSIGHT_V5A_LOCK.json`,
+  `frontier_rl/examples/acrobot_hindsight_v5a_feasibility.json`,
+  `frontier_rl/examples/acrobot_hindsight_v5a_verification.json`,
+  `frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_AMENDMENT.json`,
+  `frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_LOCK.json`
+- Neural MountainCar V1R2 result note, lock, development artifact, and
+  verification:
+  `frontier_rl/examples/MOUNTAINCAR_NEURAL_TRANSFER_V1_RESULTS.md`,
+  `frontier_rl/examples/MOUNTAINCAR_NEURAL_TRANSFER_V1_LOCK.json`,
+  `frontier_rl/examples/mountaincar_neural_transfer_v1_development.json`,
+  `frontier_rl/examples/mountaincar_neural_transfer_v1_development_verification.json`
+- External-review entry point: `REVIEW_NOTES.md`
 - Production integration: `verl_integration/`

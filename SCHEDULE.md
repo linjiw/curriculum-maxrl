@@ -1,6 +1,7 @@
 # Experiment schedule & tracking
 
-*Living document — updated as runs complete. Times are A10G wall-clock.*
+*Living document — updated as runs complete. GPU times are A10G wall-clock;
+local Gymnasium studies report serial Mac CPU wall-clock separately.*
 
 > **July 2026 audit.** The GPU E/F entries below are historical and
 > provisional: those runs used the legacy `u_{N+1}` score, mixed `K=0` and
@@ -9,9 +10,22 @@
 > and scaled dense-hindsight loss with relabel count. They are retained as an
 > execution record, not as corrected validation. Historical GPU AUC values
 > were step-indexed without the post-SFT anchor despite
-> wall-clock-matched endpoints. The MountainCar P2 result below uses the repaired
+> wall-clock-matched endpoints. The tile-coded MountainCar P2 result below uses the repaired
 > estimator and evaluation stack. The old CartPole three-seed smoke run has
 > not been rerun under that protocol and is excluded from current evidence.
+
+## Current local studies
+
+| study | status | completed decision | next allowed action |
+|---|---|---|---|
+| Acrobot V5A | ✅ complete and independently verified | 27/27 runs valid; all learning-outcome-field-blind gates passed; fresh `U*=250`; V5B authorized | preserve immutable V5A evidence |
+| Acrobot V5B | ⏳ in progress, outcome-blinded | none—no performance fields or interim contrasts may be inspected | finish all 180 locked runs, then run the independent all-or-nothing analyzer |
+| Neural MountainCar V1R2 | 🛑 complete development NO-GO | all 15 runs/reconstruction checks passed, but feasibility failed: 1,932 dead, 474 mixed, 0 all-pass; hardest-goal AUC zero in every run | do not touch seeds `18000..18019`; design fresh V2 adequacy development |
+
+V5A's projected 180-run serial runtime was `7.0557400375` hours. Passing V5A
+is authorization evidence only; V5B currently has no reported outcome. The
+source locks are local pre-execution locks, not externally timestamped
+preregistrations.
 
 ## Currently executing (GPU queue, in order)
 
@@ -28,7 +42,7 @@
 
 **GPU QUEUE DRAINED (all E and F runs complete).** Next wave now unblocked.
 
-**Parallel CPU P2 (done): corrected MountainCar paired study.** Ten paired
+**Parallel CPU P2 (done): corrected tile-coded MountainCar paired study.** Ten paired
 seeds, at least 500,000 transitions per condition, 64 fixed common-random-number
 evaluation episodes per target, and a task-agnostic shared tile policy. The
 environment uses official MountainCar-v0 dynamics with custom nested binary
@@ -48,6 +62,17 @@ or centered over success-only. The shared/per-bin control supports transfer thro
 parameters, but also changes model capacity and data sharing.
 
 Historical watcher: `watch_gpu.sh`; the recorded queue is drained and no watcher is claimed active.
+
+**Parallel CPU P6 (done): neural MountainCar V1R2 development.** This is not
+the positive tile-coded P2 study above. V1R2 used five neural conditions:
+frontier/shared H64, uniform/shared H64, hardest-only/shared H64,
+uniform/disjoint-total H8×8, and uniform/disjoint-active H64×8. All 15 runs
+and independent reconstruction checks passed, but the predeclared adequacy gate
+returned NO-GO. The native hardest-goal AUC was zero in all 15 runs; pooled
+regimes were 1,932 all-fail, 474 mixed, and zero all-pass. Supporting mean-pass
+AUC deltas were `+0.0065104`, `+0.0119792`, `+0.00546875`, and `+0.00429688`
+in the registered contrast order. They are development-only descriptions and
+do not authorize a performance claim. Confirmatory seeds remain untouched.
 
 ## Decision tree after the queue drains
 
@@ -79,10 +104,12 @@ F3–F4 historical seeds
 | priority | experiment | est. | prerequisite |
 |---|---|---|---|
 | P1 | **Efficiency eval of F1's long-horizon checkpoint** — does 4× training turn into inference-time speedup at deep levels? | 30 min | F1 |
-| P2 ✅ | **Corrected MountainCar benchmark** — 10 paired seeds, ≥500k transitions/condition, γ and hindsight ablations, shared/per-bin control | done; results and family-corrected tests above | none |
+| P2 ✅ | **Corrected tile-coded MountainCar benchmark** — 10 paired seeds, ≥500k transitions/condition, γ and hindsight ablations, shared/per-bin control | done; results and family-corrected tests above | none |
 | P3 | **Corrected maze factorial** — uniform vs exact `u_N` vs legacy `u_{N+1}` vs learnability at γ=1, followed by a hindsight ablation | GPU | audited training stack |
 | P4 | **Streaming-pool teacher prototype** (parametric density over a continuous difficulty axis, ALP-GMM-style) — unblocks procedural/generative task sources; CPU-validate on a continuous-difficulty variant of grid_reach | CPU | none |
 | P5 | SmolLM2-360M + GSM8K 2×2 via `verl_integration/` | 8-GPU node | **blocked on hardware** |
+| P6 🛑 | **Neural MountainCar capacity-matched development** — 3 seeds × 5 cells, hardest-goal primary | complete NO-GO; no confirmation | fresh V2 adequacy design |
+| P7 ⏳ | **Acrobot optimizer-matched hindsight V5B** — 20 seeds × 9 cells, update-matched `U*=250` | in progress and outcome-blinded | independent all-or-nothing analysis after 180/180 |
 
 ## Standing cadence
 
@@ -103,3 +130,12 @@ F3–F4 historical seeds
 - **Toy→real gap:** every CPU win must re-prove itself outside the toy. γ=4
   helped corrected MountainCar but did not help the historical GPU maze;
   concentration is a task-graph knob, not a universal default.
+- **Neural MountainCar headroom:** V1R2 produced zero hardest-goal AUC and no
+  all-pass groups. Treat this as an adequacy failure, not a zero effect or a
+  contradiction of the older tile-coded mean-pass study.
+- **Outcome leakage:** do not inspect or summarize V5B cell performance while
+  it is running. A partial/terminal artifact becomes evidence only after the
+  locked independent analyzer accepts all 180 runs.
+- **Historical source availability:** V3 and later manifests match current
+  bytes. V2's locked runner hash refers to bytes not present at HEAD; retain
+  that mismatch in every external review.

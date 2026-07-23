@@ -3,6 +3,14 @@
 *Status: 2026-07-22. CPU numbers reproduce from this repo; historical GPU
 tables retain provenance in `curriculum_maxrl/maze_gpu/` and the audit caveat below.*
 
+**Registration terminology.** Source locks in this repository are local files
+created before the corresponding seed blocks; they are not externally
+timestamped preregistrations. Current source bytes match the V3 and later lock
+manifests. The historical V2 lock instead records an earlier
+`run_acrobot_neural.py` hash (`215f126e...`), while HEAD contains the V3-era
+runner (`7bd8e4c7...`); the missing historical runner bytes are a reproducibility
+limitation, not permission to reinterpret V2.
+
 **Audit note (2026-07-21):** exact binomial analysis found that the practical
 drop-both estimator targets order `N-1`, not `N`; hindsight cosine hid a scale
 bias; and historical GPU code counted all-pass groups as dead, used the
@@ -106,12 +114,12 @@ argmax. Learning compounds —
 progress on the highest-mass task unlocks successors—so sharper concentration
 can help. The mass ordering and γ=4 were best among tested settings on the
 chain; the right concentration remains task-graph dependent. The corrected
-MountainCar factorial independently supports γ=4 over γ=1, while the
+tile-coded MountainCar factorial independently supports γ=4 over γ=1, while the
 historical GPU maze ablation favored γ=1. Concentration is therefore an
 empirical property of transfer structure, not part of the coefficient-mass
 theorem.
 
-### F5. Corrected MountainCar separates mechanisms—but not score families
+### F5. Corrected tile-coded MountainCar separates mechanisms—but not score families
 
 Across ten paired seeds and at least 500k transitions, exact-mass γ=4 beats
 uniform by +0.141 mean-pass AUC [95% paired bootstrap CI 0.076, 0.202] and
@@ -216,7 +224,53 @@ parameter sharing or capacity, hindsight efficacy or scale, wall-clock
 efficiency, or generalization beyond Acrobot. The failed V1/V2 controls cannot
 be rehabilitated by V3.
 
-### F8. Historical GPU leaderboard (provisional, seed 0)
+### F8. Acrobot V5A passes the redesigned feasibility gate; V5B remains blinded
+
+V5 starts fresh rather than weakening V4A. Its 3×3 Stage-A matrix crossed
+learning-rate multipliers `{0.5,1,2}` with hindsight scales `{0,1,2}` on seeds
+`15000..15002`. All 27 runs completed, every technical and natural-relevance
+gate passed, and the registered fallback selected `U*=250` nonzero optimizer
+updates. The independent analyzer authorized V5B without using pass-rate,
+return, entropy, AUC, or between-cell performance fields. The projected serial
+runtime for the 180-run matrix was `7.0557400375` hours.
+
+V5B is now executing the nine cells on fresh paired seeds `16000..16019` under
+an explicit amendment and source/runtime lock. It remains **outcome-blinded**:
+no cell means, contrasts, signs, or interim performance claims have been
+inspected or reported. The four-contrast family is all-or-nothing and will be
+computed only after all 180 runs finish and the independent analyzer accepts
+every run. V5A therefore establishes feasibility and authorization, not a
+hindsight effect; V5B currently establishes no result.
+
+The V5A lock/artifact/verification hashes are `5c277413...`, `9cf741c9...`,
+and `a46b5e9f...`; the V5B amendment/lock hashes are `11975381...` and
+`dfc930bb...`. Full hashes and review order are in `REVIEW_NOTES.md`.
+
+### F9. Neural MountainCar V1R2 is a verified development NO-GO
+
+The new neural V1R2 study is separate from F5's older tile-coded mechanism
+study. It used eight thresholds, a shared H64 actor, hardest-only and uniform
+sampling controls, and exact total-parameter and active-capacity disjoint
+controls. All 15 development runs (`3 seeds × 5 conditions`) completed, and
+the independent analyzer reconstructed the locks, task schedules, sampler
+traces, transitions, evaluation samples, AUCs, parameter identities, and RNG
+contracts.
+
+The predeclared feasibility decision was nevertheless **NO-GO**. Pooled groups
+contained 1,932 all-fail, 474 mixed, and zero all-pass regimes, and hardest-goal
+AUC was exactly zero in all 15 runs. Thus every primary development contrast
+was zero. Supporting mean-pass AUC deltas, in registered order, were
+`+0.0065104`, `+0.0119792`, `+0.00546875`, and `+0.00429688`; they are
+descriptive and cannot rescue the degenerate primary metric. Confirmatory seeds
+`18000..18019` remain untouched and are not authorized.
+
+This is negative feasibility evidence, not evidence that the curriculum loses:
+the frozen policy/optimizer/budget produced neither native-goal headroom nor
+the all-pass regime needed to exercise both sides of the coefficient-mass
+curriculum. It does not overturn F5 because F5 used a tile-coded policy, a
+different control, a mean-pass primary metric, and a local-mechanism role.
+
+### F10. Historical GPU leaderboard (provisional, seed 0)
 
 | rank | config | final | best | legacy unanchored step-AUC | pass@8 |
 |---|---|---|---|---|---|
@@ -251,6 +305,12 @@ be rehabilitated by V3.
    mid-epoch sampling. The two verl patches passed a local application check
    against an official MaxRL checkout; the upstream commit hash was not
    retained with the result. ✅
+7. A fresh Acrobot V5A full-grid feasibility study: 27/27 runs completed, all
+   outcome-field-blind gates passed, `U*=250` selected, and V5B independently
+   authorized. This is a feasibility milestone, not an efficacy result. ✅
+8. A capacity-matched neural MountainCar development matrix with complete
+   reconstruction and a faithfully enforced NO-GO when native-goal headroom
+   and the all-pass regime were absent. ✅
 
 **Not yet achieved:**
 1. **The deep frontier remains uncrossed at fixed budget** — level 6+
@@ -269,6 +329,11 @@ be rehabilitated by V3.
 5. **Score specificity** — exact `u_N`, legacy `u_{N+1}`, and learnability are
    empirically tied at γ=1 on MountainCar; a regime with smaller N or more
    sharply separated pass rates is needed to test the distinctive shape.
+6. **Optimizer-matched neural hindsight result** — V5B is still running and
+   outcome-blinded; V5A authorization is not a performance result.
+7. **Independent neural transfer confirmation** — MountainCar V1R2 stopped at
+   development. Its reserved confirmatory seeds are untouched, and no transfer
+   or curriculum-efficacy claim follows from the zero-headroom matrix.
 
 **Assessment: the mechanism is promising but not yet established at scale.**
 What is proved is the estimator algebra and the myopic proxy objective. What is
@@ -278,13 +343,18 @@ load-bearing.
 
 ## 5. The most promising next push (and why)
 
-For the Acrobot track, V4A is complete and independently verified. Its
-integrity checks passed, the registered fallback selected `U*=250`, and all
-gates except the every-run preview-count gate passed. Exactly three of nine
-runs fell below the required ten previews (`8`, `5`, and `6`), so the frozen
-protocol stopped. V4B was not authorized or run. Because every V4A condition
-used hindsight scale zero, this decision says only that the planned factorial
-failed its feasibility gate; it is not a hindsight-effect result.
+For the Acrobot track, the redesigned V5A feasibility stage is complete and
+independently verified: all 27 runs and all gates passed, `U*=250` was selected,
+and V5B was authorized. V5B is now running and remains outcome-blinded. The
+next Acrobot action is therefore operational, not adaptive: finish the frozen
+180-run matrix, run the independent all-or-nothing analysis, and report the
+four predeclared contrasts without adding rescue analyses.
+
+For independent neural transfer, MountainCar V1R2 completed development but
+stopped at its predeclared gate. Do not use the untouched confirmatory seeds.
+A V2 design should first establish native-goal variation and dead/mixed/all-pass
+coverage on fresh development seeds using an outcome-blind adequacy rule; only
+then should a new confirmatory protocol be reviewed and sealed.
 
 Ranked by expected information per GPU-hour:
 
@@ -294,15 +364,16 @@ Ranked by expected information per GPU-hour:
    establishes a teacher effect.
 3. **Hindsight factorial:** none vs centered vs success-only/positive-only,
    using maximum BFS depth and cumulative K=0/K=N accounting.
-4. **Optimizer-matched hindsight scale:** cross auxiliary scale with base
-   learning rate or normalize update compute so scale is not merely a larger
-   step-size treatment.
+4. **Complete and independently analyze locked V5B:** preserve outcome
+   blinding until all 180 runs pass the validity checks; do not alter its four
+   contrasts or materiality rules.
 5. **Multi-seed replication:** expand only the effects whose paired pilot
    intervals exclude zero.
 6. **LLM 2×2:** curriculum × {MaxRL, GRPO} when hardware permits.
-7. **Independent Gym replication:** rerun a transition-matched survival or
-   sparse-goal environment with a neural shared policy; the old CartPole
-   group-matched smoke result is not evidence.
+7. **Neural MountainCar V2 adequacy development:** on fresh development seeds,
+   calibrate the actor/optimizer/budget so the native goal varies and all three
+   group regimes occur before freezing any performance comparison. The old
+   CartPole group-matched smoke result is not evidence.
 
 ## 6. Threats to validity (kept current)
 
@@ -320,10 +391,17 @@ Ranked by expected information per GPU-hour:
   dead/step + steps-per-second consistency).
 - The teacher assumes a finite prompt pool with a stationary index; streaming
   pools need the parametric (ALP-GMM-style) variant sketched in GUIDE.md.
-- MountainCar uses official dynamics but custom nested binary predicates, a
-  weak tile policy, and a per-bin control that is not capacity/data matched.
-  Its nine AUC comparisons are paired and Holm-corrected, but ten seeds still
-  leave wide flag-pass uncertainty for no-hindsight conditions.
+- The positive MountainCar mechanism study uses official dynamics but custom
+  nested binary predicates, a weak tile policy, and a per-bin control that is
+  not capacity/data matched. Its nine AUC comparisons are paired and
+  Holm-corrected, but ten seeds leave wide flag-pass uncertainty. The separate
+  neural V1R2 study has capacity controls but failed development feasibility:
+  zero hardest-goal AUC and zero all-pass groups make it inconclusive about
+  efficacy and transfer.
+- Local source locks are not external timestamping. V3 and later lock manifests
+  match current bytes, but the V2-locked historical runner hash does not match
+  the current V3-era runner; reviewers cannot reconstruct those exact V2 runner
+  bytes from HEAD alone.
 - The production sampler/index/checkpoint contracts have unit coverage and the
   patches passed a local application check, but its upstream commit hash was
   not retained and no multi-worker, multi-GPU verl training job was available
