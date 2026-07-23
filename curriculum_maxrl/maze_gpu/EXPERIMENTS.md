@@ -1,11 +1,27 @@
 # maze_gpu experiment log
 
+> **Historical-audit warning (2026-07-21).** All tables below predate several
+> corrections: the old zero-weight counter mixed all-fail K=0 and all-pass
+> K=N groups; the frontier teacher used legacy `u_{N+1}`, not exact `u_N`;
+> hindsight called legal path length “depth” even when paths looped;
+> all training levels used the deepest response budget although evaluation
+> used level-specific budgets; dense hindsight grew in magnitude with relabel
+> count; and dead-group values were sparse evaluation-step snapshots, not
+> run-wide rates. Evaluation and teacher logging also consumed the subsequent
+> training/curriculum RNG streams; shared warmstarts matched weights but not
+> post-SFT random streams; and the time-limit record used an incremented,
+> untrained step index. The code now fixes these contracts. Treat the numbers below
+> as exploratory provenance pending a corrected rerun. Historical AUCs were
+> unanchored and integrated over optimization step despite wall-clock-matched
+> endpoints; `analyze.py` now anchors the post-SFT point and reports total
+> process wall-clock and step AUC separately.
+
 GPU testbed: 1.26M-param decoder-only transformer (6 layers, d=128) on 17×17
 Prim mazes, A10G. Difficulty = BFS distance of the goal from start (1,1):
 13 levels, distance 4,6,…,28. Binary verifier on the emitted move string.
 Infinite-data regime (fresh mazes每 step), matching the paper's maze setup.
 
-## Design decisions discovered by pilots
+## Archived pilot observations (raw drivers/artifacts not retained)
 
 1. **Maze *size* is a broken curriculum dimension.** After SFT on 5×5/7×7,
    9×9 pass rate is exactly 0/1024 — a hard generalization cliff (different
@@ -38,29 +54,30 @@ Post-SFT baseline eval (level: pass@sampled):
 
 Three mechanism findings:
 
-1. **Dead-group waste is real and the teachers fix it.** Uniform wastes 65%
-   of groups (K=0, dropped by MaxRL); frontier cuts to 49%, learnability to 33%.
-2. **Teachers are ~2× faster per step.** Deep-level rollouts wander for the
-   full move budget (57 tokens); frontier/learnability sample frontier levels
+1. **The old zero-weight snapshots cannot identify dead-group waste.** They
+   mixed K=0 and K=N, so 65%/49%/33% are provenance, not corrected dead rates.
+2. **Teachers were ~2× faster per step in the old stack.** Deep-level rollouts
+   used the global deepest response budget (37 tokens); frontier/learnability sample frontier levels
    whose successful paths are short, halving generation time. **Fixed-step
    comparison is therefore unfair to teachers** — switched to matched
-   wall-clock (2400 s RL per config, `--max-seconds`).
-3. **Teacher posteriors track truth well.** frontier p_hat
-   [0.98, 0.87, 0.58, 0.32, 0.11, 0.09, ~0…] ≈ eval pass rates; its
-   distribution concentrates 60% of mass on levels 2–5 (the true frontier).
+   post-SFT process time including evaluation (2400 s per config,
+   `--max-seconds`).
+3. **Teacher posteriors were qualitatively ordered, not tightly calibrated.**
+   The historical p_hat roughly preserved the frontier ordering and put 60%
+   of mass on levels 2–5, but final per-level errors reach roughly 0.1; there
+   is no supported ±0.03 accuracy bound.
 
-At equal *steps*, all three tie within noise (~0.22) — as expected when the
-teachers' savings are returned as unused time. The matched-clock sweep
-(`matched_*.jsonl`) is the definitive comparison: 6 configs =
+At equal *steps*, all three tie within noise (~0.22). The historical
+matched-clock sweep (`matched_*.jsonl`) compares 6 configs =
 {uniform, frontier, learnability, frontier_alp} × maxrl + {uniform, frontier} × grpo.
 
 Protocol note: pass@k eval (unbiased Chen et al. 2021 estimator, k∈{1,8})
 was added to `evaluate()` while config 1 (uniform+maxrl) was already running,
 so its log lacks `passk` records; configs 2–6 have them.
 
-## Matched wall-clock results (2400 s RL each, seed 0, complete)
+## Historical matched-time results (2400 s post-SFT process time including evaluation, seed 0)
 
-| config | steps | dead/8 | final | best | AUC | pass@8 final | frontier |
+| config | steps | old zero-weight snapshot/8 | final | best | legacy unanchored step-AUC | pass@8 final | frontier |
 |---|---|---|---|---|---|---|---|
 | uniform+maxrl | 583 | 5.8 | 0.225 | 0.233 | 0.214 | — | 2 |
 | uniform+grpo | 527 | 6.0 | 0.230 | 0.237 | 0.216 | 0.312 | 2 |
@@ -75,32 +92,30 @@ so its log lacks `passk` records; configs 2–6 have them.
 
 **Findings:**
 
-1. **Every teacher/hindsight variant beats both uniform baselines on AUC.**
+1. **Every teacher/hindsight variant has higher legacy step-AUC than both uniform baselines in this seed.**
    Top two: frontier+maxrl+hindsight (0.234) and frontier_alp+maxrl (0.233)
-   vs 0.214/0.216 uniform. The mechanisms compound: more steps per second
-   (583→700+), fewer dead groups (5.8→3.3–3.9), plus hindsight recycling.
-2. **H6 REFUTED — direction reversed.** Prediction was that the teacher
+   vs 0.214/0.216 uniform. The old stack shows more steps per second and fewer
+   zero-weight snapshots, but the audit prevents a mechanism attribution.
+2. **H6 historical direction reversal.** Prediction was that the teacher
    patches GRPO's pass@k collapse by retiring mastered prompts. Instead
    frontier+grpo collapsed *more* (pass@8 0.332→0.269) than uniform+grpo
    (0.351→0.312), and lost easy-level retention (min easy pass 0.62 vs 0.75).
-   Reading: GRPO's inverted w(p) was effectively *maintaining* easy prompts;
-   concentrating its updates on the frontier removes that maintenance and
-   sharpens harder. **The objective is the problem — a data-level curriculum
-   cannot rescue GRPO's collapse, which strengthens the paper's own claim
-   that pass@k degradation is driven by objective choice.** MaxRL configs
-   under the same teacher keep pass@8 flat-to-up (0.327→0.351).
-3. **GPU hindsight gain is real but much smaller than CPU** (AUC +0.008/+0.011
+   One possible reading is that easy-prompt updates helped maintain coverage,
+   but the audited stack does not isolate that mechanism. This is a hypothesis
+   about objective–curriculum interaction, not a general conclusion. MaxRL configs under the
+   same historical teacher keep pass@8 flat-to-up (0.327→0.351).
+3. **The historical GPU hindsight delta is much smaller than CPU** (legacy AUC +0.008/+0.011
    vs +0.22 on the toy): relabeled mazes here are one-off (fresh maze每 step,
    no repeated task to cash in the relabeled skill), and the relabeling only
    fires on the single best rollout per dead group. Both hindsight configs
    tie for best frontier depth (level 3) and best pass@8 at their band.
-4. **frontier_alp (ALP anti-forgetting bonus) is the best pure-teacher
-   variant** — first setting where the |Δp̂| term clearly earns its keep
-   (level-2 pass 0.62 vs 0.54 frontier, best final overall).
+4. **frontier_alp has the highest seed-0 historical pure-teacher point
+   estimate** (level-2 pass 0.62 vs 0.54 frontier, best final overall). The
+   audited single-seed comparison does not establish an ALP effect.
 
-## Multi-seed confirmation (seeds 0–2, matched 2400 s, key configs)
+## Historical multi-seed check (seeds 0–2, matched 2400 s, key configs)
 
-| config | AUC (3 seeds) | final | pass@8 first→last | ΔAUC vs uniform+maxrl per seed |
+| config | legacy unanchored step-AUC (3 seeds) | final | pass@8 first→last | ΔAUC vs uniform+maxrl per seed |
 |---|---|---|---|---|
 | uniform+maxrl | 0.211 ± 0.011 | 0.230 ± 0.015 | 0.310 → 0.300 | — |
 | uniform+grpo | 0.213 ± 0.006 | 0.230 ± 0.001 | 0.308 → **0.271** ↓ | mixed (+0.003, −0.005, +0.008) |
@@ -109,17 +124,16 @@ so its log lacks `passk` records; configs 2–6 have them.
 
 Seeds share their SFT warmstart, so per-seed deltas are paired comparisons.
 
-**Confirmed across seeds:**
+**Observed across three seeds (not confirmatory):**
 
-1. **Both teacher variants beat uniform+maxrl on AUC in every seed** (6/6
-   paired deltas positive). Effect size is modest (~+0.01 AUC, ~5%) but the
-   sign is consistent; frontier_alp also wins final mean-pass with the
+1. Both teacher variants have positive legacy AUC deltas in every seed. The
+   six deltas are two correlated configurations over only three independent
+   seeds; frontier_alp also has higher final mean-pass with the
    tightest spread (0.246 ± 0.002 vs 0.230 ± 0.015).
-2. **The pass@k divergence is systematic, not seed noise:** GRPO *decays*
+2. The observed pass@k divergence is a rerun hypothesis: GRPO *decays*
    coverage in every seed (mean 0.308 → 0.271) while teacher+MaxRL configs
-   *grow* it (0.306→0.338, 0.316→0.348). This is the paper's Takeaway-5
-   dynamic reproduced at 1.26M scale, plus our addition: the curriculum
-   widens the gap in both directions (helps MaxRL coverage, hurts GRPO's).
+   *grow* it (0.306→0.338, 0.316→0.348). Three seeds and the audit confounds
+   do not separate this pattern from seed noise or implementation effects.
 3. uniform+grpo ≈ uniform+maxrl on mean pass at this scale — the estimators
    separate on *coverage* (pass@8) and on how they respond to a curriculum,
    not on average performance.
@@ -138,14 +152,15 @@ only **1 relabel per dead group (3.6/step)** out of up to 32.
 1. `--hindsight-dense`: relabel *every* failed rollout with legal prefix
    ≥ `--hindsight-min-depth` (default 6) to the cell it reached, capped at
    `--hindsight-cap` (16) per step → ~10× more salvaged signal per dead
-   group, each an exact verified (prompt, trajectory) pair.
+   group, each a verifier-valid (prompt, trajectory) pair; this does not imply
+   equality to a fresh-task gradient law.
 2. `--hindsight-to-teacher`: relabeled successes update the teacher
    posterior at the matching distance level. Rationale: hindsight teaches
    deep-navigation skill that the teacher's posterior never sees (it only
    observes original-task rewards), so the curriculum lags the student's
    true frontier. Deliberately optimistic (reached *some* cell at distance
    d, not a requested one); posterior decay corrects overshoot.
-3. CPU A/B on goal selection: relabeling to the *deepest* reached prefix
+3. Archived CPU A/B on goal selection (driver/output not retained): relabeling to the *deepest* reached prefix
    beats picking the advantage-mass-optimal prefix (AUC 0.863 vs 0.848) —
    when signal is free, take the most of it; mass-optimality matters only
    when allocation is the scarce resource. GPU version keeps deepest-cell.
@@ -158,35 +173,40 @@ sampling beyond the true frontier (dead-group rate would rise).
 
 **A/B/C RESULTS (complete):**
 
-| config | final | best | AUC | pass@8 | frontier | relabeled/step |
+| config | final | best | legacy unanchored step-AUC | pass@8 | frontier | relabeled/step |
 |---|---|---|---|---|---|---|
 | baseline (frontier_alp, no hs) | 0.244 | 0.257 | 0.233 | 0.361 | 2 | 0 |
 | A sparse hindsight | 0.226 | 0.254 | 0.234 | 0.365 | 2 | 3.6 |
 | **B dense hindsight** | **0.258** | **0.269** | 0.236 | 0.361 | 2 | **16.0** |
 | C dense + teacher feedback | 0.242 | 0.260 | **0.237** | 0.361 | **3** | 15.9 |
 
-1. **Dense hindsight (B) is the new champion**: best final (0.258) and best
+1. **Dense hindsight (B) has the best historical point estimates**: final (0.258) and
    peak (0.269) of every GPU config to date; level-0–3 pass rates all
    improve simultaneously (0.99/0.87/0.68/0.45) — the relabeled gradients
    strengthen shallow navigation without sacrificing the frontier.
    Harvest rate went 3.6 → 16.0 relabels/step (the cap), exactly the
-   ~4.4× the design predicted.
-2. **Teacher feedback (C) behaves exactly as V4 pre-registered**: AUC ties B
+   ~4.4× the design predicted. Its loss also scaled with that count, so this
+   comparison confounds relabel coverage and gradient magnitude.
+2. **Teacher feedback (C) directionally matched the V4 prediction**: historical AUC ties B
    (0.237 vs 0.236, noise), final is lower (0.242), and the mechanism's
    signature is visible — C's posterior at level 2 inflates to p̂=0.81 vs
    eval 0.47 (B tracks: 0.54 vs 0.64), pushing sampling mass deeper
    (earning the only frontier=3 flag) at the cost of consolidating level 2.
-   Mild optimism inflation, no runaway (dead rate 4.9 < B's 5.3). Verdict:
-   **keep dense hindsight, drop teacher feedback** — the posterior should
-   see only requested-task evidence.
+   The old counter cannot establish “no runaway,” and protocol confounds
+   prevent a policy verdict. For the corrected rerun, requested-task-only
+   feedback remains the conservative default and teacher feedback is an
+   explicit ablation.
 3. Level 6 still ≈ 0.01–0.02: dense hindsight lifts the *approach* to the
    frontier but one 2400 s budget doesn't cash it out at distance 16+.
    The efficiency study + longer runs are the follow-up.
 
-## Inference-efficiency study (E4, the paper's currency)
+## Archived inference-efficiency study (E4; not reproducible as shipped)
 
-Three matched-2400s checkpoints evaluated for samples-to-target-coverage
-(`eval_efficiency.py`, unbiased pass@k from 64 samples × 16 mazes/level):
+Three historical matched-time checkpoints were evaluated with unbiased pass@k
+from 64 samples × 16 mazes/level. The checkpoint files were not retained, and
+the table used different post-hoc coverage targets by level even though the
+current evaluator takes one global target. Treat these values as descriptive
+archive only, not a reproducible or preregistered comparison:
 
 | level (target) | GRPO k* | MaxRL-uniform k* | ours (teacher+dense-hs) k* | **ours vs GRPO** |
 |---|---|---|---|---|
@@ -195,34 +215,27 @@ Three matched-2400s checkpoints evaluated for samples-to-target-coverage
 | 4 (45%) | 6.7 | 10.7 | 12.8 | 0.5× |
 | 5 (25%) | >64 → 64.0 | 10.5 | **5.8** | **11×** |
 
-Same qualitative shape as the MaxRL paper's Fig. 5, reproduced at 1.26M
-scale with our teacher on top: **the harder the level, the larger the
-speedup**, up to 11× at the deepest level where GRPO barely clears the
-target at k=64. GRPO's curves also *flatten* at large k (L2 saturates at
-0.88 vs our 1.00; L4 at 0.56) — coverage collapse visible in inference
-currency: more samples stop helping. The L4 reversal (GRPO 0.5×) is the
-flip side of the same phenomenon — GRPO's distribution sharpens onto its
-solvable subset, buying pass@1 on mid levels at the cost of the tail
-(L5: 0.25 vs our 0.56 at k=64). Note these are single-checkpoint numbers
-(seed 0); the multiplier pattern, not the exact values, is the finding.
+The historical point estimates range from a 0.5× reversal at level 4 to an
+11× advantage at level 5, so they do **not** establish a monotone
+difficulty–speedup relationship. Apparent curve flattening and tail coverage
+are hypotheses for a corrected, seeded, common-target evaluation with retained
+checkpoints; no multiplier from this table is current evidence.
 
-## F3/F4 verdict — champion multi-seed (seeds 0–2, matched 2400 s)
+## F3/F4 historical multi-seed point estimates (seeds 0–2, matched 2400 s)
 
-| config | final (3 seeds) | AUC (3 seeds) | pass@8 |
+| config | final (3 seeds) | legacy unanchored step-AUC (3 seeds) | pass@8 |
 |---|---|---|---|
 | uniform+maxrl | 0.230 ± 0.015 | 0.211 ± 0.011 | 0.300 |
 | frontier_alp+maxrl | 0.246 ± 0.002 | 0.221 ± 0.013 | 0.338 |
-| **champion (falp + dense hindsight)** | **0.252 ± 0.005** | **0.229 ± 0.009** | 0.335 |
+| **falp + dense hindsight** | **0.252 ± 0.005** | **0.229 ± 0.009** | 0.335 |
 
-Paired per-seed deltas (shared warmstarts), champion − frontier_alp:
-Δfinal = +0.014/+0.002/+0.001, ΔAUC = +0.003/+0.006/+0.014 — **6/6
-positive**, so the champion's edge survives multi-seed, but the *final*
-margin is mostly one seed. Honest read: **dense hindsight's reliable gain
-on the maze is learning speed (AUC) and never being worse; its final-eval
-edge over the plain teacher is small on this infinite-data testbed**
+Paired per-seed deltas (shared warmstarts), dense hindsight − frontier_alp:
+Δfinal = +0.014/+0.002/+0.001, ΔAUC = +0.003/+0.006/+0.014. These are two
+metrics over only three paired seeds, without a formal test, and dense loss
+scaled with relabel count. The point estimates favor dense hindsight, while
+the final margin is mostly one seed; reliability remains unestablished.
 (consistent with the one-shot-mazes analysis — salvaged skill can't
-compound on a task you never see again). Both teacher configs clearly beat
-uniform on every metric. Coverage ties between the two teacher variants
+compound on a task you never see again). Coverage is similar between the two teacher variants
 (0.335 vs 0.338). The fixed-prompt-set regime (GSM8K) remains where dense
 hindsight should show CPU-like compounding.
 
@@ -320,18 +333,16 @@ steps): mean climbs 0.258→0.269 and level 5 doubles (0.17→0.23–0.25), but
 level 6 stays ≈0.01–0.02 the entire run. The frontier march decelerates
 hard between distance 14 and 16. Per the pre-registered decision tree, the
 mechanism needs revision at depth: candidates are (a) move budgets that
-scale with achieved depth (the 4·dist+8 cap may bind exploration wander),
+scale with achieved depth (the dist+8 cap may bind exploration wander),
 (b) hindsight-min-depth curriculum, (c) the MountainCar transfer lesson —
 check whether tile/prompt representations even share parameters across
 these depths. CPU-validate before spending GPU.
 
-**F2 — γ=4 does NOT transfer to the maze (as pre-registered possible).**
-AUC 0.231 / best 0.254 vs γ=1's 0.236/0.269. Consistent with the V6b ODE
-account: compounding drives the γ effect, and 13 broad distance-levels with
-a noisy 1.26M policy compound far less than 36 tight chain tasks with exact
-gradients. Decision: γ stays 1 as GPU/verl default; documented as
-CPU/chain-structured effect. (This is the third CPU→GPU transfer test; two
-transferred, one didn't — the ODE model correctly predicted *which* one.)
+**F2 — γ=4 did not improve this historical maze run.** Legacy step-AUC 0.231 /
+best 0.254 versus γ=1's 0.236/0.269. Weak compounding across 13 broad levels
+is one hypothesis, but the audited GPU confounds prevent a mechanism claim.
+Decision for the corrected maze rerun: retain γ=1 until a clean concentration
+ablation says otherwise.
 
 ### Hypotheses for the matched-clock analysis
 
@@ -348,11 +359,12 @@ transferred, one didn't — the ODE model correctly predicted *which* one.)
 
 ### Theory update (see ../THEORY.md)
 
-The teacher utility is now *derived*, not heuristic: expected MaxRL advantage
-mass per group is exactly `2(pass@N − pass@1)`, peaking at p* ≈ ln(N)/N.
-RLOO's mass is exactly `2p(1−p)` (= SFL learnability), and GRPO's realized
+The teacher utility is now derived from expected scalar coefficient mass:
+`EΣ|w|=2(pass@N − pass@1)`, whose peak is p* ≈ ln(N)/N.
+RLOO's expected mass is `2p(1−p)`, proportional to SFL learnability, and GRPO's realized
 finite-sample mass on hard prompts is ~2× below its population w(p) due to
-dead groups. Greedy water-filling on marginal mass `p(1−p)^N` is the optimal
-rollout allocation. CPU validation: advmass teacher ties frontier teacher
+degenerate groups. With fixed known p, feasible integer bounds, and a one-step
+budget, greedy water-filling on half-mass marginal `p(1−p)^N` is exact for
+that proxy. CPU validation: advmass teacher ties frontier teacher
 (AUC 0.704 vs 0.712, both > zpd 0.688), greedy allocation ≈ adaptive; the
 derived form wins on principle (parameter-free) not performance.

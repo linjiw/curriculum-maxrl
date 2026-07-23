@@ -1,8 +1,8 @@
 diff --git a/verl/trainer/main_ppo.py b/verl/trainer/main_ppo.py
-index 432b437..d5c8faa 100644
+index 432b437..cd5a309 100644
 --- a/verl/trainer/main_ppo.py
 +++ b/verl/trainer/main_ppo.py
-@@ -185,7 +185,26 @@ class TaskRunner:
+@@ -185,7 +185,30 @@ class TaskRunner:
          # Create training and validation datasets.
          train_dataset = create_rl_dataset(config.data.train_files, config.data, tokenizer, processor)
          val_dataset = create_rl_dataset(config.data.val_files, config.data, tokenizer, processor)
@@ -11,8 +11,12 @@ index 432b437..d5c8faa 100644
 +        curriculum_teacher = None
 +        curriculum_cfg = config.data.get("curriculum", None)
 +        if curriculum_cfg is not None and curriculum_cfg.get("enable", False):
-+            from verl.utils.curriculum import CurriculumSampler, FrontierTeacher
++            from verl.utils.curriculum import (CurriculumIndexedDataset,
++                                               CurriculumSampler, FrontierTeacher)
 +
++            # Attach a contiguous position after concatenation/filtering.
++            # Source extra_info.index values are not safe teacher-array slots.
++            train_dataset = CurriculumIndexedDataset(train_dataset)
 +            curriculum_teacher = FrontierTeacher(
 +                n_prompts=len(train_dataset),
 +                n_rollouts=config.actor_rollout_ref.rollout.n,
@@ -30,7 +34,7 @@ index 432b437..d5c8faa 100644
  
          # Initialize the PPO trainer.
          trainer = RayPPOTrainer(
-@@ -203,6 +222,8 @@ class TaskRunner:
+@@ -203,6 +226,8 @@ class TaskRunner:
              train_sampler=train_sampler,
              device_name=config.trainer.device,
          )

@@ -32,10 +32,12 @@ def weights_grpo(r: np.ndarray) -> np.ndarray:
 
 
 def weights_maxrl(r: np.ndarray) -> np.ndarray:
-    """Variance-reduced MaxRL estimator, eq. (10)/Algorithm 1 of the paper.
+    """Practical dropped-group MaxRL estimator (paper Algorithm 1).
 
     w_j = (r_j / K - 1/N); the whole group is dropped when K = 0.
-    Unbiased for the truncated ML objective with T = N.
+    Dropping Eq. 10's control variate on K=0 makes this unbiased for the
+    truncated MaxRL objective with T=N-1, not T=N.  The raw success average
+    and the control-variate form retained on K=0 are provided below.
     """
     n = len(r)
     k = r.sum()
@@ -44,10 +46,34 @@ def weights_maxrl(r: np.ndarray) -> np.ndarray:
     return r / k - 1.0 / n
 
 
+def weights_maxrl_success(r: np.ndarray) -> np.ndarray:
+    """Raw MaxRL success-average estimator, paper Eq. 9 (order T=N)."""
+    k = r.sum()
+    if k == 0:
+        return np.zeros(len(r))
+    return r / k
+
+
+def weights_maxrl_unbiased_cv(r: np.ndarray) -> np.ndarray:
+    """Paper Eq. 10 with the score control variate retained for K=0.
+
+    The all-fail weights are intentionally -1/N.  Their sample update is not
+    generally zero, but the unconditional score expectation is, preserving
+    exact order-T=N unbiasedness.
+    """
+    n = len(r)
+    k = r.sum()
+    if k == 0:
+        return np.full(n, -1.0 / n)
+    return r / k - 1.0 / n
+
+
 def _c_TN(K: int, N: int, T: int) -> float:
     """Per-success weight of the subset estimator (maclaurin.py c_sub_TN,
     paper appendix eq. 51): unbiased for the T-truncated objective with N
-    rollouts, any T <= N.  c_{N,N}(K) = 1/K recovers Algorithm 1."""
+    rollouts, any T <= N. c_{N,N}(K)=1/K recovers the Eq. 9 success
+    coefficient; adding the dropped control variate in weights_maxrl_t
+    recovers practical Algorithm 1."""
     from math import lgamma, log, exp
     if K == 0 or T <= 0:
         return 0.0
@@ -68,15 +94,25 @@ def _c_TN(K: int, N: int, T: int) -> float:
 
 
 def weights_maxrl_t(r: np.ndarray, T: int) -> np.ndarray:
-    """MaxRL subset estimator with decoupled truncation order T <= N.
+    """Practical dropped-group subset estimator with nominal order T <= N.
 
     w_succ = c_{T,N}(K) - 1/N, w_fail = -1/N (same zero-mean control variate
-    as eq. 10); group dropped at K = 0.  T = N recovers weights_maxrl; T = 1
-    gives E[w*] matching plain RL weighting.
+    as Eq. 10); group dropped at K = 0.  Its expected population weight is
+    ``w_T(p) - (1-p)^(N-1)`` because the control variate is dropped
+    outcome-dependently.  T=N recovers ``weights_maxrl`` (effective order
+    N-1); T=1 therefore does *not* recover plain RL.
     """
     n = len(r)
     k = int(r.sum())
     if k == 0:
         return np.zeros(n)
+    c = _c_TN(k, n, min(T, n))
+    return r * c - 1.0 / n
+
+
+def weights_maxrl_t_unbiased(r: np.ndarray, T: int) -> np.ndarray:
+    """Subset estimator that retains the control variate and targets T exactly."""
+    n = len(r)
+    k = int(r.sum())
     c = _c_TN(k, n, min(T, n))
     return r * c - 1.0 / n

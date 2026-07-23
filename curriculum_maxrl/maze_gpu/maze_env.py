@@ -3,7 +3,7 @@
 Mirrors the MaxRL paper's maze setup (procedurally generated mazes, tiny
 transformer, binary verifier on the emitted move sequence) but with a *smooth*
 difficulty dimension: the maze is always 17x17, and level l requires reaching
-a goal at BFS distance d = 4*(l+1) from the fixed start (1,1).  Longer routes
+a goal at BFS distance d = 4+2l from the fixed start (1,1). Longer routes
 are concatenations of shorter ones, so competence transfers between adjacent
 levels — maze *size* as difficulty proved to have a hard generalization cliff
 (9x9 stays at exactly p=0 after 7x7 SFT).
@@ -112,20 +112,25 @@ def encode_prompt(grid: np.ndarray, goal) -> list[int]:
     return toks
 
 
-def verify(grid: np.ndarray, goal, response: list[int]) -> bool:
-    """Simulate response tokens; success iff at goal when EOS is emitted."""
+def verify(grid: np.ndarray, goal, response: list[int],
+           max_moves: int | None = None) -> bool:
+    """Simulate tokens; succeed iff EOS is emitted at the goal within budget."""
     size = grid.shape[0]
     pos = (1, 1)
+    moves = 0
     for tok in response:
         if tok == EOS:
             return pos == goal
         if tok not in MOVE_DELTA:
+            return False
+        if max_moves is not None and moves >= max_moves:
             return False
         dx, dy = MOVE_DELTA[tok]
         nxt = (pos[0] + dx, pos[1] + dy)
         if not (0 <= nxt[0] < size and 0 <= nxt[1] < size) or grid[nxt] == 1:
             return False
         pos = nxt
+        moves += 1
     return False  # ran out of budget without EOS
 
 
@@ -139,7 +144,7 @@ class MazeTask:
 
 
 def sample_task(level: int, rng: random.Random) -> MazeTask:
-    """Fresh 13x13 maze with a goal at exactly BFS distance LEVEL_DIST[level]
+    """Fresh 17x17 maze with a goal at exactly BFS distance LEVEL_DIST[level]
     (nearest available distance if the maze has no cell at that exact depth)."""
     target = LEVEL_DIST[level]
     while True:
@@ -192,3 +197,38 @@ def simulate_prefix(grid: np.ndarray, response: list[int]) -> tuple[int, tuple]:
         pos = nxt
         n += 1
     return n, pos
+
+
+def deepest_prefix(grid: np.ndarray,
+                   response: list[int]) -> tuple[int, tuple, int]:
+    """Return the legal prefix ending at the maximum BFS depth reached.
+
+    The tuple is ``(prefix_length, position, bfs_depth)``. Raw legal path
+    length can be inflated by loops and backtracking; BFS depth cannot. The
+    returned prefix is verifier-valid for ``position`` once EOS is appended.
+    """
+    prev = bfs_tree(grid)
+    depths = {(1, 1): 0}
+    for node, parent in prev.items():
+        if parent is not None:
+            depths[node] = depths[parent[0]] + 1
+
+    size = grid.shape[0]
+    pos = (1, 1)
+    best_pos = pos
+    best_depth = 0
+    best_n = 0
+    for n, tok in enumerate(response, start=1):
+        if tok not in MOVE_DELTA:
+            break
+        dx, dy = MOVE_DELTA[tok]
+        nxt = (pos[0] + dx, pos[1] + dy)
+        if not (0 <= nxt[0] < size and 0 <= nxt[1] < size) or grid[nxt] == 1:
+            break
+        pos = nxt
+        depth = depths.get(pos, 0)
+        if depth > best_depth:
+            best_pos = pos
+            best_depth = depth
+            best_n = n
+    return best_n, best_pos, best_depth

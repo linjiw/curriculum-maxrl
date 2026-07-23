@@ -2,35 +2,60 @@
 
 *Living document — updated as runs complete. Times are A10G wall-clock.*
 
+> **July 2026 audit.** The GPU E/F entries below are historical and
+> provisional: those runs used the legacy `u_{N+1}` score, mixed `K=0` and
+> `K=N` in the old zero-weight counter, measured path length rather than BFS
+> depth for hindsight, trained all levels with the deepest response budget,
+> and scaled dense-hindsight loss with relabel count. They are retained as an
+> execution record, not as corrected validation. Historical GPU AUC values
+> were step-indexed without the post-SFT anchor despite
+> wall-clock-matched endpoints. The MountainCar P2 result below uses the repaired
+> estimator and evaluation stack. The old CartPole three-seed smoke run has
+> not been rerun under that protocol and is excluded from current evidence.
+
 ## Currently executing (GPU queue, in order)
 
 | # | run | duration | purpose | decision it feeds |
 |---|---|---|---|---|
 | E1 ✅ | ck_uniform_maxrl (2400 s + ckpt) | done | efficiency baseline | — |
 | E2 ✅ | ck_uniform_grpo (2400 s + ckpt) | done | efficiency baseline | — |
-| E3 ✅ | ck_frontier_alp_maxrl_hsd (2400 s + ckpt) | done | champion checkpoint | — |
-| E4 ✅ | eval_efficiency over E1–E3 | done | samples-to-coverage | **RESULT: up to 11× vs GRPO at level 5, speedup grows with difficulty (1.2×/2.7×/11×); GRPO curves flatten at large k. Decision: efficiency leads the benefits table on site + PAPER.** |
+| E3 ✅ historical | ck_frontier_alp_maxrl_hsd (2400 s + ckpt) | done | archived checkpoint run | audited protocol; no champion claim |
+| E4 ⚠ archived | eval_efficiency over E1–E3 | not reproducible as shipped | samples-to-coverage | Historical post-hoc targets gave 0.5× to 11×; checkpoints were not retained, so no monotone difficulty claim. Rerun with saved checkpoints, fixed RNG, and one preregistered target. |
 | F1 ✅ | long_falp_hsdense (9600 s) | done | is level 6+ a duration question? | **NO** — mean 0.258→0.269, L5 doubles, L6 stays ≈0.01. Mechanism revision needed at depth; CPU-validate depth-scaled move budgets / param-sharing check first |
-| F2 ✅ | matched_falp_p4_hsdense (2400 s) | done | γ=4 on GPU | **does not transfer** (AUC 0.231 vs 0.236) — ODE model predicted it (weak compounding at 13 broad levels); γ stays 1 on GPU/verl, CPU/chain-only effect |
-| F3 ✅ | dense-hindsight seed 1 (2400 s) | done | champion multi-seed | see F4 |
-| F4 ✅ | dense-hindsight seed 2 (2400 s) | done | champion multi-seed | champion 0.252±0.005 final / 0.229±0.009 AUC; paired deltas vs plain teacher 6/6 positive but final margin mostly seed-0; **honest headline: reliable AUC gain + never worse; final edge small in infinite-data regime** |
+| F2 ✅ | matched_falp_p4_hsdense (2400 s) | done | γ=4 on GPU | **did not improve the historical run** (legacy unanchored step-AUC 0.231 vs 0.236); γ stays 1 for the corrected maze rerun pending clean evidence |
+| F3 ✅ historical | dense-hindsight seed 1 (2400 s) | done | exploratory three-seed point estimates | see F4 |
+| F4 ✅ | dense-hindsight seed 2 (2400 s) | done | exploratory multi-seed | 0.252±0.005 final / 0.229±0.009 legacy unanchored step-AUC; positive deltas for two configurations across three seeds, but no inferential test and audit confounds prevent a reliability claim |
 
 **GPU QUEUE DRAINED (all E and F runs complete).** Next wave now unblocked.
 
-**Parallel CPU (done): MountainCar categorical result** — flag-only 0.000 →
-uniform-mix 0.889 → teacher 0.944 → **full stack 1.000 every seed**; plus
-the transfer lesson (per-bin params never reach the flag: curricula operate
-through shared parameters).
+**Parallel CPU P2 (done): corrected MountainCar paired study.** Ten paired
+seeds, at least 500,000 transitions per condition, 64 fixed common-random-number
+evaluation episodes per target, and a task-agnostic shared tile policy. The
+environment uses official MountainCar-v0 dynamics with custom nested binary
+thresholds, so pass-rate AUC is not standard Gymnasium return. AUC mean ± sample
+SD is 0.389±0.071 uniform, 0.414±0.081 exact adv-mass teacher γ=1,
+0.530±0.059 exact adv-mass teacher γ=4, 0.720±0.029 γ=4 + centered hindsight,
+and 0.727±0.023 γ=4 + success-only hindsight. The per-bin centered control is
+0.229±0.031.
 
-Watcher: `watch_gpu.sh` (running) — notifies on stall (>25 min no log growth) or queue completion.
+Paired AUC effects with 95% bootstrap CIs that survive Holm correction of exact
+sign-flip tests are γ=4 over uniform (+0.141 [0.076, 0.202]), γ=4 over γ=1
+(+0.116 [0.060, 0.172]), centered hindsight over none (+0.191 [0.155, 0.231]),
+success-only hindsight over none (+0.197 [0.160, 0.238]), and shared centered
+over per-bin centered (+0.492 [0.464, 0.522]). The same family does not support
+γ=1 over uniform, exact adv-mass over legacy, exact adv-mass over learnability,
+or centered over success-only. The shared/per-bin control supports transfer through shared
+parameters, but also changes model capacity and data sharing.
+
+Historical watcher: `watch_gpu.sh`; the recorded queue is drained and no watcher is claimed active.
 
 ## Decision tree after the queue drains
 
 ```
-E4 efficiency table
-├─ champion shows ≥2× samples-to-coverage on frontier levels
-│    → add efficiency chart to website; lead REPORT with it
-└─ no separation → coverage parity note; keep AUC as headline
+Corrected efficiency table
+├─ retained checkpoints and one preregistered target show separation
+│    → report seeded curves with uncertainty
+└─ otherwise → keep the archived table out of headline evidence
 
 F1 long-horizon
 ├─ level 6 leaves 0 by 9600 s
@@ -44,18 +69,18 @@ F2 γ=4
 └─ tie/worse → document as CPU-only effect (compounding weaker at 13 levels
      than 36 tasks); keep γ=1 GPU default
 
-F3–F4 seeds
-├─ ordering holds → REPORT tables get ±std; done
-└─ champion within noise of frontier_alp → soften "champion" claim to tie
+F3–F4 historical seeds
+├─ point-estimate ordering holds → report descriptively with audit caveats
+└─ margins overlap seed variation → make no ranking claim
 ```
 
-## Next wave (planned, not yet queued)
+## Next-wave tracking
 
 | priority | experiment | est. | prerequisite |
 |---|---|---|---|
 | P1 | **Efficiency eval of F1's long-horizon checkpoint** — does 4× training turn into inference-time speedup at deep levels? | 30 min | F1 |
-| P2 | **MountainCar scaled benchmark** (steps 120→600, 5 seeds, γ ablation) — does hindsight reach the flag (hardest bin > 0)? First *external* env where the full stack could show a categorical win | ~2 h CPU (parallel, no GPU) | none |
-| P3 | **Best-config maze run with all validated knobs** (frontier_alp + dense hs + γ=4 + greedy rollout allocation if F2 passes) — the "everything on" run | 40 min | F2 |
+| P2 ✅ | **Corrected MountainCar benchmark** — 10 paired seeds, ≥500k transitions/condition, γ and hindsight ablations, shared/per-bin control | done; results and family-corrected tests above | none |
+| P3 | **Corrected maze factorial** — uniform vs exact `u_N` vs legacy `u_{N+1}` vs learnability at γ=1, followed by a hindsight ablation | GPU | audited training stack |
 | P4 | **Streaming-pool teacher prototype** (parametric density over a continuous difficulty axis, ALP-GMM-style) — unblocks procedural/generative task sources; CPU-validate on a continuous-difficulty variant of grid_reach | CPU | none |
 | P5 | SmolLM2-360M + GSM8K 2×2 via `verl_integration/` | 8-GPU node | **blocked on hardware** |
 
@@ -75,6 +100,6 @@ F3–F4 seeds
 - **Seed noise:** finals vary ±0.01–0.015 across seeds; no single-seed claim
   goes in REPORT.md without either multi-seed confirmation or an explicit
   single-seed caveat.
-- **Toy→real gap:** every CPU win must re-prove itself on GPU (γ=4 is the
-  current test case); two CPU pre-registrations have transferred correctly
-  so far.
+- **Toy→real gap:** every CPU win must re-prove itself outside the toy. γ=4
+  helped corrected MountainCar but did not help the historical GPU maze;
+  concentration is a task-graph knob, not a universal default.

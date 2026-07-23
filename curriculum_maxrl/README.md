@@ -9,7 +9,7 @@ Research prototype exploring the integration of curriculum learning
 | file | purpose |
 |---|---|
 | `RESEARCH.md` | verified deep-research synthesis of modern curriculum RL and where MaxRL fits |
-| `THEORY.md` | advantage-mass analysis: exact E[Σ\|w\|] per estimator, derived teacher utility, optimal rollout allocation |
+| `THEORY.md` | coefficient-mass analysis, derived teacher utility, myopic fixed-p rollout allocation |
 | `DESIGN.md` | integration design, hypotheses, and validation results |
 | `maze_gpu/` | GPU testbed (tiny transformer on 17×17 mazes, goal-distance curriculum, pass@k eval) |
 | `testbed.py` | skill-chain environment (binary verifier rewards, exact score functions) |
@@ -17,8 +17,8 @@ Research prototype exploring the integration of curriculum learning
 | `teachers.py` | Uniform / ZPD-band / ALP / MaxRL-frontier teachers + adaptive rollout allocation |
 | `run_experiment.py` | teacher × estimator sweep (final performance) |
 | `run_speed.py` | learning-speed (AUC, steps-to-frontier) + adaptive-N comparison |
-| `verl_curriculum.py` | drop-in `FrontierTeacher` + `CurriculumSampler` for the verl trainer in this repo |
-| `test_verl_curriculum.py` | CPU unit tests for the verl integration module |
+| `verl_curriculum.py` | compatibility re-export of the canonical `verl_integration/` module |
+| `test_verl_curriculum.py` | CPU compatibility tests for the verl integration module |
 
 ## Quick start
 
@@ -31,12 +31,12 @@ python3 test_verl_curriculum.py
 ## Core idea in one line
 
 The MaxRL estimator's own math defines the curriculum: the expected total
-|advantage| a prompt receives from a group of N rollouts is exactly
-`2·(pass@N − pass@1)` — the probability it is solvable within N attempts but
-not within one (THEORY.md). The teacher samples prompts proportional to this
-derived utility (Thompson-sampled from a Beta posterior), and the optimal
-rollout allocation is greedy water-filling on the marginal `p(1−p)^N` — the
-probability the next rollout is a group's first success. At N=2 the utility
-reduces to SFL's learnability `p(1−p)`; RLOO's advantage mass *is* `2p(1−p)`
-exactly, unifying the learnability-curriculum literature with the estimator
-algebra.
+scalar coefficient magnitude a prompt receives from a group of N rollouts is
+exactly `2·(pass@N − pass@1)`—twice the probability it is solvable within N
+attempts but not within one (THEORY.md). The teacher prioritizes prompts using
+the corresponding half-mass utility, with Thompson-style draws from discounted
+Beta pseudo-counts. Under fixed supplied pass rates, feasible integer bounds,
+and a fixed one-step budget, greedy water-filling on `p(1−p)^N` maximizes this
+proxy. At N=2 the half-mass utility equals SFL's learnability `p(1−p)`;
+`u_1=0`. RLOO's expected coefficient mass is `2p(1−p)`, proportional to
+the same score, though the estimators and objectives remain distinct.

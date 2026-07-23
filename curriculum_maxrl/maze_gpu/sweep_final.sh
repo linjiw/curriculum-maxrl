@@ -1,5 +1,5 @@
 #!/bin/bash
-# Final push: (1) long-horizon champion run (4x budget) — tests whether
+# Historical final sweep: (1) long-horizon top-point-estimate run (4x budget) — tests whether
 # level 6+ is a duration question; (2) gamma=4 concentration on GPU;
 # (3) dense-hindsight multi-seed due diligence.
 cd /home/ec2-user/work/curriculumrl/maxrl/curriculum_maxrl/maze_gpu
