@@ -449,9 +449,23 @@ blaming the sampler — in our case the teacher was exonerated and the answer
 was capacity. With a 4B model on 24 GB, capacity may well be where your
 frontier march ends, and knowing that early changes Phase 2's hardware ask.*
 
-*Repo pointers for your integration: `frontier_rl/interfaces.py` (the three
-contracts), `frontier_rl/trainer.py` (the loop II.1 reuses),
-`frontier_rl/estimators.py` (weights; positive-part flag incoming),
-`frontier_rl/streaming.py` (if your init-state axis goes continuous),
-`SONIC_RESPONSE.md` (the dense-PPO sibling of this document — your Q2/Q4
-have cousins there).*
+*Repo pointers for your integration — Part II is now implemented and tested
+on our side, not just specified: `frontier_rl/estimators.py`
+(`maxrl_weights(..., positive_part=True)`, the Q1 estimator, with the
+mass-identity MC test), `frontier_rl/trainer.py`
+(`TrainerConfig(positive_weights=True)`), `frontier_rl/adapters/cosmos_libero.py`
+(`CosmosLiberoSpace` — the II.1 wiring with template rewrites, relabel-only
+sub-goal arms, mastery splits, and the `PoisonRateMeter` for Pilot 0b),
+`frontier_rl/examples/run_cosmos_pilot.py` (the four Phase-1 arms on a CPU
+mock: uniform/teacher 0.000 → oracle-relabel 0.862, self-verified 0.756,
+gated 0.842 — the V5 categorical result on your exact code path; swap
+`rollout_fn` for the policy-server wave and this IS Phase 1),
+`frontier_rl/interfaces.py` (the three contracts), `frontier_rl/streaming.py`
+(if your init-state axis goes continuous), `SONIC_RESPONSE.md` (the dense-PPO
+sibling of this document — your Q2/Q4 have cousins there). Two findings from
+building the mock that upgrade Part II: (1) sub-goal arms must be
+relabel-only — if the teacher can roll out the invented curriculum directly,
+the frontier-heavy regime quietly becomes a balanced one; (2) Pilot 0b's
+probe set must be enriched with successes, or false-positive base rates on
+failure-heavy rollouts (~65:1 at p≈0.015) will push clean predicate classes
+below any 90% precision gate.*
