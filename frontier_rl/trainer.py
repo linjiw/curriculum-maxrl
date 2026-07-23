@@ -30,6 +30,11 @@ class TrainerConfig:
     hindsight: bool = True          # dense relabeling of dead groups (F3)
     hindsight_scale: float = 1.0    # natural K=1 group weight; tune down if
                                     # self-imitation entrenches errors
+    positive_weights: bool = False  # weighted-RFT: success weights only, for
+                                    # policies without per-sample log-probs
+                                    # (flow heads / weighted SFT — COSMOS3 Q1);
+                                    # E[Σw⁺] = u(p) exactly, so the teacher's
+                                    # algebra is unchanged
     teacher_gamma: float = 1.0      # V6: ~4 on chained pools
     teacher_decay: float = 0.7
     teacher_floor: float = 0.1
@@ -65,7 +70,7 @@ class FrontierTrainer:
             self.teacher.observe(task_id, r)   # requested-task evidence only
             rewards_seen.append(r.mean())
 
-            w = maxrl_weights(r)
+            w = maxrl_weights(r, positive_part=self.cfg.positive_weights)
             if np.any(w != 0):
                 stats.live_groups += 1
                 self.policy.update(task_id, group.trajectories, w)
@@ -83,7 +88,8 @@ class FrontierTrainer:
                 new_task, new_rewards = relabel
                 new_trajs = group.trajectories
             r2 = np.asarray(new_rewards, dtype=float)
-            w2 = maxrl_weights(r2) * self.cfg.hindsight_scale
+            w2 = maxrl_weights(r2, positive_part=self.cfg.positive_weights) \
+                * self.cfg.hindsight_scale
             if np.any(w2 != 0):
                 stats.relabeled_groups += 1
                 self.policy.update(int(new_task), new_trajs, w2)
