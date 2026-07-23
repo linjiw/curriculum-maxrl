@@ -8,4 +8,9 @@
 - gym_goal: a gym-style adapter skeleton showing where env.reset/step go
   and how to bin a continuous goal space into task ids (imports gymnasium
   lazily; the rest of the package never needs it).
+- isaaclab_curriculum: reset-stream teacher for massively parallel sim
+  (no groups; per-reset Bernoulli evidence — the SONIC regime).
+- cosmos_libero: predicate-goal manipulation tasks with a flow-policy VLA
+  (positive-part weights, template conditioning rewrites, mastery splits,
+  poison-rate gating — the COSMOS3_RESPONSE.md Part II design).
 """

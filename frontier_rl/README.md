@@ -70,6 +70,7 @@ of these distributional conditions.
 | `grid_reach` | goal-conditioned pattern; concrete-goal verifier relabel | 0.583 → 0.652 → **0.702** (10-seed corrected study) |
 | `gym_classic` | Gymnasium MountainCar/CartPole dynamics with custom nested binary tasks | corrected transition-matched MountainCar study below; historical CartPole result pending rerun |
 | `gym_goal` | Gymnasium GoalEnv skeleton; requires an environment-specific verifier-backed relabel callback | (skeleton — bring your env) |
+| `cosmos_libero` | **flow-policy VLA pattern** (Cosmos3/LIBERO): predicate-conjunction goals, positive-part weights, template conditioning rewrites, relabel-only sub-goal arms, mastery splits, per-class poison gating | frontier-heavy mock: uniform/teacher **0.000** → oracle-relabel **0.862**, self-verified 0.756, +gate 0.842 (3 seeds; `examples/run_cosmos_pilot.py`) |
 
 The adapter uses official Gymnasium dynamics and modern reset/step semantics,
 but evaluates custom binary task predicates rather than standard episodic
@@ -165,6 +166,7 @@ design, not an accident:
 | goal-conditioned control (gym/robotics) | `FrontierTeacher` over goal bins | group | relabel + conditioning rewrite | gridworld, MountainCar, CartPole |
 | massively parallel sim (IsaacLab, 4096 envs) | `FrontierBinTeacher` (vectorized, evidence-scaled decay, deterministic optimism) | per-reset Bernoulli stream | statistics-half only (occupancy credit) | adapter + unit tests; SONIC design doc |
 | dense-reward PPO | any of the above with `utility="learnability"` | termination flag as verifier | usually skip (dense reward is the partial credit) | SONIC_RESPONSE.md analysis |
+| flow/diffusion action heads, no per-sample log-prob (VLA weighted SFT) | `MasteryFrontierTeacher` (samplable mask, mastery splits) | group (task, K of N) | dense relabel + **template** conditioning rewrite, per-class poison gate | cosmos_libero adapter + mock pilot; COSMOS3_RESPONSE.md |
 
 The swap points and what fixes each choice:
 
@@ -181,6 +183,12 @@ The swap points and what fixes each choice:
 - **hindsight** — full trajectory relabel where the env verifies exactly and
   conditioning can be rewritten; statistics-only credit where it can't
   (on-policy PPO); off where dense reward already carries partial credit.
+- **weights** — full MaxRL (`r/K − 1/N`) when per-sample log-probs exist;
+  `positive_part=True` (successes only, `TrainerConfig.positive_weights`) for
+  weighted-SFT on flow/diffusion heads. `E[Σw⁺]` equals the teacher utility
+  exactly and all-pass groups self-retire. The pass@k-tail update identity is
+  exact for true trajectory scores; a flow/SFT surrogate needs a separate
+  direction-fidelity probe (COSMOS3_RESPONSE.md Q1).
 
 ## IsaacLab / massively-parallel sim adapter
 
@@ -207,6 +215,46 @@ analysis: evidence-scaled decay (half-life invariant to env count — exact:
 optimism bonus, learnability default, and a `max_prob` tripwire instead of a
 shaping cap. See `SONIC_RESPONSE.md` for the full design rationale including
 the closed-loop threshold-curriculum stability rules.
+
+## Cosmos3 / LIBERO flow-policy adapter
+
+`adapters/cosmos_libero.py` implements the COSMOS3_RESPONSE.md Part-II design
+for RLVR on flow-matching VLA policies (no tractable per-sample log-prob):
+
+- **positive-part weights** (`TrainerConfig(positive_weights=True)`) — the
+  weighted-RFT rule; its scalar sampling algebra is unchanged (P1 exact),
+  while surrogate update-direction fidelity remains an empirical gate.
+- **`CosmosLiberoSpace`** — arms are predicate-conjunction goals; `rollout_fn`
+  is a hook for the policy-server + vector-env wave (no cosmos import here);
+  live groups are verified ONLY by the sim's binary success; dead groups are
+  relabeled to the deepest achieved sub-conjunction with the language
+  conditioning rebuilt from a **fixed template per goal** (contract 2 at VLA
+  scale — never free-generated) and can never be upgraded to the original
+  task's success.
+- **relabel-only arms** — sub-goal tasks the teacher cannot roll out directly
+  (`samplable_mask()`); they exist purely as credit targets for hindsight.
+  This distinction is load-bearing: letting the teacher sample the invented
+  curriculum directly turns a frontier-heavy pool into a balanced one and
+  erases the categorical result (measured while building the mock pilot).
+- **`MasteryFrontierTeacher`** — mastery splits create init-state-bin child
+  arms with hierarchical pseudo-count shrinkage toward the parent (the
+  starved-450-arm fix), plus the samplable mask.
+- **`PoisonRateMeter`** — Pilot 0b's instrument: per-predicate-class
+  precision/recall of a self-verifier vs oracle; prunes the relabel
+  vocabulary at a precision gate (the action is removal of a class, never
+  lowering the gate).
+
+`examples/run_cosmos_pilot.py` runs the four preregistered Phase-1 arms on a
+CPU mock (Bernoulli predicate skills, exact pass rates): frontier-heavy pool
+where uniform and teacher-alone score **0.000 in every seed** while
+oracle-relabel reaches **0.862**, self-verified 0.756, and per-class gating
+recovers most of the poison gap (0.842) — the V5 categorical result and the
+poison→gate story reproduced end-to-end on the exact code path the real
+integration will use. It also surfaced a base-rate warning for the real
+Pilot 0: with rare true achievements, precision measured on failure-heavy
+rollouts is dominated by false-positive opportunity (~65:1 at q=0.015), so
+the probe set must be enriched with successes or the gate will mis-prune
+clean classes.
 
 ## Streaming / procedural task sources
 

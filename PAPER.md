@@ -90,9 +90,11 @@ GPU, broader neural, and LLM experiments remain necessary.
 
 Throughout this paper, “registered,” “sealed,” and “predeclared” denote local
 source/runtime locks created before the corresponding seed block. They are not
-externally timestamped preregistrations. The V3 and later manifests match
-current source bytes; the historical V2 lock points to an earlier runner hash
-whose exact bytes are not present at HEAD.
+externally timestamped preregistrations. The V3-and-later manifests matched at
+reviewed snapshot `2dbda4e`; later work evolved three shared core files while
+leaving the locks intact, and their exact locked bytes remain recoverable from
+that commit. The historical V2 lock points to an earlier runner whose exact
+bytes are not retained.
 
 ## 1. Problem statement
 
@@ -152,10 +154,12 @@ Everything the method does flows through three channels, and every experiment
 we ran gains its effect through exactly one of them:
 
 **Channel 1 — waste avoidance (the teacher).** Don't roll out where the
-estimator will emit nothing. Worth a consistent but bounded +0.05–0.08 AUC —
-bounded by the oracle ceiling, because allocation can only redistribute
-signal that exists (a perfect sampler collects just 0.4% more advantage mass
-than our posterior).
+estimator is likely to emit no scalar coefficient mass. The rule is exact for
+that statistic, but its learning benefit is environment-dependent. A
+true-pass-rate proportional-priority comparator collected only 0.4% more mass
+than the pseudo-count teacher in one CPU study while learning much faster;
+therefore collected mass is neither an oracle ceiling nor a sufficient proxy
+for progress.
 
 **Channel 2 — signal creation (hindsight).** Create verifier-valid auxiliary
 targets from failures already paid for. This is the only channel that can
@@ -164,13 +168,14 @@ fresh target update still requires the law or moment conditions proved below.
 Its observed local gain varies with how much a relabeled skill can *compound*:
 about +0.22 AUC on fixed task sets and +0.01 on one-shot task streams.
 
-**Channel 3 — objective safety (MaxRL weighting underneath).** Channels 1–2
-are not objective-agnostic add-ons: the identical teacher grew coverage under
-MaxRL in every seed and amplified GRPO's collapse in every seed. The
-objective decides whether a curriculum is safe at all.
+**Channel 3 — learner interaction (MaxRL weighting underneath).** Channels
+1–2 are not automatically objective-agnostic. A historical maze comparison
+found opposite teacher interactions under MaxRL and GRPO, but that study used
+the pre-audit GPU protocol and is hypothesis-generating rather than a general
+safety result. Corrected objective-by-teacher experiments remain open.
 
-One line: **the teacher allocates, hindsight creates, the objective decides
-whether either is safe.** The regime map, practitioner playbook, and graded
+One line: **the teacher allocates, hindsight adds auxiliary targets, and the
+learner determines whether those data help.** The regime map, practitioner playbook, and graded
 claim inventory live in EVIDENCE.md; the interactive version of this section
 (a live frontier-walk simulation) is on the project site.
 
@@ -1237,9 +1242,9 @@ The experiments isolate several distinct questions.
     unresolved.
 13. **Local locks are not external preregistration.** They provide a
     machine-checkable within-repository chronology but no independent
-    timestamp. Current V3 and later manifests match their files. V2's lock
-    records a historical runner hash that differs from HEAD, so exact V2 runner
-    reconstruction requires bytes not present in the current tree.
+    timestamp. V3-and-later locked bytes are recoverable from reviewed snapshot
+    `2dbda4e`; three shared core files evolved afterward without rewriting the
+    locks. V2's historical runner bytes are not present in the retained tree.
 
 ## 11. Next experiments
 

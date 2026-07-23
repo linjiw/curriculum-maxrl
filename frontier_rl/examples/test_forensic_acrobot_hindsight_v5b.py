@@ -23,6 +23,14 @@ def _artifact_is_materialized() -> bool:
         )
 
 
+def _sealed_runtime_matches() -> bool:
+    if not LOCK.exists():
+        return False
+    with LOCK.open(encoding="utf-8") as handle:
+        expected = json.load(handle).get("runtime")
+    return expected == forensic.frozen._runtime()
+
+
 def test_numpy_reduction_and_ulp_helpers_are_exact():
     run = {
         "update_diagnostics": [
@@ -55,6 +63,10 @@ def test_verifier_rejects_every_artifact_other_than_the_sealed_original(monkeypa
 @pytest.mark.skipif(
     not _artifact_is_materialized(),
     reason="V5B raw artifact is not materialized; run git lfs pull",
+)
+@pytest.mark.skipif(
+    not _sealed_runtime_matches(),
+    reason="bit-exact V5B forensics require the source-locked runtime",
 )
 def test_current_artifact_forensics_are_non_authorizing_and_outcome_free():
     report = forensic.verify(ARTIFACT, LOCK)

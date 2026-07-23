@@ -33,10 +33,10 @@ imports the frozen analyzer and reuses its private lock, raw-run, and
 reconstruction helpers; its separate contribution is the reduction-order
 diagnosis, byte-bound artifact check, and outcome-free report boundary.
 
-Across the 720 saved cumulative diagnostic reductions:
+Across the 720 saved cumulative diagnostic reductions on the sealed runtime:
 
 - all 720 exactly equal a fresh reconstruction with the runner's NumPy
-  reduction semantics;
+  reduction semantics on that runtime (bit patterns can be BLAS-dependent);
 - 377 differ bitwise from the analyzer's sequential-Python reductions;
 - the maximum absolute difference is
   `1.9984014443252818e-15`;

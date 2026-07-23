@@ -141,6 +141,40 @@ E||Σ_i w_i S_i|| ≤ 2G u_N(p).
 Score norms, directions, cancellation, optimizer state, and parameter sharing
 still determine actual learning progress.
 
+### Corollary 2a (Positive-part weights)
+
+Define the positive-part update
+
+```text
+P_N = 1{K>0} Σ_i r_i(1/K-1/N)S_i.
+```
+
+For true trajectory scores,
+
+```text
+E[P_N] = (w_N(p)-1)∇p
+       = Σ_{k=2}^N (1/k)∇pass@k,
+E[Σ_i r_i(1/K-1/N)] = u_N(p).
+```
+
+**Proof.** The first term of `P_N` is `H_N`, while the subtracted success
+term has expectation
+
+```text
+E[(1/N)Σ_i r_iS_i] = E[r_1S_1] = ∇p.
+```
+
+Proposition 1 therefore gives `E[P_N]=(w_N-1)∇p`. Since
+`w_N-1=Σ_{j=1}^{N-1}(1-p)^j` and
+`(1/k)∇pass@k=(1-p)^(k-1)∇p`, the tail representation follows. The scalar
+mass is `(1-K/N)1{K≥1}`; its expectation is
+`P(K≥1)-E[K]/N=1-(1-p)^N-p=u_N(p)`. ∎
+
+The update identity requires `S_i=∇log m_θ(z_i|x)`. If the same scalar
+weights multiply a supervised, flow-matching, or other surrogate loss, only
+the coefficient-mass identity remains exact. Alignment of that surrogate
+gradient with the true-score update is a separate empirical question.
+
 ## Proposition 3 (Myopic rollout allocation)
 
 Fix known pass rates `p_i∈(0,1)`, integer bounds `1≤L_i≤N_i≤U_i`, and a

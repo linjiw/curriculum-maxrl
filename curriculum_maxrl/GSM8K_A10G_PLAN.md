@@ -133,7 +133,8 @@ materialize fp32-vocab tensors) and keep `enable_gradient_checkpointing: true` (
 **Scaling logic.** Paper: 256 prompts x 128 rollouts = 32,768 seqs/step over 8 GPUs
 (4,096/GPU). Ours: 64 prompts x 16 rollouts = 1,024 seqs/step on 1 GPU — a 4x/GPU reduction
 that offsets hf-generate being ~4-10x slower than vllm. N=16 keeps enough group resolution
-for MaxRL (truncate order T=N=16) and for the teacher's `pass@N - pass@1` utility.
+for practical dropped-group MaxRL (truncate order T=N-1=15) and for the teacher's
+`pass@N - pass@1` coefficient-mass utility.
 `max_response_length=1024` instead of 2048: SmolLM2 GSM8K solutions are ~150-400 tokens;
 2048 doubles KV + straggler cost for negligible pass-rate gain, and truncated responses are
 already zeroed by `zero_reward_on_max_response_length`.
@@ -309,3 +310,43 @@ Everything else checks out: the hf-rollout code path is complete and precedented
 paper's own maze recipe; memory fits with ~2x headroom for 360M; a 50-step cell lands at
 5-8 h; data and model downloads were verified reachable; and the curriculum sampler's
 index/uid feedback loop is wired end-to-end for the gsm8k parquet schema.
+
+## Pre-registered predictions (written 2026-07-23, before any cell finished)
+
+Disclosure: at writing time we have seen 14 training steps of cell 1
+(maxrl+cur, killed by the GPU collision, re-queued) and 3 steps of cell 2
+(maxrl) — train scores only (~0.03, too early to order), no val metrics.
+Predictions follow from the three-channel model (EVIDENCE.md) applied to
+this regime: fixed 7473-prompt pool, SmolLM2-360M with pass@1 ≈ 2-4% (deep
+frontier-heavy), N=16, no hindsight channel wired.
+
+- **P-G1 (teacher = waste avoidance):** maxrl+cur beats maxrl on AUC of
+  val reward@1 over the 50 steps, because ~70% of uniform groups are dead
+  (observed: step-1 dead fraction 0.75) and the teacher reallocates that
+  compute. Expected magnitude modest (+10-30% relative AUC), bounded by the
+  oracle ceiling — no hindsight means no signal creation.
+- **P-G2 (H6 at LLM scale — the headline test):** grpo+cur does NOT beat
+  grpo; if anything it degrades pass@8 relative to grpo, reproducing the
+  maze H6 reversal (curricula amplify GRPO's collapse because its
+  normalized weights maintain easy prompts). This is the riskiest and most
+  valuable prediction: if grpo+cur *wins*, the "curricula require
+  likelihood-style weighting" claim does not transfer to LLM scale.
+- **P-G3 (coverage currency):** the maxrl cells grow or hold pass@8/best@8
+  while grpo cells shrink the pass@1→pass@8 gap (sharpening). Differences
+  will be clearer in pass@8 than in reward@1 — as in the maze, pass@1 is
+  the least sensitive meter.
+- **P-G4 (teacher telemetry):** in cur cells, frac-dead-sampled falls
+  within ~10 steps (already visible in the 14 salvaged cell-1 steps:
+  0.75 → 0.60 by step 8) and mean p̂ of visited prompts tracks upward;
+  in uniform cells the dead fraction stays ≈ the population dead rate.
+- **P-G5 (magnitude honesty):** at 50 steps × 64 prompts × 16 rollouts on
+  a 360M model, absolute gains are small (val reward@1 moves a few points
+  from ~0.03); the *ordering* and the pass@8 divergence, not the absolute
+  score, are the pre-registered outcomes. A null on P-G1 with confirmation
+  of P-G2 still supports the safety claim; a null on both means the A10G
+  budget is below the regime where the schedule matters at this scale.
+
+Analysis contract: cells compared by (a) AUC of val reward@1 across the
+common step grid, (b) final pass@8, (c) dead-fraction trajectories. The
+partial cell-1 run (collision casualty) is NOT comparable on wall-clock and
+will be excluded from headline numbers; its full re-run replaces it.

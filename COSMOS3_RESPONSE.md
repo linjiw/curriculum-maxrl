@@ -13,11 +13,12 @@ should survive into the paper); and refusing the three broader novelty claims
 your review refuted. This is the most careful external read of our work we've
 received.*
 
-*One headline before the numbered answers, because it upgrades your Q1: your
-Phase-1 "weighted RFT" framing is not a compromise. The positive part of the
-MaxRL weights is itself an unbiased estimator — of the pass@k tail objective —
-and its expected mass is exactly our teacher utility. Details in Q1; it means
-Phase 1 keeps more of the theory than your proposal claims.*
+*One headline before the numbered answers, because it sharpens your Q1: with
+true trajectory scores, the positive part of the MaxRL weights is an unbiased
+estimator of the pass@k-tail objective, and its expected scalar mass is exactly
+our teacher utility. Flow-matching weighted RFT replaces that score with a
+surrogate, so only the mass/sampling identity transfers automatically; update
+direction is an empirical fidelity gate. Details in Q1.*
 
 ---
 
@@ -88,19 +89,21 @@ and that's a preregisterable prediction, not a hope.
 weights — `w_i = 1/K − 1/N` on verified successes, 0 on failures — and claim
 the following, which is exact, not order-preserving:**
 
-1. **The positive part is itself a principled estimator.** MaxRL's
+1. **The positive part is a principled true-score estimator.** MaxRL's
    variance-reduced form (paper eq. 10) is `w_i = r_i/K − 1/N`; the failure
-   term `−(1/N)Σ S_i` is a zero-mean control variate (unconditional score mean
-   is 0), so dropping *all* weights' baseline gives the paper's own eq. 9 —
-   unbiased, higher variance. Dropping only the **negative** weights gives
-   something sharper. Per prompt (exact likelihoods):
+   weights are the negative part of a full-group score baseline
+   `−(1/N)Σ_i S_i`, whose unconditional expectation is zero. Dropping that
+   entire baseline gives the paper's own eq. 9; dropping only the negative
+   weights instead leaves the success-side `−1/N` contribution. Per prompt,
+   when `S_i` is the true trajectory score:
 
    ```
    E[Σ_succ (1/K − 1/N) S_i] = (w_T(p) − 1)·∇p = Σ_{k=2}^{N} (1/k) ∇pass@k
    ```
 
-   i.e. the positive-part update is an **unbiased estimator of the pass@k tail
-   objective** — maximum likelihood minus its first-order (REINFORCE) term. Its
+   i.e. the positive-part update is an **unbiased estimator of the pass@k-tail
+   objective** — maximum likelihood minus its first-order (REINFORCE) term.
+   This update identity is not automatic for the weighted-CFM surrogate. Its
    cross-prompt weight `w_T(p)−1` vanishes at p→1 and grows like N−1 as p→0:
    the coverage-first behavior you want, in the currency (pass@k) your
    evaluation already speaks. This is a *feature* for a robotics paper whose
@@ -110,9 +113,9 @@ the following, which is exact, not order-preserving:**
    positive-part weights is `E[Σ w⁺] = E[(1−K/N)·1{K≥1}] = pass@N − pass@1`
    — *exactly* the teacher utility (we re-verified by MC while drafting this,
    200k trials, matches to 4 decimals). So the teacher's algebra governs the
-   Phase-1 update exactly, not approximately. The only thing the surrogate
-   degrades is the update direction (surrogate score vs true score), not the
-   curriculum.
+   Phase-1 sampling rule exactly, not approximately. The surrogate changes the
+   update direction (weighted CFM gradient versus true score gradient), which
+   is why Pilot 0 includes a direction-fidelity probe.
 
 3. **Two practical properties you get free.** (a) All-pass groups self-retire:
    K=N ⇒ every weight is 0 — mastered tasks stop producing gradient without
@@ -449,9 +452,23 @@ blaming the sampler — in our case the teacher was exonerated and the answer
 was capacity. With a 4B model on 24 GB, capacity may well be where your
 frontier march ends, and knowing that early changes Phase 2's hardware ask.*
 
-*Repo pointers for your integration: `frontier_rl/interfaces.py` (the three
-contracts), `frontier_rl/trainer.py` (the loop II.1 reuses),
-`frontier_rl/estimators.py` (weights; positive-part flag incoming),
-`frontier_rl/streaming.py` (if your init-state axis goes continuous),
-`SONIC_RESPONSE.md` (the dense-PPO sibling of this document — your Q2/Q4
-have cousins there).*
+*Repo pointers for your integration — Part II is now implemented and tested
+on our side, not just specified: `frontier_rl/estimators.py`
+(`maxrl_weights(..., positive_part=True)`, the Q1 estimator, with the
+mass-identity MC test), `frontier_rl/trainer.py`
+(`TrainerConfig(positive_weights=True)`), `frontier_rl/adapters/cosmos_libero.py`
+(`CosmosLiberoSpace` — the II.1 wiring with template rewrites, relabel-only
+sub-goal arms, mastery splits, and the `PoisonRateMeter` for Pilot 0b),
+`frontier_rl/examples/run_cosmos_pilot.py` (the four Phase-1 arms on a CPU
+mock: uniform/teacher 0.000 → oracle-relabel 0.862, self-verified 0.756,
+gated 0.842 — the V5 categorical result on your exact code path; swap
+`rollout_fn` for the policy-server wave and this IS Phase 1),
+`frontier_rl/interfaces.py` (the three contracts), `frontier_rl/streaming.py`
+(if your init-state axis goes continuous), `SONIC_RESPONSE.md` (the dense-PPO
+sibling of this document — your Q2/Q4 have cousins there). Two findings from
+building the mock that upgrade Part II: (1) sub-goal arms must be
+relabel-only — if the teacher can roll out the invented curriculum directly,
+the frontier-heavy regime quietly becomes a balanced one; (2) Pilot 0b's
+probe set must be enriched with successes, or false-positive base rates on
+failure-heavy rollouts (~65:1 at p≈0.015) will push clean predicate classes
+below any 90% precision gate.*

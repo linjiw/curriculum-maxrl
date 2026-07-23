@@ -254,11 +254,12 @@ still runs the source/lock checks and skips only tests that require raw bytes.
 **Provenance boundary.** “Registered,” “sealed,” and “predeclared” in this
 repository refer to local source/runtime locks created before the corresponding
 seed block was executed. They are not externally timestamped preregistrations.
-An audit of current bytes finds one historical exception: the V2 lock records
-an earlier `run_acrobot_neural.py` hash, while the current file is the V3-era
-runner. The V2 lock still discloses the expected historical hash, but those
-runner bytes are not present at HEAD. The V3 and later listed source manifests
-match the current checked-in bytes. See `REVIEW_NOTES.md` for the exact scope.
+At reviewed snapshot `2dbda4e`, the V3-and-later manifests matched the listed
+files; post-lock Cosmos support subsequently evolved three shared core files
+(`estimators.py`, `trainer.py`, and `adapters/__init__.py`). The locks remain
+unchanged and their exact bytes are recoverable from that commit. The older V2
+runner remains the historical exception whose exact locked bytes are not in
+the retained tree. See `REVIEW_NOTES.md` for the exact scope.
 
 ## Citation / provenance
 

@@ -20,72 +20,80 @@ what lets you predict where the method will and won't help.
   estimator's exact expected scalar coefficient mass). The practical
   drop-both estimator targets `T=N−1`; `u_2(p)=p(1−p)` and `u_1≡0`. The score
   is zero at mastered (`p→1`) and unreachable (`p→0`) tasks.
-- What it buys, measured: dead groups 5.8→3.4 of 8 (maze); 22–35% more
-  optimization steps per GPU-hour (frontier rollouts also end earlier);
-  6/6 paired-seed wins vs uniform.
-- Ceiling: the ORACLE bound. A perfect sampler collects only 0.4% more
-  advantage mass than our Thompson posterior (V2) — allocation saturates
-  fast. Channel 1 alone is worth ~+0.05–0.08 AUC and never more, because
-  it can only reallocate signal that exists.
-- When it's the dominant channel: mixed-difficulty pools with real spread
-  (the balanced regime), and any setting where rollouts are the cost center.
+- What it bought in the historical maze mechanism logs: the legacy
+  zero-weight counter fell from 5.8→3.4 of 8; 22–35% more optimization steps
+  ran per GPU-hour (frontier rollouts also ended earlier); and all six paired
+  seeds favored the teacher. Those logs conflated all-fail (`K=0`) with
+  all-pass (`K=N`) groups and used the legacy score, so they motivate—but do
+  not close—the corrected mechanism claim.
+- Retained evidence: the teacher improved shared-H64 Acrobot transition-AUC
+  by `+0.03635` over uniform across 20 paired seeds. In tile-coded
+  MountainCar, exact-mass `γ=4` improved AUC by `+0.141`, while the
+  predeclared `γ=1` exact-mass arm was not separated from uniform,
+  learnability, or the legacy score. These results establish local efficacy,
+  not a universal effect size.
+- No oracle ceiling has been established. In one CPU study, a true-pass-rate
+  proportional-priority comparator collected 841 units of coefficient mass
+  versus 838 for the pseudo-count teacher, yet achieved AUC 0.851 versus
+  0.700. Timing, estimation, and gradient direction matter; total mass alone
+  is not a sufficient learning proxy.
 
 ### Channel 2 — SIGNAL CREATION (hindsight recycling)
 *"Manufacture verified successes from the failures you already paid for."*
 
-- Mechanism: a dead group's rollouts are relabeled to the sub-goals they
-  actually achieved; the same success-conditioned weights apply. P6 + V1:
-  where the env's relabel is exact, these gradients are *indistinguishable
-  from fresh unbiased groups* (cosine 0.956 vs 0.958; mean → 1.000).
-- What it buys, measured: the only channel that breaks the oracle ceiling
-  (0.890 > 0.851); the only channel that scores at all in frontier-heavy
-  regimes (0.98 vs exactly 0.00 for every pure sampler including DAPO);
-  MountainCar flag 0.000 → 1.000.
-- Its own boundary, measured: the gain is proportional to how much a
-  relabeled skill can COMPOUND. Fixed task set (CPU skill chain): +0.22 AUC.
-  One-shot tasks (infinite-data maze): +0.01, reliable but small. This is
-  the single most important regime variable in the whole project.
-- Contracts (violations measured, not hypothesized): exactness (true success
-  under the env's verifier) and conditioning-rewrite (goal-embedded
-  trajectories must be rewritten — skipping it made hindsight HURT,
-  0.600 < 0.658, on the gridworld).
+- Mechanism: an all-fail group's rollouts can be credited to verifier-valid
+  goals they actually achieved, producing an auxiliary selected-data stream.
+  Equality with a fresh target-task update requires equality of the relevant
+  update moments; full rewritten-group law equality is sufficient. Verifier
+  validity and conditioning rewrite are necessary but not sufficient.
+- Retained local evidence: under `γ=4`, centered hindsight added `+0.1050`
+  AUC on the 12-seed skill chain. In tile-coded MountainCar it added `+0.191`
+  (centered) or `+0.197` (success-only) AUC over the matched teacher arms;
+  final custom flag-pass was about 0.84, not a standard-return result. The
+  corrected grid study ordered 0.583 uniform < 0.652 teacher < 0.702 full
+  stack, but was group-step rather than transition matched.
+- A frontier-heavy toy shows the clean categorical mechanism: pure sampling
+  cannot create signal when every pool task is unreachable, whereas valid
+  auxiliary goals can ignite learning. This is not yet a broad robotics or
+  language-model result. The small one-shot-maze hindsight effect is from the
+  audited historical GPU protocol and remains hypothesis-generating.
 
-### Channel 3 — OBJECTIVE SAFETY (MaxRL weighting underneath)
-*"The curriculum is only safe on a likelihood-shaped objective."*
+### Channel 3 — LEARNER INTERACTION (the weighting underneath)
+*"A curriculum changes the data stream; the learner determines the update."*
 
 - Mechanism: P5 — MaxRL concentrates ≈(N−1)× more signal than RLOO on
   frontier tasks as p→0, and unlike GRPO its weight function doesn't invert
   at p→1.
-- What it buys, measured: the H6 reversal. The identical teacher GREW
-  coverage under MaxRL every seed (pass@8 0.316→0.348) and AMPLIFIED
-  collapse under GRPO every seed (0.332→0.269, easy-retention lost).
-  GRPO's inverted weighting was silently maintaining easy tasks; the
-  curriculum removes that maintenance.
-- This is a compatibility theorem in empirical form: **channels 1+2 are not
-  objective-agnostic add-ons.** Ship them on GRPO and you make it worse.
+- Historical observation: the same teacher interacted in opposite directions
+  with MaxRL and GRPO in an old maze sweep. That run used the pre-audit score,
+  counters, budgets, and AUC protocol, so it motivates a corrected
+  objective-by-teacher factorial but cannot establish that GRPO curricula are
+  generally unsafe.
+- Exact positive-part weighting has a pass@k-tail gradient identity only with
+  true trajectory scores. For weighted flow/SFT surrogates, the coefficient
+  mass remains exact but update-direction fidelity is empirical.
 
-**The one-line synthesis: the teacher allocates, hindsight creates, the
-objective decides whether either is safe.**
+**The one-line synthesis: the teacher reallocates groups, hindsight adds
+auxiliary targets, and the learner converts those data into updates.**
 
 ## 2. The regime map (when each channel dominates)
 
-| regime | ch.1 teacher | ch.2 hindsight | evidence |
+| observed regime | ch.1 teacher | ch.2 hindsight | evidence boundary |
 |---|---|---|---|
-| easy-heavy pool | small (+0.01–0.03) | small | V5 row 1: everything ≥0.93 |
-| balanced spread | moderate (+0.05) | large on fixed sets | V5 row 2, CPU main tables |
-| frontier-heavy (p≈0 pool) | **zero** (nothing to allocate) | **categorical** (0→0.93+) | V5 row 3, MountainCar |
-| infinite/one-shot tasks | moderate | small (+0.01, no compounding) | maze GPU, F3/F4 |
-| fixed task set | moderate | **largest** (+0.22, compounds) | CPU, MountainCar shared |
-| starved (tiny eval budget) | zero | zero | SONIC F3 + our V3 agreement |
+| mixed nested thresholds | local positive effect | larger local effect | corrected CPU/Gym studies |
+| frontier-heavy pool | no bootstrap in the limit | categorical ignition possible | synthetic mechanism only |
+| fixed recurring goals | compounding is plausible | largest retained local effects | skill chain + tile-coded MountainCar |
+| one-shot procedural tasks | unresolved under corrected protocol | possibly smaller | historical maze hypothesis only |
+| arm-starved budget | posterior cannot localize | also hard to estimate | arithmetic/design constraint |
 
-Second-order effects, all measured:
-- **Parameter sharing is the transfer channel** (MountainCar per-bin 0.000
-  vs shared 1.000; maze-size cliff). No sharing ⇒ no curriculum can work.
-- **γ concentration tracks structure**: γ≈4 on tight chains (compounding,
-  V6/V6b ODE), γ=1 on broad/flat pools (GPU maze non-transfer — predicted).
-- **Capacity interacts with the frontier**: the teacher walks the frontier to
-  the policy's per-step-execution ceiling and stalls there (q-diagnosis);
-  more capacity resumes the march (L6 coverage 0.188→0.438).
+Second-order hypotheses worth testing:
+- **Shared transfer:** shared parameters are a plausible competence-transfer
+  channel, but the MountainCar shared/per-bin comparison confounds capacity
+  and data flow, and Acrobot's capacity controls were behaviorally inadequate.
+- **Concentration:** `γ=4` helped in two tightly shared nested-task studies;
+  it is an empirical knob, not a theorem or a default for broad pools.
+- **Capacity:** historical maze probes suggest a capacity/frontier
+  interaction, but corrected multi-seed confirmation is still missing.
 
 ## 3. The meter lesson (how to even see the method working)
 
@@ -107,21 +115,26 @@ efficiency currency or you will kill working runs.
 
 Decision procedure distilled from every ablation:
 
-1. **Choose the difficulty axis** so bins share parameters (goal-condition,
-   never partition). Check: does competence at bin k move eval at bin k+1?
-   If not, fix the representation before any curriculum work.
+1. **Choose and test the task axis.** Use one goal-conditioned policy where
+   plausible, then measure whether training bin `k` changes held-out behavior
+   at `k+1`. Include capacity- and data-adequate controls before calling the
+   effect transfer.
 2. **Teacher config**: learnability p(1−p) if you have no natural group size
    N (dense-PPO, hazard-style p); advmass with your real N if you have
    episodic groups. Decay 0.7 (evidence-scaled half-life if throughput
    varies). Floor 0.1. Thompson if stochasticity is acceptable; mean+k·std
-   if not. γ=1 unless the pool is a tight chain.
-3. **Hindsight**: ON wherever the env can relabel exactly; expect gains ∝
-   task-set fixedness. Both contracts enforced (unit-test the conditioning
-   rewrite). Never feed relabels to the teacher's posterior (V4 + GPU C).
-4. **Objective check**: MaxRL/likelihood weighting underneath. If the team
-   insists on GRPO, do NOT ship the curriculum (H6).
-5. **Metrics from day one**: coverage@k (not just pass@1), easy-decile
-   retention, dead-group rate, teacher p̂-vs-eval calibration.
+   if not. Start with `γ=1`; register `γ=4` as a distinct concentration arm
+   when nested shared tasks make it plausible.
+3. **Hindsight**: enable only with a binary verifier, goal-conditioning
+   rewrite, first-hit truncation where applicable, and an adequacy pilot.
+   Compare relabeled and fresh target-task update moments; never feed relabels
+   to requested-task teacher state.
+4. **Learner check**: register the estimator/surrogate and include an
+   objective-by-teacher ablation. Do not generalize the historical GRPO
+   interaction before a corrected run.
+5. **Metrics from day one**: standard environment score, fixed-target pass
+   rates, `K=0`/mixed/`K=N` counts, coefficient mass, gradient norm/alignment,
+   actual transitions, optimizer updates, and wall-clock.
 6. **When the frontier stalls**: run the q-diagnosis (per-step accuracy →
    geometric reach). Capacity problem ⇒ wider/longer; curriculum problem ⇒
    check sharing + relabel contracts.
@@ -131,18 +144,17 @@ Decision procedure distilled from every ablation:
 | claim | strongest single piece of evidence | grade |
 |---|---|---|
 | `2u_N(p)` = practical estimator's exact expected coefficient mass | P1 proof + 200k-trial MC | proved |
-| teacher beats uniform | 6/6 paired seeds, matched clock | multi-seed |
-| hindsight gradients exact on-structure | V1 cosine table (0.956 vs 0.958, mean 1.000) | measured |
-| full stack > oracle sampler | V7: 0.890 vs 0.851, 5 seeds | multi-seed CPU |
-| categorical win where samplers get 0 | V5 frontier-heavy + MountainCar 0→1.000 w/ controls | controlled |
-| curricula require likelihood weighting | H6 reversal, every seed both directions | multi-seed |
-| compounding drives hindsight's size | CPU +0.22 vs maze +0.01, mechanism traced | cross-regime |
-| coverage is the right meter | L6 0.125→0.438 invisible to pass@1 | single-ckpt* |
-| efficiency grows with difficulty | 1.2×/2.7×/11× vs GRPO | single-seed* |
-| sharing is the transfer channel | MountainCar per-bin 0 vs shared 1.000 | controlled |
-| γ tracks structure | V6 + ODE model + GPU non-transfer *prediction* | pre-registered |
+| teacher can beat uniform locally | Acrobot V3 `+0.03635`, 20 paired seeds | narrow neural result |
+| `γ=4` concentration can matter | MountainCar `+0.116` over `γ=1` | corrected local result |
+| verifier-valid hindsight can help | skill chain +0.105; MountainCar about +0.19 | local, exactness unproved |
+| pure sampling cannot revive a zero-signal pool | frontier-heavy construction | synthetic mechanism |
+| shared transfer causes the gain | current controls confounded/inadequate | open |
+| MaxRL makes curricula safe | historical objective interaction only | open |
+| compounding predicts hindsight size | retained fixed-pool positives; maze side historical | hypothesis |
+| corrected GPU/LLM/robotics generality | no qualifying result yet | open |
 
-\* = worth one more seed before external claims; flagged in REPORT.
+The historical maze coverage and efficiency multipliers remain useful for
+experiment design, not for external performance claims.
 
 ## 6. What we'd still like to know (ranked)
 

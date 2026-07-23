@@ -9,6 +9,7 @@ import copy
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 
 import numpy as np
 import pytest
@@ -21,6 +22,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES = PROJECT_ROOT / "frontier_rl/examples"
 V5A_ARTIFACT = EXAMPLES / "acrobot_hindsight_v5a_feasibility.json"
 V5B_ARTIFACT = EXAMPLES / "acrobot_hindsight_v5b_factorial.json"
+V5B_LAST_MATCHING_COMMIT = "2dbda4ec8ebe9bafcaafc0ef0f49c3499e08afa6"
+POST_V5B_CORE_EVOLUTION = {
+    "frontier_rl/adapters/__init__.py",
+    "frontier_rl/estimators.py",
+    "frontier_rl/trainer.py",
+}
 
 
 def _materialized_lfs_artifact(path: Path) -> bool:
@@ -64,7 +71,7 @@ def test_registered_matrix_capacity_arithmetic_and_fresh_seed_blocks():
     }
 
 
-def test_v5_lock_protected_bytes_remain_unchanged():
+def test_v5_lock_sources_remain_intact_or_historically_recoverable():
     lock_path = PROJECT_ROOT / "frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_LOCK.json"
     lock_hash = hashlib.sha256(lock_path.read_bytes()).hexdigest()
     assert lock_hash == (
@@ -92,7 +99,16 @@ def test_v5_lock_protected_bytes_remain_unchanged():
     }
     for relative, expected in lock["source_sha256"].items():
         observed = hashlib.sha256((PROJECT_ROOT / relative).read_bytes()).hexdigest()
-        assert observed == expected, relative
+        if observed == expected:
+            continue
+        assert relative in POST_V5B_CORE_EVOLUTION, relative
+        historical = subprocess.run(
+            ["git", "show", f"{V5B_LAST_MATCHING_COMMIT}:{relative}"],
+            cwd=PROJECT_ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        assert hashlib.sha256(historical).hexdigest() == expected, relative
     dependencies = {
         "amendment_sha256": EXAMPLES / "ACROBOT_HINDSIGHT_V5B_AMENDMENT.json",
         "stage_a_independent_verification_sha256": EXAMPLES

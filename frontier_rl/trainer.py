@@ -31,6 +31,11 @@ class TrainerConfig:
     hindsight_scale: float = 1.0    # natural K=1 group weight; tune down if
                                     # self-imitation entrenches errors
     hindsight_estimator: str = "maxrl"  # "maxrl" (centered) or "success_only"
+    positive_weights: bool = False  # weighted-RFT: success weights only, for
+                                    # policies without per-sample log-probs
+                                    # (flow heads / weighted SFT — COSMOS3 Q1);
+                                    # E[Σw⁺] = u(p) exactly, so the teacher's
+                                    # algebra is unchanged
     teacher_gamma: float = 1.0      # V6: ~4 on chained pools
     teacher_decay: float = 0.7
     teacher_floor: float = 0.1
@@ -84,7 +89,9 @@ class FrontierTrainer:
 
             k = float(r.sum())
             if 0.0 < k < len(r):
-                w = maxrl_weights(r)
+                w = maxrl_weights(
+                    r, positive_part=self.cfg.positive_weights
+                )
                 stats.live_groups += 1
                 self.policy.update(task_id, group.trajectories, w)
                 continue
@@ -109,7 +116,9 @@ class FrontierTrainer:
                 new_trajs = group.trajectories
             r2 = np.asarray(new_rewards, dtype=float)
             if self.cfg.hindsight_estimator == "maxrl":
-                w2 = maxrl_weights(r2)
+                w2 = maxrl_weights(
+                    r2, positive_part=self.cfg.positive_weights
+                )
             elif self.cfg.hindsight_estimator == "success_only":
                 # The raw success average is the estimator directly justified
                 # by the ML conditional-expectation identity.  Relabeling can

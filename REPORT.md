@@ -5,10 +5,11 @@ tables retain provenance in `curriculum_maxrl/maze_gpu/` and the audit caveat be
 
 **Registration terminology.** Source locks in this repository are local files
 created before the corresponding seed blocks; they are not externally
-timestamped preregistrations. Current source bytes match the V3 and later lock
-manifests. The historical V2 lock instead records an earlier
-`run_acrobot_neural.py` hash (`215f126e...`), while HEAD contains the V3-era
-runner (`7bd8e4c7...`); the missing historical runner bytes are a reproducibility
+timestamped preregistrations. The V3-and-later manifests matched at reviewed
+snapshot `2dbda4e`; later Cosmos integration evolved three shared core files,
+whose locked versions remain recoverable from that commit. The historical V2
+lock instead records an earlier `run_acrobot_neural.py` hash (`215f126e...`)
+whose exact bytes are not in the retained tree; that is a reproducibility
 limitation, not permission to reinterpret V2.
 
 **Audit note (2026-07-21):** exact binomial analysis found that the practical
@@ -429,10 +430,10 @@ Ranked by expected information per GPU-hour:
   neural V1R2 study has capacity controls but failed development feasibility:
   zero hardest-goal AUC and zero all-pass groups make it inconclusive about
   efficacy and transfer.
-- Local source locks are not external timestamping. V3 and later lock manifests
-  match current bytes, but the V2-locked historical runner hash does not match
-  the current V3-era runner; reviewers cannot reconstruct those exact V2 runner
-  bytes from HEAD alone.
+- Local source locks are not external timestamping. V3-and-later locked bytes
+  are recoverable from reviewed snapshot `2dbda4e`, although three shared core
+  files have since evolved; the V2-locked historical runner is not retained
+  byte-for-byte and cannot be reconstructed from the current tree.
 - The production sampler/index/checkpoint contracts have unit coverage and the
   patches passed a local application check, but its upstream commit hash was
   not retained and no multi-worker, multi-GPU verl training job was available

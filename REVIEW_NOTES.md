@@ -85,13 +85,16 @@ corresponding seed blocks. They are machine-checkable but **not externally
 timestamped preregistrations**. Review language such as “registered,”
 “predeclared,” and “sealed” with that boundary in mind.
 
-As of this snapshot, the listed source hashes in the V3, V4A, V5A, V5B, and
-neural MountainCar V1R2 locks match the current files. There is one known
-historical exception:
+At reviewed snapshot `2dbda4e`, the listed source hashes in the V3, V4A, V5A,
+V5B, and neural MountainCar V1R2 locks matched their files. The subsequent
+reviewed Cosmos integration evolved `frontier_rl/estimators.py`,
+`frontier_rl/trainer.py`, and `frontier_rl/adapters/__init__.py`; the historical
+locks remain unchanged and those exact source bytes are recoverable from
+`2dbda4e`. There is one older, non-recoverable historical exception:
 
 - Acrobot V2 expected `frontier_rl/examples/run_acrobot_neural.py` SHA-256
   `215f126eb560bf330d44f2fb7b38792c78488e14693fa57fb493ac49820017eb`.
-- The current V3-era runner SHA-256 is
+- The retained V3-era runner SHA-256 is
   `7bd8e4c7d2e85e98d0ca769ce6a65c997307cb4c6b65a8b90c00edb862c49cbf`.
 - All other V2 manifest entries match current bytes. The V2 lock preserves the
   expected runner hash, but the exact historical runner bytes are not present

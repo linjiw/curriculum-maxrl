@@ -47,10 +47,11 @@ scale or generality claims.
 
 “Registered,” “sealed,” and “predeclared” below mean locally source-locked
 before the corresponding seed block, not externally timestamped
-preregistration. Current bytes match the V3 and later manifests. The historical
-V2 lock records an older runner hash that does not match the V3-era runner at
-HEAD; reviewers must treat that missing byte-for-byte historical runner as a
-V2 provenance limitation.
+preregistration. The V3-and-later manifests matched at reviewed snapshot
+`2dbda4e`; post-lock Cosmos integration then evolved three shared core files.
+Those locked bytes remain recoverable from that commit and the locks were not
+rewritten. The historical V2 lock records an older runner whose exact bytes
+are not present in the retained tree, a separate V2 provenance limitation.
 
 ## 1. Problem definition
 
