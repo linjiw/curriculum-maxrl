@@ -2,7 +2,27 @@
 
 *Living document — updated as runs complete. Times are A10G wall-clock.*
 
-## Currently executing (GPU queue, in order)
+## Currently executing (2026-07-23, standing loop)
+
+| # | run | status | purpose |
+|---|---|---|---|
+| G1 | GSM8K 2×2 cell 2: maxrl, cur=false (50 steps) | **RUNNING** (~25 min/step) | MaxRL baseline at LLM scale |
+| G2 | GSM8K 2×2 cell 3: grpo, cur=true | queued | **P-G2: the H6-at-LLM-scale test** |
+| G3 | GSM8K 2×2 cell 4: grpo, cur=false | queued | GRPO baseline |
+| G4 | GSM8K cell 1 re-run: maxrl, cur=true | queued (requeue_cell1.sh) | teacher channel at LLM scale (collision casualty re-run) |
+| A1 | docs-evidence audit workflow v2 | running | AUDIT.md: every number vs logs |
+| — | PR #1 union merge (`pr1-union-proposal` fce7fc5) | **awaiting human merge** | see PR1_REVIEW_VERDICT.md |
+
+Pre-registered predictions for G1–G4: `curriculum_maxrl/GSM8K_A10G_PLAN.md`
+(P-G1..P-G5, committed 39520fa before any cell finished). Analysis contract:
+AUC of val reward@1 on the common step grid + final pass@8 + dead-fraction
+trajectories; partial cell-1 excluded from headlines.
+
+Watcher: `smollm/watch_2x2_event.sh` — exits (=> notification) on cell
+transition, new OOM, checkpoint, or queue drain.
+
+## Recently completed (maze wave, 2026-07-22)
+
 
 | # | run | duration | purpose | decision it feeds |
 |---|---|---|---|---|
