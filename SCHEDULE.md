@@ -21,6 +21,7 @@ local Gymnasium studies report serial Mac CPU wall-clock separately.*
 | Acrobot V5A | ✅ complete and independently verified | 27/27 runs valid; all learning-outcome-field-blind gates passed; fresh `U*=250`; V5B authorized | preserve immutable V5A evidence |
 | Acrobot V5B | 🛑 180/180 complete; procedural NO-GO | zero run failures and raw integrity passed, but the frozen analyzer failed exact diagnostic reconstruction; no primary result | retain V5B without rescue analysis; review a tolerance-aware verifier and seal fresh V5C seeds |
 | Neural MountainCar V1R2 | 🛑 complete development NO-GO | all 15 runs/reconstruction checks passed, but feasibility failed: 1,932 dead, 474 mixed, 0 all-pass; hardest-goal AUC zero in every run | do not touch seeds `18000..18019`; design fresh V2 adequacy development |
+| UniLab Stewart native V2 | ✅ 33 arm runs across nine seed-level multi-arm replicates complete | raw-mass mechanism and target-correction cost verified; gradient-moment sampler improved ESS/second moment but not AUC (`-.0004` vs uniform) | calibrate/shrink moments on a common charged stream; compare frozen sampler vs online tracker before any confirmation |
 
 V5A's projected 180-run serial runtime was `7.0557400375` hours. Passing V5A
 is authorization evidence only. V5B completed all 180 runs with zero run
@@ -117,6 +118,7 @@ F3–F4 historical seeds
 | P5 | SmolLM2-360M + GSM8K 2×2 via `verl_integration/` | 8-GPU node | **blocked on hardware** |
 | P6 🛑 | **Neural MountainCar capacity-matched development** — 3 seeds × 5 cells, hardest-goal primary | complete NO-GO; no confirmation | fresh V2 adequacy design |
 | P7 🛑 | **Acrobot optimizer-matched hindsight V5B** — 20 seeds × 9 cells, update-matched `U*=250` | 180/180 complete; frozen verifier exact-equality failure makes the primary family a procedural NO-GO | fresh V5C with a prereviewed tolerance-aware verifier |
+| P8 | **UniLab calibrated gradient-moment allocation** — uniform sham calibration vs refreshed calibrated `rho/q`; 32 groups/task at 0 and 60, disjoint 16-group/task audits | 37,209,600 Mac-CPU transitions on development seeds 3–5 | implement the frozen post-V2 protocol and fail-closed mechanism analyzer |
 
 ## Standing cadence
 

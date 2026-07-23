@@ -484,5 +484,10 @@ Cauchy--Schwarz. It is not generally the coefficient-mass teacher and says
 nothing by itself about environment-transition cost. The mean and variance
 statements are per requested group; unequal task transition or token costs
 require a separate cost-aware analysis. It defines a distinct target-preserving
-research direction rather than a proof of the
-adaptive-objective method used in the current experiments.
+research direction rather than a proof of the adaptive-objective method.  The
+UniLab Stewart native V2 development study implements this rule with a positive
+uniform floor and exact `ρ/q`: it improves importance ESS and some empirical
+second-moment diagnostics, but its selected-task online moment tracker does not
+produce a stable learning gain.  That null performance result is consistent
+with this proposition—the optimum assumes accurate current conditional second
+moments and does not promise finite-budget progress from noisy estimates.

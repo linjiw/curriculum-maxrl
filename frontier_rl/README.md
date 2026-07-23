@@ -72,7 +72,7 @@ of these distributional conditions.
 | `gym_classic` | Gymnasium MountainCar/CartPole dynamics with custom nested binary tasks | corrected transition-matched MountainCar study below; historical CartPole result pending rerun |
 | `gym_goal` | Gymnasium GoalEnv skeleton; requires an environment-specific verifier-backed relabel callback | (skeleton — bring your env) |
 | `cosmos_libero` | **flow-policy VLA pattern** (Cosmos3/LIBERO): predicate-conjunction goals, positive-part weights, template conditioning rewrites, relabel-only sub-goal arms, mastery splits, per-class poison gating | frontier-heavy mock: uniform/teacher **0.000** → oracle-relabel **0.862**, self-verified 0.756, +gate 0.842 (3 seeds; `examples/run_cosmos_pilot.py`) |
-| UniLab external integration | reset-stream terrain teacher plus exact grouped Stewart manipulation on Motrix/Mac CPU | three-seed development pipeline result: all exact `D_8` arms learned; `u_8` reduced all-fail groups and increased coefficient mass but did not have the best mean AUC; no teacher-ranking claim |
+| UniLab external integration | native exact grouped Stewart manipulation on Motrix/Mac CPU | 33 arm runs across nine seed-level multi-arm replicates: `u_8` created the predicted raw mass, `rho/q` exposed its variance cost, and gradient-moment sampling improved ESS/second moment without a stable learning gain; no teacher-ranking claim |
 
 The adapter uses official Gymnasium dynamics and modern reset/step semantics,
 but evaluates custom binary task predicates rather than standard episodic
@@ -138,30 +138,31 @@ python3 frontier_rl/examples/run_mountaincar_shared.py # corrected matched-trans
 # From the sibling UniLab checkout (Motrix CPU):
 uv run --extra motrix python ../curriculum-maxrl/frontier_rl/examples/unilab_stewart_base_rate.py
 uv run train --algo ppo --task stewart_balance_grouped --sim motrix training.device=cpu training.no_play=true
-# Exact grouped training requires the audited local warm-start checkpoint:
-uv run --extra motrix python ../curriculum-maxrl/frontier_rl/examples/unilab_stewart_grouped.py \
-  --reset-mode fixed_radius --horizon-seconds 6 --success-delay-seconds .5 \
-  --still-steps-needed 10 --rsl-warm-start /path/to/model_200.pt
+# Current native exact grouped training requires the registered owner checkpoint:
+uv run --extra motrix python scripts/train_grouped_maxrl.py \
+  --config-name second_moment training.checkpoint=/path/to/model_99.pt
 ```
 
-### UniLab Stewart development result: mechanics work; ranking is open
+### UniLab Stewart native development result: mechanisms work; ranking is open
 
-The stock disk-reset pilot was rejected because its apparent pass-rate ladder
-was almost exactly the probability of spawning inside the success radius. The
-repaired fixed-radius task requires post-reset control, and a score-function
-regression guard prevents the reparameterized action from cancelling the
-actor-mean REINFORCE gradient.
+The current native study uses a hash-locked final owner checkpoint, a repaired
+16-observation fixed-radius task, complete first episodes from all eight vector
+slots, and episodewise fixed-seed evaluation.  On the broader eleven-task
+ladder, corrected `u_8` sampling increased raw coefficient mass by about 14%,
+close to its 15.1% fixed-policy prediction, but exact `rho/q` correction
+cancelled weighted mass back toward uniform and reduced importance ESS to
+0.768.  Its paired performance effect was `+.0006` AUC and `-.0059` final
+macro.
 
-Across three paired development seeds, 120 groups and 288,000 matched backend
-transitions per arm, transition-AUC was `0.2249 ± 0.0314` uniform,
-`0.2427 ± 0.0203` learnability, and `0.2318 ± 0.0041` exact `u_8` sampling.
-The `u_8` teacher nevertheless produced 107.0 update-bearing groups versus
-98.7 for uniform, 13.0 rather than 21.3 all-fail groups, and 151.25 rather than
-140.25 scalar coefficient-mass units. With three seeds, all paired intervals
-cross zero. The supported conclusion is mechanism-level: `u_8` improves
-estimator activity, while coefficient mass alone does not rank useful target
-progress. See `examples/UNILAB_STEWART_RESULTS_V1.md` and the retained raw
-artifacts; this is not a confirmatory robotics or general-method result.
+A follow-up sampled from online raw gradient-second moments, the quantity that
+actually minimizes the corrected estimator's second moment.  It improved ESS
+to 0.949 and lowered the observed corrected gradient second moment by about
+10% on average, but still produced `-.0004` AUC and `-.0062` final macro versus
+uniform.  Same-policy probes show why: the online tracker captured only 0.45%
+second-moment reduction at the end while the same-floor probe plug-in retained
+19.06% opportunity.  The next gate is calibrated/shrunk moment estimation, not
+another sampling score.  See `examples/UNILAB_STEWART_NATIVE_RESULTS_V2.md`;
+this is development evidence, not confirmatory robotics efficacy.
 
 ## Mapping to robotics / gym in practice
 

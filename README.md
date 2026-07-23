@@ -51,6 +51,7 @@ the next rollout is a group's first success).
 | `frontier_rl/` | Reusable grouped trainer, estimator/teacher implementations, CPU/Gym adapters, corrected artifacts, and external-environment protocols |
 | `frontier_rl/examples/UNILAB_ROBOTICS_PROTOCOL_V1.md` | Mac-CPU robotics ladder separating reset-stream PPO curriculum tests from the exact grouped estimator experiment |
 | `frontier_rl/examples/UNILAB_STEWART_RESULTS_V1.md` | Audited three-seed development result for the exact grouped Motrix manipulation pilot, including its failed first task axis and next discriminating experiment |
+| `frontier_rl/examples/UNILAB_STEWART_NATIVE_RESULTS_V2.md` | Current native UniLab result: 33 arm runs across target-preserving coefficient-mass and gradient-second-moment studies, mechanism gains, performance null, and next estimation gate |
 | `docs/` | Static project website and curves exported only from retained corrected artifacts |
 | `verl_integration/` | Production integration for the MaxRL verl fork: `curriculum.py` (drop-in module), patches for `main_ppo.py` / `ray_trainer.py`, SmolLM+GSM8K launch script |
 
@@ -85,10 +86,12 @@ uv run train --algo ppo --task stewart_balance_grouped --sim motrix \
   training.device=cpu training.no_play=true
 ```
 
-The exact grouped runner is
-`frontier_rl/examples/unilab_stewart_grouped.py`. Its retained development
-artifacts use a SHA-pinned local RSL-RL warm start; see
-`frontier_rl/examples/UNILAB_STEWART_RESULTS_V1.md` before interpreting them.
+The current exact grouped runner is native to the sibling UniLab worktree at
+`scripts/train_grouped_maxrl.py`; it uses Hydra configs under
+`conf/grouped_maxrl/`, strict owner-checkpoint provenance, and the 16-input
+task owner.  See `frontier_rl/examples/UNILAB_STEWART_NATIVE_RESULTS_V2.md`.
+The older independent 15-input runner and its development artifacts remain in
+this repository as V1 history, not the current robotics claim.
 
 GPU maze testbed (needs torch + one ~24GB GPU):
 

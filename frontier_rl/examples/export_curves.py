@@ -101,21 +101,6 @@ def aggregate_case(case: dict, x_key: str, curve_key: str, label: str) -> dict:
     }
 
 
-def aggregate_unilab(paths: list[Path], arm: str, label: str) -> dict:
-    """Aggregate exact grouped Stewart checkpoints across paired dev seeds."""
-    runs = []
-    for path in paths:
-        artifact = json.loads(path.read_text())
-        selected = next(run for run in artifact["runs"] if run["arm"] == arm)
-        runs.append(
-            {
-                "x": [point["backend_env_steps"] for point in selected["checkpoints"]],
-                "curve": [point["mean_pass_rate"] for point in selected["checkpoints"]],
-            }
-        )
-    return aggregate_case({"runs": runs}, "x", "curve", label)
-
-
 def main() -> None:
     out = {
         "_meta": {
@@ -149,38 +134,11 @@ def main() -> None:
             f"{name}: {methods['uniform']['n_seeds']} retained seeds, "
             f"{len(methods['uniform']['mean'])} checkpoints"
         )
-    unilab_paths = [
-        ROOT
-        / "frontier_rl"
-        / "examples"
-        / f"unilab_stewart_grouped_fixed_radius_seed{seed}_dev.json"
-        for seed in range(3)
-    ]
-    out["unilab_stewart"] = {
-        "artifact": (
-            "frontier_rl/examples/"
-            "unilab_stewart_grouped_fixed_radius_seed{0,1,2}_dev.json"
-        ),
-        "status": "three-paired-seed development artifact; not confirmatory",
-        "metric": "fixed-radius target-uniform mean terminal pass rate",
-        "x_label": "Motrix backend environment transitions (0–288k)",
-        "note": (
-            "Exact grouped D_8 actor-only development study on the UniLab "
-            "StewartBalance Motrix CPU simulator. Generic chart slots denote "
-            "uniform, learnability p(1-p), and u_8 sampling; there is no hindsight arm."
-        ),
-        "sampling_trace": "not retained",
-        "methods": {
-            "uniform": aggregate_unilab(unilab_paths, "uniform", "uniform"),
-            "teacher": aggregate_unilab(
-                unilab_paths, "learnability", "learnability p(1-p)"
-            ),
-            "hindsight": aggregate_unilab(
-                unilab_paths, "advmass", "exact coefficient mass u_8"
-            ),
-        },
-    }
-    print("unilab_stewart: 3 retained development seeds, 7 checkpoints")
+    unilab_curve_path = (
+        ROOT / "frontier_rl" / "examples" / "unilab_stewart_native_v2_curves.json"
+    )
+    out["unilab_stewart"] = json.loads(unilab_curve_path.read_text())
+    print("unilab_stewart: 3 retained native development seeds, 5 checkpoints")
     OUT.write_text(json.dumps(out, indent=2) + "\n")
     print(f"wrote {OUT} ({OUT.stat().st_size // 1024} KB)")
 

@@ -852,131 +852,122 @@
     }
   },
   "unilab_stewart": {
-    "artifact": "frontier_rl/examples/unilab_stewart_grouped_fixed_radius_seed{0,1,2}_dev.json",
-    "status": "three-paired-seed development artifact; not confirmatory",
-    "metric": "fixed-radius target-uniform mean terminal pass rate",
-    "x_label": "Motrix backend environment transitions (0\u2013288k)",
-    "note": "Exact grouped D_8 actor-only development study on the UniLab StewartBalance Motrix CPU simulator. Generic chart slots denote uniform, learnability p(1-p), and u_8 sampling; there is no hindsight arm.",
-    "sampling_trace": "not retained",
+    "schema": "curriculum-maxrl/unilab-stewart-native-v2-curves/v1",
+    "source_artifacts": [
+      {
+        "seed": 0,
+        "sha256": "281fb0b444a5e02042914da3a36b08b828771fa2896ce542faa679e4c8ab0a69"
+      },
+      {
+        "seed": 1,
+        "sha256": "46693714c18297225a0bde832537931b2c3dd2149193c8cf57da95ab9e209a9e"
+      },
+      {
+        "seed": 2,
+        "sha256": "a050cb60d55ffbcfe56830e52e61e7ed5c58c3ae843f32ce656159c4f235cf5c"
+      }
+    ],
+    "artifact": "sibling UniLab benchmark/outputs/stewart_grouped_maxrl/second_moment_seed_{0,1,2}.json",
+    "status": "three-paired-seed native development artifact; not confirmatory",
+    "metric": "eleven-radius target-uniform mean terminal pass rate",
+    "x_label": "Motrix backend training transitions (0\u2013288k)",
+    "note": "Native complete-episode D_8 StewartBalanceGrouped development study. Chart slots are uniform, target-preserving u_8 coefficient-mass sampling, and target-preserving gradient-second-moment sampling; there is no hindsight arm and no supported sampler ranking.",
+    "sampling_trace": "retained in source artifacts; not embedded in website export",
     "methods": {
       "uniform": {
         "label": "uniform",
         "n_seeds": 3,
         "x": [
           0,
-          48000,
-          96000,
+          72000,
           144000,
-          192000,
-          240000,
+          216000,
           288000
         ],
         "mean": [
-          0.128906,
-          0.148438,
-          0.165365,
-          0.22526,
-          0.255859,
-          0.313151,
-          0.353516
+          0.312263,
+          0.314394,
+          0.328598,
+          0.329309,
+          0.340436
         ],
         "lo": [
-          0.128906,
-          0.146484,
-          0.146484,
-          0.185547,
-          0.199219,
-          0.238281,
-          0.275391
+          0.301847,
+          0.305398,
+          0.319602,
+          0.318892,
+          0.335938
         ],
         "hi": [
-          0.128906,
-          0.150391,
-          0.177734,
-          0.259766,
-          0.291016,
-          0.367188,
-          0.412109
+          0.324574,
+          0.326705,
+          0.338778,
+          0.335938,
+          0.34375
         ]
       },
       "teacher": {
-        "label": "learnability p(1-p)",
+        "label": "u_8 + exact rho/q",
         "n_seeds": 3,
         "x": [
           0,
-          48000,
-          96000,
+          72000,
           144000,
-          192000,
-          240000,
+          216000,
           288000
         ],
         "mean": [
-          0.128906,
-          0.16276,
-          0.200521,
-          0.246745,
-          0.272135,
-          0.317057,
-          0.384766
+          0.312263,
+          0.319129,
+          0.330492,
+          0.333807,
+          0.334517
         ],
         "lo": [
-          0.128906,
-          0.150391,
-          0.15625,
-          0.214844,
-          0.265625,
-          0.289062,
-          0.380859
+          0.301847,
+          0.308949,
+          0.318182,
+          0.324574,
+          0.325284
         ],
         "hi": [
-          0.128906,
-          0.169922,
-          0.259766,
-          0.273438,
-          0.28125,
-          0.333984,
-          0.392578
+          0.324574,
+          0.333807,
+          0.352983,
+          0.34517,
+          0.347301
         ]
       },
       "hindsight": {
-        "label": "exact coefficient mass u_8",
+        "label": "gradient moment + exact rho/q",
         "n_seeds": 3,
         "x": [
           0,
-          48000,
-          96000,
+          72000,
           144000,
-          192000,
-          240000,
+          216000,
           288000
         ],
         "mean": [
-          0.128906,
-          0.14974,
-          0.175781,
-          0.222656,
-          0.269531,
-          0.320312,
-          0.376302
+          0.312263,
+          0.316288,
+          0.328362,
+          0.329072,
+          0.33428
         ],
         "lo": [
-          0.128906,
-          0.138672,
-          0.164062,
-          0.212891,
-          0.265625,
-          0.300781,
-          0.337891
+          0.301847,
+          0.314631,
+          0.316761,
+          0.3125,
+          0.321733
         ],
         "hi": [
-          0.128906,
-          0.167969,
-          0.181641,
-          0.236328,
-          0.275391,
-          0.332031,
-          0.433594
+          0.324574,
+          0.318182,
+          0.34517,
+          0.34375,
+          0.346591
         ]
       }
     }

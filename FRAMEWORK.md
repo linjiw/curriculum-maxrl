@@ -45,6 +45,16 @@ its confirmatory seeds remain untouched. Corrected GPU, behaviorally adequate
 broader neural, and language-model validation remain required before making
 scale or generality claims.
 
+A native UniLab/Motrix Stewart V2 study now adds a real Mac-CPU robotic
+simulator boundary.  Across three paired development seeds, proportional-`u_8`
+sampling produced its predicted raw coefficient-mass increase, but exact
+`rho/q` target correction cancelled that gain in expectation and exposed an
+importance-variance cost.  A gradient-second-moment sampler improved
+importance ESS and reduced observed corrected-gradient second moment on two of
+three seeds, but neither adaptive rule produced a stable target-score gain.
+This raises robotics implementation/mechanism confidence only; it is not a
+Level-3 efficacy or generality result.
+
 “Registered,” “sealed,” and “predeclared” below mean locally source-locked
 before the corresponding seed block, not externally timestamped
 preregistration. The V3-and-later manifests matched at reviewed snapshot
@@ -594,7 +604,8 @@ family, including null results.
 | Is shared transfer causal? | capacity-matched, behaviorally adequate shared vs per-task parameters, crossed with curriculum vs uniform | curriculum-minus-uniform interaction | tile-coded MountainCar control is confounded; Acrobot V2 controls failed learning; neural MountainCar V1R2 had exact capacity controls but zero primary headroom and stopped; causal test pending |
 | Does shared-policy neural efficacy replicate? | Acrobot shared H64, frontier-`u_N` teacher at `gamma=1` vs uniform | one transition-AUC contrast on 20 sealed paired seeds | V3 independently verified: `Delta=+0.0363524`, CI `[0.0164536,0.0553949]`, exact `p=0.00263977`; registered decision supported |
 | Does neural efficacy transfer to MountainCar? | frontier shared H64 vs uniform/hardest-only, with exact total-/active-capacity controls | hardest-goal transition AUC after an outcome-blind adequacy gate | V1R2 development NO-GO: hardest-goal AUC zero in all 15 runs and no all-pass groups; confirmatory seeds untouched |
-| What objective is optimized? | adaptive mode vs `rho/q` target-preserving mode | target-mixture score, variance, effective sample size | pending |
+| What objective is optimized? | adaptive mode vs `rho/q` target-preserving mode | target-mixture score, variance, effective sample size | UniLab Stewart V2 completed locally: raw mass rose about 14%, correction cancelled weighted mass toward the uniform target and lowered ESS; no stable performance gain |
+| Can target-preserving task allocation reduce gradient-estimator variance? | uniform vs `q_i ∝ rho_i sqrt(E||D_i||^2)` with exact `rho/q` | same-policy second moment, observed squared norm, ESS, target score | UniLab V2 mechanism partly supported: ESS .949 and about 10% lower observed second moment on average, but online tracking lagged probe plug-ins and AUC contrast was `-.0004` |
 | Is the floor doing useful work? | multiple `floor` values and abrupt task changes | revisit delay, change recovery, target score | visitation theorem only; empirical study pending |
 | Is decay useful? | fixed count vs declared decay grid under drift | pass-rate tracking error and target score | pending retained validation |
 | Does variable `N` help? | fixed `N` vs greedy marginal allocation | target score per transition/token | one-step fixed-pass-rate proxy theorem proved; training benefit pending |
@@ -740,7 +751,9 @@ remains pending because the V2 capacity controls were not behaviorally
 adequate. The project should not yet make Level 4–6 claims or a broad Level 3
 generality claim. V5A raises implementation/feasibility confidence only, and
 neural MountainCar V1R2 documents a failure boundary rather than a new claim
-level.
+level.  Native UniLab Stewart V2 likewise remains below Level 3: it supports a
+real-simulator CPU implementation and bounded mechanism findings, while all
+three-seed learning contrasts include zero and no sampler ranking is retained.
 
 ## 13. Failure modes and safeguards
 
@@ -796,7 +809,21 @@ the exact working module invocation is:
 The scope and provenance of this invocation correction are recorded in
 `frontier_rl/examples/ACROBOT_HINDSIGHT_V4_ERRATA.md`.
 
-### Priority 2: redesign the Acrobot transfer control
+### Priority 2: calibrate the UniLab gradient-moment allocation
+
+The Stewart V2 probe data show that the same-floor distribution computed from
+fresh task moments retained about 17--19% second-moment opportunity, whereas
+the selected-task online EMA captured 7.3% at group 60 and only 0.45% at group
+120.  The next two-arm development protocol therefore gives uniform a charged
+sham calibration and refreshes the calibrated sampler from 32 groups per task
+before group 1 and after group 60.  Disjoint 16-group-per-task audits test the
+moment ratio.  Total-algorithm-transition AUC includes calibration as flat
+policy intervals.  Seeds 3--5 cost 37,209,600 backend transitions and remain
+development.  Do not open fresh confirmatory seeds unless the calibrated arm
+first passes its independent same-policy second-moment gate and then shows
+development performance headroom.
+
+### Priority 3: redesign the Acrobot transfer control
 
 The V2 controls matched total and active parameter capacity but were not
 behaviorally adequate. Use only excluded development seeds to find a control
@@ -812,7 +839,7 @@ baseline learnability. If no adequate disjoint control can be constructed, the
 project should retain the shared-policy efficacy claim and drop the causal
 transfer claim.
 
-### Priority 3: redesign neural MountainCar adequacy after the V1R2 stop
+### Priority 4: redesign neural MountainCar adequacy after the V1R2 stop
 
 Do not run V1R2's reserved confirmatory seeds. On fresh development seeds,
 calibrate the neural actor, optimizer, and/or transition budget using an
@@ -822,7 +849,7 @@ hardest-goal primary metric. Only a separately reviewed, locally sealed V2 may
 touch a confirmatory block. Acrobot's ordered thresholds remain the sole neural
 efficacy result until such a study passes development and confirmation.
 
-### Priority 4: corrected GPU causal factorial
+### Priority 5: corrected GPU causal factorial
 
 Re-run a shared-policy sparse-reward benchmark from one materialized
 post-initialization checkpoint per seed. Preserve training RNG independently of

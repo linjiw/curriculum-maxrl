@@ -414,6 +414,43 @@ working invocation is:
 See `frontier_rl/examples/ACROBOT_HINDSIGHT_V4_ERRATA.md` for the scoped
 invocation correction.
 
+## UniLab Stewart native V2 development ledger
+
+The current external robotics development evidence runs inside a sibling
+UniLab worktree on the Motrix CPU backend.  It uses the native
+`StewartBalanceGrouped` owner (16 policy observations, two latent actions, six
+IK-controlled actuators), the final registered PPO iteration-99 warm start,
+complete first episodes from eight vector slots, and practical order-7 `D_8`
+updates.  Checkpoint and owner-config SHA-256 values are validated before any
+evaluation or training.  Evaluation stores every episode outcome and uses
+`seed=91000+training_seed` identically across paired arms.
+
+Three development studies, each with seeds 0--2 and 120 groups per arm, found:
+
+| study | primary mechanism | performance result |
+|---|---|---|
+| six-task five-arm factorial | little opportunity: fixed-policy proportional-`u_8` mass headroom only 3.35% | corrected `u_8` minus uniform `-.0039` AUC, `-.0143` final macro |
+| eleven-task opportunity follow-up | corrected `u_8` raised raw mass about 14%, close to the 15.06% screen prediction; weighted mass returned near uniform and ESS fell to .768 | `+.0006` AUC, `-.0059` final macro |
+| gradient-second-moment follow-up | ESS improved to .949; observed corrected-gradient second moment was about 10% lower than paired uniform on average | `-.0004` AUC, `-.0062` final macro |
+
+All performance intervals include zero and only three seeds are present.  The
+authorized finding is therefore implementation plus mechanism, not sampler
+superiority.  Same-policy probes identify tracking as the next gate: at group
+120 the online gradient-moment distribution reduced the frozen-policy plug-in
+second moment by only 0.45% on average, while a distribution recomputed from
+the same probe moments under the same floor would reduce it by 19.06%.
+
+The V2-C raw artifact SHA-256 values are:
+
+- seed 0: `281fb0b444a5e02042914da3a36b08b828771fa2896ce542faa679e4c8ab0a69`
+- seed 1: `46693714c18297225a0bde832537931b2c3dd2149193c8cf57da95ab9e209a9e`
+- seed 2: `a050cb60d55ffbcfe56830e52e61e7ed5c58c3ae843f32ce656159c4f235cf5c`
+
+See
+`frontier_rl/examples/UNILAB_STEWART_NATIVE_RESULTS_V2.md`.  The authoritative
+runner, fail-closed analyzer, aggregate report, and raw artifacts live in the
+sibling UniLab branch `codex/curriculum-maxrl-unilab`.
+
 ## Consolidated design updates
 
 1. **Pseudo-count decay 0.9 → 0.7** in the reusable `frontier_rl` and verl

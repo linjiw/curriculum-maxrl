@@ -247,7 +247,7 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
       <tr><td><span class="status ok">✓ Exact math</span></td><td>Finite-N coefficient-mass, peak-location, and fixed-p allocation identities, with their stated estimator conventions.</td></tr>
       <tr><td><span class="status ok">✓ Corrected local mechanisms</span></td><td>Retained CPU skill-chain, goal-rewrite gridworld, and tile-coded MountainCar studies; these are local task-family results, not a general benchmark claim.</td></tr>
       <tr><td><span class="status ok">✓ Narrow neural result</span></td><td>Acrobot V3 only: with one shared H64 policy and hindsight off, the teacher improved normalized transition-AUC by +0.03635 over 20 paired seeds (exact sign-flip p=0.00264). No transfer or parameter-sharing cause was tested.</td></tr>
-      <tr><td><span class="status run">◇ Robotics development pipeline</span></td><td>On UniLab's Motrix Stewart simulator, all exact grouped D<sub>8</sub> arms learned across three paired development seeds. The u<sub>8</sub> teacher reduced all-fail groups and increased coefficient mass, but did not have the best mean AUC. This validates a CPU pipeline, not teacher superiority or robotics generality.</td></tr>
+      <tr><td><span class="status run">◇ Robotics mechanisms, performance null</span></td><td>Native grouped D<sub>8</sub> training now runs on UniLab's Motrix Stewart simulator. On the broader ladder, u<sub>8</sub> sampling produced its predicted ≈14% raw-mass increase, while ρ/q correction exposed the variance cost. Gradient-moment sampling improved ESS to .949 and lowered observed second moment on average, but its paired AUC effect was −.0004. This validates a Mac-CPU pipeline and bounded mechanisms—not teacher superiority or robotics generality.</td></tr>
       <tr><td><span class="status no">✗ Registered no-go boundaries</span></td><td>Acrobot V4B was not run after V4A failed feasibility; completed V5B is a procedural NO-GO with no authorized contrasts; neural MountainCar failed its development gate and never reached confirmation.</td></tr>
       <tr><td><span class="status run">⚠ Historical only</span></td><td>GPU maze observations remain provisional because the audited training and evaluation stack is confounded.</td></tr>
       <tr><td><span class="status run">◇ Synthetic mock only</span></td><td>The Cosmos/LIBERO integration currently exercises a CPU synthetic mock; it is not evidence from a real robot or robotics benchmark.</td></tr>
@@ -510,9 +510,10 @@ This proxy is not the gradient norm or a proof of optimal learning progress.</p>
 MaxRL/verl trainer behind <code>+data.curriculum.enable=true</code>, with teacher state
 checkpointed alongside the model — and packaged environment-agnostically in
 <a href="https://github.com/linjiw/curriculum-maxrl/tree/main/frontier_rl"><code>frontier_rl/</code></a>
-for tested local Gym-style tasks and future adapters. A first three-seed UniLab
-simulated-manipulation development pilot now validates the exact grouped CPU
-pipeline; it does not establish a teacher ranking or robotics generality.</p>
+for tested local Gym-style tasks and future adapters. Thirty-three native UniLab
+simulated-manipulation arm runs now validate the exact grouped CPU
+pipeline, target-preserving importance arithmetic, and a gradient-moment
+sampler; none establishes a teacher ranking or robotics generality.</p>
 
 <h3 id="proof">The two-line proof (Proposition 1)</h3>
 <div class="card">
@@ -700,14 +701,15 @@ unbiasedness or the archived ablation.</p>
     <tr><td>Acrobot V4A/V4B</td><td>V4A feasibility gate failed in 3/9 runs; V4B was not authorized or run</td><td class="num"><span class="status no">✗ no effect estimate</span></td></tr>
     <tr><td>Acrobot V5B</td><td>180/180 runs completed, but the frozen analyzer failed its exact diagnostic-reconstruction rule</td><td class="num"><span class="status no">✗ procedural NO-GO</span></td></tr>
     <tr><td>MountainCar neural V1R2</td><td>all 15 development runs completed, hardest-goal AUC was zero in every cell, and the adequacy gate failed</td><td class="num"><span class="status no">✗ no confirmation</span></td></tr>
-    <tr><td>UniLab Stewart exact grouped, three development seeds</td><td>all D<sub>8</sub> arms learned; AUC uniform/learnability/u<sub>8</sub> = .225/.243/.232. u<sub>8</sub> averaged 13.0 all-fail groups versus 21.3 uniform and 151.25 versus 140.25 coefficient-mass units</td><td class="num"><span class="status run">◇ pipeline + mechanism only</span></td></tr>
+    <tr><td>UniLab Stewart native grouped V2, three development seeds per study</td><td>broader-ladder corrected u<sub>8</sub> raised raw mass ≈14% but gave +.0006 AUC / −.0059 final macro; gradient-moment sampling improved ESS .878→.949 but gave −.0004 AUC / −.0062 final macro versus uniform</td><td class="num"><span class="status run">◇ pipeline + mechanisms; performance null</span></td></tr>
   </tbody>
 </table>
 <p class="footnote">V3 tests only teacher versus uniform sampling on one fixed Acrobot threshold
 family. It does not test transfer causality, a parameter-sharing effect, hindsight, or Acrobot
 performance in general. V5B cell outcomes remain quarantined and are not interpreted here.
-The UniLab family used a post-hoc development warm-start checkpoint and only three paired
-seeds; every paired AUC interval crossed zero, so it cannot rank samplers.</p>
+The current UniLab family uses a hash-locked final native owner checkpoint, but only three
+paired development seeds per study; every paired AUC interval crossed zero, so it cannot rank
+samplers. The older post-hoc V1 warm-start study remains historical development evidence.</p>
 
 <h3>Honest negatives &amp; open items</h3>
 <table>
@@ -731,6 +733,9 @@ seeds; every paired AUC interval crossed zero, so it cannot rank samplers.</p>
     <tr><td>Cosmos/LIBERO robotics integration</td>
         <td>adapter and training path currently exercise a CPU synthetic mock only; no real LIBERO or robot result is complete</td>
         <td class="num"><span class="status run">◇ synthetic only</span></td></tr>
+    <tr><td>Online gradient-second-moment curriculum</td>
+        <td>the variance-derived distribution improved importance ESS and observed second moment, but selected-task EMA tracking captured only 0.45% end-of-run plug-in reduction versus 19.06% available from the same-floor probe estimate</td>
+        <td class="num"><span class="status run">⟳ improve estimation</span></td></tr>
   </tbody>
 </table>
 
@@ -772,7 +777,7 @@ run was only an uncorrected three-seed smoke test and is not evidence in this ta
         <option value="skill_chain">Skill chain</option>
         <option value="grid_reach">Gridworld reach</option>
         <option value="mountaincar">MountainCar</option>
-        <option value="unilab_stewart">UniLab Stewart (development)</option>
+        <option value="unilab_stewart">UniLab Stewart V2 (development)</option>
       </select>
     </div>
     <p class="chart-sub" id="curveNote" aria-live="polite"></p>
@@ -786,10 +791,10 @@ run was only an uncorrected three-seed smoke test and is not evidence in this ta
   <figcaption>
     <code>frontier_rl/examples/export_curves.py</code> now reads the retained corrected artifacts
     directly: 12 paired skill-chain seeds, 10 gridworld seeds, 10 paired MountainCar seeds,
-    and the explicitly development-only three-seed UniLab Stewart family.
-    The retired small-seed MountainCar and CartPole exports are excluded. These corrected
-    artifacts retain evaluation curves but not per-checkpoint teacher-distribution snapshots,
-    so the panel marks that trace unavailable instead of mixing in an archived run.
+    and the explicitly development-only three-seed native UniLab Stewart V2 family.
+    The retired small-seed MountainCar and CartPole exports are excluded. The compact website
+    bundle does not embed per-checkpoint teacher-distribution snapshots, so the panel marks
+    that trace unavailable instead of mixing in another run or reconstructing it approximately.
   </figcaption>
 </figure>
 
