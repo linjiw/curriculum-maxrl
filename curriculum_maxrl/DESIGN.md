@@ -3,6 +3,13 @@
 Working draft. Companion code: `testbed.py`, `estimators.py`, `teachers.py`,
 `run_experiment.py` (CPU prototype) and the verl integration sketch at the end.
 
+> **Audit status (2026-07-21).** This file preserves the original design and
+> historical experiment names. The corrected estimator conventions and proofs
+> are authoritative in `PROOFS.md`: raw `H_N` and always-retained-CV
+> `C_N` target order N, while practical drop-both `D_N` targets order N−1.
+> Historical `maxrl_frontier` used the nearby legacy score `u_{N+1}`;
+> `AdvMassTeacher` uses exact `u_N`.
+
 ## 1. What MaxRL is (recap of arXiv:2602.02710)
 
 For a prompt `x` with pass rate `p = p_θ(x)`, maximum likelihood admits the
@@ -13,17 +20,19 @@ J_ML(x) = log p = -Σ_{k=1..∞} (1-p)^k / k          (eq. 4)
 ∇J_ML(x) = Σ_{k=1..∞} (1/k) ∇pass@k(x)             (eq. 5)
 ```
 
-Standard RL (`∇pass@1`) is the first-order truncation. MaxRL optimizes the
-T-truncated objective; **Theorem 2**: with N rollouts and K successes, the
-success-conditioned estimator
+Standard RL (`∇pass@1`) is the first-order truncation. With N rollouts and K
+successes, distinguish the raw estimator and the practical centered form:
 
 ```
-ĝ_N = (1/K) Σ r_i S_i          (0 if K = 0)         (eq. 9)
-g̃_N = Σ (r_i/K − 1/N) S_i     (variance-reduced, eq. 10)
+H_N = 1{K>0}(1/K) Σ r_i S_i
+C_N = H_N − (1/N)ΣS_i
+D_N = 1{K>0}[(1/K)Σr_iS_i − (1/N)ΣS_i]
 ```
 
-is unbiased for the truncated gradient at **T = N**. More rollouts don't just
-reduce variance — they *raise the order of the objective*.
+The paper proves `H_N` is unbiased for order N; `C_N` retains that property
+only when its control variate remains active at K=0. Practical Algorithm 1
+drops both terms at K=0, giving `E[D_N]=∇J_{N-1}`. Thus more rollouts raise
+the effective order, but to N−1 for the implementation used in this repo.
 
 The unifying weight-function view (Section 5): all methods have gradient
 `E_x[w(p) ∇p]` with
@@ -52,43 +61,47 @@ teacher can close:
    wasted compute (GRPO is worse here — its w(p) inverts and *upweights*
    p→1). A teacher should retire mastered prompts (with a small replay floor
    against forgetting).
-3. **Uniform rollout budget.** The paper uses fixed N per prompt. But T = N
-   is a *per-prompt knob*: hard prompts benefit from larger N (higher-order
-   ML approximation + higher chance of ≥1 success), easy prompts need tiny N.
+3. **Uniform rollout budget.** The paper uses fixed N per prompt. Group size is
+   a per-prompt compute knob: it changes both the live-group probability and
+   effective order (N−1 for practical drop-both; N for raw/always-CV forms).
 
 > **Update (see THEORY.md):** the heuristic frontier utility below has been
 > superseded by the *derived* advantage-mass utility
 > `u(p) = pass@N(p) − p`, which is exactly half the expected total |advantage|
-> the MaxRL estimator emits on the prompt (MC-verified). The two are
-> numerically near-identical; the derived form is parameter-free and extends
-> to an optimal rollout-allocation rule (greedy water-filling on `p(1−p)^N`).
+> the practical MaxRL estimator emits on the prompt. The historical heuristic
+> is exactly `u_{N+1}`; it is close at the configured N=16/32 but not
+> identical at fixed N. The derived form extends
+> to an exact myopic fixed-p allocation rule (greedy water-filling on `p(1−p)^N`).
 
-## 3. The core integration idea: "frontier utility" from the MaxRL weight function
+## 3. Historical frontier heuristic and corrected mass utility
 
-The teacher's curriculum signal falls out of MaxRL's own math. The expected
-per-prompt gradient contribution under MaxRL with group size N is
-
-```
-signal(p) = w_N(p) · p = 1 − (1−p)^N = pass@N(x)
-```
-
-and the remaining headroom is `(1−p)`. Define **frontier utility**
+The historical teacher began from the population weight-function quantity
 
 ```
-u(p) = (1 − (1−p)^N) · (1 − p)
+pass@N(p) = 1 − (1−p)^N
 ```
 
-- `u → 0` when `p → 1` (mastered, nothing left to learn)
-- `u → 0` when `p ≪ 1/N` (beyond the frontier; group will be dropped)
-- `u` is maximal on a wide plateau of "hard but reachable" prompts — this is
+and multiplied it by headroom:
+
+```
+h_N(p) = (1 − (1−p)^N) · (1 − p) = u_{N+1}(p).
+```
+
+- `h_N → 0` when `p → 1` (mastered)
+- `h_N → 0` when `p ≪ 1/N` (groups are usually all-fail)
+- `h_N` peaks on a "hard but reachable" band
   a ZPD (zone of proximal development) band, but *derived from the estimator*
   rather than hand-tuned like ADARFT's target-difficulty or DAPO's 0<K<N
   filter. As N grows the band automatically widens toward harder prompts —
-  the curriculum is **compute-indexed exactly like the objective**.
+  the curriculum is compute-indexed like the estimator.
 
-Estimation: teacher keeps a per-prompt Beta posterior over p, updated from
-observed group rewards (decayed, since the policy moves), and Thompson-samples
-p when scoring → optimism drives probing of uncertain/unvisited prompts.
+The corrected N-rollout score is
+`u_N(p)=pass@N(p)-p=(1-p)pass@(N-1,p)`, exactly half the expected scalar
+coefficient mass of `D_N`. This is a proxy/upper-bound factor for gradient
+magnitude, not a proof of optimal learning progress.
+
+Estimation uses per-prompt discounted Beta pseudo-counts and Thompson-style
+draws. Because the policy moves, these are not exact Bayesian posteriors.
 
 This is teacher–student in the Matiisen et al. sense: student = policy trained
 with MaxRL advantages; teacher = non-stationary bandit whose reward is
@@ -96,17 +109,15 @@ frontier utility, exploring/exploiting the student's competence boundary.
 
 ## 4. Second integration: adaptive rollout allocation (T = N as a curriculum knob)
 
-Given a fixed rollout budget B per batch, allocate `N_i ∝ 1/max(p̂_i, 1/N_max)`
-clipped to `[N_min, N_max]`. Rationale: to keep `pass@N_i` roughly constant
-across the batch you need `N_i ≈ c/p̂_i`; simultaneously the truncation order
-`T_i = N_i` gives harder prompts a higher-fidelity ML approximation. This
-turns MaxRL's "compute buys objective fidelity" property into a *targeted*
-statement: spend fidelity where the frontier is.
+Given fixed supplied pass rates, a feasible integer budget B, and bounds,
+maximize `Σ_i u_{N_i}(p_i)` by assigning each next rollout to the task with
+largest marginal `p_i(1-p_i)^{N_i}`. Discrete concavity makes this greedy
+rule exact for the one-step coefficient-mass proxy. It is not a theorem about
+unknown, moving pass rates or long-horizon learning.
 
-(Relation to prior work: Xiong et al. 2025b study adaptive rollout budgets as
-design space; MaxRL paper explicitly does *not* adapt sampling. This slot is
-the natural place a curriculum plugs in without breaking Theorem 2 — each
-group is still unbiased for its own T = N_i objective.)
+The older `N_i∝1/p̂_i` helper remains for historical experiments. Under
+drop-both weights each group targets effective order `N_i−1`; an order
+`N_i` claim requires the raw or always-retained-CV estimator.
 
 ## 5. Hypotheses to validate
 
@@ -116,7 +127,7 @@ group is still unbiased for its own T = N_i objective.)
   distributions (MaxRL's implicit weighting already does part of the job).
 - H3: On distributions dominated by beyond-frontier tasks (p ≈ 0 for most),
   curriculum+MaxRL ≫ either alone: the teacher fixes the K=0 dead zone that
-  MaxRL alone cannot, and MaxRL extracts more from each in-band group than
+  MaxRL alone cannot, and practical MaxRL assigns more coefficient mass to
   GRPO.
 - H4: MaxRL-frontier teacher (u(p), no hand-tuned band) ≥ ZPD-band teacher
   (hand-tuned [lo,hi]) while having one fewer hyperparameter.
@@ -199,12 +210,12 @@ Hypothesis outcomes:
   frontier (206 vs 248 steps uniform+maxrl vs 262 zpd+grpo) and best in the
   beyond-frontier-dominated regime (0.961), where each factor alone plateaus
   (uniform+maxrl 0.871, frontier+grpo 0.847).
-- **H4 confirmed.** The derived u(p) frontier teacher matches/beats the
-  hand-tuned ZPD band (0.979 vs 0.977 final; AUC 0.712 vs 0.688) with no
-  [lo, hi] band hyperparameters.
-- **H5 weakly supported.** Adaptive N gives a small consistent speed gain
-  (AUC 0.718 vs 0.712, 200 vs 206 steps); the effect should grow when group
-  budgets are tighter relative to difficulty spread — worth testing at scale.
+- **H4 historical result.** The legacy `h_N=u_{N+1}` frontier teacher
+  matches/beats the hand-tuned ZPD band (0.979 vs 0.977 final; AUC 0.712 vs
+  0.688). The exact `u_N` teacher is tested separately in `VALIDATION.md`.
+- **H5 preliminary.** The historical `1/p̂` adaptive-N heuristic gives a
+  small speed gain (AUC 0.718 vs 0.712). It does not test the proved greedy
+  allocator, and the earlier T=N interpretation was off by one.
 - **Bonus:** ALP (learning-progress) underperforms both pass-rate-band
   teachers here — |Δp̂| is noisy at N=16 rollouts and lags the moving frontier.
 - **Estimator ablation:** REINFORCE/RLOO barely move under uniform sampling

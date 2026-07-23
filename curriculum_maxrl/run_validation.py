@@ -1,19 +1,21 @@
 """Validation suite for the curriculum-MaxRL proposals (CPU, exact gradients).
 
-V1  Hindsight gradient fidelity: cosine similarity between the hindsight
+V0  Exact binomial audit of raw, unbiased-CV, and practical dropped MaxRL.
+
+V1  Hindsight gradient fidelity: direction and scale of the hindsight
     (relabeled dead-group) gradient and the TRUE success-conditioned ML
     gradient of the relabeled task — computable exactly on the skill chain.
-    Also the unbiased fresh-group reference for scale.
+    Also a fresh on-policy practical-group reference for scale.
 
-V2  Oracle gap: teacher driven by TRUE pass rates (oracle) vs Thompson
-    posterior vs uniform.  The oracle-Thompson gap is the price of
-    exploration; oracle-uniform is the total value of the curriculum.
+V2  Tracking gap: a fixed proportional-priority rule driven by TRUE pass
+    rates versus discounted pseudo-count estimates versus uniform. This is a
+    comparison within one priority family, not an optimal-sampler bound.
 
 V3  Explore/exploit curve: AUC as a function of the uniform floor
     (exploration fraction) of the advmass teacher.
 
 V4  Feedback-loop stability: hindsight successes feeding the teacher
-    posterior (CPU analog of --hindsight-to-teacher).  Watch dead-group
+    pseudo-count estimate (CPU analog of --hindsight-to-teacher). Watch dead-group
     rate and AUC for runaway optimism.
 """
 
@@ -22,7 +24,8 @@ from __future__ import annotations
 import numpy as np
 
 from testbed import SkillChainEnv
-from estimators import weights_maxrl
+from estimators import (weights_maxrl, weights_maxrl_success,
+                        weights_maxrl_unbiased_cv)
 from teachers import AdvMassTeacher, Teacher, UniformTeacher
 from run_hindsight import correct_prefix_len
 
@@ -74,9 +77,47 @@ def pretrain(env: SkillChainEnv, rng_seed: int = 0, steps: int = 120):
                 env.apply_gradient(t, actions, w, 0.5)
 
 
+# ---------------------------------------------------------------- V0
+def v0_estimator_objectives():
+    """Enumerate K exactly for a Bernoulli-logit policy.
+
+    This distinguishes the paper's order-N estimators from the practical
+    drop-both implementation's order N-1 objective without Monte Carlo noise.
+    """
+    from math import comb
+
+    print("\n=== V0: exact estimator/objective audit ===")
+    print("    N    p       raw(T=N)      CV(T=N)    dropped(T=N-1)  mass error")
+    max_err = 0.0
+    for N in (2, 4, 16):
+        for p in (0.03, 0.2, 0.7):
+            values = {"raw": 0.0, "cv": 0.0, "drop": 0.0, "mass": 0.0}
+            for K in range(N + 1):
+                prob = comb(N, K) * p ** K * (1 - p) ** (N - K)
+                r = np.array([1.0] * K + [0.0] * (N - K))
+                score = r - p
+                for key, fn in (("raw", weights_maxrl_success),
+                                ("cv", weights_maxrl_unbiased_cv),
+                                ("drop", weights_maxrl)):
+                    values[key] += prob * float(fn(r) @ score)
+                values["mass"] += prob * float(np.abs(weights_maxrl(r)).sum())
+            grad_p = p * (1 - p)
+            target_n = (1 - (1 - p) ** N) / p * grad_p
+            target_nm1 = (1 - (1 - p) ** (N - 1)) / p * grad_p
+            target_mass = 2 * (1 - (1 - p) ** N - p)
+            err = max(abs(values["raw"] - target_n),
+                      abs(values["cv"] - target_n),
+                      abs(values["drop"] - target_nm1),
+                      abs(values["mass"] - target_mass))
+            max_err = max(max_err, err)
+            print(f"  {N:3d} {p:4.2f} {values['raw']:13.9f} "
+                  f"{values['cv']:13.9f} {values['drop']:17.9f} {err:10.1e}")
+    print(f"  maximum identity error: {max_err:.2e}")
+
+
 # ---------------------------------------------------------------- V1
 def v1_hindsight_fidelity(n_groups: int = 4000, N: int = 16):
-    print("\n=== V1: hindsight gradient fidelity (exact, skill chain) ===")
+    print("\n=== V1: hindsight direction and scale (skill chain) ===")
     env = SkillChainEnv(seed=0)
     pretrain(env)
     p = env.true_pass_rates()
@@ -88,8 +129,10 @@ def v1_hindsight_fidelity(n_groups: int = 4000, N: int = 16):
     print(f"  probe task: level {levels[t_hard]}, true p = {p[t_hard]:.4f}")
 
     per_group_cos = {}   # j -> list of per-group cosines
-    mean_grad = {}       # j -> accumulated hindsight gradient
-    fresh_cos = {}       # j -> per-group cosines of unbiased fresh groups
+    mean_grad = {}       # j -> accumulated centered hindsight gradient
+    mean_grad_raw = {}   # j -> accumulated success-only hindsight gradient
+    mean_fresh = {}      # j -> accumulated unconditional fresh practical grad
+    fresh_cos = {}       # j -> cosines of fresh practical on-policy groups
     counts = {}
     rng = np.random.default_rng(7)
     for _ in range(n_groups):
@@ -104,32 +147,47 @@ def v1_hindsight_fidelity(n_groups: int = 4000, N: int = 16):
         r2 = (prefixes >= j).astype(float)
         w2 = weights_maxrl(r2)
         g_hs = group_gradient(env, t_hard, actions, w2, n_prefix=j)
+        g_hs_raw = group_gradient(
+            env, t_hard, actions, weights_maxrl_success(r2), n_prefix=j
+        )
         g_true = true_ml_gradient(env, target)
         per_group_cos.setdefault(j, []).append(cosine(g_hs, g_true))
         mean_grad[j] = mean_grad.get(j, 0) + g_hs
+        mean_grad_raw[j] = mean_grad_raw.get(j, 0) + g_hs_raw
         counts[j] = counts.get(j, 0) + 1
-        # unbiased reference: fresh on-policy group for the same prefix task
+        # fresh practical on-policy reference for the same prefix task
         fa, fr = env.rollout(target, N)
         fw = weights_maxrl(fr)
+        fg = group_gradient(env, target, fa, fw)
+        mean_fresh[j] = mean_fresh.get(j, 0) + fg
         if np.any(fw != 0):
             fresh_cos.setdefault(j, []).append(
-                cosine(group_gradient(env, target, fa, fw), g_true))
+                cosine(fg, g_true))
 
     print(f"  dead-group rate at probe task: "
           f"{sum(counts.values())/n_groups:.2f} of sampled groups usable")
     print(f"  {'j':>3s} {'n':>5s} {'hindsight cos (per-group)':>28s} "
-          f"{'fresh cos (per-group)':>24s} {'cos(MEAN hs grad, true)':>24s}")
+          f"{'fresh cos (per-group)':>24s} {'mean cos':>9s} {'center scale':>13s} "
+          f"{'success scale':>13s} {'fresh scale':>11s}")
     for j in sorted(counts):
         hs = np.array(per_group_cos[j])
         fr = np.array(fresh_cos.get(j, [np.nan]))
-        cm = cosine(mean_grad[j] / counts[j], true_ml_gradient(env, chain0 + j - 1))
+        true = true_ml_gradient(env, chain0 + j - 1)
+        mh = mean_grad[j] / counts[j]
+        mr = mean_grad_raw[j] / counts[j]
+        mf = mean_fresh[j] / counts[j]
+        cm = cosine(mh, true)
+        denom = np.linalg.norm(true)
         print(f"  {j:3d} {counts[j]:5d} {np.nanmean(hs):14.3f} ± {np.nanstd(hs):.3f} "
-              f"{np.nanmean(fr):12.3f} ± {np.nanstd(fr):.3f} {cm:24.3f}")
+              f"{np.nanmean(fr):12.3f} ± {np.nanstd(fr):.3f} {cm:9.3f} "
+              f"{np.linalg.norm(mh)/denom:13.3f} "
+              f"{np.linalg.norm(mr)/denom:13.3f} "
+              f"{np.linalg.norm(mf)/denom:11.3f}")
 
 
 # ---------------------------------------------------------------- V2
-class OracleTeacher(Teacher):
-    """Cheating teacher: computes advantage-mass utility from TRUE pass rates."""
+class TruePassRatePriorityTeacher(Teacher):
+    """Uses true p in the same proportional-priority family."""
 
     def __init__(self, n_tasks, seed=0, n_rollouts=16, env=None, floor=0.1):
         super().__init__(n_tasks, seed)
@@ -149,9 +207,11 @@ class OracleTeacher(Teacher):
 
 def run_teacher(kind: str, seed: int, steps: int = 400, floor: float = 0.1):
     env = SkillChainEnv(seed=seed)
-    if kind == "oracle":
-        teacher = OracleTeacher(env.n_tasks, seed=seed + 1000, n_rollouts=16,
-                                env=env, floor=floor)
+    if kind == "true_p":
+        teacher = TruePassRatePriorityTeacher(
+            env.n_tasks, seed=seed + 1000, n_rollouts=16,
+            env=env, floor=floor
+        )
     elif kind == "advmass":
         teacher = AdvMassTeacher(env.n_tasks, seed=seed + 1000, n_rollouts=16,
                                  explore_frac=floor)
@@ -172,9 +232,9 @@ def run_teacher(kind: str, seed: int, steps: int = 400, floor: float = 0.1):
     return np.array(hist), mass_collected
 
 
-def v2_oracle_gap():
-    print("\n=== V2: oracle vs Thompson vs uniform (5 seeds) ===")
-    for kind in ["uniform", "advmass", "oracle"]:
+def v2_tracking_gap():
+    print("\n=== V2: true-p vs pseudo-count priority vs uniform (5 seeds) ===")
+    for kind in ["uniform", "advmass", "true_p"]:
         aucs, finals, masses = [], [], []
         for seed in range(5):
             h, m = run_teacher(kind, seed)
@@ -220,6 +280,8 @@ def v4_feedback_loop(steps: int = 400):
                     if np.any(w != 0):
                         env.apply_gradient(t, actions, w, 0.5)
                         continue
+                    if rewards.sum() == len(rewards):
+                        continue  # saturated all-pass group
                     dead += 1
                     prefixes = np.array([correct_prefix_len(a) for a in actions])
                     j = int(prefixes.max())
@@ -242,7 +304,8 @@ def v4_feedback_loop(steps: int = 400):
 
 
 if __name__ == "__main__":
+    v0_estimator_objectives()
     v1_hindsight_fidelity()
-    v2_oracle_gap()
+    v2_tracking_gap()
     v3_floor_curve()
     v4_feedback_loop()

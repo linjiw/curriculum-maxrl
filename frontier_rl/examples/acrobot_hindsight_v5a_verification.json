@@ -1,0 +1,225 @@
+{
+  "schema": "curriculum-maxrl/acrobot-hindsight-v5a-verification/v1",
+  "v5_stage": "stage_a_natural_feasibility",
+  "artifact": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5a_feasibility.json",
+  "artifact_sha256": "9cf741c91dcb82218cada9b451b76e0811c67aa4cbf1786ac0ba926806479b0a",
+  "lock_sha256": "5c277413c5238f5839d281e09810537221a16737f831a498a3e0217ca5b1502e",
+  "all_checks_passed": true,
+  "selected_optimizer_update_budget": 250,
+  "stage_b_factorial_authorized": true,
+  "runner_saved_gates_sha256": "5a63992e3dba4be61536859451d41e98b70b3868b4d9012385837d11b7eb36bb",
+  "independent_gate_recomputation": {
+    "selected_update_budget": 250,
+    "gate_passes": {
+      "gate_1_lock_schedule_and_technical_invariants": true,
+      "gate_2_fresh_all_27_first_exact_prefix": true,
+      "gate_3_scale_zero_preview_and_shadow": true,
+      "gate_4_positive_updates_and_natural_relabel_coverage": true,
+      "gate_5_per_cell_natural_regimes": true,
+      "gate_6_per_run_teacher_tv": true,
+      "gate_7_serial_runtime_projection": true
+    },
+    "all_pass": true,
+    "projected_hours_180": 7.055740037513897,
+    "technical_projection_sha256": "b4c4825c534ab1e9192c2afcfeb069476ccd2afde271f9b490db3f1d50a55868",
+    "technical_projection_forbidden_fields_present": []
+  },
+  "outcome_exclusion_audit": {
+    "passed": true,
+    "method": "AST scan of V5 launch functions for forbidden outcome-field literals",
+    "checked_functions": [
+      "_prefix",
+      "_prefix_errors",
+      "_prefix_technical_errors",
+      "_technical_gate_projection",
+      "compute_stage_a_gates"
+    ],
+    "forbidden_fields": [
+      "auc_mean_pass_by_optimizer_updates",
+      "auc_mean_pass_by_transitions",
+      "final_hardest_pass",
+      "final_mean_censored_time_to_goal",
+      "final_mean_native_return",
+      "final_mean_pass",
+      "final_native_success_rate",
+      "hardest_pass_curve",
+      "initial_mean_pass",
+      "mean_censored_time_to_goal_curve",
+      "mean_native_return_curve",
+      "mean_pass_curve",
+      "mean_policy_entropy_curve",
+      "native_success_rate_curve",
+      "pass_rate_curve"
+    ],
+    "found_forbidden_fields": []
+  },
+  "source_runtime_lock": {
+    "passed": true,
+    "lock_sha256": "5c277413c5238f5839d281e09810537221a16737f831a498a3e0217ca5b1502e",
+    "runtime": {
+      "python": "3.12.13",
+      "python_implementation": "CPython",
+      "platform": "macOS-26.5-arm64-arm-64bit",
+      "machine": "arm64",
+      "numpy": "2.5.1",
+      "gymnasium": "1.3.0"
+    },
+    "registered_schedule": {
+      "v5_stage": "stage_a_natural_feasibility",
+      "paired_seeds": [
+        15000,
+        15001,
+        15002
+      ],
+      "base_learning_rate": 0.0003,
+      "learning_rate_multipliers": [
+        0.5,
+        1.0,
+        2.0
+      ],
+      "hindsight_scales": [
+        0.0,
+        1.0,
+        2.0
+      ],
+      "condition_names": [
+        "lr_mult_0p5_hs_0",
+        "lr_mult_0p5_hs_1",
+        "lr_mult_0p5_hs_2",
+        "lr_mult_1_hs_0",
+        "lr_mult_1_hs_1",
+        "lr_mult_1_hs_2",
+        "lr_mult_2_hs_0",
+        "lr_mult_2_hs_1",
+        "lr_mult_2_hs_2"
+      ],
+      "optimizer_update_target": 400,
+      "single_allowed_fallback_update_target": 250,
+      "transition_group_start_cap": 4000000,
+      "maximum_complete_group_overshoot": 8000,
+      "eval_interval_optimizer_updates": 50,
+      "eval_episodes_per_task": 32,
+      "fresh_budget_selection_population": "all 27 V5A runs",
+      "shadow_test": {
+        "seed": 100,
+        "optimizer_update_budget": 3,
+        "transition_group_start_cap": 80000,
+        "eval_episodes_per_task": 4
+      }
+    },
+    "checked_source_files": [
+      "frontier_rl/__init__.py",
+      "frontier_rl/adapters/__init__.py",
+      "frontier_rl/adapters/acrobot_neural.py",
+      "frontier_rl/estimators.py",
+      "frontier_rl/examples/ACROBOT_HINDSIGHT_PROTOCOL_V5.md",
+      "frontier_rl/examples/analyze_acrobot_hindsight_v5.py",
+      "frontier_rl/examples/run_acrobot_hindsight_v4.py",
+      "frontier_rl/examples/run_acrobot_hindsight_v5.py",
+      "frontier_rl/examples/run_acrobot_neural.py",
+      "frontier_rl/examples/test_acrobot_neural.py",
+      "frontier_rl/examples/test_analyze_acrobot_hindsight_v5.py",
+      "frontier_rl/examples/test_run_acrobot_hindsight_v4.py",
+      "frontier_rl/examples/test_run_acrobot_hindsight_v5.py",
+      "frontier_rl/examples/test_run_acrobot_neural.py",
+      "frontier_rl/interfaces.py",
+      "frontier_rl/teacher.py",
+      "frontier_rl/trainer.py"
+    ],
+    "engine_contract": {
+      "instrumentation_checkpoints": [
+        250,
+        400
+      ],
+      "instrumentation_eval_interval_updates": 50,
+      "instrumentation_transition_group_start_cap": 4000000,
+      "instrumentation_maximum_complete_group_overshoot": 8000,
+      "same_locked_neural_module_object": true,
+      "n_rollouts": 16,
+      "thresholds": [
+        -1.5,
+        -1.0,
+        -0.5,
+        0.0,
+        0.25,
+        0.5,
+        0.7,
+        1.0
+      ],
+      "teacher_gamma": 1.0,
+      "teacher_decay": 0.7,
+      "teacher_floor": 0.1,
+      "max_episode_steps": 500,
+      "shared_h64_total_parameters": 640,
+      "shared_h64_active_parameters": 640
+    },
+    "seed_collision_audit": {
+      "prior_registered_blocks": {
+        "v1_core": [
+          0,
+          11,
+          12
+        ],
+        "v2_core": [
+          0,
+          19,
+          20
+        ],
+        "v1_v2_scale": [
+          100,
+          109,
+          10
+        ],
+        "v1_pilot": [
+          10000,
+          10002,
+          3
+        ],
+        "v2_development": [
+          11000,
+          11002,
+          3
+        ],
+        "v3_confirmatory": [
+          12000,
+          12019,
+          20
+        ],
+        "v4a_feasibility": [
+          13000,
+          13002,
+          3
+        ],
+        "v4b_registered": [
+          14000,
+          14009,
+          10
+        ]
+      },
+      "v5a_block": [
+        15000,
+        15002,
+        3
+      ],
+      "v5b_block": [
+        16000,
+        16019,
+        20
+      ],
+      "collisions": {
+        "v5a_vs_prior": [],
+        "v5b_vs_prior": [],
+        "v5a_vs_v5b": []
+      },
+      "passed": true,
+      "scope": "explicit ledger of Acrobot seed blocks registered by V1--V4 source/protocols; the source/protocol files carrying that ledger are themselves hash-locked"
+    }
+  },
+  "descriptive_full_run_audit": {
+    "authorizing": false,
+    "passed": true,
+    "errors": {}
+  },
+  "claim_boundary": "V5A verifies implementation, natural mechanics, and serial feasibility; it does not estimate a learning-performance effect.",
+  "lock": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_HINDSIGHT_V5A_LOCK.json"
+}

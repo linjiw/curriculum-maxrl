@@ -7,9 +7,9 @@ for the nested task (c, j) — the same trajectory, truncated.  We relabel the
 best-prefix rollouts as successes of the deepest prefix task j* achieved by
 the group and apply MaxRL's success-conditioned weights there.
 
-This is Hindsight Experience Replay mapped into MaxRL: the estimator only
-learns from successes, and relabeling manufactures successes on the frontier
-from compute that would otherwise be dropped (K=0).
+This is Hindsight Experience Replay mapped into MaxRL: practical groups with
+K=0 provide no update, and relabeling turns some of that otherwise-dropped
+compute into successful trajectories for an achieved frontier task.
 
 Caveat re bias: the relabeled group is conditioned on the achieved outcome,
 so it is NOT an unbiased estimator of task-j*'s truncated-ML gradient; it is
@@ -20,6 +20,11 @@ it helps or hurts.
 from __future__ import annotations
 
 import numpy as np
+
+
+def _trapezoid(y, x):
+    integrate = getattr(np, "trapezoid", None)
+    return (np.trapz if integrate is None else integrate)(y, x)
 
 from testbed import SkillChainEnv
 from estimators import weights_maxrl
@@ -60,6 +65,8 @@ def run(teacher_name: str, seed: int, steps: int = 400, hindsight: bool = True,
             if np.any(w != 0):
                 env.apply_gradient(t, actions, w, lr)
                 continue
+            if rewards.sum() == len(rewards):
+                continue  # all-pass is saturated, not hindsight-eligible
             if not hindsight:
                 continue
             # dead group: relabel to the deepest prefix level achieved
@@ -102,7 +109,7 @@ def main():
                 s = np.array([x["step"] for x in h])
                 mp = np.array([x["mean_pass"] for x in h])
                 finals.append(mp[-1])
-                aucs.append(float(np.trapz(mp, s) / (s[-1] - s[0])))
+                aucs.append(float(_trapezoid(mp, s) / (s[-1] - s[0])))
                 rels.append(h[-1]["relabeled"])
             tag = f"{teacher}+maxrl" + ("+hindsight" if hs else "")
             print(f"{tag:32s} final={np.mean(finals):.3f}(±{np.std(finals):.3f}) "

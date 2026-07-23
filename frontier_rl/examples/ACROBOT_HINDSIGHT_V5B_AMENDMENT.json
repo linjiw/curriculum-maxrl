@@ -1,0 +1,71 @@
+{
+  "schema": "curriculum-maxrl/acrobot-hindsight-v5b-amendment/v1",
+  "v5_stage": "stage_b_confirmatory_factorial",
+  "created_utc": "2026-07-22T23:52:22.555362+00:00",
+  "explicit_stage_b_authorization": true,
+  "stage_a_artifact": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5a_feasibility.json",
+  "stage_a_artifact_sha256": "9cf741c91dcb82218cada9b451b76e0811c67aa4cbf1786ac0ba926806479b0a",
+  "stage_a_independent_verification": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5a_verification.json",
+  "stage_a_independent_verification_sha256": "a46b5e9f732b7f9e1796e2d4a2ff344c9ff738574c464b28631e884faaa6ba19",
+  "stage_a_gates_sha256": "5a63992e3dba4be61536859451d41e98b70b3868b4d9012385837d11b7eb36bb",
+  "selected_update_budget": 250,
+  "registered_schedule": {
+    "v5_stage": "stage_b_confirmatory_factorial",
+    "paired_seeds": [
+      16000,
+      16001,
+      16002,
+      16003,
+      16004,
+      16005,
+      16006,
+      16007,
+      16008,
+      16009,
+      16010,
+      16011,
+      16012,
+      16013,
+      16014,
+      16015,
+      16016,
+      16017,
+      16018,
+      16019
+    ],
+    "base_learning_rate": 0.0003,
+    "learning_rate_multipliers": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "hindsight_scales": [
+      0.0,
+      1.0,
+      2.0
+    ],
+    "condition_names": [
+      "lr_mult_0p5_hs_0",
+      "lr_mult_0p5_hs_1",
+      "lr_mult_0p5_hs_2",
+      "lr_mult_1_hs_0",
+      "lr_mult_1_hs_1",
+      "lr_mult_1_hs_2",
+      "lr_mult_2_hs_0",
+      "lr_mult_2_hs_1",
+      "lr_mult_2_hs_2"
+    ],
+    "optimizer_update_target": 250,
+    "transition_group_start_cap": 4000000,
+    "maximum_complete_group_overshoot": 8000,
+    "eval_interval_optimizer_updates": 50,
+    "eval_episodes_per_task": 32,
+    "run_count": 180
+  },
+  "frozen_claim_rule": "C1/C2 require mean>=+0.03 and Holm rejection; C3/C4 require abs(mean)>=0.03 and Holm rejection; complete 180-run family only.",
+  "exact_commands": {
+    "stage_a_independent_verifier": "/tmp/curriculum-maxrl-gym/bin/python -m frontier_rl.examples.analyze_acrobot_hindsight_v5 /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5a_feasibility.json --lock /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_HINDSIGHT_V5A_LOCK.json --output /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5a_verification.json",
+    "runner": "/tmp/curriculum-maxrl-gym/bin/python -m frontier_rl.examples.run_acrobot_hindsight_v5 stage-b --stage-a-artifact /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5a_feasibility.json --amendment /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_AMENDMENT.json --lock /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_LOCK.json --output /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5b_factorial.json",
+    "independent_verifier": "/tmp/curriculum-maxrl-gym/bin/python -m frontier_rl.examples.analyze_acrobot_hindsight_v5 /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5b_factorial.json --lock /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_LOCK.json --output /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5b_verification.json"
+  }
+}

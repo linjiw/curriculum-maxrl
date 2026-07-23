@@ -1,12 +1,12 @@
 diff --git a/verl/trainer/ppo/ray_trainer.py b/verl/trainer/ppo/ray_trainer.py
-index 7a2f2d4..9d3878b 100644
+index 7a2f2d4..69e6a3a 100644
 --- a/verl/trainer/ppo/ray_trainer.py
 +++ b/verl/trainer/ppo/ray_trainer.py
 @@ -1404,6 +1404,11 @@ class RayPPOTrainer:
          dataloader_state_dict = self.train_dataloader.state_dict()
          torch.save(dataloader_state_dict, dataloader_local_path)
  
-+        # save curriculum teacher state
++        # save curriculum teacher state (sampler state is included in data.pt)
 +        if getattr(self, "curriculum_teacher", None) is not None:
 +            teacher_local_path = os.path.join(local_global_step_folder, "curriculum_teacher.pt")
 +            torch.save(self.curriculum_teacher.state_dict(), teacher_local_path)
@@ -14,27 +14,53 @@ index 7a2f2d4..9d3878b 100644
          # latest checkpointed iteration tracker (for atomic usage)
          local_latest_checkpointed_iteration = os.path.join(
              default_local_dir, 
-@@ -1528,6 +1533,12 @@ class RayPPOTrainer:
+@@ -1466,1 +1471,16 @@ class RayPPOTrainer:
++    def _load_curriculum_teacher(self, checkpoint_folder: str):
++        """Restore teacher counts/RNG whenever a curriculum sampler is resumed."""
++        if getattr(self, "curriculum_teacher", None) is None:
++            return
++        teacher_local_path = os.path.join(checkpoint_folder, "curriculum_teacher.pt")
++        if not os.path.exists(teacher_local_path):
++            raise FileNotFoundError(
++                "curriculum resume requires teacher state next to data.pt: "
++                f"{teacher_local_path}"
++            )
++        self.curriculum_teacher.load_state_dict(
++            torch.load(teacher_local_path, weights_only=False)
++        )
++        print(f"Curriculum teacher state loaded from {teacher_local_path}")
++
+     def _load_checkpoint(self):
+@@ -1494,6 +1514,9 @@ class RayPPOTrainer:
+                     else:
+                         self._load_dataloader(
+                             dataloader_local_path=dataloader_local_path,
+                         )
+-
++                        self._load_curriculum_teacher(
++                            checkpoint_folder=os.path.dirname(dataloader_local_path)
++                        )
++
+                 return 0
+@@ -1528,4 +1551,7 @@ class RayPPOTrainer:
          dataloader_local_path = os.path.join(global_step_folder, "data.pt")
          self._load_dataloader(dataloader_local_path=dataloader_local_path)
- 
-+        # load curriculum teacher state
-+        teacher_local_path = os.path.join(global_step_folder, "curriculum_teacher.pt")
-+        if getattr(self, "curriculum_teacher", None) is not None and os.path.exists(teacher_local_path):
-+            self.curriculum_teacher.load_state_dict(torch.load(teacher_local_path, weights_only=False))
-+            print(f"Curriculum teacher state loaded from {teacher_local_path}")
+-
++        # StatefulDataLoader restores CurriculumSampler from data.pt; restore
++        # the coupled teacher pseudo-counts and RNG from the same checkpoint.
++        self._load_curriculum_teacher(checkpoint_folder=global_step_folder)
 +
          # Load wandb id
-         wandb_id_save_path = os.path.join(
-             checkpoint_folder,
-@@ -1760,6 +1771,15 @@ class RayPPOTrainer:
+@@ -1760,6 +1787,17 @@ class RayPPOTrainer:
                              reward_tensor, reward_extra_infos_dict = ray.get(future_reward)
                          batch.batch["token_level_scores"] = reward_tensor
  
 +                        # feed per-prompt outcomes back to the curriculum teacher
-+                        if getattr(self, "curriculum_teacher", None) is not None and "index" in batch.non_tensor_batch:
++                        if getattr(self, "curriculum_teacher", None) is not None:
++                            if "curriculum_index" not in batch.non_tensor_batch:
++                                raise RuntimeError("missing CurriculumIndexedDataset position")
 +                            self.curriculum_teacher.observe_batch(
-+                                dataset_indices=batch.non_tensor_batch["index"],
++                                dataset_indices=batch.non_tensor_batch["curriculum_index"],
 +                                uids=batch.non_tensor_batch["uid"],
 +                                scores=reward_tensor.sum(dim=-1).cpu().numpy(),
 +                            )

@@ -2,3 +2,8 @@ __pycache__/
 *.pyc
 *.pt
 .DS_Store
+
+# Excluded local Acrobot smoke/quick artifacts (not publication evidence)
+frontier_rl/examples/acrobot_neural_core_quick.json
+frontier_rl/examples/acrobot_neural_pilot_quick.json
+frontier_rl/examples/acrobot_neural_scale_quick.json
