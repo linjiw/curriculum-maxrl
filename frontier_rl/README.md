@@ -255,7 +255,14 @@ for RLVR on flow-matching VLA policies (no tractable per-sample log-prob):
 
 - **positive-part weights** (`TrainerConfig(positive_weights=True)`) — the
   weighted-RFT rule; its scalar sampling algebra is unchanged (P1 exact),
-  while surrogate update-direction fidelity remains an empirical gate.
+  while surrogate update-direction fidelity remains an empirical gate. A
+  stored three-seed skill-chain summary reports AUC `0.887→0.828` and final
+  score `0.986→0.941` relative to full MaxRL
+  (`curriculum_maxrl/positive_part_training_cost.json`), but the summary does
+  not include raw per-seed records or a generation manifest. Treat it as
+  local development evidence, not as closure of the surrogate-fidelity gate;
+  use positive-part weights only when per-sample log-probabilities are not
+  available.
 - **`CosmosLiberoSpace`** — arms are predicate-conjunction goals; `rollout_fn`
   is a hook for the policy-server + vector-env wave (no cosmos import here);
   live groups are verified ONLY by the sim's binary success; dead groups are

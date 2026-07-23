@@ -37,7 +37,8 @@ def weights_maxrl(r: np.ndarray) -> np.ndarray:
     w_j = (r_j / K - 1/N); the whole group is dropped when K = 0.
     Dropping Eq. 10's control variate on K=0 makes this unbiased for the
     truncated MaxRL objective with T=N-1, not T=N.  The raw success average
-    and the control-variate form retained on K=0 are provided below.
+    and the control-variate form retained on K=0 are provided below; see
+    PROOFS.md Proposition 1.
     """
     n = len(r)
     k = r.sum()

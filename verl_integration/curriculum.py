@@ -42,7 +42,7 @@ Enable via config:
 
     data.curriculum.enable=true
     data.curriculum.floor=0.1          # uniform replay floor
-    data.curriculum.decay=0.7          # pseudo-count decay per observation
+    data.curriculum.decay=0.7          # discounted pseudo-count decay (validated default)
     data.curriculum.success_threshold=0.5
     data.curriculum.utility=advmass    # or "frontier"
     data.curriculum.power=1.0          # concentration; keep 1 on flat pools

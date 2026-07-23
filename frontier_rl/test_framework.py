@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-import sys, os
+import os
+import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 from math import comb
@@ -374,6 +375,42 @@ def test_all_pass_group_is_not_relabelled():
     print("all-pass gate OK")
 
 
+def test_isaaclab_adapter():
+    """Reset-stream teacher: the behaviors ISAACLAB_DESIGN.md claims."""
+    from frontier_rl.adapters.isaaclab_curriculum import FrontierBinTeacher
+
+    t = FrontierBinTeacher(n_bins=6, decay_half_life=64.0, seed=0)
+    # visit every bin (unvisited bins sit at the optimistic prior p=0.5 and
+    # tie for max utility by design); pass rates 0 / .5 / .1 / 0 / .9 / 1
+    fails = {0: [True] * 8, 1: [False, True] * 4, 2: [True] * 7 + [False],
+             3: [True] * 8, 4: [False] * 7 + [True], 5: [False] * 8}
+    for _ in range(20):
+        for b, f in fails.items():
+            t.observe_resets(np.full(8, b), np.array(f))
+    probs = t.sampling_probs()
+    # frontier bin (p~0.5 under learnability) out-samples dead + mastered
+    assert probs[1] > probs[3] and probs[1] > probs[5], probs
+    assert abs(probs.sum() - 1) < 1e-9
+    assert t.argmax_utility() == 1
+    # decayed evidence (~15 episode-equivalents) leaves all-fail bins at
+    # p̂≈0.06 under the Beta prior — probe with a matching threshold
+    assert t.dead_fraction(threshold=0.1) > 0 and t.mastered_fraction() > 0
+    # evidence-scaled decay is exact: one half-life of events halves counts
+    t2 = FrontierBinTeacher(n_bins=2, decay_half_life=10.0, seed=0)
+    t2.observe_resets(np.zeros(10, dtype=int), np.zeros(10, dtype=bool))
+    s_before = t2.succ[0]
+    t2.observe_resets(np.ones(10, dtype=int), np.ones(10, dtype=bool))
+    assert abs(t2.succ[0] - s_before / 2) < 1e-12
+    # sample_bins respects the floor: every bin reachable
+    seen = set(t.sample_bins(2000).tolist())
+    assert seen == set(range(6)), seen
+    # state roundtrip
+    t3 = FrontierBinTeacher(n_bins=6, decay_half_life=64.0, seed=0)
+    t3.load_state_dict(t.state_dict())
+    assert np.allclose(t3.succ, t.succ) and np.allclose(t3.fail, t.fail)
+    print("isaaclab reset-stream teacher OK")
+
+
 if __name__ == "__main__":
     test_estimators()
     test_maxrl_population_orders()
@@ -390,4 +427,5 @@ if __name__ == "__main__":
     test_cosmos_posterior_hygiene_end_to_end()
     test_dead_group_without_relabel_is_skipped()
     test_all_pass_group_is_not_relabelled()
+    test_isaaclab_adapter()
     print("\nALL TESTS PASSED")

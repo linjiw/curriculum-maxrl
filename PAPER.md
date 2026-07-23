@@ -159,7 +159,11 @@ that statistic, but its learning benefit is environment-dependent. A
 true-pass-rate proportional-priority comparator collected only 0.4% more mass
 than the pseudo-count teacher in one CPU study while learning much faster;
 therefore collected mass is neither an oracle ceiling nor a sufficient proxy
-for progress.
+for progress. In a later five-seed synthetic skill-chain run, a proposal using
+the simulator's true pass rates reached mean AUC `.851` at `gamma=1` and
+`.884` at matched `gamma=4`, versus `.728` for the Thompson teacher; the full
+`gamma=4` stack with success-only hindsight reached `.890`. These are local
+development results, not a universal proposal ceiling.
 
 **Channel 2 — signal creation (hindsight).** Create verifier-valid auxiliary
 targets from failures already paid for. This is the only channel that can

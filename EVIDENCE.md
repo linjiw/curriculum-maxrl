@@ -44,11 +44,15 @@ what lets you predict where the method will and won't help.
   `-.0062` final macro; three paired development seeds).  This validates the
   native CPU pipeline and two mechanisms, not sampler superiority or robotics
   generality.
-- No oracle ceiling has been established. In one CPU study, a true-pass-rate
-  proportional-priority comparator collected 841 units of coefficient mass
-  versus 838 for the pseudo-count teacher, yet achieved AUC 0.851 versus
-  0.700. Timing, estimation, and gradient direction matter; total mass alone
-  is not a sufficient learning proxy.
+- The new V7 CPU artifact makes the earlier “oracle ceiling” wording more
+  precise. A true-pass-rate proposal reached mean AUC .851 at `gamma=1` and
+  .884 at `gamma=4`, versus .728 for the Thompson teacher; the complete
+  `gamma=4` plus success-only-hindsight procedure reached .890. These five
+  synthetic skill-chain seeds show both a large proposal-tracking gap and a
+  small auxiliary-stream gain beyond the matched pure sampler. They do not
+  define a universal ceiling: timing, estimation, gradient direction, and
+  valid signal creation remain separate mechanisms. The persisted summary is
+  `frontier_rl/examples/v7_oracle_result.json`.
 
 ### Channel 2 — SIGNAL CREATION (hindsight recycling)
 *"Manufacture verified successes from the failures you already paid for."*
@@ -114,8 +118,7 @@ Three separate times, the *metric* hid what the method was doing:
 1. **Fixed-step comparisons hid the teacher's speed** (it runs 22–35% more
    steps per hour) → matched wall-clock protocol.
 2. **Peakedness hid the teacher's targeting** (ZPD utilities are diffuse by
-   design; SONIC's forecast pmax/uniform only 1.3–2.0) → targeting-ratio
-   criterion.
+   design — SONIC_RESPONSE Q5) → targeting-ratio criterion.
 3. **pass@1 hid the deep-frontier march entirely** (L6 "stalled at 0.01–0.05"
    while coverage@64 went 0.125→0.438) → coverage currency.
 
@@ -165,6 +168,7 @@ Decision procedure distilled from every ablation:
 | MaxRL makes curricula safe | historical objective interaction only | open |
 | compounding predicts hindsight size | retained fixed-pool positives; maze side historical | hypothesis |
 | corrected GPU/LLM/robotics generality | one narrow robotics development pilot; no confirmatory/general result | open |
+| full procedure can edge a pure known-pass-rate proposal locally | V7 skill chain: `.890` full stack vs `.884` matched `gamma=4` oracle proposal, five seeds | corrected synthetic result; no inference |
 
 The historical maze coverage and efficiency multipliers remain useful for
 experiment design, not for external performance claims.

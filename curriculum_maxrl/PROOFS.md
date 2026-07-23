@@ -2,6 +2,8 @@
 
 This note separates three MaxRL estimators that were previously conflated and
 states exactly what the curriculum score does and does not prove.
+The core identities are also checked numerically by `run_validation.py` and
+the `THEORY.md` §6 snippet.
 
 Fix a task `x`. Let `p=p_θ(x)∈(0,1)` be its binary success probability,
 `S_i=∇_θ log m_θ(z_i|x)` its rollout score, and let `N` rollouts be conditionally
@@ -223,7 +225,15 @@ E[Σ_i|w_i|] = 2p(1-p).
 Σ_i|w_i| = 2K(N-K)/(N(N-1)).
 ```
 
-Because `E[K(N-K)]=N(N-1)p(1-p)`, the result follows. ∎
+Because
+
+```text
+E[K(N-K)] = N E[K] - E[K²]
+            = N²p - {Np(1-p)+N²p²}
+            = N(N-1)p(1-p),
+```
+
+the result is exactly `E[Σ_i|w_i|]=2p(1-p)`. ∎
 
 This matches SFL-style Bernoulli learnability up to a constant. Practical
 MaxRL coefficient mass equals RLOO's exactly at **`N=2`**, not `N=1`;
