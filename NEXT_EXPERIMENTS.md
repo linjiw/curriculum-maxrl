@@ -105,6 +105,49 @@ walk the annotated difficulty axis?
 4. **E-LLM-3 (streaming/RG)** after, or interleaved if E-LLM-2 stalls.
 5. **E-LLM-4 (K&K/DUMP contrast)** only if the probe shows a usable frontier.
 
-*Harness-side findings (vllm rollout speedup, eval harness, alternative
-trainers) land in a follow-up section when the second research agent
-returns.*
+## Harness findings (second sweep) — and what's already done
+
+- **vllm 0.8.5.post1 INSTALLED and verified** (torch 2.6.0+cu124 pin matched
+  exactly; numpy settled at 2.2.6; full verl import gauntlet incl.
+  vLLMRollout passes). Our verl fork already ships sleep-level-1
+  (`enable_sleep_mode`/`free_cache_engine`); config for colocated 360M:
+  `rollout.name=vllm, gpu_memory_utilization≈0.45, enforce_eager=True,
+  free_cache_engine=True`. Expected 5–10× on the generation phase (1250s of
+  our 1450s step) → **~3–4× end-to-end**; our 64×16=1024 concurrent
+  sequences are continuous batching's best case. Smoke-test on our next GPU
+  window, before cell 3.
+- **Stay on verl**: TRL's GRPOTrainer hard-codes group-norm advantages and
+  has no sampler hook (both our deltas are private-API subclasses there);
+  OpenRLHF/open-r1 are multi-GPU-shaped; nano-GRPO loops would re-pay the
+  infra cost we already paid.
+- **Eval upgrade**: GSM8K-Platinum is only 1,209 rows — post-vllm, evaluate
+  the full platinum set at checkpoints instead of our 256-row slice
+  (pass@{1,4,8,16}); lighteval has vllm-backend pass@k if we want citable
+  external numbers.
+- **Two one-flag baselines to add** (pre-empt the obvious reviewer asks):
+  `utility=learnability` ≡ LILO (arXiv:2502.12272 — per-prompt p(1−p)
+  rejection sampling, our N=2 special case) and a DUMP/SEC-style
+  |advantage|-bandit. Our FrontierTeacher already parameterizes utility.
+- **Sharpened differentiation** (deeper sweep): LILO is the closest
+  published method (per-prompt p(1−p)); DUMP/SEC/TAC are bucket/domain-level
+  bandits; PKPO/Pass@k-Training modify the objective but keep uniform
+  sampling; GRESO/DAPO-dynamic-sampling only CULL dead prompts (avoidance,
+  no allocation, no creation). All hindsight-for-LLM work (AgentHER, HSL)
+  relabels agent trajectories with an LLM judge — **exact-verifier
+  relabeling inside the RL loop remains unoccupied**, now doubly confirmed.
+- **Mixed-pool gap confirmed**: all adaptive mixing (TAC, DUMP, SEC) is
+  domain-level; nobody runs a per-prompt teacher across a heterogeneous
+  pool. GSM8K + 2–3 reasoning-gym families with a label-free per-prompt
+  teacher = E-LLM-5 candidate after the flagship.
+
+## E-LLM-2 staging status (done 2026-07-23)
+
+Countdown is STAGED in the maxrl repo (`curriculum_maxrl/countdown/`):
+tiered 10k pool generated (~/data/countdown, tiers = 2/3/4 operands, all
+solvable by construction), strict-binary verl reward fn, exact-relabel
+helpers (roundtrip verified: failed trace's achieved value scores 1.0
+against the rewritten prompt), and a pre-registered pass@16 probe with
+frozen decision rules. `frontier_rl/adapters/countdown_llm.py` carries the
+same contracts framework-side (tests green). Remaining before launch:
+vllm smoke on our GPU window → probe → hindsight-in-verl wiring (relabel
+dead groups inside the trainer, the one new engineering piece) → 2×2×2.
