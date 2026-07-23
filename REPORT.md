@@ -29,13 +29,13 @@ The chain, component by component:
 | Math result (PROOFS.md) | Algorithm component | CPU evidence | GPU evidence |
 |---|---|---|---|
 | **P1**: E[Σ\|w\|] = 2(pass@N − pass@1), exact | AdvMass teacher utility | ties hand-tuned ZPD with 0 hyperparams (V2: AUC 0.700 vs 0.688) | teacher beats uniform 6/6 paired seeds; dead groups 5.8→3.4/8 |
-| **P2**: peak at p\* ≈ ln N/N, strictly concave | compute-indexed ZPD band; no band tuning | posterior tracks true p within ±0.03 | teacher p̂ matches eval per level; 60% of mass on true frontier |
+| **P2**: peak at p\* ≈ ln N/N, strictly concave | compute-indexed ZPD band; no band tuning | posterior tracks true p (CPU) | teacher p̂ tracks eval per level to ~±0.1 (max mid-run deviation ~0.16); ~70% of mass on true frontier |
 | **P3**: greedy water-filling optimal for Σ mass | `allocate_rollouts_greedy` | +18% mass vs uniform split | (phase 2 — needs per-prompt n in rollout worker) |
 | **P4**: RLOO mass = 2p(1−p) ≡ SFL learnability | unifies curriculum literature w/ estimator algebra | exact MC match | — (interpretive) |
-| **P5**: MaxRL mass ≈ N× RLOO's as p→0 | why the teacher is safe with MaxRL specifically | — | GRPO+teacher collapses (H6 reversed); MaxRL+teacher grows pass@8 every seed |
+| **P5**: MaxRL mass ≈ (N−1)× RLOO's as p→0 | why the teacher is safe with MaxRL specifically | — | GRPO+teacher collapses (H6 reversed; single-seed arm — GRPO's decay itself is every-seed); MaxRL+teacher grows pass@8 every seed |
 | **P6**: hindsight update = ML gradient under shifted conditional; exact when laws match | dense hindsight relabeling | V1: per-group cosine = fresh-group cosine (0.956 vs 0.958); mean cosine 1.000 | dense hindsight = GPU champion (final 0.258, best 0.269) |
 | **P7**: posterior lag & floor as staleness bound | decay 0.7, floor 0.1 | V2b: decay 0.7 closes ~19% of oracle gap; V3: floor flat 0–0.4 | defaults shipped in verl module |
-| V6 (empirical): learning compounds ⇒ γ>1 | `power` knob, sample ∝ u^γ | γ=4: AUC 0.782 vs 0.728 | (not yet run on GPU) |
+| V6 (empirical): learning compounds ⇒ γ>1 | `power` knob, sample ∝ u^γ | γ=4: AUC 0.782 vs 0.728 | GPU: γ=4 did NOT transfer (0.231 vs 0.236) — as the V6b ODE model pre-registered; γ=1 GPU default |
 
 The two places the chain *broke* were as informative as where it held:
 
@@ -122,19 +122,23 @@ flat pools).
    pre-registrations. ✅
 
 **Not yet achieved:**
-1. **The deep frontier remains uncrossed at fixed budget** — level 6+
-   (distance ≥ 16) sits at ~0.01–0.02 after 2400 s in every config. Dense
-   hindsight improved the approach (levels 0–3 all lifted) but one budget
-   does not cash out 16-step credit assignment. This is now a
-   compute-duration question, not a mechanism question — but that claim
-   itself needs a long-run to verify.
-2. **LLM-scale transfer** — the verl integration is production-ready and the
-   data-scarce GSM8K regime is precisely where hindsight's fixed-prompt-set
-   compounding should shine (the infinite-data maze understates it), but the
-   single A10G cannot fit the 8-GPU recipe. Open until a larger node.
-3. **Inference-efficiency currency** — the paper's samples-to-coverage
-   speedup framing; the study is running now (3 matched checkpoints,
-   `eval_efficiency.py`).
+1. **The deep frontier remains uncrossed — and it is NOT a duration
+   question.** The 4× long run (`long_falp_hsdense_s0.jsonl`, 9600 s) refuted
+   the duration hypothesis: level 5 doubles but level 6 stays 0.01–0.02.
+   The depth study's diagnosis is a per-step-legality ceiling (q≈0.87 →
+   geometric reach ≈ 6.7); meanwhile the frontier DID move in coverage
+   currency (L6 coverage@64: 0.125 → 0.188 → 0.312 → 0.438 across
+   GRPO/champion/long/wide) — invisible to pass@1. Depth needs capacity or
+   deeper warmstarts, not more schedule.
+2. **LLM-scale transfer** — a GSM8K 2×2 (SmolLM2-360M, N=16) is RUNNING
+   on the A10G with pre-registered predictions
+   (`curriculum_maxrl/GSM8K_A10G_PLAN.md` P-G1..P-G5); the paper-scale 8-GPU
+   recipe remains hardware-blocked. Hindsight-in-verl (the fixed-pool
+   compounding test) is the next engineering step after the 2×2.
+3. **Inference-efficiency currency** — COMPLETE (`efficiency.json`):
+   1.2×/2.7×/11× samples-to-coverage vs GRPO at levels 2/3/5, growing with
+   difficulty; honest reversal at L4 (0.5×, GRPO sharpening onto its
+   solvable subset).
 4. **P3 (optimal rollout allocation) has no GPU test** — needs per-prompt
    group sizes in the rollout path.
 
@@ -149,21 +153,22 @@ signal-allocation — makes progress (F3).*
 
 Ranked by expected-information-per-A10G-hour:
 
-1. **Long-horizon run of the champion config** (dense hindsight, 4–6× the
-   2400 s budget, one seed): directly tests the "level 6 is a duration
-   question" claim — the only unverified load-bearing claim about the maze.
-   If level 6 leaves zero, the frontier-march story is complete end-to-end;
-   if not, the mechanism needs revision (e.g. hindsight-min-depth curriculum,
-   or move budgets that scale with achieved depth).
-2. **γ=4 concentration on GPU** (one matched run): the last CPU win without
-   a GPU test; trivial to run (`power` knob already shipped).
-3. **Efficiency table** (running): converts our wins into the paper's own
-   currency; needed for any external comparison.
-4. **Multi-seed for dense hindsight** (seeds 1–2): the champion's margin
-   (0.258 vs 0.244) is a single-seed number; the prior multi-seed round
-   showed ±0.01–0.015 seed noise on finals, so this is due diligence.
-5. GSM8K 2×2 when hardware allows — the highest-value experiment overall,
-   blocked on resources only.
+*(This list is preserved as written; all five items have since executed —
+outcomes inline.)*
+
+1. **Long-horizon run** — DONE, hypothesis REFUTED: 9600 s lifts level 5
+   (0.03→0.23) but level 6 stays ≈0.01; the mechanism revision it called for
+   became the depth study (per-step-legality ceiling) + capacity probe
+   (wide model = new records, L6 leaves the floor in coverage@64).
+2. **γ=4 on GPU** — DONE, did NOT transfer (AUC 0.231 vs 0.236); the V6b ODE
+   model pre-registered exactly this (weak compounding on broad pools); γ=1
+   stays the GPU default.
+3. **Efficiency table** — DONE: 1.2×/2.7×/11× at L2/3/5, 0.5× reversal at L4.
+4. **Multi-seed dense hindsight** — DONE: champion 0.252±0.005 final /
+   0.229±0.009 AUC, 6/6 paired deltas positive vs uniform; final-margin edge
+   concentrated in seed 0 (honest headline: reliable AUC gain, never worse).
+5. **GSM8K 2×2** — RUNNING on the A10G (pre-registered:
+   `curriculum_maxrl/GSM8K_A10G_PLAN.md`).
 
 ## 6. Threats to validity (kept current)
 

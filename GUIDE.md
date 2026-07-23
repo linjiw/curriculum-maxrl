@@ -8,7 +8,8 @@ and `curriculum_maxrl/maze_gpu/EXPERIMENTS.md`.
 ## 1. Problem framing
 
 MaxRL's estimator (Algorithm 1 of arXiv:2602.02710) normalizes advantages by the
-per-prompt mean reward, making it unbiased for the T=N-truncated maximum-likelihood
+per-prompt mean reward, making it unbiased for the T=N−1-truncated maximum-likelihood (dropping the K=0
+control variate shifts the order — PROOFS.md Prop 1 correction)
 objective. Its weight function w(p) = (1−(1−p)^T)/p upweights hard prompts — an
 *implicit curriculum at the gradient level*. Three gaps remain that only a
 *data-level* teacher can close:
@@ -26,7 +27,7 @@ rather than needing an external heuristic.
 
 ## 2. Proposed methods and verification status
 
-### M1. Advantage-mass teacher (core method) — ✅ derived + validated (CPU), 🔄 GPU sweep running
+### M1. Advantage-mass teacher (core method) — ✅ derived + validated (CPU + GPU, 3 seeds)
 
 - **Claim (proved, MC-verified 200k trials):** expected total |advantage| a prompt
   receives from a MaxRL group of N rollouts is exactly `2(pass@N − pass@1)`;
@@ -38,7 +39,8 @@ rather than needing an external heuristic.
   - Formula: Monte-Carlo match to 3 decimals across p ∈ [0.005, 0.95] (THEORY.md §2, §5).
   - CPU skill-chain (5 seeds): AUC 0.704 vs 0.712 heuristic-frontier vs 0.688
     hand-tuned ZPD — ties the best heuristic with zero band hyperparameters.
-  - Posterior fidelity (GPU maze): teacher p̂ tracks true eval pass rates to ±0.03;
+  - Posterior fidelity (GPU maze): teacher p̂ tracks true eval pass rates to ~±0.1
+    (max mid-run deviation ~0.16 — decayed evidence lags fast learning);
     concentrates 60% of sampling mass on the true frontier band.
   - Dead-group reduction (GPU maze): 5.2/8 dead groups per step under uniform →
     3.9 (frontier) / 2.6 (learnability-style) under teachers.
@@ -88,7 +90,7 @@ rather than needing an external heuristic.
   in the matched GPU sweep. The uniform floor already covers most anti-forgetting
   duty in our regimes.
 
-### M7. Hindsight relabeling for dead groups — ✅ validated (CPU), 🔄 GPU sweep queued
+### M7. Hindsight relabeling for dead groups — ✅ validated (CPU + GPU: dense variant is the maze champion)
 
 - **Idea:** MaxRL's Theorem 1 makes the estimator success-conditioned — it learns
   *only from successes*, which is why K=0 groups are dead weight. HER's move is
@@ -128,7 +130,9 @@ rather than needing an external heuristic.
 - **Bias caveat:** relabeled groups are conditioned on the achieved outcome —
   an auxiliary HER-style term, not an unbiased truncated-ML gradient. Helps
   uniformly on the toy; GPU maze version (goal ← deepest cell legally reached,
-  `--hindsight` in `maze_gpu/train.py`) is queued behind sweep 1.
+  `--hindsight` in `maze_gpu/train.py`) completed: dense hindsight is the
+  GPU champion (0.252±0.005 final over 3 seeds; +0.01 AUC in the
+  infinite-data regime vs +0.22 on fixed pools — the fixedness lesson).
 - **LLM analogue:** goal/prefix relabeling wherever verifiers admit it —
   sub-goals in multi-step proofs, partial-credit unit tests, reached-state
   goals in agentic tasks.
@@ -240,7 +244,9 @@ is subsumed by teacher+hindsight everywhere at equal compute.
 - CPU effect sizes come from a toy with exact gradients; LLM noise (verifier
   errors, nonstationary posteriors) may shrink the teacher's edge — that's exactly
   what the GSM8K run tests.
-- Matched GPU results so far are single-seed.
+- Matched GPU results: seeds 0–2 confirmed for the four headline configs
+  (6/6 paired teacher wins); auxiliary arms (γ=4, long-horizon, frontier+grpo)
+  remain single-seed.
 - The teacher assumes a fixed finite prompt set (Beta posterior per row index);
   streaming/procedural prompt sources need a parametric difficulty model
   (ALP-GMM-style) instead.
