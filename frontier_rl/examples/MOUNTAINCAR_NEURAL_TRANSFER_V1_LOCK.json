@@ -1,0 +1,483 @@
+{
+  "schema": "mountaincar-neural-transfer-v1r2-development-lock",
+  "study": "mountaincar_neural_transfer_v1",
+  "scope": "development_only",
+  "authorized_development_seeds": [
+    17000,
+    17001,
+    17002
+  ],
+  "confirmatory_seeds_reserved_untouched": [
+    18000,
+    18001,
+    18002,
+    18003,
+    18004,
+    18005,
+    18006,
+    18007,
+    18008,
+    18009,
+    18010,
+    18011,
+    18012,
+    18013,
+    18014,
+    18015,
+    18016,
+    18017,
+    18018,
+    18019
+  ],
+  "confirmatory_execution_available": false,
+  "runtime": {
+    "python_implementation": "CPython",
+    "python_version": "3.12.13",
+    "numpy_version": "2.5.1",
+    "gymnasium_version": "1.3.0",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "machine": "arm64"
+  },
+  "source_sha256": {
+    "frontier_rl/examples/mountaincar_neural_transfer_v1_core.py": "0cc7ffb7ddce5b4a39310e0d7de43c5efa883cf66f9f9d82fd47511363ac9540",
+    "frontier_rl/examples/run_mountaincar_neural_transfer_v1.py": "06c381d85a457cefbfd6599f9057d2757d2a624746fd6bbbb65aa317700d2b02",
+    "frontier_rl/examples/analyze_mountaincar_neural_transfer_v1.py": "e20f8b50a8d2fbd55f059b73e5d071e1e68290333df25ccaba5a7d1dfd00a984",
+    "frontier_rl/examples/MOUNTAINCAR_NEURAL_TRANSFER_PROTOCOL_V1.md": "eb81c4037e8740f4861a423e6d28768222807f36099debd042203d5e93b1832c",
+    "frontier_rl/examples/test_mountaincar_neural_transfer_v1.py": "00a1b9ae94d489ba944920777ea0857015df38ed3d18ac0a5fa74248243baf05",
+    "frontier_rl/examples/test_analyze_mountaincar_neural_transfer_v1.py": "8baa29d5539921ea2fe8354b604cb3c27b819daec45323afccf09dd4527a3c16",
+    "frontier_rl/__init__.py": "1ef143075407ee38e06dbcde7b5711c2c80e82062e1d326682d05be0460ca253",
+    "frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+    "frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+    "frontier_rl/estimators.py": "6db395ce10b961b731062ac3ad087bf5425434d3210bfed80c84af3836a535fd",
+    "frontier_rl/trainer.py": "0e0046f446a7b0e46b098588b94679fa3db5d7c38cba4ae0f8dc51171555f8fd"
+  },
+  "seed_collision_audit": {
+    "passed": true,
+    "development_seeds": [
+      17000,
+      17001,
+      17002
+    ],
+    "confirmatory_seeds_reserved_untouched": [
+      18000,
+      18001,
+      18002,
+      18003,
+      18004,
+      18005,
+      18006,
+      18007,
+      18008,
+      18009,
+      18010,
+      18011,
+      18012,
+      18013,
+      18014,
+      18015,
+      18016,
+      18017,
+      18018,
+      18019
+    ],
+    "prior_training_seed_blocks": {
+      "legacy_mountaincar": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "acrobot_v1_core": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "acrobot_v1_scale": [
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109
+      ],
+      "acrobot_v1_pilot": [
+        10000,
+        10001,
+        10002
+      ],
+      "acrobot_v2_development": [
+        11000,
+        11001,
+        11002
+      ],
+      "acrobot_v3_confirmatory": [
+        12000,
+        12001,
+        12002,
+        12003,
+        12004,
+        12005,
+        12006,
+        12007,
+        12008,
+        12009,
+        12010,
+        12011,
+        12012,
+        12013,
+        12014,
+        12015,
+        12016,
+        12017,
+        12018,
+        12019
+      ],
+      "acrobot_hindsight_v4a": [
+        13000,
+        13001,
+        13002
+      ],
+      "acrobot_hindsight_v4b": [
+        14000,
+        14001,
+        14002,
+        14003,
+        14004,
+        14005,
+        14006,
+        14007,
+        14008,
+        14009
+      ],
+      "acrobot_hindsight_v5a": [
+        15000,
+        15001,
+        15002
+      ],
+      "acrobot_hindsight_v5b": [
+        16000,
+        16001,
+        16002,
+        16003,
+        16004,
+        16005,
+        16006,
+        16007,
+        16008,
+        16009,
+        16010,
+        16011,
+        16012,
+        16013,
+        16014,
+        16015,
+        16016,
+        16017,
+        16018,
+        16019
+      ]
+    },
+    "derived_rng_root_blocks": {
+      "actor_action": [
+        1017000,
+        1017001,
+        1017002,
+        1018000,
+        1018001,
+        1018002,
+        1018003,
+        1018004,
+        1018005,
+        1018006,
+        1018007,
+        1018008,
+        1018009,
+        1018010,
+        1018011,
+        1018012,
+        1018013,
+        1018014,
+        1018015,
+        1018016,
+        1018017,
+        1018018,
+        1018019
+      ],
+      "environment_episode": [
+        2017000,
+        2017001,
+        2017002,
+        2018000,
+        2018001,
+        2018002,
+        2018003,
+        2018004,
+        2018005,
+        2018006,
+        2018007,
+        2018008,
+        2018009,
+        2018010,
+        2018011,
+        2018012,
+        2018013,
+        2018014,
+        2018015,
+        2018016,
+        2018017,
+        2018018,
+        2018019
+      ],
+      "teacher": [
+        4017000,
+        4017001,
+        4017002,
+        4018000,
+        4018001,
+        4018002,
+        4018003,
+        4018004,
+        4018005,
+        4018006,
+        4018007,
+        4018008,
+        4018009,
+        4018010,
+        4018011,
+        4018012,
+        4018013,
+        4018014,
+        4018015,
+        4018016,
+        4018017,
+        4018018,
+        4018019
+      ],
+      "evaluation_episode": [
+        6017000,
+        6017001,
+        6017002,
+        6018000,
+        6018001,
+        6018002,
+        6018003,
+        6018004,
+        6018005,
+        6018006,
+        6018007,
+        6018008,
+        6018009,
+        6018010,
+        6018011,
+        6018012,
+        6018013,
+        6018014,
+        6018015,
+        6018016,
+        6018017,
+        6018018,
+        6018019
+      ],
+      "evaluation_action": [
+        7017000,
+        7017001,
+        7017002,
+        7018000,
+        7018001,
+        7018002,
+        7018003,
+        7018004,
+        7018005,
+        7018006,
+        7018007,
+        7018008,
+        7018009,
+        7018010,
+        7018011,
+        7018012,
+        7018013,
+        7018014,
+        7018015,
+        7018016,
+        7018017,
+        7018018,
+        7018019
+      ]
+    },
+    "collisions": {
+      "development_vs_confirmatory": [],
+      "development_vs_prior": [],
+      "confirmatory_vs_prior": [],
+      "rng_roots_vs_training": {
+        "actor_action": [],
+        "environment_episode": [],
+        "teacher": [],
+        "evaluation_episode": [],
+        "evaluation_action": []
+      },
+      "between_rng_root_blocks": {
+        "actor_action_vs_environment_episode": [],
+        "actor_action_vs_teacher": [],
+        "actor_action_vs_evaluation_episode": [],
+        "actor_action_vs_evaluation_action": [],
+        "environment_episode_vs_teacher": [],
+        "environment_episode_vs_evaluation_episode": [],
+        "environment_episode_vs_evaluation_action": [],
+        "teacher_vs_evaluation_episode": [],
+        "teacher_vs_evaluation_action": [],
+        "evaluation_episode_vs_evaluation_action": []
+      }
+    },
+    "rng_namespaces": {
+      "training_seed": "reserved block value",
+      "actor_action_seed": "training seed + 1000000",
+      "environment_episode_seed_stream": "training seed + 2000000",
+      "teacher_seed": "training seed + 4000000",
+      "evaluation_episode_seed_root": "training seed + 6000000",
+      "evaluation_action_seed_root": "training seed + 7000000"
+    }
+  },
+  "protocol": {
+    "gymnasium_environment": "MountainCar-v0",
+    "task_definition": "post-transition max position >= threshold",
+    "thresholds": [
+      -0.375,
+      -0.25,
+      -0.125,
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5
+    ],
+    "n_tasks": 8,
+    "n_actions": 3,
+    "max_episode_steps": 200,
+    "n_rollouts": 16,
+    "estimator": "practical MaxRL: 1{K>0}(r_i/K - 1/16)",
+    "hindsight": false,
+    "learning_rate": 0.0003,
+    "optimizer": "plain SGD ascent; summed frozen-group score gradient",
+    "transition_budget": 500000,
+    "eval_interval_transitions": 100000,
+    "eval_episodes_per_task": 32,
+    "primary_metric": "hardest-goal pass AUC over exact [0, transition_budget]",
+    "primary_estimand": "paired mean method difference in hardest-goal pass AUC for each of the four registered contrasts",
+    "supporting_metric": "target-uniform mean-pass AUC over exact [0, transition_budget]",
+    "claim_rule": "only the four hardest-goal AUC contrasts are confirmatory; mean-pass AUC is supporting and cannot rescue a failed primary contrast",
+    "paired_uniform_schedule_rule": "all uniform cells use one seed-indexed outcome-independent sequence and their realized task lists must equal its exact prefix",
+    "uniform_task_schedule": {
+      "algorithm": "repeated numpy Generator.choice over 8 tasks with p=1/8",
+      "seed_rule": "training seed + 4000000",
+      "registered_length": 31250,
+      "sha256_by_development_seed": {
+        "17000": "b665e3b39f4023704851aa7549e7e7854c940451a30a4be678086491f9604904",
+        "17001": "0c4fdd99e797d68beb566702a04b6a0a734baf20efe1e85eb98a2f10c5edebfa",
+        "17002": "1793584235e18e91aace2c1abd35a1e95fdb18f2165c31e06ff0134f3682994c"
+      }
+    },
+    "checkpoint_policy_rule": "post-group if end == checkpoint; otherwise saved pre-crossing-group parameters",
+    "audit_schema": {
+      "training_rollout_fields": [
+        "episode_seed",
+        "n_steps",
+        "max_position",
+        "max_position_before_final",
+        "pre_final_position",
+        "final_position",
+        "native_terminated",
+        "native_truncated",
+        "native_reward_sum",
+        "success"
+      ],
+      "evaluation_fields": [
+        "evaluation_episode_seeds",
+        "evaluation_action_seeds",
+        "evaluation_max_position_samples"
+      ],
+      "first_hit_rule": "success iff max_position_before_final < requested threshold <= final_position"
+    },
+    "teacher": {
+      "name": "frontier_u16",
+      "utility": "max(1-(1-p)^16-p,0)^4",
+      "decay": 0.7,
+      "uniform_floor": 0.1,
+      "gamma": 4.0,
+      "evidence": "requested-task outcomes only"
+    },
+    "capacity_contract": {
+      "shared_h64": {
+        "hidden_size": 64,
+        "slots": 1,
+        "total_parameters": 384,
+        "active_parameters_per_task": 384
+      },
+      "disjoint_total_h8x8": {
+        "hidden_size": 8,
+        "slots": 8,
+        "total_parameters": 384,
+        "active_parameters_per_task": 48
+      },
+      "disjoint_active_h64x8": {
+        "hidden_size": 64,
+        "slots": 8,
+        "total_parameters": 3072,
+        "active_parameters_per_task": 384
+      }
+    }
+  },
+  "conditions": [
+    {
+      "name": "frontier_shared_h64",
+      "sampling": "frontier_u16",
+      "architecture": "shared_h64"
+    },
+    {
+      "name": "uniform_shared_h64",
+      "sampling": "uniform",
+      "architecture": "shared_h64"
+    },
+    {
+      "name": "hardest_shared_h64",
+      "sampling": "hardest_only",
+      "architecture": "shared_h64"
+    },
+    {
+      "name": "uniform_disjoint_total_h8x8",
+      "sampling": "uniform",
+      "architecture": "disjoint_total_h8x8"
+    },
+    {
+      "name": "uniform_disjoint_active_h64x8",
+      "sampling": "uniform",
+      "architecture": "disjoint_active_h64x8"
+    }
+  ]
+}

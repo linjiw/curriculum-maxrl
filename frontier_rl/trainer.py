@@ -13,12 +13,12 @@ This module has no torch/gym dependency; numpy only.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable, Optional
 
 import numpy as np
 
-from frontier_rl.estimators import maxrl_weights
+from frontier_rl.estimators import maxrl_success_weights, maxrl_weights
 from frontier_rl.interfaces import GroupResult, Policy, TaskSpace
 from frontier_rl.teacher import FrontierTeacher
 
@@ -35,6 +35,7 @@ class TrainerConfig:
                                     # (flow heads / weighted SFT — COSMOS3 Q1);
                                     # E[Σw⁺] = u(p) exactly, so the teacher's
                                     # algebra is unchanged
+    hindsight_estimator: str = "maxrl"  # "maxrl" (centered) or "success_only"
     teacher_gamma: float = 1.0      # V6: ~4 on chained pools
     teacher_decay: float = 0.7
     teacher_floor: float = 0.1
@@ -45,8 +46,10 @@ class TrainerConfig:
 class StepStats:
     live_groups: int = 0
     dead_groups: int = 0
+    all_pass_groups: int = 0
     relabeled_groups: int = 0
     mean_reward: float = 0.0
+    env_steps: int = 0
 
 
 class FrontierTrainer:
@@ -69,11 +72,33 @@ class FrontierTrainer:
             r = np.asarray(group.rewards, dtype=float)
             self.teacher.observe(task_id, r)   # requested-task evidence only
             rewards_seen.append(r.mean())
+            # Sequence trajectories naturally expose episode length.  Mapping
+            # trajectories (for example the grid adapter's structured record)
+            # do not: counting their keys would be a bogus transition count.
+            if all(not isinstance(traj, dict) for traj in group.trajectories):
+                try:
+                    stats.env_steps += sum(len(traj)
+                                           for traj in group.trajectories)
+                except TypeError:
+                    pass
+            elif group.infos and all(
+                    isinstance(info, dict) and "n_steps" in info
+                    for info in group.infos):
+                stats.env_steps += sum(int(info["n_steps"])
+                                       for info in group.infos)
 
-            w = maxrl_weights(r, positive_part=self.cfg.positive_weights)
-            if np.any(w != 0):
+            k = float(r.sum())
+            if 0.0 < k < len(r):
+                w = maxrl_weights(r, positive_part=self.cfg.positive_weights)
                 stats.live_groups += 1
                 self.policy.update(task_id, group.trajectories, w)
+                continue
+
+            # The practical centered estimator is zero for both extremes, but
+            # only K=0 is a failed group eligible for hindsight.  Treating
+            # K=N as dead silently relabels mastered-task successes.
+            if k >= len(r):
+                stats.all_pass_groups += 1
                 continue
 
             stats.dead_groups += 1
@@ -88,8 +113,19 @@ class FrontierTrainer:
                 new_task, new_rewards = relabel
                 new_trajs = group.trajectories
             r2 = np.asarray(new_rewards, dtype=float)
-            w2 = maxrl_weights(r2, positive_part=self.cfg.positive_weights) \
-                * self.cfg.hindsight_scale
+            if self.cfg.hindsight_estimator == "maxrl":
+                w2 = maxrl_weights(r2, positive_part=self.cfg.positive_weights)
+            elif self.cfg.hindsight_estimator == "success_only":
+                # The raw success average is the estimator directly justified
+                # by the ML conditional-expectation identity.  Relabeling can
+                # still shift the trajectory law, so this is proof-aligned,
+                # not automatically unbiased for an arbitrary relabeler.
+                w2 = maxrl_success_weights(r2)
+            else:
+                raise ValueError(
+                    "hindsight_estimator must be 'maxrl' or 'success_only'"
+                )
+            w2 = w2 * self.cfg.hindsight_scale
             if np.any(w2 != 0):
                 stats.relabeled_groups += 1
                 self.policy.update(int(new_task), new_trajs, w2)

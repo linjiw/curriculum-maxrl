@@ -1,9 +1,9 @@
-"""P2: scaled MountainCar benchmark — can the full stack reach the flag?
+"""Legacy group-matched MountainCar benchmark (superseded).
 
-600 steps (5x the demo), 5 seeds, plus a gamma ablation. The question that
-matters: does any method get the HARDEST bin (the actual flag at x>=0.5)
-off zero? MountainCar's flag is unreachable by undirected exploration, so
-this is the external-env analog of the frontier-heavy categorical result.
+This script used disjoint per-bin parameters and matched group counts rather
+than environment transitions.  Keep it only for provenance; use
+``run_mountaincar_shared.py`` for the corrected factorial with a shared-policy
+condition, transition budgets, fixed evaluation seeds, and uncertainty.
 
 Run: python3 frontier_rl/examples/run_mountaincar_scaled.py
 """

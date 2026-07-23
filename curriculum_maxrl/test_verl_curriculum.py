@@ -1,8 +1,17 @@
-"""CPU unit tests for verl_curriculum.py (no torch/verl required)."""
+"""CPU compatibility tests for the canonical verl integration."""
+
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
 
-from verl_curriculum import FrontierTeacher, CurriculumSampler, allocate_rollout_budget
+from curriculum_maxrl.verl_curriculum import (
+    CurriculumSampler,
+    FrontierTeacher,
+    allocate_rollout_budget,
+)
 
 
 def test_teacher_updates_and_weights():
@@ -16,7 +25,7 @@ def test_teacher_updates_and_weights():
             idx.append(prompt)
             uids.append(f"u{prompt}")
             scores.append(1.0 if j < k else 0.0)
-    for _ in range(5):  # several batches to sharpen posteriors
+    for _ in range(5):  # several batches to sharpen discounted pseudo-counts
         teacher.observe_batch(np.array(idx), np.array(uids), np.array(scores))
 
     p = teacher.pass_rate_estimates()
@@ -71,6 +80,21 @@ def test_teacher_checkpoint_roundtrip():
     t2 = FrontierTeacher(n_prompts=5, n_rollouts=8, seed=0)
     t2.load_state_dict(t1.state_dict())
     assert np.allclose(t1.alpha, t2.alpha) and np.allclose(t1.beta, t2.beta)
+    assert np.allclose(t1.sampling_weights(), t2.sampling_weights())
+
+
+def test_sampler_resume_roundtrip():
+    ds = list(range(20))
+    t1 = FrontierTeacher(n_prompts=len(ds), n_rollouts=8, seed=4)
+    s1 = CurriculumSampler(ds, t1, seed=99)
+    list(iter(s1))  # advance one epoch
+    state = t1.state_dict()
+    expected_next = list(iter(s1))
+
+    t2 = FrontierTeacher(n_prompts=len(ds), n_rollouts=8, seed=123)
+    t2.load_state_dict(state)
+    s2 = CurriculumSampler(ds, t2, seed=7)
+    assert list(iter(s2)) == expected_next
 
 
 if __name__ == "__main__":
@@ -78,4 +102,5 @@ if __name__ == "__main__":
     test_sampler_tracks_teacher()
     test_budget_allocation()
     test_teacher_checkpoint_roundtrip()
+    test_sampler_resume_roundtrip()
     print("all tests passed")

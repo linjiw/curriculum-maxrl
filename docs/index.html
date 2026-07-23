@@ -192,21 +192,26 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     In RL with verifiable rewards, rollout compute is wasted twice: on prompts the model has
     mastered (nothing left to learn) and on prompts it can't touch (every rollout fails —
     group estimators emit <em>zero gradient</em>). We measured it: under uniform sampling,
-    <strong>65–75% of rollout groups produce no learning signal</strong>. The fix needs no new
-    machinery. We prove MaxRL's expected learning signal on a prompt is exactly
-    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong> — solvable in N tries but not in one — and
-    that formula <em>is</em> the curriculum: sample by it, and the first waste disappears. For
-    all-fail prompts no sampling rule can help, so we <em>recycle</em>: a failed rollout is a
-    verified success for the goal it actually reached. Together they beat an <strong>oracle</strong>
-    that knows every true pass rate — because the oracle can only allocate signal that exists,
-    while recycling creates signal that didn't.
+    <strong>historical logs showed 65–75% zero-weight groups</strong>, but the old counter mixed
+    all-fail and all-pass groups. The fix needs no new
+    machinery. We prove practical MaxRL's expected scalar coefficient mass is exactly
+    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong> — twice the probability of being solvable in N tries but not in one — and
+    that formula supplies a curriculum proxy: sample by it to favor groups likely to emit
+    practical MaxRL coefficient mass. An
+    already-realized all-fail group has no practical MaxRL update, so selection alone cannot
+    recover that group; where a verifier-valid goal rewrite exists, we <em>recycle</em> a failed
+    rollout as a success for an achieved goal. Together they beat a
+    <strong>true-pass-rate proportional-priority baseline</strong> on the toy —
+    because that baseline only reallocates original-task groups, while
+    recycling adds verifier-valid auxiliary targets.
   </p>
   <div class="card" style="margin-top:18px">
     <p class="eyebrow" style="margin-bottom:8px">The one-sentence pitch</p>
     <p style="margin:0"><strong>Read the curriculum off the estimator's own algebra, and salvage
     what the estimator throws away.</strong> No difficulty-band hyperparameters — the rollout
     budget N you already chose sets the band (peak difficulty ≈ ln&nbsp;N&nbsp;/&nbsp;N); the
-    estimator is never modified, so every unbiasedness result of the base paper carries over.</p>
+    practical drop-both estimator targets order N−1; raw and always-retained-CV
+    variants retain the paper's order-N result.</p>
   </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
@@ -218,6 +223,19 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 </header>
 
 <main>
+
+<div class="card">
+  <p><strong>July 2026 audit.</strong> Proofs and CPU/Gym code have been corrected.
+  GPU tables on this page are historical and provisional: old runs used the
+  legacy u<sub>N+1</sub> score, conflated K=0 with K=N in counters, used
+  path length rather than BFS depth for hindsight, trained all levels with the
+  deepest response budget, and scaled dense loss with relabel count. Its old
+  step-AUC also omitted the post-SFT anchor. See PROOFS.md and
+  VALIDATION.md for authoritative current results. The old three-seed
+  MountainCar and CartPole smoke numbers have also been retired; the
+  MountainCar section below reports the corrected ten-seed study, while
+  CartPole awaits the same corrected protocol.</p>
+</div>
 
 <!-- ============================================================ -->
 <h2 id="why">0 · Why this direction</h2>
@@ -232,7 +250,7 @@ one).</p>
 <p>The answer is sharply the second, for a structural reason: <strong>weights act on prompts
 only after they are sampled, and only when at least one rollout succeeds.</strong> However
 w(p) is shaped, it cannot rescue a prompt whose group came back all-fail — the group is
-dropped, and that drop is precisely what makes the estimator unbiased — and it cannot un-spend
+dropped in the practical implementation—and it cannot un-spend
 compute burned re-confirming mastered prompts. So the curriculum's real job is not "emphasize
 hard prompts" (the objective does that); it is to manage <em>exactly the two regimes the
 estimator is blind to</em>. That reframing — <strong>the estimator's blind spots define the
@@ -241,7 +259,8 @@ curriculum's job description</strong> — is the origin of everything on this pa
 <div class="grid2">
   <div class="card">
     <h3>Channel 1 → the teacher (waste avoidance)</h3>
-    <p>The estimator learns only from successes (Theorem 1 of the paper), so its expected
+    <p>Theorem 1 expresses the ML gradient through success-conditioned scores; the practical
+    centered update also scores failures in live mixed groups but discards K=0 groups. Its expected
     signal per prompt has a closed form — and that form, 2·(pass@N − pass@1), is a
     zone-of-proximal-development functional the estimator was computing implicitly all along.
     Sampling by it is the curriculum. Bounded by the oracle ceiling: allocation only
@@ -249,11 +268,11 @@ curriculum's job description</strong> — is the origin of everything on this pa
   </div>
   <div class="card">
     <h3>Channel 2 → the recycler (signal creation)</h3>
-    <p>If the estimator only learns from successes, <em>manufacture successes</em>. A failed
-    rollout is a verified success for the goal it actually reached; relabeled gradients measure
-    as exact as fresh unbiased ones. The only channel that breaks the oracle ceiling — and its
-    gain scales with how much a recycled skill can <em>compound</em> (+0.22 AUC on fixed task
-    sets, +0.01 on one-shot streams).</p>
+    <p>If an all-fail group supplies no update, <em>create a verified auxiliary success</em>. A failed
+    rollout is a verified success for the goal it actually reached; relabeling dead groups
+    yields verifier-valid auxiliary gradients. Equality to a fresh target
+    update needs the law/moment conditions in Proposition 6. This changes what
+    a sampled failure can yield in a way prompt selection alone cannot.</p>
   </div>
 </div>
 <p>There is a third, silent channel: <strong>objective safety</strong>. The identical teacher
@@ -300,9 +319,10 @@ interpolates from RL (T=1) to ML (T→∞).</p>
 <p><strong>Step 3 — a one-line estimator.</strong> Sample N rollouts, count K successes.
 REINFORCE averages score functions over all N samples; MaxRL averages over the K
 <em>successful</em> ones (and skips the prompt when K=0). Theorem 2 of the paper: this simple
-change is unbiased for the truncated objective with <strong>T&nbsp;=&nbsp;N</strong>. So extra rollouts
-don't just cut variance — they raise the fidelity of the objective itself. In the practical
-algorithm it is literally one line: normalize the advantage by the group's <em>mean reward</em>
+change is unbiased for the truncated objective with <strong>T&nbsp;=&nbsp;N</strong>.
+The always-retained control-variate form is also order N, while practical
+Algorithm 1 drops both terms at K=0 and targets <strong>T&nbsp;=&nbsp;N−1</strong>.
+In the practical algorithm it is one line: normalize the advantage by the group's <em>mean reward</em>
 (instead of the std as in GRPO, or nothing as in RLOO).</p>
 
 <!-- Chart 1: weight functions -->
@@ -339,7 +359,9 @@ teacher can close:</p>
   <h3>Dead prompts (K = 0)</h3>
   <p>If p ≪ 1/N, all N rollouts fail with probability (1−p)<sup>N</sup> ≈ 1. The group is dropped:
   zero gradient, wasted generation compute. No choice of w(p) can put signal where the group dies.
-  In our maze experiments, <strong>uniform sampling wasted ~65% of all rollout groups</strong> this way.</p>
+  Historical maze logs recorded about 65% zero-weight groups under uniform sampling, but that
+  counter mixed K=0 with K=N. It therefore cannot estimate all-fail waste; corrected runs log
+  those cases separately.</p>
 </div>
 <div class="gap-card">
   <h3>Mastered prompts (p → 1)</h3>
@@ -362,7 +384,7 @@ limit no finite-group trainer lives in.</p>
 <h2 id="idea">3 · Our proposal: read the curriculum off the estimator</h2>
 
 <p>Instead of importing a curriculum heuristic (difficulty bands, learning-progress bandits),
-we asked: <em>how much learning signal does the MaxRL estimator actually emit on a prompt, in
+we asked: <em>how much scalar coefficient mass does practical MaxRL emit on a prompt, in
 expectation?</em> Define the <strong>advantage mass</strong> of a group as the total magnitude of
 its advantage weights, Σ|w|. For MaxRL's variance-reduced estimator
 (w<sub>succ</sub>&nbsp;=&nbsp;1/K&nbsp;−&nbsp;1/N, w<sub>fail</sub>&nbsp;=&nbsp;−1/N, group dropped at K=0),
@@ -373,7 +395,7 @@ the algebra collapses to something exact and interpretable:</p>
   <span class="rm">=</span> 2·( (1−(1−p)<sup>N</sup>) − p )
 </div>
 
-<p><strong>The expected learning signal on a prompt is twice the probability that it is solvable
+<p><strong>The expected scalar coefficient mass on a prompt is twice the probability that it is solvable
 within N attempts but not within one.</strong> That is a compute-indexed formalization of the
 zone of proximal development, produced by the estimator itself. It vanishes at both ends —
 beyond-frontier prompts (group dies) and mastered prompts (no headroom) — and peaks at</p>
@@ -383,8 +405,8 @@ beyond-frontier prompts (group dies) and mastered prompts (no headroom) — and 
   <span class="frac"><span class="num rm">ln N</span><span class="den rm">N</span></span>
 </div>
 
-<p>so larger group sizes automatically shift the optimal curriculum band toward harder prompts —
-the teacher and the objective share the same compute knob.</p>
+<p>so larger group sizes shift the coefficient-mass peak toward harder prompts.
+This proxy is not the gradient norm or a proof of optimal learning progress.</p>
 
 <!-- Chart 2: advantage mass -->
 <figure>
@@ -403,9 +425,9 @@ the teacher and the objective share the same compute knob.</p>
   </div>
   <figcaption>
     x is log-scaled to expose the low-p regime. The green reference is SFL's
-    “learnability” p(1−p) — exactly our utility at N=2 (u₁ ≡ 0), and (we prove) exactly ½ the advantage
-    mass of the RLOO estimator. The learnability-curriculum literature and the estimator algebra
-    are the same object seen from two sides.
+    “learnability” p(1−p)—exactly our half-mass utility at N=2 (u<sub>1</sub>=0),
+    and exactly ½ the expected coefficient mass of RLOO. The scalar scores
+    coincide; the estimator and curriculum objective remain distinct.
   </figcaption>
 </figure>
 
@@ -440,20 +462,22 @@ the teacher and the objective share the same compute knob.</p>
 <h3>The teacher loop</h3>
 <div class="card">
 <ol class="loop">
-  <li><strong>Track.</strong> Keep a decayed Beta(α, β) posterior over each prompt's pass rate,
-  updated from every group's observed successes (decay 0.7 — validated below: the posterior's job
+  <li><strong>Track.</strong> Keep discounted Beta(α, β) pseudo-counts for each prompt's pass rate,
+  updated from every group's observed successes (decay 0.7—the estimate's job
   is <em>tracking</em> the moving student, not remembering).</li>
-  <li><strong>Score.</strong> Thompson-sample p̃ from each posterior; compute
-  u(p̃) = (1−(1−p̃)<sup>N</sup>) − p̃. Sampling from the posterior gives optimism on
+  <li><strong>Score.</strong> Draw p̃ from each pseudo-count distribution; compute
+  u(p̃) = (1−(1−p̃)<sup>N</sup>) − p̃. Randomized draws encourage exploration of
   rarely-visited prompts for free.</li>
   <li><strong>Sample.</strong> Draw the next batch of prompts ∝ u<sup>γ</sup> (γ≈4 when tasks share
   skills, 1 on flat pools — see the compounding result below), mixed with a uniform floor
-  (default 10%) — the floor is the anti-forgetting/replay channel and keeps posteriors fresh.</li>
+  (default 10%)—the floor is the anti-forgetting/replay channel and guarantees revisits.</li>
   <li><strong>Allocate (optional).</strong> Split the rollout budget by greedy water-filling on the
   marginal mass p̃(1−p̃)<sup>N</sup> — the probability the next rollout is the group's
-  <em>first success</em>. Total mass is concave in each N<sub>i</sub>, so greedy is optimal.</li>
-  <li><strong>Train.</strong> MaxRL advantages, unchanged — the estimator was never modified,
-  so all of the paper's unbiasedness results carry over untouched.</li>
+  <em>first success</em>. For fixed supplied pass rates, feasible integer bounds,
+  and a one-step budget, separable concavity makes greedy exact for this proxy.</li>
+  <li><strong>Train.</strong> Practical MaxRL advantages, unchanged within a
+  selected task. Curriculum sampling changes the task distribution, and the
+  drop-both estimator has effective order N−1.</li>
 </ol>
 </div>
 
@@ -480,17 +504,18 @@ magnitude telescopes:</p>
   <span class="rm">=</span> 2·((1−(1−p)<sup>N</sup>) − p)
   <span class="rm">=</span> 2·(<span class="rm">pass@</span>N − <span class="rm">pass@</span>1) <span class="rm">∎</span>
 </div>
-<p>Every claim on this page traces to identities of this kind — seven propositions with proofs in
+<p>The mathematical claims on this page trace to seven propositions with proofs in
 <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/PROOFS.md">PROOFS.md</a>
-(peak location, water-filling optimality, RLOO ≡ learnability, the ~N× frontier-signal ratio,
-the hindsight conditional-law characterization), each Monte-Carlo verified in
+(peak location, fixed-p water-filling, RLOO mass ∝ learnability, the frontier mass ratio,
+the hindsight conditional-law characterization). Core estimator and allocation identities have
+exact-enumeration/unit tests; experiment-specific checks live in
 <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/run_validation.py">run_validation.py</a>.</p>
 </div>
 
 <!-- ============================================================ -->
 <h2 id="results">4 · What we verified (and what failed)</h2>
 
-<h3>Exact formulas, Monte-Carlo checked</h3>
+<h3>Exact formulas, checked by enumeration and tests</h3>
 <table>
   <thead><tr><th>Estimator</th><th>E[Σ|w|] (exact)</th><th>Reading</th><th class="num">Status</th></tr></thead>
   <tbody>
@@ -506,25 +531,25 @@ the hindsight conditional-law characterization), each Monte-Carlo verified in
   <tbody>
     <tr><td>MaxRL is an implicit curriculum</td><td>a teacher lifts GRPO by +0.23 final mean-pass but MaxRL by only +0.01 on moderate distributions</td></tr>
     <tr><td>Teacher × MaxRL are complementary where it counts</td><td>beyond-frontier-heavy regime: combination 0.961 vs 0.871 (MaxRL alone) vs 0.847 (teacher+GRPO)</td></tr>
-    <tr><td>Derived utility ≥ hand-tuned ZPD band</td><td>AUC 0.704–0.712 vs 0.688, with zero band hyperparameters</td></tr>
+    <tr><td>Historical legacy utility ≈ hand-tuned ZPD band</td><td>AUC 0.704–0.712 vs 0.688; the corrected exact-u<sub>N</sub> run is 0.700 vs 0.650 uniform</td></tr>
     <tr><td>Fastest to the deepest level</td><td>frontier+maxrl: 206 steps vs 248 (uniform+maxrl) vs 262 (zpd+grpo)</td></tr>
   </tbody>
 </table>
 
-<h3>GPU maze testbed — 1.26M-param transformer, 17×17 mazes, 13 goal-distance levels</h3>
+<h3>Historical GPU maze testbed — provisional after audit</h3>
 <table>
   <thead><tr><th>Finding</th><th>Evidence</th></tr></thead>
   <tbody>
-    <tr><td>Uniform sampling wastes most of MaxRL's compute</td><td>5.2 of 8 groups/step dead (K=0) → 3.9 with the frontier teacher, 2.6 with learnability</td></tr>
+    <tr><td>Old logs showed fewer zero-weight snapshots</td><td>5.2 of 8 under uniform → 3.9 frontier, 2.6 learnability; the counter mixed K=0 and K=N</td></tr>
     <tr><td>Teachers are ~2× faster per step in wall-clock</td><td>frontier-band rollouts terminate early; fixed-step comparisons silently handicap teachers → we use matched wall-clock budgets</td></tr>
-    <tr><td>Teacher posterior tracks truth</td><td>p̂ within ±0.03 of held-out eval pass rates; 60% of sampling mass on the true frontier band</td></tr>
+    <tr><td>Historical teacher estimate was qualitatively ordered</td><td>p̂ roughly preserved the frontier ordering and placed ~60% of mass on the frontier band; the logs do not support a uniform calibration-error bound</td></tr>
     <tr><td>Curriculum axes must respect generalization reach</td><td>maze <em>size</em> as difficulty has a hard cliff (0/1024 on 9×9 after 7×7 SFT); goal <em>distance</em> in a fixed maze transfers smoothly</td></tr>
   </tbody>
 </table>
 
-<h3>Matched wall-clock sweep — 8 configs × 2400 s (complete, single seed)</h3>
+<h3>Historical matched wall-clock sweep — 8 configs × 2400 s</h3>
 <table>
-  <thead><tr><th>Config</th><th class="num">steps</th><th class="num">dead/8</th><th class="num">AUC</th><th class="num">pass@8</th></tr></thead>
+  <thead><tr><th>Config</th><th class="num">steps</th><th class="num">old zero-weight snapshot/8</th><th class="num">legacy unanchored step-AUC</th><th class="num">pass@8</th></tr></thead>
   <tbody>
     <tr><td>uniform + maxrl</td><td class="num">583</td><td class="num">5.8</td><td class="num">0.214</td><td class="num">—</td></tr>
     <tr><td>uniform + grpo</td><td class="num">527</td><td class="num">6.0</td><td class="num">0.216</td><td class="num">0.312</td></tr>
@@ -536,28 +561,28 @@ the hindsight conditional-law characterization), each Monte-Carlo verified in
     <tr><td><strong>frontier + maxrl + hindsight</strong></td><td class="num">694</td><td class="num">3.8</td><td class="num"><strong>0.234</strong></td><td class="num">0.356</td></tr>
   </tbody>
 </table>
-<p>Every teacher/hindsight variant beats both uniform baselines on learning speed at equal
-wall-clock. <strong>The most instructive result is a refuted hypothesis:</strong> we predicted a
+<p>In these provisional logs every teacher/hindsight variant has higher legacy step-AUC than both
+uniform baselines at the wall-clock endpoint. <strong>The most instructive hypothesis for a
+corrected rerun</strong> is that a
 frontier teacher would rescue GRPO from pass@k collapse by retiring the mastered prompts its
 inverted w(p) overweights. The opposite happened — frontier+grpo collapsed <em>harder</em>
 (pass@8 0.332→0.269) than uniform+grpo (0.351→0.312), losing easy-level retention, while MaxRL
-under the same teacher kept pass@8 flat-to-up. GRPO's inversion was quietly <em>maintaining</em>
-easy prompts; a curriculum removes that maintenance. So the collapse is an objective-level
-pathology that data-level curricula amplify rather than fix — a frontier curriculum
-<em>requires</em> likelihood-style weighting to be safe, which strengthens the paper's central
-claim from the outside.</p>
+under the same teacher kept pass@8 flat-to-up. One possible interpretation is that easy-prompt
+updates helped maintain coverage, but the audited runs do not isolate that mechanism. They
+motivate, but do not establish, an estimator-by-curriculum interaction or safety claim.</p>
 
-<p><strong>Multi-seed confirmation (seeds 0–2, paired via shared per-seed warmstarts):</strong>
-both teacher variants beat uniform+maxrl on AUC in <em>every</em> seed (6/6 paired deltas
-positive); frontier_alp+maxrl wins final mean-pass with the tightest spread
-(0.246&nbsp;±&nbsp;0.002 vs 0.230&nbsp;±&nbsp;0.015). The coverage divergence is systematic, not
-seed noise: GRPO's pass@8 <em>decays</em> in every seed (mean 0.308→0.271) while teacher+MaxRL
-<em>grows</em> it (0.316→0.348) — the paper's coverage-collapse dynamic reproduced at 1.26M
-scale, with the curriculum widening the gap in both directions.</p>
+<p><strong>Provisional multi-seed check (seeds 0–2, shared per-seed SFT weights but not common post-SFT RNG streams):</strong>
+both teacher variants have positive legacy step-AUC deltas against uniform+maxrl in each
+of three seeds (six correlated configuration deltas); frontier_alp+maxrl has final mean-pass
+0.246&nbsp;±&nbsp;0.002 versus 0.230&nbsp;±&nbsp;0.015. GRPO's pass@8 declines in those runs
+(mean 0.308→0.271), while teacher+MaxRL grows it (0.316→0.348). Three independent seeds,
+no reported inferential test, and the audit confounds are insufficient to distinguish a stable
+mechanism from seed noise; the result is hypothesis-generating.</p>
 
 <h3>Hindsight relabeling — the biggest single gain</h3>
-<p>MaxRL's Theorem 1 makes the estimator <em>success-conditioned</em>: it learns only from
-successes. The HER-style complement: a failed trajectory is a success <em>for the goal it
+<p>MaxRL's Theorem 1 expresses the ML gradient through a success-conditioned score. The
+practical centered estimator uses failures in live mixed groups, but discards all-fail groups.
+The HER-style complement: a failed trajectory is a success <em>for the goal it
 actually reached</em>. Relabeling dead groups to their deepest achieved sub-goal converts
 wasted compute into live MaxRL groups:</p>
 <table>
@@ -570,53 +595,54 @@ wasted compute into live MaxRL groups:</p>
   </tbody>
 </table>
 <p>Division of labor: the <strong>teacher avoids</strong> spending compute beyond the frontier;
-<strong>hindsight salvages</strong> whatever still fails there. In the hard 16-level regime hindsight
-alone (0.970) even beats the teacher alone (0.961), and the combination stays best (0.978).
-Two later validation results sharpened this: <strong>the hindsight gradient is exact
-on-structure</strong> — per-group cosine to the true success-conditioned ML gradient equals that
-of unbiased fresh groups (0.956 vs 0.958), and the mean relabeled gradient converges to cosine
-1.000 (Prop. 6 + V1); and in a <strong>frontier-heavy regime</strong> (max pool pass rate 10⁻⁵)
+<strong>hindsight salvages</strong> whatever still fails there. An archived
+16-level sweep (driver/output not retained) reported that hindsight partially substituted for the teacher;
+those particular numbers are not current evidence.
+Two later validation results sharpened this: <strong>centered hindsight is
+direction-aligned but scale-biased</strong>, while success-only has unit scale
+under the special chain law (Prop. 6 + V1); and in a
+<strong>frontier-heavy regime</strong> (max pool pass rate 10⁻⁵)
 uniform, DAPO dynamic sampling, and the plain teacher all flatline at exactly 0 while
 teacher+hindsight reaches 0.98 — reallocating compute among unlearnable tasks cannot help;
 hindsight <em>creates</em> the missing signal by inventing the curriculum below the pool,
 igniting learnability within ~400 groups, then going silent as natural successes take over.</p>
 
-<h3>Beating the oracle — and the concentration surprise</h3>
+<h3>Beating a true-pass-rate priority baseline—and the concentration surprise</h3>
 <p>Two late results sharpened the method. First, sampling ∝ u(p)<sup>γ</sup> with γ≈4 beats
 proportional sampling (AUC 0.782 vs 0.728): the mass functional is the right <em>ordering</em>,
 but learning <em>compounds</em> on structured task pools — steps on the highest-mass task unlock
-the next — so the optimal temperature is sharper than proportional. (A two-line ODE model
-isolates the cause: with shared skills the γ effect reproduces quantitatively; on a flat pool it
-vanishes.) Second, the headline:</p>
+the next—so a sharper tested temperature can outperform proportional sampling. An archived
+two-line ODE pilot was consistent with a shared-skill explanation, but its driver was not retained;
+the causal explanation remains a hypothesis. Second, the headline:</p>
 
 <figure>
   <div class="chart-card" id="chart3card">
-    <p class="chart-title">Learning speed (AUC) by teacher — the oracle line is the ceiling for pure samplers</p>
-    <p class="chart-sub">Skill-chain testbed, 5 seeds. Hover a bar for the value and what the config means.</p>
-    <svg id="chart3" viewBox="0 0 800 340" role="img" aria-label="Horizontal bar chart of AUC by teacher configuration; the full stack with hindsight exceeds the oracle sampler's ceiling"></svg>
+    <p class="chart-title">Skill-chain checkpoint mean by teacher</p>
+    <p class="chart-sub">Five seeds in one retained shared-trainer runner. This historical “AUC” convention is the mean of equally spaced post-update checkpoints.</p>
+    <svg id="chart3" viewBox="0 0 800 340" role="img" aria-label="Horizontal bar chart of checkpoint mean by teacher configuration and a true-pass-rate proportional-priority baseline"></svg>
     <div class="tooltip" id="tt3"></div>
     <details><summary>Table view</summary><div id="table3"></div></details>
   </div>
   <figcaption>
-    <strong>The full stack beats the oracle.</strong> The oracle knows every true pass rate and
-    allocates groups perfectly — but it can only collect what natural successes emit. Hindsight
-    changes the game itself, manufacturing verified signal from failures. The method's advantage
-    is not better allocation of the standard signal; it is access to signal the best possible
-    allocator cannot reach.
+    The retained shared-trainer runner reports the full stack above a
+    true-pass-rate proportional-priority baseline. The baseline is strong but
+    is not an optimal sampler bound.
   </figcaption>
 </figure>
 
-<p>On the GPU maze, dense hindsight (relabel every deep-enough failed rollout, ~16
-relabels/step) is likewise the new champion (final 0.258, best 0.269 at matched wall-clock),
-while routing relabeled successes into the teacher's posterior inflated it (p̂ 0.81 vs true 0.47)
-and was dropped — the posterior should see only requested-task evidence.</p>
+<p>In the audited historical GPU maze logs, dense hindsight had the highest
+reported point estimate in one comparison (final 0.258, best 0.269), while
+teacher-feedback p̂ inflation was observed. Unequal budgets, RNG coupling,
+relabel-count scaling, and other audit confounds make both the ranking and the
+feedback policy provisional pending a corrected rerun.</p>
 
-<h3>Hindsight gradients are exact, not approximate</h3>
+<h3>Hindsight gradients: direction, scale, and the law condition</h3>
 <p>The load-bearing question for hindsight: is a relabeled gradient a real ML gradient or
 plausible noise? On the skill chain we can compute the <em>true</em> success-conditioned ML
-gradient exactly and measure alignment. Result — relabeled (hindsight) groups are exactly as
-well-aligned as unbiased fresh groups sampled directly on the relabeled task, and the mean
-hindsight gradient converges to the truth:</p>
+gradient exactly and measure alignment. Centered relabeled groups are strongly
+direction-aligned, but their mean scale differs by roughly ±6%; cosine alone
+hid that bias. Success-only relabeling has unit scale under the special chain
+law, which need not transfer to other environments:</p>
 <table>
   <thead><tr><th>Relabel depth j</th><th class="num">groups</th><th class="num">hindsight cosine</th><th class="num">fresh-group cosine</th><th class="num">cosine of mean</th></tr></thead>
   <tbody>
@@ -625,27 +651,27 @@ hindsight gradient converges to the truth:</p>
     <tr><td>10</td><td class="num">276</td><td class="num">0.956 ± 0.012</td><td class="num">0.958 ± 0.007</td><td class="num"><strong>1.000</strong></td></tr>
   </tbody>
 </table>
-<p>The catch (Proposition 6, learned the hard way on a goal-conditioned gridworld): if
+<p>The catch (Proposition 6): if
 trajectories embed the goal, the relabel must <em>rewrite the conditioning</em> to the achieved
-goal — skipping the rewrite makes hindsight <em>hurt</em> (AUC 0.600 vs 0.658 teacher-only);
-with it, hindsight wins (0.703). This is HER's observation-rewrite, surfaced as a measured
-interface contract in <code>frontier_rl</code>.</p>
+goal. The corrected ten-seed gridworld study exercises the valid-rewrite path (teacher AUC
+0.652; teacher+hindsight 0.702) but has no corrected no-rewrite arm. Rewriting is an estimator
+contract; these results validate the compliant implementation, not the archived ablation.</p>
 
 <h3>Honest negatives &amp; open items</h3>
 <table>
   <thead><tr><th>Approach</th><th>Outcome</th><th class="num">Status</th></tr></thead>
   <tbody>
     <tr><td>Adaptive truncation T<sub>i</sub> ≈ 1/p̂<sub>i</sub> (decoupled from N via the repo's subset estimator)</td>
-        <td>slightly <em>under</em>performs fixed T=N (AUC 0.698 vs 0.704) — at N=16–32 variance isn't binding, so lowering T only weakens hard-prompt upweighting</td>
-        <td class="num"><span class="status no">✗ negative</span></td></tr>
+        <td>historical dropped-CV implementation has weight w<sub>T</sub>(p)−(1−p)<sup>N−1</sup>; it did not test the claimed order-T objective</td>
+        <td class="num"><span class="status run">⟳ inconclusive</span></td></tr>
     <tr><td>Learning-progress (|Δp̂|) teachers</td>
         <td>underperform pass-rate-band teachers here — the signal is noisy at N=16 and lags the moving frontier</td>
         <td class="num"><span class="status no">✗ weak</span></td></tr>
     <tr><td>H6: teacher patches GRPO's inversion (less pass@k collapse for frontier+grpo)</td>
-        <td>refuted, direction reversed — the teacher <em>amplifies</em> GRPO's collapse (pass@8 0.332→0.269 vs uniform 0.351→0.312); curricula need likelihood-style weighting</td>
-        <td class="num"><span class="status no">✗ refuted</span></td></tr>
-    <tr><td>Hindsight→teacher posterior feedback</td>
-        <td>AUC tie with dense hindsight but worse final; posterior inflates (p̂ 0.81 vs eval 0.47) — dropped; posterior sees requested-task evidence only</td>
+        <td>historical direction reversed (pass@8 0.332→0.269 vs uniform 0.351→0.312), but the audited three-seed GPU stack cannot establish a general incompatibility</td>
+        <td class="num"><span class="status run">⚠ provisional</span></td></tr>
+    <tr><td>Hindsight→teacher pseudo-count feedback</td>
+        <td>CPU V4 is slightly negative; the historical GPU run also shows p̂ inflation (0.81 vs eval 0.47). Keep teacher evidence requested-task-only pending a corrected rerun.</td>
         <td class="num"><span class="status no">✗ dropped</span></td></tr>
     <tr><td>SmolLM2-360M + GSM8K, curriculum × {maxrl, grpo}</td>
         <td>launch script ready (<code>verl_integration/</code>); needs a multi-GPU node</td>
@@ -660,16 +686,15 @@ interface contract in <code>frontier_rl</code>.</p>
 (<a href="https://github.com/linjiw/curriculum-maxrl/tree/main/frontier_rl"><code>frontier_rl/</code></a>,
 numpy-only core). You implement four methods — task bins, group rollout, hindsight relabel, and
 one weighted policy update — and the teacher, estimator, and hindsight logic come for free. The
-same code reproduces the validated numbers on the skill chain (regression anchor) and transfers
-to real Gymnasium environments:</p>
+same code reproduces the validated numbers on the skill chain (regression anchor), the corrected
+gridworld, and one corrected external Gymnasium benchmark:</p>
 
 <table>
-  <thead><tr><th>Environment (AUC, matched budgets)</th><th class="num">uniform</th><th class="num">teacher</th><th class="num">teacher + hindsight</th></tr></thead>
+  <thead><tr><th>Environment (matched budgets; Gym/Grid use trapezoidal AUC)</th><th class="num">uniform</th><th class="num">teacher</th><th class="num">teacher + hindsight</th></tr></thead>
   <tbody>
-    <tr><td>Skill chain (regression anchor, 5 seeds)</td><td class="num">0.650</td><td class="num">0.728</td><td class="num"><strong>0.890</strong></td></tr>
-    <tr><td>Gridworld reach (goal-conditioned, 3 seeds)</td><td class="num">0.592</td><td class="num">0.658</td><td class="num"><strong>0.703</strong></td></tr>
-    <tr><td>Gymnasium <strong>MountainCar</strong> — positional curriculum (3 seeds)</td><td class="num">0.216</td><td class="num">0.228</td><td class="num"><strong>0.246</strong></td></tr>
-    <tr><td>Gymnasium <strong>CartPole</strong> — survival curriculum (3 seeds)</td><td class="num">0.190</td><td class="num">0.225</td><td class="num"><strong>0.246</strong></td></tr>
+    <tr><td>Skill chain (equally spaced checkpoint mean, 5 seeds; third arm is γ=4 full stack)</td><td class="num">0.650</td><td class="num">0.728</td><td class="num"><strong>0.890</strong></td></tr>
+    <tr><td>Gridworld reach (corrected, 10 seeds)</td><td class="num">0.583</td><td class="num">0.652</td><td class="num"><strong>0.702</strong></td></tr>
+    <tr><td>Gymnasium <strong>MountainCar</strong> (corrected, 10 paired seeds)</td><td class="num">0.389 ± 0.071</td><td class="num">0.530 ± 0.059<br><small>exact adv-mass γ=4</small></td><td class="num"><strong>0.720 ± 0.029</strong><br><small>centered</small></td></tr>
   </tbody>
 </table>
 
@@ -677,8 +702,9 @@ to real Gymnasium environments:</p>
 task — the real-world twin of the frontier-heavy regime where pure samplers score exactly zero.
 Its curriculum ("reach x ≥ x*, walking x* from the valley to the flag") is the template for
 robotics reach tasks: swap position bins for end-effector distance bands and the adapter carries
-over. The ordering <em>uniform &lt; teacher &lt; teacher+hindsight</em> holds on every
-environment tested.</p>
+over. These are MountainCar-v0's official dynamics with custom nested binary target thresholds;
+the pass-rate AUC is <strong>not</strong> standard Gymnasium episode return. The retired CartPole
+run was only an uncorrected three-seed smoke test and is not evidence in this table.</p>
 
 <h3>Real training curves — performance rising while the curriculum walks</h3>
 <figure>
@@ -712,17 +738,36 @@ environment tested.</p>
 </figure>
 
 <div class="card">
-  <h3>Case study: MountainCar's flag, solved — with clean controls</h3>
-  <p>With a <em>shared</em> goal-conditioned policy (150 steps, 3 seeds, weak tabular learner):
-  training on the flag alone — the standard sparse-reward setup — scores <strong>exactly
-  0.000</strong> (the classic exploration wall); a uniform mixture over easier targets reaches
-  flag pass 0.889; the teacher 0.944; the <strong>full stack 1.000 in every seed</strong> at
-  equal compute. The instructive failure mode: the same curriculum with <em>per-bin</em> policy
-  parameters never reaches the flag at any budget — <strong>curricula operate through shared
-  parameters</strong>; difficulty bins must share the policy (condition on the goal, don't
-  partition by it) or competence has no channel to transfer through. The gym-scale version of
-  our maze-size generalization cliff, and the first thing to check when a curriculum "doesn't
-  work."</p>
+  <h3>Case study: MountainCar — corrected paired study</h3>
+  <p>Ten paired seeds each receive at least 500,000 environment transitions (the final rollout
+  group may overshoot), with 64 fixed common-random-number evaluation episodes per target and a
+  task-agnostic shared tile policy. Values below are mean ± sample SD:</p>
+  <table>
+    <thead><tr><th>Configuration</th><th class="num">AUC</th><th class="num">final mean pass</th><th class="num">final flag pass</th></tr></thead>
+    <tbody>
+      <tr><td>flag only, shared</td><td class="num">0.024 ± 0.006</td><td class="num">0.024 ± 0.006</td><td class="num">0.000 ± 0.000</td></tr>
+      <tr><td>uniform, shared</td><td class="num">0.389 ± 0.071</td><td class="num">0.684 ± 0.094</td><td class="num">0.058 ± 0.079</td></tr>
+      <tr><td>exact adv-mass teacher, γ=1, shared</td><td class="num">0.414 ± 0.081</td><td class="num">0.758 ± 0.127</td><td class="num">0.208 ± 0.266</td></tr>
+      <tr><td>exact adv-mass teacher, γ=4, shared</td><td class="num">0.530 ± 0.059</td><td class="num">0.928 ± 0.056</td><td class="num">0.664 ± 0.232</td></tr>
+      <tr><td>γ=4 + centered hindsight, shared</td><td class="num"><strong>0.720 ± 0.029</strong></td><td class="num">0.969 ± 0.013</td><td class="num">0.842 ± 0.062</td></tr>
+      <tr><td>γ=4 + success-only hindsight, shared</td><td class="num"><strong>0.727 ± 0.023</strong></td><td class="num">0.970 ± 0.014</td><td class="num">0.848 ± 0.058</td></tr>
+      <tr><td>γ=4 + centered hindsight, per-bin control</td><td class="num">0.229 ± 0.031</td><td class="num">0.284 ± 0.028</td><td class="num">0.000 ± 0.000</td></tr>
+    </tbody>
+  </table>
+  <p>Paired AUC effects (95% bootstrap CI) supported by family-corrected exact
+  sign-flip tests are exact adv-mass γ=4 over uniform: +0.141 [0.076, 0.202]; γ=4 over γ=1:
+  +0.116 [0.060, 0.172]; centered hindsight over none: +0.191 [0.155, 0.231];
+  success-only hindsight over none: +0.197 [0.160, 0.238]; and shared centered
+  hindsight over the per-bin control: +0.492 [0.464, 0.522]. Holm-adjusted
+  p-values are 0.047 for the two γ comparisons and 0.018 for the other three.</p>
+  <p>The same family does <strong>not</strong> support γ=1 over uniform (+0.025
+  [−0.035, 0.091]), exact adv-mass γ=1 over the legacy score (−0.000 [−0.023, 0.026]),
+  exact adv-mass γ=1 over learnability priority (+0.003 [−0.054, 0.063]), or centered
+  over success-only hindsight (−0.006 [−0.021, +0.008]; exact sign-flip
+  p=0.436, Holm-adjusted p=1.000). This makes the transfer lesson precise:
+  curricula need shared parameters for competence to transfer, but this
+  per-bin control also changes capacity and data sharing, so it isolates a
+  mechanism rather than estimating a pure architecture effect.</p>
 </div>
 
 <pre><code># the whole integration surface
@@ -739,27 +784,25 @@ FrontierTrainer(MyEnv(), MyPolicy(), TrainerConfig(hindsight=True)).train(500)</
 <!-- ============================================================ -->
 <h2 id="benefits">6 · What you actually get</h2>
 
-<p><strong>The measured benefits:</strong></p>
+<p><strong>Corrected measurements and provisional historical signals (provenance in each row):</strong></p>
 <table>
   <thead><tr><th>Benefit</th><th>Number</th></tr></thead>
   <tbody>
-    <tr><td>More optimization per GPU-hour (dead groups avoided + frontier rollouts terminate early)</td>
+    <tr><td>Historical GPU, provisional: more steps per wall-clock endpoint</td>
         <td>22–35% more steps at matched wall-clock, gains landing on frontier tasks</td></tr>
-    <tr><td>Coverage grows instead of collapsing</td>
+    <tr><td>Historical GPU, provisional: divergent coverage trend</td>
         <td>pass@8 ↑ 0.316→0.348 every seed (GRPO's ↓ 0.308→0.271 every seed)</td></tr>
-    <tr><td>Inference-time sampling efficiency vs GRPO (samples to target coverage, perfect verifier)</td>
-        <td>up to <strong>11×</strong> fewer samples on the hardest evaluated level — the speedup grows with difficulty (1.2× / 2.7× / 11× at levels 2/3/5)</td></tr>
-    <tr><td>Frontier-heavy regimes: impossible → solved</td>
+    <tr><td>Archived single-checkpoint GPU inference table</td>
+        <td>post-hoc per-level targets ranged from a 0.5× reversal to an 11× advantage; checkpoints were not retained, so no monotone difficulty claim is supported</td></tr>
+    <tr><td>Corrected CPU skill chain: frontier-heavy regime</td>
         <td>0.00 → 0.98 at equal compute (uniform, DAPO, and plain teacher all score exactly 0)</td></tr>
-    <tr><td>Beats perfect allocation when recycling is available</td>
-        <td>AUC 0.890 vs oracle 0.851</td></tr>
+    <tr><td>Corrected CPU skill chain: full stack vs true-p proportional priority</td>
+        <td>checkpoint mean 0.890 vs 0.851 in the retained shared-trainer runner (not an optimal-sampler bound)</td></tr>
   </tbody>
 </table>
-<p class="footnote">The inference-efficiency pattern reproduces the MaxRL paper's headline
-(their Fig. 5: 2.3–19.2×) at 1.26M scale with our teacher on top; GRPO's coverage curves
-visibly <em>flatten</em> at large k (saturating at 0.88/0.56 where ours reach 1.00/0.62) —
-collapse expressed in inference currency: extra samples stop helping. Single-checkpoint
-numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
+<p class="footnote">The archived inference table used different post-hoc targets by level and
+cannot be regenerated without the unretained checkpoints. Corrected teacher/hindsight checkpoints,
+fixed evaluation RNG, and one preregistered target are required before reporting an efficiency effect.</p>
 
 <p><strong>The hidden benefits — quieter, arguably worth more:</strong></p>
 <div class="grid2">
@@ -772,22 +815,23 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   </div>
   <div class="card">
     <h3>A safety diagnosis, not just a method</h3>
-    <p>The same algebra that builds the teacher predicts when a curriculum will
-    <em>backfire</em>: GRPO's inverted weight function relies on easy prompts for maintenance,
-    so a frontier curriculum amplifies its collapse. Negative knowledge that saves other
-    people's compute — verified per-seed, not anecdotal.</p>
+    <p>The historical maze evidence raises a testable warning: if GRPO relies on easy prompts
+    for maintenance, a frontier curriculum may amplify coverage loss. The current three-seed
+    audited result is hypothesis-generating; a corrected factorial is required before treating
+    this as a safety rule.</p>
   </div>
   <div class="card">
     <h3>Conceptual compression</h3>
     <p>Learnability curricula (p(1−p)), DAPO-style dynamic filtering, and HER stop being three
-    separate tricks: they are the N=1 slice, the sampling shadow, and the success-manufacturing
-    complement of <em>one identity</em>. Fewer moving parts to tune, one theory to reason with.</p>
+    separate tricks: their coefficient-mass scores meet at N=2, filtering
+    changes sampling, and HER adds auxiliary success targets. Fewer moving
+    parts to reason about, without claiming the methods are identical.</p>
   </div>
   <div class="card">
     <h3>Free telemetry</h3>
-    <p>The teacher's posterior is a live difficulty map of your task pool — mastered / frontier /
-    dead fractions per training step, at no extra cost. In our runs it tracked held-out truth
-    within ±0.03 and diagnosed a failure mode (posterior inflation) before it hurt.</p>
+    <p>The teacher's pseudo-count estimate is a live difficulty map of the task
+    pool—mastered/frontier/dead fractions per step. Historical GPU diagnostics
+    tracked held-out pass rates, but corrected validation is still required.</p>
   </div>
 </div>
 
@@ -797,17 +841,17 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
 <div class="grid2">
   <div class="card">
     <h3>Compute changes the objective, not just the variance</h3>
-    <p>For REINFORCE, more rollouts = lower variance on the same objective. For MaxRL, more
-    rollouts = a strictly better objective (T = N). Any curriculum that reallocates rollouts is
-    therefore also reallocating <em>objective fidelity</em> — which is why rollout allocation
-    deserves to be a first-class curriculum axis.</p>
+    <p>For REINFORCE, more rollouts lower variance on the same objective. For
+    raw/always-CV MaxRL, N sets order N; for practical drop-both MaxRL it sets
+    order N−1. Rollout allocation therefore changes both signal probability
+    and effective objective order.</p>
   </div>
   <div class="card">
     <h3>The zero-gradient zone is structural, not a bug</h3>
-    <p>Dropping K=0 groups is what makes the estimator unbiased for the truncated objective.
-    So MaxRL <em>cannot</em> be patched at the loss level to learn from all-fail prompts — the fix
-    has to live in the sampling distribution. That is the cleanest argument we know for pairing
-    it with a teacher.</p>
+    <p>The raw success-average estimator is order-N unbiased. Dropping the
+    centered control variate at K=0 creates practical order N−1 and a zero
+    update on all-fail groups. A teacher or semantically valid auxiliary target
+    addresses that practical dead zone.</p>
   </div>
   <div class="card">
     <h3>Population curves mislead at finite N</h3>
@@ -818,10 +862,10 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   </div>
   <div class="card">
     <h3>Existing curricula are special cases</h3>
-    <p>SFL's learnability p(1−p) is our utility at N=2 and RLOO's exact advantage mass; SEC's
-    empirical-|advantage| bandit reward has our formulas as its exact expectation. The
-    advantage-mass teacher is “oracle SEC for MaxRL” — same target, computable from a posterior
-    before a prompt is ever visited.</p>
+    <p>SFL's learnability p(1−p) equals our half-mass utility at N=2 and half
+    RLOO's expected coefficient mass. SEC's empirical-|advantage| reward has
+    these formulas as expectations. Our pseudo-count teacher is a model-based
+    estimate of expected SEC-style mass, not an oracle.</p>
   </div>
 </div>
 
@@ -1079,15 +1123,15 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   /* ---------- chart 3: oracle-gap horizontal bars ---------- */
   var BARS = [
     { name: "uniform (no teacher)", auc: 0.650, color: "--series-2",
-      note: "flat sampling; 65% of groups dead" },
+      note: "flat-sampling baseline" },
     { name: "Thompson teacher, γ=1", auc: 0.728, color: "--series-1",
       note: "advantage-mass utility, proportional" },
     { name: "Thompson teacher, γ=4", auc: 0.782, color: "--series-1",
-      note: "sharper concentration — compounding" },
-    { name: "ORACLE (true pass rates)", auc: 0.851, color: "--series-4",
-      note: "best possible pure sampler — the ceiling" },
-    { name: "Thompson γ=4 + dense hindsight", auc: 0.890, color: "--series-1",
-      note: "signal creation beats perfect allocation" }
+      note: "retained shared-trainer run" },
+    { name: "TRUE-p proportional priority", auc: 0.851, color: "--series-4",
+      note: "strong baseline in the same proportional-priority family" },
+    { name: "Thompson γ=4 + hindsight", auc: 0.890, color: "--series-1",
+      note: "retained shared-trainer full stack" }
   ];
 
   function drawChart3() {
@@ -1109,7 +1153,7 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
     var oracleX = sx(0.851);
     BARS.forEach(function (b, i) {
       var y = M3.top + i * bandH + (bandH - barH) / 2;
-      var isOracle = b.name.indexOf("ORACLE") === 0;
+      var isOracle = b.name.indexOf("TRUE-p") === 0;
       var r = el("rect", { x: sx(X0), y: y, width: Math.max(sx(b.auc) - sx(X0), 0),
         height: barH, rx: 4, fill: cssVar(b.color),
         opacity: isOracle ? 0.55 : 1 });
@@ -1129,7 +1173,7 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
         var row = document.createElement("div"); row.className = "row";
         var nm = document.createElement("span"); nm.textContent = b.note; row.appendChild(nm);
         var v = document.createElement("span"); v.className = "v";
-        v.textContent = "AUC " + b.auc.toFixed(3); row.appendChild(v);
+        v.textContent = "checkpoint mean " + b.auc.toFixed(3); row.appendChild(v);
         tt.appendChild(row);
         tt.style.display = "block";
         tt.style.left = "60px";
@@ -1142,18 +1186,18 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
       });
       svg.appendChild(hit);
     });
-    /* the oracle ceiling line */
+    /* true-p proportional-priority reference line */
     svg.appendChild(el("line", { x1: oracleX, x2: oracleX, y1: M3.top - 4, y2: M3.top + IH3,
       stroke: cssVar("--series-4"), "stroke-width": 1.5, "stroke-dasharray": "none",
       opacity: 0.9 }));
     svg.appendChild(el("text", { x: oracleX, y: M3.top - 2, "text-anchor": "middle", class: "dl" },
-      "sampler ceiling"));
+      "true-p baseline"));
     /* table view */
     var host = document.getElementById("table3");
     host.textContent = "";
     var t = document.createElement("table");
     var tr0 = document.createElement("tr");
-    ["config", "AUC (5 seeds)"].forEach(function (h) {
+    ["config", "checkpoint mean (5 seeds)"].forEach(function (h) {
       var th = document.createElement("th"); th.textContent = h; tr0.appendChild(th);
     });
     var thead = document.createElement("thead"); thead.appendChild(tr0); t.appendChild(thead);

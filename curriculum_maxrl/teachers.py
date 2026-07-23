@@ -1,8 +1,9 @@
 """Curriculum teachers: map per-task statistics -> a sampling distribution.
 
-All teachers see only what a real RLVR trainer sees: the empirical rewards of
-past rollouts (never the true pass rate).  Statistics are tracked with an
-exponential moving average plus a Beta posterior for uncertainty.
+All teachers see only what a real RLVR trainer sees: empirical rewards from
+past rollouts (never the true pass rate). Statistics are tracked with an
+exponential moving average plus discounted Beta pseudo-counts. These are not
+an exact posterior for a moving policy.
 
 Teachers
 --------
@@ -11,14 +12,9 @@ ZPDBandTeacher       samples tasks whose estimated pass rate lies in a target
                      band (ADARFT/DAPO-style difficulty targeting).
 ALPTeacher           absolute-learning-progress bandit (TSCL / ALP-GMM style):
                      samples proportional to |d p̂ / dt|.
-MaxRLFrontierTeacher MaxRL-native: the effective per-prompt signal of the
-                     MaxRL estimator with N rollouts is
-                         w_N(p) * p = 1 - (1-p)^N = pass@N,
-                     i.e. the probability the group produces >=1 success and
-                     is not dropped.  Utility = pass@N * (1 - p): probability
-                     of receiving likelihood-weighted signal times headroom.
-                     Thompson sampling over a Beta posterior supplies optimism
-                     on rarely-visited tasks, so the frontier keeps advancing.
+MaxRLFrontierTeacher legacy score pass@N*(1-p), equal to the exact practical
+                     coefficient-mass family at index N+1.
+AdvMassTeacher       exact half-mass score pass@N-p for N practical rollouts.
 """
 
 from __future__ import annotations
@@ -32,7 +28,7 @@ class TaskStats:
     """Online statistics for one task, from observed rollout rewards only."""
     ema_pass: float = 0.0
     ema_initialized: bool = False
-    alpha_beta: tuple[float, float] = (1.0, 1.0)  # Beta posterior params
+    alpha_beta: tuple[float, float] = (1.0, 1.0)  # discounted pseudo-counts
     prev_ema: float = 0.0
     visits: int = 0
 
@@ -45,7 +41,7 @@ class TaskStats:
         else:
             self.ema_pass = (1 - ema_w) * self.ema_pass + ema_w * mean_r
         a, b = self.alpha_beta
-        # decay old evidence so the posterior tracks the moving policy
+        # decay old evidence so pseudo-counts track the moving policy
         decay = 0.9
         self.alpha_beta = (1.0 + (a - 1.0) * decay + rewards.sum(),
                            1.0 + (b - 1.0) * decay + (len(rewards) - rewards.sum()))
@@ -119,19 +115,19 @@ class ALPTeacher(Teacher):
 
 
 class MaxRLFrontierTeacher(Teacher):
-    """MaxRL-native curriculum.
+    """Legacy near-neighbor of the exact coefficient-mass curriculum.
 
     For the MaxRL estimator with group size N, a prompt contributes gradient
     signal only when K >= 1, which happens with probability
     pass@N = 1 - (1-p)^N — exactly w_N(p) * p, the estimator's effective
     weight on the pass-rate gradient.  Utility:
 
-        u(p) = (1 - (1-p)^N) * (1 - p)
+        h_N(p) = (1 - (1-p)^N) * (1 - p) = u_{N+1}(p)
 
-    -> 0 for mastered tasks (p ~ 1, no headroom) and for tasks far beyond the
-    frontier (p << 1/N, group almost surely dropped); maximal on the widest
-    band of "hard but reachable" tasks.  p is drawn from the task's Beta
-    posterior (Thompson sampling) so that uncertain tasks are probed.
+    It is exactly the practical mass family with an off-by-one group-size
+    index. It is retained for historical comparisons; ``AdvMassTeacher`` is
+    the exact N-rollout score. Discounted Beta pseudo-count draws provide
+    Thompson-style randomized exploration.
     """
 
     def __init__(self, n_tasks: int, seed: int = 0, n_rollouts: int = 16,
@@ -154,17 +150,17 @@ class MaxRLFrontierTeacher(Teacher):
 
 
 class AdvMassTeacher(Teacher):
-    """Teacher driven by the *exact* expected MaxRL advantage mass.
+    """Teacher driven by the exact expected scalar coefficient mass.
 
     THEORY.md section 2: for a group of N rollouts, the expected total
     |advantage| the MaxRL estimator emits on a prompt with pass rate p is
     2*(pass@N(p) - p) = 2*((1-(1-p)^N) - p) — the probability the prompt is
-    solvable within N attempts but not within one.  Sampling proportional to
-    this quantity maximizes expected learning signal per group.  Thompson
-    sampling over the Beta posterior supplies optimism.
+    solvable within N attempts but not within one. Sampling proportional to
+    this quantity is a smooth stochastic priority rule; hard argmax would
+    maximize known one-step mass absent coverage or variance constraints.
+    Discounted Beta pseudo-count draws supply randomized exploration.
 
-    ``power`` (VALIDATION.md V6): sample ∝ u^power.  Proportional sampling
-    (power=1) maximizes mass per draw, but learning compounds — steps on the
+    ``power`` (VALIDATION.md V6): sample ∝ u^power. Learning compounds — steps on the
     highest-mass task unlock the next — so sharper concentration wins on
     chain-structured pools (γ≈4 saturates); use 1–2 on flat pools.
     """
@@ -192,21 +188,35 @@ class AdvMassTeacher(Teacher):
 
 def allocate_rollouts_greedy(p_hat: np.ndarray, total_budget: int,
                              n_min: int = 4, n_max: int = 64) -> np.ndarray:
-    """Optimal rollout allocation for the advantage-mass objective.
+    """Exact myopic allocation for fixed supplied pass rates and bounds.
 
-    Maximizing sum_i [(1-(1-p_i)^{N_i}) - p_i] s.t. sum N_i = B is concave in
-    each N_i, so greedy water-filling is optimal: the marginal mass of the
-    (N+1)-th rollout on prompt i is p_i(1-p_i)^N — the probability that
-    rollout is the group's *first success*.  Repeatedly award the next
-    rollout to the prompt with the largest marginal.
+    With a feasible integer budget and fixed known/supplied p_i, maximizing
+    half-mass sum_i u_{N_i}(p_i) (equivalently total expected coefficient mass
+    2*sum_i u_{N_i}) is separable and discretely concave. Greedy water-filling
+    is exact. The half-mass marginal is p_i(1-p_i)^N; total mass has an
+    irrelevant factor two. This is not a long-horizon curriculum theorem.
     """
-    m = len(p_hat)
-    p = np.clip(p_hat, 1e-4, 1 - 1e-4)
+    p = np.asarray(p_hat, dtype=float)
+    if p.ndim != 1:
+        raise ValueError("p_hat must be a one-dimensional array")
+    if not np.isfinite(p).all() or (p < 0.0).any() or (p > 1.0).any():
+        raise ValueError("p_hat entries must be finite probabilities in [0, 1]")
+    m = len(p)
+    if m == 0:
+        return np.array([], dtype=int)
+    if (int(n_min) != n_min or int(n_max) != n_max
+            or int(total_budget) != total_budget):
+        raise ValueError("bounds and total_budget must be integers")
+    n_min, n_max, total_budget = int(n_min), int(n_max), int(total_budget)
+    if n_min < 1 or n_max < n_min:
+        raise ValueError("require 1 <= n_min <= n_max")
+    if not (m * n_min <= total_budget <= m * n_max):
+        raise ValueError(
+            "total_budget must satisfy len(p_hat)*n_min <= budget <= "
+            "len(p_hat)*n_max"
+        )
     n = np.full(m, n_min, dtype=int)
     remaining = total_budget - n_min * m
-    if remaining < 0:  # budget can't even cover minimums
-        n = np.full(m, max(total_budget // m, 1), dtype=int)
-        return n
     marginal = p * (1 - p) ** n  # value of the next rollout per prompt
     for _ in range(remaining):
         i = int(np.argmax(marginal))
@@ -221,14 +231,12 @@ def allocate_rollouts_greedy(p_hat: np.ndarray, total_budget: int,
 def allocate_rollouts_adaptive(teacher: Teacher, task_ids: np.ndarray,
                                total_budget: int, n_min: int = 4,
                                n_max: int = 64) -> np.ndarray:
-    """Compute-indexed curriculum: split a fixed rollout budget across the
-    selected tasks so that harder tasks get more rollouts.
+    """Historical 1/p̂ rollout heuristic, retained for old experiments.
 
-    MaxRL's truncation order equals the group size (T = N), so giving a hard
-    task a larger N simultaneously (a) raises pass@N, the chance its group is
-    not dropped, and (b) raises the fidelity of the ML approximation on that
-    task.  Allocation ~ 1/max(p̂, 1/n_max), clipped to [n_min, n_max] and
-    renormalized to the budget.
+    For practical drop-both MaxRL, effective order is N-1; raw/always-CV
+    variants have order N. The proved one-step coefficient-mass rule is
+    allocate_rollouts_greedy. This helper clips and renormalizes the older
+    heuristic to the requested budget.
     """
     p_hat = np.array([
         max(teacher.stats[t].ema_pass if teacher.stats[t].ema_initialized else 0.5, 1e-3)

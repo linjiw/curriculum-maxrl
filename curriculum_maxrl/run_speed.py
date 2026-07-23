@@ -5,6 +5,11 @@ from __future__ import annotations
 
 import json
 import numpy as np
+
+
+def _trapezoid(y, x):
+    integrate = getattr(np, "trapezoid", None)
+    return (np.trapz if integrate is None else integrate)(y, x)
 from run_experiment import run, TEACHERS, ESTIMATORS
 
 
@@ -12,7 +17,7 @@ def summarize(hist):
     steps = np.array([h["step"] for h in hist])
     mp = np.array([h["mean_pass"] for h in hist])
     fr = np.array([h["frontier"] for h in hist])
-    auc = float(np.trapz(mp, steps) / (steps[-1] - steps[0]))
+    auc = float(_trapezoid(mp, steps) / (steps[-1] - steps[0]))
     hit = steps[fr >= 12]
     return auc, (int(hit[0]) if len(hit) else -1)
 

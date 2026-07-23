@@ -71,14 +71,17 @@ curriculum**:
 - (b) Unlike learnability p(1−p), the 1/p weight grows monotonically as p→0 —
   favoring near-unsolvable prompts that the SFL evidence says carry ~zero
   learning signal; the Maclaurin truncation (T=N) is exactly what bounds the
-  resulting p≈0 variance explosion.
+  resulting p≈0 variance explosion. The paper's raw and always-retained-CV
+  estimators use order T=N; the practical drop-both estimator used here has
+  order T=N−1.
 - (c) It **cannot rescue truly all-fail prompts** (K=0 → group dropped): the
   same zero-signal structure as regret-0 levels (UED fixes via teacher
   disincentive) and all-fail groups (DAPO fixes via resampling/filtering).
 - (d) As a static pass-rate signal, it inherits the two failure modes LP
   methods target: can't distinguish hard-but-learnable from stagnant/
-  unlearnable prompts, and has no anti-forgetting mechanism (though its w(p)
-  keeps weight ≈1 on easy prompts rather than zeroing them like GRPO).
+  unlearnable prompts, and has no anti-forgetting mechanism. GRPO's normalized
+  population weight diverges as p→1, although a realized all-pass group still
+  has zero centered advantage.
 
 Suggested integrations from the literature: PLR-style prompt replay buffers
 scored by learnability or LP with MaxRL weighting inside the curated batch;
@@ -86,19 +89,23 @@ DAPO-style p=0 filtering before likelihood reweighting.
 
 ## Key implication discovered during our design work
 
-Our MaxRL-native frontier utility
+The original design used the legacy frontier score
 
 ```
-u_N(p) = (1 − (1−p)^N) · (1−p) = pass@N · (1−p)
+h_N(p) = (1 − (1−p)^N) · (1−p) = u_{N+1}(p).
 ```
 
-**reduces exactly to SFL's learnability p(1−p) at N = 1** and, as N grows,
-shifts its mass toward harder prompts (any p ≳ 1/N stays near-max utility). So
-it is a *compute-indexed generalization of learnability* that widens the ZPD
-band at exactly the rate the MaxRL estimator can absorb it (a group of N
-rollouts produces signal with probability pass@N). The teacher and the
-objective are indexed by the same compute knob — which is the conceptual core
-of the curriculum-MaxRL integration.
+The exact half-mass utility for N practical drop-both MaxRL rollouts is
+
+```
+u_N(p) = pass@N(p) − p = (1−p)pass@(N−1,p).
+```
+
+It equals SFL's learnability `p(1−p)` at **N=2**; `u_1=0`. As N grows,
+its coefficient-mass peak moves toward harder prompts. This is an exact
+compute-indexed coefficient-mass identity, not a claim that coefficient mass
+itself is learning progress. The legacy score is the same family shifted by
+one rollout and is close at the configured moderate group sizes.
 
 Remaining gap (from lineage 2): u_N(p) is still a static difficulty signal —
 it cannot detect stagnation or forgetting. A production version should add an
