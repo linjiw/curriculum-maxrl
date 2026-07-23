@@ -32,6 +32,16 @@ E[Σ|w|] = 2·E[(1 − K/N)·1{K≥1}]
         = 2·((1−(1−p)ᴺ) − p).          ∎
 ```
 
+**Correction (verified 2026-07-23, 4M-trial MC).** The *practical* Algorithm-1
+estimator (drop both terms when K=0) is unbiased for truncation order
+**T = N−1**, not N: zeroing the control variate only on all-fail groups makes
+it outcome-dependent, contributing −(1−p)^{N−1}∇p, and
+w_N(p) − (1−p)^{N−1} = w_{N−1}(p). Eq. 9 (no CV) and Eq. 10 with the CV
+retained at K=0 are both unbiased for T = N. MC at N=8, p≈0.23:
+practical → 0.64678±0.0003 = ∇J^{N−1} (0.64683); eq9/eq10 → 0.675 = ∇J^N.
+Credit: PR #1. None of the advantage-mass results below change (they are
+statements about |w|, not about which J the mean gradient targets).
+
 **Interpretation.** The learning signal a prompt commands equals twice the
 probability it is *solvable within N attempts but not within one*. This is
 the estimator's own zone-of-proximal-development functional — the teacher
@@ -100,7 +110,7 @@ E[K(N−K)] = N·E[K] − E[K²] = Np − (Np(1−p) + N²p²) = N(N−1)p(1−p
 (Rutherford et al. 2024) *is* the advantage mass of the RLOO estimator. The
 curriculum literature and the estimator algebra converge on the same
 functional from opposite directions — and our Prop. 1 shows MaxRL
-generalizes it to a compute-indexed family (u_N → learnability at N=1).
+generalizes it to a compute-indexed family (u_2(p) = p(1−p) exactly; u_1 ≡ 0 — credit PR #1 for the index correction).
 
 ---
 

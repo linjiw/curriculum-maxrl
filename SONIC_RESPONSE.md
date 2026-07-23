@@ -52,7 +52,7 @@ groups of N rollouts on one task*, where "solvable within N attempts" is a real
 event. Your multinomial-over-thousands-of-bins allocation has no such event, so N
 degrades from a derived constant to a free band knob — at which point **you have
 lost the property that made advmass attractive (zero tuned hyperparameters)** and
-learnability `p(1−p)` is the more principled choice: it is the N→1 member of the
+learnability `p(1−p)` is the more principled choice: it is the N=2 member of the
 family, needs no knob, and your own forecast shows it *more* aggressive at
 discounting impossible bins (0.034–0.058 impossible mass vs advmass's 0.256–0.274)
 — which, per your F2 diagnosis, is the pathology you are fixing. Long-shot

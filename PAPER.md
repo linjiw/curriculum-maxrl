@@ -154,7 +154,7 @@ post-training, and on hard task distributions most of it buys nothing. Prior
 fixes either pay for the waste differently (DAPO's dynamic sampling redraws
 until a live group appears — the discards still cost GPU-hours), or gate on
 heuristic difficulty bands with their own hyperparameters (ADARFT), or
-target learnability p(1−p) — the right instinct, but the N=1 shadow of the
+target learnability p(1−p) — the right instinct, and exactly the N=2 member of the
 real functional. Deriving the rule from the estimator's algebra gives the
 band, its width, and its compute-scaling (ln N/N) with **zero new
 hyperparameters**: the rollout budget N you already chose *is* the

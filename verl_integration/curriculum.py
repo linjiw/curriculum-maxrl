@@ -24,8 +24,8 @@ w_fail = -1/N, K=0 groups dropped) is exactly
 i.e. twice the probability the prompt is solvable within N attempts but not
 within one.  Sampling proportional to this utility maximizes the learning
 signal the optimizer receives per group.  It peaks at p* ~ ln(N)/N, so
-larger group sizes automatically target harder prompts.  At N=1 it reduces
-to the "learnability" objective p(1-p) of Rutherford et al. (2024).  The
+larger group sizes automatically target harder prompts.  At N=2 it equals
+the "learnability" objective p(1-p) of Rutherford et al. (2024) (u_1 = 0).  The
 older heuristic frontier utility (1-(1-p)^N)(1-p) is available via
 utility="frontier" and is numerically near-identical.
 

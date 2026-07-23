@@ -403,7 +403,7 @@ the teacher and the objective share the same compute knob.</p>
   </div>
   <figcaption>
     x is log-scaled to expose the low-p regime. The green reference is SFL's
-    “learnability” p(1−p) — exactly our utility at N=1, and (we prove) exactly ½ the advantage
+    “learnability” p(1−p) — exactly our utility at N=2 (u₁ ≡ 0), and (we prove) exactly ½ the advantage
     mass of the RLOO estimator. The learnability-curriculum literature and the estimator algebra
     are the same object seen from two sides.
   </figcaption>
@@ -818,7 +818,7 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   </div>
   <div class="card">
     <h3>Existing curricula are special cases</h3>
-    <p>SFL's learnability p(1−p) is our utility at N=1 and RLOO's exact advantage mass; SEC's
+    <p>SFL's learnability p(1−p) is our utility at N=2 and RLOO's exact advantage mass; SEC's
     empirical-|advantage| bandit reward has our formulas as its exact expectation. The
     advantage-mass teacher is “oracle SEC for MaxRL” — same target, computable from a posterior
     before a prompt is ever visited.</p>

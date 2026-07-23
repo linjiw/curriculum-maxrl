@@ -36,7 +36,7 @@ The MaxRL estimator's own math defines the curriculum: the expected total
 not within one (THEORY.md). The teacher samples prompts proportional to this
 derived utility (Thompson-sampled from a Beta posterior), and the optimal
 rollout allocation is greedy water-filling on the marginal `p(1−p)^N` — the
-probability the next rollout is a group's first success. At N=1 the utility
+probability the next rollout is a group's first success. At N=2 the utility
 reduces to SFL's learnability `p(1−p)`; RLOO's advantage mass *is* `2p(1−p)`
 exactly, unifying the learnability-curriculum literature with the estimator
 algebra.
