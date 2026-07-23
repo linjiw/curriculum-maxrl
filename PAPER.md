@@ -139,8 +139,9 @@ most important regime variable we found.
 
 **Channel 3 — objective safety (MaxRL weighting underneath).** Channels 1–2
 are not objective-agnostic add-ons: the identical teacher grew coverage under
-MaxRL in every seed and amplified GRPO's collapse in every seed. The
-objective decides whether a curriculum is safe at all.
+MaxRL in every seed, while GRPO decayed coverage in every seed — and in the
+teacher-arm run the collapse was amplified. The objective decides whether a
+curriculum is safe at all.
 
 One line: **the teacher allocates, hindsight creates, the objective decides
 whether either is safe.** The regime map, practitioner playbook, and graded
@@ -163,10 +164,11 @@ curriculum knob.
 **Coverage collapse, and a compatibility warning.** The field's two favorite
 post-training tools are GRPO and difficulty curricula. We show they are
 **actively incompatible**: a frontier curriculum amplifies GRPO's pass@k
-collapse (pass@8 0.332→0.269 under the teacher vs 0.351→0.312 uniform, every
-seed) because GRPO's inverted weight function was quietly *maintaining* easy
-prompts, and the curriculum removes that maintenance. The same teacher grows
-coverage under MaxRL in every seed (0.316→0.348). Curricula don't fix
+collapse (pass@8 0.332→0.269 under the teacher vs 0.351→0.312 uniform;
+GRPO's decay replicates in every seed, the teacher-amplified arm is a
+single-seed run) because GRPO's inverted weight function was quietly
+*maintaining* easy prompts, and the curriculum removes that maintenance.
+The same teacher grows coverage under MaxRL in every seed (0.316→0.348). Curricula don't fix
 objective-level pathologies — they magnify them. If you run a curriculum,
 you need likelihood-style weighting underneath it.
 
@@ -209,7 +211,7 @@ Quieter, but arguably worth more:
   the teacher tells you when a curriculum will backfire (GRPO). Negative
   knowledge that saves other people's compute.
 - **Conceptual compression.** Learnability curricula, DAPO-style filtering,
-  and HER stop being separate tricks: they are the N=1 slice, the sampling
+  and HER stop being separate tricks: they are the N=2 slice, the sampling
   shadow, and the success-manufacturing complement of one identity.
 - **Free telemetry.** The teacher's posterior is a live difficulty map of
   your task pool — mastered/frontier/dead fractions per step at no cost.
@@ -228,9 +230,11 @@ thing to check when a curriculum "doesn't work."
 
 ## 5. Evidence in brief
 
-Three testbeds, same ordering everywhere (uniform < teacher <
-teacher+hindsight): a CPU skill-chain with exact gradients (5 seeds; where
-all seven propositions are also Monte-Carlo verified), a 1.26M-parameter
+Three testbeds; the hindsight-augmented stack finishes on top in all of
+them, and teacher ≥ uniform holds everywhere except MountainCar's AUC
+(small-N seeds, teacher within noise of uniform there): a CPU skill-chain
+with exact gradients (5 seeds; where propositions P1–P6 are also
+Monte-Carlo verified and P7 is quantified by V2/V3), a 1.26M-parameter
 transformer on procedurally generated mazes at matched wall-clock (>20 runs;
 champion = teacher + dense hindsight at 0.252 ± 0.005 final / 0.229 ± 0.009
 AUC over 3 seeds vs 0.230 ± 0.015 / 0.211 ± 0.011 uniform, paired deltas
@@ -248,12 +252,17 @@ REPORT.md.
 
 ## 6. Limits we know about
 
-Deep frontiers at fixed budget remain uncrossed on the maze (level 6+ at
-distance ≥16 stays ≈0 in 2400 s; a 4× duration run is executing). LLM-scale
-transfer is implemented (drop-in verl integration) but blocked on multi-GPU
-hardware; the data-scarce GSM8K regime is where fixed-pool recycling should
-compound hardest. The teacher assumes a finite task pool; streaming/
-procedural sources need the parametric-posterior variant (planned). And the
+Deep frontiers at fixed budget remain uncrossed on the maze — and a 4×
+duration run refuted the duration hypothesis (9600 s: level 5 doubles,
+level 6 stays ≈0.01): the stall is a per-step-competence ceiling
+(legality q≈0.87 caps geometric reach), so depth needs capacity or deeper
+warmstarts, not more schedule. LLM-scale transfer: the drop-in verl
+integration is now running a GSM8K 2×2 on a single A10G (SmolLM2-360M,
+pre-registered predictions in curriculum_maxrl/GSM8K_A10G_PLAN.md); the
+paper-scale 8-GPU recipe remains hardware-blocked. The fixed-pool teacher
+generalizes to streaming/procedural sources via the validated kernel-
+posterior variant (`frontier_rl/streaming.py`, matches discrete bins
+exactly). And the
 exactness of recycled gradients is a property of the environment's relabel
 map — math and mazes admit exact relabels; noisier verifiers will land
 between our toy (+0.22 AUC) and maze (+0.01) endpoints.
