@@ -36,16 +36,22 @@ the next rollout is a group's first success).
 | path | contents |
 |---|---|
 | `PAPER.md` | **The story** — 30-second pitch, why this direction, the three insights, what problem it resolves, real + hidden benefits |
+| `EVIDENCE.md` | Audited claim ledger: exact results, corrected local evidence, historical-only observations, no-go boundaries, and open tests |
 | `FRAMEWORK.md` | Research contract: assumptions, reference algorithm, target-mixture choice, hindsight gates, ablation matrix, and claim ladder |
 | `GUIDE.md` | Design guide: approaches tried, verification status of each, and what's next |
 | `REPORT.md` | Full experiment report: math→algorithm→evidence chain, findings, goal assessment |
 | `SCHEDULE.md` | Live experiment tracking: executing queue, decision trees, next wave |
 | `REVIEW_NOTES.md` | Reviewer entry point: claim boundaries, lock provenance, current run status, and audit order |
 | `curriculum_maxrl/THEORY.md` | Exact coefficient-mass formulas, derived utility, myopic fixed-p allocation theorem, adaptive-T audit |
+| `curriculum_maxrl/PROOFS.md` | Proof-level estimator conventions, practical `N-1` result, positive-part corollary, coefficient-mass limits, and hindsight moment/law conditions |
 | `curriculum_maxrl/DESIGN.md` | Original integration design, hypotheses H1–H5, CPU validation tables |
 | `curriculum_maxrl/RESEARCH.md` | Deep-research synthesis of modern curriculum RL (PAIRED/PLR/ACCEL, ALP-GMM, SFL learnability, RLVR curricula) — 3-vote adversarially verified against primary sources |
 | `curriculum_maxrl/*.py` | CPU prototype: skill-chain testbed, 5 estimators, 5 teachers, experiment runners |
 | `curriculum_maxrl/maze_gpu/` | GPU testbed: 1.26M-param transformer on 17×17 mazes, goal-distance curriculum (13 levels), pass@k eval, matched wall-clock sweep protocol + logs |
+| `frontier_rl/` | Reusable grouped trainer, estimator/teacher implementations, CPU/Gym adapters, corrected artifacts, and external-environment protocols |
+| `frontier_rl/examples/UNILAB_ROBOTICS_PROTOCOL_V1.md` | Mac-CPU robotics ladder separating reset-stream PPO curriculum tests from the exact grouped estimator experiment |
+| `frontier_rl/examples/UNILAB_STEWART_RESULTS_V1.md` | Audited three-seed development result for the exact grouped Motrix manipulation pilot, including its failed first task axis and next discriminating experiment |
+| `docs/` | Static project website and curves exported only from retained corrected artifacts |
 | `verl_integration/` | Production integration for the MaxRL verl fork: `curriculum.py` (drop-in module), patches for `main_ppo.py` / `ray_trainer.py`, SmolLM+GSM8K launch script |
 
 ## Quick start (CPU, numpy only; commands run from the repository root)
@@ -66,6 +72,23 @@ python3 frontier_rl/examples/run_mountaincar_shared.py --quick
 
 Omit `--quick` for the ten-seed, 500k-transition validation. Quick mode writes
 `mountaincar_shared_quick.json` so it cannot overwrite the canonical result.
+
+UniLab Stewart-platform probes run from the sibling UniLab worktree. The first
+command reproduces the fixed-policy geometry diagnostic; the second exercises
+the repaired 16-observation PPO task owner on CPU:
+
+```bash
+uv run --extra motrix python \
+  ../curriculum-maxrl/frontier_rl/examples/unilab_stewart_base_rate.py \
+  --output ../curriculum-maxrl/frontier_rl/examples/unilab_stewart_base_rate_seed0_4.json
+uv run train --algo ppo --task stewart_balance_grouped --sim motrix \
+  training.device=cpu training.no_play=true
+```
+
+The exact grouped runner is
+`frontier_rl/examples/unilab_stewart_grouped.py`. Its retained development
+artifacts use a SHA-pinned local RSL-RL warm start; see
+`frontier_rl/examples/UNILAB_STEWART_RESULTS_V1.md` before interpreting them.
 
 GPU maze testbed (needs torch + one ~24GB GPU):
 

@@ -32,6 +32,14 @@ what lets you predict where the method will and won't help.
   predeclared `γ=1` exact-mass arm was not separated from uniform,
   learnability, or the legacy score. These results establish local efficacy,
   not a universal effect size.
+- UniLab/Motrix now supplies a real CPU simulator development test of the exact
+  grouped estimator. Across three paired Stewart seeds, `u_8` sampling reduced
+  mean all-fail groups from 21.3 to 13.0, increased update-bearing groups from
+  98.7 to 107.0, and raised realized scalar coefficient mass from 140.25 to
+  151.25 at a matched 288k transitions. It did **not** have the best mean AUC:
+  uniform/learnability/`u_8` were 0.225/0.243/0.232. This is a development
+  mechanism result and a direct warning that coefficient mass is not target
+  gradient alignment or useful progress.
 - No oracle ceiling has been established. In one CPU study, a true-pass-rate
   proportional-priority comparator collected 841 units of coefficient mass
   versus 838 for the pseudo-count teacher, yet achieved AUC 0.851 versus
@@ -148,10 +156,11 @@ Decision procedure distilled from every ablation:
 | `γ=4` concentration can matter | MountainCar `+0.116` over `γ=1` | corrected local result |
 | verifier-valid hindsight can help | skill chain +0.105; MountainCar about +0.19 | local, exactness unproved |
 | pure sampling cannot revive a zero-signal pool | frontier-heavy construction | synthetic mechanism |
+| exact grouped robotic-simulator training is viable on Mac CPU | three-seed UniLab Stewart development pilot; all arms learn | development pipeline result |
 | shared transfer causes the gain | current controls confounded/inadequate | open |
 | MaxRL makes curricula safe | historical objective interaction only | open |
 | compounding predicts hindsight size | retained fixed-pool positives; maze side historical | hypothesis |
-| corrected GPU/LLM/robotics generality | no qualifying result yet | open |
+| corrected GPU/LLM/robotics generality | one narrow robotics development pilot; no confirmatory/general result | open |
 
 The historical maze coverage and efficiency multipliers remain useful for
 experiment design, not for external performance claims.

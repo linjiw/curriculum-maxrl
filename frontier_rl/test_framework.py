@@ -17,6 +17,7 @@ from frontier_rl.adapters.grid_reach import GridReachSpace, MOVES
 from frontier_rl.adapters.cosmos_libero import (CosmosLiberoSpace,
                                                 MasteryFrontierTeacher,
                                                 PoisonRateMeter)
+from frontier_rl.adapters.isaaclab_curriculum import FrontierBinTeacher
 
 
 def test_estimators():
@@ -115,6 +116,36 @@ def test_teacher_state_roundtrip():
     assert np.allclose(t.alpha, t2.alpha) and np.allclose(t.beta, t2.beta)
     assert np.allclose(t.distribution(), t2.distribution())
     print("state roundtrip OK")
+
+
+def test_reset_stream_teacher_state_roundtrip():
+    """Resume preserves evidence, cached probabilities, and Thompson RNG."""
+    teacher = FrontierBinTeacher(
+        4, utility="advmass", advmass_n=8, thompson=True, seed=17
+    )
+    teacher.observe_resets(
+        np.array([0, 0, 1, 2, 2, 2]),
+        np.array([False, True, False, True, True, False]),
+    )
+    teacher.sampling_probs()  # materialize the stochastic cached distribution
+    state = teacher.state_dict()
+    expected = teacher.sample_bins(64)
+
+    restored = FrontierBinTeacher(
+        4, utility="advmass", advmass_n=8, thompson=True, seed=999
+    )
+    restored.load_state_dict(state)
+    assert np.array_equal(restored.sample_bins(64), expected)
+    assert np.array_equal(restored.succ, teacher.succ)
+    assert np.array_equal(restored.fail, teacher.fail)
+
+    # A dirty checkpoint must also reproduce the next posterior draw.
+    teacher.observe_resets(np.array([3]), np.array([False]))
+    dirty_state = teacher.state_dict()
+    dirty_expected = teacher.sample_bins(64)
+    restored.load_state_dict(dirty_state)
+    assert np.array_equal(restored.sample_bins(64), dirty_expected)
+    print("reset-stream teacher state roundtrip OK")
 
 
 def test_trainer_on_skill_chain():
@@ -349,6 +380,7 @@ if __name__ == "__main__":
     test_positive_part_estimator()
     test_teacher_pseudocounts_and_utility()
     test_teacher_state_roundtrip()
+    test_reset_stream_teacher_state_roundtrip()
     test_trainer_on_skill_chain()
     test_hindsight_contract_gridworld()
     test_grid_group_update_is_permutation_invariant()

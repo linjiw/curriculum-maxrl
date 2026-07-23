@@ -1,86 +1,188 @@
-"""Export per-step training curves + teacher-distribution snapshots for the
-website's real-data charts.
+"""Export audited, retained training curves for the static project website.
 
-For each env x method: eval curve (mean pass over bins) every few steps, and
-for teacher methods a snapshot of the sampling distribution + posterior p̂ —
-so the site can show performance rising WHILE the curriculum visibly walks.
+This exporter deliberately reads the corrected result artifacts instead of
+launching fresh, small-seed smoke runs.  In particular, the retired CartPole
+smoke study is not exported, and MountainCar comes from the corrected ten-seed
+shared-policy study.
 
-Output: docs/curves.json  (kept small: ~3 seeds x 4 envs x 3 methods)
+Output: docs/curves.json
 
 Run: python3 frontier_rl/examples/export_curves.py
 """
 
 from __future__ import annotations
 
-import json, sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+import json
+from pathlib import Path
 
 import numpy as np
 
-from frontier_rl import FrontierTrainer, TrainerConfig, FrontierTeacher
-from frontier_rl.adapters.skill_chain import SkillChainSpace
-from frontier_rl.adapters.grid_reach import GridReachSpace
-from frontier_rl.adapters.gym_classic import MountainCarSpace, CartPoleSurviveSpace
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
-                   "docs", "curves.json")
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / "docs" / "curves.json"
 
 
-def run_one(env_cls, env_kw, method, seed, steps, eval_every, eval_n, gamma):
-    env = env_cls(seed=seed, **env_kw)
-    cfg = TrainerConfig(n_rollouts=16, tasks_per_step=4,
-                        hindsight=(method == "hindsight"),
-                        teacher_gamma=gamma, seed=seed)
-    teacher = FrontierTeacher(env.n_tasks, cfg.n_rollouts, seed=seed + 1000,
-                              gamma=gamma)
-    if method == "uniform":
-        teacher.distribution = lambda n=env.n_tasks: np.full(n, 1.0 / n)
-    trainer = FrontierTrainer(env, env, cfg, teacher=teacher)
-    curve, dists, phats = [], [], []
-    def on_eval(i):
-        if hasattr(env, "true_pass_rates"):
-            curve.append(float(env.true_pass_rates().mean()))
-        else:
-            curve.append(float(env.eval_pass_rates(n=eval_n).mean()))
-        if method != "uniform":
-            dists.append(np.round(teacher.distribution(), 4).tolist())
-            phats.append(np.round(teacher.pass_rate_estimates(), 3).tolist())
-    trainer.train(steps, on_eval=on_eval, eval_every=eval_every)
-    return curve, dists, phats
+DATASETS = {
+    "skill_chain": {
+        "artifact": "frontier_rl/examples/skill_chain_component_ablation.json",
+        "x_key": "checkpoint_steps",
+        "curve_key": "mean_pass_curve",
+        "x_label": "trainer step (0–400)",
+        "metric": "analytic target-uniform mean pass rate",
+        "note": (
+            "Corrected 12-paired-seed component study. The three displayed "
+            "configurations are illustrative; the teacher arm uses gamma=1 and "
+            "the full-stack arm uses gamma=4, so their gap is not a pure "
+            "hindsight contrast."
+        ),
+        "cases": {
+            "uniform": ("uniform_no_hindsight", "uniform"),
+            "teacher": ("teacher_g1_no_hindsight", "exact-mass teacher, gamma=1"),
+            "hindsight": (
+                "teacher_g4_centered_hindsight",
+                "exact-mass teacher, gamma=4 + centered hindsight",
+            ),
+        },
+    },
+    "grid_reach": {
+        "artifact": "frontier_rl/examples/grid_reach_validation.json",
+        "x_key": "x_steps",
+        "curve_key": "mean_pass_curve",
+        "x_label": "trainer checkpoint",
+        "metric": "fixed-evaluation target-uniform mean pass rate",
+        "note": "Corrected 10-seed goal-rewrite study.",
+        "cases": {
+            "uniform": ("uniform + maxrl", "uniform"),
+            "teacher": ("teacher + maxrl", "exact-mass teacher"),
+            "hindsight": (
+                "teacher + maxrl + hindsight",
+                "exact-mass teacher + verifier-valid hindsight",
+            ),
+        },
+    },
+    "mountaincar": {
+        "artifact": "frontier_rl/examples/mountaincar_shared_validation.json",
+        "x_key": "x_transitions",
+        "curve_key": "mean_pass_curve",
+        "x_label": "environment transitions (about 0–500k)",
+        "metric": "custom-threshold target-uniform mean pass rate",
+        "note": (
+            "Corrected 10-paired-seed shared tile-policy study on official "
+            "MountainCar-v0 dynamics; this metric is not standard episode return."
+        ),
+        "cases": {
+            "uniform": ("uniform_shared", "uniform, shared tile policy"),
+            "teacher": (
+                "advmass_shared",
+                "exact-mass teacher, gamma=4, shared tile policy",
+            ),
+            "hindsight": (
+                "advmass_shared_hindsight",
+                "gamma=4 + centered hindsight, shared tile policy",
+            ),
+        },
+    },
+}
 
 
-ENVS = [
-    ("skill_chain", SkillChainSpace, {}, 400, 20, 0, 4.0, 3),
-    ("grid_reach", GridReachSpace, {"radius": 8}, 150, 10, 24, 4.0, 3),
-    ("mountaincar", MountainCarSpace, {}, 120, 10, 12, 4.0, 2),
-    ("cartpole", CartPoleSurviveSpace, {}, 80, 8, 10, 4.0, 2),
-]
+def aggregate_case(case: dict, x_key: str, curve_key: str, label: str) -> dict:
+    runs = case["runs"]
+    curves = np.asarray([run[curve_key] for run in runs], dtype=float)
+    xs = np.asarray([run[x_key] for run in runs], dtype=float)
+    if curves.ndim != 2 or xs.shape != curves.shape:
+        raise ValueError(f"inconsistent retained curve shapes for {label}")
+    return {
+        "label": label,
+        "n_seeds": len(runs),
+        "x": np.rint(xs.mean(axis=0)).astype(int).tolist(),
+        "mean": np.round(curves.mean(axis=0), 6).tolist(),
+        "lo": np.round(curves.min(axis=0), 6).tolist(),
+        "hi": np.round(curves.max(axis=0), 6).tolist(),
+    }
 
 
-def main():
-    out = {}
-    for name, cls, kw, steps, ee, en, gamma, seeds in ENVS:
-        out[name] = {"eval_every": ee, "methods": {}}
-        for method in ["uniform", "teacher", "hindsight"]:
-            curves, dists, phats = [], None, None
-            for seed in range(seeds):
-                c, d, p = run_one(cls, kw, method, seed, steps, ee, en, gamma)
-                curves.append(c)
-                if seed == 0 and method != "uniform":
-                    dists, phats = d, p
-            L = min(len(c) for c in curves)
-            arr = np.array([c[:L] for c in curves])
-            entry = {"mean": np.round(arr.mean(0), 4).tolist(),
-                     "lo": np.round(arr.min(0), 4).tolist(),
-                     "hi": np.round(arr.max(0), 4).tolist()}
-            if dists:
-                entry["dist"] = dists[:L]
-                entry["phat"] = phats[:L]
-            out[name]["methods"][method] = entry
-            print(f"{name}/{method}: final {entry['mean'][-1]:.3f}", flush=True)
-    with open(OUT, "w") as f:
-        json.dump(out, f)
-    print("wrote", OUT, os.path.getsize(OUT)//1024, "KB")
+def aggregate_unilab(paths: list[Path], arm: str, label: str) -> dict:
+    """Aggregate exact grouped Stewart checkpoints across paired dev seeds."""
+    runs = []
+    for path in paths:
+        artifact = json.loads(path.read_text())
+        selected = next(run for run in artifact["runs"] if run["arm"] == arm)
+        runs.append(
+            {
+                "x": [point["backend_env_steps"] for point in selected["checkpoints"]],
+                "curve": [point["mean_pass_rate"] for point in selected["checkpoints"]],
+            }
+        )
+    return aggregate_case({"runs": runs}, "x", "curve", label)
+
+
+def main() -> None:
+    out = {
+        "_meta": {
+            "schema": "curriculum-maxrl/website-curves/v2",
+            "status": "corrected retained artifacts only",
+            "band": "seed min-max envelope",
+            "sampling_trace": "not retained in these corrected artifacts",
+        }
+    }
+    for name, spec in DATASETS.items():
+        artifact_path = ROOT / spec["artifact"]
+        artifact = json.loads(artifact_path.read_text())
+        methods = {}
+        for method, (case_name, label) in spec["cases"].items():
+            methods[method] = aggregate_case(
+                artifact["cases"][case_name],
+                spec["x_key"],
+                spec["curve_key"],
+                label,
+            )
+        out[name] = {
+            "artifact": spec["artifact"],
+            "status": "corrected retained artifact",
+            "metric": spec["metric"],
+            "x_label": spec["x_label"],
+            "note": spec["note"],
+            "sampling_trace": "not retained",
+            "methods": methods,
+        }
+        print(
+            f"{name}: {methods['uniform']['n_seeds']} retained seeds, "
+            f"{len(methods['uniform']['mean'])} checkpoints"
+        )
+    unilab_paths = [
+        ROOT
+        / "frontier_rl"
+        / "examples"
+        / f"unilab_stewart_grouped_fixed_radius_seed{seed}_dev.json"
+        for seed in range(3)
+    ]
+    out["unilab_stewart"] = {
+        "artifact": (
+            "frontier_rl/examples/"
+            "unilab_stewart_grouped_fixed_radius_seed{0,1,2}_dev.json"
+        ),
+        "status": "three-paired-seed development artifact; not confirmatory",
+        "metric": "fixed-radius target-uniform mean terminal pass rate",
+        "x_label": "Motrix backend environment transitions (0–288k)",
+        "note": (
+            "Exact grouped D_8 actor-only development study on the UniLab "
+            "StewartBalance Motrix CPU simulator. Generic chart slots denote "
+            "uniform, learnability p(1-p), and u_8 sampling; there is no hindsight arm."
+        ),
+        "sampling_trace": "not retained",
+        "methods": {
+            "uniform": aggregate_unilab(unilab_paths, "uniform", "uniform"),
+            "teacher": aggregate_unilab(
+                unilab_paths, "learnability", "learnability p(1-p)"
+            ),
+            "hindsight": aggregate_unilab(
+                unilab_paths, "advmass", "exact coefficient mass u_8"
+            ),
+        },
+    }
+    print("unilab_stewart: 3 retained development seeds, 7 checkpoints")
+    OUT.write_text(json.dumps(out, indent=2) + "\n")
+    print(f"wrote {OUT} ({OUT.stat().st_size // 1024} KB)")
 
 
 if __name__ == "__main__":

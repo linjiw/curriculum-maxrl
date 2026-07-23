@@ -44,6 +44,8 @@ Usage sketch inside an IsaacLab task cfg:
 
 from __future__ import annotations
 
+import copy
+
 import numpy as np
 
 
@@ -173,20 +175,20 @@ class FrontierBinTeacher:
     def dead_fraction(self, threshold: float = 0.05) -> float:
         """Fraction of *seen* bins the posterior currently rates unlearnable."""
         p = self.pass_rate_estimates()
-        seen = (self.succ + self.fail) > 1.0
+        seen = (self.succ + self.fail) > 0.0
         if not seen.any():
             return 0.0
         return float((p[seen] < threshold).mean())
 
     def mastered_fraction(self, threshold: float = 0.9) -> float:
         p = self.pass_rate_estimates()
-        seen = (self.succ + self.fail) > 1.0
+        seen = (self.succ + self.fail) > 0.0
         if not seen.any():
             return 0.0
         return float((p[seen] > threshold).mean())
 
     def metrics(self) -> dict:
-        seen = (self.succ + self.fail) > 1.0
+        seen = (self.succ + self.fail) > 0.0
         return {"teacher/effective_bins": float(1.0 / (self.sampling_probs() ** 2).sum()),
                 "teacher/seen_frac": float(seen.mean()),
                 "teacher/frontier_bin": float(self.argmax_utility()),
@@ -194,12 +196,46 @@ class FrontierBinTeacher:
                 "teacher/frac_mastered": self.mastered_fraction()}
 
     def state_dict(self) -> dict:
-        return {"succ": self.succ.copy(), "fail": self.fail.copy()}
+        """Return all mutable state needed for bitwise-identical sampling.
+
+        Saving only the evidence arrays is insufficient when Thompson sampling
+        is enabled: both the NumPy generator and a clean cached distribution
+        affect the next sampled bins.  Keeping the cache also avoids consuming
+        an extra posterior draw immediately after resume.
+        """
+        return {
+            "succ": self.succ.copy(),
+            "fail": self.fail.copy(),
+            "probs": self._probs.copy(),
+            "dirty": bool(self._dirty),
+            "rng_state": copy.deepcopy(self.rng.bit_generator.state),
+        }
 
     def load_state_dict(self, state: dict) -> None:
-        self.succ = np.asarray(state["succ"], dtype=float)
-        self.fail = np.asarray(state["fail"], dtype=float)
-        self._dirty = True
+        succ = np.asarray(state["succ"], dtype=float)
+        fail = np.asarray(state["fail"], dtype=float)
+        if succ.shape != (self.n_bins,) or fail.shape != (self.n_bins,):
+            raise ValueError(
+                "teacher evidence shape does not match configured n_bins"
+            )
+        self.succ = succ.copy()
+        self.fail = fail.copy()
+
+        # Backward-compatible restore for checkpoints written before the RNG
+        # and cached distribution were persisted.  Such checkpoints recover
+        # evidence but cannot promise the old sampling continuation.
+        if "rng_state" in state:
+            self.rng.bit_generator.state = copy.deepcopy(state["rng_state"])
+        probs = np.asarray(
+            state.get("probs", np.full(self.n_bins, 1.0 / self.n_bins)),
+            dtype=float,
+        )
+        if probs.shape != (self.n_bins,):
+            raise ValueError(
+                "teacher probability shape does not match configured n_bins"
+            )
+        self._probs = probs.copy()
+        self._dirty = bool(state.get("dirty", True))
 
 
 # --------------------------------------------------------------------------

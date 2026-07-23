@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Curriculum-MaxRL — a teacher curriculum derived from the MaxRL objective</title>
-<meta name="description" content="How Maximum Likelihood RL works, why it is an implicit curriculum, and how we derive an explicit teacher curriculum from the estimator's own algebra.">
+<meta name="description" content="Finite-N Curriculum-MaxRL math, corrected local experiments, narrow neural evidence, and the current no-go and generality boundaries.">
 <style>
 :root {
   color-scheme: light;
@@ -193,7 +193,7 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     mastered (nothing left to learn) and on prompts it can't touch (every rollout fails —
     group estimators emit <em>zero gradient</em>). We measured it: under uniform sampling,
     <strong>historical logs showed 65–75% zero-weight groups</strong>, but the old counter mixed
-    all-fail and all-pass groups. The fix needs no new
+    all-fail and all-pass groups. The statistic needs no new estimator
     machinery. We prove practical MaxRL's expected scalar coefficient mass is exactly
     <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong> — twice the probability of being solvable in N tries but not in one — and
     that formula supplies a curriculum proxy: sample by it to favor groups likely to emit
@@ -201,17 +201,18 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     already-realized all-fail group has no practical MaxRL update, so selection alone cannot
     recover that group; where a verifier-valid goal rewrite exists, we <em>recycle</em> a failed
     rollout as a success for an achieved goal. Together they beat a
-    <strong>true-pass-rate proportional-priority baseline</strong> on the toy —
-    because that baseline only reallocates original-task groups, while
+    <strong>true-pass-rate proportional-priority comparator</strong> on the toy —
+    because that comparator only reallocates original-task groups, while
     recycling adds verifier-valid auxiliary targets.
   </p>
   <div class="card" style="margin-top:18px">
     <p class="eyebrow" style="margin-bottom:8px">The one-sentence pitch</p>
     <p style="margin:0"><strong>Read the curriculum off the estimator's own algebra, and salvage
-    what the estimator throws away.</strong> No difficulty-band hyperparameters — the rollout
-    budget N you already chose sets the band (peak difficulty ≈ ln&nbsp;N&nbsp;/&nbsp;N); the
-    practical drop-both estimator targets order N−1; raw and always-retained-CV
-    variants retain the paper's order-N result.</p>
+    what the estimator throws away.</strong> No hand-set band center or width: the rollout
+    budget N sets the coefficient-mass band (peak pass rate ≈ ln&nbsp;N&nbsp;/&nbsp;N).
+    Floor, concentration, decay, and task bins remain empirical; the practical drop-both
+    estimator targets order N−1, while raw and always-retained-CV variants retain the
+    paper's order-N result.</p>
   </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
@@ -235,6 +236,24 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
   MountainCar and CartPole smoke numbers have also been retired; the
   MountainCar section below reports the corrected ten-seed study, while
   CartPole awaits the same corrected protocol.</p>
+</div>
+
+<div class="card" aria-labelledby="claim-ladder-title">
+  <p class="eyebrow">Evidence status · 23 July 2026</p>
+  <h3 id="claim-ladder-title" style="margin:0 0 6px">Current claim ladder</h3>
+  <table>
+    <thead><tr><th>Level</th><th>What the repository currently supports</th></tr></thead>
+    <tbody>
+      <tr><td><span class="status ok">✓ Exact math</span></td><td>Finite-N coefficient-mass, peak-location, and fixed-p allocation identities, with their stated estimator conventions.</td></tr>
+      <tr><td><span class="status ok">✓ Corrected local mechanisms</span></td><td>Retained CPU skill-chain, goal-rewrite gridworld, and tile-coded MountainCar studies; these are local task-family results, not a general benchmark claim.</td></tr>
+      <tr><td><span class="status ok">✓ Narrow neural result</span></td><td>Acrobot V3 only: with one shared H64 policy and hindsight off, the teacher improved normalized transition-AUC by +0.03635 over 20 paired seeds (exact sign-flip p=0.00264). No transfer or parameter-sharing cause was tested.</td></tr>
+      <tr><td><span class="status run">◇ Robotics development pipeline</span></td><td>On UniLab's Motrix Stewart simulator, all exact grouped D<sub>8</sub> arms learned across three paired development seeds. The u<sub>8</sub> teacher reduced all-fail groups and increased coefficient mass, but did not have the best mean AUC. This validates a CPU pipeline, not teacher superiority or robotics generality.</td></tr>
+      <tr><td><span class="status no">✗ Registered no-go boundaries</span></td><td>Acrobot V4B was not run after V4A failed feasibility; completed V5B is a procedural NO-GO with no authorized contrasts; neural MountainCar failed its development gate and never reached confirmation.</td></tr>
+      <tr><td><span class="status run">⚠ Historical only</span></td><td>GPU maze observations remain provisional because the audited training and evaluation stack is confounded.</td></tr>
+      <tr><td><span class="status run">◇ Synthetic mock only</span></td><td>The Cosmos/LIBERO integration currently exercises a CPU synthetic mock; it is not evidence from a real robot or robotics benchmark.</td></tr>
+      <tr><td><span class="status run">○ Not completed</span></td><td>No real LLM-scale, confirmatory robotics, or broad benchmark study currently supports a generality claim.</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- ============================================================ -->
@@ -261,25 +280,28 @@ curriculum's job description</strong> — is the origin of everything on this pa
     <h3>Channel 1 → the teacher (waste avoidance)</h3>
     <p>Theorem 1 expresses the ML gradient through success-conditioned scores; the practical
     centered update also scores failures in live mixed groups but discards K=0 groups. Its expected
-    signal per prompt has a closed form — and that form, 2·(pass@N − pass@1), is a
+    scalar coefficient mass per prompt has a closed form — and that form, 2·(pass@N − pass@1), is a
     zone-of-proximal-development functional the estimator was computing implicitly all along.
-    Sampling by it is the curriculum. Bounded by the oracle ceiling: allocation only
-    redistributes signal that exists.</p>
+    Sampling by it is the curriculum. A true-pass-rate proportional-priority comparator is
+    a useful reference: allocation only redistributes original-task groups, and no
+    optimal-sampler bound has been established.</p>
   </div>
   <div class="card">
     <h3>Channel 2 → the recycler (signal creation)</h3>
     <p>If an all-fail group supplies no update, <em>create a verified auxiliary success</em>. A failed
     rollout is a verified success for the goal it actually reached; relabeling dead groups
-    yields verifier-valid auxiliary gradients. Equality to a fresh target
+    yields verifier-valid auxiliary updates. Equality to a fresh target
     update needs the law/moment conditions in Proposition 6. This changes what
     a sampled failure can yield in a way prompt selection alone cannot.</p>
   </div>
 </div>
-<p>There is a third, silent channel: <strong>objective safety</strong>. The identical teacher
-grew coverage under MaxRL in every seed and <em>amplified GRPO's collapse</em> in every seed —
-the objective underneath decides whether a curriculum is safe at all (section 4). Together:
-<strong>the teacher allocates, hindsight creates, the objective decides whether either is
-safe.</strong> The full evidence decomposition, regime map, and practitioner playbook are in
+<p>A third channel is the <strong>learner interaction</strong>: a curriculum changes the data
+stream, and the learner turns that stream into updates. One historical maze sweep showed the
+same teacher interacting in opposite directions with MaxRL and GRPO, but its score, counters,
+budgets, and AUC protocol were confounded. That observation is a hypothesis for a corrected
+factorial, not a general conclusion about GRPO curricula. Together:
+<strong>the teacher reallocates groups, hindsight adds auxiliary targets, and the learner
+converts those data into updates.</strong> The full evidence decomposition, regime map, and practitioner playbook are in
 <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/EVIDENCE.md">EVIDENCE.md</a>.</p>
 
 <!-- ============================================================ -->
@@ -365,18 +387,20 @@ teacher can close:</p>
 </div>
 <div class="gap-card">
   <h3>Mastered prompts (p → 1)</h3>
-  <p>∇p → 0, so rollouts are spent re-confirming what the model knows. GRPO is actively worse here:
-  its w(p) inverts and <em>upweights</em> easy prompts, sharpening the distribution.</p>
+  <p>∇p → 0, so rollouts are spent re-confirming what the model knows. GRPO's population
+  coefficient curve turns upward and relatively <em>upweights</em> easy prompts; whether that
+  harms a particular learner is an empirical interaction question.</p>
 </div>
 <div class="gap-card">
   <h3>Uniform rollout budgets</h3>
   <p>The paper uses a fixed N per prompt. But since the truncation order is tied to the group size
-  (T = N), harder prompts would benefit from larger groups twice over: more chance of a first
-  success, and a higher-order approximation of the ML objective.</p>
+  (T = N for the raw and always-retained estimators; T = N−1 for the practical drop-both
+  estimator), a larger group both raises the chance of a first success and changes the effective
+  objective order. Variable N is therefore an objective change, not pure compute allocation.</p>
 </div>
 
 <p>A striking finite-sample fact we verified: at p&nbsp;=&nbsp;0.01, N&nbsp;=&nbsp;32, GRPO's population
-curve promises weight ≈ 0.199, but the <em>realized</em> expected signal is 0.100 — half —
+curve gives coefficient mass ≈ 0.199, but the <em>realized</em> expected coefficient mass is 0.100 — half —
 because 72% of groups are all-fail and contribute nothing. Population weight curves describe a
 limit no finite-group trainer lives in.</p>
 
@@ -453,9 +477,9 @@ This proxy is not the gradient norm or a proof of optimal learning progress.</p>
   <figcaption>
     Same simulation math as the CPU testbed (Beta-posterior teacher, u(p)=pass@N−pass@1 utility,
     dead-group relabeling to the deepest reachable easier task). The mean-pass counters update
-    live; by ~150 steps the ordering uniform &lt; teacher &lt; teacher+hindsight emerges the same
-    way it does in every real experiment. Reduced-motion users: the Play button steps the
-    simulation; nothing animates unprompted.
+    live; by ~150 steps the ordering uniform &lt; teacher &lt; teacher+hindsight emerges in this
+    illustrative synthetic model. Experimental evidence is reported separately below.
+    Reduced-motion users: the Play button steps the simulation; nothing animates unprompted.
   </figcaption>
 </figure>
 
@@ -486,7 +510,9 @@ This proxy is not the gradient norm or a proof of optimal learning progress.</p>
 MaxRL/verl trainer behind <code>+data.curriculum.enable=true</code>, with teacher state
 checkpointed alongside the model — and packaged environment-agnostically in
 <a href="https://github.com/linjiw/curriculum-maxrl/tree/main/frontier_rl"><code>frontier_rl/</code></a>
-for gym and robotics tasks.</p>
+for tested local Gym-style tasks and future adapters. A first three-seed UniLab
+simulated-manipulation development pilot now validates the exact grouped CPU
+pipeline; it does not establish a teacher ranking or robotics generality.</p>
 
 <h3 id="proof">The two-line proof (Proposition 1)</h3>
 <div class="card">
@@ -521,18 +547,18 @@ exact-enumeration/unit tests; experiment-specific checks live in
   <tbody>
     <tr><td>MaxRL</td><td class="mono">2(pass@N − pass@1)</td><td>solvable in N tries but not in one — the derived teacher utility</td><td class="num"><span class="status ok">✓ 200k-trial MC</span></td></tr>
     <tr><td>RLOO</td><td class="mono">2p(1−p)</td><td>identical to SFL “learnability” — two literatures, one object</td><td class="num"><span class="status ok">✓ exact</span></td></tr>
-    <tr><td>GRPO</td><td class="mono">≈2√(p(1−p))·P(K∉{0,N})</td><td>realized signal on hard prompts ~2× below the population curve</td><td class="num"><span class="status ok">✓ binomial sum</span></td></tr>
+    <tr><td>GRPO</td><td class="mono">≈2√(p(1−p))·P(K∉{0,N})</td><td>realized coefficient mass on hard prompts ~2× below the population curve</td><td class="num"><span class="status ok">✓ binomial sum</span></td></tr>
   </tbody>
 </table>
 
-<h3>CPU skill-chain testbed — teacher × estimator (36 tasks, initial pass rates 10<sup>−level</sup>, 5 seeds)</h3>
+<h3>Corrected CPU skill-chain component study — 36 tasks, 12 paired seeds</h3>
 <table>
   <thead><tr><th>Finding</th><th>Evidence</th></tr></thead>
   <tbody>
-    <tr><td>MaxRL is an implicit curriculum</td><td>a teacher lifts GRPO by +0.23 final mean-pass but MaxRL by only +0.01 on moderate distributions</td></tr>
-    <tr><td>Teacher × MaxRL are complementary where it counts</td><td>beyond-frontier-heavy regime: combination 0.961 vs 0.871 (MaxRL alone) vs 0.847 (teacher+GRPO)</td></tr>
-    <tr><td>Historical legacy utility ≈ hand-tuned ZPD band</td><td>AUC 0.704–0.712 vs 0.688; the corrected exact-u<sub>N</sub> run is 0.700 vs 0.650 uniform</td></tr>
-    <tr><td>Fastest to the deepest level</td><td>frontier+maxrl: 206 steps vs 248 (uniform+maxrl) vs 262 (zpd+grpo)</td></tr>
+    <tr><td>Exact-mass teacher helps locally</td><td>γ=1 checkpoint mean 0.732 vs 0.660 uniform; paired effect +0.0718, Holm-adjusted exact sign-flip p=0.0073</td></tr>
+    <tr><td>Concentration helps on this structured pool</td><td>γ=4 checkpoint mean 0.781 vs 0.732 at γ=1; paired effect +0.0494, adjusted p=0.0073. A shared-skill explanation remains a hypothesis.</td></tr>
+    <tr><td>Centered hindsight is the larger local component</td><td>checkpoint-mean effects: +0.2056 under uniform, +0.1470 under γ=1, and +0.1050 under γ=4; all adjusted p=0.0073</td></tr>
+    <tr><td>Teacher and hindsight are not simply additive</td><td>teacher × centered-hindsight interaction −0.0586, adjusted p=0.0073; both channels can recycle overlapping waste</td></tr>
   </tbody>
 </table>
 
@@ -569,7 +595,7 @@ inverted w(p) overweights. The opposite happened — frontier+grpo collapsed <em
 (pass@8 0.332→0.269) than uniform+grpo (0.351→0.312), losing easy-level retention, while MaxRL
 under the same teacher kept pass@8 flat-to-up. One possible interpretation is that easy-prompt
 updates helped maintain coverage, but the audited runs do not isolate that mechanism. They
-motivate, but do not establish, an estimator-by-curriculum interaction or safety claim.</p>
+motivate, but do not establish, an estimator-by-curriculum interaction mechanism.</p>
 
 <p><strong>Provisional multi-seed check (seeds 0–2, shared per-seed SFT weights but not common post-SFT RNG streams):</strong>
 both teacher variants have positive legacy step-AUC deltas against uniform+maxrl in each
@@ -584,14 +610,17 @@ mechanism from seed noise; the result is hypothesis-generating.</p>
 practical centered estimator uses failures in live mixed groups, but discards all-fail groups.
 The HER-style complement: a failed trajectory is a success <em>for the goal it
 actually reached</em>. Relabeling dead groups to their deepest achieved sub-goal converts
-wasted compute into live MaxRL groups:</p>
+wasted compute into live MaxRL groups. This is not generally an exact or unbiased replacement
+for a fresh target-task group: verifier validity and conditioning rewrite are necessary, and
+update equality additionally needs equality of the relevant moments (full rewritten-group law
+equality is sufficient).</p>
 <table>
-  <thead><tr><th>Config (CPU skill-chain, 5 seeds)</th><th class="num">Final</th><th class="num">AUC (speed)</th></tr></thead>
+  <thead><tr><th>Config (corrected CPU skill-chain, 12 paired seeds)</th><th class="num">Final</th><th class="num">checkpoint mean</th></tr></thead>
   <tbody>
-    <tr><td>uniform + maxrl</td><td class="num">0.966</td><td class="num">0.653</td></tr>
-    <tr><td>uniform + maxrl + <strong>hindsight</strong></td><td class="num">0.978</td><td class="num"><strong>0.878</strong></td></tr>
-    <tr><td>advmass teacher + maxrl</td><td class="num">0.979</td><td class="num">0.704</td></tr>
-    <tr><td>advmass teacher + maxrl + <strong>hindsight</strong></td><td class="num"><strong>0.984</strong></td><td class="num"><strong>0.883</strong></td></tr>
+    <tr><td>uniform + maxrl</td><td class="num">0.967</td><td class="num">0.660</td></tr>
+    <tr><td>uniform + maxrl + <strong>centered hindsight</strong></td><td class="num">0.979</td><td class="num"><strong>0.866</strong></td></tr>
+    <tr><td>exact-mass γ=1 teacher + maxrl</td><td class="num">0.980</td><td class="num">0.732</td></tr>
+    <tr><td>exact-mass γ=1 teacher + maxrl + <strong>centered hindsight</strong></td><td class="num"><strong>0.984</strong></td><td class="num"><strong>0.879</strong></td></tr>
   </tbody>
 </table>
 <p>Division of labor: the <strong>teacher avoids</strong> spending compute beyond the frontier;
@@ -607,26 +636,30 @@ teacher+hindsight reaches 0.98 — reallocating compute among unlearnable tasks 
 hindsight <em>creates</em> the missing signal by inventing the curriculum below the pool,
 igniting learnability within ~400 groups, then going silent as natural successes take over.</p>
 
-<h3>Beating a true-pass-rate priority baseline—and the concentration surprise</h3>
+<h3>Comparing with true-pass-rate proportional priority—and the concentration surprise</h3>
 <p>Two late results sharpened the method. First, sampling ∝ u(p)<sup>γ</sup> with γ≈4 beats
-proportional sampling (AUC 0.782 vs 0.728): the mass functional is the right <em>ordering</em>,
+proportional sampling in the corrected 12-seed skill chain (checkpoint mean 0.781 vs 0.732): the mass functional supplied a useful <em>ordering</em> on this pool,
 but learning <em>compounds</em> on structured task pools — steps on the highest-mass task unlock
 the next—so a sharper tested temperature can outperform proportional sampling. An archived
 two-line ODE pilot was consistent with a shared-skill explanation, but its driver was not retained;
-the causal explanation remains a hypothesis. Second, the headline:</p>
+the causal explanation remains a hypothesis. A separate retained diagnostic is equally important:
+the true-pass-rate proportional-priority comparator accumulated 841 units of coefficient mass
+versus 838 for the pseudo-count teacher, yet their AUCs were 0.851 and 0.700. Similar total
+coefficient mass did <em>not</em> imply similar AUC; timing, estimation error, and update direction
+also matter.</p>
 
 <figure>
   <div class="chart-card" id="chart3card">
     <p class="chart-title">Skill-chain checkpoint mean by teacher</p>
     <p class="chart-sub">Five seeds in one retained shared-trainer runner. This historical “AUC” convention is the mean of equally spaced post-update checkpoints.</p>
-    <svg id="chart3" viewBox="0 0 800 340" role="img" aria-label="Horizontal bar chart of checkpoint mean by teacher configuration and a true-pass-rate proportional-priority baseline"></svg>
+    <svg id="chart3" viewBox="0 0 800 340" role="img" aria-label="Horizontal bar chart of checkpoint mean by teacher configuration and a true-pass-rate proportional-priority comparator"></svg>
     <div class="tooltip" id="tt3"></div>
     <details><summary>Table view</summary><div id="table3"></div></details>
   </div>
   <figcaption>
     The retained shared-trainer runner reports the full stack above a
-    true-pass-rate proportional-priority baseline. The baseline is strong but
-    is not an optimal sampler bound.
+    true-pass-rate proportional-priority comparator. It is a strong reference, not an
+    optimal-sampler bound.
   </figcaption>
 </figure>
 
@@ -655,7 +688,26 @@ law, which need not transfer to other environments:</p>
 trajectories embed the goal, the relabel must <em>rewrite the conditioning</em> to the achieved
 goal. The corrected ten-seed gridworld study exercises the valid-rewrite path (teacher AUC
 0.652; teacher+hindsight 0.702) but has no corrected no-rewrite arm. Rewriting is an estimator
-contract; these results validate the compliant implementation, not the archived ablation.</p>
+contract, and the rewritten update still needs the stated moment/law condition to equal a fresh
+target update. These results validate the compliant implementation, not general hindsight
+unbiasedness or the archived ablation.</p>
+
+<h3>Neural and simulator CPU validation boundary</h3>
+<table>
+  <thead><tr><th>Study</th><th>Registered outcome</th><th class="num">Authorized claim</th></tr></thead>
+  <tbody>
+    <tr><td>Acrobot V3, shared H64, hindsight off</td><td>teacher AUC 0.6850 vs 0.6487 uniform; paired Δ=+0.03635, bootstrap 95% CI [0.01645, 0.05539], exact p=0.00264</td><td class="num"><span class="status ok">✓ local efficacy</span></td></tr>
+    <tr><td>Acrobot V4A/V4B</td><td>V4A feasibility gate failed in 3/9 runs; V4B was not authorized or run</td><td class="num"><span class="status no">✗ no effect estimate</span></td></tr>
+    <tr><td>Acrobot V5B</td><td>180/180 runs completed, but the frozen analyzer failed its exact diagnostic-reconstruction rule</td><td class="num"><span class="status no">✗ procedural NO-GO</span></td></tr>
+    <tr><td>MountainCar neural V1R2</td><td>all 15 development runs completed, hardest-goal AUC was zero in every cell, and the adequacy gate failed</td><td class="num"><span class="status no">✗ no confirmation</span></td></tr>
+    <tr><td>UniLab Stewart exact grouped, three development seeds</td><td>all D<sub>8</sub> arms learned; AUC uniform/learnability/u<sub>8</sub> = .225/.243/.232. u<sub>8</sub> averaged 13.0 all-fail groups versus 21.3 uniform and 151.25 versus 140.25 coefficient-mass units</td><td class="num"><span class="status run">◇ pipeline + mechanism only</span></td></tr>
+  </tbody>
+</table>
+<p class="footnote">V3 tests only teacher versus uniform sampling on one fixed Acrobot threshold
+family. It does not test transfer causality, a parameter-sharing effect, hindsight, or Acrobot
+performance in general. V5B cell outcomes remain quarantined and are not interpreted here.
+The UniLab family used a post-hoc development warm-start checkpoint and only three paired
+seeds; every paired AUC interval crossed zero, so it cannot rank samplers.</p>
 
 <h3>Honest negatives &amp; open items</h3>
 <table>
@@ -676,11 +728,14 @@ contract; these results validate the compliant implementation, not the archived 
     <tr><td>SmolLM2-360M + GSM8K, curriculum × {maxrl, grpo}</td>
         <td>launch script ready (<code>verl_integration/</code>); needs a multi-GPU node</td>
         <td class="num"><span class="status run">⟳ queued</span></td></tr>
+    <tr><td>Cosmos/LIBERO robotics integration</td>
+        <td>adapter and training path currently exercise a CPU synthetic mock only; no real LIBERO or robot result is complete</td>
+        <td class="num"><span class="status run">◇ synthetic only</span></td></tr>
   </tbody>
 </table>
 
 <!-- ============================================================ -->
-<h2 id="framework">5 · One schedule, any environment: <span class="mono">frontier_rl</span></h2>
+<h2 id="framework">5 · One interface across tested local environments: <span class="mono">frontier_rl</span></h2>
 
 <p>The validated schedule is packaged as an environment-agnostic framework
 (<a href="https://github.com/linjiw/curriculum-maxrl/tree/main/frontier_rl"><code>frontier_rl/</code></a>,
@@ -692,48 +747,49 @@ gridworld, and one corrected external Gymnasium benchmark:</p>
 <table>
   <thead><tr><th>Environment (matched budgets; Gym/Grid use trapezoidal AUC)</th><th class="num">uniform</th><th class="num">teacher</th><th class="num">teacher + hindsight</th></tr></thead>
   <tbody>
-    <tr><td>Skill chain (equally spaced checkpoint mean, 5 seeds; third arm is γ=4 full stack)</td><td class="num">0.650</td><td class="num">0.728</td><td class="num"><strong>0.890</strong></td></tr>
+    <tr><td>Skill chain (corrected equally spaced checkpoint mean, 12 paired seeds; third arm is γ=4 full stack)</td><td class="num">0.660</td><td class="num">0.732</td><td class="num"><strong>0.886</strong></td></tr>
     <tr><td>Gridworld reach (corrected, 10 seeds)</td><td class="num">0.583</td><td class="num">0.652</td><td class="num"><strong>0.702</strong></td></tr>
     <tr><td>Gymnasium <strong>MountainCar</strong> (corrected, 10 paired seeds)</td><td class="num">0.389 ± 0.071</td><td class="num">0.530 ± 0.059<br><small>exact adv-mass γ=4</small></td><td class="num"><strong>0.720 ± 0.029</strong><br><small>centered</small></td></tr>
   </tbody>
 </table>
 
-<p>MountainCar is the deliberate stress test: sparse flag-success is the classic hard-exploration
-task — the real-world twin of the frontier-heavy regime where pure samplers score exactly zero.
+<p>MountainCar is the deliberate stress test: sparse flag-success is a classic hard-exploration
+task and a Gym analogue of the synthetic frontier-heavy regime where pure samplers score exactly zero.
 Its curriculum ("reach x ≥ x*, walking x* from the valley to the flag") is the template for
-robotics reach tasks: swap position bins for end-effector distance bands and the adapter carries
-over. These are MountainCar-v0's official dynamics with custom nested binary target thresholds;
+future robotics reach experiments: a candidate adapter would replace position bins with
+end-effector distance bands, but that transfer has not been validated. These are MountainCar-v0's official dynamics with custom nested binary target thresholds;
 the pass-rate AUC is <strong>not</strong> standard Gymnasium episode return. The retired CartPole
 run was only an uncorrected three-seed smoke test and is not evidence in this table.</p>
 
-<h3>Real training curves — performance rising while the curriculum walks</h3>
+<h3>Corrected retained training curves</h3>
 <figure>
   <div class="chart-card" id="curvecard">
     <p class="chart-title">Left: mean pass rate over training (line = seed mean, band = seed min–max).
-    Right: the teacher's sampling distribution over the same run — darker = more sampling mass.</p>
+    Right: provenance boundary for the selected artifact.</p>
     <div class="slider-row">
       <label for="envSel">Environment</label>
       <select id="envSel" style="padding:5px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface-1);color:var(--text-primary)">
         <option value="skill_chain">Skill chain</option>
         <option value="grid_reach">Gridworld reach</option>
         <option value="mountaincar">MountainCar</option>
-        <option value="cartpole">CartPole</option>
+        <option value="unilab_stewart">UniLab Stewart (development)</option>
       </select>
     </div>
+    <p class="chart-sub" id="curveNote" aria-live="polite"></p>
     <div class="legend">
-      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-2)"></span>uniform</span>
-      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-1)"></span>teacher</span>
-      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-6)"></span>teacher + hindsight</span>
+      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-2)"></span><span id="curveLegendUniform">uniform</span></span>
+      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-1)"></span><span id="curveLegendTeacher">teacher</span></span>
+      <span class="key"><span class="swatch-line" style="border-top-color:var(--series-6)"></span><span id="curveLegendHindsight">teacher + hindsight</span></span>
     </div>
-    <svg id="curvesvg" viewBox="0 0 800 400" role="img" aria-label="Training curves for three methods with seed bands, next to a heatmap of the teacher's sampling distribution over tasks and time"></svg>
+    <svg id="curvesvg" viewBox="0 0 800 400" role="img" aria-label="Corrected retained training curves for three methods with seed bands, next to a data-provenance panel"></svg>
   </div>
   <figcaption>
-    Data exported from the actual runs (<code>frontier_rl/examples/export_curves.py</code>,
-    <code>docs/curves.json</code>) — not a mock. The heatmap makes the mechanism visible: the dark
-    band of sampling mass starts on easy tasks and <em>walks rightward</em> (harder) as the policy
-    improves — performance and curriculum are two views of one process. On MountainCar the
-    per-bin-parameter variant is shown (the flag needs the shared policy, see the case study
-    below), so teacher gains are muted there — the honest picture.
+    <code>frontier_rl/examples/export_curves.py</code> now reads the retained corrected artifacts
+    directly: 12 paired skill-chain seeds, 10 gridworld seeds, 10 paired MountainCar seeds,
+    and the explicitly development-only three-seed UniLab Stewart family.
+    The retired small-seed MountainCar and CartPole exports are excluded. These corrected
+    artifacts retain evaluation curves but not per-checkpoint teacher-distribution snapshots,
+    so the panel marks that trace unavailable instead of mixing in an archived run.
   </figcaption>
 </figure>
 
@@ -764,10 +820,9 @@ run was only an uncorrected three-seed smoke test and is not evidence in this ta
   [−0.035, 0.091]), exact adv-mass γ=1 over the legacy score (−0.000 [−0.023, 0.026]),
   exact adv-mass γ=1 over learnability priority (+0.003 [−0.054, 0.063]), or centered
   over success-only hindsight (−0.006 [−0.021, +0.008]; exact sign-flip
-  p=0.436, Holm-adjusted p=1.000). This makes the transfer lesson precise:
-  curricula need shared parameters for competence to transfer, but this
-  per-bin control also changes capacity and data sharing, so it isolates a
-  mechanism rather than estimating a pure architecture effect.</p>
+  p=0.436, Holm-adjusted p=1.000). The largest effect appears in the shared-policy
+  condition, but the per-bin control also changes capacity and data sharing. It therefore
+  establishes neither a necessity result nor parameter sharing as the causal mechanism.</p>
 </div>
 
 <pre><code># the whole integration surface
@@ -795,8 +850,8 @@ FrontierTrainer(MyEnv(), MyPolicy(), TrainerConfig(hindsight=True)).train(500)</
     <tr><td>Archived single-checkpoint GPU inference table</td>
         <td>post-hoc per-level targets ranged from a 0.5× reversal to an 11× advantage; checkpoints were not retained, so no monotone difficulty claim is supported</td></tr>
     <tr><td>Corrected CPU skill chain: frontier-heavy regime</td>
-        <td>0.00 → 0.98 at equal compute (uniform, DAPO, and plain teacher all score exactly 0)</td></tr>
-    <tr><td>Corrected CPU skill chain: full stack vs true-p proportional priority</td>
+        <td>0.00 → 0.98 at equal group/rollout-attempt budget (uniform, DAPO, and plain teacher all score exactly 0); primitive skill decisions are not matched</td></tr>
+    <tr><td>Corrected CPU skill chain: full stack vs true-pass-rate proportional-priority comparator</td>
         <td>checkpoint mean 0.890 vs 0.851 in the retained shared-trainer runner (not an optimal-sampler bound)</td></tr>
   </tbody>
 </table>
@@ -807,18 +862,19 @@ fixed evaluation RNG, and one preregistered target are required before reporting
 <p><strong>The hidden benefits — quieter, arguably worth more:</strong></p>
 <div class="grid2">
   <div class="card">
-    <h3>Zero difficulty hyperparameters</h3>
+    <h3>An estimator-derived difficulty scale</h3>
     <p>ADARFT-style bands need targets and widths tuned per task. Here the band is
     <em>derived</em>: the rollout budget N you already chose sets the peak (≈ ln N / N) and the
-    width. Doubling N moves the curriculum harder automatically — the compute knob and the
-    curriculum knob are the same knob.</p>
+    width. Larger N moves the coefficient-mass peak toward lower pass rates, although floor,
+    concentration, decay, and task discretization remain empirical choices—and practical N also
+    changes objective order.</p>
   </div>
   <div class="card">
-    <h3>A safety diagnosis, not just a method</h3>
-    <p>The historical maze evidence raises a testable warning: if GRPO relies on easy prompts
-    for maintenance, a frontier curriculum may amplify coverage loss. The current three-seed
-    audited result is hypothesis-generating; a corrected factorial is required before treating
-    this as a safety rule.</p>
+    <h3>A learner-interaction hypothesis</h3>
+    <p>The historical maze evidence raises a testable possibility: if a learner relies on easy
+    prompts for maintenance, a frontier curriculum may amplify coverage loss. The three-seed
+    audited GRPO observation is confounded and hypothesis-generating; a corrected factorial is
+    required before making a general interaction claim.</p>
   </div>
   <div class="card">
     <h3>Conceptual compression</h3>
@@ -855,17 +911,17 @@ fixed evaluation RNG, and one preregistered target are required before reporting
   </div>
   <div class="card">
     <h3>Population curves mislead at finite N</h3>
-    <p>The elegant w(p) table is an infinite-sample statement. Realized signal is throttled by
+    <p>The elegant w(p) table is an infinite-sample statement. Realized coefficient mass is throttled by
     pass@N for every estimator; on hard prompts GRPO delivers half of what its curve promises.
-    Curriculum design should target the finite-sample quantity — which is exactly what
-    advantage mass is.</p>
+    Advantage mass supplies one explicit finite-sample proxy; whether it predicts useful target
+    improvement better than alternatives is the next empirical question.</p>
   </div>
   <div class="card">
     <h3>Existing curricula are special cases</h3>
     <p>SFL's learnability p(1−p) equals our half-mass utility at N=2 and half
     RLOO's expected coefficient mass. SEC's empirical-|advantage| reward has
     these formulas as expectations. Our pseudo-count teacher is a model-based
-    estimate of expected SEC-style mass, not an oracle.</p>
+    estimate of expected SEC-style mass, not privileged ground-truth scheduling.</p>
   </div>
 </div>
 
@@ -1120,7 +1176,7 @@ fixed evaluation RNG, and one preregistered target are required before reporting
       xs2, series, sx, function (x) { return x.toPrecision(2); });
   }
 
-  /* ---------- chart 3: oracle-gap horizontal bars ---------- */
+  /* ---------- chart 3: comparator horizontal bars ---------- */
   var BARS = [
     { name: "uniform (no teacher)", auc: 0.650, color: "--series-2",
       note: "flat-sampling baseline" },
@@ -1128,8 +1184,8 @@ fixed evaluation RNG, and one preregistered target are required before reporting
       note: "advantage-mass utility, proportional" },
     { name: "Thompson teacher, γ=4", auc: 0.782, color: "--series-1",
       note: "retained shared-trainer run" },
-    { name: "TRUE-p proportional priority", auc: 0.851, color: "--series-4",
-      note: "strong baseline in the same proportional-priority family" },
+    { name: "true-p priority comparator", auc: 0.851, color: "--series-4",
+      note: "true-pass-rate proportional-priority reference; not an optimal bound" },
     { name: "Thompson γ=4 + hindsight", auc: 0.890, color: "--series-1",
       note: "retained shared-trainer full stack" }
   ];
@@ -1150,13 +1206,13 @@ fixed evaluation RNG, and one preregistered target are required before reporting
     });
     svg.appendChild(el("text", { x: M3.left + IW3 / 2, y: H3 + 2, "text-anchor": "middle" }, ""));
     var bandH = IH3 / BARS.length, barH = Math.min(24, bandH - 10);
-    var oracleX = sx(0.851);
+    var comparatorX = sx(0.851);
     BARS.forEach(function (b, i) {
       var y = M3.top + i * bandH + (bandH - barH) / 2;
-      var isOracle = b.name.indexOf("TRUE-p") === 0;
+      var isComparator = b.name.indexOf("true-p") === 0;
       var r = el("rect", { x: sx(X0), y: y, width: Math.max(sx(b.auc) - sx(X0), 0),
         height: barH, rx: 4, fill: cssVar(b.color),
-        opacity: isOracle ? 0.55 : 1 });
+        opacity: isComparator ? 0.55 : 1 });
       svg.appendChild(r);
       svg.appendChild(el("text", { x: M3.left - 10, y: y + barH / 2 + 4,
         "text-anchor": "end", class: "dl" }, b.name));
@@ -1178,20 +1234,20 @@ fixed evaluation RNG, and one preregistered target are required before reporting
         tt.style.display = "block";
         tt.style.left = "60px";
         tt.style.top = (70 + i * 44) + "px";
-        r.setAttribute("opacity", isOracle ? 0.75 : 0.85);
+        r.setAttribute("opacity", isComparator ? 0.75 : 0.85);
       });
       hit.addEventListener("pointerleave", function () {
         document.getElementById("tt3").style.display = "none";
-        r.setAttribute("opacity", isOracle ? 0.55 : 1);
+        r.setAttribute("opacity", isComparator ? 0.55 : 1);
       });
       svg.appendChild(hit);
     });
     /* true-p proportional-priority reference line */
-    svg.appendChild(el("line", { x1: oracleX, x2: oracleX, y1: M3.top - 4, y2: M3.top + IH3,
+    svg.appendChild(el("line", { x1: comparatorX, x2: comparatorX, y1: M3.top - 4, y2: M3.top + IH3,
       stroke: cssVar("--series-4"), "stroke-width": 1.5, "stroke-dasharray": "none",
       opacity: 0.9 }));
-    svg.appendChild(el("text", { x: oracleX, y: M3.top - 2, "text-anchor": "middle", class: "dl" },
-      "true-p baseline"));
+    svg.appendChild(el("text", { x: comparatorX, y: M3.top - 2, "text-anchor": "middle", class: "dl" },
+      "true-p comparator"));
     /* table view */
     var host = document.getElementById("table3");
     host.textContent = "";
@@ -1370,7 +1426,7 @@ fixed evaluation RNG, and one preregistered target are required before reporting
   });
   drawAnim();
 
-  /* ---------- real training curves + curriculum heatmap ---------- */
+  /* ---------- corrected retained training curves ---------- */
   var CURVES = null;
   function loadCurves() {
     fetch("curves.json").then(function (r) { return r.json(); })
@@ -1385,6 +1441,16 @@ fixed evaluation RNG, and one preregistered target are required before reporting
     var envName = document.getElementById("envSel").value;
     var env = CURVES[envName];
     if (!env) return;
+    var curveNote = document.getElementById("curveNote");
+    var methodLabels = ["uniform", "teacher", "hindsight"].map(function (name) {
+      return env.methods[name].label;
+    });
+    document.getElementById("curveLegendUniform").textContent = methodLabels[0];
+    document.getElementById("curveLegendTeacher").textContent = methodLabels[1];
+    document.getElementById("curveLegendHindsight").textContent = methodLabels[2];
+    curveNote.textContent = env.note + " Shown: " + methodLabels.join(" · ") + ".";
+    svg.setAttribute("aria-label", "Corrected retained " + envName.replace("_", " ") +
+      " training curves with seed envelopes; sampling-distribution trace not retained");
     var W5 = 800, H5 = 400;
     // left panel: curves
     var L = { top: 16, left: 52, w: 360, h: 320 };
@@ -1420,9 +1486,10 @@ fixed evaluation RNG, and one preregistered target are required before reporting
     });
     svg.appendChild(el("line", { x1: L.left, x2: L.left + L.w, y1: L.top + L.h, y2: L.top + L.h, stroke: cssVar("--baseline") }));
     svg.appendChild(el("text", { x: L.left + L.w / 2, y: H5 - 22, "text-anchor": "middle" },
-      "training step (eval every " + env.eval_every + ")"));
+      env.x_label || "training progress"));
     svg.appendChild(el("text", { x: 14, y: L.top + L.h / 2, transform: "rotate(-90 14 " + (L.top + L.h / 2) + ")", "text-anchor": "middle" }, "mean pass rate"));
-    // right panel: teacher-distribution heatmap (hindsight arm's teacher)
+    // Right panel: corrected artifacts do not retain sampling snapshots. Keep
+    // heatmap support for future corrected exports, but never splice archived traces.
     var Hm = { left: 490, top: 16, w: 280, h: 320 };
     var src = env.methods.hindsight.dist || env.methods.teacher.dist;
     if (src && src.length) {
@@ -1445,6 +1512,17 @@ fixed evaluation RNG, and one preregistered target are required before reporting
       svg.appendChild(el("text", { x: Hm.left - 8, y: Hm.top + 10, "text-anchor": "end" }, "easy"));
       svg.appendChild(el("text", { x: Hm.left - 8, y: Hm.top + Hm.h, "text-anchor": "end" }, "hard"));
       svg.appendChild(el("text", { x: Hm.left + Hm.w / 2, y: Hm.top - 4, "text-anchor": "middle", class: "dl" }, "teacher sampling mass"));
+    } else {
+      svg.appendChild(el("rect", { x: Hm.left, y: Hm.top, width: Hm.w, height: Hm.h,
+        rx: 8, fill: cssVar("--surface-1"), stroke: cssVar("--grid"), "stroke-dasharray": "5 5" }));
+      svg.appendChild(el("text", { x: Hm.left + Hm.w / 2, y: Hm.top + 132,
+        "text-anchor": "middle", class: "dl" }, "Sampling trace not retained"));
+      svg.appendChild(el("text", { x: Hm.left + Hm.w / 2, y: Hm.top + 158,
+        "text-anchor": "middle" }, "Corrected artifact contains"));
+      svg.appendChild(el("text", { x: Hm.left + Hm.w / 2, y: Hm.top + 176,
+        "text-anchor": "middle" }, "evaluation curves only."));
+      svg.appendChild(el("text", { x: Hm.left + Hm.w / 2, y: Hm.top + 211,
+        "text-anchor": "middle" }, "No archived trace substituted."));
     }
   }
   document.getElementById("envSel").addEventListener("change", drawCurves);
