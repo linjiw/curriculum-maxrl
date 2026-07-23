@@ -195,7 +195,13 @@ the closed-loop threshold-curriculum stability rules.
 for RLVR on flow-matching VLA policies (no tractable per-sample log-prob):
 
 - **positive-part weights** (`TrainerConfig(positive_weights=True)`) — the
-  weighted-RFT estimator; sampling algebra unchanged (P1 exact).
+  weighted-RFT estimator; sampling algebra unchanged (P1 exact). Measured
+  cost of dropping the failure term (skill-chain anchor, matched budgets,
+  3 seeds): AUC 0.887→0.828, final 0.986→0.941 — the dropped term is a
+  zero-mean baseline, so the price is variance, not bias; the full stack
+  still clears plain-teacher (0.73) and uniform (0.65) by a wide margin
+  (`curriculum_maxrl/positive_part_training_cost.json`). Use it only when
+  per-sample log-probs are genuinely unavailable.
 - **`CosmosLiberoSpace`** — arms are predicate-conjunction goals; `rollout_fn`
   is a hook for the policy-server + vector-env wave (no cosmos import here);
   live groups are verified ONLY by the sim's binary success; dead groups are
