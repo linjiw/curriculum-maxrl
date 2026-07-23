@@ -18,13 +18,18 @@ what lets you predict where the method will and won't help.
 
 - Mechanism: sample ∝ u(p) = pass@N − pass@1 (P1: the estimator's exact
   expected signal). Zero at mastered (p→1) and unreachable (p→0) tasks.
-- What it buys, measured: dead groups 5.8→3.4 of 8 (maze); 22–35% more
+- What it buys, measured: dead groups 5.8→3.4 of 8 (maze — historical
+  zero-weight-group counter, mechanism-open per the EXPERIMENTS.md audit:
+  it pools K=0 with K=N and cannot isolate dead-group waste); 22–35% more
   optimization steps per GPU-hour (frontier rollouts also end earlier);
   6/6 paired-seed wins vs uniform.
 - Ceiling: the ORACLE bound. A perfect sampler collects only 0.4% more
-  advantage mass than our Thompson posterior (V2) — allocation saturates
-  fast. Channel 1 alone is worth ~+0.05–0.08 AUC and never more, because
-  it can only reallocate signal that exists.
+  advantage mass than our Thompson posterior (V2) — but mass saturation
+  bounds mass, not AUC: the V2 oracle still reaches +0.20 AUC over uniform
+  on CPU. Realized Thompson-teacher gain is +0.05–0.08 AUC on CPU and
+  ~+0.01 on the maze; the remaining oracle gap is a tracking problem, and
+  no pure sampler can exceed the oracle — it can only reallocate signal
+  that exists.
 - When it's the dominant channel: mixed-difficulty pools with real spread
   (the balanced regime), and any setting where rollouts are the cost center.
 
@@ -55,8 +60,9 @@ what lets you predict where the method will and won't help.
   frontier tasks as p→0, and unlike GRPO its weight function doesn't invert
   at p→1.
 - What it buys, measured: the H6 reversal. The identical teacher GREW
-  coverage under MaxRL every seed (pass@8 0.316→0.348) and AMPLIFIED
-  collapse under GRPO every seed (0.332→0.269, easy-retention lost).
+  coverage under MaxRL every seed (pass@8 0.316→0.348); GRPO decayed
+  coverage every seed, and in the seed run with a teacher the collapse
+  was AMPLIFIED (0.332→0.269, easy-retention lost — single-seed arm).
   GRPO's inverted weighting was silently maintaining easy tasks; the
   curriculum removes that maintenance.
 - This is a compatibility theorem in empirical form: **channels 1+2 are not
@@ -69,7 +75,7 @@ objective decides whether either is safe.**
 
 | regime | ch.1 teacher | ch.2 hindsight | evidence |
 |---|---|---|---|
-| easy-heavy pool | small (+0.01–0.03) | small | V5 row 1: everything ≥0.93 |
+| easy-heavy pool | small (+0.01–0.03) | small | V5 row 1: everything ≈0.93+ |
 | balanced spread | moderate (+0.05) | large on fixed sets | V5 row 2, CPU main tables |
 | frontier-heavy (p≈0 pool) | **zero** (nothing to allocate) | **categorical** (0→0.93+) | V5 row 3, MountainCar |
 | infinite/one-shot tasks | moderate | small (+0.01, no compounding) | maze GPU, F3/F4 |
@@ -92,8 +98,7 @@ Three separate times, the *metric* hid what the method was doing:
 1. **Fixed-step comparisons hid the teacher's speed** (it runs 22–35% more
    steps per hour) → matched wall-clock protocol.
 2. **Peakedness hid the teacher's targeting** (ZPD utilities are diffuse by
-   design; SONIC's forecast pmax/uniform only 1.3–2.0) → targeting-ratio
-   criterion.
+   design — SONIC_RESPONSE Q5) → targeting-ratio criterion.
 3. **pass@1 hid the deep-frontier march entirely** (L6 "stalled at 0.01–0.05"
    while coverage@64 went 0.125→0.438) → coverage currency.
 
@@ -133,7 +138,7 @@ Decision procedure distilled from every ablation:
 | hindsight gradients exact on-structure | V1 cosine table (0.956 vs 0.958, mean 1.000) | measured |
 | full stack > oracle sampler | V7: 0.890 vs 0.851, 5 seeds | multi-seed CPU |
 | categorical win where samplers get 0 | V5 frontier-heavy + MountainCar 0→1.000 w/ controls | controlled |
-| curricula require likelihood weighting | H6 reversal, every seed both directions | multi-seed |
+| curricula require likelihood weighting | H6 reversal: MaxRL grows / GRPO decays every seed; teacher-amplified collapse single-seed | multi-seed / single-seed* |
 | compounding drives hindsight's size | CPU +0.22 vs maze +0.01, mechanism traced | cross-regime |
 | coverage is the right meter | L6 0.125→0.438 invisible to pass@1 | single-ckpt* |
 | efficiency grows with difficulty | 1.2×/2.7×/11× vs GRPO | single-seed* |

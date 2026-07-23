@@ -33,7 +33,7 @@ Enable via config:
 
     data.curriculum.enable=true
     data.curriculum.floor=0.1          # uniform replay floor
-    data.curriculum.decay=0.9          # posterior decay per observation
+    data.curriculum.decay=0.7          # posterior decay per observation (validated default)
     data.curriculum.success_threshold=0.5
     data.curriculum.utility=advmass    # or "frontier"
 
