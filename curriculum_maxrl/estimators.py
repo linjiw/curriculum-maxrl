@@ -35,7 +35,8 @@ def weights_maxrl(r: np.ndarray) -> np.ndarray:
     """Variance-reduced MaxRL estimator, eq. (10)/Algorithm 1 of the paper.
 
     w_j = (r_j / K - 1/N); the whole group is dropped when K = 0.
-    Unbiased for the truncated ML objective with T = N.
+    Unbiased for the truncated ML objective with T = N-1 (dropping the
+    K=0 control variate shifts the order; see PROOFS.md Prop 1 correction).
     """
     n = len(r)
     k = r.sum()

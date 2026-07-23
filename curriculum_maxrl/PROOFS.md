@@ -2,7 +2,7 @@
 
 Self-contained statements and proofs of the identities the algorithm rests
 on. Every result is also verified numerically (`run_validation.py`,
-THEORY.md §5 snippet). Notation: a prompt has pass rate `p ∈ (0,1)`; a group
+THEORY.md §6 snippet). Notation: a prompt has pass rate `p ∈ (0,1)`; a group
 is `N` i.i.d. rollouts with `K ~ Bin(N, p)` successes; the MaxRL
 variance-reduced weights (paper eq. 10 / Algorithm 1) are
 
@@ -95,14 +95,14 @@ where it is most likely to flip a dead group live."
 ## Proposition 4 (RLOO advantage mass = learnability)
 
 **Claim.** For RLOO weights `wᵢ = (rᵢ − r̄₋ᵢ)/N` (leave-one-out baseline),
-`E[Σ|w|] = 2p(1−p)·N/(N−1) → 2p(1−p)`.
+`E[Σ|w|] = 2p(1−p)` exactly, for all N ≥ 2.
 
 **Proof.** With K successes: a success has weight `(1 − (K−1)/(N−1))/N =
 (N−K)/(N(N−1))` and a failure `−K/(N(N−1))` in magnitude. Summing:
 
 ```
 Σ|w| = K(N−K)/(N(N−1)) + (N−K)K/(N(N−1)) = 2K(N−K)/(N(N−1)).
-E[K(N−K)] = N·E[K] − E[K²] = Np − (Np(1−p) + N²p²) = N(N−1)p(1−p).
+E[K(N−K)] = N·E[K] − E[K²] = N²p − (Np(1−p) + N²p²) = N(N−1)p(1−p).
 ⇒ E[Σ|w|] = 2p(1−p).                                        ∎
 ```
 
@@ -117,7 +117,7 @@ generalizes it to a compute-indexed family (u_2(p) = p(1−p) exactly; u_1 ≡ 0
 ## Proposition 5 (Signal ordering: why MaxRL dominates on the frontier)
 
 **Claim.** For all N ≥ 2 and p ≤ p*(N):
-`u_MaxRL(p) ≥ u_RLOO(p)` with ratio `→ N` as p → 0.
+`u_MaxRL(p) ≥ u_RLOO(p)` with ratio `→ N−1` (≈ N) as p → 0.
 
 **Proof.** `u_MaxRL(p)/2 = (1−(1−p)ᴺ) − p = Σ_{k=1}^{N} C(N,k)pᵏ(−1)^{k+1}... `
 simpler: for small p, `1−(1−p)ᴺ = Np − C(N,2)p² + O(p³)`, so

@@ -56,7 +56,7 @@ worth more than any single-arm result.
 **D3 — Utility: learnability p(1−p), not advantage-mass.** Their §9.1 already
 resolves this per our regime table: no rollout groups ⇒ no N ⇒ the
 advmass band-placement theorem has nothing to bind to, and learnability is
-the N→1 member with zero knobs. (Same call as SONIC Q2 — this is now our
+the N=2 member with zero knobs (u₁ ≡ 0 — the N→1 limit is degenerate). (Same call as SONIC Q2 — this is now our
 standing rule for reset-stream evidence.)
 
 **D4 — Optimism: deterministic mean + 1·std, Thompson off by default.**
