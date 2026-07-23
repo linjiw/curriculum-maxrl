@@ -18,6 +18,18 @@ from frontier_rl.examples import run_mountaincar_neural_transfer_v1 as runner
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+EXAMPLES = PROJECT_ROOT / "frontier_rl/examples"
+V5A_ARTIFACT = EXAMPLES / "acrobot_hindsight_v5a_feasibility.json"
+V5B_ARTIFACT = EXAMPLES / "acrobot_hindsight_v5b_factorial.json"
+
+
+def _materialized_lfs_artifact(path: Path) -> bool:
+    if not path.exists():
+        return False
+    with path.open("rb") as handle:
+        return not handle.read(128).startswith(
+            b"version https://git-lfs.github.com/spec/v1\n"
+        )
 
 
 def test_registered_matrix_capacity_arithmetic_and_fresh_seed_blocks():
@@ -81,22 +93,34 @@ def test_v5_lock_protected_bytes_remain_unchanged():
     for relative, expected in lock["source_sha256"].items():
         observed = hashlib.sha256((PROJECT_ROOT / relative).read_bytes()).hexdigest()
         assert observed == expected, relative
-    examples = PROJECT_ROOT / "frontier_rl/examples"
-    stage_b = json.loads(
-        (examples / "acrobot_hindsight_v5b_factorial.json").read_text(encoding="utf-8")
-    )
-    assert stage_b["provenance"]["source_lock_sha256"] == lock_hash
-    assert stage_b["provenance"]["source_sha256"] == lock["source_sha256"]
     dependencies = {
-        "amendment_sha256": examples / "ACROBOT_HINDSIGHT_V5B_AMENDMENT.json",
-        "stage_a_artifact_sha256": examples / "acrobot_hindsight_v5a_feasibility.json",
-        "stage_a_independent_verification_sha256": examples
+        "amendment_sha256": EXAMPLES / "ACROBOT_HINDSIGHT_V5B_AMENDMENT.json",
+        "stage_a_independent_verification_sha256": EXAMPLES
         / "acrobot_hindsight_v5a_verification.json",
     }
     for key, path in dependencies.items():
         assert hashlib.sha256(path.read_bytes()).hexdigest() == lock[key]
+
+
+@pytest.mark.skipif(
+    not (
+        _materialized_lfs_artifact(V5A_ARTIFACT)
+        and _materialized_lfs_artifact(V5B_ARTIFACT)
+    ),
+    reason="V5A/V5B raw artifacts are not materialized; run git lfs pull",
+)
+def test_v5_raw_artifacts_match_the_protected_lock():
+    lock_path = EXAMPLES / "ACROBOT_HINDSIGHT_V5B_LOCK.json"
+    lock_hash = hashlib.sha256(lock_path.read_bytes()).hexdigest()
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    assert hashlib.sha256(V5A_ARTIFACT.read_bytes()).hexdigest() == lock[
+        "stage_a_artifact_sha256"
+    ]
+    stage_b = json.loads(V5B_ARTIFACT.read_text(encoding="utf-8"))
+    assert stage_b["provenance"]["source_lock_sha256"] == lock_hash
+    assert stage_b["provenance"]["source_sha256"] == lock["source_sha256"]
     stage_a = json.loads(
-        dependencies["stage_a_artifact_sha256"].read_text(encoding="utf-8")
+        V5A_ARTIFACT.read_text(encoding="utf-8")
     )
     gates_payload = json.dumps(
         stage_a["stage_a_learning_outcome_blind_gates"],

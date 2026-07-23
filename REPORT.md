@@ -238,19 +238,24 @@ runtime for the 180-run matrix was `7.0557400375` hours.
 
 V5B completed the nine cells on fresh paired seeds `16000..16019` under an
 explicit amendment and source/runtime lock. All 180 runs finished with zero
-run failures. An independent raw-integrity audit validated all 53,510 group
-records, 45,000 updates, and 1,080 checkpoints.
+run failures. A post-hoc forensic raw-integrity audit validated all 53,510
+group records, 45,000 updates, and 1,080 checkpoints.
 
 The frozen analyzer nevertheless failed deterministically before authorizing
 the four-contrast primary family. The runner computed step-norm diagnostics
 with NumPy reductions; the analyzer reconstructed them with Python scalar
-reductions and then required exact dictionary equality. An independent root
-audit found 377 mismatches among 720 diagnostic floats, with maximum absolute
-difference `1.9984014443252818e-15` and maximum distance 11 ULP. Step norms
+reductions and then required exact dictionary equality. A post-hoc forensic
+reduction audit found 377 mismatches among 720 diagnostic floats, with maximum
+absolute difference `1.9984014443252818e-15` and maximum distance 11 ULP. Step norms
 are protocol diagnostics, but exact runner/analyzer agreement is the frozen
 all-or-nothing acceptance rule. The official V5B family is therefore a
 **procedural NO-GO**: no cell outcome, contrast, sign, or hindsight-effect
 result is claimed.
+
+The sealed artifact does contain runner-produced case, contrast, and decision
+subtrees, so V5B violated the protocol's literal "not computed" rule before
+the frozen analyzer ran. Those fields remain quarantined and uninterpreted;
+V5C must separate raw execution output from verifier-gated primary analysis.
 
 A post-hoc tolerance-aware compatibility audit passed the remaining checks,
 but it is non-authorizing and cannot rescue the frozen analysis. V5A therefore

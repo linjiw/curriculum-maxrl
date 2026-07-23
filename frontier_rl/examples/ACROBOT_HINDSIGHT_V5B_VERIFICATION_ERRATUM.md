@@ -28,6 +28,11 @@ frozen protocol, raw-run, source/runtime-lock, and linked-authorization helpers.
 It validates 180 runs, 53,510 group records, 45,000 applied-update records, and
 1,080 evaluation checkpoints.
 
+This is not a wholly independent reimplementation. The forensic verifier
+imports the frozen analyzer and reuses its private lock, raw-run, and
+reconstruction helpers; its separate contribution is the reduction-order
+diagnosis, byte-bound artifact check, and outcome-free report boundary.
+
 Across the 720 saved cumulative diagnostic reductions:
 
 - all 720 exactly equal a fresh reconstruction with the runner's NumPy
@@ -43,6 +48,21 @@ analyzer's sequential-Python diagnostic reductions. All remaining frozen checks
 then passed. The normalized copy was not written, and primary contrast,
 cell-outcome, and decision subtrees were neither retained nor emitted by the
 forensic report.
+
+## Artifact-generation protocol violation
+
+The frozen protocol says that if any numeric verification fails, no member of
+the primary family is computed or claimed. The sealed raw artifact nevertheless
+contains runner-produced `stage_b_case_summaries`, `paired_scale_contrasts`,
+`predeclared_scale_decision`, and `analysis_status.performed=true` fields. The
+prose and forensic report make no outcome claim, but the literal "not computed"
+rule was already violated when those subtrees were written before independent
+analyzer acceptance.
+
+Those fields are quarantined: they are not copied into the forensic report,
+reported, interpreted, or eligible for retrospective authorization. A V5C
+runner must keep raw execution records separate from primary analysis output
+and emit the latter only after its frozen verifier accepts the artifact.
 
 ## Claim boundary
 

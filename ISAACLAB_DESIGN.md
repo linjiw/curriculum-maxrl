@@ -55,9 +55,10 @@ worth more than any single-arm result.
 
 **D3 — Utility: learnability p(1−p), not advantage-mass.** Their §9.1 already
 resolves this per our regime table: no rollout groups ⇒ no N ⇒ the
-advmass band-placement theorem has nothing to bind to, and learnability is
-the N→1 member with zero knobs. (Same call as SONIC Q2 — this is now our
-standing rule for reset-stream evidence.)
+advmass band-placement theorem has nothing to bind to. Learnability is used
+here as a separate reset-stream heuristic with zero group-size knobs; it
+coincides with the grouped half-mass family at `N=2`, while `u_1≡0`. (Same
+call as SONIC Q2 — this is now our standing rule for reset-stream evidence.)
 
 **D4 — Optimism: deterministic mean + 1·std, Thompson off by default.**
 Their determinism pitfall (same seed + same GPU count only) plus our V3

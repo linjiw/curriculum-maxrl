@@ -380,6 +380,12 @@ E ||sum_i w_i S_i|| <= 2G u_N(p).
 
 This is an upper bound, not an equality. Score directions, cancellation,
 representation sharing, optimizer state, and downstream transfer all matter.
+Using `u_N(p)` to order heterogeneous tasks is therefore a **monotone-proxy
+assumption**: taskwise score norms must not be so strongly negatively
+associated with `u_N(p)` that they reverse its ordering. Positive association,
+as observed when harder maze tasks also produce longer trajectories and larger
+score norms, reinforces the ordering but does not turn it into a gradient-norm
+theorem.
 The concentration exponent used below is consequently an empirical task-graph
 knob, not a theorem.
 
@@ -1021,8 +1027,8 @@ verification SHA-256 hashes are respectively
 and `a46b5e9f732b7f9e1796e2d4a2ff344c9ff738574c464b28631e884faaa6ba19`.
 
 V5B completed all nine cells on fresh paired seeds `16000..16019`: all 180
-runs finished with zero run failures, and an independent raw-integrity audit
-validated 53,510 group records, 45,000 updates, and 1,080 checkpoints. Its
+runs finished with zero run failures, and a post-hoc forensic raw-integrity
+audit validated 53,510 group records, 45,000 updates, and 1,080 checkpoints. Its
 four update-indexed AUC contrasts, exact `2^20` sign-flip tests, Holm family,
 and `0.03` materiality rules were frozen. The amendment and lock hashes are
 `11975381874842bc3019074ea9d8168006c0517982ac11e00ad0b488e7671f36`
@@ -1034,18 +1040,23 @@ The frozen analyzer nevertheless failed deterministically before authorizing
 the primary family. The runner computed step-norm diagnostics with NumPy
 reductions, whereas the analyzer reconstructed them with Python scalar
 reductions and then required exact equality of the resulting dictionaries.
-An independent root audit found 377 mismatches among 720 diagnostic floats;
-the maximum absolute discrepancy was `1.9984014443252818e-15` and the maximum
-distance was 11 ULP. The protocol classifies step norms as diagnostics, but it
+A post-hoc forensic reduction audit found 377 mismatches among 720 diagnostic
+floats; the maximum absolute discrepancy was `1.9984014443252818e-15` and the
+maximum distance was 11 ULP. The protocol classifies step norms as diagnostics, but it
 also makes exact runner/analyzer agreement an all-or-nothing acceptance rule.
 That rule controls: the official V5B primary family is a **procedural NO-GO**,
 and no cell outcome, contrast, sign, or hindsight-effect result is claimed.
+The sealed runner artifact nevertheless contains precomputed case, contrast,
+and decision subtrees, violating the protocol's literal "not computed" rule
+even though none is reported or interpreted here. Those fields are
+quarantined; V5C must separate raw execution output from verifier-gated primary
+analysis.
 
 A post-hoc tolerance-aware compatibility audit passed the remaining integrity
 and reconstruction checks. It is diagnostic only and cannot rescue or
 authorize the frozen family. A valid follow-up requires a reviewed
 tolerance-aware verifier and a fresh V5C seed block; the existing V5B outcomes
-must not be recycled into that decision. The failure boundary and independent
+must not be recycled into that decision. The failure boundary and post-hoc
 diagnostics are recorded in the
 [V5B verification erratum](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md)
 and
@@ -1086,7 +1097,14 @@ The correct conclusion is not that the curriculum won or lost. The frozen
 actor, optimizer, and 500,000-transition budget produced no native-goal
 headroom and never exercised the all-pass side that coefficient-mass sampling
 should downweight. Reserved confirmatory seeds `18000..18019` remain untouched
-and unauthorized. The lock, development artifact, and verification hashes are
+and unauthorized. This lack of native-goal headroom is directionally
+consistent with Section 8.5's flag-only shared and centered-hindsight per-bin
+controls, both of which ended at zero final-flag pass, while the successful
+Section 8.5 arms combined intermediate-goal training with shared parameters.
+Because the actor, optimizer, budget, and endpoints differ, that consistency
+is neither a replication nor causal proof of the transfer channel.
+
+The lock, development artifact, and verification hashes are
 `b5edbc33048a8d3a8d7dbb992a23178ddf8424dd3c5be3165c87e6dc42a50a5c`,
 `2e4803805009a3323307f6bdcfae17fb625008adb5361dc2310e414a19129180`,
 and `fdefc9e4ee2887953c341d2f44c44001bc336598b089dbdc8035175e430148a0`.

@@ -678,7 +678,7 @@ The V5B amendment and lock hashes are
 and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`;
 the completed artifact hash is
 `c633886a121906ee2bceb03f3117e4bea5dc20ab314e43f9b702ef8d88f495ac`.
-V5B completed all 180 runs with zero run failures. Independent raw validation
+V5B completed all 180 runs with zero run failures. A post-hoc forensic audit
 covered 53,510 group records, 45,000 updates, and 1,080 checkpoints. The frozen
 analyzer then failed its exact dictionary-equality check because runner NumPy
 norm reductions and analyzer Python scalar reductions disagreed in 377 of 720
@@ -687,6 +687,10 @@ diagnostic floats. The maximum absolute difference was
 step norms are diagnostics, exact runner/analyzer agreement is the registered
 acceptance rule. The V5B primary family is therefore a procedural NO-GO; no
 outcome, cell ordering, sign, contrast, or hindsight-effect result is claimed.
+The sealed runner artifact nevertheless contains precomputed case, contrast,
+and decision subtrees, violating the protocol's literal "not computed" rule.
+Those fields are quarantined and must remain uninterpreted; V5C must separate
+raw execution output from verifier-gated primary analysis.
 A post-hoc tolerance-aware compatibility audit passed all remaining checks but
 is non-authorizing. A reviewed tolerance-aware verifier and fresh V5C seeds are
 required. The scoped diagnosis is recorded in

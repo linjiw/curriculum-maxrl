@@ -16,8 +16,10 @@ what lets you predict where the method will and won't help.
 ### Channel 1 — WASTE AVOIDANCE (the teacher)
 *"Don't roll out where the estimator will emit nothing."*
 
-- Mechanism: sample ∝ u(p) = pass@N − pass@1 (P1: the estimator's exact
-  expected signal). Zero at mastered (p→1) and unreachable (p→0) tasks.
+- Mechanism: sample ∝ `u_N(p) = pass@N − pass@1` (P1: half the practical
+  estimator's exact expected scalar coefficient mass). The practical
+  drop-both estimator targets `T=N−1`; `u_2(p)=p(1−p)` and `u_1≡0`. The score
+  is zero at mastered (`p→1`) and unreachable (`p→0`) tasks.
 - What it buys, measured: dead groups 5.8→3.4 of 8 (maze); 22–35% more
   optimization steps per GPU-hour (frontier rollouts also end earlier);
   6/6 paired-seed wins vs uniform.
@@ -128,7 +130,7 @@ Decision procedure distilled from every ablation:
 
 | claim | strongest single piece of evidence | grade |
 |---|---|---|
-| u(p) = estimator's exact expected signal | P1 proof + 200k-trial MC | proved |
+| `2u_N(p)` = practical estimator's exact expected coefficient mass | P1 proof + 200k-trial MC | proved |
 | teacher beats uniform | 6/6 paired seeds, matched clock | multi-seed |
 | hindsight gradients exact on-structure | V1 cosine table (0.956 vs 0.958, mean 1.000) | measured |
 | full stack > oracle sampler | V7: 0.890 vs 0.851, 5 seeds | multi-seed CPU |

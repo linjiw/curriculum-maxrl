@@ -1,3 +1,3 @@
 # Requires Python >=3.10 (Gymnasium 1.3 requirement).
-numpy>=1.26,<3
+numpy>=2.0,<3
 gymnasium[classic-control]==1.3.0

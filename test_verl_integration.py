@@ -23,6 +23,25 @@ def test_dataset_wrapper_uses_post_filter_position_not_source_id():
     assert [wrapped[i]["index"] for i in range(3)] == [100, 7, 100]
 
 
+def test_dataset_wrapper_delegates_resume_dataset_state():
+    calls = []
+
+    class StatefulDataset:
+        def __len__(self):
+            return 1
+
+        def __getitem__(self, position):
+            return {"index": position}
+
+        def resume_dataset_state(self, checkpoint, *, strict):
+            calls.append((checkpoint, strict))
+            return "resumed"
+
+    wrapped = CurriculumIndexedDataset(StatefulDataset())
+    assert wrapped.resume_dataset_state("checkpoint-7", strict=True) == "resumed"
+    assert calls == [("checkpoint-7", True)]
+
+
 def test_production_teacher_and_sampler_resume_mid_epoch():
     data = list(range(12))
     teacher_a = FrontierTeacher(len(data), n_rollouts=8, seed=11)

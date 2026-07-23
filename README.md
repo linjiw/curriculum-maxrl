@@ -218,7 +218,7 @@ V5A replaced neither V4A nor its stopped decision. It used fresh seeds
 registered fallback `U*=250`. The independently verified launch decision
 authorized V5B. V5B used fresh seeds `16000..16019` for a 20-seed 3×3
 factorial with four predeclared contrasts. All 180 runs completed with zero run
-failures; independent raw validation covered 53,510 group records, 45,000
+failures; a post-hoc forensic audit covered 53,510 group records, 45,000
 updates, and 1,080 checkpoints.
 
 The frozen analyzer then failed deterministically: the runner's NumPy
@@ -244,6 +244,12 @@ The V5B amendment and lock hashes are
 and `dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2`;
 the completed artifact hash is
 `c633886a121906ee2bceb03f3117e4bea5dc20ab314e43f9b702ef8d88f495ac`.
+
+**Artifact storage.** The seven raw experiment JSON files larger than 1 MB are
+stored with Git LFS; locks, manifests, hashes, and verification reports remain
+ordinary Git files for lightweight review. Run `git lfs install` and
+`git lfs pull` to materialize the raw artifacts. Without them, the test suite
+still runs the source/lock checks and skips only tests that require raw bytes.
 
 **Provenance boundary.** “Registered,” “sealed,” and “predeclared” in this
 repository refer to local source/runtime locks created before the corresponding

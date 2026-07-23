@@ -14,6 +14,15 @@ ARTIFACT = ROOT / "frontier_rl/examples/acrobot_hindsight_v5b_factorial.json"
 LOCK = ROOT / "frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_LOCK.json"
 
 
+def _artifact_is_materialized() -> bool:
+    if not ARTIFACT.exists():
+        return False
+    with ARTIFACT.open("rb") as handle:
+        return not handle.read(128).startswith(
+            b"version https://git-lfs.github.com/spec/v1\n"
+        )
+
+
 def test_numpy_reduction_and_ulp_helpers_are_exact():
     run = {
         "update_diagnostics": [
@@ -33,12 +42,20 @@ def test_numpy_reduction_and_ulp_helpers_are_exact():
     assert forensic._ulp_distance(adjacent, 1.0) == 1
 
 
+@pytest.mark.skipif(
+    not _artifact_is_materialized(),
+    reason="V5B raw artifact is not materialized; run git lfs pull",
+)
 def test_verifier_rejects_every_artifact_other_than_the_sealed_original(monkeypatch):
     monkeypatch.setattr(forensic, "EXPECTED_ARTIFACT_SHA256", "0" * 64)
     with pytest.raises(ValueError, match="forensic verifier is bound"):
         forensic.verify(ARTIFACT, LOCK)
 
 
+@pytest.mark.skipif(
+    not _artifact_is_materialized(),
+    reason="V5B raw artifact is not materialized; run git lfs pull",
+)
 def test_current_artifact_forensics_are_non_authorizing_and_outcome_free():
     report = forensic.verify(ARTIFACT, LOCK)
     assert report["artifact_sha256"] == forensic.EXPECTED_ARTIFACT_SHA256

@@ -45,18 +45,21 @@ V5A's authorization used no pass-rate, return, entropy, AUC, final-performance,
 or between-cell performance field. It selected `U*=250`; the projected
 180-run serial runtime was `7.0557400375` hours. V5B used fresh paired seeds
 `16000..16019` and four frozen update-indexed AUC contrasts. All 180 runs
-completed with zero run failures. Independent raw validation covered 53,510
+completed with zero run failures. A post-hoc forensic audit covered 53,510
 group records, 45,000 updates, and 1,080 checkpoints.
 
 The frozen analyzer did not accept the completed artifact. The runner used
 NumPy reductions for step-norm diagnostics, while the analyzer independently
 used Python scalar reductions and then required exact dictionary equality.
-An independent root audit found 377 mismatches among 720 diagnostic floats;
-the maximum absolute difference was `1.9984014443252818e-15`, and the maximum
-distance was 11 ULP. The protocol labels these step norms as diagnostics, but
+A post-hoc forensic reduction audit found 377 mismatches among 720 diagnostic
+floats; the maximum absolute difference was `1.9984014443252818e-15`, and the
+maximum distance was 11 ULP. The protocol labels these step norms as diagnostics, but
 its all-or-nothing acceptance rule requires exact runner/analyzer agreement.
 The official V5B primary family is therefore a procedural NO-GO. Do not report
 or infer any V5B outcome, cell ranking, sign, contrast, or hindsight effect.
+The sealed runner artifact already contains case, contrast, and decision
+subtrees, which violates the protocol's literal "not computed" rule; those
+fields are quarantined and must remain uninterpreted.
 
 A post-hoc tolerance-aware compatibility audit passed the remaining checks.
 It is explicitly non-authorizing: it diagnoses the verifier failure but does
