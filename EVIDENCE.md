@@ -136,7 +136,7 @@ Decision procedure distilled from every ablation:
 | u(p) = estimator's exact expected signal | P1 proof + 200k-trial MC | proved |
 | teacher beats uniform | 6/6 paired seeds, matched clock | multi-seed |
 | hindsight gradients exact on-structure | V1 cosine table (0.956 vs 0.958, mean 1.000) | measured |
-| full stack > oracle sampler | V7: 0.890 vs 0.851, 5 seeds | multi-seed CPU |
+| full stack > oracle sampler | V7: 0.890 vs 0.851 (γ=1 oracle; also beats the sharper γ=4 oracle at 0.884), 5 seeds — artifact: `frontier_rl/examples/v7_oracle_result.json` | multi-seed CPU |
 | categorical win where samplers get 0 | V5 frontier-heavy + MountainCar 0→1.000 w/ controls | controlled |
 | curricula require likelihood weighting | H6 reversal: MaxRL grows / GRPO decays every seed; teacher-amplified collapse single-seed | multi-seed / single-seed* |
 | compounding drives hindsight's size | CPU +0.22 vs maze +0.01, mechanism traced | cross-regime |
