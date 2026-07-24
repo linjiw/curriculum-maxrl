@@ -50,13 +50,15 @@ simulation_app = app_launcher.app
 
 """Rest everything follows."""
 
+import importlib.metadata as metadata
+
 import gymnasium as gym
 import torch
 from rsl_rl.runners import OnPolicyRunner
 
 from isaaclab.managers import CurriculumTermCfg as CurrTerm
 
-from isaaclab_rl.rsl_rl import RslRlVecEnvWrapper
+from isaaclab_rl.rsl_rl import RslRlVecEnvWrapper, handle_deprecated_rsl_rl_cfg
 
 import isaaclab_tasks  # noqa: F401
 from isaaclab_tasks.utils.parse_cfg import load_cfg_from_registry, parse_env_cfg
@@ -100,6 +102,7 @@ def main():
     env_cfg.curriculum.terrain_levels = CurrTerm(
         func=FixedLevelProbe, params={"success_fn": args_cli.success_fn})
     agent_cfg = load_cfg_from_registry(args_cli.task, "rsl_rl_cfg_entry_point")
+    agent_cfg = handle_deprecated_rsl_rl_cfg(agent_cfg, metadata.version("rsl-rl-lib"))
 
     env = gym.make(args_cli.task, cfg=env_cfg)
     # fetch the live probe instance from the manager's own (deep-copied) term cfg;
@@ -132,8 +135,12 @@ def main():
             # fresh episode boundaries, THEN fresh tallies: env.reset() fires the
             # probe on the previous policy's mid-flight episodes — those partial
             # outcomes must not leak into this checkpoint's counts.
+            # reset must run under inference_mode: after the first checkpoint's
+            # rollout, sim buffers are inference tensors and a plain reset can't
+            # write them in place (RuntimeError on root_link_pose_w).
             env.seed(args_cli.seed)
-            env.reset()
+            with torch.inference_mode():
+                env.reset()
             probe.succ = None
             results = evaluate(env, policy, probe, max_steps)
             results["checkpoint"] = os.path.basename(ckpt)
