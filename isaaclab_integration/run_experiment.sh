@@ -29,7 +29,8 @@ fi
 # scripted ramp spans the whole run: iters * num_steps_per_env(24)
 RAMP=$((ITERS * 24))
 
-ARMS=(control greedy scripted uniform teacher)
+# Override with e.g. ARMS="teacher_g4 hybrid" ./run_experiment.sh pilot
+ARMS=(${ARMS:-control greedy scripted uniform teacher})
 FAILED=()
 
 # GPU gate: Isaac Sim's kit python exits 0 even on CUDA-context crashes, and a

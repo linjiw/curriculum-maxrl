@@ -36,8 +36,11 @@ import cli_args  # isort: skip
 
 parser = argparse.ArgumentParser(description="Frontier-curriculum RSL-RL training.")
 parser.add_argument("--arm", type=str, default="teacher",
-                    choices=["control", "greedy", "scripted", "uniform", "teacher"],
-                    help="Curriculum arm to run (greedy = stock terrain_levels_vel).")
+                    choices=["control", "greedy", "scripted", "uniform", "teacher",
+                             "teacher_g4", "hybrid"],
+                    help="Curriculum arm to run (greedy = stock terrain_levels_vel; "
+                         "teacher_g4 = concentration-fixed teacher; hybrid = "
+                         "per-env walk + posterior masks).")
 parser.add_argument("--success_fn", type=str, default="survival",
                     choices=["survival", "distance", "tile"],
                     help="Teacher's binary success predicate.")

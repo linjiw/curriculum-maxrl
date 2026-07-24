@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 from isaaclab_integration.frontier_terms import (  # noqa: E402
     FixedLevelProbe,
     FrontierTerrainTeacher,
+    HybridTerrainTeacher,
     ScriptedTerrainLevels,
     StaticTerrainLevels,
     UniformTerrainLevels,
@@ -349,6 +350,77 @@ def test_teacher_determinism_same_seed():
     assert torch.equal(outs[0], outs[1])
 
 
+def test_hybrid_walks_locally_and_respects_masks():
+    env = StubEnv(seed=8)
+    term = make_term(HybridTerrainTeacher)
+    ids = torch.arange(N_ENVS)
+    # construction reset: no evidence, levels unchanged
+    before = env.scene.terrain.terrain_levels.clone()
+    term(env, ids, save_every_calls=0, explore_frac=0.0)
+    assert torch.equal(env.scene.terrain.terrain_levels, before)
+    assert term.teacher.succ.sum() + term.teacher.fail.sum() == 0
+    # deterministic outcomes: envs on even levels succeed, odd levels fail
+    env.episode_length_buf[ids] = 100
+    lev = env.scene.terrain.terrain_levels
+    success = (lev % 2 == 0)
+    env.termination_manager.time_outs[:] = success
+    pre = lev.clone()
+    # min_evidence=1e9 disables the posterior masks: pure-locality phase
+    # (deterministic outcomes would otherwise saturate p-hat in one batch)
+    term(env, ids, success_fn="survival", save_every_calls=0, explore_frac=0.0,
+         min_evidence=1e9)
+    post = env.scene.terrain.terrain_levels
+    # locality: success -> +1, failure -> -1 (clamped)
+    expected = torch.where(success, pre + 1, pre - 1).clamp(0, N_LEVELS - 1)
+    assert torch.equal(post, expected)
+    # now force a dead bin with evidence and verify no env steps INTO it
+    # (wipe the even/odd evidence first so only the forced bin is masked;
+    #  envs currently ON the dead bin must fail — succeeding there would
+    #  correctly lift the mask via the in-call observation)
+    dead_bin = 5
+    term.teacher.succ[:] = 0.0
+    term.teacher.fail[:] = 0.0
+    term.teacher.succ[dead_bin] = 0.0
+    term.teacher.fail[dead_bin] = 500.0
+    env.episode_length_buf[ids] = 100
+    env.termination_manager.time_outs[:] = True
+    env.termination_manager.time_outs[env.scene.terrain.terrain_levels == dead_bin] = False
+    pre = env.scene.terrain.terrain_levels.clone()
+    # min_evidence=50: only the forced dead bin (500 fails) is masked; the
+    # ~25 fresh all-success observations per other bin stay below threshold.
+    term(env, ids, success_fn="survival", save_every_calls=0, explore_frac=0.0,
+         min_evidence=50)
+    post = env.scene.terrain.terrain_levels
+    # no PROMOTION into the dead bin; envs already on it retreat (never trapped)
+    was_on_dead = pre == dead_bin
+    assert (post[was_on_dead] == dead_bin - 1).all(), "failed env trapped on dead bin"
+    was_at_4 = (pre == 4)
+    if was_at_4.any():
+        # envs at 4 promoted: 5 is blocked -> 2-step skip to 6
+        assert (post[was_at_4] == 6).all()
+    assert not (post == dead_bin).any(), "env walked into a dead bin"
+    # origins consistent
+    t = env.scene.terrain
+    assert torch.allclose(t.env_origins, t.terrain_origins[t.terrain_levels, t.terrain_types])
+    # telemetry has the mask counter
+    env.episode_length_buf[ids] = 100
+    out = term(env, ids, success_fn="survival", save_every_calls=0, explore_frac=0.0)
+    assert "blocked_bins" in out and out["blocked_bins"] >= 1.0
+
+
+def test_hybrid_explore_frac_uses_teacher_distribution():
+    env = StubEnv(seed=9)
+    term = make_term(HybridTerrainTeacher)
+    ids = torch.arange(N_ENVS)
+    env.episode_length_buf[ids] = 100
+    env.termination_manager.time_outs[:] = False  # everyone would demote
+    env.scene.terrain.terrain_levels[:] = 0       # all at floor: demote = stay at 0
+    for _ in range(3):
+        term(env, ids, success_fn="survival", save_every_calls=0, explore_frac=0.5)
+    # with explore_frac=0.5, half the envs must have been redistributed off 0
+    assert (env.scene.terrain.terrain_levels > 0).float().mean() > 0.2
+
+
 def test_apply_arm():
     class TermCfg:
         def __init__(self):
@@ -367,6 +439,11 @@ def test_apply_arm():
     assert cfg.curriculum.terrain_levels.params == {"success_fn": "tile", "floor": 0.2}
     apply_arm(cfg, "scripted", scripted_total_steps=123)
     assert cfg.curriculum.terrain_levels.params == {"total_steps": 123}
+    apply_arm(cfg, "teacher_g4", success_fn="tile")
+    assert cfg.curriculum.terrain_levels.func is FrontierTerrainTeacher
+    assert cfg.curriculum.terrain_levels.params["gamma"] == 4.0
+    apply_arm(cfg, "hybrid", success_fn="tile")
+    assert cfg.curriculum.terrain_levels.func is HybridTerrainTeacher
     apply_arm(cfg, "control")
     assert cfg.curriculum.terrain_levels.func is StaticTerrainLevels
     try:

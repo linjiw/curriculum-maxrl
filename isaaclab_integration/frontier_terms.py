@@ -401,6 +401,127 @@ class FrontierTerrainTeacher(_TerrainCurriculumBase):
 
 
 # ---------------------------------------------------------------------------
+# Arm 6 — hybrid: greedy's per-env walk under the teacher's posterior masks
+# ---------------------------------------------------------------------------
+
+class HybridTerrainTeacher(FrontierTerrainTeacher):
+    """Per-env ±1 difficulty walk (greedy's locality) bounded by the pooled
+    posterior (the teacher's knowledge).
+
+    Pilot finding (RESULTS_pilot.md): greedy's entire win came from per-env
+    locality — each env's next level conditions on ITS OWN outcome (zero-lag
+    retreat/promote), while the global teacher samples iid from one
+    distribution, discarding that information. The teacher's pooled posterior
+    is still the only thing that can see dead/mastered bins. This arm composes
+    the two mechanisms instead of choosing:
+
+      per env:  success → level+1, failure → level−1        (locality)
+      masks:    never step INTO a bin the posterior rates dead (p̂ < dead_lo
+                with ≥ min_evidence) or mastered (p̂ > mastered_hi) — walk
+                past it (2-step) if the far side is open, else stay      (pooling)
+      floor:    an ``explore_frac`` of resetting envs instead draw from the
+                teacher's u^γ distribution — keeps posterior coverage alive
+                and replays easier rows (anti-forgetting).
+
+    Evidence stream, telemetry, checkpointing: inherited unchanged.
+    """
+
+    def __call__(self, env: ManagerBasedRLEnv, env_ids: Sequence[int],
+                 success_fn: str = "survival", distance_fraction: float = 0.5,
+                 command_name: str = "base_velocity",
+                 utility: str = "learnability", advmass_n: int = 16,
+                 decay_half_life: float = 2048.0,
+                 floor: float = 0.1, gamma: float = 1.0, optimism_k: float = 1.0,
+                 thompson: bool = False, max_prob: float | None = None, seed: int = 0,
+                 load_state: str | None = None, save_every_calls: int = 200,
+                 dead_lo: float = 0.05, mastered_hi: float = 0.9,
+                 min_evidence: float = 8.0,
+                 explore_frac: float = 0.1) -> dict[str, torch.Tensor | float]:
+        if success_fn not in SUCCESS_FNS:
+            raise ValueError(f"unknown success_fn {success_fn!r}; choose from {sorted(SUCCESS_FNS)}")
+        teacher = self._ensure_teacher(env, dict(
+            utility=utility, advmass_n=advmass_n,
+            decay_half_life=decay_half_life, floor=floor, gamma=gamma,
+            optimism_k=optimism_k, thompson=thompson, max_prob=max_prob,
+            seed=seed, load_state=load_state,
+        ))
+        terrain = env.scene.terrain
+        n_bins = self._bins(env)
+        ids = _env_id_tensor(env_ids, terrain.terrain_levels.device)
+
+        # 1) OBSERVE (same evidence stream + construction-reset guard as teacher)
+        completed_ids = _completed_env_ids(env, ids, terrain.terrain_levels.device)
+        success_mask = None
+        if len(completed_ids) > 0:
+            if success_fn == "distance":
+                success = _success_distance(env, completed_ids, distance_fraction, command_name)
+            else:
+                success = SUCCESS_FNS[success_fn](env, completed_ids)
+            teacher.observe_resets(terrain.terrain_levels[completed_ids], ~success)
+            success_mask = success
+
+        # 2) per-env ±1 proposal (locality). Envs without a completed episode
+        #    (construction reset) keep their current level.
+        cur = terrain.terrain_levels[ids].clone()
+        proposed = cur.clone()
+        if success_mask is not None:
+            step = torch.where(success_mask, 1, -1).to(cur.dtype)
+            # positions of completed envs within `ids`
+            comp_pos = torch.isin(ids, completed_ids)
+            proposed[comp_pos] = (terrain.terrain_levels[completed_ids] + step).clamp(0, n_bins - 1)
+
+        # 3) posterior masks (pooling): block PROMOTIONS into dead/mastered
+        # bins. Promotions only — a failure retreat must never be blocked
+        # (blocking it traps envs ON dead bins when neighbors are masked;
+        # one wasted episode on a mastered bin self-corrects via locality,
+        # a trapped env wastes every episode until the posterior decays).
+        p_hat = teacher.pass_rate_estimates()
+        evidence = teacher.succ + teacher.fail
+        blocked_np = ((p_hat < dead_lo) | (p_hat > mastered_hi)) & (evidence >= min_evidence)
+        blocked = torch.as_tensor(blocked_np, device=cur.device)
+        promoting = proposed > cur
+        into_blocked = promoting & blocked[proposed]
+        # try the 2-step (walk past a blocked bin) where in range and open
+        two_step = (proposed + 1).clamp(0, n_bins - 1)
+        can_skip = into_blocked & ~blocked[two_step] & (two_step != proposed)
+        proposed[can_skip] = two_step[can_skip]
+        stay = into_blocked & ~can_skip
+        proposed[stay] = cur[stay]
+
+        # 4) exploration floor: a fraction of envs draw from the teacher dist
+        if explore_frac > 0 and len(ids) > 0:
+            k = int(round(explore_frac * len(ids)))
+            if k > 0:
+                pick = torch.randperm(len(ids), generator=self._gen(env),
+                                      device=cur.device)[:k]
+                explore_levels = torch.as_tensor(
+                    teacher.sample_bins(k), device=cur.device, dtype=cur.dtype
+                ).clamp_(0, n_bins - 1)
+                proposed[pick] = explore_levels
+
+        _write_levels(terrain, ids, proposed)
+
+        # 5) telemetry (superset of teacher's) + checkpoint cadence
+        self._calls += 1
+        if save_every_calls and self._calls % save_every_calls == 0:
+            self._save_state(env)
+        m = teacher.metrics()
+        probs = teacher.sampling_probs()
+        zpd = (p_hat > 0.2) & (p_hat < 0.8)
+        return {
+            "mean_bin": torch.mean(terrain.terrain_levels.float()),
+            "n_bins": float(n_bins),
+            "frontier_bin": m["teacher/frontier_bin"],
+            "dead_frac": m["teacher/frac_dead"],
+            "mastered_frac": m["teacher/frac_mastered"],
+            "effective_bins": m["teacher/effective_bins"],
+            "blocked_bins": float(blocked_np.sum()),
+            "zpd_mass": float(probs[zpd].sum()),
+            "zpd_bins": float(zpd.sum()),
+        }
+
+
+# ---------------------------------------------------------------------------
 # Eval probe — per-level success measurement on a FIXED level grid
 # ---------------------------------------------------------------------------
 
@@ -493,6 +614,8 @@ ARM_TERMS = {
     "scripted": ScriptedTerrainLevels,
     "uniform": UniformTerrainLevels,
     "teacher": FrontierTerrainTeacher,
+    "teacher_g4": FrontierTerrainTeacher,   # concentration fix: gamma=4
+    "hybrid": HybridTerrainTeacher,         # per-env walk + posterior masks
 }
 
 
@@ -517,5 +640,13 @@ def apply_arm(env_cfg, arm: str, *, success_fn: str = "survival",
     elif arm == "scripted":
         term.params = {"total_steps": scripted_total_steps}
     elif arm == "teacher":
+        term.params = {"success_fn": success_fn, **(teacher_params or {})}
+    elif arm == "teacher_g4":
+        # pilot diagnosis: at gamma=1 the learnability contrast across a
+        # cold-start posterior is only ~2.3:1 -> effective_bins 9.5/10 (near
+        # uniform). gamma=4 gives ~29:1 contrast / effective_bins ~6 while the
+        # 0.1 floor still covers every bin.
+        term.params = {"success_fn": success_fn, "gamma": 4.0, **(teacher_params or {})}
+    elif arm == "hybrid":
         term.params = {"success_fn": success_fn, **(teacher_params or {})}
     return env_cfg
