@@ -257,7 +257,8 @@ curriculum's job description</strong> — is the origin of everything on this pa
   </div>
 </div>
 <p>There is a third, silent channel: <strong>objective safety</strong>. The identical teacher
-grew coverage under MaxRL in every seed and <em>amplified GRPO's collapse</em> in every seed —
+grew coverage under MaxRL in every seed, while GRPO decayed coverage in every seed — and in
+the teacher-arm run the collapse was <em>amplified</em> (single-seed arm) —
 the objective underneath decides whether a curriculum is safe at all (section 4). Together:
 <strong>the teacher allocates, hindsight creates, the objective decides whether either is
 safe.</strong> The full evidence decomposition, regime map, and practitioner playbook are in
@@ -349,8 +350,9 @@ teacher can close:</p>
 <div class="gap-card">
   <h3>Uniform rollout budgets</h3>
   <p>The paper uses a fixed N per prompt. But since the truncation order is tied to the group size
-  (T = N), harder prompts would benefit from larger groups twice over: more chance of a first
-  success, and a higher-order approximation of the ML objective.</p>
+  (T = N−1 for the practical drop-dead-group estimator), harder prompts would benefit from larger
+  groups twice over: more chance of a first success, and a higher-order approximation of the ML
+  objective.</p>
 </div>
 
 <p>A striking finite-sample fact we verified: at p&nbsp;=&nbsp;0.01, N&nbsp;=&nbsp;32, GRPO's population
@@ -636,7 +638,7 @@ interface contract in <code>frontier_rl</code>.</p>
   <thead><tr><th>Approach</th><th>Outcome</th><th class="num">Status</th></tr></thead>
   <tbody>
     <tr><td>Adaptive truncation T<sub>i</sub> ≈ 1/p̂<sub>i</sub> (decoupled from N via the repo's subset estimator)</td>
-        <td>slightly <em>under</em>performs fixed T=N (AUC 0.698 vs 0.704) — at N=16–32 variance isn't binding, so lowering T only weakens hard-prompt upweighting</td>
+        <td>slightly <em>under</em>performs fixed T=N−1 (AUC 0.698 vs 0.704) — at N=16–32 variance isn't binding, so lowering T only weakens hard-prompt upweighting</td>
         <td class="num"><span class="status no">✗ negative</span></td></tr>
     <tr><td>Learning-progress (|Δp̂|) teachers</td>
         <td>underperform pass-rate-band teachers here — the signal is noisy at N=16 and lags the moving frontier</td>
@@ -677,8 +679,9 @@ to real Gymnasium environments:</p>
 task — the real-world twin of the frontier-heavy regime where pure samplers score exactly zero.
 Its curriculum ("reach x ≥ x*, walking x* from the valley to the flag") is the template for
 robotics reach tasks: swap position bins for end-effector distance bands and the adapter carries
-over. The ordering <em>uniform &lt; teacher &lt; teacher+hindsight</em> holds on every
-environment tested.</p>
+over. The hindsight-augmented stack finishes on top in every environment tested; teacher ≥ uniform
+holds everywhere except MountainCar's AUC at demo budgets (within seed noise there — see
+curves.json).</p>
 
 <h3>Real training curves — performance rising while the curriculum walks</h3>
 <figure>
@@ -780,7 +783,7 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   <div class="card">
     <h3>Conceptual compression</h3>
     <p>Learnability curricula (p(1−p)), DAPO-style dynamic filtering, and HER stop being three
-    separate tricks: they are the N=1 slice, the sampling shadow, and the success-manufacturing
+    separate tricks: they are the N=2 slice, the sampling shadow, and the success-manufacturing
     complement of <em>one identity</em>. Fewer moving parts to tune, one theory to reason with.</p>
   </div>
   <div class="card">
@@ -798,7 +801,8 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
   <div class="card">
     <h3>Compute changes the objective, not just the variance</h3>
     <p>For REINFORCE, more rollouts = lower variance on the same objective. For MaxRL, more
-    rollouts = a strictly better objective (T = N). Any curriculum that reallocates rollouts is
+    rollouts = a strictly better objective (truncation order T = N−1 grows with N). Any curriculum
+    that reallocates rollouts is
     therefore also reallocating <em>objective fidelity</em> — which is why rollout allocation
     deserves to be a first-class curriculum axis.</p>
   </div>

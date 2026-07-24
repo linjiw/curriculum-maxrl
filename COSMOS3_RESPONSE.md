@@ -58,8 +58,8 @@ Phase-1 config.
 Flow-GRPO/Flow-SDE as a Phase-2 alternative to ReinFlow. Take the **machinery**
 (ODE→SDE conversion, per-step Gaussian chain likelihoods) if it ablates well —
 but do not take the **weighting**. GRPO's std-normalized group advantages under
-a frontier teacher is exactly our H6 reversal (pass@8 0.332→0.269, every seed,
-easy-retention lost). If Phase 2 ships any denoising-MDP route, the group
+a frontier teacher is exactly our H6 reversal (pass@8 0.332→0.269; GRPO's decay
+replicates every seed, the teacher-amplified arm is single-seed; easy-retention lost). If Phase 2 ships any denoising-MDP route, the group
 weights on top must stay MaxRL's success-conditioned 1/K form. One sentence for
 your route table: *Flow-SDE the chain, MaxRL the weights.*
 
