@@ -222,9 +222,10 @@ for RLVR on flow-matching VLA policies (no tractable per-sample log-prob):
   vocabulary at a precision gate (the action is removal of a class, never
   lowering the gate).
 
-`examples/run_cosmos_pilot.py` runs the four preregistered Phase-1 arms on a
-CPU mock (Bernoulli predicate skills, exact pass rates): frontier-heavy pool
-where uniform and teacher-alone score **0.000 in every seed** while
+`examples/run_cosmos_pilot.py` runs the preregistered Phase-1 arms **plus
+baselines** (DAPO dynamic resampling, GRPO estimator arms) on a CPU mock
+(Bernoulli predicate skills, exact pass rates): frontier-heavy pool where
+uniform, DAPO, and teacher-alone score **0.000 in every seed** while
 oracle-relabel reaches **0.862**, self-verified 0.756, and per-class gating
 recovers most of the poison gap (0.842) — the V5 categorical result and the
 poison→gate story reproduced end-to-end on the exact code path the real
@@ -233,6 +234,35 @@ Pilot 0: with rare true achievements, precision measured on failure-heavy
 rollouts is dominated by false-positive opportunity (~65:1 at q=0.015), so
 the probe set must be enriched with successes or the gate will mis-prune
 clean classes.
+
+The rest of the pipeline to real training is in place and unit-tested with
+fakes that mirror the verified cosmos-framework APIs:
+
+- `adapters/cosmos_live.py` — `LiveRolloutBackend` (one group = one
+  `/predict_batch` wave against SubprocVectorEnv, per-episode init states,
+  end-of-episode predicate snapshots for dead groups only),
+  `goal_predicates_of` (BDDL `goal_state` → canonical predicates),
+  `WeightedCFMBuffer` (Policy → JSONL manifest for the weighted
+  flow-matching SFT: `(w·per_instance_loss).sum()/w.sum()` at the existing
+  `compute_flow_matching_loss` call site), `Phase1Round` (collect → train →
+  redeploy loop with teacher-state persistence).
+- `evaluation.py` — unbiased success@k, easy-decile retention (fixed probe),
+  teacher-calibration (the posterior-inflation detector), `RunLedger` +
+  `matched_budget_report` (both currencies: matched rollouts AND matched
+  wall-clock, with live/relabel update counts separated).
+- `pilot0.py` — the three gate instruments (within-group variance, poison
+  rate with success-enriched probes, surrogate-fidelity cosine) and the
+  go/no-go verdict.
+- `trainer.py` — baseline arms: `estimator="grpo"/"rloo"`,
+  `dapo_max_redraws` (paid redraws, V5 protocol). Note: the H6 GRPO-collapse
+  ablation requires function approximation — it does not reproduce on
+  tabular-exact testbeds (a measured non-result, consistent with DESIGN.md
+  §8) — so it is a real-model Phase-2 claim, in per-seed success@k currency.
+
+`../READINESS.md` is the launch runbook: what is done, the ordered R1–R6
+checklist to real training-vs-baseline (env plumbing → checkpoint/data
+freeze → Pilot 0 → weighted-SFT hook → four-arm launch → baselines), each
+with its gate.
 
 ## Streaming / procedural task sources
 

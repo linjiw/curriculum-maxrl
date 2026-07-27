@@ -58,13 +58,22 @@ def goal_of(template: str) -> frozenset:
     return frozenset(template.split(" and "))
 
 
-def build_pool(rng):
-    """Frontier-heavy: 10 triple-conjunction tasks, all dead at N=8
-    (p = q³ ≈ 6·10⁻⁵ at init).  The learnable curriculum exists only BELOW
-    the pool — singletons/pairs reachable through hindsight's sub-goal
-    vocabulary (V5's frontier-heavy construction: nothing to sample toward)."""
+def build_pool(rng, scenario="frontier"):
+    """frontier: 10 triple-conjunction tasks, all dead at N=8 (p = q³ ≈
+    6·10⁻⁵ at init).  The learnable curriculum exists only BELOW the pool —
+    singletons/pairs reachable through hindsight's sub-goal vocabulary
+    (V5's frontier-heavy construction: nothing to sample toward).
+
+    balanced: 4 singletons + 4 pairs + 4 triples — the H6 collapse-ablation
+    pool: easy tasks exist for GRPO's inverted weighting to silently
+    maintain, and for a frontier curriculum to strip that maintenance from."""
     goals, seen = [], set()
-    while len(goals) < 10:
+    if scenario == "balanced":
+        goals = [frozenset([PREDICATES[i]]) for i in range(4)]
+        goals += [frozenset(rng.choice(PREDICATES, 2, replace=False))
+                  for _ in range(4)]
+        seen = set(goals)
+    while len(goals) < (12 if scenario == "balanced" else 10):
         g = frozenset(rng.choice(PREDICATES, 3, replace=False))
         if g not in seen:
             goals.append(g); seen.add(g)
@@ -160,13 +169,15 @@ def make_world(policy, seed, fp_rate_by_class=None):
 # ---------------------------------------------------------------------------
 # arms
 # ---------------------------------------------------------------------------
-def run_arm(arm, seed, steps=100, n_rollouts=8, tasks_per_step=8):
+def run_arm(arm, seed, steps=100, n_rollouts=8, tasks_per_step=8,
+            scenario="frontier", init_q=None):
     rng = np.random.default_rng(7)          # fixed pool across arms/seeds
-    pool_goals = build_pool(rng)
+    pool_goals = build_pool(rng, scenario)
     tasks = [(g, template_of(g)) for g in pool_goals]
     vocab = subgoal_vocabulary(set(pool_goals))
 
-    policy = PredicateSkillPolicy(seed=seed)
+    policy = (PredicateSkillPolicy(seed=seed) if init_q is None
+              else PredicateSkillPolicy(init_q=init_q, seed=seed))
     # "on" is the poisoned class.  NOTE a base-rate effect the real Pilot 0
     # must budget for: precision is measured on the verifier's POSITIVE
     # calls, and with rare true achievements (q≈0.015) false-positive
@@ -203,25 +214,34 @@ def run_arm(arm, seed, steps=100, n_rollouts=8, tasks_per_step=8):
     teacher = MasteryFrontierTeacher(env.n_tasks, n_rollouts,
                                      samplable=env.samplable_mask(),
                                      seed=seed + 1000)
-    if arm == "uniform":
+    if arm.startswith("uniform") or arm == "dapo":
         mask = env.samplable_mask()
         teacher.distribution = lambda: mask / mask.sum()
 
-    cfg = TrainerConfig(n_rollouts=n_rollouts, tasks_per_step=tasks_per_step,
-                        hindsight=(arm not in ("uniform", "teacher")),
-                        positive_weights=True, seed=seed)
+    estimator = "grpo" if arm.endswith("+grpo") else "maxrl"
+    cfg = TrainerConfig(
+        n_rollouts=n_rollouts, tasks_per_step=tasks_per_step,
+        hindsight=(arm in ("oracle", "self", "self+gate")),
+        positive_weights=(estimator == "maxrl"), estimator=estimator,
+        dapo_max_redraws=(4 if arm == "dapo" else 0), seed=seed)
     trainer = FrontierTrainer(env, policy, cfg, teacher=teacher)
 
-    curve = []
+    curve, easy_curve = [], []
+    easy = [g for g in pool_goals if len(g) == 1]   # retention probe
     def on_eval(i):
         curve.append(float(np.mean([policy.pass_rate(g)
                                     for g in pool_goals])))
+        if easy:
+            easy_curve.append(float(np.mean([policy.pass_rate(g)
+                                             for g in easy])))
     stats = trainer.train(steps, on_eval=on_eval, eval_every=5)
     relabels = [s.relabeled_groups for s in stats]
     third = max(len(relabels) // 3, 1)
     return {
         "auc": float(np.mean(curve)),
         "final": curve[-1],
+        "easy_first": easy_curve[len(easy_curve) // 4] if easy_curve else None,
+        "easy_final": easy_curve[-1] if easy_curve else None,
         "dead_rate": float(np.mean([s.dead_groups / tasks_per_step
                                     for s in stats])),
         "relabels_early": int(np.sum(relabels[:third])),
@@ -232,7 +252,7 @@ def run_arm(arm, seed, steps=100, n_rollouts=8, tasks_per_step=8):
 
 def main():
     seeds = range(3)
-    arms = ["uniform", "teacher", "oracle", "self", "self+gate"]
+    arms = ["uniform", "dapo", "teacher", "oracle", "self", "self+gate"]
     print(f"{'arm':12s} {'AUC':>14s} {'final':>7s} "
           f"{'dead/8':>7s} {'relabel e->l':>13s}")
     results = {}
@@ -255,8 +275,10 @@ def main():
         ("frontier-heavy: pool ~dead without relabeling (rare lucky "
          "ignitions only)",
          f["uniform"] < 0.1 and f["teacher"] < 0.1),
+        ("DAPO redraws also score ~0 (reallocation cannot help)",
+         f["dapo"] < 0.1),
         ("relabeling ignites the pool (oracle final >> non-relabel arms)",
-         f["oracle"] > 5 * max(f["uniform"], f["teacher"], 1e-9)),
+         f["oracle"] > 5 * max(f["uniform"], f["teacher"], f["dapo"], 1e-9)),
         ("ignition: relabels decay (early > late)",
          np.mean([r["relabels_early"] for r in results["oracle"]])
          > np.mean([r["relabels_late"] for r in results["oracle"]])),
@@ -266,6 +288,31 @@ def main():
     print()
     for label, ok in checks:
         print(f"  [{'PASS' if ok else 'FAIL'}] {label}")
+
+    # ---- GRPO/baseline arm wiring (balanced pool) --------------------------
+    # NOT the H6 collapse ablation.  H6 (frontier curricula amplify GRPO's
+    # pass@k collapse) is a function-approximation + sampled-coverage
+    # pathology: it appeared at 1.26M-param GPU scale and NOT on the CPU
+    # exact-gradient testbed (DESIGN.md §8: zpd+grpo scored 0.989 there).
+    # This tabular-exact mock is in the same regime as the CPU testbed, so
+    # GRPO looks healthy here BY DESIGN of the mock — reproducing collapse
+    # requires the real flow policy and per-seed success@k (Phase 2).  These
+    # arms only verify the estimator/teacher plumbing runs end-to-end.
+    print("\nbaseline arm wiring (balanced pool; NOT evidence about H6 — "
+          "collapse needs function approximation, see comment):")
+    print(f"{'arm':16s} {'AUC':>7s} {'easy@25%':>9s} {'easy final':>11s}")
+    h6 = {}
+    for arm in ["uniform+grpo", "teacher+grpo", "teacher", "uniform"]:
+        rs = [run_arm(arm, s, scenario="balanced", init_q=0.25)
+              for s in seeds]
+        h6[arm] = rs
+        print(f"{arm:16s} {np.mean([r['auc'] for r in rs]):7.3f} "
+              f"{np.mean([r['easy_first'] for r in rs]):9.3f} "
+              f"{np.mean([r['easy_final'] for r in rs]):11.3f}")
+    wiring_ok = all(np.mean([r["auc"] for r in rs]) > 0.5
+                    for rs in h6.values())
+    print(f"  [{'PASS' if wiring_ok else 'FAIL'}] all estimator/teacher "
+          f"combinations train end-to-end")
 
 
 if __name__ == "__main__":
