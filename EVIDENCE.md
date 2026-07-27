@@ -23,13 +23,15 @@ what lets you predict where the method will and won't help.
   it pools K=0 with K=N and cannot isolate dead-group waste); 22–35% more
   optimization steps per GPU-hour (frontier rollouts also end earlier);
   6/6 paired-seed wins vs uniform.
-- Ceiling: the ORACLE bound. A perfect sampler collects only 0.4% more
-  advantage mass than our Thompson posterior (V2) — but mass saturation
-  bounds mass, not AUC: the V2 oracle still reaches +0.20 AUC over uniform
-  on CPU. Realized Thompson-teacher gain is +0.05–0.08 AUC on CPU and
-  ~+0.01 on the maze; the remaining oracle gap is a tracking problem, and
-  no pure sampler can exceed the oracle — it can only reallocate signal
-  that exists.
+- Ceiling: the ORACLE bound — CORRECTED (Opus5 review B3 + our control
+  battery, `frontier_rl/examples/hindsight_controls.json`). The published
+  "oracle" carried a 10% floor handicap; the honest no-floor γ-matched
+  oracle reaches 0.8885, TYING the full stack (0.8895). Creation still
+  adds on top of perfect allocation (+0.005, oracle+HS 0.8935) but the
+  channels substitute more than they compose: "beats the oracle by 0.039"
+  is retracted; "+0.005 on top of the best sampler including an oracle"
+  is the honest number. Realized Thompson-teacher gain is +0.05–0.08 AUC
+  on CPU and ~+0.01 on the maze.
 - When it's the dominant channel: mixed-difficulty pools with real spread
   (the balanced regime), and any setting where rollouts are the cost center.
 
@@ -59,6 +61,14 @@ what lets you predict where the method will and won't help.
 - Mechanism: P5 — MaxRL concentrates ≈(N−1)× more signal than RLOO on
   frontier tasks as p→0, and unlike GRPO its weight function doesn't invert
   at p→1.
+- Decomposition (control battery, 5 seeds): of the +0.22 hindsight gap
+  on fixed pools, an extra-gradient placebo (replaying LIVE gradients on
+  dead-group slots, zero relabel information) captures 83%, lr×2 captures
+  68%, and random-target relabeling 69%. The relabel DIRECTION carries
+  +0.037 beyond the strongest placebo — real, exactness-dependent (fake
+  labels are actively harmful), but the headline "+0.22 from signal
+  creation" decomposes into ~0.18 gradient-dose effect + ~0.04 direction
+  information. Both numbers ship together from now on.
 - What it buys, measured: the H6 reversal. The identical teacher GREW
   coverage under MaxRL every seed (pass@8 0.316→0.348); GRPO decayed
   coverage every seed, and in the seed run with a teacher the collapse
