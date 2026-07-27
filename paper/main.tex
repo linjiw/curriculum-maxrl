@@ -324,7 +324,14 @@ $.096\to.093$, $\passat{4}$ $.193\to.181$) while plain GRPO climbs
 monotonically ($.078\to.105\to.120$) --- with the teacher verifiably
 steering (sampled-dead fraction driven to 0.48 vs.\ the ${\sim}0.65$
 population rate). MaxRL+teacher trains stably to its best value
-($.066\to.102$). Beyond the predictions: the teacher's posterior
+($.066\to.102$); the uniform-MaxRL cell finishes at $.108$, making
+P-G1 (a teacher gain for MaxRL) an honest \emph{null at this budget} ---
+predicted in advance by the posterior-starvation analysis below. A
+$\passat{k}$ sweep on the final checkpoints sharpens the safety read: the
+teacher's deficit under GRPO \emph{widens monotonically with $k$}
+($-.008$ at $k{=}1$ to $-.024$ at $k{=}16$) --- curriculum damage lives in
+coverage, as the maze predicted, though each individual delta is within
+single-seed noise. Beyond the predictions: the teacher's posterior
 \emph{learns} real difficulty from ${\sim}1$ visit per prompt
 ($\rho = -0.17$ against independent 7B-model solve-rate annotations,
 $p\approx 10^{-17}$) but its allocation is \emph{posterior-starved} ---
