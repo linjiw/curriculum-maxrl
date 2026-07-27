@@ -106,13 +106,43 @@ no coverage rescue either. At 50 steps × 7.5k prompts, channel 1 does not
 pay at the prompt level. The H6 safety result (Finding 1) is unaffected
 and remains the experiment's headline.
 
+## Finding 5 — k-sweep: the teacher's GRPO damage grows with k (P-G3, directional)
+
+Final checkpoints, vllm, n=16 samples on the 256-row slice, unbiased
+pass@k (`gsm8k_partial/ksweep_results.json`):
+
+| cell | p@1 | p@4 | p@8 | p@16 |
+|---|---|---|---|---|
+| grpo | .038 | .111 | .168 | **.238** |
+| maxrl | .033 | .099 | .157 | .231 |
+| grpo + teacher | .030 | .091 | .143 | .215 |
+| maxrl + teacher | .028 | .084 | .138 | .215 |
+
+Three honest reads:
+1. **The teacher's damage to GRPO grows with k** — deficit −.008 at k=1
+   widening to −.024 at k=16, the P-G3 signature (curriculum damage lives
+   in coverage). Directional support: each individual delta is within
+   single-seed noise (se≈.026 unpaired at n=256), but the monotone widening
+   across four k values is the predicted pattern.
+2. **At this budget the teacher costs coverage under BOTH estimators**
+   (maxrl+teacher −.016 at k=16) — smaller than GRPO's cost, but not the
+   maze's coverage GROWTH. Consistent with the starved-posterior diagnosis:
+   a near-uniform teacher with a 0.48-dead-floor sampled fewer effective
+   unique prompts per epoch than uniform did, a pure cost with no
+   allocation benefit. Channel 1 at prompt-level 50-step budgets: null to
+   slightly negative.
+3. **GRPO's coverage did not collapse in 50 steps** (its p@16 leads all
+   cells) — collapse horizons in the maze were hundreds of steps; the
+   H6 signature here is the teacher-induced *relative* degradation
+   (Finding 1's trajectory + the widening-with-k deficit), not absolute
+   collapse. State this precisely in the paper.
+
 ## What remains before E-LLM-1 closes
 
-1. ~~Cell 2 final val~~ DONE — P-G1 verdict above.
-2. k-sweep (pass@{1,4,8,16}) on all four final checkpoints via vllm — the
-   proper coverage currency for the H6 claim (P-G3).
+1. ~~Cell 2 final val~~ DONE — Finding 4.
+2. ~~k-sweep~~ DONE — Finding 5.
 3. Dead-fraction trajectory figure + curves.json export for the site.
-4. Verdict table against P-G1..P-G5 verbatim; fold into PAPER/EVIDENCE.
+4. Fold verdicts into PAPER §7.5 (done in the same commit as this edit).
 
 ## Pre-registered predictions scoreboard (live)
 
@@ -120,6 +150,6 @@ and remains the experiment's headline.
 |---|---|
 | P-G1 teacher AUC gain over maxrl | **NULL at this budget** (final .102 vs .108; 2.1× the improvement slope but start-dominated) — as the posterior-starvation analysis predicted |
 | **P-G2 grpo+cur does NOT beat grpo** | **CONFIRMED** (and regressed 25→50) |
-| P-G3 pass@k divergence clearer than mean | partial (pass@4 mirrors mean@4; k-sweep pending) |
+| P-G3 pass@k divergence clearer than mean | **directional** — grpo+teacher deficit widens monotonically −.008→−.024 from k=1→16; individual deltas within single-seed noise |
 | P-G4 teacher bends dead-fraction below population | CONFIRMED post-fix (min 0.48 vs 0.65 population); earlier claim retracted, see val_checkpoints.md |
 | P-G5 absolute gains small; ordering is the outcome | holding exactly as written |
