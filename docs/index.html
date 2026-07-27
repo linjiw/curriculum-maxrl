@@ -1022,6 +1022,72 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
 
 <hr>
 
+<!-- ============================================================ -->
+<h2 id="paper">8 · The paper draft — abstract, status, and how we write</h2>
+
+<p>The full working draft lives at
+<a href="https://github.com/linjiw/curriculum-maxrl/blob/main/PAPER.md"><span class="mono">PAPER.md</span></a>
+(v0.9). We studied the MaxRL paper's own craft — the "your method is our method at
+T=1" subsumption move, theorem boxes with plain-English interpretations, an escalating
+experimental ladder with one takeaway per rung — and hold this draft to that bar. Our
+one-line hook mirrors theirs one level up: <em>they showed RL is a first-order
+approximation of maximum likelihood; we show the curriculum is a closed-form property
+of their estimator — and that what the estimator throws away is the one thing no
+curriculum can fix, until you recycle it.</em></p>
+
+<div class="card">
+  <h3>Abstract (current draft)</h3>
+  <p style="font-size:0.93rem">Reinforcement learning with verifiable rewards spends most of its
+  budget generating rollouts, and on hard task pools most of that budget buys nothing: under
+  uniform prompt sampling, we measure that <strong>65–75% of rollout groups produce zero learning
+  signal</strong>. The emerging fix is a difficulty curriculum, but current curricula are
+  heuristics bolted on from outside: bandit scores, hand-set difficulty bands, filtering rules.
+  We show the curriculum is already inside the estimator. For MaxRL-style success-conditioned
+  advantages, the expected learning signal a prompt emits from a group of N rollouts has a closed
+  form, <strong>E[Σ|w|] = 2·(pass@N − pass@1)</strong> — a compute-indexed
+  zone-of-proximal-development functional, maximal on prompts solvable within N attempts but not
+  within one. Sampling prompts by this quantity turns the rollout budget N you already chose into
+  the curriculum knob, with no new difficulty hyperparameters; published learnability curricula
+  fall out as its N=2 slice. The same algebra draws a hard boundary: no sampling rule can rescue
+  an all-fail prompt. We therefore add <strong>failure recycling</strong>: a failed trajectory is
+  a verified success for the goal it actually reached, and relabeling dead groups provably yields
+  the maximum-likelihood gradient of the relabeled task. Across four testbeds the combined
+  schedule beats a true-pass-rate <strong>oracle</strong> allocator (0.890 vs 0.851), turns a
+  frontier-heavy regime from unlearnable to solved (0 → 0.98), grows pass@k where GRPO's
+  collapses, and needs up to 11× fewer inference samples to reach target coverage. A
+  pre-registered LLM-scale 2×2 confirms the safety half: the identical curriculum that trains
+  stably under MaxRL <em>degrades</em> GRPO — the estimator underneath decides whether a
+  curriculum is safe at all.</p>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <h3>Draft status — what's solid</h3>
+    <p>✅ Abstract, intro with 5-item contribution list, theory sections with
+    interpretation lines after every proposition, the escalating experiment ladder
+    (7.1–7.5, one bolded takeaway each), related-work differentiation table,
+    limitations-with-diagnoses. All numbers audit-traced; the two-round adversarial
+    audit found the quantitative core clean and fixed the prose qualifiers.</p>
+  </div>
+  <div class="card">
+    <h3>What's pending before v1.0</h3>
+    <p>⟳ GSM8K cell 2 final (P-G1 verdict) + the pass@{1,4,8,16} k-sweep on all four
+    final checkpoints; the Countdown 2×2×2 (channel 2 at LLM scale — the flagship);
+    multi-seed LLM replication; figures rebuilt from <span class="mono">curves.json</span>
+    artifacts; LaTeX conversion.</p>
+  </div>
+</div>
+
+<p><strong>Writing principles we borrowed from the base paper</strong> (and where we
+push further): <em>subsume, don't compete</em> — every rival method appears as a slice
+or shadow of one identity (their T=1 move, our N=2 move); <em>a theorem box is only as
+good as its interpretation line</em> — every proposition is followed by a plain-English
+sentence a skimmer can carry away; <em>escalate the experiments</em> — exact gradients →
+controlled regimes → real scale, each rung earning the next; and one place we hold
+ourselves to a higher bar: <em>pre-registration and retraction</em> — predictions
+committed before data, one early claim withdrawn when review found the mechanism
+inert, and the negative results carry diagnoses, not apologies.</p>
+
 <p class="footnote">
   Built on the official <a href="https://arxiv.org/abs/2602.02710">MaxRL</a> codebase
   (Tajwar, Zeng, et&nbsp;al., ICML 2026 — a verl fork). Curriculum design draws on PLR, PAIRED,
