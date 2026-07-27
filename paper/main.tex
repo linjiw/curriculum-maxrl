@@ -1,0 +1,406 @@
+\documentclass[10pt]{article}
+% ICLR-style layout without the (unavailable) class file: we mimic the
+% geometry so the draft paginates like the real submission.
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\setlist{topsep=2pt,itemsep=1pt,leftmargin=1.4em}
+
+\newtheorem{proposition}{Proposition}
+\newenvironment{interp}{\par\vspace{2pt}\noindent\small\textbf{Interpretation.}\itshape}{\par\vspace{4pt}}
+\newcommand{\takeaway}[1]{\par\vspace{3pt}\noindent\fcolorbox{black!20}{black!4}{\parbox{0.96\linewidth}{\small\textbf{Takeaway.} #1}}\vspace{4pt}}
+\newcommand{\passat}[1]{\text{pass@}#1}
+
+\title{\textbf{The Estimator Is the Curriculum:}\\
+\large Frontier Sampling and Failure Recycling for Likelihood-Based RL}
+\author{Anonymous authors\\ \small Working draft v0.9 --- \today\\
+\small Code, logs, and proofs: \url{https://github.com/linjiw/curriculum-maxrl}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Reinforcement learning with verifiable rewards spends most of its budget
+generating rollouts, and on hard task pools most of that budget buys
+nothing: under uniform prompt sampling, we measure that \textbf{65--75\% of
+rollout groups produce zero learning signal} --- every rollout fails, and
+success-conditioned estimators drop the group. The emerging fix is a
+difficulty curriculum, but current curricula are heuristics bolted on from
+outside: bandit scores, hand-set difficulty bands, filtering rules. We show
+the curriculum is already inside the estimator. For MaxRL-style
+success-conditioned advantages, the expected learning signal a prompt emits
+from a group of $N$ rollouts has a closed form,
+$\mathbb{E}[\sum_i |w_i|] = 2\,(\passat{N}-\passat{1})$ --- a
+compute-indexed zone-of-proximal-development functional, maximal on prompts
+solvable within $N$ attempts but not within one, peaking at pass rate
+$\approx \ln N/N$. Sampling prompts by this quantity (a decayed Thompson
+posterior makes it practical) turns the rollout budget $N$ you already
+chose into the curriculum knob, with no new difficulty hyperparameters;
+published learnability curricula fall out as its $N{=}2$ slice. The same
+algebra draws a hard boundary: no sampling rule can rescue an all-fail
+prompt, because allocation only redistributes signal that exists. We
+therefore add a second, complementary mechanism --- \textbf{failure
+recycling}: a failed trajectory is a verified success for the goal it
+actually reached, and relabeling dead groups (with the prompt's goal
+conditioning rewritten) provably yields the maximum-likelihood gradient of
+the relabeled task, exact when conditional laws match. On testbeds spanning
+exact-gradient chains, a 1.26M-parameter maze transformer, Gymnasium
+control, and a 360M LLM on GSM8K, the combined schedule beats a
+true-pass-rate \textbf{oracle} allocator (0.890 vs.\ 0.851 AUC), turns a
+frontier-heavy regime from unlearnable to solved ($0 \to 0.98$ at equal
+compute), grows $\passat{k}$ coverage where GRPO's collapses, and needs up
+to $11\times$ fewer inference samples to reach target coverage. A
+pre-registered LLM-scale $2{\times}2$ confirms the safety half of the
+claim: the identical curriculum that trains stably under MaxRL
+\emph{degrades} GRPO --- curricula amplify objective-level pathologies, so
+the estimator underneath decides whether a curriculum is safe at all.
+\end{abstract}
+
+\section{Introduction}
+
+Post-training language models with verifiable rewards has a cost structure
+unlike ordinary supervised learning: the data is free, but \emph{rollouts}
+are not. Every optimization step is preceded by sampling $N$ completions
+per prompt, and generation dominates wall-clock (86\% of step time in our
+LLM runs). What that compute buys depends entirely on where it lands. On a
+prompt the model has mastered, $N$ successes carry no contrast and no
+gradient. On a prompt beyond the model's reach, $N$ failures carry no
+successes --- and for the success-conditioned estimators of
+likelihood-based RL, the group is dropped entirely. We measure the combined
+waste at 65--75\% of groups under uniform sampling. The field's response is
+difficulty curricula --- but the current generation derives its sampling
+rule from outside the learner: UCB bandits over difficulty buckets
+\citep{dump}, target-difficulty controllers \citep{adarft}, category
+bandits \citep{sec}, rejection rules \citep{lilo}, or dead-prompt filtering
+\citep{dapo,greso}. Each adds machinery and hyperparameters to estimate, in
+effect, \emph{where learning is possible right now}.
+
+Our starting observation is that likelihood-based RL already computes this.
+MaxRL \citep{maxrl} showed that standard RL on binary rewards optimizes a
+first-order approximation of maximum likelihood, and that normalizing
+advantages by the group's success count $K$ instead of its size $N$
+recovers a truncated-ML objective. Reading their weight-function view
+raises a question with a non-obvious answer: \emph{if the objective already
+pours gradient into hard prompts, is there anything left for a curriculum
+to do?} The answer is sharply yes, for a structural reason: \textbf{weights
+act on prompts after they are sampled, and only when at least one rollout
+succeeds.} However the weight function is shaped, it cannot rescue a group
+that came back all-fail --- dropping that group is precisely what makes the
+estimator unbiased --- and it cannot un-spend the compute burned
+re-confirming mastered prompts. The estimator's blind spots define the
+curriculum's job description.
+
+Taking that sentence literally produces this paper. Our contributions:
+\begin{enumerate}
+\item \textbf{The curriculum is a theorem, not a heuristic}
+  (\S\ref{sec:theory}): the expected advantage mass of a prompt is exactly
+  $2(\passat{N}-\passat{1})$, a derived ZPD functional whose band location,
+  width, and compute-scaling are set by $N$ alone. Learnability curricula
+  are its $N{=}2$ slice; optimal rollout allocation is water-filling on
+  $p(1-p)^N$.
+\item \textbf{A practical teacher} (\S\ref{sec:method}): Thompson sampling
+  on a decayed Beta posterior with the derived utility; the estimator is
+  untouched, so its unbiasedness carries over.
+\item \textbf{Failure recycling with an exactness guarantee}
+  (\S\ref{sec:recycling}): relabeling dead groups to achieved sub-goals
+  yields the ML gradient of the relabeled task; exact when conditional laws
+  match, measured indistinguishable from fresh groups (cosine 0.956 vs.\
+  0.958), with two contracts whose violation we price.
+\item \textbf{A three-channel account with a safety rule}
+  (\S\ref{sec:channels}--\ref{sec:experiments}): allocation is bounded by
+  an oracle ceiling; creation breaks it; the objective underneath decides
+  whether either is safe --- confirmed at LLM scale on a pre-registered
+  prediction.
+\item \textbf{An honest evidence discipline}: pre-registered predictions,
+  documented negatives with diagnoses, one retraction, and a two-round
+  adversarial audit tracing every number to a log or proof.
+\end{enumerate}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig1_utility}
+\caption{\textbf{The estimator is the curriculum.} \emph{Left:} the derived
+utility $u_N(p) = (1-(1-p)^N)-p$ --- the estimator's expected advantage
+mass (Prop.~\ref{prop:mass}) --- for growing rollout budgets $N$. The peak
+$p^*\approx \ln N/N$ walks toward harder prompts as compute grows; both
+tails are dead zones the weight function cannot reach. \emph{Right:} at
+$N{=}16$, MaxRL concentrates $\to(N{-}1)\times$ more expected signal than
+RLOO on frontier prompts (Prop.~\ref{prop:ratio}); RLOO's profile is
+exactly the published ``learnability'' objective --- the $N{=}2$ slice.}
+\label{fig:utility}
+\end{figure}
+
+\section{Background: MaxRL in three lines}
+For binary rewards, maximum likelihood maximizes
+$\mathbb{E}[\log p_\theta(\text{success}\mid x)]$. MaxRL expands $\log p$
+as a Maclaurin series in $(1-p)$ and truncates at order $T$, giving a
+compute-indexed family $J^{(T)}$ interpolating REINFORCE ($T{=}1$) to exact
+ML ($T\to\infty$); the practical estimator sets per-rollout advantages
+$w_i = r_i/K - 1/N$ with all-fail groups dropped, which is unbiased for the
+$T = N{-}1$ objective. Its weight function grows as $p\to 0$: the objective
+is an \emph{implicit, gradient-level} curriculum. Our work is the
+data-level complement: the same algebra, read as a sampling rule plus a
+recycling rule.
+
+\section{The estimator is the curriculum}\label{sec:theory}
+
+\begin{proposition}[Advantage mass; MC-verified]\label{prop:mass}
+For a prompt with pass rate $p$ and $N$ i.i.d.\ rollouts under the
+practical MaxRL weights,
+\[ \mathbb{E}\Big[\textstyle\sum_i |w_i|\Big]
+   \;=\; 2\big(\passat{N}(p) - \passat{1}(p)\big)
+   \;=\; 2\big((1-(1-p)^N) - p\big). \]
+\end{proposition}
+\begin{interp}
+The estimator's expected learning signal on a prompt is twice the
+probability that the prompt is solvable within $N$ attempts but not within
+one. That sentence is a curriculum: zero on mastered prompts, zero on
+unreachable ones, maximal at $p^* = 1 - N^{-1/(N-1)} \approx \ln N/N$ --- a
+zone of proximal development whose center, width, and compute-scaling are
+set by the one parameter you already chose.
+\end{interp}
+
+\begin{proposition}[Frontier amplification]\label{prop:ratio}
+As $p \to 0$, the ratio of MaxRL's expected signal to RLOO's
+($2p(1-p)$ exactly) tends to $N-1$.
+\end{proposition}
+\begin{interp}
+Concentrating sampling on the frontier only helps if the estimator can
+extract signal there; GRPO's variance-normalized weights invert the
+profile, which \S\ref{sec:experiments} shows becoming an active failure
+under a curriculum.
+\end{interp}
+
+\begin{proposition}[Allocation]\label{prop:alloc}
+The rollout allocation maximizing total expected signal is greedy
+water-filling on the marginal $p(1-p)^N$ --- the probability that the next
+rollout is a group's first success.
+\end{proposition}
+
+\noindent One identity, three literatures: learnability curricula
+\citep{sfl,lilo} are the $N{=}2$ slice of $u_N$; DAPO-style dynamic
+sampling and GRESO are its avoidance shadow (cull where $u\approx 0$);
+HER-style relabeling is its creation complement (manufacture $K>0$ where
+$u=0$ identically; \S\ref{sec:recycling}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig4_algorithm}
+\caption{\textbf{One FrontierMax step.} A Thompson-sampled posterior
+allocates rollouts by the derived utility; live groups train with
+unmodified MaxRL weights; dead groups are relabeled to the sub-goal they
+actually achieved (conditioning rewritten) and train as verified successes.
+The posterior observes requested-task outcomes only.}
+\label{fig:algorithm}
+\end{figure}
+
+\section{FrontierMax: the schedule}\label{sec:method}
+A decayed Beta posterior (decay $0.7$) tracks each prompt's pass rate from
+observed group outcomes only --- never from relabeled successes (violating
+this inflates the posterior: $\hat p$ 0.81 vs.\ eval 0.47). Thompson
+sampling draws $\tilde p$ and samples prompts $\propto u(\tilde p)^\gamma$
+with a 10\% uniform floor; $\gamma\approx 4$ when tasks share skills
+(learning compounds --- validated on chains, and its non-transfer to broad
+pools was predicted in advance by a compounding ODE model), $\gamma=1$
+otherwise. Live groups train with unmodified MaxRL advantages. Honest knob
+inventory: decay, floor, and $\gamma$ exist, with validated defaults; what
+is \emph{derived} rather than tuned is the difficulty band itself ---
+location, width, and $N$-scaling --- which is exactly where competing
+curricula spend their hyperparameters.
+
+\section{Failure recycling}\label{sec:recycling}
+
+\begin{proposition}[Hindsight exactness]\label{prop:hindsight}
+Relabeling a dead group to the sub-goal $g'$ its trajectories actually
+achieved, rewriting the goal conditioning, and applying the same
+success-conditioned weights yields the ML gradient of task $g'$ under the
+conditional law shifted by the original sampling; the two coincide exactly
+when the conditional laws match.
+\end{proposition}
+\begin{interp}
+Measured: per-group cosine to the true relabeled-task gradient 0.956,
+vs.\ 0.958 for fresh unbiased groups; the mean relabeled gradient reaches
+cosine 1.000.
+\end{interp}
+
+Two contracts keep practice on the proof's side: \textbf{(1) exactness} ---
+a relabeled success must be a true success of the relabeled task under the
+environment's own verifier (never an LLM judge); \textbf{(2) conditioning}
+--- goal-embedding trajectories must have their conditioning rewritten to
+the achieved goal. Skipping (2) turns the exact gradient into noise: on our
+gridworld, hindsight without the rewrite scores below teacher-only
+($0.600 < 0.658$); with it, it leads ($0.703$). Recycling is the only
+mechanism here that \emph{creates} signal, and its value is
+regime-dependent in a way we can state precisely: the gain is proportional
+to how much a relabeled skill can compound --- $+0.22$ AUC on fixed task
+pools, $+0.01$ on one-shot task streams. Task-set fixedness is the single
+most important regime variable we found.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.62\linewidth]{figures/fig5_channels}
+\caption{\textbf{Three channels.} The teacher allocates compute to the
+frontier band; recycling creates signal in the dead zone no sampler can
+reach; the objective underneath decides whether either is safe.}
+\label{fig:channels}
+\end{figure}
+
+\section{Three channels, one safety rule}\label{sec:channels}
+The \textbf{teacher} avoids waste --- bounded by an oracle ceiling (a
+perfect allocator collects only 0.4\% more advantage mass than our
+posterior). \textbf{Recycling} creates signal --- the only channel that
+breaks that ceiling. The \textbf{objective} underneath decides whether
+either is safe. One line: \emph{the teacher allocates, hindsight creates,
+the objective decides whether either is safe.}
+
+\section{Experiments: an escalating ladder}\label{sec:experiments}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig2_ladder}
+\caption{\textbf{The ladder.} (a) Exact-gradient chains: the full stack
+beats the true-pass-rate oracle. (b) Frontier-heavy regime: allocation
+scores exactly zero; creation solves it. (c) Maze at matched wall-clock:
+6/6 paired seed wins. (d) GSM8K $2{\times}2$: the identical teacher helps
+MaxRL and hurts GRPO (pre-registered P-G2).}
+\label{fig:ladder}
+\end{figure}
+
+\paragraph{7.1 Exact-gradient skill chains (CPU, 5 seeds).} Uniform 0.650
+$\to$ teacher 0.728 $\to$ full stack $\mathbf{0.890 \pm 0.002}$ --- above
+the true-pass-rate oracle allocator (0.851) and above a sharper
+$\gamma{=}4$ oracle (0.884).
+\takeaway{Allocation saturates; creation breaks the ceiling.}
+
+\paragraph{7.2 Frontier-heavy regime (max pool pass rate $10^{-5}$).}
+Uniform, DAPO, and the plain teacher score \textbf{exactly 0.00};
+teacher+recycling reaches \textbf{0.98 final (0.93 AUC)} --- relabeling
+invents the curriculum below the pool, ignites within ${\sim}400$ groups,
+then goes silent.
+\takeaway{Where there is nothing to sample toward, only signal creation
+works --- categorically, not marginally.}
+
+\paragraph{7.3 Maze transformer at matched wall-clock (1.26M params, 13
+levels, ${\sim}30$ runs, 3 seeds).} Champion (teacher + dense recycling)
+$0.252{\pm}0.005$ final / $0.229{\pm}0.009$ AUC vs.\ uniform
+$0.230{\pm}0.015$ / $0.211{\pm}0.011$; paired deltas positive 6/6 seeds;
+22--35\% more optimization steps per GPU-hour. Safety: the identical
+teacher grows $\passat{8}$ under MaxRL in every seed ($0.316\to0.348$)
+while GRPO's coverage decays in every seed ($0.308\to0.271$); the
+teacher-arm run amplifies the collapse ($0.332\to0.269$; single-seed arm).
+Inference currency: $1.2\times/2.7\times/\mathbf{11\times}$ fewer samples
+than GRPO to reach target coverage at levels 2/3/5 (honest $0.5\times$
+reversal at level 4).
+\takeaway{The gains survive real gradients; the safety warning is real;
+coverage is the currency that sees both.}
+
+\paragraph{7.4 Gymnasium control (MountainCar).} Flag-only training: 0.000.
+Positional curriculum with a \emph{shared} goal-conditioned policy: uniform
+0.889 $\to$ teacher 0.944 $\to$ full stack \textbf{1.000 in every seed} at
+equal compute. Per-bin policy parameters never reach the flag.
+\takeaway{Curricula operate through shared parameters, or not at all.}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.6\linewidth]{figures/fig3_gsm8k}
+\caption{\textbf{GSM8K $2{\times}2$ (pre-registered).} The identical
+teacher helps MaxRL and hurts GRPO; GRPO+teacher is the only cell that
+regresses in its second half --- the maze safety reversal at LLM scale.}
+\label{fig:gsm8k}
+\end{figure}
+
+\paragraph{7.5 LLM scale: GSM8K $2{\times}2$, pre-registered
+(SmolLM2-360M, $N{=}16$, one A10G).} Predictions committed before any cell
+finished. \textbf{P-G2, the riskiest prediction, confirmed:} GRPO+teacher
+is the only cell that regresses in its second half (val accuracy
+$.096\to.093$, $\passat{4}$ $.193\to.181$) while plain GRPO climbs
+monotonically ($.078\to.105\to.120$) --- with the teacher verifiably
+steering (sampled-dead fraction driven to 0.48 vs.\ the ${\sim}0.65$
+population rate). MaxRL+teacher trains stably to its best value
+($.066\to.102$). Beyond the predictions: the teacher's posterior
+\emph{learns} real difficulty from ${\sim}1$ visit per prompt
+($\rho = -0.17$ against independent 7B-model solve-rate annotations,
+$p\approx 10^{-17}$) but its allocation is \emph{posterior-starved} ---
+3{,}200 draws over 7{,}473 prompts leave Thompson sampling near-uniform.
+And the GRPO degradation is not token-entropy collapse (GRPO+teacher
+retains \emph{more} entropy): the damage is distributional, visible only
+in coverage. Single seed; small model; the pre-registered outcomes were
+orderings and signs, and both landed.
+\takeaway{The safety half of the thesis transfers to LLM RLVR; the
+allocation half needs tiers or longer runs --- which is how the next
+experiment is designed.}
+
+\paragraph{Next rung (staged, review-hardened).} Countdown $2{\times}2
+{\times}2$: the first exact-verifier hindsight experiment in RLVR --- a
+failed equation still evaluates to some value $v$; relabel the target to
+$v$ and the same verifier certifies a true success. Pre-registered:
+recycling ignites the operand tiers that stay at zero for every
+recycling-off cell.
+
+\section{Related work}
+Difficulty-adaptive RLVR sampling is bucket- or scalar-level and
+heuristic-scored: DUMP (UCB over buckets), AdaRFT (scalar controller over
+precomputed labels), SEC (category bandit), threshold curricula. LILO is
+the closest per-prompt method --- rejection sampling by $\hat p(1-\hat p)$,
+which Prop.~\ref{prop:mass}'s corollary identifies as the $N{=}2$ slice of
+our derived utility. DAPO's dynamic sampling and GRESO cull dead prompts
+--- avoidance without allocation or creation. PKPO and Pass@k-training
+modify the objective toward $\passat{k}$ but keep uniform sampling.
+Hindsight for LLMs (AgentHER, HSL) relabels agent trajectories with an LLM
+judge; exact-verifier relabeling inside the RL loop is, to our knowledge,
+unoccupied. No prior work (i) derives the sampling utility from the
+estimator's own expected signal, (ii) couples it with success-conditioned
+weights it provably matches, and (iii) adds a signal-creation channel with
+an exactness guarantee.
+
+\section{Limitations and honest negatives}
+Deep frontiers at fixed budget remain uncrossed on the maze, and a
+$4\times$ duration run \emph{refuted} our own duration hypothesis (the
+stall is a per-step-competence ceiling; depth needs capacity, not more
+schedule). $\gamma$-concentration did not transfer from chains to the maze
+--- predicted in advance by the compounding ODE model. Adaptive truncation
+order underperformed fixed $T$. Feeding relabeled successes to the
+teacher's posterior inflates it --- dropped. An early GSM8K claim of
+teacher steering was retracted when review found the sampler epoch-frozen;
+the fixed run confirmed the effect properly. Recycled-gradient exactness is
+a property of the environment's relabel map; noisier verifiers will land
+between our $+0.22$ (fixed pools) and $+0.01$ (one-shot) endpoints. LLM
+results are single-seed at 360M; the $2{\times}2{\times}2$ and multi-seed
+replications are the active work.
+
+\section*{Reproducibility}
+Every proposition has a Monte-Carlo verification script; every experiment
+writes JSON/JSONL artifacts committed to the repository; the documentation
+passed a two-round adversarial audit. The framework is a dependency-light
+package (\texttt{frontier\_rl}, numpy-only core) with adapters for LLM
+pools (verl), gym control, IsaacLab parallel sim, and flow-policy VLAs.
+
+\begin{thebibliography}{9}\small
+\bibitem[Tajwar et al.(2026)]{maxrl} Tajwar, F., Zeng, G., et al.
+Maximum Likelihood Reinforcement Learning. \emph{ICML}, 2026.
+\bibitem[Wang et al.(2025)]{dump} Wang, Z., et al. DUMP: Automated
+distribution-level curriculum learning for RL-based LLM post-training.
+arXiv:2504.09710, 2025.
+\bibitem[Shi et al.(2025)]{adarft} Shi, T., et al. Efficient reinforcement
+finetuning via adaptive curriculum learning. arXiv:2504.05520, 2025.
+\bibitem[SEC(2025)]{sec} Self-evolving curriculum for LLM reasoning.
+arXiv:2505.14970, 2025.
+\bibitem[LILO(2025)]{lilo} Sampling from the frontier of learnability.
+arXiv:2502.12272, 2025.
+\bibitem[Yu et al.(2025)]{dapo} Yu, Q., et al. DAPO: an open-source LLM
+reinforcement learning system at scale. arXiv:2503.14476, 2025.
+\bibitem[GRESO(2025)]{greso} Pre-rollout filtering for efficient RLVR.
+arXiv:2506.02177, 2025.
+\bibitem[Rutherford et al.(2024)]{sfl} Rutherford, A., et al. No
+regrets: investigating and improving regret approximations for curriculum
+discovery. \emph{NeurIPS}, 2024.
+\end{thebibliography}
+
+\end{document}
