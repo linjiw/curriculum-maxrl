@@ -301,10 +301,11 @@ reversal at level 4).
 \takeaway{The gains survive real gradients; the safety warning is real;
 coverage is the currency that sees both.}
 
-\paragraph{7.4 Gymnasium control (MountainCar).} Flag-only training: 0.000.
-Positional curriculum with a \emph{shared} goal-conditioned policy: uniform
-0.889 $\to$ teacher 0.944 $\to$ full stack \textbf{1.000 in every seed} at
-equal compute. Per-bin policy parameters never reach the flag.
+\paragraph{7.4 Gymnasium control (MountainCar).} Flag-only training:
+0.000 --- the classic exploration wall. The corrected 10-seed
+transition-matched study (paired bootstrap): flag pass uniform
+$0.058{\pm}0.079$ $\to$ teacher $0.664{\pm}0.232$ $\to$ full stack
+$\mathbf{0.848{\pm}0.058}$; per-bin policy parameters stay at 0.000.
 \takeaway{Curricula operate through shared parameters, or not at all.}
 
 \begin{figure}[t]

@@ -80,12 +80,17 @@ learns from scratch, so the curriculum has nothing to *transfer*. Giving
 all bins one **shared** policy (the task enters only the success predicate)
 changes everything — 150 steps, 3 seeds:
 
-| shared-policy config | mean pass | FLAG bin |
+| shared-policy config | mean-pass AUC | final FLAG pass |
 |---|---|---|
-| flag-only (no curriculum) | 0.028 | **0.000** |
-| uniform over bins | 0.975 | 0.889 |
-| teacher (γ=4) | 0.994 | 0.944 |
-| **teacher (γ=4) + hindsight** | **1.000** | **1.000** |
+| flag-only (no curriculum) | 0.024±0.006 | **0.000±0.000** |
+| uniform over bins | 0.389±0.071 | 0.058±0.079 |
+| teacher (γ=4, exact mass) | 0.530±0.059 | 0.664±0.232 |
+| **teacher (γ=4) + hindsight** | **0.727±0.023** | **0.848±0.058** |
+| (control) per-bin parameters + hindsight | 0.229±0.031 | **0.000±0.000** |
+
+*(Corrected 10-seed transition-matched study with paired bootstrap, from
+the audited branch; an earlier 3-seed table reporting flag pass up to
+1.000 had no persisted artifact and is retracted.)*
 
 Training on the flag alone — the standard sparse-reward setup — scores
 exactly zero: MountainCar's classic exploration wall. *Any* mixture over

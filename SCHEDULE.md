@@ -38,7 +38,7 @@ transition, new OOM, checkpoint, or queue drain.
 **GPU QUEUE DRAINED (all E and F runs complete).** Next wave now unblocked.
 
 **Parallel CPU (done): MountainCar categorical result** — flag-only 0.000 →
-uniform-mix 0.889 → teacher 0.944 → **full stack 1.000 every seed**; plus
+uniform 0.058 → teacher 0.664 → **full stack 0.848±0.058** (corrected 10-seed transition-matched study; the earlier 0.889/0.944/1.000 figures had no artifact and are retracted); plus
 the transfer lesson (per-bin params never reach the flag: curricula operate
 through shared parameters).
 

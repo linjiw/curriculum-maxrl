@@ -260,11 +260,14 @@ on top, and GRPO's coverage curves *flatten* at large k (saturating at
 **Takeaway: the gains survive real gradients; the safety warning is real;
 coverage is the currency that sees both.**
 
-**7.4 Gymnasium control (MountainCar).** Flag-only training: 0.000 — the
-classic exploration wall. Positional curriculum with a *shared*
-goal-conditioned policy: uniform 0.889 → teacher 0.944 → full stack
-**1.000 in every seed** at equal compute. The instructive failure: the
-same curriculum with *per-bin* policy parameters never reaches the flag.
+**7.4 Gymnasium control (MountainCar).** Training on the flag alone scores 0.000 (the classic exploration
+wall). The corrected 10-seed transition-matched study (paired bootstrap,
+from the audited branch; per-seed curves committed there): flag pass
+uniform 0.058±0.079 → teacher (γ=4, exact mass) 0.664±0.232 → full stack
+**0.848±0.058**; the same curriculum with *per-bin* policy parameters
+stays at 0.000.
+The instructive failure stands: curricula operate through shared
+parameters, or not at all.
 **Takeaway: curricula operate through shared parameters, or not at all —
 the first thing to check when a curriculum "doesn't work."**
 

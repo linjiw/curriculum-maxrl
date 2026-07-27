@@ -910,7 +910,7 @@ curves.json).</p>
   <p>With a <em>shared</em> goal-conditioned policy (150 steps, 3 seeds, weak tabular learner):
   training on the flag alone — the standard sparse-reward setup — scores <strong>exactly
   0.000</strong> (the classic exploration wall); a uniform mixture over easier targets reaches
-  flag pass 0.889; the teacher 0.944; the <strong>full stack 1.000 in every seed</strong> at
+  flag pass 0.058±0.079; the teacher 0.664±0.232; the <strong>full stack 0.848±0.058</strong> (corrected 10-seed transition-matched study) at
   equal compute. The instructive failure mode: the same curriculum with <em>per-bin</em> policy
   parameters never reaches the flag at any budget — <strong>curricula operate through shared
   parameters</strong>; difficulty bins must share the policy (condition on the goal, don't
