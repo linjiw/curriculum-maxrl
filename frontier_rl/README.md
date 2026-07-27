@@ -78,7 +78,8 @@ Scaled runs (600 steps) with **per-bin policy parameters** never reach the
 flag (hardest bin stays 0.000 for every method): each bin's tile table
 learns from scratch, so the curriculum has nothing to *transfer*. Giving
 all bins one **shared** policy (the task enters only the success predicate)
-changes everything — 150 steps, 3 seeds:
+changes everything — corrected study, 10 paired seeds, matched at 500k
+environment transitions:
 
 | shared-policy config | mean-pass AUC | final FLAG pass |
 |---|---|---|
@@ -94,16 +95,18 @@ the audited branch; an earlier 3-seed table reporting flag pass up to
 
 Training on the flag alone — the standard sparse-reward setup — scores
 exactly zero: MountainCar's classic exploration wall. *Any* mixture over
-easier targets breaks the wall (energy-pumping transfers), the teacher
-sharpens it, and the full stack solves the flag bin perfectly in every
-seed. Two morals for practitioners:
+easier targets cracks the wall (energy-pumping transfers), the teacher
+sharpens it substantially, and hindsight carries the flag bin to
+0.848±0.058. Two morals for practitioners:
 
 1. **Curricula operate through shared parameters.** Difficulty bins must
    share the policy (condition on the goal, don't partition by it) or
-   there is no channel for competence to flow through — the same
+   there is no channel for competence to flow through — the per-bin
+   control row (0.000 with the full stack) is the same
    generalization-cliff lesson as our maze-size finding, now in gym form.
-2. With sharing in place, MountainCar reproduces the categorical result:
-   flag-only 0.000 → full stack 1.000 at equal compute.
+2. With sharing in place, the stack ordering (uniform < teacher <
+   teacher+hindsight) holds at every difficulty level, with the largest
+   gains exactly where sampling alone is weakest (the flag bin).
 
 Run them:
 
