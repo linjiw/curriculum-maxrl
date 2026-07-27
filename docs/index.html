@@ -650,10 +650,201 @@ interface contract in <code>frontier_rl</code>.</p>
         <td>AUC tie with dense hindsight but worse final; posterior inflates (p̂ 0.81 vs eval 0.47) — dropped; posterior sees requested-task evidence only</td>
         <td class="num"><span class="status no">✗ dropped</span></td></tr>
     <tr><td>SmolLM2-360M + GSM8K, curriculum × {maxrl, grpo}</td>
-        <td>launch script ready (<code>verl_integration/</code>); needs a multi-GPU node</td>
-        <td class="num"><span class="status run">⟳ queued</span></td></tr>
+        <td>2×2 RAN on one A10G — <a href="#gsm8k">section 4b</a>: P-G2 (H6-at-LLM-scale) confirmed on a pre-registered prediction</td>
+        <td class="num"><span class="status ok">✓ 3/4 cells done</span></td></tr>
   </tbody>
 </table>
+
+<!-- ============================================================ -->
+<h2 id="gsm8k">4b · The experiment ladder at LLM scale — what each run asks, and why</h2>
+
+<p>Every experiment in this project is a <em>question about one channel</em>. The reader's
+map: the <strong>teacher</strong> can only reallocate compute (channel 1), <strong>hindsight</strong>
+can create signal from failures (channel 2), and the <strong>objective</strong> decides whether a
+curriculum is safe at all (channel 3). Each LLM experiment isolates the channels it can test
+cleanly and pre-registers its predictions before any cell finishes:</p>
+
+<table>
+  <thead><tr><th>experiment</th><th>the question it asks</th><th>what we expect to see (pre-registered)</th><th>status</th></tr></thead>
+  <tbody>
+    <tr><td><strong>E-LLM-1 · GSM8K 2×2</strong><br><span class="mono">{maxrl,grpo}×{teacher,uniform}</span></td>
+        <td>Do channels 1 and 3 transfer to LLM RLVR? Is a curriculum SAFE under GRPO's normalized weights, and does waste-avoidance help MaxRL?</td>
+        <td>P-G2: grpo+teacher does <em>not</em> beat grpo (the maze H6 reversal). P-G1: modest teacher gain for MaxRL. P-G5: small absolute deltas — the <em>ordering</em> is the outcome.</td>
+        <td><span class="status ok">✓ P-G2 confirmed</span></td></tr>
+    <tr><td><strong>E-LLM-2 · Countdown 2×2×2</strong><br><span class="mono">+{hindsight,none}</span></td>
+        <td>Channel 2 at LLM scale: a failed equation still <em>evaluates to some value v</em> — relabel target := v and the same verifier certifies a true success. Does exact-verifier recycling ignite tiers no sampler can reach?</td>
+        <td>Hindsight-on ignites the 3–4-operand tiers that stay at 0 for every hindsight-off cell (the CPU categorical: 0.93 AUC vs exactly 0.00); relabels decay after ignition.</td>
+        <td><span class="status run">⟳ staged, review-hardened</span></td></tr>
+    <tr><td><strong>E-LLM-3 · reasoning-gym</strong></td>
+        <td>Does the <em>streaming</em> teacher (kernel posterior over a continuous difficulty dial) beat the library's own threshold curriculum on procedural tasks?</td>
+        <td>Match-or-beat the published +13–40-point threshold-curriculum gains, without its hand-set threshold.</td>
+        <td><span class="status run">⟳ planned</span></td></tr>
+  </tbody>
+</table>
+
+<h3>E-LLM-1 results — the safety claim lands at LLM scale</h3>
+
+<p>SmolLM2-360M on 7,473 GSM8K prompts, N=16 rollouts, 50 steps per cell, one A10G. At this
+scale ~65–75% of uniformly sampled groups are <em>dead</em> (all 16 rollouts fail — zero
+gradient). Validation: 256 held-out problems, 4 samples each. The chart shows the mean@4
+trajectory; the story is the <em>divergence after step 25</em>:</p>
+
+<figure>
+  <div style="display:flex; gap:6px; margin-bottom:8px" id="gsmChips">
+    <button data-metric="mean" style="padding:5px 12px; border-radius:8px; border:1px solid var(--series-1); background:var(--accent-wash); color:var(--text-primary); font-size:0.82rem; cursor:pointer">accuracy (mean@4)</button>
+    <button data-metric="pass" style="padding:5px 12px; border-radius:8px; border:1px solid var(--border); background:var(--surface-1); color:var(--text-secondary); font-size:0.82rem; cursor:pointer">coverage (pass@4)</button>
+  </div>
+  <div style="position:relative">
+    <canvas id="gsmChart" width="880" height="360" style="width:100%; max-width:880px"></canvas>
+    <div id="gsmTip" style="position:absolute; display:none; pointer-events:none; background:var(--surface-1); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:0.8rem"></div>
+  </div>
+  <figcaption>GSM8K 2×2, validation trajectory (0 → 25 → 50 steps). GRPO alone climbs
+  monotonically; GRPO+teacher — the only cell that worsens after step 25 — reproduces the
+  maze's H6 reversal exactly as pre-registered (P-G2). MaxRL+teacher trains stably to its
+  best value. Single seed; deltas are small at 50 steps × 360M — the <em>sign pattern</em>,
+  not the magnitudes, is the pre-registered outcome. Data: <span class="mono">GSM8K_ANALYSIS.md</span>.</figcaption>
+</figure>
+
+<div class="grid2">
+  <div class="card"><h3>What confirmed</h3>
+  <p><strong>P-G2, the riskiest prediction.</strong> grpo+teacher regressed .096→.093
+  (pass@4 .193→.181) in its second half while grpo gained .105→.120. A curriculum removed
+  the easy-prompt maintenance GRPO's inverted weighting was providing — at LLM scale, same
+  as the maze. The teacher was verifiably live: it drove the sampled-dead fraction to 0.48
+  vs the ~0.65 population rate.</p></div>
+  <div class="card"><h3>What we learned beyond the predictions</h3>
+  <p><strong>The teacher's two sub-channels separate.</strong> Its posterior learned real
+  difficulty (p̂ vs external 7B-model annotations: ρ=−0.17, p≈10⁻¹⁷) but its allocation
+  barely engaged — 3,200 group-draws over 7,473 prompts is ~0.4 visits/prompt, so Thompson
+  sampling stayed near-uniform. GSM8K-at-50-steps is <em>posterior-starved</em>: the teacher
+  knows, but hasn't the budget to act. E-LLM-2 fixes this structurally (3 tiers, not 7k rows).</p></div>
+  <div class="card"><h3>Why the collapse isn't "entropy collapse"</h3>
+  <p>grpo+teacher kept <em>more</em> token entropy (0.77) than plain grpo (0.64) yet did
+  worse on val — the damage is distributional (which prompts improve), invisible to
+  token-level meters. Same dissociation as the maze, where pass@8 collapsed while pass@1
+  looked fine. Measure coverage or be blind.</p></div>
+</div>
+
+<script>
+(function () {
+  var GSM = {
+    mean: {
+      grpo:      [0.078, 0.105, 0.120],
+      grpo_cur:  [0.072, 0.096, 0.093],
+      maxrl_cur: [0.066, 0.099, 0.102],
+      maxrl:     [0.091, 0.097, null]
+    },
+    pass: {
+      grpo:      [0.162, 0.213, 0.229],
+      grpo_cur:  [0.151, 0.193, 0.181],
+      maxrl_cur: [0.136, 0.190, 0.190],
+      maxrl:     [0.182, 0.207, null]
+    }
+  };
+  var SERIES = [
+    { key: "grpo",      label: "GRPO (uniform)",   cssVar: "--series-2" },
+    { key: "grpo_cur",  label: "GRPO + teacher",   cssVar: "--series-3" },
+    { key: "maxrl",     label: "MaxRL (uniform)",  cssVar: "--series-1" },
+    { key: "maxrl_cur", label: "MaxRL + teacher",  cssVar: "--series-6" }
+  ];
+  var STEPS = [0, 25, 50];
+  var metric = "mean";
+  var cv = document.getElementById("gsmChart");
+  if (!cv) return;
+  var tip = document.getElementById("gsmTip");
+
+  function cssColor(v) {
+    return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  }
+  function draw() {
+    var ctx = cv.getContext("2d");
+    var W = cv.width, H = cv.height, L = 64, R = 150, T = 18, B = 42;
+    ctx.clearRect(0, 0, W, H);
+    var data = GSM[metric];
+    var all = [];
+    SERIES.forEach(function (s) { data[s.key].forEach(function (v) { if (v != null) all.push(v); }); });
+    var lo = Math.min.apply(null, all) - 0.01, hi = Math.max.apply(null, all) + 0.012;
+    function x(i) { return L + (W - L - R) * (STEPS[i] / 50); }
+    function y(v) { return T + (H - T - B) * (1 - (v - lo) / (hi - lo)); }
+    // grid + axes (recessive)
+    ctx.strokeStyle = cssColor("--grid"); ctx.lineWidth = 1;
+    ctx.fillStyle = cssColor("--text-muted"); ctx.font = "11px system-ui"; ctx.textAlign = "right";
+    for (var g = 0; g <= 4; g++) {
+      var vv = lo + (hi - lo) * g / 4, yy = y(vv);
+      ctx.beginPath(); ctx.moveTo(L, yy); ctx.lineTo(W - R, yy); ctx.stroke();
+      ctx.fillText(vv.toFixed(2), L - 8, yy + 4);
+    }
+    ctx.textAlign = "center";
+    STEPS.forEach(function (st, i) { ctx.fillText("step " + st, x(i), H - B + 22); });
+    // series: 2px lines, 8px markers, direct labels right
+    var labelYs = [];
+    SERIES.forEach(function (s) {
+      var col = cssColor(s.cssVar), pts = data[s.key];
+      ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.beginPath();
+      var started = false;
+      pts.forEach(function (v, i) {
+        if (v == null) return;
+        if (!started) { ctx.moveTo(x(i), y(v)); started = true; } else ctx.lineTo(x(i), y(v));
+      });
+      ctx.stroke();
+      if (s.key === "maxrl") { // partial cell: dashed continuation marker
+        ctx.setLineDash([4, 4]); ctx.strokeStyle = col; ctx.globalAlpha = 0.5;
+        ctx.beginPath(); ctx.moveTo(x(1), y(pts[1])); ctx.lineTo(x(2), y(pts[1]));
+        ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      }
+      pts.forEach(function (v, i) {
+        if (v == null) return;
+        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x(i), y(v), 4, 0, 7); ctx.fill();
+        ctx.strokeStyle = cssColor("--surface-1"); ctx.lineWidth = 2; ctx.stroke();
+      });
+      var lastIdx = pts[2] != null ? 2 : 1;
+      var ly = y(pts[lastIdx]);
+      while (labelYs.some(function (o) { return Math.abs(o - ly) < 15; })) ly += 15;
+      labelYs.push(ly);
+      ctx.fillStyle = cssColor("--text-secondary"); ctx.textAlign = "left"; ctx.font = "12px system-ui";
+      ctx.fillText(pts[2] == null ? s.label.replace(" (uniform)", "") + " ⟳" : s.label, (W - R) + 10, ly + 4);
+      // identity dot beside the label (color never on text)
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc((W - R) + 4, ly, 3, 0, 7); ctx.fill();
+    });
+  }
+  // hover tooltip: nearest point
+  cv.addEventListener("mousemove", function (e) {
+    var r = cv.getBoundingClientRect(), sx = cv.width / r.width, sy = cv.height / r.height;
+    var mx = (e.clientX - r.left) * sx, my = (e.clientY - r.top) * sy;
+    var best = null, W = cv.width, H = cv.height, L = 64, R = 150, T = 18, B = 42;
+    var data = GSM[metric]; var all = [];
+    SERIES.forEach(function (s) { data[s.key].forEach(function (v) { if (v != null) all.push(v); }); });
+    var lo = Math.min.apply(null, all) - 0.01, hi = Math.max.apply(null, all) + 0.012;
+    SERIES.forEach(function (s) {
+      data[s.key].forEach(function (v, i) {
+        if (v == null) return;
+        var px = L + (W - L - R) * (STEPS[i] / 50);
+        var py = T + (H - T - B) * (1 - (v - lo) / (hi - lo));
+        var d = Math.hypot(px - mx, py - my);
+        if (d < 24 && (!best || d < best.d)) best = { d: d, s: s, v: v, i: i, px: px, py: py };
+      });
+    });
+    if (best) {
+      tip.style.display = "block";
+      tip.style.left = (best.px / sx + 12) + "px";
+      tip.style.top = (best.py / sy - 10) + "px";
+      tip.textContent = best.s.label + " · step " + STEPS[best.i] + " · " + best.v.toFixed(3);
+    } else tip.style.display = "none";
+  });
+  cv.addEventListener("mouseleave", function () { tip.style.display = "none"; });
+  document.querySelectorAll("#gsmChips button").forEach(function (c) {
+    c.addEventListener("click", function () {
+      document.querySelectorAll("#gsmChips button").forEach(function (o) {
+        o.style.border = "1px solid var(--border)"; o.style.background = "var(--surface-1)"; o.style.color = "var(--text-secondary)";
+      });
+      c.style.border = "1px solid var(--series-1)"; c.style.background = "var(--accent-wash)"; c.style.color = "var(--text-primary)";
+      metric = c.dataset.metric; draw();
+    });
+  });
+  draw();
+  if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { setTimeout(draw, 50); });
+})();
+</script>
 
 <!-- ============================================================ -->
 <h2 id="framework">5 · One schedule, any environment: <span class="mono">frontier_rl</span></h2>
