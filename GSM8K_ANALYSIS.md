@@ -29,9 +29,9 @@ teacher, uniform}. It tests two of our three channels at LLM scale:
 | grpo (uniform) | .078/.162 | .105/.213 | **.120/.229** | .0432 |
 | grpo + teacher | .072/.151 | .096/.193 | **.093/.181** ↓ | .0404 |
 | maxrl + teacher | .066/.136 | .099/.190 | **.102/.190** | .0432 |
-| maxrl (uniform) | .091/.182 | .097/.207* | *finishing* | — |
+| maxrl (uniform) | .091/.182 | .097/.207 | **.108/.204** | — |
 
-*\*step-25 val from the resumed session; cell completes ~today.*
+*(all four cells complete, 2026-07-27)*
 
 ## Finding 1 — P-G2 CONFIRMS: the H6 reversal transfers to LLM scale
 
@@ -87,9 +87,28 @@ distributional (which prompts improve), visible in val/pass@k, not in
 token entropy. The maze showed the same dissociation (pass@8 collapsed
 while pass@1 looked fine). Meter lesson again: coverage currency or blind.
 
+## Finding 4 — P-G1 verdict: NULL on final value, consistent with the posterior-starvation diagnosis
+
+Cell 2 complete: maxrl (uniform) finishes at .108 mean@4 vs maxrl+teacher's
+.102. The teacher arm gained 2.1× more over training (+.036 vs +.017) but
+from a lower step-0 draw (.066 vs .091 — same warmstart, val sampling
+noise), and the trajectories converge rather than diverge. Verdict:
+**P-G1 is a null at this budget** — exactly what Finding 2's
+posterior-starvation analysis predicts (visits flat across difficulty at
+0.4/prompt; the teacher's allocation never left uniform's neighborhood).
+The structural prior from the pre-registration scoreboard ("small-or-null
+without invalidating the mechanism") held. The mechanism test moves to
+E-LLM-2's tier-level posterior (3 arms, hundreds of visits each) where
+starvation is impossible.
+
+Honest note: pass@4 tells the same story (.204 uniform vs .190 teacher) —
+no coverage rescue either. At 50 steps × 7.5k prompts, channel 1 does not
+pay at the prompt level. The H6 safety result (Finding 1) is unaffected
+and remains the experiment's headline.
+
 ## What remains before E-LLM-1 closes
 
-1. Cell 2 final val (running) → P-G1 paired read (maxrl+cur vs maxrl).
+1. ~~Cell 2 final val~~ DONE — P-G1 verdict above.
 2. k-sweep (pass@{1,4,8,16}) on all four final checkpoints via vllm — the
    proper coverage currency for the H6 claim (P-G3).
 3. Dead-fraction trajectory figure + curves.json export for the site.
@@ -99,7 +118,7 @@ while pass@1 looked fine). Meter lesson again: coverage currency or blind.
 
 | prediction | status |
 |---|---|
-| P-G1 teacher AUC gain over maxrl | pending cell 2 (structural prior: small/null — posterior-starved) |
+| P-G1 teacher AUC gain over maxrl | **NULL at this budget** (final .102 vs .108; 2.1× the improvement slope but start-dominated) — as the posterior-starvation analysis predicted |
 | **P-G2 grpo+cur does NOT beat grpo** | **CONFIRMED** (and regressed 25→50) |
 | P-G3 pass@k divergence clearer than mean | partial (pass@4 mirrors mean@4; k-sweep pending) |
 | P-G4 teacher bends dead-fraction below population | CONFIRMED post-fix (min 0.48 vs 0.65 population); earlier claim retracted, see val_checkpoints.md |
