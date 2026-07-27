@@ -61,36 +61,36 @@ Ns = [4, 8, 16, 32]
 tints = [0.62, 0.42, 0.20, 0.0]  # sequential blues, light -> dark
 for N, f in zip(Ns, tints):
     c = tint(BLUE, f)
-    axA.plot(p, u(p, N), color=c, lw=1.6, solid_capstyle="round")
+    axA.plot(p, u(p, N), color=c, lw=1.6, solid_capstyle="round",
+             label=f"$N$={N}")
     ps = p_star(N)
     axA.plot([ps], [u(ps, N)], "o", color=c, ms=4, zorder=5)
-    # direct label near each peak
-    dx, dy = (0.012, 0.028)
-    axA.text(ps + dx, u(ps, N) + dy, f"N={N}", fontsize=8, color=c,
-             ha="left", va="bottom")
+
+axA.legend(loc="upper right", frameon=False, handlelength=1.5,
+           borderaxespad=0.2, labelspacing=0.25)
 
 # N=16 peak annotation
 ps16 = p_star(16)
 axA.annotate(r"$p^{*}\approx \ln N/N$", xy=(ps16, u(ps16, 16)),
-             xytext=(0.335, 0.955), fontsize=8, color=GRAY,
-             ha="left", va="top",
-             arrowprops=dict(arrowstyle="-", lw=0.7, color=GRAY,
-                             shrinkA=2, shrinkB=4))
+             xytext=(0.40, 0.93), fontsize=8, color=GRAY,
+             ha="left", va="center",
+             arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
+                             connectionstyle="arc3,rad=-0.12",
+                             shrinkA=2, shrinkB=5))
 
 # dead zone: mastered (p -> 1)
 axA.annotate("mastered:\nnothing to learn", xy=(0.975, 0.015),
-             xytext=(0.60, 0.175), fontsize=8, color=GRAY,
-             ha="left", va="center", style="italic",
+             xytext=(0.97, 0.16), fontsize=8, color=GRAY,
+             ha="right", va="bottom", style="italic",
              arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
                              shrinkA=2, shrinkB=2))
 
 # dead zone: unreachable (p -> 0); recycling channel acts here
-axA.annotate("unreachable: nothing to\nsample toward\n"
-             "(recycling creates signal here)",
-             xy=(0.008, 0.04), xytext=(0.055, 0.96), fontsize=8,
-             color=GRAY, ha="left", va="top", style="italic",
+axA.annotate("unreachable: nothing\nto sample toward\n(recycling acts here)",
+             xy=(0.008, 0.04), xytext=(0.24, 0.09), fontsize=8,
+             color=GRAY, ha="left", va="bottom", style="italic",
              arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
-                             connectionstyle="arc3,rad=0.15",
+                             connectionstyle="arc3,rad=-0.1",
                              shrinkA=2, shrinkB=2))
 
 axA.set_xlim(0, 1)
@@ -112,10 +112,10 @@ axB.plot(p, rloo, color=GREEN, lw=1.6, ls="--")
 axB.plot(p, grpo, color=MAGENTA, lw=1.6, ls=":")
 
 # direct labels
-axB.text(0.155, 0.845, "MaxRL ($N$=16)", fontsize=8, color=BLUE,
+axB.text(0.135, 0.835, "MaxRL ($N$=16)", fontsize=8, color=BLUE,
          ha="left", va="bottom")
-axB.text(0.56, 0.855, "GRPO (inverted at extremes)", fontsize=8,
-         color=MAGENTA, ha="center", va="bottom")
+axB.text(0.985, 0.44, "GRPO (inverted\nat extremes)", fontsize=8,
+         color=MAGENTA, ha="right", va="bottom")
 axB.text(0.52, 0.155, "RLOO = learnability ($N$=2 slice)", fontsize=8,
          color=GREEN, ha="center", va="top")
 
