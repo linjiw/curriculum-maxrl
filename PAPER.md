@@ -312,9 +312,16 @@ dynamic sampling and GRESO cull dead prompts — avoidance without
 allocation or creation; the discards still cost GPU-hours. PKPO and
 Pass@k-training modify the objective toward pass@k but keep uniform
 sampling — the complement of our teacher, with no recycling. Hindsight for
-LLMs (AgentHER, HSL) relabels agent trajectories with an LLM judge;
-exact-verifier relabeling inside the RL loop is, to our knowledge,
-unoccupied. No prior work (i) derives the sampling utility from the
+LLMs (AgentHER, HSL) relabels agent trajectories with an LLM judge. The
+nearest neighbor is concurrent: LfH (Xu et al., 2026) brings hindsight
+relabeling into GRPO for VLA post-training — a VLM proposes one shared
+hindsight instruction per failed group and rescores the group under it,
+with a hindsight importance correction; 5× sample efficiency on
+LIBERO-PRO. LfH's relabeler is a VLM judge (their stated limitation:
+relabel noise), and its evaluation never measures pass@k — precisely the
+currency where we find recycling's hidden cost. Exact-verifier relabeling
+with a correctness guarantee, and the coverage accounting of recycling,
+remain, to our knowledge, ours. No prior work (i) derives the sampling utility from the
 estimator's own expected signal, (ii) couples it with success-conditioned
 weights it provably matches, and (iii) adds a signal-creation channel with
 an exactness guarantee.
