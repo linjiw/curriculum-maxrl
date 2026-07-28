@@ -671,10 +671,10 @@ cleanly and pre-registers its predictions before any cell finishes:</p>
         <td>Do channels 1 and 3 transfer to LLM RLVR? Is a curriculum SAFE under GRPO's normalized weights, and does waste-avoidance help MaxRL?</td>
         <td>P-G2: grpo+teacher does <em>not</em> beat grpo (the maze H6 reversal). P-G1: modest teacher gain for MaxRL. P-G5: small absolute deltas — the <em>ordering</em> is the outcome.</td>
         <td><span class="status ok">✓ P-G2 confirmed</span></td></tr>
-    <tr><td><strong>E-LLM-2 · Countdown 2×2×2</strong><br><span class="mono">+{hindsight,none}</span></td>
+    <tr><td><strong>E-LLM-2 · Countdown 2×2</strong><br><span class="mono">+{hindsight,none}</span></td>
         <td>Channel 2 at LLM scale: a failed equation still <em>evaluates to some value v</em> — relabel target := v and the same verifier certifies a true success. Does exact-verifier recycling ignite tiers no sampler can reach?</td>
-        <td>Hindsight-on ignites the 3–4-operand tiers that stay at 0 for every hindsight-off cell (the CPU categorical: 0.93 AUC vs exactly 0.00); relabels decay after ignition.</td>
-        <td><span class="status run">⟳ staged, review-hardened</span></td></tr>
+        <td>Hindsight-on ignites the hard tiers; relabels decay after ignition.</td>
+        <td><span class="status no">✗ both nulls (pool saturated to its guesser bound) — but found <a href="#sharpening">recycling-induced sharpening</a>, a new phenomenon</span></td></tr>
     <tr><td><strong>E-LLM-3 · reasoning-gym</strong></td>
         <td>Does the <em>streaming</em> teacher (kernel posterior over a continuous difficulty dial) beat the library's own threshold curriculum on procedural tasks?</td>
         <td>Match-or-beat the published +13–40-point threshold-curriculum gains, without its hand-set threshold.</td>
@@ -723,6 +723,36 @@ trajectory; the story is the <em>divergence after step 25</em>:</p>
   worse on val — the damage is distributional (which prompts improve), invisible to
   token-level meters. Same dissociation as the maze, where pass@8 collapsed while pass@1
   looked fine. Measure coverage or be blind.</p></div>
+</div>
+
+<h3 id="sharpening">E-LLM-2 result — two honest nulls, one new phenomenon</h3>
+
+<p>The Countdown experiment ran all four MaxRL cells with the recycling machinery live in
+production (12 relabeled groups/step, 72–89% yield — a failed equation's achieved value
+becomes a verified success with prompt <em>and</em> response rewritten). Both pre-registered
+positive predictions returned <strong>null</strong>, with an exact diagnosis: the uniform
+baseline reached 94/76/94% of the <em>random-guesser bound</em> implied by the pool's
+simplified construction — the pool was too shallow for allocation or recycling to matter.
+(An independent adversarial review predicted this failure mode in closed form before the
+run; the pre-registered kill criterion did its job.)</p>
+
+<div class="grid2">
+  <div class="card"><h3>The new finding: recycling-induced sharpening</h3>
+  <p>Hindsight arms improved <strong>mean@16</strong> while <strong>losing pass@16
+  coverage</strong> (tier-1: .571 vs .645 for the no-relabel baseline). Recycled
+  off-target successes concentrate the policy on reachable outputs at the expense of
+  exploration breadth — the creation channel has its own safety trade-off, mirroring the
+  H6 weight-induced collapse one level up: <em>data-induced</em> rather than
+  weight-induced. A ~30-paper review found no prior report of hindsight-induced pass@k
+  loss in RLVR: the nearest works never measured coverage.</p></div>
+  <div class="card"><h3>The fix falls out of our own algebra</h3>
+  <p>A relabel to a value the model just produced is a task at p≈1 — exactly where
+  u(p) = pass@N − pass@1 says training signal is <em>zero</em>, and the softmax pays for
+  those updates out of the exploration tail. So the estimator already provides the
+  admission rule: <strong>the same derived utility that schedules sampling should gate
+  the relabel destination</strong> (reject relabels to targets the model already reaches).
+  Pre-registered as the lead mitigation arm of E-LLM-2b, against the literature-standard
+  KL-to-base anchor. Full synthesis: <span class="mono">SHARPENING_SYNTHESIS.md</span>.</p></div>
 </div>
 
 <script>

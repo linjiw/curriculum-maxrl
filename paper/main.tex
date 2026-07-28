@@ -345,12 +345,26 @@ orderings and signs, and both landed.
 allocation half needs tiers or longer runs --- which is how the next
 experiment is designed.}
 
-\paragraph{Next rung (staged, review-hardened).} Countdown $2{\times}2
-{\times}2$: the first exact-verifier hindsight experiment in RLVR --- a
-failed equation still evaluates to some value $v$; relabel the target to
-$v$ and the same verifier certifies a true success. Pre-registered:
-recycling ignites the operand tiers that stay at zero for every
-recycling-off cell.
+\paragraph{7.6 Countdown $2{\times}2$ (pre-registered): two honest nulls
+and a new phenomenon.} The first exact-verifier hindsight experiment in
+RLVR ran in production (12 relabeled groups/step, 72--89\% yield). Both
+positive predictions returned null, with an exact diagnosis: the uniform
+baseline reached 94/76/94\% of the random-guesser bound implied by the
+pool's simplified construction --- no headroom for allocation or creation
+to matter. What the run found instead is new: \textbf{recycling-induced
+sharpening} --- hindsight arms improved mean@16 while \emph{losing}
+$\passat{16}$ coverage (tier-1: .571 vs.\ .645 for the no-relabel
+baseline). Recycled off-target successes concentrate the policy on
+reachable outputs at the expense of exploration breadth: the creation
+channel has its own safety trade-off, mirroring \S7.3's weight-induced
+collapse --- data-induced rather than weight-induced, and to our knowledge
+unreported (no prior work measures $\passat{k}$ under hindsight in RLVR).
+Our algebra predicts it: a relabel to a self-achieved value is a task at
+$p \approx 1$, where $u(p)$ says training signal is zero --- the softmax
+pays for those updates out of the exploration tail.
+\emph{Takeaway: recycling needs an admission rule, and the estimator
+already provides it --- the same derived utility that schedules sampling
+should gate the relabel destination.}
 
 \section{Related work}
 Difficulty-adaptive RLVR sampling is bucket- or scalar-level and
