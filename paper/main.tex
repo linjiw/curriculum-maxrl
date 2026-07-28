@@ -376,8 +376,15 @@ our derived utility. DAPO's dynamic sampling and GRESO cull dead prompts
 --- avoidance without allocation or creation. PKPO and Pass@k-training
 modify the objective toward $\passat{k}$ but keep uniform sampling.
 Hindsight for LLMs (AgentHER, HSL) relabels agent trajectories with an LLM
-judge; exact-verifier relabeling inside the RL loop is, to our knowledge,
-unoccupied. No prior work (i) derives the sampling utility from the
+judge. The nearest neighbor is concurrent: LfH \citep{lfh} brings
+hindsight relabeling into GRPO for VLA post-training --- a VLM proposes
+one shared hindsight instruction per failed group and rescores the group
+under it; $5\times$ sample efficiency on LIBERO-PRO. LfH's relabeler is a
+VLM judge (their stated limitation: relabel noise), and its evaluation
+never measures $\passat{k}$ --- precisely the currency where we find
+recycling's hidden cost. Exact-verifier relabeling with a correctness
+guarantee, and the coverage accounting of recycling, remain, to our
+knowledge, ours. No prior work (i) derives the sampling utility from the
 estimator's own expected signal, (ii) couples it with success-conditioned
 weights it provably matches, and (iii) adds a signal-creation channel with
 an exactness guarantee.
@@ -420,6 +427,8 @@ arXiv:2502.12272, 2025.
 reinforcement learning system at scale. arXiv:2503.14476, 2025.
 \bibitem[GRESO(2025)]{greso} Pre-rollout filtering for efficient RLVR.
 arXiv:2506.02177, 2025.
+\bibitem[Xu et al.(2026)]{lfh} Xu, I., Jiang, S., et al. Learning more
+from less: reinforcement learning from hindsight. arXiv:2607.09042, 2026.
 \bibitem[Rutherford et al.(2024)]{sfl} Rutherford, A., et al. No
 regrets: investigating and improving regret approximations for curriculum
 discovery. \emph{NeurIPS}, 2024.
