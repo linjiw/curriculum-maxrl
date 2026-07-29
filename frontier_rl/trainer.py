@@ -30,6 +30,12 @@ class TrainerConfig:
     hindsight: bool = True          # dense relabeling of dead groups (F3)
     hindsight_scale: float = 1.0    # natural K=1 group weight; tune down if
                                     # self-imitation entrenches errors
+    hindsight_gate: bool = False    # utility-gate relabel DESTINATIONS: skip
+                                    # relabels to tasks the posterior rates
+                                    # p_hat > gate_max_p (u(p)->0 as p->1:
+                                    # recycled updates there buy sharpening,
+                                    # not signal — E-LLM-2b validated)
+    gate_max_p: float = 0.5
     positive_weights: bool = False  # weighted-RFT: success weights only, for
                                     # policies without per-sample log-probs
                                     # (flow heads / weighted SFT — COSMOS3 Q1);
@@ -116,6 +122,13 @@ class FrontierTrainer:
             relabel = self.env.relabel(group)
             if relabel is None:
                 continue
+            if self.cfg.hindsight_gate:
+                # destination posterior from the teacher's own Beta rows —
+                # on CPU testbeds tasks ARE the destinations
+                dest = int(relabel[0])
+                a, b = self.teacher.alpha[dest], self.teacher.beta[dest]
+                if a / (a + b) > self.cfg.gate_max_p:
+                    continue
             if len(relabel) == 3:           # env rewrote goal-conditioning
                 new_task, new_rewards, new_trajs = relabel
             else:
