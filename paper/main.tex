@@ -366,11 +366,20 @@ and Countdown, this makes the regime rule a three-scale result:
 to avoid} --- on learnable-everywhere pools, breadth beats focus at
 1.26M-param maze, 360M LLM, and legged-robot scale.
 
-\paragraph{7.4b Gymnasium control (MountainCar).} Flag-only training:
-0.000 --- the classic exploration wall. The corrected 10-seed
-transition-matched study (paired bootstrap): flag pass uniform
-$0.058{\pm}0.079$ $\to$ teacher $0.664{\pm}0.232$ $\to$ full stack
-$\mathbf{0.848{\pm}0.058}$; per-bin policy parameters stay at 0.000.
+\paragraph{7.4b Gymnasium control (MountainCar, CartPole) ---
+performance currency.} Against the standard direct-RL setup (train only
+on the target task), the curriculum ladder delivers $10$--$12\times$ the
+task performance at matched episode budgets (5 seeds): MountainCar mean
+pass $.029 \to .337$, CartPole $.098 \to .427$, with each rung adding
+--- uniform mixing breaks the exploration wall, the teacher adds,
+recycling adds, and the \emph{gated} full stack is the best arm on both
+environments (the gate helps here too: $.337$ vs.\ $.287$ ungated on
+MountainCar, consistent with the sharpening account extending to tile
+policies). At extended budgets the corrected 10-seed transition-matched
+study cracks the flag itself: flag pass uniform $0.058{\pm}0.079$ $\to$
+teacher $0.664{\pm}0.232$ $\to$ full stack $\mathbf{0.848{\pm}0.058}$;
+per-bin policy parameters stay at 0.000 --- curricula operate through
+shared parameters, or not at all.
 \takeaway{Curricula operate through shared parameters, or not at all.}
 
 \begin{figure}[t]
