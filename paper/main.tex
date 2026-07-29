@@ -222,7 +222,15 @@ rollout is a group's first success.
 \citep{sfl,lilo} are the $N{=}2$ slice of $u_N$; DAPO-style dynamic
 sampling and GRESO are its avoidance shadow (cull where $u\approx 0$);
 HER-style relabeling is its creation complement (manufacture $K>0$ where
-$u=0$ identically; \S\ref{sec:recycling}).
+$u=0$ identically; \S\ref{sec:recycling}). Closest prior:
+DisCO \citep{disco} derives the per-question weights of the GRPO family
+($\omega(q)=\sqrt{p(1-p)}$ for GRPO, $p(1-p)$ for Dr.~GRPO) to diagnose
+difficulty bias, and SC-SDPO \citep{scsdpo} notes the residual
+$\sqrt{p(1-p)}$ acts as an implicit curriculum. Our lemma generalizes
+this line to success-conditioned estimators (where the functional is
+$u_N = \passat{N}-\passat{1}$, compute-indexed by $N$), and --- the step
+neither takes --- uses it to predict how \emph{external} curricula and
+recyclers interact with each estimator, in coverage terms.
 
 \begin{figure}[t]
 \centering
@@ -401,10 +409,22 @@ already provides it --- the same derived utility that schedules sampling
 should gate the relabel destination.}
 
 \section{Related work}
-Difficulty-adaptive RLVR sampling is bucket- or scalar-level and
-heuristic-scored: DUMP (UCB over buckets), AdaRFT (scalar controller over
-precomputed labels), SEC (category bandit), threshold curricula. LILO is
-the closest per-prompt method --- rejection sampling by $\hat p(1-\hat p)$,
+\textbf{The coverage tension.} RLVR itself trades coverage for precision:
+$\passat{1}$ rises while $\passat{k}$ at large $k$ falls below the base
+model \citep{yue}, with entropy collapse as the mechanistic signature
+\citep{cui} and overtraining on saturated problems as a locus
+\citep{yuan}. Our contribution to this line is the \emph{interaction}:
+whether external curricula and recyclers compound or cancel the
+estimator's implicit weighting, and what that costs in coverage. Notably,
+recent work frames curricula as the \emph{cure} for coverage loss
+\citep{cai}; our GRPO arms show the cure is estimator-conditional ---
+those studies never varied the estimator.
+
+\textbf{Curricula for RLVR.} Difficulty-adaptive sampling is bucket- or
+scalar-level and heuristic-scored: DUMP (UCB over buckets), AdaRFT
+(scalar controller over precomputed labels, TMLR 2026), SEC (category
+bandit), threshold curricula. LILO (NeurIPS 2025) is the closest
+per-prompt method --- rejection sampling by $\hat p(1-\hat p)$,
 which Prop.~\ref{prop:mass}'s corollary identifies as the $N{=}2$ slice of
 our derived utility. DAPO's dynamic sampling and GRESO cull dead prompts
 --- avoidance without allocation or creation. PKPO and Pass@k-training
@@ -448,17 +468,32 @@ pools (verl), gym control, IsaacLab parallel sim, and flow-policy VLAs.
 \begin{thebibliography}{9}\small
 \bibitem[Tajwar et al.(2026)]{maxrl} Tajwar, F., Zeng, G., et al.
 Maximum Likelihood Reinforcement Learning. \emph{ICML}, 2026.
+\bibitem[Li et al.(2025)]{disco} Li, G., et al. DisCO: discriminative
+constrained optimization. \emph{NeurIPS}, 2025.
+\bibitem[Liu et al.(2026)]{scsdpo} Liu, R., et al. Restoring the sweet
+spot: pass-rate weighted self-distillation. arXiv:2605.27765, 2026.
+\bibitem[Yue et al.(2025)]{yue} Yue, Y., et al. Does RL really
+incentivize reasoning capacity in LLMs beyond the base model?
+\emph{NeurIPS} (oral), 2025.
+\bibitem[Yuan et al.(2026)]{yuan} Yuan, S., et al. Understanding
+diversity collapse in RLVR via the lens of overtraining.
+arXiv:2606.15455, 2026.
+\bibitem[Cui et al.(2025)]{cui} Cui, G., et al. The entropy mechanism of
+RL for reasoning language models. arXiv:2505.22617, 2025.
+\bibitem[Cai et al.(2026)]{cai} Cai, W., et al. Curriculum RL can
+incentivize reasoning capacity beyond the base model. arXiv:2606.22317,
+2026.
 \bibitem[Wang et al.(2025)]{dump} Wang, Z., et al. DUMP: Automated
 distribution-level curriculum learning for RL-based LLM post-training.
 arXiv:2504.09710, 2025.
 \bibitem[Shi et al.(2025)]{adarft} Shi, T., et al. Efficient reinforcement
-finetuning via adaptive curriculum learning. arXiv:2504.05520, 2025.
+finetuning via adaptive curriculum learning. \emph{TMLR}, 2026.
 \bibitem[SEC(2025)]{sec} Self-evolving curriculum for LLM reasoning.
 arXiv:2505.14970, 2025.
-\bibitem[LILO(2025)]{lilo} Sampling from the frontier of learnability.
-arXiv:2502.12272, 2025.
+\bibitem[LILO(2025)]{lilo} LILO: learning to reason at the frontier of
+learnability. \emph{NeurIPS}, 2025.
 \bibitem[Yu et al.(2025)]{dapo} Yu, Q., et al. DAPO: an open-source LLM
-reinforcement learning system at scale. arXiv:2503.14476, 2025.
+reinforcement learning system at scale. \emph{NeurIPS}, 2025.
 \bibitem[GRESO(2025)]{greso} Pre-rollout filtering for efficient RLVR.
 arXiv:2506.02177, 2025.
 \bibitem[Ghosh et al.(2021)]{gcsl} Ghosh, D., et al. Learning to reach
