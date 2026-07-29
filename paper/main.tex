@@ -343,7 +343,21 @@ reversal at level 4).
 \takeaway{The gains survive real gradients; the safety warning is real;
 coverage is the currency that sees both.}
 
-\paragraph{7.4 Gymnasium control (MountainCar).} Flag-only training:
+\paragraph{7.4a Legged locomotion (IsaacLab, pre-registered honest
+null).} A 5-arm pilot on Anymal-C rough terrain (frontier teacher vs.\
+stock greedy walker, uniform, scripted ramp, and a no-motion control;
+fixed-grid per-level evaluation, one seed, run by an independent team on
+a co-designed protocol) lands the \emph{pre-registered} null exactly:
+on a terrain grid where every level is learnable at budget, the stock
+greedy curriculum wins outright (mean pass .372 vs.\ the teacher's
+.278), and the teacher's only edge is a within-noise sliver at the
+hardest evaluated level. Combined with the maze step-matched analysis
+and Countdown, this makes the regime rule a three-scale result:
+\textbf{allocation pays only where unlearnable-at-budget regions exist
+to avoid} --- on learnable-everywhere pools, breadth beats focus at
+1.26M-param maze, 360M LLM, and legged-robot scale.
+
+\paragraph{7.4b Gymnasium control (MountainCar).} Flag-only training:
 0.000 --- the classic exploration wall. The corrected 10-seed
 transition-matched study (paired bootstrap): flag pass uniform
 $0.058{\pm}0.079$ $\to$ teacher $0.664{\pm}0.232$ $\to$ full stack
