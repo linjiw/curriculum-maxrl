@@ -129,7 +129,16 @@ Gating relabel admission by the destination's estimated pass rate (the
 same utility that schedules sampling, applied to the recycler) blocks
 $\sim$79\% of relabels as saturated and doubles frontier-tier
 $\passat{16}$ relative to ungated recycling on a structurally faithful
-Countdown pool.
+Countdown pool --- with the mechanism visible in-run: the gate's
+rejection rate rises monotonically ($.12 \to .85$) as the model's
+reachable set expands into it, admits shift from novel destinations
+(73\% early) to still-rare revisits (94\% late), and the gated arm
+preserves \emph{more} policy entropy than the no-recycling baseline at
+$4.9\times$ less relabel dose. Where recycling is healthy the gate is
+transparent: rerunning the validated CPU testbeds with the gate enabled
+reproduces their results to within noise (skill-chain AUC $.8879$ vs.\
+$.8876$; gridworld bit-identical) because hard-destination relabels pass
+the gate untouched. One method, no per-domain switches.
 
 Taking that sentence literally produces this paper. Our contributions:
 \begin{enumerate}
