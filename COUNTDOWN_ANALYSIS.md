@@ -82,3 +82,52 @@ discriminate the mechanisms. Next Countdown iteration (E-LLM-2b) requires:
   finding makes dose-response the scientifically interesting question.
 - grpo cells dropped (GSM8K already carries the safety claim); budget goes
   to 2 seeds on the informative contrasts instead.
+
+
+---
+
+# E-LLM-2b (v2 pool) — the sharpening replication and the gate result
+
+*2026-07-29. All three arms complete on the real-structure pool (perm ×
+parens × exact division; headroom gate passed on tiers 1–2). Single seed;
+seeds 2–3 queued. Artifacts: ray sessions 07-28_22 (B2), 07-29_02 (B3),
+07-29_05 (B1).*
+
+## Step-60 scoreboard (mean@16 / pass@16; headline tiers 1–2)
+
+| arm | tier 1 | tier 2 (frontier) |
+|---|---|---|
+| B1 baseline (no HS) | .310/**.559** | .104/.266 |
+| B2 hindsight | **.334**/.485 | **.144**/.153 |
+| B3 hindsight + **utility gate** | .309/.475 | .133/**.306** |
+
+Gate telemetry: B2 relabeled 108 rollouts/step; B3 admitted 22 and
+rejected 83/step as saturated (79%), tracking 291 destination values.
+
+## P-B1 — sharpening replicates: CONFIRMED (both halves)
+
+On a pool with verified headroom (unlike v1), hindsight lifts mean@16
+(t1 +.024, t2 +.040 over baseline) and LOSES pass@16 (t1 −.074,
+t2 −.113). The v1 signature was not a shallow-pool artifact: recycling
+buys accuracy with coverage. This is the paper's claim-3 replication.
+
+## P-B2 — the gate: DECISIVE at the frontier, partial at tier 1
+
+At tier 2, the gate doesn't just close B2's coverage deficit — it
+REVERSES it: pass@16 .306 vs baseline .266 (+.040) vs ungated .153,
+while keeping 72% of hindsight's mean gain. At tier 1 the gate returns
+to baseline mean and still trails baseline coverage (.475 vs .559).
+Reading: the gate rescues recycling exactly where recycling is
+worth having (the frontier — where relabel destinations are NOT yet
+saturated) and neutralizes it where it was pure sharpening (tier 1's
+destinations saturate early, so the gate blocks most relabels there and
+the arm converges toward baseline). The mechanism and the telemetry
+agree.
+
+## Honest limits
+
+Single seed each (seeds 2–3 queued); val noise ±.02–.04 at n=128/tier
+(t2 pass@16 differences of .11–.15 clear it; t1 mean differences of .02
+do not); B1's first launch OOM'd against an external tenant and was
+cleanly rerun; the t0 tier is excluded per the pre-registered headroom
+gate (guesser-saturated).
