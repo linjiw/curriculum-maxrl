@@ -131,3 +131,34 @@ Single seed each (seeds 2–3 queued); val noise ±.02–.04 at n=128/tier
 do not); B1's first launch OOM'd against an external tenant and was
 cleanly rerun; the t0 tier is excluded per the pre-registered headroom
 gate (guesser-saturated).
+
+
+---
+
+## 3-seed aggregate (2026-07-30) — the multi-seed truth, stated plainly
+
+| arm | t1 mean@16 | t1 pass@16 | t2 mean@16 | t2 pass@16 |
+|---|---|---|---|---|
+| B1 baseline | .278±.054 | **.541±.020** | .117±.030 | .274±.015 |
+| B2 hindsight | **.324±.012** | .492±.011 | **.143±.014** | .237±.065 |
+| B3 hs + gate | .282±.031 | .484±.011 | .133±.006 | **.279±.019** |
+
+**P-B1 (sharpening) at 3 seeds: CONFIRMED at tier 1, directional at
+tier 2.** Tier 1 is clean: mean +.046 and coverage −.049, both well
+outside seed noise. Tier 2's mean gain (+.026) is clear but the coverage
+loss (−.037±.065) is noisy — seed 1's dramatic collapse (.153) was the
+extreme of the spread, not the norm.
+
+**P-B2 (gate) at 3 seeds: the gate restores frontier coverage to
+baseline (.279 vs .274, tight ±.019) while retaining ~60% of recycling's
+mean gain (+.016 of +.026).** The seed-1 "doubling" (.153→.306) was
+real but seed-specific — the honest multi-seed claim is
+coverage-restoration-plus-partial-mean-retention, not coverage gain.
+At tier 1 the gate neutralizes recycling almost entirely (mean back to
+baseline; coverage matches ungated) — consistent with tier-1
+destinations saturating early so the gate blocks nearly everything.
+
+**F5 caveat (favorable direction)**: all B3 runs carried the
+under-gating bug (audit-measured p̂ 0.637 where the design says 0.917) —
+the gate as designed is STRONGER than what ran. A post-fix B3 rerun is
+queued as the cheapest possible upside experiment.
