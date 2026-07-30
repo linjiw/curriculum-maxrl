@@ -162,3 +162,32 @@ destinations saturating early so the gate blocks nearly everything.
 under-gating bug (audit-measured p̂ 0.637 where the design says 0.917) —
 the gate as designed is STRONGER than what ran. A post-fix B3 rerun is
 queued as the cheapest possible upside experiment.
+
+
+## Post-fix B3 rerun (2026-07-30, corrected gate math, seed 1)
+
+Step-60: t1 .220/.564, t2 .083/.238. Gate telemetry confirms the fix
+bites as the audit predicted: 104.5 rejected / 7.2 admitted per step
+(old math: 83.1/22.2 — the corrected decay gates ~3× harder).
+
+Reading against the arms (seed-1 axis): tier-1 COVERAGE now exceeds even
+the baseline (.564 vs B1 .559 vs old-B3 .475) — at the strongest gating,
+recycling's tier-1 coverage cost is fully erased. The price is the mean
+gain: t1 mean .220 (below baseline .310) and t2 .083 — at this gate
+strength the arm approaches hindsight-off behavior with extra variance
+(the step-45→60 t1 mean drop suggests val noise or late instability;
+single seed). Combined with the 3-seed old-math result, the emerging
+dose-response picture:
+
+| gate strength | mean gain kept | coverage |
+|---|---|---|
+| none (B2) | all (+.046 t1) | −.049 lost |
+| under-gated (old B3) | ~60% | restored to baseline |
+| full (post-fix B3) | ~none at t1 | restored-to-slightly-above |
+
+i.e. **gate_max_p traces a mean-vs-coverage frontier** — the mitigation
+is a dial, not a switch. For the paper: report the old-math B3 as the
+operating point (with the F5 disclosure), the post-fix run as the
+strong-gating end, and gate_max_p sweep as future work. The theory
+gains a refinement: destination-saturation gating trades recycled mean
+for preserved exploration monotonically.
