@@ -1,0 +1,38 @@
+{
+ "mc_target_only_3x": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.025625000000000002,
+  "coverage": 0.0
+ },
+ "mc_uniform_3x": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.32,
+  "coverage": 0.32
+ },
+ "mc_full_gated_3x": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.39875000000000005,
+  "coverage": 0.4
+ },
+ "cp_target_only_3x": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.09609375,
+  "coverage": 0.1
+ },
+ "cp_uniform_3x": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.47265625,
+  "coverage": 0.5
+ },
+ "cp_full_gated_3x": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.45703125,
+  "coverage": 0.5
+ }
+}
