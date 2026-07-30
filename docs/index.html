@@ -186,31 +186,36 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <body>
 
 <header class="hero">
-  <p class="eyebrow">Research notes · curriculum learning × MaxRL</p>
-  <h1>The estimator is the curriculum</h1>
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-07-30</p>
+  <h1>The estimator decides</h1>
   <p class="lede">
-    In RL with verifiable rewards, rollout compute is wasted twice: on prompts the model has
-    mastered (nothing left to learn) and on prompts it can't touch (every rollout fails —
-    group estimators emit <em>zero gradient</em>). We measured it: under uniform sampling,
-    <strong>65–75% of rollout groups produce no learning signal</strong>. The fix needs no new
-    machinery. We prove MaxRL's expected learning signal on a prompt is exactly
-    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong> — solvable in N tries but not in one — and
-    that formula <em>is</em> the curriculum: sample by it, and the first waste disappears. For
-    all-fail prompts no sampling rule can help, so we <em>recycle</em>: a failed rollout is a
-    verified success for the goal it actually reached. Together they beat an <strong>oracle</strong>
-    that knows every true pass rate — because the oracle can only allocate signal that exists,
-    while recycling creates signal that didn't.
+    RL with verifiable rewards leans on two data-level fixes — <em>difficulty curricula</em>
+    (train where learning is possible) and <em>failure recycling</em> (relabel failed rollouts
+    as successes of what they actually achieved). Both are treated as objective-agnostic
+    add-ons. <strong>They are not.</strong> We derive the curriculum from the estimator's own
+    algebra — a prompt's expected learning signal is exactly
+    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong> — and use it to predict, pre-register, and
+    confirm two failure modes nobody was measuring: the <em>same</em> curriculum that trains
+    stably under MaxRL <strong>degrades GRPO</strong> (maze + LLM scale), and recycling buys
+    mean accuracy <strong>with pass@k coverage</strong> (recycling-induced sharpening — a new
+    finding). The same algebra supplies the fix: gate relabels by their destination's pass
+    rate, and coverage comes back with most of the gain kept.
   </p>
   <div class="card" style="margin-top:18px">
-    <p class="eyebrow" style="margin-bottom:8px">The one-sentence pitch</p>
-    <p style="margin:0"><strong>Read the curriculum off the estimator's own algebra, and salvage
-    what the estimator throws away.</strong> No difficulty-band hyperparameters — the rollout
-    budget N you already chose sets the band (peak difficulty ≈ ln&nbsp;N&nbsp;/&nbsp;N); the
-    estimator is never modified, so every unbiasedness result of the base paper carries over.</p>
+    <p class="eyebrow" style="margin-bottom:8px">Three headline results</p>
+    <p style="margin:0">
+    <strong>Gym, trained to convergence:</strong> standard RL 0.000 on MountainCar's flag and
+    CartPole's survive-400 — the gated stack <strong>1.000±0.000 on both</strong> (60×/13×).
+    &nbsp;·&nbsp; <strong>Safety, pre-registered:</strong> the identical teacher helps MaxRL and
+    hurts GRPO — the only regressing cell in the GSM8K 2×2, permutation p=0.0079 on the maze.
+    &nbsp;·&nbsp; <strong>Sharpening + the gate:</strong> recycling trades coverage for accuracy
+    (3 seeds, outside noise); the utility gate restores coverage keeping ~60% of the gain — and
+    the gate threshold traces a mean-vs-coverage dial.</p>
   </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
-    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/PAPER.md">Paper draft ↗</a>
+    <a class="btn" href="paper-draft.pdf">📄 Paper PDF</a>
+    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/PAPER.md">Markdown draft ↗</a>
     <a class="btn" href="https://arxiv.org/abs/2602.02710">MaxRL paper ↗</a>
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/GUIDE.md">Design guide ↗</a>
     <button id="themeToggle" type="button">Toggle theme</button>
