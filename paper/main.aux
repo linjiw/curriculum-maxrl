@@ -21,14 +21,16 @@
 \citation{sec}
 \citation{lilo}
 \citation{dapo,greso}
-\citation{maxrl}
+\citation{lfh}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {The estimator is the curriculum.} \emph  {Left:} the derived utility $u_N(p) = (1-(1-p)^N)-p$ --- the estimator's expected advantage mass (Prop.\nobreakspace  {}\ref  {prop:mass}) --- for growing rollout budgets $N$. The peak $p^*\approx \qopname  \relax o{ln}N/N$ walks toward harder prompts as compute grows; both tails are dead zones the weight function cannot reach. \emph  {Right:} at $N{=}16$, MaxRL concentrates $\to (N{-}1)\times $ more expected signal than RLOO on frontier prompts (Prop.\nobreakspace  {}\ref  {prop:ratio}); RLOO's profile is exactly the published ``learnability'' objective --- the $N{=}2$ slice.}}{2}{figure.1}\protected@file@percent }
-\newlabel{fig:utility}{{1}{2}{\textbf {The estimator is the curriculum.} \emph {Left:} the derived utility $u_N(p) = (1-(1-p)^N)-p$ --- the estimator's expected advantage mass (Prop.~\ref {prop:mass}) --- for growing rollout budgets $N$. The peak $p^*\approx \ln N/N$ walks toward harder prompts as compute grows; both tails are dead zones the weight function cannot reach. \emph {Right:} at $N{=}16$, MaxRL concentrates $\to (N{-}1)\times $ more expected signal than RLOO on frontier prompts (Prop.~\ref {prop:ratio}); RLOO's profile is exactly the published ``learnability'' objective --- the $N{=}2$ slice}{figure.1}{}}
+\citation{gcsl}
+\citation{ferbach}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Background: MaxRL in three lines}{2}{section.2}\protected@file@percent }
 \citation{sfl,lilo}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only.}}{3}{figure.2}\protected@file@percent }
-\newlabel{fig:algorithm}{{2}{3}{\textbf {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only}{figure.2}{}}
+\citation{disco}
+\citation{scsdpo}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {The estimator is the curriculum.} \emph  {Left:} the derived utility $u_N(p) = (1-(1-p)^N)-p$ --- the estimator's expected advantage mass (Prop.\nobreakspace  {}\ref  {prop:mass}) --- for growing rollout budgets $N$. The peak $p^*\approx \qopname  \relax o{ln}N/N$ walks toward harder prompts as compute grows; both tails are dead zones the weight function cannot reach. \emph  {Right:} at $N{=}16$, MaxRL concentrates $\to (N{-}1)\times $ more expected signal than RLOO on frontier prompts (Prop.\nobreakspace  {}\ref  {prop:ratio}); RLOO's profile is exactly the published ``learnability'' objective --- the $N{=}2$ slice.}}{3}{figure.1}\protected@file@percent }
+\newlabel{fig:utility}{{1}{3}{\textbf {The estimator is the curriculum.} \emph {Left:} the derived utility $u_N(p) = (1-(1-p)^N)-p$ --- the estimator's expected advantage mass (Prop.~\ref {prop:mass}) --- for growing rollout budgets $N$. The peak $p^*\approx \ln N/N$ walks toward harder prompts as compute grows; both tails are dead zones the weight function cannot reach. \emph {Right:} at $N{=}16$, MaxRL concentrates $\to (N{-}1)\times $ more expected signal than RLOO on frontier prompts (Prop.~\ref {prop:ratio}); RLOO's profile is exactly the published ``learnability'' objective --- the $N{=}2$ slice}{figure.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}The estimator is the curriculum}{3}{section.3}\protected@file@percent }
 \newlabel{sec:theory}{{3}{3}{The estimator is the curriculum}{section.3}{}}
 \newlabel{prop:mass}{{1}{3}{Advantage mass; MC-verified}{proposition.1}{}}
@@ -36,33 +38,52 @@
 \newlabel{prop:alloc}{{3}{3}{Allocation}{proposition.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}FrontierMax: the schedule}{3}{section.4}\protected@file@percent }
 \newlabel{sec:method}{{4}{3}{FrontierMax: the schedule}{section.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Three channels.} The teacher allocates compute to the frontier band; recycling creates signal in the dead zone no sampler can reach; the objective underneath decides whether either is safe.}}{4}{figure.3}\protected@file@percent }
-\newlabel{fig:channels}{{3}{4}{\textbf {Three channels.} The teacher allocates compute to the frontier band; recycling creates signal in the dead zone no sampler can reach; the objective underneath decides whether either is safe}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only.}}{4}{figure.2}\protected@file@percent }
+\newlabel{fig:algorithm}{{2}{4}{\textbf {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only}{figure.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}Failure recycling}{4}{section.5}\protected@file@percent }
 \newlabel{sec:recycling}{{5}{4}{Failure recycling}{section.5}{}}
 \newlabel{prop:hindsight}{{4}{4}{Hindsight exactness}{proposition.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Three channels, one safety rule}{4}{section.6}\protected@file@percent }
 \newlabel{sec:channels}{{6}{4}{Three channels, one safety rule}{section.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {The ladder.} (a) Exact-gradient chains: the full stack beats the true-pass-rate oracle. (b) Frontier-heavy regime: allocation scores exactly zero; creation solves it. (c) Maze at matched wall-clock: 6/6 paired seed wins. (d) GSM8K $2{\times }2$: the identical teacher helps MaxRL and hurts GRPO (pre-registered P-G2).}}{5}{figure.4}\protected@file@percent }
-\newlabel{fig:ladder}{{4}{5}{\textbf {The ladder.} (a) Exact-gradient chains: the full stack beats the true-pass-rate oracle. (b) Frontier-heavy regime: allocation scores exactly zero; creation solves it. (c) Maze at matched wall-clock: 6/6 paired seed wins. (d) GSM8K $2{\times }2$: the identical teacher helps MaxRL and hurts GRPO (pre-registered P-G2)}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Three channels.} The teacher allocates compute to the frontier band; recycling creates signal in the dead zone no sampler can reach; the objective underneath decides whether either is safe.}}{5}{figure.3}\protected@file@percent }
+\newlabel{fig:channels}{{3}{5}{\textbf {Three channels.} The teacher allocates compute to the frontier band; recycling creates signal in the dead zone no sampler can reach; the objective underneath decides whether either is safe}{figure.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7}Experiments: an escalating ladder}{5}{section.7}\protected@file@percent }
 \newlabel{sec:experiments}{{7}{5}{Experiments: an escalating ladder}{section.7}{}}
 \@writefile{toc}{\contentsline {paragraph}{7.1 Exact-gradient skill chains (CPU, 5 seeds).}{5}{section*.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{7.2 Frontier-heavy regime (max pool pass rate $10^{-5}$).}{5}{section*.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{7.3 Maze transformer at matched wall-clock (1.26M params, 13 levels, ${\sim }30$ runs, 3 seeds).}{5}{section*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{7.4 Gymnasium control (MountainCar).}{5}{section*.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {GSM8K $2{\times }2$ (pre-registered).} The identical teacher helps MaxRL and hurts GRPO; GRPO+teacher is the only cell that regresses in its second half --- the maze safety reversal at LLM scale.}}{6}{figure.5}\protected@file@percent }
-\newlabel{fig:gsm8k}{{5}{6}{\textbf {GSM8K $2{\times }2$ (pre-registered).} The identical teacher helps MaxRL and hurts GRPO; GRPO+teacher is the only cell that regresses in its second half --- the maze safety reversal at LLM scale}{figure.5}{}}
-\@writefile{toc}{\contentsline {paragraph}{7.5 LLM scale: GSM8K $2{\times }2$, pre-registered (SmolLM2-360M, $N{=}16$, one A10G).}{6}{section*.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Next rung (staged, review-hardened).}{6}{section*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}Related work}{6}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{7.4a Legged locomotion (IsaacLab, pre-registered honest null).}{5}{section*.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {The ladder.} (a) Exact-gradient chains: the full stack beats the true-pass-rate oracle. (b) Frontier-heavy regime: allocation scores exactly zero; creation solves it. (c) Maze at matched wall-clock: 6/6 paired seed wins. (d) GSM8K $2{\times }2$: the identical teacher helps MaxRL and hurts GRPO (pre-registered P-G2).}}{6}{figure.4}\protected@file@percent }
+\newlabel{fig:ladder}{{4}{6}{\textbf {The ladder.} (a) Exact-gradient chains: the full stack beats the true-pass-rate oracle. (b) Frontier-heavy regime: allocation scores exactly zero; creation solves it. (c) Maze at matched wall-clock: 6/6 paired seed wins. (d) GSM8K $2{\times }2$: the identical teacher helps MaxRL and hurts GRPO (pre-registered P-G2)}{figure.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{7.4b Gymnasium control (MountainCar, CartPole) --- trained to convergence, official-task currency.}{6}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{7.5 LLM scale: GSM8K $2{\times }2$, pre-registered (SmolLM2-360M, $N{=}16$, one A10G).}{6}{section*.6}\protected@file@percent }
+\citation{yue}
+\citation{cui}
+\citation{yuan}
+\citation{cai}
+\citation{lfh}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Gym control, trained to plateau (3 seeds, matched episodes).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). Standard RL flatlines at zero on the official task in both environments; the gated FrontierMax stack converges to 1.000.}}{7}{figure.5}\protected@file@percent }
+\newlabel{fig:gym}{{5}{7}{\textbf {Gym control, trained to plateau (3 seeds, matched episodes).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). Standard RL flatlines at zero on the official task in both environments; the gated FrontierMax stack converges to 1.000}{figure.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{7.6 Countdown $2{\times }2$ (pre-registered): two honest nulls and a new phenomenon.}{7}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Related work}{7}{section.8}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {GSM8K $2{\times }2$ (pre-registered).} The identical teacher helps MaxRL and hurts GRPO; GRPO+teacher is the only cell that regresses in its second half --- the maze safety reversal at LLM scale.}}{8}{figure.6}\protected@file@percent }
+\newlabel{fig:gsm8k}{{6}{8}{\textbf {GSM8K $2{\times }2$ (pre-registered).} The identical teacher helps MaxRL and hurts GRPO; GRPO+teacher is the only cell that regresses in its second half --- the maze safety reversal at LLM scale}{figure.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Limitations and honest negatives}{8}{section.9}\protected@file@percent }
 \bibcite{maxrl}{{1}{2026}{{Tajwar et al.}}{{}}}
-\bibcite{dump}{{2}{2025}{{Wang et al.}}{{}}}
-\bibcite{adarft}{{3}{2025}{{Shi et al.}}{{}}}
-\bibcite{sec}{{4}{2025}{{SEC}}{{}}}
-\bibcite{lilo}{{5}{2025}{{LILO}}{{}}}
-\bibcite{dapo}{{6}{2025}{{Yu et al.}}{{}}}
-\bibcite{greso}{{7}{2025}{{GRESO}}{{}}}
-\bibcite{sfl}{{8}{2024}{{Rutherford et al.}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Limitations and honest negatives}{7}{section.9}\protected@file@percent }
-\gdef \@abspage@last{7}
+\bibcite{disco}{{2}{2025}{{Li et al.}}{{}}}
+\bibcite{scsdpo}{{3}{2026}{{Liu et al.}}{{}}}
+\bibcite{yue}{{4}{2025}{{Yue et al.}}{{}}}
+\bibcite{yuan}{{5}{2026}{{Yuan et al.}}{{}}}
+\bibcite{cui}{{6}{2025}{{Cui et al.}}{{}}}
+\bibcite{cai}{{7}{2026}{{Cai et al.}}{{}}}
+\bibcite{dump}{{8}{2025}{{Wang et al.}}{{}}}
+\bibcite{adarft}{{9}{2025}{{Shi et al.}}{{}}}
+\bibcite{sec}{{10}{2025}{{SEC}}{{}}}
+\bibcite{lilo}{{11}{2025}{{LILO}}{{}}}
+\bibcite{dapo}{{12}{2025}{{Yu et al.}}{{}}}
+\bibcite{greso}{{13}{2025}{{GRESO}}{{}}}
+\bibcite{gcsl}{{14}{2021}{{Ghosh et al.}}{{}}}
+\bibcite{ferbach}{{15}{2024}{{Ferbach et al.}}{{}}}
+\bibcite{lfh}{{16}{2026}{{Xu et al.}}{{}}}
+\bibcite{sfl}{{17}{2024}{{Rutherford et al.}}{{}}}
+\gdef \@abspage@last{9}

@@ -1,0 +1,62 @@
+{
+ "mc_target_only": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.029374999999999995,
+  "coverage": 0.0
+ },
+ "mc_uniform": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.27749999999999997,
+  "coverage": 0.27999999999999997
+ },
+ "mc_teacher": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.295,
+  "coverage": 0.3
+ },
+ "mc_teacher_hs": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.2875,
+  "coverage": 0.27999999999999997
+ },
+ "mc_full_gated": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.33687500000000004,
+  "coverage": 0.34
+ },
+ "cp_target_only": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.09765625,
+  "coverage": 0.075
+ },
+ "cp_uniform": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.353125,
+  "coverage": 0.425
+ },
+ "cp_teacher": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.390625,
+  "coverage": 0.45
+ },
+ "cp_teacher_hs": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.41875,
+  "coverage": 0.5
+ },
+ "cp_full_gated": {
+  "target_task": 0.0,
+  "target_std": 0.0,
+  "mean_bins": 0.42734375,
+  "coverage": 0.5
+ }
+}

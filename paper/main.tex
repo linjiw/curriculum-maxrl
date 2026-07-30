@@ -367,19 +367,32 @@ to avoid} --- on learnable-everywhere pools, breadth beats focus at
 1.26M-param maze, 360M LLM, and legged-robot scale.
 
 \paragraph{7.4b Gymnasium control (MountainCar, CartPole) ---
-performance currency.} Against the standard direct-RL setup (train only
-on the target task), the curriculum ladder delivers $10$--$12\times$ the
-task performance at matched episode budgets (5 seeds): MountainCar mean
-pass $.029 \to .337$, CartPole $.098 \to .427$, with each rung adding
---- uniform mixing breaks the exploration wall, the teacher adds,
-recycling adds, and the \emph{gated} full stack is the best arm on both
-environments (the gate helps here too: $.337$ vs.\ $.287$ ungated on
-MountainCar, consistent with the sharpening account extending to tile
-policies). At extended budgets the corrected 10-seed transition-matched
-study cracks the flag itself: flag pass uniform $0.058{\pm}0.079$ $\to$
-teacher $0.664{\pm}0.232$ $\to$ full stack $\mathbf{0.848{\pm}0.058}$;
-per-bin policy parameters stay at 0.000 --- curricula operate through
-shared parameters, or not at all.
+trained to convergence, official-task currency.} Against the standard
+direct-RL setup (train only on the target task), run to plateau at
+matched episode budgets (3 seeds, Fig.~\ref{fig:gym}): standard RL
+converges to \textbf{0.000} on both official tasks --- it never sees a
+success, so there is no gradient to follow --- while the gated full
+stack reaches \textbf{1.000$\pm$0.000 on MountainCar's flag
+($x \ge 0.5$) and 1.000$\pm$0.000 on CartPole's survive-400}, a
+$60\times$/$13\times$ mean-performance gap. An instructive methods
+note: our own first version of this study silently used per-bin
+task-partitioned policy parameters and reproduced the known failure
+(flag 0.000 in every arm) --- restoring the validated shared-policy
+design (the task enters only the success predicate) is what cracks the
+task, replicating the 10-seed transition-matched branch study
+(flag $0.848{\pm}0.058$) and strengthening it to full convergence.
+Curricula operate through shared parameters, or not at all.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig6_gym}
+\caption{\textbf{Gym control, trained to plateau (3 seeds, matched
+episodes).} Solid: mean pass rate across curriculum bins; dashed: the
+\emph{official} task (MountainCar flag / CartPole survive-400).
+Standard RL flatlines at zero on the official task in both
+environments; the gated FrontierMax stack converges to 1.000.}
+\label{fig:gym}
+\end{figure}
 \takeaway{Curricula operate through shared parameters, or not at all.}
 
 \begin{figure}[t]
