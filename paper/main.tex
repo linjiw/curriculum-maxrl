@@ -126,15 +126,21 @@ self-consumption \citep{ferbach}.
 destination the model already reaches sits at $p \to 1$, where the mass
 functional is zero --- recycled updates there buy sharpening, not signal.
 Gating relabel admission by the destination's estimated pass rate (the
-same utility that schedules sampling, applied to the recycler) blocks
-$\sim$79\% of relabels as saturated and doubles frontier-tier
-$\passat{16}$ relative to ungated recycling on a structurally faithful
-Countdown pool --- with the mechanism visible in-run: the gate's
-rejection rate rises monotonically ($.12 \to .85$) as the model's
-reachable set expands into it, admits shift from novel destinations
-(73\% early) to still-rare revisits (94\% late), and the gated arm
-preserves \emph{more} policy entropy than the no-recycling baseline at
-$4.9\times$ less relabel dose. Where recycling is healthy the gate is
+same utility that schedules sampling, applied to the recycler) restores
+the coverage that ungated recycling spends: over three seeds, recycling
+lifts tier-1 mean@16 by $+.046$ while losing $.049$ of $\passat{16}$
+(both outside seed noise); the gated arm returns coverage to baseline
+($.484{\pm}.011$ vs.\ ungated $.492$, baseline $.541$; frontier tier
+$.279{\pm}.019$ vs.\ baseline $.274$) while retaining $\sim$60\% of
+the mean gain. The mechanism is visible in-run: the gate's rejection
+rate rises monotonically ($.12 \to .85$) as the model's reachable set
+expands into it, admits shift from novel destinations (73\% early) to
+still-rare revisits (94\% late), and the gated arm preserves
+\emph{more} policy entropy than the no-recycling baseline at
+$4.9\times$ less relabel dose. A corrected-decay rerun (stronger
+gating) erases the mean gain but pushes coverage \emph{above} baseline
+--- the gate threshold traces a monotone mean-vs-coverage frontier: the
+mitigation is a dial, not a switch. Where recycling is healthy the gate is
 transparent: rerunning the validated CPU testbeds with the gate enabled
 reproduces their results to within noise (skill-chain AUC $.8879$ vs.\
 $.8876$; gridworld bit-identical) because hard-destination relabels pass
