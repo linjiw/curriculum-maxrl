@@ -438,6 +438,24 @@ orderings and signs, and both landed.
 allocation half needs tiers or longer runs --- which is how the next
 experiment is designed.}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig7_sharpening}
+\caption{\textbf{Recycling-induced sharpening and its derived
+mitigation (Countdown, tier 1).} \emph{(a)} Three seeds, both axes:
+recycling (B2) buys mean@16 with $\passat{16}$ coverage; the utility
+gate (B3) restores coverage to baseline keeping $\sim$60\% of the
+gain; full-strength gating (corrected decay, 1 seed) pushes coverage
+above baseline at the cost of the mean --- the gate threshold traces a
+mean-vs-coverage frontier. \emph{(b)} The mechanism in-run: the gate's
+rejection rate rises monotonically as the model's reachable set
+saturates its relabel destinations, while the ungated dose rides its
+cap. \emph{(c)} Gated recycling preserves \emph{more} policy entropy
+than no recycling --- admitted relabels are a spread-preserving
+gradient.}
+\label{fig:sharpening}
+\end{figure}
+
 \paragraph{7.6 Countdown $2{\times}2$ (pre-registered): two honest nulls
 and a new phenomenon.} The first exact-verifier hindsight experiment in
 RLVR ran in production (12 relabeled groups/step, 72--89\% yield). Both
