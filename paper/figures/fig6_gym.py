@@ -69,7 +69,7 @@ def stack(runs, metric):
 
 
 ARMS = [
-    ("target_only", GRAY, "standard RL (target only)"),
+    ("target_only", GRAY, "target-only (sparse)"),
     ("full_gated", ORANGE, "FrontierMax (gated)"),
 ]
 GREEN = "#008300"  # uniform-over-bins control (official-task curve only)
@@ -140,7 +140,7 @@ for ax, env, title in zip(axes, ("mc", "cp"), ("MountainCar", "CartPole")):
         (("full_gated", "hard"), ORANGE, "official task", 7.5, "italic"),
         (("full_gated", "mean"), ORANGE, "FrontierMax\n(gated)", 8, None),
         (("uniform", "hard"), GREEN, "uniform bins\n(official)", 7.5, "italic"),
-        (("target_only", "mean"), GRAY, "standard RL\n(target only)", 8, None),
+        (("target_only", "mean"), GRAY, "target-only\n(sparse, frozen)", 8, None),
         (("target_only", "hard"), GRAY, "official task: 0", 7.5, "italic"),
     ]
     entries = [e for e in entries if e[0] in ends]

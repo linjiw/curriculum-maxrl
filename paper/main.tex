@@ -432,22 +432,39 @@ budget (P-G1).}
 
 \paragraph{7.1 Exact-gradient skill chains (CPU, 5 seeds).} Uniform 0.650
 $\to$ teacher 0.728 $\to$ full stack $\mathbf{0.890 \pm 0.002}$ AUC. The
-control battery locates where that comes from. \emph{Allocation
-saturates:} a true-pass-rate oracle allocator, floor-matched and
-$\gamma$-matched, ties the full stack (0.8885 vs.\ 0.8895) --- perfect
-information about pass rates is worth almost nothing over the cheap
-posterior, and recycling still adds on top of the oracle
-(oracle+recycling 0.8935). \emph{Creation decomposes:} of recycling's
-$+0.22$ AUC over teacher-only, a placebo that replays \emph{live}
-gradients on dead-group slots (zero relabel information) captures 83\%;
-the relabel direction itself carries $+0.037$ beyond the strongest
-placebo, is exactness-dependent (random-target relabels are harmful),
-and utility-form choice is second-order (exact $u_N$ vs.\ the legacy
-frontier form: AUC $0.728$ vs.\ $0.733$, within noise; the $N{=}2$
-learnability slice costs $-0.09$).
-\takeaway{Allocation saturates --- an oracle ties the posterior;
-creation is the channel that still adds on top, and most of its gain is
-gradient dose, with a real, exactness-dependent direction term.}
+control battery locates where that comes from, and its eight arms order
+into a clean \emph{gradient-information ladder}: zero-information dose
+(lr$\times$2 $0.798$ $\approx$ random-target relabels $0.800$) $<$
+reused correct direction (live-gradient replay $0.832$) $<$ new correct
+information (true relabels $0.869$) $<$ perfect allocation (oracle
+$0.8885$ $\approx$ full stack $0.8895$) $<$ allocation$+$creation
+(oracle$+$recycling $0.8935$) --- each rung a 5/5 paired-seed win.
+\emph{Allocation saturates:} the floor- and $\gamma$-matched
+true-pass-rate oracle ties the full stack; perfect information about
+pass rates is worth almost nothing over the cheap posterior.
+\emph{Creation decomposes:} the replay placebo captures 83\% of
+recycling's $+0.22$; the relabel direction carries $+0.037$ beyond it
+--- and the direction term is the most \emph{reliable} arm in the
+battery (seed spread $\pm.0025$, $4$--$6\times$ tighter than every
+placebo; its worst seed beats every placebo's best). Precision on the
+converse: random-target relabels are harmful \emph{relative to
+dose-matched replay} ($-.032$, 5/5 seeds) but $\approx$ neutral vs.\
+plain lr-doubling --- fake labels waste the slot rather than poison
+training. Utility-form choice, same protocol: exact $u_N$
+$0.728{\pm}.002$ $\approx$ legacy frontier form $0.733{\pm}.013$ (the
+derived form's payoff is $7\times$ smaller seed variance, not mean
+speed), but the $N$-blind $N{=}2$ learnability slice $p(1-p)$ forfeits
+the \emph{entire} allocation gain --- paired against uniform sampling
+it is a wash ($-.007$ mean, 2/5 wins) where $u_N$ carries $+.078$ (5/5):
+the group size in the utility is load-bearing. Endpoint honesty: all
+arms finish within $.027$ of each other at convergence --- on fixed
+pools these interventions buy \emph{time-to-ceiling}, not the ceiling
+(AUC spread $9\times$ the final spread), which is exactly the currency
+--- rollouts --- that costs money at LLM scale.
+\takeaway{A monotone information ladder: dose $<$ direction $<$
+allocation-ceiling $<$ +creation. Allocation saturates; creation adds
+on top; and every intervention buys speed, not asymptote --- efficiency
+is the honest currency.}
 
 \paragraph{7.2 Frontier-heavy regime (max pool pass rate $10^{-5}$).}
 Uniform, DAPO, and the plain teacher score \textbf{exactly 0.00};
@@ -546,23 +563,43 @@ to avoid} --- on learnable-everywhere pools, breadth beats focus at
 1.26M-param maze, 360M LLM, and legged-robot scale.
 
 \paragraph{7.4b Gymnasium control (MountainCar, CartPole) ---
-trained to convergence, official-task currency.} Against the standard
-direct-RL setup (train only on the target task), run to plateau at
-matched episode budgets (3 seeds, Fig.~\ref{fig:gym}): standard RL
-converges to \textbf{0.000} on both official tasks --- it never sees a
-success, so there is no gradient to follow --- while the gated full
-stack reaches \textbf{1.000$\pm$0.000 on MountainCar's flag
-($x \ge 0.5$) and 1.000$\pm$0.000 on CartPole's survive-400}. The
-right attribution question is what the curriculum adds \emph{beyond
-task spread}: a uniform-over-bins control also cracks both tasks
-($0.986{\pm}.020$ / $0.972{\pm}.039$) but converges $\sim$20\% slower
-and off-ceiling --- on this small bin set, most of the categorical gap
-is the auxiliary task \emph{spread} (which the derived band explains:
-with easy bins present, $u$ is nonzero almost everywhere), and the
-teacher's contribution is speed and seed-stability, not existence. An
-instructive methods note: our own first version of this study silently
-used per-bin task-partitioned policy parameters and reproduced the
-known failure (flag 0.000 in every arm) --- restoring the validated
+binary-success RLVR on classic control, official-task currency.}
+Setting, stated precisely because the baseline label matters: all arms
+train on \emph{binary task success} (MountainCar: reach $x \ge x^*$;
+CartPole: survive $\ge T$) with the same group estimator --- the
+classic-control analogue of a verifier reward, not the environments'
+native dense rewards that standard libraries train on. The
+\textbf{target-only} arm (sample only the official task) is then a
+provable zero-update freeze, not a slow learner: every group is
+all-fail, every group-relative estimator (MaxRL, GRPO, RLOO) emits
+exactly zero weights on constant rewards, and telemetry confirms the
+policy received \emph{zero} parameter updates over its full budget
+($\lVert\theta\rVert = 0$ throughout; measured random-policy success is
+$< 3{\times}10^{-6}$ for the flag over $10^6$ episodes and
+${\approx}10^{-13}$ for survive-400 by tail fit --- no budget ignites
+it). The gated full stack under the identical reward reaches
+\textbf{1.000$\pm$0.000 on both official tasks} (3 seeds,
+Fig.~\ref{fig:gym}). Honesty about the dense-reward world: with
+CartPole's native $+1$/step reward, vanilla REINFORCE on the
+\emph{same tile policy} solves survive-400 within this budget
+($0.50$--$0.75$ by 4{,}000 episodes) --- the categorical zero is a
+property of sparse verifier-style reward, which is exactly the RLVR
+setting this rung models; MountainCar's native reward ($-1$/step,
+constant until first success) flatlines policy gradients either way,
+which is why it is \emph{the} hard-exploration classic. Attribution
+within the sparse setting, three rungs at a common 280-step horizon
+(hard-task AUC): uniform-over-bins task spread gets most of the way
+(MC $.750 \to$ +recycling $.895 \to$ +teacher $.956$; CartPole
+$.708 \to .792 \to .893$; the paired teacher increment is positive in
+3/3 seeds on both envs), creation-without-allocation plateaus
+\emph{below} ceiling on CartPole ($0.958$ in every seed) while adding
+the teacher restores $1.000$, and the teacher's remaining contribution
+is speed and stability: $3.0\times$ faster to hard-task $0.9$ on both
+environments ($2.1\times$ to $0.99$ on CartPole) with $2.5$--$6\times$
+smaller cross-seed variance along the whole curve. An instructive
+methods note: our own first version of this study silently used
+per-bin task-partitioned policy parameters and reproduced the known
+failure (flag 0.000 in every arm) --- restoring the validated
 shared-policy design (the task enters only the success predicate) is
 what cracks the task, replicating the 10-seed transition-matched
 branch study (flag $0.848{\pm}0.058$) and strengthening it to full
@@ -571,14 +608,18 @@ convergence.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig6_gym}
-\caption{\textbf{Gym control, trained to plateau (3 seeds, matched
-episodes).} Solid: mean pass rate across curriculum bins; dashed: the
-\emph{official} task (MountainCar flag / CartPole survive-400).
-Standard RL flatlines at zero on the official task; a uniform-over-bins
-control (green) also cracks it --- slower and off-ceiling --- isolating
-what the teacher adds (speed, seed-stability) from what task spread
-adds (existence of the gradient); the gated FrontierMax stack converges
-to $1.000{\pm}0.000$.}
+\caption{\textbf{Gym control under binary task-success reward, trained
+to plateau (3 seeds).} Solid: mean pass rate across curriculum bins;
+dashed: the \emph{official} task (MountainCar flag / CartPole
+survive-400). The target-only arm (gray) is a provable zero-update
+freeze under sparse verifier-style reward --- all-fail groups emit zero
+gradient in every group-relative estimator (with CartPole's native
+dense reward, plain REINFORCE solves the task; the zero is a property
+of the sparse setting this rung models). A uniform-over-bins control
+(green) also cracks the task --- $3\times$ slower to hard-task 0.9 and
+off-ceiling --- isolating the teacher's contribution (speed,
+seed-stability) from task spread's (existence of the gradient); the
+gated FrontierMax stack converges to $1.000{\pm}0.000$.}
 \label{fig:gym}
 \end{figure}
 \takeaway{Curricula operate through shared parameters, or not at all.}

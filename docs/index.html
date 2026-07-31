@@ -204,8 +204,10 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
   <div class="card" style="margin-top:18px">
     <p class="eyebrow" style="margin-bottom:8px">Three headline results</p>
     <p style="margin:0">
-    <strong>Gym, trained to convergence:</strong> standard RL 0.000 on MountainCar's flag and
-    CartPole's survive-400 — the gated stack <strong>1.000±0.000 on both</strong> (60×/13×).
+    <strong>Gym under verifier-style sparse reward:</strong> target-only training is a provable
+    zero-update freeze (0.000 on the flag and survive-400) — the gated stack reaches
+    <strong>1.000±0.000 on both</strong>; with dense native rewards plain REINFORCE solves
+    CartPole, so the zero is a property of the sparse setting RLVR actually lives in.
     &nbsp;·&nbsp; <strong>Safety, pre-registered:</strong> on the maze, every MaxRL run grows
     coverage and every GRPO run loses it (9 runs, permutation p=0.0079, zero exceptions). On
     GSM8K the registered run landed the predicted sign (GRPO+teacher the only regressing cell);
@@ -911,34 +913,33 @@ to real Gymnasium environments:</p>
   <tbody>
     <tr><td>Skill chain (regression anchor, 5 seeds)</td><td class="num">0.650</td><td class="num">0.728</td><td class="num"><strong>0.890</strong></td></tr>
     <tr><td>Gridworld reach (goal-conditioned, 3 seeds)</td><td class="num">0.592</td><td class="num">0.658</td><td class="num"><strong>0.703</strong></td></tr>
-    <tr><td>Gymnasium <strong>MountainCar</strong> — positional curriculum (3 seeds)</td><td class="num">0.216</td><td class="num">0.228</td><td class="num"><strong>0.246</strong></td></tr>
-    <tr><td>Gymnasium <strong>CartPole</strong> — survival curriculum (3 seeds)</td><td class="num">0.190</td><td class="num">0.225</td><td class="num"><strong>0.246</strong></td></tr>
+    <tr><td>Gymnasium <strong>MountainCar</strong> / <strong>CartPole</strong> (post-fix shared
+    policy, 3 seeds, hard-task AUC @ 280 steps)</td><td class="num">0.750 / 0.708</td>
+    <td class="num">—</td><td class="num"><strong>0.956 / 0.893</strong></td></tr>
   </tbody>
 </table>
 
 <div class="card">
-  <h3>Performance currency (2026-07-29): 10–12× over standard RL, gated stack best</h3>
-  <p>The question that matters is not sampling telemetry but <em>task performance</em>. Against
-  the standard direct-RL setup (train only on the target task), at matched episode budgets,
-  5 seeds:</p>
-  <table>
-    <thead><tr><th>arm</th><th class="num">MountainCar mean pass</th><th class="num">CartPole mean pass</th></tr></thead>
-    <tbody>
-      <tr><td>standard RL (target only)</td><td class="num">0.029</td><td class="num">0.098</td></tr>
-      <tr><td>uniform curriculum</td><td class="num">0.277</td><td class="num">0.353</td></tr>
-      <tr><td>frontier teacher</td><td class="num">0.295</td><td class="num">0.391</td></tr>
-      <tr><td>teacher + hindsight</td><td class="num">0.287</td><td class="num">0.419</td></tr>
-      <tr><td><strong>full stack + utility gate</strong></td><td class="num"><strong>0.337</strong></td><td class="num"><strong>0.427</strong></td></tr>
-    </tbody>
-  </table>
-  <p>Each rung adds; the <strong>gated</strong> stack is the best arm on both environments.
-  <strong>Trained to convergence (3 seeds), the result is categorical: standard RL plateaus at
-  0.000 on both official tasks — the flag and survive-400 — while the gated stack converges to
-  1.000±0.000 on both</strong> (60×/13× mean-performance gaps). Attribution, kept honest: a
-  uniform-over-bins control also cracks both tasks (0.986±.020 / 0.972±.039) — most of the
-  categorical gap is the auxiliary task <em>spread</em>, which the derived band explains; the
-  teacher's contribution is convergence speed and seed-stability (1.000±0.000 vs off-ceiling
-  with seed variance). The gate is verified
+  <h3>Performance currency: binary-success RLVR on classic control (post-fix, 3 seeds)</h3>
+  <p><strong>Setting, stated precisely:</strong> all arms train on <em>binary task success</em>
+  (reach x ≥ x*; survive ≥ T) with the same group estimator — the classic-control analogue of a
+  verifier reward, <em>not</em> the dense native rewards standard libraries (SB3 etc.) train on.
+  Under sparse reward, the <strong>target-only arm is a provable zero-update freeze</strong>:
+  every group is all-fail, every group-relative estimator (MaxRL, GRPO, RLOO) emits exactly zero
+  weights on constant rewards — telemetry confirms ‖θ‖ = 0 over the entire budget, and measured
+  random-policy success is &lt;3×10⁻⁶ (flag) and ≈10⁻¹³ (survive-400): no budget ignites it.
+  Honesty about the dense world: with CartPole's native +1/step reward, plain REINFORCE on the
+  <em>same tile policy</em> solves survive-400 within budget (0.50–0.75 by 4k episodes) — the
+  categorical zero is a property of the sparse verifier-style setting, which is exactly what
+  RLVR looks like. MountainCar's native reward (−1/step, constant until first success) flatlines
+  policy gradients either way — the hard-exploration classic.</p>
+  <p>Three-rung attribution at a common 280-step horizon (hard-task AUC): uniform-over-bins
+  spread gets most of the way (MC .750 → +recycling .895 → +teacher .956; CP .708 → .792 → .893;
+  teacher increment positive 3/3 seeds both envs); creation-without-allocation caps <em>below</em>
+  ceiling on CartPole (0.958 every seed) while adding the teacher restores 1.000; and the teacher
+  is <strong>3.0× faster to hard-task 0.9</strong> with 2.5–6× smaller cross-seed variance along
+  the whole curve; final: gated stack 1.000±0.000 both envs, uniform control off-ceiling
+  (0.986±.020 / 0.972±.039). The gate is verified
   <em>transparent</em> on the validated CPU rungs (skill-chain .8879 vs .8876; gridworld
   bit-identical): one method, no per-domain switches. Methods note, kept honest: our first
   version of this study silently used per-bin policy parameters and reproduced the known
@@ -950,9 +951,8 @@ to real Gymnasium environments:</p>
 task — the real-world twin of the frontier-heavy regime where pure samplers score exactly zero.
 Its curriculum ("reach x ≥ x*, walking x* from the valley to the flag") is the template for
 robotics reach tasks: swap position bins for end-effector distance bands and the adapter carries
-over. In the demo-budget table above, the hindsight-augmented stack finishes on top everywhere;
-teacher ≥ uniform holds everywhere except MountainCar's AUC at demo budgets (within seed noise —
-see curves.json).</p>
+over. (The earlier demo-budget 5-arm table was measured on the superseded per-bin
+configuration and has been retired; the convergence study above is the citable result.)</p>
 
 <h3>Real training curves — performance rising while the curriculum walks</h3>
 <figure>
