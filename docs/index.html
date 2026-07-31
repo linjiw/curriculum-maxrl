@@ -206,8 +206,9 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     <p style="margin:0">
     <strong>Gym, trained to convergence:</strong> standard RL 0.000 on MountainCar's flag and
     CartPole's survive-400 — the gated stack <strong>1.000±0.000 on both</strong> (60×/13×).
-    &nbsp;·&nbsp; <strong>Safety, pre-registered:</strong> the identical teacher helps MaxRL and
-    hurts GRPO — the only regressing cell in the GSM8K 2×2, permutation p=0.0079 on the maze.
+    &nbsp;·&nbsp; <strong>Safety, pre-registered:</strong> the identical teacher is stable under
+    MaxRL and regresses under GRPO — the only regressing cell in the GSM8K 2×2; on the maze, every
+    MaxRL run grows coverage and every GRPO run loses it (permutation p=0.0079, zero exceptions).
     &nbsp;·&nbsp; <strong>Sharpening + the gate:</strong> recycling trades coverage for accuracy
     (3 seeds, outside noise); the utility gate restores coverage keeping ~60% of the gain — and
     the gate threshold traces a mean-vs-coverage dial.</p>
@@ -256,7 +257,7 @@ curriculum's job description</strong> — is the origin of everything on this pa
     <h3>Channel 2 → the recycler (signal creation)</h3>
     <p>If the estimator only learns from successes, <em>manufacture successes</em>. A failed
     rollout is a verified success for the goal it actually reached; relabeled gradients measure
-    as exact as fresh unbiased ones. The only channel that breaks the oracle ceiling — and its
+    as exact as fresh unbiased ones. The only channel that adds signal beyond even a perfect allocator — and its
     gain scales with how much a recycled skill can <em>compound</em> (+0.22 AUC on fixed task
     sets, +0.01 on one-shot streams).</p>
   </div>
@@ -588,7 +589,7 @@ teacher+hindsight reaches 0.98 — reallocating compute among unlearnable tasks 
 hindsight <em>creates</em> the missing signal by inventing the curriculum below the pool,
 igniting learnability within ~400 groups, then going silent as natural successes take over.</p>
 
-<h3>Beating the oracle — and the concentration surprise</h3>
+<h3>Tying the oracle — and the concentration surprise</h3>
 <p>Two late results sharpened the method. First, sampling ∝ u(p)<sup>γ</sup> with γ≈4 beats
 proportional sampling (AUC 0.782 vs 0.728): the mass functional is the right <em>ordering</em>,
 but learning <em>compounds</em> on structured task pools — steps on the highest-mass task unlock
@@ -605,11 +606,13 @@ vanishes.) Second, the headline:</p>
     <details><summary>Table view</summary><div id="table3"></div></details>
   </div>
   <figcaption>
-    <strong>The full stack beats the oracle.</strong> The oracle knows every true pass rate and
-    allocates groups perfectly — but it can only collect what natural successes emit. Hindsight
-    changes the game itself, manufacturing verified signal from failures. The method's advantage
-    is not better allocation of the standard signal; it is access to signal the best possible
-    allocator cannot reach.
+    <strong>Allocation saturates; creation still adds.</strong> The honest headline after our
+    own control battery: a floor-and-γ-matched true-pass-rate oracle <em>ties</em> the full
+    stack (0.8885 vs 0.8895) — perfect pass-rate information is worth almost nothing over the
+    cheap posterior. What survives every control is that recycling adds on top of even the
+    oracle (oracle+hindsight 0.8935): the advantage is not better allocation of the standard
+    signal; it is access to signal no allocator can reach. (An earlier "beats the oracle by
+    0.039" claim compared against a floor-handicapped oracle and is retracted.)
   </figcaption>
 </figure>
 
@@ -742,22 +745,28 @@ simplified construction — the pool was too shallow for allocation or recycling
 run; the pre-registered kill criterion did its job.)</p>
 
 <div class="grid2">
-  <div class="card"><h3>The new finding: recycling-induced sharpening</h3>
-  <p>Hindsight arms improved <strong>mean@16</strong> while <strong>losing pass@16
-  coverage</strong> (tier-1: .571 vs .645 for the no-relabel baseline). Recycled
-  off-target successes concentrate the policy on reachable outputs at the expense of
-  exploration breadth — the creation channel has its own safety trade-off, mirroring the
-  H6 weight-induced collapse one level up: <em>data-induced</em> rather than
-  weight-induced. A ~30-paper review found no prior report of hindsight-induced pass@k
-  loss in RLVR: the nearest works never measured coverage.</p></div>
-  <div class="card"><h3>The fix falls out of our own algebra</h3>
+  <div class="card"><h3>The finding: recycling-induced sharpening (3 seeds)</h3>
+  <p>On the rebuilt real-structure pool, recycling lifts <strong>tier-1 mean@16 by
+  +.046</strong> (.278±.054 → .324±.012) while <strong>losing .049 of pass@16
+  coverage</strong> (.541±.020 → .492±.011) — both outside seed noise, replicated
+  across three seeds. Recycled off-target successes concentrate the policy on reachable
+  outputs at the expense of exploration breadth — the creation channel has its own
+  safety trade-off, mirroring the H6 weight-induced collapse one level up:
+  <em>data-induced</em> rather than weight-induced. A ~30-paper review found no prior
+  report of hindsight-induced pass@k loss in RLVR: the nearest works never measured
+  coverage.</p></div>
+  <div class="card"><h3>The fix falls out of our own algebra — and it's a dial</h3>
   <p>A relabel to a value the model just produced is a task at p≈1 — exactly where
-  u(p) = pass@N − pass@1 says training signal is <em>zero</em>, and the softmax pays for
-  those updates out of the exploration tail. So the estimator already provides the
-  admission rule: <strong>the same derived utility that schedules sampling should gate
-  the relabel destination</strong> (reject relabels to targets the model already reaches).
-  Pre-registered as the lead mitigation arm of E-LLM-2b, against the literature-standard
-  KL-to-base anchor. Full synthesis: <span class="mono">SHARPENING_SYNTHESIS.md</span>.</p></div>
+  u(p) = pass@N − pass@1 says training signal is <em>zero</em>. So the estimator
+  provides the admission rule: <strong>gate the relabel destination by its estimated
+  pass rate</strong>. Measured across three seeds: at the frontier tier the gate
+  restores coverage to baseline (.279±.019 vs .274) while keeping ~60% of recycling's
+  mean gain; a full-strength rerun pushes tier-1 coverage <em>above</em> baseline at
+  the mean's full price. Gate strength traces a monotone mean-vs-coverage trade —
+  a dial, not a switch. In-run telemetry shows the mechanism: rejection rises
+  .12 → .85 as the model's reachable set saturates, and the gated arm ends with
+  <em>more</em> policy entropy than no recycling at all. Full synthesis:
+  <span class="mono">SHARPENING_SYNTHESIS.md</span>.</p></div>
 </div>
 
 <script>
@@ -767,13 +776,13 @@ run; the pre-registered kill criterion did its job.)</p>
       grpo:      [0.078, 0.105, 0.120],
       grpo_cur:  [0.072, 0.096, 0.093],
       maxrl_cur: [0.066, 0.099, 0.102],
-      maxrl:     [0.091, 0.097, null]
+      maxrl:     [0.091, 0.097, 0.108]
     },
     pass: {
       grpo:      [0.162, 0.213, 0.229],
       grpo_cur:  [0.151, 0.193, 0.181],
       maxrl_cur: [0.136, 0.190, 0.190],
-      maxrl:     [0.182, 0.207, null]
+      maxrl:     [0.182, 0.207, 0.204]
     }
   };
   var SERIES = [
@@ -919,7 +928,11 @@ to real Gymnasium environments:</p>
   <p>Each rung adds; the <strong>gated</strong> stack is the best arm on both environments.
   <strong>Trained to convergence (3 seeds), the result is categorical: standard RL plateaus at
   0.000 on both official tasks — the flag and survive-400 — while the gated stack converges to
-  1.000±0.000 on both</strong> (60×/13× mean-performance gaps). The gate is verified
+  1.000±0.000 on both</strong> (60×/13× mean-performance gaps). Attribution, kept honest: a
+  uniform-over-bins control also cracks both tasks (0.986±.020 / 0.972±.039) — most of the
+  categorical gap is the auxiliary task <em>spread</em>, which the derived band explains; the
+  teacher's contribution is convergence speed and seed-stability (1.000±0.000 vs off-ceiling
+  with seed variance). The gate is verified
   <em>transparent</em> on the validated CPU rungs (skill-chain .8879 vs .8876; gridworld
   bit-identical): one method, no per-domain switches. Methods note, kept honest: our first
   version of this study silently used per-bin policy parameters and reproduced the known
@@ -1006,8 +1019,8 @@ FrontierTrainer(MyEnv(), MyPolicy(), TrainerConfig(hindsight=True)).train(500)</
         <td>up to <strong>11×</strong> fewer samples on the hardest evaluated level — the speedup grows with difficulty (1.2× / 2.7× / 11× at levels 2/3/5)</td></tr>
     <tr><td>Frontier-heavy regimes: impossible → solved</td>
         <td>0.00 → 0.98 at equal compute (uniform, DAPO, and plain teacher all score exactly 0)</td></tr>
-    <tr><td>Beats perfect allocation when recycling is available</td>
-        <td>AUC 0.890 vs oracle 0.851</td></tr>
+    <tr><td>Recycling adds on top of perfect allocation</td>
+        <td>matched oracle ties the stack (0.8885 vs 0.8895); oracle+recycling 0.8935</td></tr>
   </tbody>
 </table>
 <p class="footnote">The inference-efficiency pattern reproduces the MaxRL paper's headline
@@ -1113,8 +1126,8 @@ curriculum can fix, until you recycle it.</em></p>
   fall out as its N=2 slice. The same algebra draws a hard boundary: no sampling rule can rescue
   an all-fail prompt. We therefore add <strong>failure recycling</strong>: a failed trajectory is
   a verified success for the goal it actually reached, and relabeling dead groups provably yields
-  the maximum-likelihood gradient of the relabeled task. Across four testbeds the combined
-  schedule beats a true-pass-rate <strong>oracle</strong> allocator (0.890 vs 0.851), turns a
+  the maximum-likelihood gradient of the relabeled task. Across four testbeds a matched true-pass-rate <strong>oracle</strong> allocator ties the
+  combined schedule (allocation saturates; recycling adds even on top of the oracle), which turns a
   frontier-heavy regime from unlearnable to solved (0 → 0.98), grows pass@k where GRPO's
   collapses, and needs up to 11× fewer inference samples to reach target coverage. A
   pre-registered LLM-scale 2×2 confirms the safety half: the identical curriculum that trains
@@ -1407,10 +1420,12 @@ inert, and the negative results carry diagnoses, not apologies.</p>
       note: "advantage-mass utility, proportional" },
     { name: "Thompson teacher, γ=4", auc: 0.782, color: "--series-1",
       note: "sharper concentration — compounding" },
-    { name: "ORACLE (true pass rates)", auc: 0.851, color: "--series-4",
-      note: "best possible pure sampler — the ceiling" },
+    { name: "ORACLE, floor- & γ-matched", auc: 0.8885, color: "--series-4",
+      note: "best possible pure sampler — ties the stack" },
     { name: "Thompson γ=4 + dense hindsight", auc: 0.890, color: "--series-1",
-      note: "signal creation beats perfect allocation" }
+      note: "creation: ties the oracle, adds on top of it" },
+    { name: "ORACLE + hindsight", auc: 0.8935, color: "--series-4",
+      note: "recycling adds even on top of perfect allocation" }
   ];
 
   function drawChart3() {
@@ -1429,7 +1444,7 @@ inert, and the negative results carry diagnoses, not apologies.</p>
     });
     svg.appendChild(el("text", { x: M3.left + IW3 / 2, y: H3 + 2, "text-anchor": "middle" }, ""));
     var bandH = IH3 / BARS.length, barH = Math.min(24, bandH - 10);
-    var oracleX = sx(0.851);
+    var oracleX = sx(0.8885);
     BARS.forEach(function (b, i) {
       var y = M3.top + i * bandH + (bandH - barH) / 2;
       var isOracle = b.name.indexOf("ORACLE") === 0;

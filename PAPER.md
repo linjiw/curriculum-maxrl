@@ -1,9 +1,16 @@
-# The Estimator Is the Curriculum
-### Frontier Sampling and Failure Recycling for Likelihood-Based RL
+# The Estimator Decides
+### What Curricula and Failure Recycling Can — and Cannot — Do for RL with Verifiable Rewards
 
-*Working draft v0.9 (2026-07-27). All numbers reproduce from this repository;
-experimental tables in REPORT.md and GSM8K_ANALYSIS.md; proofs in
-curriculum_maxrl/PROOFS.md; graded claim inventory in EVIDENCE.md.*
+> **This markdown draft is superseded by the LaTeX paper** (`paper/main.tex`,
+> rendered at `docs/paper-draft.pdf`), which carries the current thesis,
+> the corrected oracle result (matched oracle TIES the full stack — the
+> old "beats the oracle" claim is retracted), the 3-seed Countdown
+> scoreboard, and the complete GSM8K 2×2. This file is kept as a
+> historical outline; where the two disagree, the LaTeX paper is right.
+
+*Original working draft v0.9 (2026-07-27). Experimental tables in REPORT.md
+and GSM8K_ANALYSIS.md; proofs in curriculum_maxrl/PROOFS.md; graded claim
+inventory in EVIDENCE.md.*
 
 **TL;DR — Curricula and likelihood-based RL are not two ideas but one: the
 estimator's own algebra defines the optimal curriculum, and what the

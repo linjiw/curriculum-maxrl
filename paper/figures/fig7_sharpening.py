@@ -37,8 +37,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(HERE, "..", "..", "..", "maxrl", "curriculum_maxrl",
-                    "countdown")
+DATA = os.path.join(HERE, "data")
+
+
 
 GRAY = "#555555"       # B1 baseline (no recycling)
 MAGENTA = "#e87ba4"    # B2 hindsight (ungated recycling)
@@ -135,7 +136,7 @@ axa.annotate("", xy=(pf_pass, pf_mean), xytext=(B3x, B3y),
              arrowprops=dict(arrowstyle="-|>", lw=1.0, color=ORANGE,
                              alpha=0.7, ls="--", shrinkA=7, shrinkB=7,
                              connectionstyle="arc3,rad=-0.28"), zorder=3)
-axa.text(0.512, 0.301, "gate:\ncoverage restored", fontsize=7,
+axa.text(0.512, 0.301, "gate strength:\na dial along the\ntrade", fontsize=7,
          color=ORANGE, ha="left", va="center", style="italic",
          linespacing=1.1, bbox=LBL_BG, zorder=5)
 

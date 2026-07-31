@@ -59,20 +59,26 @@ def slanted_ticks(ax, labels):
 
 
 # ------------------------------------------------- (a) skill chain
-vals_a = [0.650, 0.728, 0.851, 0.890]
-labels_a = ["uniform", "teacher", "oracle", "full stack"]
-colors_a = [GREEN, BLUE, "white", ORANGE]
-bars = axa.bar(range(4), vals_a, color=colors_a,
-               edgecolor=[GREEN, BLUE, GRAY, ORANGE], linewidth=0.8, **BAR_KW)
+# honest post-retraction numbers (hindsight_controls.json): the no-floor
+# gamma-matched oracle TIES the full stack; oracle+recycling adds +.005
+vals_a = [0.650, 0.728, 0.8885, 0.8895, 0.8935]
+labels_a = ["uniform", "teacher", "oracle", "full stack", "oracle+rec."]
+colors_a = [GREEN, BLUE, "white", ORANGE, "white"]
+edges_a = [GREEN, BLUE, GRAY, ORANGE, ORANGE]
+bars = axa.bar(range(5), vals_a, color=colors_a,
+               edgecolor=edges_a, linewidth=0.8, **BAR_KW)
 bars[2].set_hatch("///")
-axa.axhline(0.851, color=GRAY, ls="--", lw=0.8, zorder=2)
-axa.text(-0.42, 0.905, "oracle\nceiling", fontsize=8, color=GRAY,
-         ha="left", va="bottom", style="italic")
+bars[4].set_hatch("///")
+axa.axhline(0.8885, color=GRAY, ls="--", lw=0.8, zorder=2)
+axa.text(-0.42, 1.145, "allocation ceiling:\noracle ties the stack",
+         fontsize=7.5, color=GRAY, ha="left", va="top", style="italic")
+# stagger the near-tied top-3 value labels so they don't collide
+lifts_a = [0.012, 0.012, 0.012, 0.075, 0.012]
 for i, v in enumerate(vals_a):
-    axa.text(i, v + 0.012, f"{v:.3f}".lstrip("0"), fontsize=VAL_FS,
+    axa.text(i, v + lifts_a[i], f"{v:.3f}".lstrip("0"), fontsize=6.8,
              ha="center", va="bottom", color="#333333")
 slanted_ticks(axa, labels_a)
-axa.set_ylim(0, 1.05)
+axa.set_ylim(0, 1.16)
 axa.set_ylabel("AUC")
 axa.set_title("(a) Skill chain (5 seeds)", loc="left", fontsize=9)
 
@@ -113,18 +119,14 @@ axc.set_ylabel("AUC")
 axc.set_title("(c) Maze (3 seeds)", loc="left", fontsize=9)
 
 # ------------------------------------------------- (d) GSM8K 2x2
-vals_d = [0.120, 0.093, 0.102]
+# complete 2x2 (GSM8K_ANALYSIS.md final val mean@4): maxrl cell .108
+vals_d = [0.120, 0.093, 0.102, 0.108]
 labels_d = ["grpo", "grpo+tea.", "maxrl+tea.", "maxrl"]
-colors_d = [MAGENTA, MAGENTA, BLUE]
-axd.bar(range(3), vals_d, color=colors_d, **BAR_KW)
-# hollow/hatched bar for maxrl uniform, still running (last observed 0.097)
-axd.bar([3], [0.097], width=0.62, facecolor="white", edgecolor=BLUE,
-        linewidth=0.8, hatch="///", zorder=3)
+colors_d = [MAGENTA, MAGENTA, BLUE, BLUE]
+axd.bar(range(4), vals_d, color=colors_d, **BAR_KW)
 for i, v in enumerate(vals_d):
     axd.text(i, v + 0.002, f"{v:.3f}".lstrip("0"), fontsize=VAL_FS,
              ha="center", va="bottom", color="#333333")
-axd.text(3, 0.048, "running", fontsize=7.5, ha="center", va="center",
-         color=BLUE, style="italic", rotation=90)
 axd.annotate("only cell that\nregresses (P-G2 ✓)", xy=(1.28, 0.088),
              xytext=(2.35, 0.150), fontsize=8, color=GRAY,
              ha="center", va="center", style="italic",

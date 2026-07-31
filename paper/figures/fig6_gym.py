@@ -72,6 +72,7 @@ ARMS = [
     ("target_only", GRAY, "standard RL (target only)"),
     ("full_gated", ORANGE, "FrontierMax (gated)"),
 ]
+GREEN = "#008300"  # uniform-over-bins control (official-task curve only)
 
 fig, axes = plt.subplots(1, 2, figsize=(7.0, 2.8))
 
@@ -93,6 +94,19 @@ for ax, env, title in zip(axes, ("mc", "cp"), ("MountainCar", "CartPole")):
             ends[(arm, metric)] = float(mu[-1])
             ymax = max(ymax, float(hi.max()))
             S = max(S, float(steps[-1]))
+
+    # uniform-over-bins control: official-task curve only (attribution:
+    # spread vs teacher — it also cracks the task, slower and off-ceiling)
+    if f"{env}_uniform" in conv:
+        runs = conv[f"{env}_uniform"]
+        steps, m = stack(runs, "hard")
+        mu = m.mean(axis=1)
+        ax.plot(steps, mu, color=GREEN, ls="--", lw=1.3, zorder=2.5,
+                alpha=0.9)
+        curves[("uniform", "hard")] = (GREEN, "--", float(steps[-1]),
+                                       float(mu[-1]))
+        ends[("uniform", "hard")] = float(mu[-1])
+        S = max(S, float(steps[-1]))
 
     # arms early-stop at their own plateau; extend the flat tail faintly
     # to the common right edge so endpoints are compared at matched steps
@@ -125,9 +139,11 @@ for ax, env, title in zip(axes, ("mc", "cp"), ("MountainCar", "CartPole")):
     entries = [
         (("full_gated", "hard"), ORANGE, "official task", 7.5, "italic"),
         (("full_gated", "mean"), ORANGE, "FrontierMax\n(gated)", 8, None),
+        (("uniform", "hard"), GREEN, "uniform bins\n(official)", 7.5, "italic"),
         (("target_only", "mean"), GRAY, "standard RL\n(target only)", 8, None),
         (("target_only", "hard"), GRAY, "official task: 0", 7.5, "italic"),
     ]
+    entries = [e for e in entries if e[0] in ends]
     ys = {k: ends[k] for k, *_ in entries}
     min_gap = 0.105 * top
     # gray group: floor at 0.035*top, stack upward (hard below mean)
@@ -138,6 +154,11 @@ for ax, env, title in zip(axes, ("mc", "cp"), ("MountainCar", "CartPole")):
     o_lo, o_hi = ("full_gated", "mean"), ("full_gated", "hard")
     ys[o_hi] = min(max(ys[o_hi], ys[o_lo] + min_gap), 0.95 * top)
     ys[o_lo] = min(ys[o_lo], ys[o_hi] - min_gap)
+    # uniform control label: slot it below the orange pair
+    u_k = ("uniform", "hard")
+    if u_k in ys:
+        ys[u_k] = min(ys[u_k], ys[o_lo] - min_gap)
+        ys[g_hi] = min(ys[g_hi], ys[u_k] - min_gap)
     for key, color, label, fs, style in entries:
         ax.text(S * 1.17, ys[key], label, color=color, fontsize=fs,
                 ha="left", va="center", linespacing=1.1, style=style,

@@ -5,7 +5,7 @@ Val mean@4 trajectories at steps 0/25/50, from GSM8K_ANALYSIS.md:
   grpo (uniform)     .078 / .105 / .120
   grpo + teacher     .072 / .096 / .093   <- the only regressing cell
   maxrl + teacher    .066 / .099 / .102
-  maxrl (uniform)    .091 / .097 / (running)
+  maxrl (uniform)    .091 / .097 / .108
 Step-25-to-50 window shaded: the identical teacher helps MaxRL, hurts GRPO.
 """
 import os
@@ -44,7 +44,7 @@ series = [
     ("grpo",           steps,    [0.078, 0.105, 0.120], GREEN,   "-"),
     ("grpo+teacher",   steps,    [0.072, 0.096, 0.093], MAGENTA, "--"),
     ("maxrl+teacher",  steps,    [0.066, 0.099, 0.102], BLUE,    "-"),
-    ("maxrl",          [0, 25],  [0.091, 0.097],        GRAY,    ":"),
+    ("maxrl",          steps,    [0.091, 0.097, 0.108], GRAY,    ":"),
 ]
 
 # divergence window shading (behind everything)
@@ -55,19 +55,16 @@ for label, xs, ys, color, ls in series:
             zorder=3, solid_capstyle="round")
 
 # direct labels at line ends
-ax.text(51.5, 0.120, "grpo", color=GREEN, fontsize=8, va="center")
+ax.text(51.5, 0.121, "grpo", color=GREEN, fontsize=8, va="center")
 ax.text(51.5, 0.091, "grpo+teacher ↓", color=MAGENTA, fontsize=8,
         va="center")
-ax.text(51.5, 0.103, "maxrl+teacher", color=BLUE, fontsize=8, va="center")
-ax.annotate("maxrl (running)", xy=(10, 0.0934), xytext=(1, 0.110),
-            color=GRAY, fontsize=8, ha="left", va="center", style="italic",
-            arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
-                            shrinkA=2, shrinkB=3))
+ax.text(51.5, 0.100, "maxrl+teacher", color=BLUE, fontsize=8, va="center")
+ax.text(51.5, 0.109, "maxrl", color=GRAY, fontsize=8, va="center")
 
 # divergence-window annotation
-ax.text(37.5, 0.0655, "divergence window:\nthe identical teacher helps\n"
-        "MaxRL, hurts GRPO", fontsize=8, color=GRAY, ha="center",
-        va="bottom", style="italic")
+ax.text(37.5, 0.0655, "divergence window: only\ngrpo+teacher regresses\n"
+        "(P-G2 ✓); maxrl arms both climb", fontsize=8, color=GRAY,
+        ha="center", va="bottom", style="italic")
 
 ax.set_xlim(-2, 68)
 ax.set_ylim(0.060, 0.128)

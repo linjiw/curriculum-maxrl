@@ -101,11 +101,19 @@ axA.set_title(r"A   $u_N(p) = \mathrm{pass@}N - \mathrm{pass@}1$",
               loc="left")
 
 # ---------------------------------------------------------------- Panel B
+# All three curves are exact expected advantage mass / 2, same
+# convention: sum of |per-rollout coefficients| in each estimator's
+# gradient (MaxRL w_i sums; RLOO/GRPO carry the 1/N prefactor).
+# GRPO exact: (1/N) E[ sqrt(K(N-K)) ], K ~ Bin(N, p).  MC-verified.
+from math import comb
+
 N = 16
-u16 = u(p, N)
-rloo = p * (1 - p)                       # RLOO mass / 2 (Prop. 4)
-grpo_shape = np.sqrt(p * (1 - p))        # GRPO empirical profile shape
-grpo = grpo_shape * (u16.max() / 0.5)    # scaled to same max
+u16 = u(p, N)                            # MaxRL mass / 2 (Prop. 1)
+rloo = p * (1 - p)                       # RLOO mass / 2 (exact)
+grpo = np.zeros_like(p)                  # GRPO mass / 2 (exact finite-N)
+for k in range(1, N):
+    grpo += (comb(N, k) * p**k * (1 - p)**(N - k)
+             * np.sqrt(k * (N - k)) / N)
 
 axB.plot(p, u16, color=BLUE, lw=1.8, ls="-")
 axB.plot(p, rloo, color=GREEN, lw=1.6, ls="--")
@@ -114,17 +122,28 @@ axB.plot(p, grpo, color=MAGENTA, lw=1.6, ls=":")
 # direct labels
 axB.text(0.135, 0.835, "MaxRL ($N$=16)", fontsize=8, color=BLUE,
          ha="left", va="bottom")
-axB.text(0.985, 0.44, "GRPO (inverted\nat extremes)", fontsize=8,
-         color=MAGENTA, ha="right", va="bottom")
-axB.text(0.52, 0.155, "RLOO = learnability ($N$=2 slice)", fontsize=8,
+axB.text(0.42, 0.335, "GRPO (exact, $N$=16)", fontsize=8,
+         color=MAGENTA, ha="center", va="top")
+axB.text(0.50, 0.135, "RLOO = learnability ($N$=2 slice)", fontsize=8,
          color=GREEN, ha="center", va="top")
 
-# ratio annotation near p = 0.05 between blue and green
+# frontier asymmetry: MaxRL >> GRPO at p->0
 p0 = 0.05
 axB.annotate("", xy=(p0, u(p0, N) - 0.015), xytext=(p0, p0 * (1 - p0) + 0.015),
              arrowprops=dict(arrowstyle="<->", lw=0.8, color=GRAY))
-axB.text(0.085, 0.24, r"$\to (N{-}1)\times$ as $p \to 0$",
-         fontsize=8, color=GRAY, ha="left", va="center")
+axB.text(0.078, 0.205, "$\\to (N{-}1)\\times$ RLOO\nas $p \\to 0$",
+         fontsize=7.5, color=GRAY, ha="left", va="center",
+         linespacing=1.15)
+# mastered asymmetry: GRPO > MaxRL at p->1
+p1 = 0.93
+g1 = float(np.interp(p1, p, grpo))
+axB.annotate("$\\sqrt{N{-}1}\\times$ MaxRL's mass\non mastered prompts",
+             xy=(p1, g1), xytext=(0.80, 0.68), fontsize=7.5,
+             color=GRAY, ha="center", va="center", style="italic",
+             linespacing=1.15,
+             arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
+                             connectionstyle="arc3,rad=-0.15",
+                             shrinkA=2, shrinkB=2))
 
 axB.set_xlim(0, 1)
 axB.set_ylim(0, 1.0)
