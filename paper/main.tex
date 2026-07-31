@@ -10,6 +10,7 @@
 \usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
 \usepackage{xcolor}
 \usepackage{enumitem}
+\usepackage{algorithm,algorithmic}
 \setlist{topsep=2pt,itemsep=1pt,leftmargin=1.4em}
 
 \newtheorem{proposition}{Proposition}
@@ -356,18 +357,43 @@ The posterior observes requested-task outcomes only.}
 \end{figure}
 
 \section{FrontierMax: the schedule}\label{sec:method}
-A decayed Beta posterior (decay $0.7$) tracks each prompt's pass rate from
-observed group outcomes only --- never from relabeled successes (violating
-this inflates the posterior: $\hat p$ 0.81 vs.\ eval 0.47). Thompson
-sampling draws $\tilde p$ and samples prompts $\propto u(\tilde p)^\gamma$
-with a 10\% uniform floor; $\gamma\approx 4$ when tasks share skills
-(learning compounds --- validated on chains, and its non-transfer to broad
-pools was predicted in advance by a compounding ODE model), $\gamma=1$
-otherwise. Live groups train with unmodified MaxRL advantages. Honest knob
-inventory: decay, floor, and $\gamma$ exist, with validated defaults; what
-is \emph{derived} rather than tuned is the difficulty band itself ---
-location, width, and $N$-scaling --- which is exactly where competing
-curricula spend their hyperparameters.
+FrontierMax is a standard group-rollout RLVR loop with three modified
+lines (Alg.~\ref{alg:frontiermax}). A decayed Beta posterior (decay
+$0.7$) tracks each prompt's pass rate from observed group outcomes only
+--- never from relabeled successes (violating this inflates the
+posterior: $\hat p$ 0.81 vs.\ eval 0.47). Thompson sampling draws
+$\tilde p$ and samples prompts $\propto u(\tilde p)^\gamma$ with a 10\%
+uniform floor; $\gamma\approx 4$ when tasks share skills (learning
+compounds --- validated on chains, and its non-transfer to broad pools
+was predicted in advance by a compounding model), $\gamma=1$ otherwise.
+Live groups train with unmodified MaxRL advantages. Knob inventory,
+stated plainly: decay, floor, and $\gamma$ exist, with validated
+defaults; what is \emph{derived} rather than tuned is the difficulty
+band itself --- location, width, and $N$-scaling --- which is exactly
+where competing curricula spend their hyperparameters.
+
+\begin{algorithm}[t]
+\caption{FrontierMax: one step. Three lines differ from a standard
+group-rollout loop (marked $\triangleright$).}
+\label{alg:frontiermax}
+\begin{algorithmic}[1]
+\STATE $\triangleright$ \textbf{sample} prompts $x_1..x_B \propto
+  u_N(\tilde p_x)^\gamma$ mixed with a uniform floor, $\tilde p_x \sim
+  \mathrm{Beta}(\alpha_x, \beta_x)$ \hfill(else: uniform)
+\STATE roll out $N$ completions per prompt; verify; $K_x \gets$
+  successes
+\STATE update posterior $(\alpha_x, \beta_x)$ from $(K_x, N)$
+  \emph{for the requested task only}
+\STATE live groups ($1 \le K_x$): MaxRL advantages
+  $w_i = r_i/K - 1/N$, unchanged
+\STATE $\triangleright$ \textbf{dead groups} ($K_x{=}0$): relabel to
+  the achieved sub-goal $g'$ (verified; conditioning rewritten)
+\STATE $\triangleright$ \quad admit the relabel only if
+  $\hat p_{g'} \le$ \texttt{gate\_max\_p} \hfill(the gate: refuse the
+  mastered tail)
+\STATE one policy-gradient step on live $+$ admitted relabeled groups
+\end{algorithmic}
+\end{algorithm}
 
 \section{Failure recycling}\label{sec:recycling}
 
@@ -625,13 +651,14 @@ $< 3{\times}10^{-6}$ for the flag over $10^6$ episodes and
 ${\approx}10^{-13}$ for survive-400 by tail fit --- no budget ignites
 it). The gated full stack under the identical reward reaches
 \textbf{1.000$\pm$0.000 on both official tasks} (3 seeds,
-Fig.~\ref{fig:gym}). Honesty about the dense-reward world: with
-CartPole's native $+1$/step reward, vanilla REINFORCE on the
-\emph{same tile policy} solves survive-400 within this budget
-($0.50$--$0.75$ by 4{,}000 episodes) --- the categorical zero is a
-property of sparse verifier-style reward, which is exactly the RLVR
-setting this rung models; MountainCar's native reward ($-1$/step,
-constant until first success) flatlines policy gradients either way,
+Fig.~\ref{fig:gym}). The dense-reward world, measured rather than
+assumed (prediction registered before the run): with CartPole's native
+$+1$/step reward, vanilla REINFORCE on the \emph{same tile policy}
+solves survive-400 ($0.96{\pm}0.03$ at plateau, 3 seeds) --- the
+categorical zero is a property of sparse verifier-style reward, which
+is exactly the RLVR setting this rung models; with MountainCar's
+native reward ($-1$/step, constant until first success) the same
+dense baseline stays at $0.000$ in all seeds over its full budget,
 which is why it is \emph{the} hard-exploration classic. Attribution
 within the sparse setting, three rungs at a common 280-step horizon
 (hard-task AUC): uniform-over-bins task spread gets most of the way

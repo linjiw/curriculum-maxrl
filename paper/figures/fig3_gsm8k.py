@@ -38,13 +38,15 @@ plt.rcParams.update({
 
 fig, ax = plt.subplots(figsize=(3.5, 2.8))
 
+# palette freeze (paper-wide): hue = estimator (GRPO magenta, MaxRL
+# blue); line style = intervention (uniform solid, +teacher dashed)
 steps = [0, 25, 50]
 series = [
     # (label, steps, values, color, linestyle)
-    ("grpo",           steps,    [0.078, 0.105, 0.120], GREEN,   "-"),
+    ("grpo",           steps,    [0.078, 0.105, 0.120], MAGENTA, "-"),
     ("grpo+teacher",   steps,    [0.072, 0.096, 0.093], MAGENTA, "--"),
-    ("maxrl+teacher",  steps,    [0.066, 0.099, 0.102], BLUE,    "-"),
-    ("maxrl",          steps,    [0.091, 0.097, 0.108], GRAY,    ":"),
+    ("maxrl",          steps,    [0.091, 0.097, 0.108], BLUE,    "-"),
+    ("maxrl+teacher",  steps,    [0.066, 0.099, 0.102], BLUE,    "--"),
 ]
 
 # divergence window shading (behind everything)
@@ -55,11 +57,11 @@ for label, xs, ys, color, ls in series:
             zorder=3, solid_capstyle="round")
 
 # direct labels at line ends
-ax.text(51.5, 0.121, "grpo", color=GREEN, fontsize=8, va="center")
+ax.text(51.5, 0.121, "grpo", color=MAGENTA, fontsize=8, va="center")
 ax.text(51.5, 0.091, "grpo+teacher ↓", color=MAGENTA, fontsize=8,
         va="center")
 ax.text(51.5, 0.100, "maxrl+teacher", color=BLUE, fontsize=8, va="center")
-ax.text(51.5, 0.109, "maxrl", color=GRAY, fontsize=8, va="center")
+ax.text(51.5, 0.109, "maxrl", color=BLUE, fontsize=8, va="center")
 
 # divergence-window annotation
 ax.text(37.5, 0.0655, "divergence window: only\ngrpo+teacher regresses\n"

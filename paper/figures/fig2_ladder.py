@@ -83,9 +83,11 @@ axa.set_ylabel("AUC")
 axa.set_title("(a) Skill chain (5 seeds)", loc="left", fontsize=9)
 
 # ------------------------------------------------- (b) frontier-heavy
+# palette freeze: magenta is reserved for GRPO-the-estimator; DAPO is a
+# baseline sampler here (all arms MaxRL), so it gets gray
 vals_b = [0.0, 0.0, 0.0, 0.93]
 labels_b = ["uniform", "DAPO", "teacher", "+recycling"]
-colors_b = [GREEN, MAGENTA, BLUE, ORANGE]
+colors_b = [GREEN, GRAY, BLUE, ORANGE]
 # 0.006-tall stubs so the zero bars still show their category color
 axb.bar(range(4), [max(v, 0.006) for v in vals_b], color=colors_b, **BAR_KW)
 for i, v in enumerate(vals_b):
