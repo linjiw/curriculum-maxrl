@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  31 JUL 2026 16:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  31 JUL 2026 20:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -512,36 +512,36 @@ File: figures/fig1_utility.pdf Graphic file (type pdf)
 Package pdftex.def Info: figures/fig1_utility.pdf  used on input line 204.
 (pdftex.def)             Requested size: 469.75502pt x 174.48326pt.
  [3 <./figures/fig1_utility.pdf>]
-<figures/fig4_algorithm.pdf, id=151, 505.89pt x 231.26399pt>
+<figures/fig4_algorithm.pdf, id=152, 505.89pt x 231.26399pt>
 File: figures/fig4_algorithm.pdf Graphic file (type pdf)
 <use figures/fig4_algorithm.pdf>
 Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 334.
 (pdftex.def)             Requested size: 469.75502pt x 214.74863pt.
  [4]
-<figures/fig5_channels.pdf, id=165, 252.945pt x 216.81pt>
+<figures/fig5_channels.pdf, id=167, 252.945pt x 216.81pt>
 File: figures/fig5_channels.pdf Graphic file (type pdf)
 <use figures/fig5_channels.pdf>
 Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 400.
 (pdftex.def)             Requested size: 291.2458pt x 249.64383pt.
  [5 <./figures/fig4_algorithm.pdf>]
-<figures/fig2_ladder.pdf, id=202, 505.89pt x 202.356pt>
+<figures/fig2_ladder.pdf, id=204, 505.89pt x 202.356pt>
 File: figures/fig2_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ladder.pdf>
 Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 420.
 (pdftex.def)             Requested size: 469.75502pt x 187.90506pt.
  [6 <./figures/fig5_channels.pdf>] [7 <./figures/fig2_ladder.pdf>]
-<figures/fig6_gym.pdf, id=268, 505.89pt x 202.356pt>
+<figures/fig6_gym.pdf, id=270, 505.89pt x 202.356pt>
 File: figures/fig6_gym.pdf Graphic file (type pdf)
 <use figures/fig6_gym.pdf>
 Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 523.
 (pdftex.def)             Requested size: 469.75502pt x 187.90506pt.
-<figures/fig3_gsm8k.pdf, id=269, 252.945pt x 202.356pt>
+<figures/fig3_gsm8k.pdf, id=271, 252.945pt x 202.356pt>
 File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
 <use figures/fig3_gsm8k.pdf>
 Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 538.
 (pdftex.def)             Requested size: 258.36668pt x 206.6968pt.
  [8 <./figures/fig6_gym.pdf>]
-<figures/fig7_sharpening.pdf, id=304, 505.89pt x 202.356pt>
+<figures/fig7_sharpening.pdf, id=306, 505.89pt x 202.356pt>
 File: figures/fig7_sharpening.pdf Graphic file (type pdf)
 <use figures/fig7_sharpening.pdf>
 Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 585.
@@ -552,10 +552,10 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 48A4EF3E0DB1C19ACC15DE288B7EF19E;1578.
  ) 
 Here is how much of TeX's memory you used:
- 12781 strings out of 480806
- 187001 string characters out of 5905151
- 538670 words of memory out of 6000000
- 29612 multiletter control sequences out of 15000+600000
+ 12785 strings out of 480806
+ 187042 string characters out of 5905151
+ 538709 words of memory out of 6000000
+ 29615 multiletter control sequences out of 15000+600000
  426610 words of font info for 226 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,9n,63p,1169b,503s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -584,10 +584,10 @@ tt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pf
 b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb
 ></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/
 share/texlive/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb>
-Output written on main.pdf (12 pages, 548778 bytes).
+Output written on main.pdf (12 pages, 548988 bytes).
 PDF statistics:
- 486 PDF objects out of 1000 (max. 8388607)
- 359 compressed objects within 4 object streams
- 68 named destinations out of 1000 (max. 500000)
+ 488 PDF objects out of 1000 (max. 8388607)
+ 361 compressed objects within 4 object streams
+ 69 named destinations out of 1000 (max. 500000)
  45164 words of extra memory for PDF output out of 51595 (max. 10000000)
 
