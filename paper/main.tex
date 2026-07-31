@@ -477,9 +477,59 @@ factorial (interaction) question this suite is not powered for; the
 GSM8K $2{\times}2$ below tests exactly that cell, pre-registered.
 Inference currency: $1.2\times/2.7\times/\mathbf{11\times}$ fewer
 samples than GRPO to reach target coverage at levels 2/3/5 (honest
-$0.5\times$ reversal at level 4).
-\takeaway{The gains survive real gradients; the estimator main effect
-on coverage is real; coverage is the currency that sees both.}
+$0.5\times$ reversal at level 4); on the final uniform-teacher
+checkpoints the two estimators' summed coverage curves cross at
+$k{\approx}4$ --- GRPO ahead at $\passat{1}$ (3.24 vs.\ 3.07 summed
+over L0--6), MaxRL ahead from $k{=}4$ on and by half a level at
+$k{=}64$ (5.12 vs.\ 4.62; single checkpoint pair) --- choose the
+estimator by how many samples you will draw at inference.
+
+\paragraph{7.3b Where and when the coverage goes (level-resolved).}
+Decomposing the main effect by difficulty band turns it into a
+mechanism (Fig.~\ref{fig:bands}). \emph{Where:} GRPO's $\passat{8}$
+loss is concentrated almost entirely on the easy/mid band L1--3
+($-.224$ mean over its four runs, every run negative) while its L1--3
+$\passat{1}$ \emph{rises} ($+.02$ to $+.14$, every run) --- it funds
+reliability by liquidating easy-band coverage; MaxRL holds L1--3 flat
+($+.005{\pm}.058$ over 18 runs) and concentrates its gain on the
+frontier band L4--6 ($+.126{\pm}.063$ vs.\ GRPO's $+.057$). The band
+asymmetry is exact-permutation $p{=}0.0001$. This is the observable
+consequence of the mass curves in Fig.~\ref{fig:utility}: the
+$\sqrt{K(N{-}K)}$ weighting keeps spending updates on mastered prompts
+(sharpening them), where $u_N$ has already released them.
+\emph{When:} the divergence is immediate, not saturation-triggered ---
+GRPO incurs 59--73\% of its total diversity-premium loss
+($\overline{\passat{8}-\passat{1}}$: $.123\to.042$) within the first
+quarter of the budget, with the first easy-band $\passat{8}$ drop
+visible at steps 0--50 when L1 $\passat{1}$ is still only $.62$--$.75$;
+MaxRL's premium stabilizes after warmup ($.122\to.101$). A
+dose-response note on recycling from the same logs: sparse relabeling
+(1/dead group) is the only variant that preserves the diversity premium
+($\Delta$gap $-.005{\pm}.009$ vs.\ $-.030$ for both no-recycling and
+dense; exact $p{=}0.007/0.008$), while dense banks the same coverage as
+sparse into the best final $\passat{1}$ --- on the maze, dose sets
+where the coverage dividend is spent, not whether coverage is lost
+(final $\passat{8}$ across doses: null, $p{=}0.39$).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig8_bands}
+\caption{\textbf{Where and when GRPO's coverage goes (maze,
+level-resolved, matched wall-clock).} \emph{(a)} $\Delta \passat{8}$
+(final $-$ warmstart) by difficulty band: GRPO's loss lives on the
+easy/mid band (all 4 runs; dots are runs) while its $\passat{1}$ there
+rises --- sharpening; MaxRL holds the easy band and gains on the
+frontier band (18 runs; band asymmetry exact permutation
+$p{=}0.0001$). \emph{(b)} Diversity premium
+$\overline{\passat{8}-\passat{1}}$ vs.\ wall-clock (mean and min--max
+across runs): GRPO's erosion begins within the first ${\sim}25$--$50$
+steps, before any level saturates; MaxRL stabilizes after warmup.}
+\label{fig:bands}
+\end{figure}
+\takeaway{The gains survive real gradients, and the coverage main
+effect now has a located mechanism: GRPO liquidates easy-band coverage
+for reliability from the first updates; MaxRL reallocates the same
+budget to the frontier. Coverage is the currency that sees it.}
 
 \paragraph{7.4a Legged locomotion (IsaacLab, pre-registered honest
 null).} A 5-arm pilot on Anymal-C rough terrain (frontier teacher vs.\
