@@ -665,7 +665,26 @@ real difficulty from ${\sim}1$ visit per prompt ($\rho = -0.17$ against
 independent 7B-model solve-rate annotations, $p\approx 10^{-17}$) but
 its allocation is \emph{posterior-starved} --- 3{,}200 draws over
 7{,}473 prompts leave Thompson sampling near-uniform, and seed 2 shows
-that starvation can neutralize the treatment itself. Small model; the
+that starvation can neutralize the treatment itself. Two posterior
+diagnostics sharpen this. \emph{The map is real:} two independent
+teacher runs' posteriors agree with each other (cross-run Spearman
+${\approx}.45$ on co-visited prompts, $n{\approx}900$, $\approx.67$
+self-consistency with a shared latent) three times better than either
+agrees with external 7B-model difficulty annotations ($.10$--$.22$) ---
+the teacher learns \emph{this model's} difficulty landscape, reliably,
+from ${\sim}1.25$ visits per prompt; the published $\rho{=}-0.17$
+against the 7B key understates what the posterior knows.
+\emph{But it is compressed:} across external-difficulty quintiles
+spanning solve rates $.33 \to .98$, mean $\hat p$ moves only
+$.076 \to .103$ --- Thompson sampling sees a nearly flat utility
+landscape, which \emph{is} the allocation-starvation mechanism. A
+sharpening note in a different currency: response length separates the
+runs by estimator, perfectly --- all three GRPO runs compress to
+$209.6{\pm}1.8$ tokens while both MaxRL runs sit at $232.4{\pm}5.7$
+(common ${\sim}365$-token warmstart; the teacher moves length $\le 3$
+tokens): the estimator, not the curriculum, sets how hard the policy
+templates its outputs, visible even where token entropy is ambiguous.
+Small model; the
 pre-registered outcomes were orderings and signs on the registered run.
 \takeaway{The maze main effect stands on nine runs; the LLM-scale
 interaction is 1-of-2-seeds and tracks steering intensity --- the
@@ -718,10 +737,33 @@ seeds, pre-registered).} We rebuilt the pool with real structure
 (random operand permutation, parenthesization, exact division; a
 headroom gate excluded guesser-saturated tiers) and ran three arms
 $\times$ three seeds: no recycling (B1), ungated recycling (B2), gated
-recycling (B3). \textbf{Sharpening replicates:} at tier 1, recycling
+recycling (B3). Setup note with a theory reading: recycling has a
+\emph{syntactic prerequisite} --- the pre-SFT base model produces zero
+verifier-valid failures (relabel yield $0.000$, $n{=}384$), so there is
+nothing to recycle until SFT installs the output format; post-SFT the
+model is a near-independent guesser whose $\passat{16}$ sits at a
+tier-invariant ${\sim}75\%$ of the independence bound
+$1-(1-\passat{1})^{16}$ (ratios $.744/.783/.755$ across tiers) --- the
+baseline our headroom gate measures against. \textbf{Sharpening
+replicates:} at tier 1, recycling
 buys mean@16 $+.046$ ($.278{\pm}.054 \to .324{\pm}.012$) and pays
 $-.049$ of $\passat{16}$ ($.541{\pm}.020 \to .492{\pm}.011$), both
 outside seed noise; the frontier tier moves the same direction.
+\textbf{The timing is dose-then-damage:} recycling's frontier-tier mean
+gain is installed by step 30 --- $+.014{\pm}.008$ paired, all seeds
+positive, at only ${\sim}28\%$ of the eventual relabel dose --- while
+the coverage cost only materializes by step 45 ($-.048{\pm}.019$
+paired, \emph{all seeds negative}, after ${\sim}65\%$ of dose): the
+benefit precedes the damage, so early-stopping on mean-accuracy
+validation would bank the gain and never see the bill. The damage is
+also visible on the training side: the ungated arm ends with more
+unsolvable-at-16 frontier training prompts than baseline in every seed
+(paired $+.083/+.063/+.034$). And the 3-seed entropy read sharpens the single-seed one: the
+\emph{gate's} entropy retention replicates ($+.072$ paired over
+baseline, all seeds positive, ${\sim}1.6\times$), while ungated
+recycling makes entropy \emph{seed-unstable} (endpoint spread
+$\pm.062$, $4$--$9\times$ the other arms') --- consistent with its
+noisy frontier-coverage endpoints.
 \textbf{The gate works where the algebra says it should:} at the
 frontier tier (destinations not yet saturated) the gated arm returns
 coverage to baseline ($.279{\pm}.019$ vs.\ $.274{\pm}.015$) while
