@@ -185,10 +185,11 @@ Taking that sentence literally produces this paper. Our contributions:
   fresh groups), biased otherwise, with two contracts whose violation we
   price and a dose-vs-direction decomposition of the gain.
 \item \textbf{A three-channel account with a safety rule}
-  (\S\ref{sec:channels}--\ref{sec:experiments}): allocation is bounded by
-  an oracle ceiling; creation breaks it; the objective underneath decides
-  whether either is safe --- confirmed at LLM scale on a pre-registered
-  prediction.
+  (\S\ref{sec:channels}--\ref{sec:experiments}): allocation saturates
+  (a matched true-pass-rate oracle ties the cheap posterior); creation
+  is the channel that still adds on top of the oracle; the objective
+  underneath decides whether either is safe --- confirmed at LLM scale
+  on a pre-registered prediction.
 \item \textbf{An honest evidence discipline}: pre-registered predictions,
   documented negatives with diagnoses, one retraction, and a two-round
   adversarial audit tracing every number to a log or proof.
