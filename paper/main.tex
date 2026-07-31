@@ -49,9 +49,12 @@ estimator-conditioned divergence we then measure: across a
 1.26M-parameter maze suite spanning four teacher conditions, every
 MaxRL run grows $\passat{k}$ coverage and every GRPO run loses it ---
 an estimator main effect on coverage (permutation $p{=}0.0079$, nine
-runs, zero exceptions) --- and a pre-registered LLM-scale $2{\times}2$
-on GSM8K lands the predicted sign: GRPO+teacher is the only cell whose
-accuracy regresses. Recycling, we find,
+runs, zero exceptions). A pre-registered LLM-scale $2{\times}2$ on
+GSM8K landed the predicted sign on its registered run --- GRPO+teacher
+the only regressing cell --- while a replication seed with weaker
+measured steering did not reproduce it: the interaction at LLM scale is
+treatment-intensity-dependent and not yet established, a status we
+report as measured. Recycling, we find,
 has its own failure mode, previously unreported: on Countdown arithmetic
 with an exact-verifier relabeler running in production, hindsight arms
 improve mean@16 while \emph{losing} $\passat{16}$ coverage ---
@@ -125,7 +128,8 @@ on the maze, every MaxRL run grows $\passat{8}$ coverage and every GRPO
 run loses it, across four teacher conditions (estimator main effect,
 permutation $p{=}0.0079$, nine runs, zero exceptions); on GSM8K, the
 pre-registered prediction that GRPO+teacher would be the only regressing
-cell landed exactly.
+cell landed on the registered run, and a replication seed with weaker
+measured steering did not reproduce it (\S 7.5 reports both).
 And recycling has its own, previously unreported failure mode:
 \textbf{recycling-induced sharpening} --- exact-verifier relabeling
 improves mean accuracy while \emph{losing} $\passat{k}$ coverage
@@ -419,9 +423,10 @@ floor-and-$\gamma$-matched true-pass-rate oracle \emph{ties} the full
 stack --- allocation saturates --- and recycling still adds on top of
 the oracle. (b) Frontier-heavy regime: allocation scores exactly zero;
 creation solves it. (c) Maze at matched wall-clock: 6/6 paired seed
-wins. (d) GSM8K $2{\times}2$ (complete): GRPO+teacher is the only cell
-that regresses (pre-registered P-G2); the teacher's MaxRL effect is a
-null at this budget (P-G1).}
+wins. (d) GSM8K $2{\times}2$, registered run: GRPO+teacher is the only
+cell that regresses (pre-registered P-G2; a replication seed did not
+reproduce it --- \S 7.5); the teacher's MaxRL effect is a null at this
+budget (P-G1).}
 \label{fig:ladder}
 \end{figure}
 
@@ -531,42 +536,49 @@ to $1.000{\pm}0.000$.}
 \begin{figure}[t!]
 \centering
 \includegraphics[width=0.55\linewidth]{figures/fig3_gsm8k}
-\caption{\textbf{GSM8K $2{\times}2$ (pre-registered, complete).}
-GRPO+teacher is the only cell that regresses in its second half (P-G2
-confirmed); under MaxRL the identical teacher trains stably to its best
-value but does not beat uniform at this budget (P-G1: null) --- the
-safety sign flips with the estimator, the gain does not appear at 50
-steps.}
+\caption{\textbf{GSM8K $2{\times}2$ (pre-registered; registered run
+shown).} GRPO+teacher is the only cell that regresses in its second
+half (P-G2 on this run; a replication seed with weaker measured
+steering climbed instead --- \S 7.5); under MaxRL the identical teacher
+trains stably to its best value but does not beat uniform at this
+budget (P-G1: null).}
 \label{fig:gsm8k}
 \end{figure}
 
 \paragraph{7.5 LLM scale: GSM8K $2{\times}2$, pre-registered
 (SmolLM2-360M, $N{=}16$, one A10G).} Predictions committed before any cell
-finished. \textbf{P-G2, the riskiest prediction, confirmed:} GRPO+teacher
-is the only cell that regresses in its second half (val accuracy
-$.096\to.093$, $\passat{4}$ $.193\to.181$) while plain GRPO climbs
+finished. \textbf{P-G2 landed on the registered run:} GRPO+teacher
+was the only cell that regressed in its second half (val accuracy
+$.096\to.093$, $\passat{4}$ $.193\to.181$) while plain GRPO climbed
 monotonically ($.078\to.105\to.120$) --- with the teacher verifiably
 steering (sampled-dead fraction driven to 0.48 vs.\ the ${\sim}0.65$
-population rate). MaxRL+teacher trains stably to its best value
+population rate). \textbf{A replication seed does not reproduce the
+regression:} seed 2 of the same cell climbs monotonically
+($.073\to.095\to.118$), and its steering telemetry shows the treatment
+was weaker (min dead-sampled fraction $.53$, mean $.66 \approx$
+population --- a near-uniform teacher on average). The pattern is
+mechanistically consistent --- damage tracks steering intensity, and
+seed 2's final $\passat{4}$ ($.203$) still sits below uniform GRPO's
+($.229$) --- but the honest status of the LLM-scale interaction is
+\emph{1 of 2 seeds, treatment-intensity-dependent}: suggestive, not
+established. MaxRL+teacher trains stably to its best value
 ($.066\to.102$); the uniform-MaxRL cell finishes at $.108$, making
 P-G1 (a teacher gain for MaxRL) an honest \emph{null at this budget} ---
 predicted in advance by the posterior-starvation analysis below. A
-$\passat{k}$ sweep on the final checkpoints sharpens the safety read: the
-teacher's deficit under GRPO \emph{widens monotonically with $k$}
-($-.008$ at $k{=}1$ to $-.024$ at $k{=}16$) --- curriculum damage lives in
-coverage, as the maze predicted, though each individual delta is within
-single-seed noise. Beyond the predictions: the teacher's posterior
-\emph{learns} real difficulty from ${\sim}1$ visit per prompt
-($\rho = -0.17$ against independent 7B-model solve-rate annotations,
-$p\approx 10^{-17}$) but its allocation is \emph{posterior-starved} ---
-3{,}200 draws over 7{,}473 prompts leave Thompson sampling near-uniform.
-And the GRPO degradation is not token-entropy collapse (GRPO+teacher
-retains \emph{more} entropy): the damage is distributional, visible only
-in coverage. Single seed; small model; the pre-registered outcomes were
-orderings and signs, and both landed.
-\takeaway{The safety half of the thesis transfers to LLM RLVR; the
-allocation half needs tiers or longer runs --- which is how the next
-experiment is designed.}
+$\passat{k}$ sweep on the registered checkpoints: the teacher's deficit
+under GRPO \emph{widens monotonically with $k$} ($-.008$ at $k{=}1$ to
+$-.024$ at $k{=}16$) --- curriculum damage lives in coverage, as the
+maze predicted, though each individual delta is within single-seed
+noise. Beyond the predictions: the teacher's posterior \emph{learns}
+real difficulty from ${\sim}1$ visit per prompt ($\rho = -0.17$ against
+independent 7B-model solve-rate annotations, $p\approx 10^{-17}$) but
+its allocation is \emph{posterior-starved} --- 3{,}200 draws over
+7{,}473 prompts leave Thompson sampling near-uniform, and seed 2 shows
+that starvation can neutralize the treatment itself. Small model; the
+pre-registered outcomes were orderings and signs on the registered run.
+\takeaway{The maze main effect stands on nine runs; the LLM-scale
+interaction is 1-of-2-seeds and tracks steering intensity --- the
+decisive experiment is a steering-controlled multi-seed cell, queued.}
 
 \begin{figure}[t]
 \centering
@@ -692,15 +704,17 @@ oracle'' claim was retracted when a floor-handicap was found in the
 oracle arm (\S 7.1 reports the corrected tie). Recycled-gradient
 exactness is a property of the environment's relabel map; noisier
 verifiers will land between our $+0.22$ (fixed pools) and $+0.01$
-(one-shot) endpoints. Countdown results are 3-seed; GSM8K is
-single-seed at 360M (a second seed of the critical GRPO+teacher cell is
-in flight) and its teacher is coverage-neutral-to-negative under
-\emph{both} estimators at this budget --- the estimator contrast there
-is about the sign of the mean-accuracy effect, not a coverage rescue.
-The maze safety analysis established an estimator main effect; the
-teacher$\times$estimator interaction at scale rests on the
-pre-registered GSM8K cell and needs multi-seed replication before it is
-more than that.
+(one-shot) endpoints. Countdown results are 3-seed. On GSM8K the
+replication seed of the critical GRPO+teacher cell did \emph{not}
+reproduce the registered regression, with measurably weaker steering
+(\S 7.5) --- so the LLM-scale teacher$\times$estimator interaction is
+1-of-2 seeds and treatment-intensity-dependent, and we do not claim it
+as established; the GSM8K teacher is also coverage-neutral-to-negative
+under \emph{both} estimators at this budget, so the contrast there is
+about the sign of the mean-accuracy effect, not a coverage rescue. The
+maze estimator main effect (nine runs, zero exceptions) is the safety
+result this paper stands on; a steering-controlled multi-seed LLM cell
+is the decisive next experiment.
 
 \section*{Reproducibility}
 Every proposition has a Monte-Carlo verification script; every figure

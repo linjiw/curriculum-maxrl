@@ -206,9 +206,10 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     <p style="margin:0">
     <strong>Gym, trained to convergence:</strong> standard RL 0.000 on MountainCar's flag and
     CartPole's survive-400 — the gated stack <strong>1.000±0.000 on both</strong> (60×/13×).
-    &nbsp;·&nbsp; <strong>Safety, pre-registered:</strong> the identical teacher is stable under
-    MaxRL and regresses under GRPO — the only regressing cell in the GSM8K 2×2; on the maze, every
-    MaxRL run grows coverage and every GRPO run loses it (permutation p=0.0079, zero exceptions).
+    &nbsp;·&nbsp; <strong>Safety, pre-registered:</strong> on the maze, every MaxRL run grows
+    coverage and every GRPO run loses it (9 runs, permutation p=0.0079, zero exceptions). On
+    GSM8K the registered run landed the predicted sign (GRPO+teacher the only regressing cell);
+    a replication seed with weaker measured steering did not reproduce it — reported as measured.
     &nbsp;·&nbsp; <strong>Sharpening + the gate:</strong> recycling trades coverage for accuracy
     (3 seeds, outside noise); the utility gate restores coverage keeping ~60% of the gain — and
     the gate threshold traces a mean-vs-coverage dial.</p>
@@ -658,8 +659,8 @@ interface contract in <code>frontier_rl</code>.</p>
         <td>AUC tie with dense hindsight but worse final; posterior inflates (p̂ 0.81 vs eval 0.47) — dropped; posterior sees requested-task evidence only</td>
         <td class="num"><span class="status no">✗ dropped</span></td></tr>
     <tr><td>SmolLM2-360M + GSM8K, curriculum × {maxrl, grpo}</td>
-        <td>2×2 RAN on one A10G — <a href="#gsm8k">section 4b</a>: P-G2 (H6-at-LLM-scale) confirmed on a pre-registered prediction</td>
-        <td class="num"><span class="status ok">✓ 3/4 cells done</span></td></tr>
+        <td>2×2 complete + replication seed — <a href="#gsm8k">section 4b</a>: P-G2 landed on the registered run; seed 2 (weaker measured steering) did not reproduce it</td>
+        <td class="num"><span class="status run">◐ 1 of 2 seeds</span></td></tr>
   </tbody>
 </table>
 
@@ -678,7 +679,7 @@ cleanly and pre-registers its predictions before any cell finishes:</p>
     <tr><td><strong>E-LLM-1 · GSM8K 2×2</strong><br><span class="mono">{maxrl,grpo}×{teacher,uniform}</span></td>
         <td>Do channels 1 and 3 transfer to LLM RLVR? Is a curriculum SAFE under GRPO's normalized weights, and does waste-avoidance help MaxRL?</td>
         <td>P-G2: grpo+teacher does <em>not</em> beat grpo (the maze H6 reversal). P-G1: modest teacher gain for MaxRL. P-G5: small absolute deltas — the <em>ordering</em> is the outcome.</td>
-        <td><span class="status ok">✓ P-G2 confirmed</span></td></tr>
+        <td><span class="status run">◐ P-G2 on registered run; replication seed did not reproduce (weaker steering)</span></td></tr>
     <tr><td><strong>E-LLM-2 · Countdown 2×2</strong><br><span class="mono">+{hindsight,none}</span></td>
         <td>Channel 2 at LLM scale: a failed equation still <em>evaluates to some value v</em> — relabel target := v and the same verifier certifies a true success. Does exact-verifier recycling ignite tiers no sampler can reach?</td>
         <td>Hindsight-on ignites the hard tiers; relabels decay after ignition.</td>
@@ -706,20 +707,25 @@ trajectory; the story is the <em>divergence after step 25</em>:</p>
     <canvas id="gsmChart" width="880" height="360" style="width:100%; max-width:880px"></canvas>
     <div id="gsmTip" style="position:absolute; display:none; pointer-events:none; background:var(--surface-1); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:0.8rem"></div>
   </div>
-  <figcaption>GSM8K 2×2, validation trajectory (0 → 25 → 50 steps). GRPO alone climbs
-  monotonically; GRPO+teacher — the only cell that worsens after step 25 — reproduces the
-  maze's H6 reversal exactly as pre-registered (P-G2). MaxRL+teacher trains stably to its
-  best value. Single seed; deltas are small at 50 steps × 360M — the <em>sign pattern</em>,
-  not the magnitudes, is the pre-registered outcome. Data: <span class="mono">GSM8K_ANALYSIS.md</span>.</figcaption>
+  <figcaption>GSM8K 2×2, validation trajectory (0 → 25 → 50 steps; registered run shown).
+  GRPO alone climbs monotonically; GRPO+teacher — the only cell that worsens after step 25 —
+  landed the pre-registered sign (P-G2). <strong>Replication status, reported as measured:</strong>
+  a second seed of the grpo+teacher cell climbed instead (.073→.095→.118), with measurably
+  weaker steering (min dead-sampled fraction .53 vs seed 1's .48; mean ≈ population) — the
+  LLM-scale interaction is 1-of-2 seeds and treatment-intensity-dependent. The maze estimator
+  main effect (9 runs, p=0.0079) is unaffected. Data: <span class="mono">GSM8K_ANALYSIS.md</span>
+  Findings 1 &amp; 6.</figcaption>
 </figure>
 
 <div class="grid2">
-  <div class="card"><h3>What confirmed</h3>
-  <p><strong>P-G2, the riskiest prediction.</strong> grpo+teacher regressed .096→.093
-  (pass@4 .193→.181) in its second half while grpo gained .105→.120. A curriculum removed
-  the easy-prompt maintenance GRPO's inverted weighting was providing — at LLM scale, same
-  as the maze. The teacher was verifiably live: it drove the sampled-dead fraction to 0.48
-  vs the ~0.65 population rate.</p></div>
+  <div class="card"><h3>What the registered run showed — and the replication</h3>
+  <p><strong>P-G2 on the registered run:</strong> grpo+teacher regressed .096→.093
+  (pass@4 .193→.181) in its second half while grpo gained .105→.120, with the teacher
+  verifiably steering (dead-sampled fraction driven to 0.48 vs ~0.65 population).
+  <strong>Seed 2 did not reproduce the regression</strong> (.073→.095→.118) — and its
+  telemetry shows why it can't count as a clean test either way: steering was near-uniform
+  on average (mean dead fraction .66 ≈ population). Damage tracks steering intensity;
+  the decisive experiment is a steering-controlled multi-seed cell.</p></div>
   <div class="card"><h3>What we learned beyond the predictions</h3>
   <p><strong>The teacher's two sub-channels separate.</strong> Its posterior learned real
   difficulty (p̂ vs external 7B-model annotations: ρ=−0.17, p≈10⁻¹⁷) but its allocation

@@ -106,6 +106,41 @@ no coverage rescue either. At 50 steps × 7.5k prompts, channel 1 does not
 pay at the prompt level. The H6 safety result (Finding 1) is unaffected
 and remains the experiment's headline.
 
+## Finding 6 — Seed-2 replication of the GRPO+teacher cell: the regression does NOT reproduce (2026-07-31)
+
+The H6 completion seed (grpo+teacher, data.seed=2, 50 steps, identical
+config; ckpt `grpo_curtrue_s2`) climbed monotonically:
+
+| seed | step 0 | step 25 | step 50 | second half |
+|---|---|---|---|---|
+| 1 (registered) | .072/.151 | .096/.193 | .093/.181 | **regressed** |
+| 2 (replication) | .073/.150 | .095/.188 | .118/.203 | **climbed** |
+
+Read honestly, three facts:
+
+1. **P-G2's regression signature is not seed-stable.** The pre-registered
+   outcome landed on the registered run; the replication seed shows no
+   second-half decline and ends at mean parity with seed-1 uniform grpo
+   (.118 vs .120).
+2. **The treatment was weaker in seed 2.** Steering telemetry:
+   min dead-sampled fraction 0.531 (seed 1: 0.48), mean 0.656 ≈ the 0.65
+   population rate — the teacher was near-uniform on average this seed
+   (posterior starvation + a different dataloader order). A near-null
+   treatment cannot damage; mechanistically consistent with
+   "steering causes the damage," but as evidence it means seed 2 did not
+   fully administer the treatment. We state this as observed telemetry,
+   not as an excuse: pre-registration binds us to report the miss.
+3. **The coverage direction survives:** seed-2 final pass@4 .203 remains
+   below uniform grpo's .229 (cross-seed comparison; same direction as
+   Finding 5's monotone k-widening deficit).
+
+**Verdict for the paper:** the LLM-scale teacher×estimator interaction is
+demoted from "confirmed" to "1 of 2 seeds, treatment-intensity-dependent
+— suggestive, not established." The maze estimator main effect (9 runs,
+p=0.0079) is unaffected. Entropy note: seed-2 ended at 0.652 vs seed-1
+grpo+teacher's 0.765 — the entropy-retention observation is also
+seed-variable.
+
 ## Finding 5 — k-sweep: the teacher's GRPO damage grows with k (P-G3, directional)
 
 Final checkpoints, vllm, n=16 samples on the 256-row slice, unbiased
