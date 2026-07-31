@@ -65,8 +65,9 @@ coverage, the currency in which both failure modes are visible.
 Post-training language models and control policies with verifiable
 rewards has a cost structure unlike supervised learning: the data is
 free, but \emph{rollouts} are not. Every optimization step is preceded by
-sampling $N$ completions per task, generation dominates wall-clock (87\%
-of step time, measured across our GSM8K runs), and on hard task pools most of that
+sampling $N$ completions per task, generation dominates wall-clock (85\%
+of step time, averaged over 272 logged steps across our GSM8K sessions;
+telemetry committed), and on hard task pools most of that
 compute buys nothing --- under uniform sampling we measure that
 \textbf{65--75\% of rollout groups produce zero learning signal}: either
 every rollout fails (the group is dropped by success-conditioned
@@ -407,14 +408,19 @@ and is otherwise a distribution-shifted (biased) estimate of it.
 \end{proposition}
 \begin{interp}
 So ``exactness'' is a property to \emph{measure per environment}, not a
-blanket guarantee. Where we validated it, the laws match by construction
-(prompt-independent skill execution) and the measurement agrees:
-per-group cosine to the true relabeled-task gradient 0.956, vs.\ 0.958
-for fresh unbiased groups. In Countdown the relabel keeps the
-trajectory's own achieved value --- the shift enters only through which
-expressions get attempted for which targets --- and the verified-success
-guarantee (contract 1) holds regardless. What the shift costs
-in general is an open, environment-specific question.
+blanket guarantee. On our validation testbed the laws match by
+construction (prompt-independent skill execution), so cosine probes
+there are consistency checks, not evidence --- internal review showed
+several null relabeling schemes produce the same cosines on that
+testbed, and we do not cite them as support. The evidence that the
+relabel \emph{direction} carries information is behavioral instead:
+the placebo decomposition of \S 6.1 ($+0.037$ beyond dose-matched
+replay, the tightest arm in the battery; random-target relabels lose
+to replay 5/5 seeds). In Countdown the relabel keeps the trajectory's
+own achieved value --- the shift enters only through which expressions
+get attempted for which targets --- and the verified-success guarantee
+(contract 1) holds regardless. What the shift costs in general is an
+open, environment-specific question.
 \end{interp}
 
 Two contracts keep practice on the proof's side: \textbf{(1) exactness} ---
@@ -471,7 +477,7 @@ rung & question & setting & seeds & outcome \\
 \midrule
 6.1 & does allocation saturate? & skill chain (exact grads) & 5 &
 yes: oracle ties posterior \\
-6.2 & anything to sample toward? & frontier-heavy pool & 3 &
+6.2 & anything to sample toward? & frontier-heavy pool & 5 &
 no: only creation scores \\
 6.3 & main effect, real gradients? & maze transformer, 1.26M & 9 runs &
 yes: 9/9, $p{=}0.0079$ \\
@@ -498,11 +504,13 @@ yes: a monotone dial \\
 floor-and-$\gamma$-matched true-pass-rate oracle \emph{ties} the full
 stack --- allocation saturates --- and recycling still adds on top of
 the oracle. (b) Frontier-heavy regime: allocation scores exactly zero;
-creation solves it. (c) Maze at matched wall-clock: 6/6 paired seed
-wins. (d) GSM8K $2{\times}2$, registered run: GRPO+teacher is the only
-cell that regresses (pre-registered P-G2; a replication seed did not
-reproduce it --- \S 6.7); the teacher's MaxRL effect is a null at this
-budget (P-G1).}
+recycling solves it, and does so equally under uniform sampling
+(.931 vs.\ .928) --- creation, not allocation, is the live channel.
+(c) Maze at matched wall-clock: 6/6 paired seed wins. (d) GSM8K
+$2{\times}2$, registered run, error bars = measured same-model eval
+noise (SD .0094): GRPO+teacher is the only cell that regresses
+(pre-registered P-G2; a replication seed did not reproduce it ---
+\S 6.7); the teacher's MaxRL effect is a null at this budget (P-G1).}
 \label{fig:ladder}
 \end{figure}
 
@@ -542,19 +550,37 @@ allocation-ceiling $<$ +creation. Allocation saturates; creation adds
 on top; and every intervention buys speed, not asymptote --- efficiency
 is the currency that prices them.}
 
-\paragraph{6.2 Can any sampler act when nothing is learnable? (frontier-heavy regime, max pool pass rate $10^{-5}$).}
+\paragraph{6.2 Can any sampler act when nothing is learnable? (frontier-heavy regime, max pool pass rate $10^{-5}$; 5 seeds, artifact committed).}
 Uniform, DAPO, and the plain teacher score \textbf{exactly 0.00};
-teacher+recycling reaches \textbf{0.98 final (0.93 AUC)} --- relabeling
-invents the curriculum below the pool, ignites within ${\sim}400$ groups,
-then goes silent.
-\takeaway{Where there is nothing to sample toward, only signal creation
-works --- categorically, not marginally.}
+adding recycling reaches \textbf{0.98 final (0.93 AUC)} --- relabeling
+invents the curriculum below the pool, ignites within ${\sim}400$
+groups, then goes silent. The attribution control pins down which
+channel did it: \emph{uniform}+recycling scores the same
+($0.931{\pm}.002$ vs.\ teacher+recycling $0.928{\pm}.003$ AUC) --- in
+this regime the entire effect is signal creation; allocation
+contributes nothing because there is nothing learnable to allocate
+toward. Equivalently: a designer who hand-added the achieved sub-goals
+to the pool would also escape the zero --- what recycling buys is
+\emph{discovering} that sub-pool from the policy's own failures, with
+no task engineering.
+\takeaway{Where nothing is learnable at budget, sampling policy is
+irrelevant --- uniform and teacher tie at zero without recycling and
+tie at 0.93 with it. Creation is the only live channel, and its value
+is discovery, not allocation.}
 
 \paragraph{6.3 Does the estimator main effect survive real gradients? (maze transformer at matched wall-clock; 1.26M params, 13
 levels, ${\sim}30$ runs, 3 seeds).} Champion (teacher + dense recycling)
 $0.252{\pm}0.005$ final / $0.229{\pm}0.009$ AUC vs.\ uniform
 $0.230{\pm}0.015$ / $0.211{\pm}0.011$; paired deltas positive 6/6 seeds;
-22--35\% more optimization steps per GPU-hour. The maze teacher uses
+22--35\% more optimization steps per GPU-hour. Attribution within that
+gain, stated plainly: matched \emph{wall-clock} lets curriculum arms
+take $1.2$--$1.4\times$ more optimization steps (dead groups skip the
+backward pass), and step-matched truncation shows the extra steps are
+most of the pure teacher's effect (step-matched teacher-only
+$\Delta$AUC $+0.006$, $p{\approx}0.36$, n.s.) while teacher+recycling
+survives step-matching ($p{\approx}0.04$) --- on the maze the teacher's
+measured value is \emph{throughput} (buying more steps per GPU-hour),
+recycling's is signal. The maze teacher uses
 the legacy frontier form, a within-noise equivalent of the exact
 utility (\S 6.1). Safety, stated as what the design
 supports: an estimator \emph{main effect on coverage} --- all five
@@ -564,14 +590,18 @@ $0.332\to0.269$ with the teacher), permutation $p{=}0.0079$ on the
 9-run main effect. Whether the teacher \emph{amplifies} GRPO's decay is a
 factorial (interaction) question this suite is not powered for; the
 GSM8K $2{\times}2$ below tests exactly that cell, pre-registered.
-Inference currency: $1.2\times/2.7\times/\mathbf{11\times}$ fewer
-samples than GRPO to reach target coverage at levels 2/3/5 (with a
-$0.5\times$ reversal at level 4); on the final uniform-teacher
-checkpoints the two estimators' summed coverage curves cross at
-$k{\approx}4$ --- GRPO ahead at $\passat{1}$ (3.24 vs.\ 3.07 summed
-over L0--6), MaxRL ahead from $k{=}4$ on and by half a level at
-$k{=}64$ (5.12 vs.\ 4.62; single checkpoint pair) --- choose the
-estimator by how many samples you will draw at inference.
+Inference currency, one convention stated and applied to every level
+(smallest $k$ reaching absolute coverage $0.25$, log-interpolated;
+single checkpoint pair, artifact \texttt{maze\_gpu/efficiency.json}):
+our checkpoint needs $\mathbf{11\times}$ fewer samples at level 5,
+ties GRPO at levels 2--3, and needs $3\times$ more at level 4 --- the
+frontier is where the efficiency gain lives, and the ledger is mixed
+below it. The summed-coverage view says the same thing without a
+target choice: GRPO ahead at $\passat{1}$ (3.24 vs.\ 3.07 summed over
+L0--6), curves crossing at $k{\approx}4$, MaxRL ahead by half a level
+at $k{=}64$ (5.12 vs.\ 4.62) with GRPO's level-2/4 curves saturating
+at 0.88/0.56 where ours reach 1.00/0.62 --- choose the estimator by
+how many samples you will draw at inference.
 
 \paragraph{6.4 Where and when does GRPO's coverage go? (level-resolved).}
 Decomposing the main effect by difficulty band turns it into a
@@ -701,23 +731,31 @@ gated FrontierMax stack converges to $1.000{\pm}0.000$.}
 \centering
 \includegraphics[width=0.55\linewidth]{figures/fig3_gsm8k}
 \caption{\textbf{GSM8K $2{\times}2$ (pre-registered; registered run
-shown).} GRPO+teacher is the only cell that regresses in its second
-half (P-G2 on this run; a replication seed with weaker measured
-steering climbed instead --- \S 6.7); under MaxRL the identical teacher
-trains stably to its best value but does not beat uniform at this
-budget (P-G1: null).}
+shown; error bars = measured same-model eval noise, SD .0094).}
+GRPO+teacher is the only cell that regresses in its second half (P-G2
+on this run; the load-bearing statistic is the endpoint gap vs.\ plain
+GRPO, $z{\approx}2$ --- the second-half dip alone is within noise; a
+replication seed with weaker measured steering climbed instead ---
+\S 6.7); under MaxRL the identical teacher trains stably to its best
+value but does not beat uniform at this budget (P-G1: null).}
 \label{fig:gsm8k}
 \end{figure}
 
 \paragraph{6.7 Does it transfer to LLM scale? (GSM8K $2{\times}2$, pre-registered;
 (SmolLM2-360M, $N{=}16$, one A10G).} Predictions committed before any cell
 finished. \textbf{P-G2 landed on the registered run:} GRPO+teacher
-was the only cell that regressed in its second half (val accuracy
-$.096\to.093$, $\passat{4}$ $.193\to.181$) while plain GRPO climbed
-monotonically ($.078\to.105\to.120$) --- with the teacher verifiably
-steering (sampled-dead fraction driven to 0.48 vs.\ the ${\sim}0.65$
-population rate). \textbf{A replication seed does not reproduce the
-regression:} seed 2 of the same cell climbs monotonically
+was the only cell that regressed in its second half, and the deficit
+against plain GRPO at the endpoint is $2$--$4\times$ the measured
+same-model eval noise (mean@4 $-.027$, $z{=}-2.0$; $\passat{4}$
+$-.048$, $z{=}-2.0$; the second-half dip itself, $.096\to.093$, is
+within the $\pm.009$ noise floor and carries no weight on its own)
+while plain GRPO climbed monotonically ($.078\to.105\to.120$).
+Steering telemetry, honestly read: the teacher's sampled-dead
+fraction \emph{minimum} reaches .48 vs.\ uniform's .52, but the run
+means are indistinguishable (.66--.67 in all cells) --- the delivered
+treatment was weak, which is the posterior-starvation mechanism below,
+and it bounds how much of the GRPO gap the curriculum can own.
+\textbf{A replication seed does not reproduce the regression:} seed 2 of the same cell climbs monotonically
 ($.073\to.095\to.118$), and its steering telemetry shows the treatment
 was weaker (min dead-sampled fraction $.53$, mean $.66 \approx$
 population --- a near-uniform teacher on average). The pattern is
@@ -733,7 +771,15 @@ $\passat{k}$ sweep on the registered checkpoints: the teacher's deficit
 under GRPO \emph{widens monotonically with $k$} ($-.008$ at $k{=}1$ to
 $-.024$ at $k{=}16$) --- curriculum damage lives in coverage, as the
 maze predicted, though each individual delta is within single-seed
-noise. Beyond the predictions: the teacher's posterior \emph{learns}
+noise (and the sweep's absolute level sits ${\sim}3\times$ below the
+trainer's val metric, an unreconciled harness discrepancy; only the
+within-sweep contrast is quoted). One design confound is disclosed
+rather than dismissed: the teacher samples with replacement, so
+curriculum cells revisit prompts more (${\sim}34\%$ unique prompts
+seen vs.\ ${\sim}43\%$ uniform) --- a repetition effect on GRPO is an
+alternative reading of the regression that a
+uniform-with-replacement control cell would separate; it is queued
+with the replication seeds. Beyond the predictions: the teacher's posterior \emph{learns}
 real difficulty from ${\sim}1$ visit per prompt ($\rho = -0.17$ against
 independent 7B-model solve-rate annotations, $p\approx 10^{-17}$) but
 its allocation is \emph{posterior-starved} --- 3{,}200 draws over
@@ -842,9 +888,18 @@ frontier tier (destinations not yet saturated) the gated arm returns
 coverage to baseline ($.279{\pm}.019$ vs.\ $.274{\pm}.015$) while
 keeping $\sim$60\% of the mean gain; at tier 1 (destinations saturate
 early, so the gate blocks nearly all relabels) it neutralizes recycling
-almost entirely, and a corrected-decay full-strength rerun (1 seed)
-pushes tier-1 coverage above baseline at the mean's full price
-(Fig.~\ref{fig:sharpening}a). In-run telemetry shows the mechanism
+almost entirely. Implementation disclosure: a decay-math bug made all
+three-seed gated runs gate \emph{weaker} than designed (effective
+destination threshold $\hat p \approx 0.64$ where the design implies
+$0.92$), so the reported operating point is an under-gated one; the
+corrected-decay rerun (1 seed) gates ${\sim}3\times$ harder and pushes
+tier-1 coverage \emph{above} baseline at the mean's full price
+(Fig.~\ref{fig:sharpening}a). Together the three arms trace a
+monotone dose--response --- no gate: full mean gain, coverage lost;
+under-gated: $\sim$60\% of the gain, coverage restored; full-strength:
+gain erased, coverage above baseline --- \texttt{gate\_max\_p} is a
+dial along a mean-vs-coverage frontier, and the bug, favorably for the
+method, sampled its middle. In-run telemetry shows the mechanism
 (Fig.~\ref{fig:sharpening}b--c): rejection rises $.12 \to .85$ as the
 reachable set saturates, and the gated arm ends with \emph{more} policy
 entropy than the no-recycling baseline. A pre-registered

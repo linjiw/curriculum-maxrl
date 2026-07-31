@@ -583,14 +583,16 @@ wasted compute into live MaxRL groups:</p>
 <p>Division of labor: the <strong>teacher avoids</strong> spending compute beyond the frontier;
 <strong>hindsight salvages</strong> whatever still fails there. In the hard 16-level regime hindsight
 alone (0.970) even beats the teacher alone (0.961), and the combination stays best (0.978).
-Two later validation results sharpened this: <strong>the hindsight gradient is exact
-on-structure</strong> — per-group cosine to the true success-conditioned ML gradient equals that
-of unbiased fresh groups (0.956 vs 0.958), and the mean relabeled gradient converges to cosine
-1.000 (Prop. 6 + V1); and in a <strong>frontier-heavy regime</strong> (max pool pass rate 10⁻⁵)
+Two later validation results sharpened this: <strong>the relabel direction carries real
+information</strong> — the control battery's behavioral test, +0.037 beyond dose-matched replay
+with random-target relabels losing to replay 5/5 seeds (the earlier cosine probe, 0.956 vs
+0.958, was retired as evidence after review showed null relabeling schemes produce identical
+cosines on that testbed); and in a <strong>frontier-heavy regime</strong> (max pool pass rate 10⁻⁵)
 uniform, DAPO dynamic sampling, and the plain teacher all flatline at exactly 0 while
-teacher+hindsight reaches 0.98 — reallocating compute among unlearnable tasks cannot help;
-hindsight <em>creates</em> the missing signal by inventing the curriculum below the pool,
-igniting learnability within ~400 groups, then going silent as natural successes take over.</p>
+adding recycling reaches 0.98 — equally under uniform sampling (0.931 vs 0.928 AUC, the
+attribution control) — reallocating compute among unlearnable tasks cannot help; hindsight
+<em>creates</em> the missing signal by inventing the curriculum below the pool, igniting
+learnability within ~400 groups, then going silent as natural successes take over.</p>
 
 <h3>Tying the oracle — and the concentration surprise</h3>
 <p>Two late results sharpened the method. First, sampling ∝ u(p)<sup>γ</sup> with γ≈4 beats
@@ -721,13 +723,15 @@ trajectory; the story is the <em>divergence after step 25</em>:</p>
 
 <div class="grid2">
   <div class="card"><h3>What the registered run showed — and the replication</h3>
-  <p><strong>P-G2 on the registered run:</strong> grpo+teacher regressed .096→.093
-  (pass@4 .193→.181) in its second half while grpo gained .105→.120, with the teacher
-  verifiably steering (dead-sampled fraction driven to 0.48 vs ~0.65 population).
-  <strong>Seed 2 did not reproduce the regression</strong> (.073→.095→.118) — and its
-  telemetry shows why it can't count as a clean test either way: steering was near-uniform
-  on average (mean dead fraction .66 ≈ population). Damage tracks steering intensity;
-  the decisive experiment is a steering-controlled multi-seed cell.</p></div>
+  <p><strong>P-G2 on the registered run:</strong> grpo+teacher ended 2–4× the measured
+  eval-noise floor below plain grpo (mean@4 −.027, z≈−2; pass@4 −.048) — the oft-quoted
+  second-half dip .096→.093 is itself within noise and carries no weight alone. Steering
+  honestly read: the teacher's dead-sampled fraction <em>minimum</em> hit .48 vs uniform's
+  .52, but run means were indistinguishable (.66–.67 everywhere) — the delivered treatment
+  was weak. <strong>Seed 2 did not reproduce the regression</strong> (.073→.095→.118), with
+  even weaker steering. Damage tracks steering intensity; the decisive experiment is a
+  steering-controlled multi-seed cell (with a uniform-with-replacement control for the
+  prompt-repetition confound).</p></div>
   <div class="card"><h3>What we learned beyond the predictions</h3>
   <p><strong>The teacher's two sub-channels separate.</strong> Its posterior learned real
   difficulty (p̂ vs external 7B-model annotations: ρ=−0.17, p≈10⁻¹⁷) but its allocation
@@ -1022,7 +1026,7 @@ FrontierTrainer(MyEnv(), MyPolicy(), TrainerConfig(hindsight=True)).train(500)</
     <tr><td>Coverage grows instead of collapsing</td>
         <td>pass@8 ↑ 0.316→0.348 every seed (GRPO's ↓ 0.308→0.271 every seed)</td></tr>
     <tr><td>Inference-time sampling efficiency vs GRPO (samples to target coverage, perfect verifier)</td>
-        <td>up to <strong>11×</strong> fewer samples on the hardest evaluated level — the speedup grows with difficulty (1.2× / 2.7× / 11× at levels 2/3/5)</td></tr>
+        <td>up to <strong>11×</strong> fewer samples on the hardest evaluated level (absolute-0.25 coverage target; ties at levels 2–3, 3× worse at level 4 — the gain lives at the frontier; single checkpoint pair)</td></tr>
     <tr><td>Frontier-heavy regimes: impossible → solved</td>
         <td>0.00 → 0.98 at equal compute (uniform, DAPO, and plain teacher all score exactly 0)</td></tr>
     <tr><td>Recycling adds on top of perfect allocation</td>
@@ -1134,8 +1138,8 @@ curriculum can fix, until you recycle it.</em></p>
   a verified success for the goal it actually reached, and relabeling dead groups provably yields
   the maximum-likelihood gradient of the relabeled task. Across four testbeds a matched true-pass-rate <strong>oracle</strong> allocator ties the
   combined schedule (allocation saturates; recycling adds even on top of the oracle), which turns a
-  frontier-heavy regime from unlearnable to solved (0 → 0.98), grows pass@k where GRPO's
-  collapses, and needs up to 11× fewer inference samples to reach target coverage. A
+  frontier-heavy regime from unlearnable to solved (0 → 0.98), grows pass@k on the maze where GRPO's
+  collapses (9/9 runs, permutation p=0.0079), and needs up to 11× fewer inference samples at the frontier. A
   pre-registered LLM-scale 2×2 confirms the safety half: the identical curriculum that trains
   stably under MaxRL <em>degrades</em> GRPO — the estimator underneath decides whether a
   curriculum is safe at all.</p>

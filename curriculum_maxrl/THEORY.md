@@ -43,8 +43,12 @@ knob, now with an exact constant.
 **RLOO** (`w_j = (r_j − LOO-mean)/N`): `Σ|w| = 2K(N−K)/(N(N−1))`, hence
 
 ```
-E[Σ|w|] = 2·p·(1−p)·N/(N−1) ≈ 2·p(1−p)   —  EXACT
+E[Σ|w|] = 2·p·(1−p)   —  EXACT
 ```
+
+(E[K(N−K)] = N(N−1)p(1−p) for K~Bin(N,p); the N(N−1) cancels. An earlier
+version of this file carried a spurious N/(N−1) prefactor — removed in the
+round-1 audit; PROOFS.md Prop. 4 is the authoritative statement.)
 
 RLOO's advantage mass **is** SFL's "learnability" p(1−p) (Rutherford et al.
 2024) up to the constant. The learnability curriculum literature and the

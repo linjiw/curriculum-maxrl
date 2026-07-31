@@ -49,12 +49,18 @@ series = [
     ("maxrl+teacher",  steps,    [0.066, 0.099, 0.102], BLUE,    "--"),
 ]
 
+# same-model eval noise floor (opus5 M1: 5 repeated evals of one
+# checkpoint, mean@4 SD 0.0094) — drawn on every point so the reader
+# can see which gaps clear it (grpo vs grpo+teacher endpoint: z~2)
+NOISE_SD = 0.0094
+
 # divergence window shading (behind everything)
 ax.axvspan(25, 50, color="#000000", alpha=0.05, zorder=0)
 
 for label, xs, ys, color, ls in series:
-    ax.plot(xs, ys, color=color, ls=ls, lw=1.6, marker="o", ms=3.5,
-            zorder=3, solid_capstyle="round")
+    ax.errorbar(xs, ys, yerr=NOISE_SD, color=color, ls=ls, lw=1.6,
+                marker="o", ms=3.5, zorder=3, solid_capstyle="round",
+                elinewidth=0.7, capsize=2, ecolor=color, alpha=0.95)
 
 # direct labels at line ends
 ax.text(51.5, 0.121, "grpo", color=MAGENTA, fontsize=8, va="center")
@@ -65,8 +71,9 @@ ax.text(51.5, 0.109, "maxrl", color=BLUE, fontsize=8, va="center")
 
 # divergence-window annotation
 ax.text(37.5, 0.0655, "divergence window: only\ngrpo+teacher regresses\n"
-        "(P-G2 ✓); maxrl arms both climb", fontsize=8, color=GRAY,
-        ha="center", va="bottom", style="italic")
+        "(registered run; bars = eval\nnoise SD; endpoint gap z≈2)",
+        fontsize=7.5, color=GRAY, ha="center", va="bottom",
+        style="italic")
 
 ax.set_xlim(-2, 68)
 ax.set_ylim(0.060, 0.128)

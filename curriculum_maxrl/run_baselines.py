@@ -68,6 +68,15 @@ def run(method: str, seed: int, total_groups: int = 3200, n_rollouts: int = 16,
             w = weights_maxrl(rewards)
             if np.any(w != 0):
                 env.apply_gradient(t, actions, w, lr)
+            elif method.endswith("hindsight"):
+                prefixes = np.array([correct_prefix_len(a) for a in actions])
+                j = int(prefixes.max())
+                if j >= 1:
+                    target = (t // chain_len) * chain_len + (j - 1)
+                    r2 = (prefixes >= j).astype(float)
+                    w2 = weights_maxrl(r2)
+                    if np.any(w2 != 0):
+                        env.apply_gradient(target, actions[:, :j], w2, lr)
         else:  # teacher variants
             i = int(teacher.sample_tasks(1)[0])
             t = int(pool[i])
@@ -86,27 +95,50 @@ def run(method: str, seed: int, total_groups: int = 3200, n_rollouts: int = 16,
                     w2 = weights_maxrl(r2)
                     if np.any(w2 != 0):
                         env.apply_gradient(target, actions[:, :j], w2, lr)
-        if used % eval_every < 1:
+        # eval on a fixed grid of `used` counts; the DAPO branch can advance
+        # `used` by >1 per iteration, so trigger on grid *crossings*, not
+        # exact multiples (the old `used % eval_every < 1` silently skipped
+        # evals for DAPO, giving it a different eval grid than the others)
+        while len(hist) < used // eval_every:
             hist.append(env.true_pass_rates()[pool].mean())
     hist.append(env.true_pass_rates()[pool].mean())
     return np.array(hist)
 
 
-METHODS = ["uniform+maxrl", "dapo+maxrl", "teacher+maxrl", "teacher+maxrl+hindsight"]
+METHODS = ["uniform+maxrl", "dapo+maxrl", "teacher+maxrl",
+           "uniform+maxrl+hindsight", "teacher+maxrl+hindsight"]
 REGIMES = {"easy-heavy": (1, 6), "balanced": (1, 12), "frontier-heavy": (5, 12)}
 
 
 def main():
+    import json
+    import os
+
+    out = {}
     for regime, rng_ in REGIMES.items():
         print(f"\n--- regime: {regime} (levels {rng_[0]}..{rng_[1]}) ---", flush=True)
+        out[regime] = {}
         for m in METHODS:
             finals, aucs = [], []
             for seed in range(5):
                 h = run(m, seed, level_range=rng_)
-                finals.append(h[-1])
-                aucs.append(h.mean())
+                finals.append(float(h[-1]))
+                aucs.append(float(h.mean()))
+            out[regime][m] = {
+                "final_mean": float(np.mean(finals)),
+                "final_std": float(np.std(finals)),
+                "auc_mean": float(np.mean(aucs)),
+                "auc_std": float(np.std(aucs)),
+                "final_per_seed": finals,
+                "auc_per_seed": aucs,
+            }
             print(f"  {m:26s} final={np.mean(finals):.3f}(±{np.std(finals):.3f}) "
                   f"AUC={np.mean(aucs):.3f}(±{np.std(aucs):.3f})", flush=True)
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "results_baselines_regimes.json")
+    with open(path, "w") as f:
+        json.dump(out, f, indent=1)
+    print(f"\nwrote {path}", flush=True)
 
 
 if __name__ == "__main__":

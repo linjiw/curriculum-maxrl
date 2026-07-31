@@ -186,5 +186,5 @@ Three honest reads:
 | P-G1 teacher AUC gain over maxrl | **NULL at this budget** (final .102 vs .108; 2.1× the improvement slope but start-dominated) — as the posterior-starvation analysis predicted |
 | **P-G2 grpo+cur does NOT beat grpo** | **CONFIRMED** (and regressed 25→50) |
 | P-G3 pass@k divergence clearer than mean | **directional** — grpo+teacher deficit widens monotonically −.008→−.024 from k=1→16; individual deltas within single-seed noise |
-| P-G4 teacher bends dead-fraction below population | CONFIRMED post-fix (min 0.48 vs 0.65 population); earlier claim retracted, see val_checkpoints.md |
+| P-G4 teacher bends dead-fraction below population | WEAKENED on review (opus5 M2): the 0.48 is the run *minimum*; uniform GRPO's own minimum is 0.516 and all run *means* are indistinguishable (0.66–0.67). Honest read: treatment delivered but weak — consistent with posterior starvation, not strong steering. Earlier CONFIRMED claim retracted twice (epoch-frozen sampler, then min-vs-mean). |
 | P-G5 absolute gains small; ordering is the outcome | holding exactly as written |

@@ -3,10 +3,12 @@
 
 Panel A: u_N(p) = (1-(1-p)^N) - p for N in {4, 8, 16, 32}; peaks at
          p* = 1 - N^(-1/(N-1)) ~ ln N / N; dead zones annotated.
-Panel B: at N=16, MaxRL utility vs RLOO's p(1-p) (the N=2 slice) vs a
-         GRPO-shaped sqrt(p(1-p)) profile scaled to the same max.
+Panel B: at N=16, all three curves are EXACT finite-N expected advantage
+         mass (same convention, mass/2): MaxRL u_N (Prop. 1), RLOO p(1-p)
+         (exact), GRPO (1/N) E[sqrt(K(N-K))], K~Bin(N,p) (MC-verified) —
+         not the population w(p) curves, which diverge at the tails.
 
-Numbers/forms from PAPER.md Sections 3 (Prop. 1, 4, 5).
+Numbers/forms from paper/main.tex Section 3 (Prop. 1-3, Remark scope).
 """
 import os
 

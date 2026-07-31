@@ -9,7 +9,8 @@ Data sources (verified):
   (c) REPORT.md #4 / PAPER.md 7.3: maze AUC uniform 0.211+-0.011 vs
       champion 0.229+-0.009, 6/6 paired wins
   (d) GSM8K_ANALYSIS.md results table (final val mean@4):
-      grpo .120, grpo+teacher .093, maxrl+teacher .102, maxrl running
+      grpo .120, grpo+teacher .093, maxrl+teacher .102, maxrl .108 (final)
+      same-model eval noise floor (mean@4 SD, 5 repeated evals): 0.0094
 """
 import os
 
@@ -94,7 +95,7 @@ for i, v in enumerate(vals_b):
     txt = "0" if v == 0 else f"{v:.2f}".lstrip("0")
     axb.text(i, max(v, 0.006) + 0.014, txt, fontsize=VAL_FS, ha="center",
              va="bottom", color="#333333")
-axb.text(0.04, 0.80, "signal creation\nvs allocation:\ncategorical",
+axb.text(0.04, 0.80, "creation is the\nonly live channel\n(unif.+rec. ties:\n.931 vs .928)",
          transform=axb.transAxes, fontsize=8, color=GRAY,
          ha="left", va="top", style="italic")
 slanted_ticks(axb, labels_b)
@@ -125,16 +126,22 @@ axc.set_title("(c) Maze (3 seeds)", loc="left", fontsize=9)
 vals_d = [0.120, 0.093, 0.102, 0.108]
 labels_d = ["grpo", "grpo+tea.", "maxrl+tea.", "maxrl"]
 colors_d = [MAGENTA, MAGENTA, BLUE, BLUE]
-axd.bar(range(4), vals_d, color=colors_d, **BAR_KW)
+# same-model eval noise floor (opus5 M1: 5 repeated evals, mean@4 SD .0094)
+NOISE_SD = 0.0094
+axd.bar(range(4), vals_d, color=colors_d, yerr=[NOISE_SD] * 4, capsize=3,
+        error_kw=dict(lw=0.8, ecolor="#333333", zorder=4), **BAR_KW)
 for i, v in enumerate(vals_d):
-    axd.text(i, v + 0.002, f"{v:.3f}".lstrip("0"), fontsize=VAL_FS,
-             ha="center", va="bottom", color="#333333")
-axd.annotate("only cell that\nregresses (P-G2 ✓)", xy=(1.28, 0.088),
-             xytext=(2.35, 0.150), fontsize=8, color=GRAY,
+    axd.text(i, v + NOISE_SD + 0.004, f"{v:.3f}".lstrip("0"),
+             fontsize=VAL_FS, ha="center", va="bottom", color="#333333")
+axd.annotate("only regressing\ncell (reg. run)", xy=(1.3, 0.080),
+             xytext=(2.1, 0.032), fontsize=7.5, color=GRAY,
              ha="center", va="center", style="italic",
              arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
-                             connectionstyle="arc3,rad=0.2",
+                             connectionstyle="arc3,rad=-0.2",
                              shrinkA=2, shrinkB=3))
+axd.text(0.02, 0.985, "bars: same-model\neval noise SD",
+         transform=axd.transAxes, fontsize=7, color=GRAY,
+         ha="left", va="top", style="italic")
 slanted_ticks(axd, labels_d)
 axd.set_ylim(0, 0.168)
 axd.set_ylabel("final val mean@4")

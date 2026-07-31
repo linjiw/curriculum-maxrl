@@ -144,14 +144,14 @@ Decision procedure distilled from every ablation:
 | claim | strongest single piece of evidence | grade |
 |---|---|---|
 | u(p) = estimator's exact expected signal | P1 proof + 200k-trial MC | proved |
-| teacher beats uniform | 6/6 paired seeds, matched clock | multi-seed |
-| hindsight gradients exact on-structure | V1 cosine table (0.956 vs 0.958, mean 1.000) | measured |
-| full stack > oracle sampler | V7: 0.890 vs 0.851 (γ=1 oracle; also beats the sharper γ=4 oracle at 0.884), 5 seeds — artifact: `frontier_rl/examples/v7_oracle_result.json` | multi-seed CPU |
-| categorical win where samplers get 0 | V5 frontier-heavy + MountainCar 0→1.000 w/ controls | controlled |
-| curricula require likelihood weighting | H6 reversal: MaxRL grows / GRPO decays every seed; teacher-amplified collapse single-seed | multi-seed / single-seed* |
-| compounding drives hindsight's size | CPU +0.22 vs maze +0.01, mechanism traced | cross-regime |
+| teacher beats uniform (matched clock) | 6/6 paired seeds; step-matched, teacher-only is n.s. (+0.006, p≈0.36) — the clock gain is largely throughput | multi-seed, decomposed |
+| hindsight direction carries information | control battery: +0.037 beyond dose-matched replay, tightest arm (±.0025); random-target loses to replay 5/5 — cosine table RETIRED as evidence (no discriminating power, Opus5 B5) | controlled |
+| full stack ties matched oracle; creation adds +0.005 on top | `hindsight_controls.json`: no-floor γ-matched oracle 0.8885 ≈ full stack 0.8895; oracle+HS 0.8935. ("beats the oracle 0.890 vs 0.851" RETRACTED — floor handicap) | multi-seed CPU |
+| creation is the only live channel in dead regimes | V5 frontier-heavy w/ uniform+HS control (0.931 ≈ teacher+HS 0.928, both vs 0.000): allocation contributes nothing there; artifact `results_baselines_regimes.json` | controlled |
+| curricula require likelihood weighting | H6: estimator main effect 9/9 runs, perm p=0.0079; LLM-scale interaction 1-of-2 seeds, tracks steering intensity | multi-seed / 1-of-2-seeds* |
+| compounding drives hindsight's size | CPU +0.22 (83% captured by replay placebo — ship both numbers) vs maze +0.01 | cross-regime, decomposed |
 | coverage is the right meter | L6 0.125→0.438 invisible to pass@1 | single-ckpt* |
-| efficiency grows with difficulty | 1.2×/2.7×/11× vs GRPO | single-seed* |
+| efficiency grows with difficulty | 11× at L5 / tie L2–3 / 3× worse L4 at the stated absolute-0.25 convention (old 1.2×/0.5× cells not reproducible from artifact — corrected) | single-seed* |
 | sharing is the transfer channel | MountainCar per-bin 0 vs shared 1.000 | controlled |
 | γ tracks structure | V6 + ODE model + GPU non-transfer *prediction* | pre-registered |
 
