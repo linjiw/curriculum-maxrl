@@ -301,18 +301,19 @@ improvement per group has a closed form, mass \emph{ties} it as a
 ranking of tasks (Spearman within $.005$ at every training snapshot;
 artifact \texttt{results\_bridge.json}) --- as a predictor of the next
 step, $u_N$ is not missing anything material. What mass does not claim
-to be is the optimal \emph{sequential} utility: the same artifact shows
-a dissociation --- the best instantaneous predictor (the exact
-first-order improvement) is \emph{not} the best sampling utility, and a
-variance-tilted variant $(1{-}p)^2 u_N$ that is a strictly worse
-predictor samples strictly better ($+.005$--$.05$ AUC, 9--10/10 seeds,
-oracle-$p$ arms), with horizon-lookahead experiments locating
-$\sim$83\% of the gap in myopia about a task's own future learnability.
-Sampling is a sequential decision problem; every myopic functional,
-including ours, is a surrogate for horizon value. \S 6.5 shows the
-regime where the whole channel buys nothing (all tasks learnable at
-budget), and the partition's boundaries --- the load-bearing claim ---
-are the zeros all these candidates share.
+to be is \emph{the} optimal sequential utility, and the same artifact
+shows why no state-local functional is: on a pool of independent tasks
+the true final-performance optimum is a \emph{planning} solution (a
+trajectory-knapsack allocation with a budget-dependent funding cutoff),
+and which surrogate best approximates it depends on the training
+objective --- a variance-tilted $(1{-}p)^\alpha u_N$ wins
+time-averaged (anytime) performance while model-predictive replanning
+wins the final checkpoint, each losing the other's metric (8--10/10
+paired seeds each way). ``Best curriculum utility'' is ill-posed until
+that objective is fixed; we report both currencies throughout. \S 6.5
+shows the regime where the whole channel buys nothing (all tasks
+learnable at budget), and the partition's boundaries --- the
+load-bearing claim --- are the zeros all these candidates share.
 \end{remark}
 
 \begin{remark}[The curriculum changes the training distribution]
