@@ -138,10 +138,32 @@ to "the band and its zeros are derived; the within-band tilt is a
 horizon-value correction, direction theory-motivated (Part D), exponent
 tuned." Adopt only together with a GPU-rung validation (maze or E-LLM-3).
 
+## Part F — stochastic lookahead (the residual is NOT mostly stochasticity)
+
+Utility = mean cumulative Δp over M=32 *exact* stochastic virtual futures
+of h groups (K~Bin(N,p); exact single-task MaxRL update — Σw=0 kills the
+−q drift, so the update is `+lr(1−K/N)` on the correct logit and
+`−lr·count/N` on sampled failure actions). Flat pool, 10 seeds:
+
+| arm | AUC | vs det. h=200 | vs var-tilt (.592) |
+|---|---|---|---|
+| stoch h=50 | .571 | −.004 (n.s.) | −.021 (p=.002) |
+| stoch h=200 | .580 | +.005 (7/10, p=.11) | −.013 (p=.0035) |
+
+Stochasticity buys a small, non-significant improvement over the ODE and
+**does not close the gap** — the pre-stated hypothesis is refuted as the
+main explanation. Remaining candidates for the tilt's last −.012 edge:
+(a) *budget-awareness* — a fixed h overvalues slow-burn tasks as the
+remaining budget shrinks (the correct horizon is the remaining budget,
+which the tilt's aggressive discounting of near-mastered tasks crudely
+mimics); (b) M=32 estimator noise in the utility itself. Honest summary
+for the paper stands unchanged: no myopic-or-lookahead utility we built
+beats the cheap tilt; sampling utility design is genuinely open beyond
+the band's zeros.
+
 ## Follow-ups it opens (not started)
 
-- A stochastic lookahead (simulate the Beta-Binomial first-success time
-  instead of the ODE) at h≈200 — would test whether stochasticity closes
-  the last −.017.
+- Budget-aware lookahead (h = remaining budget / n_tasks, shrinking) —
+  the last untested mechanism for the tilt's residual edge.
 - GPU validation of the α-tilt before adopting it in FrontierMax
-  (fold into the u_N-form maze rerun or E-LLM-3).
+  (folded into sweep_un_form.sh P-U2 — running).
