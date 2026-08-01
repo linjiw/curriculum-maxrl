@@ -1,5 +1,17 @@
 # Next research steps (post review-3, 2026-07-31)
 
+> **Status 2026-08-01:** #4 (bridge) DONE — see
+> `curriculum_maxrl/BRIDGE_ANALYSIS.md`: mass ties exact first-order LP
+> as a predictor; the review's variance tilt is a *horizon-value*
+> surrogate and survives posterior noise (α∈[1,2] robust band); no
+> myopic utility is the right sequential objective. #3 (u_N maze rerun)
+> RUNNING — `maze_gpu/sweep_un_form.sh` queued behind the H6 seed-2 pair
+> job, with pre-registered P-U1/P-U2 (incl. first GPU test of the tilt).
+> NEW: E-LLM-3 (Jugs) selected via `BENCHMARK_SURVEY.md`; infrastructure
+> + feasibility harness built and queued (`jugs_llm/`). #1 (GSM8K
+> steering-controlled replication) and #2 (gate dose sweep) are next in
+> the GPU queue after feasibility.
+
 Ranked by (decisiveness for the paper's thesis) × (cost). Each item names
 the claim it would settle, the design, and the pre-registration hook.
 
