@@ -163,24 +163,64 @@ horizon is evidently not the equal-share of remaining budget (a good
 sampler concentrates, so its effective per-task horizon on chosen tasks
 is much longer than the average).
 
+## Parts H & I — the optimum's shape, and the resolution
+
+Flat pool ⇒ tasks independent ⇒ the deterministic-optimal *open-loop*
+allocation is a knapsack DP over per-task trajectories (quantum 10
+groups, objective = **final** mean p). Its shape (part H artifact):
+funds 30/36 tasks, allocation *increasing* in difficulty among funded
+tasks (30 groups for p₀=.45 up to 540 for p₀=2e-4), hard-cutoff below
+p₀≈2e-4 — "everyone funded to completion, pay each task its
+time-to-learn, drop what doesn't fit." No proportional-to-anything
+myopic index reproduces a shape with a budget-dependent cutoff.
+
+Part I closes the loop: **MPC** (re-solve the DP from the current state
+every 200 groups — planning *with* feedback):
+
+| arm | AUC | final |
+|---|---|---|
+| mass (closed-loop) | .543 | .633 |
+| var-tilt (closed-loop) | .592 | .730 |
+| DP open-loop replay (H) | .542 | .660 |
+| **MPC-DP (I)** | **.461** (−.13 vs tilt, 0/10) | **.762** (+.032 vs tilt, 8/10, p=.005) |
+
+**The inversion resolves the mystery.** The planner — built to maximize
+final performance — wins final and loses AUC; the tilt wins AUC. The
+tilt's "mechanistically unexplained" edge was an *objective mismatch*
+all along: parts B–G scored AUC, an objective none of the constructed
+utilities targeted. "Which within-band utility is best" is **ill-posed
+until the training objective is fixed** (time-averaged vs endpoint —
+i.e., anytime performance vs a final checkpoint), and the answer
+genuinely differs: endpoint favors planning-like allocations that
+tolerate long dark periods on hard tasks; time-averaged favors
+front-loading cheap wins. Note the same currency split runs through the
+GPU experiments (maze "dose sets where the coverage dividend is spent";
+Countdown early-stop banking the mean before the coverage bill) — this
+is the testbed-exact version of that phenomenon.
+
 ## Where the utility question lands (final)
 
-Four mechanistic constructions — myopic exact LP, deterministic
-lookahead (any fixed h), stochastic lookahead, budget-aware lookahead —
-all lose to the cheap tilt (1−p)·u_N on the flat pool. The tilt's edge
-is real (10/10, survives posterior noise, robust α∈[1,2]) and
-**mechanistically unexplained**. For the paper this is the honest and
-actually stronger statement: within-band sampling-utility design is an
-open sequential-decision problem that resists greedy/lookahead
-solutions; the partition's boundaries (the zeros every candidate
-shares) are what the theory nails down, and u_N is as good as the exact
-first-order objective as a predictor while being computable from p̃
-alone.
+1. u_N ties the exact first-order improvement as a *predictor* (A).
+2. No myopic or lookahead index we built is optimal for either
+   objective; the true final-objective optimum is a *planning* solution
+   (budget-dependent cutoff — not expressible as any state-local
+   utility), approximable by MPC.
+3. The practical recipe by objective: **AUC/anytime → (1−p)·u_N tilt**
+   (cheap, posterior-robust, α∈[1,2]); **final-checkpoint → longer
+   horizons / planning-like concentration** — and the paper's
+   compounding-γ result (γ≈4 on chains) now reads as the same lesson:
+   sharper concentration ≈ more planning-like.
+4. The partition's boundaries (u_N's zeros) are shared by every
+   candidate and remain the load-bearing theory claim.
 
 ## Follow-ups it opens (not started)
 
 - GPU validation of the α-tilt before adopting it in FrontierMax
-  (folded into sweep_un_form.sh P-U2 — running).
-- If P-U2 confirms on the maze: a Gittins-style analysis of the
-  restless-bandit structure is the principled next theory step (each
-  task's p drifts only when sampled → near-Whittle-indexable).
+  (folded into sweep_un_form.sh P-U2 — running). Note P-U2's meter is
+  matched-clock AUC — per the H/I resolution, that is the tilt's
+  favorable objective; a final-checkpoint read should be reported
+  beside it.
+- Whittle-index analysis is now better-motivated: the restless-bandit
+  value function is exactly what the DP computes; a closed-form index
+  approximating it would unify the tilt (AUC) and the cutoff (final)
+  as two discountings of one object.
