@@ -1,0 +1,1000 @@
+{"jug_capacities": [7, 12], "target": 2, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 13], "target": 8, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 20], "target": 12, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [18, 20], "target": 16, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [13, 18], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [17, 20], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 18], "target": 12, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [12, 20], "target": 4, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 9], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 7], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [14, 18], "target": 4, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [9, 13], "target": 4, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 6], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 15], "target": 3, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [6, 14], "target": 2, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 19], "target": 15, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [8, 17], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 13], "target": 9, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [7, 11], "target": 4, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [14, 18], "target": 10, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 16], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 20], "target": 10, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 15], "target": 12, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [14, 20], "target": 6, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 12], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [13, 14], "target": 12, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [10, 18], "target": 2, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 12], "target": 7, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [16, 18], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [9, 10], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [11, 15], "target": 4, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 7], "target": 5, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 10], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [12, 18], "target": 6, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [10, 15], "target": 5, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 8], "target": 5, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [14, 16], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 7], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [14, 20], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [15, 18], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [12, 15], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 5], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 11], "target": 6, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 14], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 14], "target": 10, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 12], "target": 9, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 8], "target": 2, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [12, 20], "target": 8, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 14], "target": 4, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 15], "target": 7, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [14, 17], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 9], "target": 6, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 9], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 16], "target": 10, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [12, 19], "target": 5, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [9, 19], "target": 18, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 18], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 14], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [9, 12], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 10], "target": 6, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 16], "target": 10, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [17, 19], "target": 15, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [11, 20], "target": 9, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 20], "target": 17, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [7, 8], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [8, 19], "target": 3, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 18], "target": 4, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 18], "target": 16, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 12], "target": 4, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 10], "target": 2, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 15], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 7], "target": 3, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [18, 20], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 17], "target": 13, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 15], "target": 9, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [7, 8], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 4], "target": 2, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [11, 18], "target": 7, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 8], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [19, 20], "target": 18, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 20], "target": 16, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 19], "target": 7, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [9, 11], "target": 7, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 5], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [8, 19], "target": 11, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 6], "target": 4, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [14, 17], "target": 11, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 13], "target": 10, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 12], "target": 8, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 15], "target": 9, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [10, 14], "target": 4, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [10, 13], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [15, 20], "target": 5, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 18], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [13, 15], "target": 11, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 15], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [15, 16], "target": 14, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 9], "target": 5, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [8, 13], "target": 5, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [16, 20], "target": 4, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [8, 14], "target": 2, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 10], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [11, 16], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 20], "target": 13, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 4], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 17], "target": 12, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 15], "target": 10, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [10, 11], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [12, 16], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [14, 15], "target": 13, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [6, 8], "target": 4, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [6, 9], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [9, 17], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [16, 19], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 18], "target": 12, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [9, 15], "target": 3, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [6, 11], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 16], "target": 9, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [7, 13], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [13, 19], "target": 7, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 10], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [13, 20], "target": 7, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [7, 15], "target": 8, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 11], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [9, 20], "target": 18, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 20], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 19], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [12, 16], "target": 4, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 11], "target": 7, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 16], "target": 12, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 20], "target": 12, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [10, 16], "target": 6, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [10, 12], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [9, 15], "target": 6, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 19], "target": 14, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [12, 13], "target": 11, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 5], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 19], "target": 5, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [6, 13], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 13], "target": 6, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [15, 19], "target": 11, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 14], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 19], "target": 14, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [14, 16], "target": 12, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 10], "target": 3, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [9, 11], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 11], "target": 10, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 17], "target": 14, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [6, 20], "target": 14, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 9], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 19], "target": 12, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [9, 14], "target": 4, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [7, 17], "target": 3, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 19], "target": 16, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 10], "target": 4, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [6, 11], "target": 5, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [15, 16], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [11, 16], "target": 5, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 16], "target": 10, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [6, 7], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [11, 17], "target": 6, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [9, 13], "target": 5, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 12], "target": 2, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [6, 10], "target": 4, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 18], "target": 14, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 5], "target": 3, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 14], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 20], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 7], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 20], "target": 4, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [12, 14], "target": 10, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [16, 20], "target": 12, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 10], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 8], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [9, 20], "target": 2, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [16, 18], "target": 14, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 19], "target": 16, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [5, 20], "target": 15, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 9], "target": 1, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 13], "target": 3, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [8, 20], "target": 16, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [11, 12], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 8], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [7, 18], "target": 11, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [10, 13], "target": 7, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 17], "target": 6, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 17], "target": 11, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [11, 14], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [3, 18], "target": 15, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [4, 17], "target": 9, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [10, 12], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [12, 14], "target": 2, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [14, 15], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [9, 19], "target": 10, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [14, 19], "target": 5, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [3, 13], "target": 7, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [12, 13], "target": 1, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [7, 10], "target": 4, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [5, 16], "target": 11, "min_moves": 2, "tier": "t0"}
+{"jug_capacities": [6, 20], "target": 8, "min_moves": 4, "tier": "t0"}
+{"jug_capacities": [4, 7, 10], "target": 9, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [3, 6, 10], "target": 5, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [9, 10, 12], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 9, 10], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 7, 10], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 10, 11], "target": 9, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 7, 8], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 8, 12], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 6, 7], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 9, 11], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 7, 12], "target": 6, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [8, 10, 12], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 6, 8], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 9, 10], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 5, 12], "target": 6, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [3, 5, 12], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 11, 12], "target": 3, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [5, 9, 9], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 8, 12], "target": 3, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 6, 11], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 8, 10], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 6, 12], "target": 8, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [9, 12, 12], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 5, 8], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 8, 11], "target": 10, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [8, 10, 10], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 7, 11], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 9, 12], "target": 11, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [7, 8, 9], "target": 3, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [5, 7, 7], "target": 1, "min_moves": 7, "tier": "t1"}
+{"jug_capacities": [7, 8, 12], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 3, 11], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [9, 10, 12], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 8, 11], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 4, 11], "target": 10, "min_moves": 7, "tier": "t1"}
+{"jug_capacities": [5, 9, 11], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 9, 12], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 6, 9], "target": 7, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [4, 7, 9], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 7, 12], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 9, 10], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 6, 6], "target": 2, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [7, 10, 10], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 10, 12], "target": 4, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [8, 9, 12], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 7, 9], "target": 3, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 11, 12], "target": 9, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [4, 4, 7], "target": 2, "min_moves": 7, "tier": "t1"}
+{"jug_capacities": [5, 9, 10], "target": 2, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [5, 9, 11], "target": 8, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [9, 10, 12], "target": 11, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 5, 9], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 3, 4], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 7, 10], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 7, 12], "target": 4, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [3, 9, 10], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [8, 9, 11], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 7, 12], "target": 10, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [7, 8, 11], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 5, 10], "target": 9, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 4, 5], "target": 2, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [7, 8, 8], "target": 5, "min_moves": 7, "tier": "t1"}
+{"jug_capacities": [3, 11, 11], "target": 2, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [4, 9, 10], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 9, 10], "target": 3, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [6, 8, 12], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 6, 10], "target": 9, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 6, 7], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 6, 11], "target": 10, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [6, 6, 7], "target": 2, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [4, 6, 9], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 4, 12], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 7, 10], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 6, 10], "target": 8, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [4, 5, 12], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 7, 10], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 7, 12], "target": 10, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [10, 11, 12], "target": 9, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 7, 10], "target": 1, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [3, 4, 9], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 10, 10], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 11, 12], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 9, 11], "target": 10, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [7, 8, 8], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 8, 9], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 8, 9], "target": 2, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [5, 5, 8], "target": 6, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [8, 9, 10], "target": 5, "min_moves": 7, "tier": "t1"}
+{"jug_capacities": [8, 9, 11], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 8, 12], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [10, 11, 12], "target": 4, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [5, 8, 9], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 8, 8], "target": 1, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [4, 10, 10], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 9, 12], "target": 1, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [3, 11, 12], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 9, 10], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 5, 12], "target": 11, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 9, 11], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 7, 9], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [8, 8, 9], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [8, 9, 12], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 7, 10], "target": 9, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 9, 12], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [9, 11, 12], "target": 4, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [3, 7, 11], "target": 9, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [6, 11, 12], "target": 4, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [3, 7, 11], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 11, 12], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 7, 11], "target": 3, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 7, 8], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 8, 12], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [8, 8, 9], "target": 2, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [5, 11, 12], "target": 8, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [7, 12, 12], "target": 9, "min_moves": 7, "tier": "t1"}
+{"jug_capacities": [5, 7, 11], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 5, 10], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 7, 11], "target": 3, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 6, 12], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 10, 12], "target": 1, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [4, 7, 11], "target": 10, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [5, 6, 10], "target": 8, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [3, 6, 10], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [10, 11, 12], "target": 3, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [7, 7, 12], "target": 10, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [9, 10, 12], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 5, 12], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 4, 12], "target": 10, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [6, 10, 10], "target": 8, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [3, 8, 9], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 4, 12], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 7, 9], "target": 4, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [5, 6, 6], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 10, 12], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 9, 12], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 5, 8], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 5, 6], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 8, 12], "target": 11, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 7, 7], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 8, 11], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [9, 10, 12], "target": 4, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [4, 8, 11], "target": 2, "min_moves": 7, "tier": "t1"}
+{"jug_capacities": [5, 10, 11], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 10, 12], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 8, 9], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 7, 11], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 6, 8], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 6, 12], "target": 9, "min_moves": 7, "tier": "t1"}
+{"jug_capacities": [3, 5, 11], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 7, 12], "target": 3, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 10, 12], "target": 11, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [7, 10, 12], "target": 9, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 10, 11], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 9, 11], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 7, 8], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 10, 12], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 11, 12], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [8, 9, 11], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 6, 11], "target": 9, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 8, 10], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 8, 12], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 4, 4], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 4, 11], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 9, 9], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 8, 10], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 8, 9], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 5, 7], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 9, 11], "target": 10, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [5, 6, 8], "target": 7, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 9, 11], "target": 6, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 5, 7], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 4, 9], "target": 3, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [10, 11, 12], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 11, 11], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 6, 7], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 9, 11], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 11, 12], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 8, 9], "target": 3, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [4, 5, 11], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 8, 9], "target": 4, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 9, 10], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [10, 12, 12], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 12, 12], "target": 10, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [7, 11, 12], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [8, 9, 9], "target": 6, "min_moves": 7, "tier": "t1"}
+{"jug_capacities": [5, 8, 8], "target": 2, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 7, 11], "target": 8, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [6, 8, 9], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 9, 10], "target": 5, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 10, 12], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 8, 11], "target": 9, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [6, 7, 10], "target": 8, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [4, 7, 10], "target": 5, "min_moves": 6, "tier": "t1"}
+{"jug_capacities": [5, 7, 9], "target": 6, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [5, 7, 7], "target": 3, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [5, 8, 12], "target": 1, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [3, 4, 10], "target": 5, "min_moves": 5, "tier": "t1"}
+{"jug_capacities": [4, 5, 11], "target": 10, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [8, 9, 12], "target": 11, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [6, 9, 11], "target": 8, "min_moves": 4, "tier": "t1"}
+{"jug_capacities": [7, 11, 14], "target": 12, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 12, 14], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 8, 13], "target": 9, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [9, 9, 11], "target": 6, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 7, 13], "target": 11, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [5, 10, 12], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 12, 12], "target": 4, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 5, 7], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 9, 14], "target": 11, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [13, 14, 15], "target": 8, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [13, 13, 15], "target": 6, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 7, 8], "target": 3, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 9, 11], "target": 10, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 10, 13], "target": 9, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [7, 7, 10], "target": 2, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [11, 13, 14], "target": 7, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [9, 11, 11], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [12, 13, 14], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [14, 14, 15], "target": 12, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [11, 11, 14], "target": 9, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 13, 14], "target": 11, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 8, 13], "target": 11, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [11, 13, 15], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 7, 12], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [12, 14, 14], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 11, 11], "target": 2, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [12, 13, 15], "target": 7, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [11, 13, 13], "target": 5, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [11, 11, 12], "target": 3, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [6, 7, 13], "target": 9, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 14, 15], "target": 5, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 5, 11], "target": 9, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 10, 11], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 8, 10], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 7, 14], "target": 10, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 7, 13], "target": 4, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [12, 12, 13], "target": 10, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 11, 13], "target": 12, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 12, 13], "target": 9, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 7, 13], "target": 8, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 13, 13], "target": 12, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [8, 9, 9], "target": 3, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [7, 9, 14], "target": 13, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 10, 11], "target": 8, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 11, 14], "target": 5, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 5, 6], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 11, 14], "target": 4, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 13, 15], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 12, 13], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 10, 14], "target": 12, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [8, 11, 11], "target": 9, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [7, 8, 8], "target": 4, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [6, 13, 13], "target": 4, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [5, 7, 12], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 11, 12], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 8, 9], "target": 3, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 7, 14], "target": 13, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [13, 14, 15], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 8, 13], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [8, 8, 14], "target": 10, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [13, 14, 15], "target": 5, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 9, 14], "target": 2, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [12, 14, 15], "target": 8, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [10, 14, 15], "target": 7, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 11, 11], "target": 4, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 7, 12], "target": 11, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [10, 10, 13], "target": 9, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 7, 9], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 7, 14], "target": 6, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 9, 13], "target": 11, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 8, 11], "target": 9, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 15, 15], "target": 2, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [6, 7, 13], "target": 10, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [11, 14, 14], "target": 2, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [11, 15, 15], "target": 12, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [8, 11, 11], "target": 10, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [10, 13, 15], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [11, 12, 13], "target": 5, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 11, 11], "target": 9, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 10, 10], "target": 8, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [6, 14, 14], "target": 10, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 10, 13], "target": 12, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 8, 14], "target": 4, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [9, 10, 15], "target": 13, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [9, 13, 14], "target": 11, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 8, 13], "target": 7, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [5, 12, 12], "target": 1, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [7, 11, 15], "target": 2, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [11, 12, 13], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 8, 13], "target": 4, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [7, 14, 15], "target": 3, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [9, 11, 13], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [10, 10, 14], "target": 12, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 5, 9], "target": 7, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [7, 7, 11], "target": 10, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 9, 14], "target": 12, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [5, 8, 8], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 11, 12], "target": 8, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 7, 12], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 5, 12], "target": 4, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [9, 13, 15], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [10, 14, 14], "target": 12, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [7, 12, 14], "target": 8, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [12, 13, 14], "target": 7, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [7, 7, 12], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 8, 15], "target": 12, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [9, 11, 11], "target": 3, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [5, 9, 14], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 9, 13], "target": 11, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 9, 14], "target": 8, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 5, 7], "target": 6, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [9, 10, 10], "target": 6, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [10, 11, 12], "target": 6, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 13, 14], "target": 10, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 14, 15], "target": 12, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [10, 14, 15], "target": 12, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 10, 10], "target": 9, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [9, 11, 13], "target": 12, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [7, 13, 14], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 6, 11], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 10, 13], "target": 4, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [10, 11, 15], "target": 13, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [10, 10, 11], "target": 3, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 9, 14], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 8, 15], "target": 10, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 15, 15], "target": 13, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [11, 14, 15], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 7, 11], "target": 5, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [6, 6, 13], "target": 11, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 12, 12], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 5, 13], "target": 6, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 9, 9], "target": 1, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [5, 10, 14], "target": 2, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 6, 11], "target": 9, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [6, 11, 12], "target": 3, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [8, 14, 14], "target": 4, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [11, 11, 15], "target": 1, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [5, 13, 15], "target": 14, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [13, 14, 15], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [8, 14, 15], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [11, 12, 12], "target": 8, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [9, 9, 10], "target": 3, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 11, 14], "target": 13, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 7, 7], "target": 3, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [13, 13, 14], "target": 11, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 12, 13], "target": 3, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [6, 6, 11], "target": 7, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 5, 14], "target": 3, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [5, 5, 9], "target": 2, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 8, 13], "target": 12, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 10, 12], "target": 11, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 8, 13], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 8, 15], "target": 13, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [11, 11, 15], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [11, 13, 15], "target": 12, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 14, 14], "target": 13, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 5, 14], "target": 8, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [6, 6, 7], "target": 4, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 10, 14], "target": 7, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [7, 12, 12], "target": 4, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [6, 12, 13], "target": 10, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 11, 14], "target": 9, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 5, 8], "target": 4, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [9, 14, 14], "target": 8, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 8, 14], "target": 10, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [11, 11, 13], "target": 6, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 5, 13], "target": 7, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [10, 11, 12], "target": 5, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 10, 14], "target": 11, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [8, 8, 15], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [9, 9, 13], "target": 12, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [10, 10, 12], "target": 6, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [9, 9, 14], "target": 6, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [7, 15, 15], "target": 5, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [6, 6, 11], "target": 2, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [8, 11, 14], "target": 7, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [7, 11, 11], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 8, 15], "target": 5, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [12, 12, 14], "target": 8, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 7, 13], "target": 3, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [8, 9, 15], "target": 11, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 12, 13], "target": 4, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [5, 12, 15], "target": 11, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [11, 13, 13], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 9, 9], "target": 2, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 10, 12], "target": 6, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [9, 11, 15], "target": 14, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [9, 11, 13], "target": 10, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [11, 13, 15], "target": 1, "min_moves": 11, "tier": "t2"}
+{"jug_capacities": [6, 11, 11], "target": 2, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 9, 9], "target": 3, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [9, 9, 13], "target": 1, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 10, 13], "target": 5, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [13, 14, 14], "target": 3, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [5, 7, 7], "target": 6, "min_moves": 10, "tier": "t2"}
+{"jug_capacities": [11, 11, 12], "target": 9, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [6, 13, 13], "target": 8, "min_moves": 8, "tier": "t2"}
+{"jug_capacities": [7, 12, 14], "target": 1, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [5, 8, 8], "target": 4, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [6, 6, 7], "target": 3, "min_moves": 9, "tier": "t2"}
+{"jug_capacities": [10, 13, 13, 13], "target": 12, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 14, 15], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [14, 14, 15, 15], "target": 10, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [9, 9, 10, 10], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 14, 14, 15], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 14, 14], "target": 3, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [8, 15, 15, 15], "target": 5, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [10, 10, 10, 13], "target": 12, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [11, 11, 11, 12], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [6, 6, 11, 11], "target": 8, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 10, 10, 10], "target": 2, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 14, 14, 15], "target": 11, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 8, 15, 15], "target": 3, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [12, 12, 12, 13], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 8, 9, 9], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 11, 11, 11], "target": 2, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 15], "target": 5, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 8, 8, 11], "target": 10, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [10, 11, 11, 11], "target": 4, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 12, 12, 12], "target": 8, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [13, 13, 15, 15], "target": 8, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 7, 8, 15], "target": 11, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 10, 10, 10], "target": 5, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 15, 15], "target": 3, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [7, 7, 13, 14], "target": 10, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 13, 13, 13], "target": 1, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [13, 13, 13, 15], "target": 8, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 15, 15, 15], "target": 13, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [5, 5, 5, 13], "target": 9, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 12, 12], "target": 11, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [5, 5, 5, 14], "target": 11, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [5, 13, 13, 13], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [8, 8, 11, 11], "target": 4, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [5, 5, 5, 12], "target": 1, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [10, 10, 13, 13], "target": 12, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [9, 10, 10, 10], "target": 4, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [6, 11, 11, 11], "target": 8, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 15, 15, 15], "target": 3, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 12, 12, 12], "target": 1, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [11, 13, 13, 13], "target": 8, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 9, 9], "target": 8, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 7, 13, 13], "target": 9, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 7, 8, 15], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 11, 11], "target": 1, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [9, 11, 11, 11], "target": 1, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [8, 8, 15, 15], "target": 5, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [5, 9, 9, 9], "target": 7, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 11, 11, 11], "target": 8, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [5, 5, 13, 13], "target": 9, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 8], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [5, 12, 12, 12], "target": 6, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [5, 12, 12, 12], "target": 11, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [10, 10, 10, 11], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [10, 10, 11, 11], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 9, 9, 9], "target": 8, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [10, 10, 10, 13], "target": 1, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [11, 11, 11, 14], "target": 1, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 15, 15], "target": 10, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [5, 5, 14, 14], "target": 2, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [6, 11, 11, 11], "target": 3, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [11, 11, 11, 14], "target": 2, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [14, 14, 14, 15], "target": 11, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [6, 13, 13, 13], "target": 9, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [12, 12, 13, 13], "target": 8, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [13, 13, 14, 14], "target": 9, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [6, 6, 13, 13], "target": 3, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [5, 5, 12, 12], "target": 11, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [6, 6, 11, 11], "target": 3, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [9, 9, 9, 13], "target": 10, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [5, 14, 14, 14], "target": 3, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [14, 15, 15, 15], "target": 10, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 12, 12], "target": 6, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [6, 6, 13, 13], "target": 10, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [6, 6, 6, 11], "target": 3, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [11, 11, 11, 15], "target": 5, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 12, 12], "target": 1, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [9, 9, 10, 10], "target": 5, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [13, 14, 14, 15], "target": 7, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 10], "target": 5, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 11], "target": 9, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [9, 9, 13, 13], "target": 7, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [11, 11, 13, 13], "target": 8, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [12, 13, 13, 13], "target": 4, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [11, 11, 11, 14], "target": 12, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 8, 15, 15], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 8, 15, 15], "target": 11, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [14, 14, 14, 15], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 8, 15, 15], "target": 10, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [5, 5, 5, 12], "target": 11, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 13, 13, 13], "target": 11, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 12, 14, 14], "target": 13, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 8, 8, 9], "target": 5, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [13, 13, 13, 14], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 12, 14], "target": 13, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 14, 15], "target": 11, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 13, 13, 13], "target": 6, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 11, 11], "target": 9, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [11, 12, 12, 12], "target": 4, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 8, 8, 15], "target": 11, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [12, 12, 12, 13], "target": 9, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 9, 14], "target": 11, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [8, 11, 11, 11], "target": 7, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [11, 11, 14, 14], "target": 12, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [8, 8, 8, 9], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [13, 13, 13, 15], "target": 7, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [5, 5, 12, 12], "target": 6, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [11, 11, 14, 14], "target": 1, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [11, 11, 12, 12], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [5, 5, 5, 12], "target": 6, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [5, 5, 14, 14], "target": 12, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [11, 11, 11, 12], "target": 8, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 9, 10], "target": 6, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 9, 13], "target": 6, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [9, 9, 9, 11], "target": 3, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [12, 12, 13, 13], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [5, 5, 11, 11], "target": 8, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [8, 8, 8, 11], "target": 4, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [14, 14, 15, 15], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [9, 9, 9, 13], "target": 7, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [6, 6, 13, 13], "target": 9, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 7, 13, 13], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [5, 5, 13, 13], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 9], "target": 1, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [5, 11, 11, 11], "target": 8, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 15, 15], "target": 12, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [11, 11, 15, 15], "target": 10, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [9, 13, 13, 13], "target": 3, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 14, 14], "target": 11, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [11, 11, 13, 15], "target": 14, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 10], "target": 8, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 15, 15, 15], "target": 10, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 9, 14], "target": 3, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 11, 11, 11], "target": 5, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [11, 13, 13, 15], "target": 14, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [5, 13, 13, 13], "target": 1, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 9, 11], "target": 8, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 8, 11, 11], "target": 7, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [11, 11, 11, 13], "target": 5, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [6, 13, 13, 13], "target": 10, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [10, 10, 13, 13], "target": 11, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [7, 7, 11, 11], "target": 2, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [14, 15, 15, 15], "target": 4, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 13], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 8, 8, 11], "target": 7, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [10, 10, 11, 11], "target": 6, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [6, 6, 6, 13], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [13, 13, 14, 14], "target": 4, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [8, 8, 8, 13], "target": 1, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [5, 9, 14, 14], "target": 7, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 13, 13], "target": 6, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [5, 5, 5, 14], "target": 12, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [6, 6, 6, 11], "target": 8, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [8, 8, 13, 13], "target": 12, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [9, 10, 10, 10], "target": 5, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [9, 14, 14, 14], "target": 3, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 12, 12, 12], "target": 6, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 12, 12, 12], "target": 11, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 11, 11], "target": 8, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 7, 10, 10], "target": 5, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [11, 14, 14, 14], "target": 13, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 15, 15, 15], "target": 10, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [11, 11, 12, 12], "target": 7, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [9, 14, 14, 14], "target": 6, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [11, 11, 13, 13], "target": 3, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [13, 14, 14, 14], "target": 9, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [11, 11, 14, 14], "target": 13, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [7, 13, 13, 13], "target": 3, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [10, 10, 13, 13], "target": 2, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [8, 8, 13, 13], "target": 1, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [8, 13, 13, 13], "target": 7, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [5, 14, 14, 14], "target": 2, "min_moves": 13, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 11], "target": 2, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [6, 11, 11, 11], "target": 9, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [10, 10, 10, 11], "target": 7, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [13, 13, 14, 15], "target": 7, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [10, 11, 11, 11], "target": 6, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [6, 6, 6, 13], "target": 9, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [11, 11, 11, 15], "target": 10, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [12, 13, 13, 13], "target": 8, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [8, 8, 8, 13], "target": 12, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [5, 9, 9, 14], "target": 7, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 13, 13, 13], "target": 4, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [11, 15, 15, 15], "target": 1, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 15], "target": 10, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [5, 5, 5, 11], "target": 3, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 9], "target": 8, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [8, 8, 8, 15], "target": 5, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 15, 15, 15], "target": 12, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 7, 7, 12], "target": 11, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [7, 13, 13, 13], "target": 9, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [11, 11, 11, 15], "target": 14, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [7, 7, 13, 13], "target": 3, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [11, 11, 15, 15], "target": 5, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [10, 10, 10, 13], "target": 2, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [11, 14, 14, 14], "target": 12, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [5, 5, 5, 13], "target": 12, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [9, 9, 9, 10], "target": 4, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [13, 13, 15, 15], "target": 5, "min_moves": 15, "tier": "t3"}
+{"jug_capacities": [6, 6, 6, 13], "target": 3, "min_moves": 14, "tier": "t3"}
+{"jug_capacities": [8, 11, 11, 11], "target": 1, "min_moves": 12, "tier": "t3"}
+{"jug_capacities": [11, 11, 13, 13, 13], "target": 12, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [12, 12, 12, 12, 19], "target": 15, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [15, 15, 15, 15, 19], "target": 9, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [8, 19, 19, 19, 19], "target": 15, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [7, 7, 7, 7, 19], "target": 18, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [8, 19, 19, 19, 19], "target": 4, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [12, 12, 17, 17, 17], "target": 6, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 15, 15], "target": 9, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [16, 17, 17, 17, 17], "target": 5, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [11, 11, 16, 16, 16], "target": 13, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [7, 7, 17, 17, 17], "target": 15, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [8, 8, 17, 17, 17], "target": 12, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [17, 17, 18, 18, 18], "target": 12, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [11, 11, 18, 18, 18], "target": 5, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [12, 12, 12, 17, 17], "target": 13, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 17, 17], "target": 7, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [14, 14, 19, 19, 19], "target": 2, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [13, 13, 16, 16, 16], "target": 14, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [16, 16, 16, 17, 17], "target": 5, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [12, 12, 12, 17, 17], "target": 4, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [15, 15, 16, 16, 16], "target": 10, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [12, 12, 19, 19, 19], "target": 8, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [10, 17, 17, 17, 17], "target": 2, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 11, 14], "target": 13, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 16, 16], "target": 2, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [11, 18, 18, 18, 18], "target": 9, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [8, 8, 19, 19, 19], "target": 15, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 15, 15], "target": 5, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 11, 17], "target": 15, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [9, 9, 9, 16, 16], "target": 8, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [14, 17, 17, 17, 17], "target": 1, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [10, 10, 10, 19, 19], "target": 5, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [9, 18, 18, 18, 19], "target": 5, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [7, 16, 16, 16, 16], "target": 15, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [12, 12, 12, 12, 13], "target": 8, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [12, 12, 17, 17, 17], "target": 4, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [8, 8, 19, 19, 19], "target": 1, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 14, 17], "target": 13, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 13, 17], "target": 15, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 16, 16], "target": 8, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 19, 19], "target": 15, "min_moves": 26, "tier": "t4"}
+{"jug_capacities": [9, 9, 16, 18, 18], "target": 17, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [14, 14, 15, 15, 15], "target": 8, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 18, 18], "target": 9, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [14, 14, 19, 19, 19], "target": 17, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [13, 18, 18, 18, 18], "target": 7, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [15, 16, 16, 16, 16], "target": 10, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [13, 13, 16, 16, 16], "target": 5, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [11, 11, 17, 17, 17], "target": 8, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [13, 13, 15, 15, 15], "target": 1, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [16, 19, 19, 19, 19], "target": 2, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [11, 15, 15, 15, 15], "target": 13, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [17, 17, 17, 18, 18], "target": 7, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 19, 19], "target": 8, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [7, 7, 7, 17, 17], "target": 2, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [12, 12, 12, 12, 19], "target": 13, "min_moves": 28, "tier": "t4"}
+{"jug_capacities": [15, 15, 15, 19, 19], "target": 5, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [13, 19, 19, 19, 19], "target": 16, "min_moves": 29, "tier": "t4"}
+{"jug_capacities": [15, 15, 15, 17, 17], "target": 14, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [15, 16, 16, 16, 16], "target": 6, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [7, 7, 7, 19, 19], "target": 1, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [9, 9, 18, 18, 19], "target": 5, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [10, 10, 19, 19, 19], "target": 14, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [15, 15, 16, 16, 16], "target": 7, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [13, 13, 19, 19, 19], "target": 10, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [13, 13, 18, 18, 18], "target": 12, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [7, 18, 18, 18, 18], "target": 9, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 16, 16], "target": 13, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [13, 13, 19, 19, 19], "target": 2, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [15, 17, 17, 17, 17], "target": 10, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [17, 17, 17, 17, 18], "target": 7, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [15, 19, 19, 19, 19], "target": 1, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [10, 10, 10, 19, 19], "target": 15, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [7, 7, 7, 19, 19], "target": 13, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 11, 17], "target": 8, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [9, 17, 17, 17, 17], "target": 13, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 16, 16], "target": 11, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 13, 17], "target": 2, "min_moves": 26, "tier": "t4"}
+{"jug_capacities": [7, 18, 18, 18, 18], "target": 13, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [15, 16, 16, 16, 16], "target": 5, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 14, 19], "target": 2, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [7, 17, 17, 17, 17], "target": 5, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [11, 11, 17, 17, 17], "target": 14, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [17, 17, 17, 18, 18], "target": 11, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [13, 13, 19, 19, 19], "target": 3, "min_moves": 26, "tier": "t4"}
+{"jug_capacities": [12, 12, 12, 19, 19], "target": 13, "min_moves": 27, "tier": "t4"}
+{"jug_capacities": [9, 19, 19, 19, 19], "target": 15, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [7, 7, 7, 15, 15], "target": 11, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [8, 8, 11, 11, 19], "target": 15, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [7, 7, 18, 18, 18], "target": 16, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [16, 16, 19, 19, 19], "target": 14, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [18, 18, 19, 19, 19], "target": 8, "min_moves": 29, "tier": "t4"}
+{"jug_capacities": [9, 19, 19, 19, 19], "target": 4, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [12, 19, 19, 19, 19], "target": 4, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [12, 12, 12, 12, 17], "target": 11, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [10, 10, 10, 17, 17], "target": 8, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 13, 15], "target": 3, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 13, 16], "target": 14, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [13, 16, 16, 16, 16], "target": 2, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 17, 17], "target": 15, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [11, 11, 19, 19, 19], "target": 4, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [11, 11, 15, 15, 15], "target": 2, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 19, 19], "target": 17, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [10, 10, 11, 11, 11], "target": 5, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [18, 18, 19, 19, 19], "target": 7, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [9, 17, 17, 17, 17], "target": 14, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [9, 9, 9, 16, 18], "target": 17, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [14, 19, 19, 19, 19], "target": 16, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [8, 8, 8, 19, 19], "target": 15, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [10, 10, 10, 13, 13], "target": 8, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [11, 11, 19, 19, 19], "target": 18, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [10, 10, 10, 19, 19], "target": 4, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [16, 16, 17, 17, 17], "target": 8, "min_moves": 29, "tier": "t4"}
+{"jug_capacities": [10, 10, 10, 19, 19], "target": 13, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [16, 16, 16, 19, 19], "target": 17, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [16, 16, 19, 19, 19], "target": 1, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [10, 10, 17, 17, 17], "target": 8, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [11, 11, 14, 14, 14], "target": 10, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [7, 7, 7, 7, 16], "target": 15, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 13, 14], "target": 9, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [15, 15, 15, 15, 17], "target": 3, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 14, 17], "target": 10, "min_moves": 26, "tier": "t4"}
+{"jug_capacities": [7, 7, 7, 7, 18], "target": 16, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 18, 18], "target": 14, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [8, 8, 15, 15, 15], "target": 11, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [8, 8, 15, 15, 15], "target": 4, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 11, 18], "target": 16, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [9, 9, 9, 9, 13], "target": 11, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [14, 15, 15, 15, 15], "target": 7, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [12, 12, 12, 19, 19], "target": 11, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 19, 19], "target": 7, "min_moves": 28, "tier": "t4"}
+{"jug_capacities": [16, 16, 16, 19, 19], "target": 1, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 17, 17], "target": 7, "min_moves": 26, "tier": "t4"}
+{"jug_capacities": [11, 17, 17, 17, 17], "target": 14, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 14, 15], "target": 10, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [16, 16, 17, 17, 17], "target": 7, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [10, 10, 19, 19, 19], "target": 15, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [16, 16, 16, 17, 17], "target": 11, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 18, 18], "target": 12, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [9, 9, 16, 16, 16], "target": 10, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 16, 16], "target": 5, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [16, 16, 16, 16, 19], "target": 14, "min_moves": 26, "tier": "t4"}
+{"jug_capacities": [12, 17, 17, 17, 17], "target": 8, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [11, 11, 17, 17, 17], "target": 9, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [7, 7, 12, 19, 19], "target": 6, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [15, 15, 15, 17, 17], "target": 1, "min_moves": 27, "tier": "t4"}
+{"jug_capacities": [18, 19, 19, 19, 19], "target": 8, "min_moves": 30, "tier": "t4"}
+{"jug_capacities": [7, 7, 19, 19, 19], "target": 18, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [7, 7, 7, 19, 19], "target": 18, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [7, 7, 19, 19, 19], "target": 8, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 19, 19], "target": 10, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [10, 10, 10, 13, 13], "target": 5, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [10, 10, 13, 13, 13], "target": 5, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [16, 16, 16, 16, 17], "target": 9, "min_moves": 28, "tier": "t4"}
+{"jug_capacities": [8, 8, 19, 19, 19], "target": 4, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [16, 16, 17, 17, 17], "target": 11, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [13, 17, 17, 17, 17], "target": 3, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [15, 15, 15, 15, 16], "target": 9, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [7, 7, 7, 19, 19], "target": 11, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [17, 17, 19, 19, 19], "target": 12, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [7, 7, 19, 19, 19], "target": 1, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [17, 17, 17, 19, 19], "target": 7, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 13, 13], "target": 1, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 11, 19], "target": 12, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [18, 19, 19, 19, 19], "target": 6, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 14, 14], "target": 4, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [7, 7, 15, 15, 15], "target": 11, "min_moves": 19, "tier": "t4"}
+{"jug_capacities": [15, 15, 19, 19, 19], "target": 9, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [7, 7, 17, 17, 17], "target": 5, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [10, 10, 10, 10, 19], "target": 13, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [9, 9, 13, 13, 13], "target": 2, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [18, 18, 18, 18, 19], "target": 9, "min_moves": 31, "tier": "t4"}
+{"jug_capacities": [13, 13, 13, 15, 15], "target": 10, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 19, 19], "target": 2, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [9, 9, 9, 9, 17], "target": 4, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [13, 18, 18, 18, 18], "target": 9, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [12, 12, 12, 12, 19], "target": 18, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [15, 15, 17, 17, 19], "target": 18, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [17, 17, 18, 18, 18], "target": 8, "min_moves": 29, "tier": "t4"}
+{"jug_capacities": [9, 9, 9, 16, 16], "target": 10, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [10, 10, 19, 19, 19], "target": 16, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [8, 8, 8, 19, 19], "target": 4, "min_moves": 22, "tier": "t4"}
+{"jug_capacities": [14, 15, 15, 15, 15], "target": 9, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [16, 19, 19, 19, 19], "target": 11, "min_moves": 27, "tier": "t4"}
+{"jug_capacities": [13, 19, 19, 19, 19], "target": 10, "min_moves": 26, "tier": "t4"}
+{"jug_capacities": [9, 9, 14, 14, 14], "target": 2, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [10, 10, 10, 19, 19], "target": 14, "min_moves": 25, "tier": "t4"}
+{"jug_capacities": [15, 15, 15, 15, 19], "target": 5, "min_moves": 17, "tier": "t4"}
+{"jug_capacities": [16, 19, 19, 19, 19], "target": 14, "min_moves": 23, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 18, 18], "target": 13, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 15, 15], "target": 6, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [11, 11, 13, 13, 13], "target": 1, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [14, 14, 14, 17, 17], "target": 1, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 15, 15], "target": 2, "min_moves": 21, "tier": "t4"}
+{"jug_capacities": [9, 9, 9, 17, 17], "target": 14, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [15, 17, 17, 17, 19], "target": 18, "min_moves": 16, "tier": "t4"}
+{"jug_capacities": [14, 14, 17, 17, 17], "target": 10, "min_moves": 24, "tier": "t4"}
+{"jug_capacities": [15, 19, 19, 19, 19], "target": 5, "min_moves": 20, "tier": "t4"}
+{"jug_capacities": [11, 11, 11, 11, 14], "target": 10, "min_moves": 18, "tier": "t4"}
+{"jug_capacities": [9, 9, 9, 9, 14], "target": 12, "min_moves": 18, "tier": "t4"}

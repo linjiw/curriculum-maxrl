@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/ec2-user/work/curriculumrl/curriculum-maxrl/jugs_llm/pool.py", line 225, in <module>
+    main()
+  File "/home/ec2-user/work/curriculumrl/curriculum-maxrl/jugs_llm/pool.py", line 216, in main
+    mm = {name: [t.min_moves for t in pool if t.tier == name]
+  File "/home/ec2-user/work/curriculumrl/curriculum-maxrl/jugs_llm/pool.py", line 217, in <dictcomp>
+    for name, _, _ in TIER_GRID}
+ValueError: too many values to unpack (expected 3)

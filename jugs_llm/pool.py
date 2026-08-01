@@ -156,29 +156,50 @@ def relabeled_task(task: JugsTask, new_target: int) -> JugsTask:
 
 
 # ------------------------------------------------------------------ pool
+# name, num_jugs, capacity range, min_moves band [lo, hi)
+# Capacity range is decoupled from the moves band (the vendored
+# generate_puzzle ties caps to difficulty, which collapses low tiers to
+# a handful of distinct puzzles); tasks are deduped on (caps, target).
 TIER_GRID = [
-    # (name, num_jugs, difficulty=min required moves)
-    ("t0", 2, 2),
-    ("t1", 3, 4),
-    ("t2", 3, 8),
-    ("t3", 4, 12),
-    ("t4", 5, 16),
+    ("t0", 2, (3, 20), (2, 5)),   # 330 unique tasks exist in this cell
+    ("t1", 3, (3, 12), (4, 8)),
+    ("t2", 3, (5, 15), (8, 12)),
+    ("t3", 4, (5, 15), (12, 16)),
+    ("t4", 5, (7, 19), (16, 32)),
 ]
 
 
-def build_pool(per_tier: int = 200, seed: int = 0) -> list[JugsTask]:
+def build_pool(per_tier: int = 200, seed: int = 0,
+               max_attempts: int = 200000) -> list[JugsTask]:
+    from functools import reduce
+    from math import gcd
+
     rng = Random(seed)
     pool = []
-    for name, n_jugs, diff in TIER_GRID:
-        made = 0
-        while made < per_tier:
-            try:
-                pz = generate_puzzle(rng, num_jugs=n_jugs, difficulty=diff)
-            except ValueError:
+    for name, n_jugs, (cap_lo, cap_hi), (mm_lo, mm_hi) in TIER_GRID:
+        seen: set = set()
+        tier_tasks: list[JugsTask] = []
+        attempts = 0
+        while len(tier_tasks) < per_tier and attempts < max_attempts:
+            attempts += 1
+            caps = sorted(rng.randint(cap_lo, cap_hi) for _ in range(n_jugs))
+            g = reduce(gcd, caps)
+            targets = [t for t in range(1, max(caps) + 1) if t % g == 0]
+            if not targets:
                 continue
-            pool.append(JugsTask(pz["jug_capacities"], pz["target"],
-                                 pz["min_moves"], name))
-            made += 1
+            target = rng.choice(targets)
+            key = (tuple(caps), target)
+            if key in seen:
+                continue
+            seen.add(key)
+            mm = min_moves_n(caps, target)
+            if mm is None or not (mm_lo <= mm < mm_hi):
+                continue
+            tier_tasks.append(JugsTask(list(caps), target, mm, name))
+        if len(tier_tasks) < per_tier:
+            print(f"warning: {name} exhausted at {len(tier_tasks)} unique "
+                  f"tasks after {attempts} attempts")
+        pool += tier_tasks
     return pool
 
 
@@ -192,12 +213,13 @@ def main():
                                 "tier": t.tier}) + "\n")
     from collections import Counter
     tiers = Counter(t.tier for t in pool)
-    mm = {name: [t.min_moves for t in pool if t.tier == name]
-          for name, _, _ in TIER_GRID}
     print(f"wrote {path}: {dict(tiers)}")
-    for name in tiers:
-        v = mm[name]
-        print(f"  {name}: min_moves {min(v)}-{max(v)}")
+    for name, *_ in TIER_GRID:
+        v = [t.min_moves for t in pool if t.tier == name]
+        uniq = len({(tuple(t.jug_capacities), t.target)
+                    for t in pool if t.tier == name})
+        if v:
+            print(f"  {name}: min_moves {min(v)}-{max(v)}, unique {uniq}/{len(v)}")
 
 
 if __name__ == "__main__":
