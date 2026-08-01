@@ -768,15 +768,19 @@ fraction \emph{minimum} reaches .48 vs.\ uniform's .52, but the run
 means are indistinguishable (.66--.67 in all cells) --- the delivered
 treatment was weak, which is the posterior-starvation mechanism below,
 and it bounds how much of the GRPO gap the curriculum can own.
-\textbf{A replication seed does not reproduce the regression:} seed 2 of the same cell climbs monotonically
-($.073\to.095\to.118$), and its steering telemetry shows the treatment
-was weaker (min dead-sampled fraction $.53$, mean $.66 \approx$
-population --- a near-uniform teacher on average). The pattern is
-mechanistically consistent --- damage tracks steering intensity, and
-seed 2's final $\passat{4}$ ($.203$) still sits below uniform GRPO's
-($.229$) --- the status of the LLM-scale interaction is therefore
-\emph{1 of 2 seeds, treatment-intensity-dependent}: suggestive, not
-established. MaxRL+teacher trains stably to its best value
+\textbf{A replication seed does not reproduce the regression shape:}
+seed 2 of the same cell climbs monotonically ($.073\to.095\to.118$),
+and its steering telemetry shows the treatment was weaker (min
+dead-sampled fraction $.53$, mean $.66 \approx$ population --- a
+near-uniform teacher on average). The completed \emph{within-seed} pair
+(grpo-uniform seed 2: $.081\to.085\to.125$, final $\passat{4}$ $.229$;
+artifact \texttt{grpo\_uniform\_seed2.json}) sharpens the read: the
+endpoint teacher deficit under GRPO has the same \emph{sign} in both
+seeds on both meters (4/4 signed contrasts; seed 2: $-.007$ mean@4,
+within noise, $-.026$ $\passat{4}$, $\sim$1.5$\times$ its floor) with
+magnitude tracking steering intensity --- a dose effect, not a sign
+flip. The pre-registered \emph{second-half-regression} shape remains
+1 of 2 seeds: suggestive, not established. MaxRL+teacher trains stably to its best value
 ($.066\to.102$); the uniform-MaxRL cell finishes at $.108$, making
 P-G1 (a teacher gain for MaxRL) a \emph{null at this budget} ---
 predicted in advance by the posterior-starvation analysis below. A

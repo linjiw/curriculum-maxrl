@@ -141,6 +141,32 @@ p=0.0079) is unaffected. Entropy note: seed-2 ended at 0.652 vs seed-1
 grpo+teacher's 0.765 — the entropy-retention observation is also
 seed-variable.
 
+### Update 2026-08-01: the within-seed pair lands (grpo uniform seed 2)
+
+The H6 completion run (raysession_2026-07-31_16-29-58, artifact
+`gsm8k_partial/grpo_uniform_seed2.json`) makes the seed-2 contrast
+within-seed instead of cross-seed:
+
+| seed-2 cell | mean@4 traj | final pass@4 |
+|---|---|---|
+| grpo uniform | .081 → .085 → **.125** | **.229** |
+| grpo+teacher | .073 → .095 → .118 | .203 |
+
+Within seed 2 the teacher deficit is −.007 mean@4 (inside the .0094
+noise floor) and −.026 pass@4 (~1.5× the .0172 pass@4 floor) — same
+direction as seed 1 (−.027 / −.048, z≈2 each), smaller magnitude,
+consistent with seed 2's weaker delivered steering (min dead-sampled
+.531 vs uniform's own .531-min this seed: means both ≈.66). Sanity:
+uniform-GRPO seed 2's final (.125) also replicates seed 1's (.120).
+
+**Sharpened verdict:** the endpoint teacher-deficit *direction* under
+GRPO is now 2/2 seeds on both meters (4/4 signed contrasts); what
+remains 1-of-2 is the pre-registered *second-half regression* shape,
+and magnitude tracks steering intensity. Still short of established —
+the steering-controlled multi-seed cell remains the decisive
+experiment — but the replication miss no longer reads as a sign flip,
+only as a dose effect.
+
 ## Finding 5 — k-sweep: the teacher's GRPO damage grows with k (P-G3, directional)
 
 Final checkpoints, vllm, n=16 samples on the 256-row slice, unbiased
