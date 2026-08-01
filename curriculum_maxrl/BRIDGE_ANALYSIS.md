@@ -114,13 +114,34 @@ trajectory.
    now states the dissociation and cites this artifact, replacing the
    weaker "does not claim proportionality" hedge.
 
+## Part E — does the tilt survive the deployed machinery? (posterior p̂)
+
+Same pools, but utilities computed from Thompson draws of the deployed
+decayed-Beta posterior (α=0 is exactly the shipped AdvMassTeacher);
+family (1−p̃)^α·u_N, α ∈ {0,1,2,3}, 10 seeds:
+
+| pool | α=0 (deployed) | α=1 | α=2 | α=3 |
+|---|---|---|---|---|
+| chain | .743 | .770 (+.027, p=.009) | .777 (+.034, p=.001) | **.784** (+.041, p=.0009) |
+| flat | .505 | **.520** (+.015, p=.034) | .518 (+.013, p=.046) | .508 (n.s.) |
+
+**The edge survives posterior noise** — it is a deployable one-line
+change, not an oracle artifact. α=2 is not special: chains reward more
+tilt (monotone through α=3), the flat pool peaks at α≈1–2 and gives the
+gain back at α=3. α ∈ [1,2] is the robust band across both pools.
+
+Practical recommendation (not yet shipped): FrontierMax's utility line
+`u = (1-(1-p̃)^N) - p̃` → `u *= (1-p̃)^α`, α=1 default. Honesty cost: this
+adds one knob with a validated default to the "derived, not tuned"
+story; the derivation-vs-tuning line moves from "the utility is derived"
+to "the band and its zeros are derived; the within-band tilt is a
+horizon-value correction, direction theory-motivated (Part D), exponent
+tuned." Adopt only together with a GPU-rung validation (maze or E-LLM-3).
+
 ## Follow-ups it opens (not started)
 
 - A stochastic lookahead (simulate the Beta-Binomial first-success time
   instead of the ODE) at h≈200 — would test whether stochasticity closes
   the last −.017.
-- Whether (1−p)^α·u_N with tuned α beats α=2 (is the review's tilt itself
-  just a point on a family?).
-- Whether the tilt's advantage survives *posterior* p̂ (all Part B/C/D
-  arms use oracle p; the deployed teacher's Thompson noise may wash out
-  a .005–.025 AUC edge — cheap to test with the existing harness).
+- GPU validation of the α-tilt before adopting it in FrontierMax
+  (fold into the u_N-form maze rerun or E-LLM-3).
