@@ -2138,5 +2138,35 @@
     "p": 0.11230559765255067
    }
   }
+ },
+ "part_g_budget_aware": {
+  "design": "deterministic-ODE lookahead with horizon = remaining_groups / n_tasks, refreshed every 50 groups and on each update; flat pool, 10 seeds",
+  "hypothesis": "if the tilt's residual edge is budget-awareness, this matches or beats var_tilted",
+  "auc_mean": 0.5473127945790277,
+  "auc_std": 0.009484100186707783,
+  "auc_per_seed": [
+   0.5468220708161345,
+   0.5386541190002768,
+   0.5392534614455203,
+   0.5594101992563173,
+   0.554043568306609,
+   0.5550049347641188,
+   0.5433436038870327,
+   0.555268225967049,
+   0.5537221399124158,
+   0.5276056224348038
+  ],
+  "vs_var_tilted": {
+   "delta_mean": -0.04472642005449112,
+   "wins": 0,
+   "t": -8.747355221559266,
+   "p": 1.0770943893107926e-05
+  },
+  "vs_det_h200": {
+   "delta_mean": -0.027688047336613408,
+   "wins": 0,
+   "t": -6.695079885444036,
+   "p": 8.903453376251288e-05
+  }
  }
 }

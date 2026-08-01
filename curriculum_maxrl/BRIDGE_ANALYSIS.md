@@ -152,18 +152,35 @@ of h groups (K~Bin(N,p); exact single-task MaxRL update — Σw=0 kills the
 
 Stochasticity buys a small, non-significant improvement over the ODE and
 **does not close the gap** — the pre-stated hypothesis is refuted as the
-main explanation. Remaining candidates for the tilt's last −.012 edge:
-(a) *budget-awareness* — a fixed h overvalues slow-burn tasks as the
-remaining budget shrinks (the correct horizon is the remaining budget,
-which the tilt's aggressive discounting of near-mastered tasks crudely
-mimics); (b) M=32 estimator noise in the utility itself. Honest summary
-for the paper stands unchanged: no myopic-or-lookahead utility we built
-beats the cheap tilt; sampling utility design is genuinely open beyond
-the band's zeros.
+main explanation.
+
+## Part G — budget-aware lookahead (also refuted)
+
+Horizon = remaining_groups/n_tasks (shrinking as budget spends,
+refreshed continuously): AUC .547 — *worse* than fixed h=200 (−.028,
+0/10) and far below the tilt (−.045, 0/10). The correct per-task
+horizon is evidently not the equal-share of remaining budget (a good
+sampler concentrates, so its effective per-task horizon on chosen tasks
+is much longer than the average).
+
+## Where the utility question lands (final)
+
+Four mechanistic constructions — myopic exact LP, deterministic
+lookahead (any fixed h), stochastic lookahead, budget-aware lookahead —
+all lose to the cheap tilt (1−p)·u_N on the flat pool. The tilt's edge
+is real (10/10, survives posterior noise, robust α∈[1,2]) and
+**mechanistically unexplained**. For the paper this is the honest and
+actually stronger statement: within-band sampling-utility design is an
+open sequential-decision problem that resists greedy/lookahead
+solutions; the partition's boundaries (the zeros every candidate
+shares) are what the theory nails down, and u_N is as good as the exact
+first-order objective as a predictor while being computable from p̃
+alone.
 
 ## Follow-ups it opens (not started)
 
-- Budget-aware lookahead (h = remaining budget / n_tasks, shrinking) —
-  the last untested mechanism for the tilt's residual edge.
 - GPU validation of the α-tilt before adopting it in FrontierMax
   (folded into sweep_un_form.sh P-U2 — running).
+- If P-U2 confirms on the maze: a Gittins-style analysis of the
+  restless-bandit structure is the principled next theory step (each
+  task's p drifts only when sampled → near-Whittle-indexable).
