@@ -944,7 +944,12 @@ whether external curricula and recyclers compound or cancel the
 estimator's implicit weighting, and what that costs in coverage. Notably,
 recent work frames curricula as the \emph{cure} for coverage loss
 \citep{cai}; our GRPO arms show the cure is estimator-conditional ---
-those studies never varied the estimator.
+those studies never varied the estimator. The estimator--difficulty
+interaction itself is a heating 2026 theme --- SC-SDPO \citep{scsdpo}
+shows GRPO's normalization implicitly encodes a difficulty weighting,
+and A-GRAE \citep{agrae} redesigns the advantage around difficulty
+focus --- but no prior work runs \emph{identical} curricula under two
+estimators or measures the resulting $\passat{k}$ sign flip.
 
 \textbf{Curricula for RLVR.} Difficulty-adaptive sampling is bucket- or
 scalar-level and heuristic-scored: DUMP (UCB over buckets), AdaRFT
@@ -961,19 +966,30 @@ form of both (water-filling spends its next rollout wherever
 $p(1-p)^N$ is largest, across or within). DAPO's dynamic sampling and
 GRESO cull dead prompts --- avoidance without allocation or creation. PKPO and Pass@k-training
 modify the objective toward $\passat{k}$ but keep uniform sampling.
-Hindsight for LLMs (AgentHER, HSL) relabels agent trajectories with an LLM
-judge. The nearest neighbor is concurrent: LfH \citep{lfh} brings
-hindsight relabeling into GRPO for VLA post-training --- a VLM proposes
-one shared hindsight instruction per failed group and rescores the group
-under it; $5\times$ sample efficiency on LIBERO-PRO. LfH's relabeler is a
-VLM judge (their stated limitation: relabel noise), and its evaluation
-never measures $\passat{k}$ --- precisely the currency where we find
-recycling's hidden cost. Exact-verifier relabeling with a correctness
-guarantee, and the coverage accounting of recycling, remain, to our
-knowledge, ours. No prior work (i) derives the sampling utility from the
-estimator's own expected signal, (ii) couples it with success-conditioned
-weights it provably matches, and (iii) adds a signal-creation channel with
-an exactness guarantee.
+\textbf{Hindsight and self-training for LLMs.} Exact-verifier
+relabeling has precedent outside RLVR loops --- CodeIt \citep{codeit}
+(ARC program synthesis, relabel + prioritized replay) and proof-tree
+relabeling \citep{minimo} --- and LLM-judged variants relabel agent
+trajectories (AgentHER, HSL). Concurrent 2026 work brings
+relabeling-adjacent mechanisms into RLVR-style training: LfH \citep{lfh}
+(a VLM proposes one shared hindsight instruction per failed group for
+VLA post-training; the relabeler is a judge, their stated limitation)
+and ZipRL's hindsight response replay \citep{ziprl} (densifying GRPO
+signal for multi-turn agents). None of these measures $\passat{k}$
+under relabeling --- precisely the currency where we find recycling's
+hidden cost. The nearest phenomenon report is in same-problem rejection
+finetuning: \citet{starcross} document a STaR-trained model winning
+$\passat{8}$ while the base model overtakes at $\passat{256}$ ---
+concentration over reach --- for SFT on a model's own verified outputs.
+Recycling-induced sharpening is the cross-task, on-policy-RL sibling,
+and our gate is its estimator-derived admission rule; gating RLVR
+updates by pass-rate-like saturation signals has independent precedent
+for \emph{vanilla} updates \citep{bbg}, not for relabel destinations.
+So the precise claims we retain: no prior work (i) derives the sampling
+utility from the estimator's own expected signal, (ii) couples it with
+success-conditioned weights it provably matches, or (iii) \emph{measures
+the coverage cost of hindsight relabeling in RLVR} and gates relabel
+admission by destination saturation.
 
 \section{Limitations and negative results}\label{sec:limits}
 
@@ -1068,6 +1084,21 @@ generative models with curated data provably optimize human preferences.
 \emph{NeurIPS}, 2024.
 \bibitem[Xu et al.(2026)]{lfh} Xu, I., Jiang, S., et al. Learning more
 from less: reinforcement learning from hindsight. arXiv:2607.09042, 2026.
+\bibitem[Butt et al.(2024)]{codeit} Butt, N., et al. CodeIt:
+self-improving language models with prioritized hindsight replay.
+\emph{ICML}, 2024.
+\bibitem[Poesia et al.(2024)]{minimo} Poesia, G., et al. Learning formal
+mathematics from intrinsic motivation. \emph{NeurIPS}, 2024.
+\bibitem[arXiv:2605.28069(2026)]{ziprl} ZipRL: hindsight response replay
+for multi-turn agent RLVR. arXiv:2605.28069, 2026. \emph{[authors TBC]}
+\bibitem[arXiv:2606.07856(2026)]{starcross} Teacher-free self-training
+amplifies but does not compound. arXiv:2606.07856, 2026. \emph{[authors
+TBC]}
+\bibitem[BBG(2026)]{bbg} Bayesian boundary gating for RLVR. 2026.
+\emph{[arXiv ID + authors TBC --- the ID reported by our search collides
+with \citealp{yuan}; verify before submission]}
+\bibitem[arXiv:2602.05548(2026)]{agrae} A-GRAE: asymmetric group-relative
+advantage estimation. arXiv:2602.05548, 2026. \emph{[authors TBC]}
 \bibitem[Rutherford et al.(2024)]{sfl} Rutherford, A., et al. No
 regrets: investigating and improving regret approximations for curriculum
 discovery. \emph{NeurIPS}, 2024.
