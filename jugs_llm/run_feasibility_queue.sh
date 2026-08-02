@@ -22,6 +22,7 @@ done
 echo "maze sweep done ($(date))"
 
 # 3. run feasibility per model (script itself waits for free GPU)
+export HF_HOME=~/hf-cache
 PY=/home/ec2-user/venvs/maxrl311/bin/python3
 for model in HuggingFaceTB/SmolLM2-360M-Instruct Qwen/Qwen2.5-0.5B-Instruct; do
   echo "=== feasibility $model ($(date)) ==="

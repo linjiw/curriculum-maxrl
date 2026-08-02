@@ -213,14 +213,31 @@ is the testbed-exact version of that phenomenon.
 4. The partition's boundaries (u_N's zeros) are shared by every
    candidate and remain the load-bearing theory claim.
 
-## Follow-ups it opens (not started)
+## GPU verdict (2026-08-02): the tilt does NOT transfer — not adopted
 
-- GPU validation of the α-tilt before adopting it in FrontierMax
-  (folded into sweep_un_form.sh P-U2 — running). Note P-U2's meter is
-  matched-clock AUC — per the H/I resolution, that is the tilt's
-  favorable objective; a final-checkpoint read should be reported
-  beside it.
-- Whittle-index analysis is now better-motivated: the restless-bandit
-  value function is exactly what the DP computes; a closed-form index
-  approximating it would unify the tilt (AUC) and the cutoff (final)
-  as two discountings of one object.
+sweep_un_form.sh completed (maze, matched clock, 3 seeds/arm; artifact
+`maze_gpu/un_form_verdicts.json`):
+- **P-U1 CONFIRMED**: exact u_N ≡ legacy frontier form on the maze
+  (ΔAUC +.0004 vs 2×noise .021). The paper's §6.3 "within-noise
+  equivalent" claim is now measured where it's used.
+- **P-U2 REFUTED**: the tilt loses to u_N 0/3 on AUC (−.008), 0/3 on
+  final eval (−.014), and 0/3 on final pass@8 (−.026) — on BOTH
+  objectives, so this is not the H/I objective-split; the CPU edge
+  simply does not survive real gradients (function approximation +
+  level-bucketed posteriors vs per-task oracle state are the leading
+  suspects). Per the pre-registered rule, **the tilt is not adopted**.
+
+Standing conclusion: u_N stays FrontierMax's utility — it ties the
+exact first-order objective as a predictor (part A), ties the legacy
+form on the maze (P-U1), and nothing we built beats it consistently
+across objectives *and* scales. The bridge's contribution is the
+negative space: the within-band question is objective-dependent (H/I)
+and testbed-sensitive (P-U2), which is precisely why deriving only the
+band's *boundaries* — the paper's actual claim — is the right altitude.
+
+## Follow-ups (closed/parked)
+
+- ~~GPU validation of the α-tilt~~ — done, refuted, not adopted.
+- Whittle-index analysis: parked. Still theoretically interesting, but
+  P-U2 shows testbed-derived within-band refinements don't transfer,
+  so it is not on the paper's critical path.

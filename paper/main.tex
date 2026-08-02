@@ -594,8 +594,15 @@ $\Delta$AUC $+0.006$, $p{\approx}0.36$, n.s.) while teacher+recycling
 survives step-matching ($p{\approx}0.04$) --- on the maze the teacher's
 measured value is \emph{throughput} (buying more steps per GPU-hour),
 recycling's is signal. The maze teacher uses
-the legacy frontier form, a within-noise equivalent of the exact
-utility (\S 6.1). Safety, stated as what the design
+the legacy frontier form; a pre-registered 3-seed rerun with the exact
+$u_N$ measures the two within noise \emph{on the maze itself} (AUC
+$.2138{\pm}.0059$ vs.\ $.2135{\pm}.0104$; artifact
+\texttt{un\_form\_verdicts.json}), closing the gap between the deployed
+form and the derived one. The same sweep refutes a CPU-derived
+within-band refinement (a $(1{-}p)$-tilted utility that won 10/10 on
+the testbed loses 0/3 on the maze on every meter) --- within-band
+utility choices are testbed-sensitive, which is why the theory claims
+only the band's boundaries. Safety, stated as what the design
 supports: an estimator \emph{main effect on coverage} --- all five
 MaxRL runs grow $\passat{8}$ (e.g.\ $0.316\to0.348$ under the teacher)
 and all four GRPO runs lose it ($0.308\to0.271$ uniform;
