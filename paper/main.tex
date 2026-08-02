@@ -48,9 +48,11 @@ sampler can reach and a mastered tail where updates buy sharpening
 instead of signal. Curricula can only reallocate compute within the
 band between them; recycling is the only channel into the dead zone;
 and relabels that land in the mastered tail sharpen. This predicts an
-estimator-conditioned divergence we confirm across four task suites:
-under identical curricula, success-conditioned runs grow $\passat{k}$
-coverage while GRPO runs lose it. It also predicts a failure mode of
+estimator-conditioned divergence we then measure: under identical
+curricula, every success-conditioned run grows $\passat{k}$ coverage
+and every GRPO run loses it (nine maze runs, exact permutation
+$p{=}0.0079$; the teacher-deficit direction replicates 2/2 seeds at
+LLM scale). It also predicts a failure mode of
 recycling we then observe in production --- hindsight arms improve mean
 accuracy while losing coverage, \textbf{recycling-induced sharpening}
 --- and supplies the mitigation: gating relabel admission by the
@@ -684,8 +686,9 @@ and Countdown, this makes the regime rule a three-scale result:
 to avoid} --- on learnable-everywhere pools, breadth beats focus at
 1.26M-param maze, 360M LLM, and legged-robot scale.
 
-\paragraph{6.6 What does a curriculum add beyond task spread? (Gymnasium control ---
-binary-success RLVR on classic control, official-task currency.}
+\paragraph{6.6 What does a curriculum add beyond task spread? (Gymnasium
+control --- binary-success RLVR on classic control; official-task
+currency).}
 Setting, stated precisely because the baseline label matters: all arms
 train on \emph{binary task success} (MountainCar: reach $x \ge x^*$;
 CartPole: survive $\ge T$) with the same group estimator --- the
@@ -761,8 +764,8 @@ value but does not beat uniform at this budget (P-G1: null).}
 \label{fig:gsm8k}
 \end{figure}
 
-\paragraph{6.7 Does it transfer to LLM scale? (GSM8K $2{\times}2$, pre-registered;
-(SmolLM2-360M, $N{=}16$, one A10G).} Predictions committed before any cell
+\paragraph{6.7 Does it transfer to LLM scale? (GSM8K $2{\times}2$,
+pre-registered; SmolLM2-360M, $N{=}16$, one A10G).} Predictions committed before any cell
 finished. \textbf{P-G2 landed on the registered run:} GRPO+teacher
 was the only cell that regressed in its second half, and the deficit
 against plain GRPO at the endpoint is $2$--$4\times$ the measured
@@ -982,9 +985,10 @@ finetuning: \citet{starcross} document a STaR-trained model winning
 $\passat{8}$ while the base model overtakes at $\passat{256}$ ---
 concentration over reach --- for SFT on a model's own verified outputs.
 Recycling-induced sharpening is the cross-task, on-policy-RL sibling,
-and our gate is its estimator-derived admission rule; gating RLVR
-updates by pass-rate-like saturation signals has independent precedent
-for \emph{vanilla} updates \citep{bbg}, not for relabel destinations.
+and our gate is its estimator-derived admission rule; gating
+\emph{vanilla} RLVR updates by saturation signals has independent
+precedent (\citealp{yuan}'s Bayesian boundary gating), not applied to
+relabel destinations.
 So the precise claims we retain: no prior work (i) derives the sampling
 utility from the estimator's own expected signal, (ii) couples it with
 success-conditioned weights it provably matches, or (iii) \emph{measures
@@ -1089,16 +1093,15 @@ self-improving language models with prioritized hindsight replay.
 \emph{ICML}, 2024.
 \bibitem[Poesia et al.(2024)]{minimo} Poesia, G., et al. Learning formal
 mathematics from intrinsic motivation. \emph{NeurIPS}, 2024.
-\bibitem[arXiv:2605.28069(2026)]{ziprl} ZipRL: hindsight response replay
-for multi-turn agent RLVR. arXiv:2605.28069, 2026. \emph{[authors TBC]}
-\bibitem[arXiv:2606.07856(2026)]{starcross} Teacher-free self-training
-amplifies but does not compound. arXiv:2606.07856, 2026. \emph{[authors
-TBC]}
-\bibitem[BBG(2026)]{bbg} Bayesian boundary gating for RLVR. 2026.
-\emph{[arXiv ID + authors TBC --- the ID reported by our search collides
-with \citealp{yuan}; verify before submission]}
-\bibitem[arXiv:2602.05548(2026)]{agrae} A-GRAE: asymmetric group-relative
-advantage estimation. arXiv:2602.05548, 2026. \emph{[authors TBC]}
+\bibitem[Hu et al.(2026)]{ziprl} Hu, Z., Wang, L., Wang, X., et al.
+ZipRL: adaptive multi-turn context compression with hindsight response
+replay. arXiv:2605.28069, 2026.
+\bibitem[Strozzi(2026)]{starcross} Strozzi, I.~L. Teacher-free
+self-training amplifies but does not compound: a pass@$K$ crossover on a
+free-verifier domain. arXiv:2606.07856, 2026.
+\bibitem[Yu et al.(2026)]{agrae} Yu, Z., Chen, Z., Liu, M., et al.
+Unveiling implicit advantage symmetry: why GRPO struggles with
+exploration and difficulty adaptation. arXiv:2602.05548, 2026.
 \bibitem[Rutherford et al.(2024)]{sfl} Rutherford, A., et al. No
 regrets: investigating and improving regret approximations for curriculum
 discovery. \emph{NeurIPS}, 2024.
