@@ -1,16 +1,17 @@
 # Next research steps (post review-3, 2026-07-31)
 
-> **Status 2026-08-01:** #4 (bridge) DONE — see
-> `curriculum_maxrl/BRIDGE_ANALYSIS.md`: mass ties exact first-order LP
-> as a predictor; the review's variance tilt is a *horizon-value*
-> surrogate and survives posterior noise (α∈[1,2] robust band); no
-> myopic utility is the right sequential objective. #3 (u_N maze rerun)
-> RUNNING — `maze_gpu/sweep_un_form.sh` queued behind the H6 seed-2 pair
-> job, with pre-registered P-U1/P-U2 (incl. first GPU test of the tilt).
-> NEW: E-LLM-3 (Jugs) selected via `BENCHMARK_SURVEY.md`; infrastructure
-> + feasibility harness built and queued (`jugs_llm/`). #1 (GSM8K
-> steering-controlled replication) and #2 (gate dose sweep) are next in
-> the GPU queue after feasibility.
+> **Status 2026-08-02:** #4 (bridge) DONE through part I + GPU verdicts
+> — `curriculum_maxrl/BRIDGE_ANALYSIS.md`. Final: u_N ties the exact
+> first-order objective as predictor; "best within-band utility" is
+> objective-dependent (AUC vs final, parts H/I) AND testbed-sensitive
+> (the tilt won 10/10 on CPU, lost 0/3 on the maze — refuted per prereg,
+> not adopted). #3 (u_N maze rerun) DONE: P-U1 CONFIRMED (exact u_N ≡
+> legacy form on the maze, closing opus5 M4 with data). H6 seed-2 pair
+> DONE: GRPO teacher-deficit direction now 2/2 seeds (dose effect, not
+> sign flip; regression *shape* still 1-of-2). E-LLM-3 (Jugs) is
+> launch-ready (pool, reward, JugsHindsight, launcher, SFT script all
+> tested); feasibility RUNNING. Next: E-LLM-3 numeric prereg → cells;
+> then #1 (steering-controlled GSM8K) and #2 (gate dose sweep).
 
 Ranked by (decisiveness for the paper's thesis) × (cost). Each item names
 the claim it would settle, the design, and the pre-registration hook.
