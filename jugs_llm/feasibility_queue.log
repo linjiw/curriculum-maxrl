@@ -30,3 +30,32 @@ t3 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.684375, 'n_tasks': 4
 t4 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.615625, 'n_tasks': 40}
 wrote /home/ec2-user/work/curriculumrl/curriculum-maxrl/jugs_llm/feasibility_SmolLM2-360M-Instruct_2shot.json
 === feasibility Qwen/Qwen2.5-0.5B-Instruct (Sun Aug  2 02:36:23 UTC 2026) ===
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+200 tasks, N=16
+[10/200] 151s t0:p1=0.006,p@16=0.10
+[20/200] 304s t0:p1=0.003,p@16=0.05
+[30/200] 456s t0:p1=0.004,p@16=0.07
+[40/200] 610s t0:p1=0.003,p@16=0.05
+[50/200] 769s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00
+[60/200] 925s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00
+[70/200] 1080s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00
+[80/200] 1237s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00
+[90/200] 1394s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00
+[100/200] 1550s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00
+[110/200] 1707s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00
+[120/200] 1862s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00
+[130/200] 2017s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00
+[140/200] 2174s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00
+[150/200] 2330s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00
+[160/200] 2486s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00
+[170/200] 2643s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00 t4:p1=0.000,p@16=0.00
+[180/200] 2798s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00 t4:p1=0.000,p@16=0.00
+[190/200] 2953s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00 t4:p1=0.000,p@16=0.00
+[200/200] 3107s t0:p1=0.003,p@16=0.05 t1:p1=0.000,p@16=0.00 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00 t4:p1=0.000,p@16=0.00
+t0 {'pass1': 0.003125, 'pass16': 0.05, 'relabel_yield_on_fail': 0.0768025078369906, 'n_tasks': 40}
+t1 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.096875, 'n_tasks': 40}
+t2 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.0984375, 'n_tasks': 40}
+t3 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.0953125, 'n_tasks': 40}
+t4 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.071875, 'n_tasks': 40}
+wrote /home/ec2-user/work/curriculumrl/curriculum-maxrl/jugs_llm/feasibility_Qwen2_5-0_5B-Instruct_2shot.json
+FEASIBILITY QUEUE DONE Sun Aug  2 03:28:19 UTC 2026

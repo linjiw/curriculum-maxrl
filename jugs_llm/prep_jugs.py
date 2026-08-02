@@ -21,6 +21,33 @@ import pandas as pd
 SYSTEM = ("You are a helpful assistant. You first think about the reasoning "
           "process step by step and then provide the user with the answer.")
 
+# Two-shot exemplars baked into every prompt (feasibility showed the
+# 2-shot base model has the ideal tier landscape, while SFT format-priming
+# collapsed the policy onto short generic sequences — see DESIGN_E_LLM3).
+# CRITICAL: the exemplar goals use "obtain ... litres in one jug", NOT the
+# task's "contain exactly {t} litres" phrasing — the hindsight prompt
+# rewrite matches the task slot by that exact phrase and must never hit an
+# exemplar (verified in test_jugs_hindsight_verl.py::two_shot case).
+TWO_SHOT_PREFIX = """Example 1:
+Two jugs with capacities [3, 5]. Objective: obtain 4 litres in one jug.
+<answer>
+fill B
+pour B->A
+empty A
+pour B->A
+fill B
+pour B->A
+</answer>
+
+Example 2:
+Two jugs with capacities [4, 9]. Objective: obtain 9 litres in one jug.
+<answer>
+fill B
+</answer>
+
+Now solve this one:
+"""
+
 PROMPT_TEMPLATE = """You have {n} water jugs with capacities {caps} litres. All jugs start empty.
 Allowed moves (one per line):
   fill X       (fill jug X to its capacity)
@@ -40,8 +67,9 @@ def row_for(d: dict, split: str, index: int) -> dict:
     caps = d["jug_capacities"]
     n = len(caps)
     labels = ", ".join(chr(ord("A") + i) for i in range(n))
-    q = PROMPT_TEMPLATE.format(n=n, caps=caps, labels=labels,
-                               target=d["target"])
+    q = TWO_SHOT_PREFIX + PROMPT_TEMPLATE.format(n=n, caps=caps,
+                                                 labels=labels,
+                                                 target=d["target"])
     tier_idx = int(d["tier"][1:])
     return {
         "data_source": f"jugs_tier{tier_idx}",

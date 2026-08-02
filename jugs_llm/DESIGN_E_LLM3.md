@@ -56,13 +56,46 @@ fraction, relabel yield + gate rejection rate, policy entropy. Noise
 floor measured FIRST (5 repeated evals of the base checkpoint) — no
 claim inside it. All artifacts JSONL, committed.
 
+## Feasibility results (2026-08-02) and the format decision
+
+Three landscapes measured (40 tasks/tier, N=16, artifacts
+`feasibility_*.json`):
+
+| arm | t0 p@1/p@16 | t1 | t2–t4 | relabel yield |
+|---|---|---|---|---|
+| SmolLM2-360M 2-shot | .058/.475 | .006/.100 | 0/0 | .62–.73 all tiers |
+| Qwen2.5-0.5B 2-shot | .003/.050 | 0/0 | 0/0 | .07–.10 |
+| SmolLM2 SFT'd, 0-shot | .000/.000 | .003/.05 | 0/0 | .85–.93 |
+
+Decisions:
+1. **Model = SmolLM2-360M-Instruct** (Qwen-0.5B is worse on every cell
+   — replicating TinyZero's 0.5B-fails-Countdown at 0-shot format too).
+2. **Format = two-shot prompts baked into the RL parquet, NO SFT.**
+   The SFT checkpoint COLLAPSED the policy: it emits short generic
+   sequences ("fill A / pour A->B") on every task — relabel yield rose
+   to .9 but t0 pass@16 fell .475→0. Cause (sampled generations
+   inspected): 6k BFS-optimal examples teach the format but overwrite
+   the instruct model's task-reading; a diversity-preserving SFT
+   (higher-temp mixture, fewer epochs) is possible but the two-shot
+   base is already in-band — simpler wins. The SFT artifact is kept as
+   a documented negative (`feasibility_jugs_sft_v1.json`).
+3. Exemplar goals use "obtain N litres in one jug" phrasing so the
+   hindsight prompt-rewrite slot ("contain exactly N litres") is unique
+   in every prompt — verified property, one source of truth in
+   `prep_jugs.py::TWO_SHOT_PREFIX`.
+4. Tokenized two-shot prompts: 294–315 tokens < 384 launcher limit. OK.
+
+The tier landscape that binds the prereg = the SmolLM2 2-shot row:
+t0 in-band bootstrap, t1 deep frontier, t2–t4 unlearnable-at-budget
+WITH .62–.73 relabel yield — the frontier-heavy §6.2 configuration at
+LLM scale.
+
 ## Status
 
 - [x] pool + verifier + relabel map, smoke-tested
-- [ ] pool_v1.jsonl generation (running)
-- [ ] feasibility: base pass@k per tier per model (GPU queued behind
-      H6 job and sweep_un_form)
-- [ ] prereg commit with numeric predictions
-- [ ] verl integration (reuse Countdown's hindsight.py machinery — the
-      gate + relabel plumbing is domain-generic; only the verifier and
-      relabel-candidate fn are swapped)
+- [x] pool_v1.jsonl (200/200 unique per tier)
+- [x] feasibility (3 landscapes; model+format decided above)
+- [x] verl integration (JugsHindsight + launcher + parquet, all tested)
+- [ ] prereg commit with numeric predictions (next — binds to the
+      2-shot landscape)
+- [ ] launch B1/B2/B3 seeds

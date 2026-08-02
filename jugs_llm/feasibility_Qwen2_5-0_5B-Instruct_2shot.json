@@ -1,0 +1,39 @@
+{
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "n": 16,
+ "two_shot": true,
+ "per_tier": 40,
+ "temperature": 0.7,
+ "tiers": {
+  "t0": {
+   "pass1": 0.003125,
+   "pass16": 0.05,
+   "relabel_yield_on_fail": 0.0768025078369906,
+   "n_tasks": 40
+  },
+  "t1": {
+   "pass1": 0.0,
+   "pass16": 0.0,
+   "relabel_yield_on_fail": 0.096875,
+   "n_tasks": 40
+  },
+  "t2": {
+   "pass1": 0.0,
+   "pass16": 0.0,
+   "relabel_yield_on_fail": 0.0984375,
+   "n_tasks": 40
+  },
+  "t3": {
+   "pass1": 0.0,
+   "pass16": 0.0,
+   "relabel_yield_on_fail": 0.0953125,
+   "n_tasks": 40
+  },
+  "t4": {
+   "pass1": 0.0,
+   "pass16": 0.0,
+   "relabel_yield_on_fail": 0.071875,
+   "n_tasks": 40
+  }
+ }
+}

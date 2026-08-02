@@ -25,28 +25,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from pool import JugsTask, relabel_candidates, verify  # noqa: E402
-
-TWO_SHOT_PREFIX = """Example 1:
-You have 2 water jugs with capacities [3, 5] litres. All jugs start empty.
-Goal: make any one jug contain exactly 4 litres.
-<answer>
-fill B
-pour B->A
-empty A
-pour B->A
-fill B
-pour B->A
-</answer>
-
-Example 2:
-You have 2 water jugs with capacities [4, 9] litres. All jugs start empty.
-Goal: make any one jug contain exactly 9 litres.
-<answer>
-fill B
-</answer>
-
-Now solve this one:
-"""
+# one source of truth: the exemplars the RL parquet actually uses
+# (exemplar goals deliberately avoid the "contain exactly N litres"
+# phrase so the hindsight rewrite can never match them)
+from prep_jugs import TWO_SHOT_PREFIX  # noqa: E402
 
 
 def load_pool(path: str, per_tier: int) -> list[JugsTask]:
