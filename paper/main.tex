@@ -1031,6 +1031,56 @@ epoch-frozen sampler (the fixed run confirmed the effect), and a
 oracle arm (\S 6.1 reports the corrected tie). Full postmortems live in
 the repository's audit trail.
 
+\appendix
+\section{Hyperparameters and compute}\label{app:hparams}
+
+Total compute for every experiment in this paper: ${\sim}230$
+A10G-hours on a single GPU plus CPU-days for the exact-gradient suites;
+generation dominates LLM step time (85\%, artifact
+\texttt{generation\_timing.json}). Table~\ref{tab:suites} gives the
+per-suite configuration and Table~\ref{tab:knobs} the knob inventory
+with provenance.
+
+\begin{table}[h]
+\centering\small
+\caption{Per-suite configuration. Teacher knobs (decay, floor, $\gamma$)
+are shared across suites with the defaults below; what varies per suite
+is scale, not schedule.}
+\label{tab:suites}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+ & chains (\S6.1--6.2) & maze (\S6.3--6.4) & GSM8K (\S6.7) & Countdown (\S6.8--6.9) \\
+\midrule
+policy & exact tabular & 1.26M transformer & SmolLM2-360M & SmolLM2-360M (SFT) \\
+rollouts $N$ & 16 & 32 & 16 & 16 \\
+groups/step & 1 & 8 & 64 & 64 \\
+optimizer, lr & SGD, 0.5 & AdamW, $10^{-4}$ & AdamW, $10^{-5}$ & AdamW, $10^{-5}$ \\
+budget & 3{,}200 groups & 2{,}400 s clock & 50 steps & 60 steps \\
+seeds (headline) & 5--10 & 3 & 1--2/cell & 3/arm \\
+compute/run & CPU-min & 0.7 A10G-h & ${\sim}20$ A10G-h & ${\sim}6$ A10G-h \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering\small
+\caption{Teacher and recycler knobs: value, provenance, and measured
+sensitivity.}
+\label{tab:knobs}
+\begin{tabular}{@{}llll@{}}
+\toprule
+knob & default & derived or tuned & sensitivity \\
+\midrule
+band location/width/$N$-scaling & --- & \textbf{derived} (Prop.~1) & the theory claim \\
+posterior decay & 0.7 & tuned (V2b) & closes ${\sim}19\%$ of oracle gap \\
+uniform floor & 0.1 & tuned & 0.15 on maze; robust 0.05--0.2 \\
+$\gamma$ (concentration) & 1 & tuned (V6) & 4 on chains; no transfer to maze \\
+\texttt{gate\_max\_p} & 0.5 & derived zero at $p{\to}1$, midpoint tuned & monotone dial (\S6.9) \\
+relabel dose cap & 12 groups/step & tuned & dose sets \emph{where} coverage is spent (\S6.4) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section*{Reproducibility}
 Every proposition has a Monte-Carlo verification script; every figure
 in this paper regenerates from JSON artifacts committed to the

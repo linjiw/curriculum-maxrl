@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  2 AUG 2026 06:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  2 AUG 2026 06:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -534,7 +534,7 @@ Package microtype Info: Loading generic protrusion settings for font family
  [1
 
 {/usr/share/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<figures/fig1_utility.pdf, id=81, 505.89pt x 187.902pt>
+<figures/fig1_utility.pdf, id=85, 505.89pt x 187.902pt>
 File: figures/fig1_utility.pdf Graphic file (type pdf)
 <use figures/fig1_utility.pdf>
 Package pdftex.def Info: figures/fig1_utility.pdf  used on input line 182.
@@ -545,7 +545,7 @@ Package pdftex.def Info: figures/fig1_utility.pdf  used on input line 182.
                                                   
 l.261 \end{proposition}
                         <./figures/fig1_utility.pdf>] [4]
-<figures/fig4_algorithm.pdf, id=174, 505.89pt x 231.26399pt>
+<figures/fig4_algorithm.pdf, id=178, 505.89pt x 231.26399pt>
 File: figures/fig4_algorithm.pdf Graphic file (type pdf)
 <use figures/fig4_algorithm.pdf>
 Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 366.
@@ -558,7 +558,7 @@ put line 393.
                                                   
 l.423 \end{proposition}
                         <./figures/fig4_algorithm.pdf>]
-<figures/fig5_channels.pdf, id=221, 252.945pt x 216.81pt>
+<figures/fig5_channels.pdf, id=225, 252.945pt x 216.81pt>
 File: figures/fig5_channels.pdf Graphic file (type pdf)
 <use figures/fig5_channels.pdf>
 Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 462.
@@ -569,7 +569,7 @@ Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 462.
                                                   
 l.483 
        <./figures/fig5_channels.pdf>]
-<figures/fig2_ladder.pdf, id=251, 505.89pt x 202.356pt>
+<figures/fig2_ladder.pdf, id=255, 505.89pt x 202.356pt>
 File: figures/fig2_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ladder.pdf>
 Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 517.
@@ -585,7 +585,7 @@ ure.4}) has been already used, duplicate ignored
                                                   
 l.627 
        <./figures/fig2_ladder.pdf>]
-<figures/fig8_bands.pdf, id=292, 505.89pt x 195.129pt>
+<figures/fig8_bands.pdf, id=296, 505.89pt x 195.129pt>
 File: figures/fig8_bands.pdf Graphic file (type pdf)
 <use figures/fig8_bands.pdf>
 Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 657.
@@ -596,12 +596,12 @@ Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 657.
                                                   
 l.688 
        <./figures/fig8_bands.pdf>]
-<figures/fig6_gym.pdf, id=327, 505.89pt x 202.356pt>
+<figures/fig6_gym.pdf, id=331, 505.89pt x 202.356pt>
 File: figures/fig6_gym.pdf Graphic file (type pdf)
 <use figures/fig6_gym.pdf>
 Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 736.
 (pdftex.def)             Requested size: 469.75502pt x 187.90506pt.
-<figures/fig3_gsm8k.pdf, id=328, 252.945pt x 202.356pt>
+<figures/fig3_gsm8k.pdf, id=332, 252.945pt x 202.356pt>
 File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
 <use figures/fig3_gsm8k.pdf>
 Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 755.
@@ -619,7 +619,7 @@ e ignored
 l.837 ...ring-controlled multi-seed cell, queued.}
                                                    <./figures/fig6_gym.pdf> <./
 figures/fig3_gsm8k.pdf>]
-<figures/fig7_sharpening.pdf, id=390, 505.89pt x 202.356pt>
+<figures/fig7_sharpening.pdf, id=394, 505.89pt x 202.356pt>
 File: figures/fig7_sharpening.pdf Graphic file (type pdf)
 <use figures/fig7_sharpening.pdf>
 Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 841.
@@ -629,16 +629,33 @@ Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 841.
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
 l.880 
-       <./figures/fig7_sharpening.pdf>] [13] [14] [15] (./main.aux)
+       <./figures/fig7_sharpening.pdf>] [13] [14]
+Overfull \hbox (62.66167pt too wide) in paragraph at lines 1070--1082
+ [][] 
+ []
+
+[15pdfTeX warning (ext4): destination with the same identifier (name{table.2}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.1118 \bibitem[Shi et al.(2025)]{adarft}
+                                          Shi, T., et al. Efficient reinforc...
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.1118 \bibitem[Shi et al.(2025)]{adarft}
+                                          Shi, T., et al. Efficient reinforc...
+] [16] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 5237B976C4EA8BDE8133CCFB14DBFC0E;1368.
+(rerunfilecheck)             Checksum: DC55B62875CC0DB36BFB2F4954A4C6B2;1553.
  ) 
 Here is how much of TeX's memory you used:
- 13191 strings out of 480806
- 192219 string characters out of 5905151
- 551957 words of memory out of 6000000
- 29938 multiletter control sequences out of 15000+600000
- 429590 words of font info for 250 fonts, out of 8000000 for 9000
+ 13206 strings out of 480806
+ 192385 string characters out of 5905151
+ 552277 words of memory out of 6000000
+ 29944 multiletter control sequences out of 15000+600000
+ 430015 words of font info for 253 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,10n,63p,1169b,499s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</us
@@ -667,12 +684,13 @@ fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/cm-super/sfti0900.pfb>
-Output written on main.pdf (15 pages, 639288 bytes).
+e/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/cm-super/sfti0900.pfb>
+Output written on main.pdf (16 pages, 645954 bytes).
 PDF statistics:
- 582 PDF objects out of 1000 (max. 8388607)
- 434 compressed objects within 5 object streams
- 93 named destinations out of 1000 (max. 500000)
- 51305 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 599 PDF objects out of 1000 (max. 8388607)
+ 449 compressed objects within 5 object streams
+ 97 named destinations out of 1000 (max. 500000)
+ 53361 words of extra memory for PDF output out of 61914 (max. 10000000)
 
