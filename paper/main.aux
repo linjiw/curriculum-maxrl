@@ -42,22 +42,22 @@
 \newlabel{prop:alloc}{{3}{4}{Allocation}{proposition.3}{}}
 \newlabel{rem:scope}{{1}{4}{Scope of the surrogate}{remark.1}{}}
 \newlabel{rem:objective}{{2}{4}{The curriculum changes the training distribution}{remark.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{The partition, as a map of the paper (Fig.\nobreakspace  {}\ref  {fig:channels}).}{4}{section*.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only.}}{5}{figure.2}\protected@file@percent }
 \newlabel{fig:algorithm}{{2}{5}{\textbf {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only}{figure.2}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces FrontierMax: one step. Three lines differ from a standard group-rollout loop (marked $\triangleright $).}}{5}{algorithm.1}\protected@file@percent }
 \newlabel{alg:frontiermax}{{1}{5}{FrontierMax: the schedule}{algorithm.1}{}}
-\@writefile{toc}{\contentsline {paragraph}{The partition, as a map of the paper (Fig.\nobreakspace  {}\ref  {fig:channels}).}{5}{section*.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4}FrontierMax: the schedule}{5}{section.4}\protected@file@percent }
 \newlabel{sec:method}{{4}{5}{FrontierMax: the schedule}{section.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Failure recycling}{5}{section.5}\protected@file@percent }
+\newlabel{sec:recycling}{{5}{5}{Failure recycling}{section.5}{}}
+\newlabel{prop:hindsight}{{4}{5}{Hindsight update, characterized}{proposition.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {The partition as a map of the method.} The teacher allocates compute within the learnable band; recycling creates signal in the dead zone no sampler can reach; the gate refuses relabels that land in the mastered tail; the estimator underneath decides whether any of it is safe.}}{6}{figure.3}\protected@file@percent }
 \newlabel{fig:channels}{{3}{6}{\textbf {The partition as a map of the method.} The teacher allocates compute within the learnable band; recycling creates signal in the dead zone no sampler can reach; the gate refuses relabels that land in the mastered tail; the estimator underneath decides whether any of it is safe}{figure.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Failure recycling}{6}{section.5}\protected@file@percent }
-\newlabel{sec:recycling}{{5}{6}{Failure recycling}{section.5}{}}
-\newlabel{prop:hindsight}{{4}{6}{Hindsight update, characterized}{proposition.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Experiments: an escalating ladder}{6}{section.6}\protected@file@percent }
+\newlabel{sec:experiments}{{6}{6}{Experiments: an escalating ladder}{section.6}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The ladder at a glance: every rung asks one question of the partition; scale rises, control falls.}}{7}{table.1}\protected@file@percent }
 \newlabel{tab:ladder}{{1}{7}{The ladder at a glance: every rung asks one question of the partition; scale rises, control falls}{table.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Experiments: an escalating ladder}{7}{section.6}\protected@file@percent }
-\newlabel{sec:experiments}{{6}{7}{Experiments: an escalating ladder}{section.6}{}}
 \@writefile{toc}{\contentsline {paragraph}{6.1 Does allocation saturate? (exact-gradient skill chains; CPU, 5 seeds).}{7}{section*.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.2 Can any sampler act when nothing is learnable? (frontier-heavy regime, max pool pass rate $10^{-5}$; 5 seeds, artifact committed).}{7}{section*.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.3 Does the estimator main effect survive real gradients? (maze transformer at matched wall-clock; 1.26M params, 13 levels, ${\sim }30$ runs, 3 seeds).}{7}{section*.4}\protected@file@percent }
@@ -74,6 +74,7 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {Recycling-induced sharpening and its derived mitigation (Countdown, tier 1).} \emph  {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\text  {pass@}16$ coverage. On this tier the moderate gate (B3) gives back most of the mean without moving coverage --- tier-1 destinations saturate early, so admitted relabels are few --- while full-strength gating (corrected decay, 1 seed) returns coverage \emph  {above} baseline at the mean's full price: gate strength is a dial along the trade, and its useful middle lives on the frontier tier, where the same moderate setting restores coverage to baseline ($.279{\pm }.019$ vs.\ $.274$) keeping $\sim $60\% of the mean gain (\S  6.8). \emph  {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph  {(c)} Gated recycling preserves \emph  {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient.}}{11}{figure.7}\protected@file@percent }
 \newlabel{fig:sharpening}{{7}{11}{\textbf {Recycling-induced sharpening and its derived mitigation (Countdown, tier 1).} \emph {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\passat {16}$ coverage. On this tier the moderate gate (B3) gives back most of the mean without moving coverage --- tier-1 destinations saturate early, so admitted relabels are few --- while full-strength gating (corrected decay, 1 seed) returns coverage \emph {above} baseline at the mean's full price: gate strength is a dial along the trade, and its useful middle lives on the frontier tier, where the same moderate setting restores coverage to baseline ($.279{\pm }.019$ vs.\ $.274$) keeping $\sim $60\% of the mean gain (\S 6.8). \emph {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph {(c)} Gated recycling preserves \emph {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient}{figure.7}{}}
 \@writefile{toc}{\contentsline {paragraph}{6.8 What does recycling cost? (Countdown $2{\times }2$, pre-registered): two nulls and a new phenomenon.}{11}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.9 Does the gate recover it? (Countdown v2 pool, 3 seeds, pre-registered).}{11}{section*.10}\protected@file@percent }
 \citation{yue}
 \citation{cui}
 \citation{yuan}
@@ -87,7 +88,6 @@
 \citation{ziprl}
 \citation{starcross}
 \citation{yuan}
-\@writefile{toc}{\contentsline {paragraph}{6.9 Does the gate recover it? (Countdown v2 pool, 3 seeds, pre-registered).}{12}{section*.10}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {7}Related work}{12}{section.7}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and negative results}{13}{section.8}\protected@file@percent }
 \newlabel{sec:limits}{{8}{13}{Limitations and negative results}{section.8}{}}
@@ -96,16 +96,17 @@
 \@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{13}{section*.13}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{13}{section*.14}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{13}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Full details for compressed experiment rungs}{13}{appendix.A}\protected@file@percent }
+\newlabel{app:rungs}{{A}{13}{Full details for compressed experiment rungs}{appendix.A}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.1 control battery (full).}{13}{section*.16}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$.}}{14}{figure.8}\protected@file@percent }
 \newlabel{fig:gym}{{8}{14}{\textbf {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$}{figure.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Full details for compressed experiment rungs}{14}{appendix.A}\protected@file@percent }
-\newlabel{app:rungs}{{A}{14}{Full details for compressed experiment rungs}{appendix.A}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.1 control battery (full).}{14}{section*.16}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.5 IsaacLab protocol.}{14}{section*.17}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.6 gym control (full).}{14}{section*.18}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{15}{section*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.7 posterior diagnostics and harness caveats (full).}{15}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  8).}{15}{section*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{14}{section*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{15}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.7 posterior diagnostics and harness caveats (full).}{15}{section*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  8).}{15}{section*.22}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {B}Hyperparameters and compute}{15}{appendix.B}\protected@file@percent }
 \newlabel{app:hparams}{{B}{15}{Hyperparameters and compute}{appendix.B}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule.}}{15}{table.2}\protected@file@percent }
