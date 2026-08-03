@@ -1057,7 +1057,7 @@ ambiguous. Prompt-uniqueness figures for the replacement confound:
 ${\sim}34\%$ unique prompts seen by teacher arms vs.\ ${\sim}43\%$
 uniform.
 
-\paragraph{Jugs suite (pool-conditionality; \S 8).} Tier grid t0--t4
+\paragraph{Jugs suite (pool-conditionality; \S\ref{sec:limits}).} Tier grid t0--t4
 (2--5 jugs, disjoint min-moves bands, 200 unique tasks/tier);
 feasibility landscape (SmolLM2-360M two-shot, $N{=}16$): t0
 $.058/.475$ (pass@1/pass@16), t1 $.006/.100$, t2--t4 $0/0$ with
@@ -1068,7 +1068,7 @@ mean@16$\,=\,$pass@16$\,=0.450$ exactly (the 2-move template stratum),
 t1 $\passat{16}$ $0.15 \to 0$, actor entropy $1.36 \to 0.02$--$0.21$.
 Ungated recycling ran 169 relabels/step at yield $.88$ and ended with
 the lowest entropy ($0.02$--$0.03$); the value-keyed gate rejected
-$99.8\%$ of relabels (the granularity bug described in \S 8, since
+$99.8\%$ of relabels (the granularity bug described in \S\ref{sec:limits}, since
 fixed and regression-tested). Postmortem and per-cell artifacts in the
 repository.
 
