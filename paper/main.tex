@@ -103,19 +103,19 @@ tail buy sharpening, not signal. The estimator decides all three.}
 Three questions unpack this:
 
 \emph{Q1: What can a curriculum contribute, at most?} For
-success-conditioned advantages, the expected advantage mass a task emits
-from a group of $N$ rollouts has a closed form ---
+success-conditioned advantages, the expected advantage mass a task
+emits from a group of $N$ rollouts has a closed form:
 $2(\passat{N}-\passat{1})$, a compute-indexed learnability functional
-(\S\ref{sec:theory}). Its two zeros are the partition's boundaries.
-Mass is a \emph{surrogate} for learning signal
-(Remark~\ref{rem:scope}), but it is the part a sampler can act on
-before spending a rollout, and it makes the allocation \emph{derivable}
-rather than heuristic: the band's location, width, and $N$-scaling come
-from the budget you already chose, and published learnability curricula
-are the $N{=}2$ slice. It also bounds the channel. Allocation can only
-redistribute signal that exists: a perfect-information allocator ties
-our cheap posterior in end performance (\S 6.1), and at LLM scale a
-prompt-level teacher starves before it pays (\S\ref{sec:experiments}).
+whose two zeros are the partition's boundaries (\S\ref{sec:theory}).
+Mass is a surrogate for learning signal (Remark~\ref{rem:scope}), but
+it is the part a sampler can act on before spending a rollout, and it
+makes the allocation \emph{derivable} rather than heuristic: the band's
+location, width, and $N$-scaling come from the budget you already
+chose, and published learnability curricula are the $N{=}2$ slice. It
+also bounds the channel. Allocation can only redistribute signal that
+exists: a perfect-information allocator ties our cheap posterior in
+end performance (\S 6.1), and at LLM scale a prompt-level teacher
+starves before it pays (\S\ref{sec:experiments}).
 
 \emph{Q2: When is either intervention safe?} The same algebra says the
 answer depends on the estimator. MaxRL concentrates $(N{-}1)\times$ more
@@ -721,7 +721,7 @@ same-model eval noise (mean@4 $-.027$, $z{=}-2.0$; $\passat{4}$
 $-.048$, $z{=}-2.0$; the second-half dip itself, $.096\to.093$, is
 within the $\pm.009$ noise floor and carries no weight on its own)
 while plain GRPO climbed monotonically ($.078\to.105\to.120$).
-Steering telemetry, honestly read: the teacher's sampled-dead
+Steering telemetry, read against its own controls: the teacher's sampled-dead
 fraction \emph{minimum} reaches .48 vs.\ uniform's .52, but the run
 means are indistinguishable (.66--.67 in all cells) --- the delivered
 treatment was weak, which is the posterior-starvation mechanism below,
