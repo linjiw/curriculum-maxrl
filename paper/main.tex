@@ -57,9 +57,12 @@ recycling we then observe in production --- hindsight arms improve mean
 accuracy while losing coverage, \textbf{recycling-induced sharpening}
 --- and supplies the mitigation: gating relabel admission by the
 destination's pass rate converts the loss into a tunable
-mean-versus-coverage dial. One diagnosis covers both: audit the
+mean-versus-coverage dial. The boundary of the safety claim is measured
+too: a pre-registered fifth suite whose learnable band collapses to one
+template stratum defeats \emph{every} estimator --- the partition needs
+a graded band to act on. One diagnosis covers all of it: audit the
 estimator before shipping a curriculum or a recycler, and measure
-coverage, the currency in which both failure modes are visible.
+coverage, the currency in which every failure mode here is visible.
 \end{abstract}
 
 \section{Introduction}
@@ -1014,6 +1017,26 @@ exhibits the regime where reallocating it buys nothing
 (learnable-everywhere pools). Recycled-gradient exactness is a property
 of the environment's relabel map; noisier verifiers will land between
 our fixed-pool and one-shot endpoints ($+0.22$ vs.\ $+0.01$ AUC).
+
+\paragraph{The coverage main effect is pool-conditional.} A
+pre-registered fifth suite (Jugs water-measuring puzzles; postmortem
+and artifacts in the repository) returned all-null: on a pool whose
+learnable band is a single stratum of 1--2-move template solutions,
+\emph{plain MaxRL} also collapses --- entropy $1.36 \to 0.07$--$0.21$
+in 60 steps, frontier-tier $\passat{16}$ $0.15 \to 0$, every arm
+converging to the same deterministic policy --- and recycling
+accelerates the collapse rather than rescuing it. When $N$ rollouts of
+a near-trivial plan are near-identical, the i.i.d.-rollout diversity
+the group contrast requires is absent, and success-conditioned weights
+liquidate frontier coverage through shared parameters just as GRPO's
+do elsewhere. The estimator main effect of \S 6.3--6.4 is therefore a
+claim about pools with a graded band at the deployed $N$, not an
+unconditional safety guarantee; per-task rollout-set diversity at
+initialization is the design gate we now check first. The same suite
+also exposed a granularity bug in the gate (keying destinations by
+value collides tasks when achieved values are few and shared ---
+$\le 20$ integers in Jugs vs.\ hundreds in Countdown); the corrected
+gate keys on the relabeled task.
 
 \paragraph{What did not transfer.} A $4\times$ duration run refuted
 our own duration hypothesis (the deep-frontier stall is a

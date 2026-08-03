@@ -42,11 +42,11 @@
 \newlabel{prop:alloc}{{3}{4}{Allocation}{proposition.3}{}}
 \newlabel{rem:scope}{{1}{4}{Scope of the surrogate}{remark.1}{}}
 \newlabel{rem:objective}{{2}{4}{The curriculum changes the training distribution}{remark.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{The partition, as a map of the paper (Fig.\nobreakspace  {}\ref  {fig:channels}).}{4}{section*.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only.}}{5}{figure.2}\protected@file@percent }
 \newlabel{fig:algorithm}{{2}{5}{\textbf {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only}{figure.2}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces FrontierMax: one step. Three lines differ from a standard group-rollout loop (marked $\triangleright $).}}{5}{algorithm.1}\protected@file@percent }
 \newlabel{alg:frontiermax}{{1}{5}{FrontierMax: the schedule}{algorithm.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{The partition, as a map of the paper (Fig.\nobreakspace  {}\ref  {fig:channels}).}{5}{section*.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4}FrontierMax: the schedule}{5}{section.4}\protected@file@percent }
 \newlabel{sec:method}{{4}{5}{FrontierMax: the schedule}{section.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {The partition as a map of the method.} The teacher allocates compute within the learnable band; recycling creates signal in the dead zone no sampler can reach; the gate refuses relabels that land in the mastered tail; the estimator underneath decides whether any of it is safe.}}{6}{figure.3}\protected@file@percent }
@@ -95,9 +95,16 @@
 \newlabel{sec:limits}{{8}{14}{Limitations and negative results}{section.8}{}}
 \@writefile{toc}{\contentsline {paragraph}{Scale.}{14}{section*.11}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Scope of the surrogate.}{14}{section*.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{14}{section*.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{14}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{14}{section*.13}\protected@file@percent }
 \bibcite{maxrl}{{1}{2026}{{Tajwar et al.}}{{}}}
+\@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{15}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{15}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Hyperparameters and compute}{15}{appendix.A}\protected@file@percent }
+\newlabel{app:hparams}{{A}{15}{Hyperparameters and compute}{appendix.A}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule.}}{15}{table.2}\protected@file@percent }
+\newlabel{tab:suites}{{2}{15}{Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule}{table.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Teacher and recycler knobs: value, provenance, and measured sensitivity.}}{15}{table.3}\protected@file@percent }
+\newlabel{tab:knobs}{{3}{15}{Teacher and recycler knobs: value, provenance, and measured sensitivity}{table.3}{}}
 \bibcite{disco}{{2}{2025}{{Li et al.}}{{}}}
 \bibcite{scsdpo}{{3}{2026}{{Liu et al.}}{{}}}
 \bibcite{yue}{{4}{2025}{{Yue et al.}}{{}}}
@@ -105,12 +112,6 @@
 \bibcite{cui}{{6}{2025}{{Cui et al.}}{{}}}
 \bibcite{cai}{{7}{2026}{{Cai et al.}}{{}}}
 \bibcite{dump}{{8}{2025}{{Wang et al.}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Hyperparameters and compute}{15}{appendix.A}\protected@file@percent }
-\newlabel{app:hparams}{{A}{15}{Hyperparameters and compute}{appendix.A}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule.}}{15}{table.2}\protected@file@percent }
-\newlabel{tab:suites}{{2}{15}{Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule}{table.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Teacher and recycler knobs: value, provenance, and measured sensitivity.}}{15}{table.3}\protected@file@percent }
-\newlabel{tab:knobs}{{3}{15}{Teacher and recycler knobs: value, provenance, and measured sensitivity}{table.3}{}}
 \bibcite{adarft}{{9}{2025}{{Shi et al.}}{{}}}
 \bibcite{sec}{{10}{2025}{{Chen et al.}}{{}}}
 \bibcite{lilo}{{11}{2025}{{Foster et al.}}{{}}}
