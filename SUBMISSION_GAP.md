@@ -73,3 +73,19 @@ still single-run-conditional, and formatting/anonymization work is undone.
 3. S2/S3 hygiene sweeps on the restructured text.
 4. When E-LLM-1b lands: fold the P-S1..P-S3 verdicts into §6.7 (either
    direction), then S1 seeds, then freeze for internal review round 4.
+
+## Progress log
+
+- 2026-08-03 pass 1: App B created (full details for compressed rungs);
+  §6.1/6.5/6.6/6.7/6.9 compressed; fig6_gym → appendix. Main text
+  14pp → 13pp. Remaining ~3pp must come from: §3 interpretations
+  (tighten), §6.3 (split attribution detail to App B), Q2/Q3 intro
+  compression, and the ICLR two-column-free format change itself
+  (article→iclr style typically saves ~10% through tighter spacing).
+  Note: B2 blocked locally — no ICLR .sty on this machine; vendor
+  iclr2027_conference.sty into paper/ when network fetch is possible,
+  or hand off to the user.
+- Sentence pass: worst dash-chains split (Q1), "honestly read" label
+  removed; §6.7/6.9/related-work chains remain (4-9 dashes/paragraph,
+  mostly structural lists — acceptable) — revisit after E-LLM-1b text
+  lands.
