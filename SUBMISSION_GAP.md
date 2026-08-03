@@ -89,3 +89,15 @@ still single-run-conditional, and formatting/anonymization work is undone.
   removed; §6.7/6.9/related-work chains remain (4-9 dashes/paragraph,
   mostly structural lists — acceptable) — revisit after E-LLM-1b text
   lands.
+- 2026-08-03 pass 2: rem:scope, §6.3 efficiency detail, Q2 compressed;
+  hardcoded §refs → \ref. Main text 13pp → 12pp.
+- 2026-08-03 B2 DONE: main_iclr.tex builds with vendored
+  iclr2026_conference.sty — double-blind header, line numbers,
+  author-year citations, bib-before-appendix ordering, no repo URLs.
+  12pp main in ICLR format (target 9-10; remaining compression:
+  §3 interp blocks, §4/§5 prose, fig1 sizing).
+- E-LLM-1b status: g3s OOM'd at step 3 (node RAM); queue hardened
+  (ray cleanup between cells, done-markers on global_step:50, retry
+  pass); amendment A1 adds g3p (warm-start + power=4) after the g3s
+  partial showed warm-start-alone doesn't move dead-sampled off the
+  population rate. m3s training now; g3s/g3p/g3u follow.
