@@ -1,0 +1,35 @@
+{
+ "_comment": "Frozen cohort for fig8_bands.py. This is a heterogeneous run inventory (samplers, hindsight doses, model widths, repeated seeds), not independent replicates of one estimator contrast; the figure is descriptive. Frozen 2026-08-04 to match the runs the manuscript describes.",
+ "grpo_runs": [
+  "matched_frontier_grpo_s0.jsonl",
+  "matched_uniform_grpo_s0.jsonl",
+  "matched_uniform_grpo_s1.jsonl",
+  "matched_uniform_grpo_s2.jsonl"
+ ],
+ "maxrl_runs": [
+  "matched_falp_maxrl_hs_s0.jsonl",
+  "matched_falp_maxrl_hsdense_s0.jsonl",
+  "matched_falp_maxrl_hsdense_s1.jsonl",
+  "matched_falp_maxrl_hsdense_s2.jsonl",
+  "matched_falp_maxrl_hsdense_tt_s0.jsonl",
+  "matched_falp_p4_hsdense_s0.jsonl",
+  "matched_frontier_alp_maxrl_s0.jsonl",
+  "matched_frontier_alp_maxrl_s1.jsonl",
+  "matched_frontier_alp_maxrl_s2.jsonl",
+  "matched_frontier_maxrl_hs_s0.jsonl",
+  "matched_frontier_maxrl_hs_s1.jsonl",
+  "matched_frontier_maxrl_hs_s2.jsonl",
+  "matched_frontier_maxrl_s0.jsonl",
+  "matched_learnability_maxrl_s0.jsonl",
+  "matched_uniform_maxrl_hs_s0.jsonl",
+  "matched_uniform_maxrl_s1.jsonl",
+  "matched_uniform_maxrl_s2.jsonl",
+  "matched_wide_falp_hsdense_s0.jsonl"
+ ],
+ "excluded": [
+  {
+   "file": "matched_uniform_maxrl_s0.jsonl",
+   "reason": "predates pass@k logging: contains no passk rows, so band deltas cannot be computed; also explains the 5v4 run count in Sec 6.3"
+  }
+ ]
+}

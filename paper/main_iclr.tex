@@ -5,7 +5,9 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{microtype}
-\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+% hypertexnames=false: sequential destination names, fixes the
+% duplicate figure/table destination warnings (review 4.5)
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black,hypertexnames=false]{hyperref}
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{algorithm,algorithmic}

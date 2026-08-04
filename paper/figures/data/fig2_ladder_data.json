@@ -1,0 +1,26 @@
+{
+ "_comment": "Versioned result table for fig2_ladder.py. Values were previously hard-coded literals in the script; this file is now the single source. Provenance per panel below. Frozen 2026-08-04.",
+ "panel_a": {
+  "_source": "frontier_rl/examples hindsight_controls.json + v7_oracle_result.json (post-retraction: no-floor gamma-matched oracle)",
+  "labels": ["uniform", "teacher", "oracle", "full stack", "oracle+rec."],
+  "auc": [0.650, 0.728, 0.8885, 0.8895, 0.8935]
+ },
+ "panel_b": {
+  "_source": "REPORT.md F-section: frontier-heavy pool (max p = 1e-5); uniform+recycling 0.931+-0.002 vs teacher+recycling 0.928+-0.003",
+  "labels": ["uniform", "DAPO", "teacher", "+recycling"],
+  "auc": [0.0, 0.0, 0.0, 0.93]
+ },
+ "panel_c": {
+  "_source": "REPORT.md #4 / PAPER.md 7.3: maze AUC, 3 seeds, paired deltas positive 3/3 seeds on both meters (final and AUC)",
+  "labels": ["unif.", "champion"],
+  "auc": [0.211, 0.229],
+  "sd": [0.011, 0.009],
+  "annotation": "3/3 seeds, both meters"
+ },
+ "panel_d": {
+  "_source": "GSM8K_ANALYSIS.md results table (final val mean@4); noise floor = 5 repeated evals of one checkpoint, mean@4 SD (evaluation noise, not training-seed uncertainty)",
+  "labels": ["grpo", "grpo+tea.", "maxrl+tea.", "maxrl"],
+  "mean_at_4": [0.120, 0.093, 0.102, 0.108],
+  "eval_noise_sd": 0.0094
+ }
+}

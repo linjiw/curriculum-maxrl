@@ -7,7 +7,9 @@
 \usepackage{booktabs}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
-\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+% hypertexnames=false: sequential destination names, fixes the
+% duplicate figure/table destination warnings (review 4.5)
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black,hypertexnames=false]{hyperref}
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{algorithm,algorithmic}
@@ -29,6 +31,9 @@
 \renewcommand{\floatpagefraction}{0.8}
 \setcounter{topnumber}{3}
 \setcounter{totalnumber}{5}
+% long \texttt paths in the reproducibility section can't hyphenate;
+% let the paragraph builder stretch instead of overflowing
+\emergencystretch=1.5em
 
 \title{\textbf{The Estimator Decides:}\\
 \large What Curricula and Failure Recycling Can and Cannot Do in

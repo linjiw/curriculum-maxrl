@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  4 AUG 2026 08:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  4 AUG 2026 09:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -295,6 +295,7 @@ Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 4073.
+Package hyperref Info: Option `hypertexnames' set `false' on input line 4073.
 Package hyperref Info: Hyper figures OFF on input line 4192.
 Package hyperref Info: Link nesting OFF on input line 4197.
 Package hyperref Info: Hyper index ON on input line 4200.
@@ -404,7 +405,7 @@ Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
 \c@lemma=\count296
 \c@remark=\count297
 LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 3
-6.
+8.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
@@ -417,24 +418,24 @@ File: l3backend-pdftex.def 2021-05-07 L3 backend support: PDF output (pdfTeX)
 (./main_iclr.aux)
 \openout1 = `main_iclr.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -458,14 +459,14 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Info: Redefining \microtypecontext on input line 36.
+LaTeX Info: Redefining \microtypecontext on input line 38.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 36.
+LaTeX Info: Redefining \showhyphens on input line 38.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -473,7 +474,7 @@ Package microtype Info: No adjustment of character kerning.
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-ptm.cfg
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
-Package hyperref Info: Link coloring ON on input line 36.
+Package hyperref Info: Link coloring ON on input line 38.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
@@ -486,9 +487,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count305
 )
-LaTeX Info: Redefining \ref on input line 36.
-LaTeX Info: Redefining \pageref on input line 36.
-LaTeX Info: Redefining \nameref on input line 36.
+LaTeX Info: Redefining \ref on input line 38.
+LaTeX Info: Redefining \pageref on input line 38.
+LaTeX Info: Redefining \nameref on input line 38.
 
 (./main_iclr.out) (./main_iclr.out)
 \@outlinefile=\write3
@@ -499,7 +500,7 @@ LaTeX Info: Redefining \nameref on input line 36.
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 38.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 42.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -508,7 +509,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 38.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 42.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -516,179 +517,123 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) [1{/usr/share/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+) (./body.tex
+Underfull \vbox (badness 1728) has occurred while \output is active []
+
+ [1{/usr/share/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
-16.
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 8
+7.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-Underfull \vbox (badness 4193) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-<figures/fig1_utility.pdf, id=102, 505.89pt x 187.902pt>
+<figures/fig1_utility.pdf, id=105, 505.89pt x 187.902pt>
 File: figures/fig1_utility.pdf Graphic file (type pdf)
 <use figures/fig1_utility.pdf>
-Package pdftex.def Info: figures/fig1_utility.pdf  used on input line 190.
+Package pdftex.def Info: figures/fig1_utility.pdf  used on input line 171.
 (pdftex.def)             Requested size: 365.68546pt x 135.82835pt.
 
-[3pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.264 \end{interp}
-                   <./figures/fig1_utility.pdf>]
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 3
-06.
+[3 <./figures/fig1_utility.pdf>]
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 2
+85.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
+LaTeX Font Info:    Font shape `OT1/pcr/m/it' in size <9> not available
+(Font)              Font shape `OT1/pcr/m/sl' tried instead on input line 285.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `pcr' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-<figures/fig4_algorithm.pdf, id=171, 505.89pt x 231.26399pt>
+ [4]
+<figures/fig4_algorithm.pdf, id=197, 505.89pt x 231.26399pt>
 File: figures/fig4_algorithm.pdf Graphic file (type pdf)
 <use figures/fig4_algorithm.pdf>
-Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 364.
+Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 388.
 (pdftex.def)             Requested size: 337.86465pt x 154.45555pt.
- [4]
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [5 <./figures/fig4_algorithm.pdf>]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 388.
- [5pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
- has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.435 \end{interp}
-                   <./figures/fig4_algorithm.pdf>]
-<figures/fig5_channels.pdf, id=246, 252.945pt x 216.81pt>
+put line 412.
+ [6]
+<figures/fig5_channels.pdf, id=262, 252.945pt x 216.81pt>
 File: figures/fig5_channels.pdf Graphic file (type pdf)
 <use figures/fig5_channels.pdf>
-Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 460.
+Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 497.
 (pdftex.def)             Requested size: 198.7425pt x 170.35501pt.
-
-Overfull \hbox (19.77081pt too wide) in paragraph at lines 487--511
- [][] 
- []
-
-<figures/fig2_ladder.pdf, id=248, 505.89pt x 202.356pt>
+<figures/fig2_ladder.pdf, id=264, 505.89pt x 202.356pt>
 File: figures/fig2_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ladder.pdf>
-Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 515.
+Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 564.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
-[6pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.551 ... intervention buys speed, not asymptote.}
-                                                   <./figures/fig5_channels.pdf
->]
-Underfull \vbox (badness 1521) has occurred while \output is active []
 
- [7pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.570 
-      pdfTeX warning (ext4): destination with the same identifier (name{figure.
-4}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.570 
-       <./figures/fig2_ladder.pdf>]
-<figures/fig8_bands.pdf, id=313, 505.89pt x 195.129pt>
+Underfull \vbox (badness 3482) has occurred while \output is active []
+
+ [7 <./figures/fig5_channels.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8 <./figures/fig2_ladder.pdf>]
+<figures/fig8_bands.pdf, id=333, 505.89pt x 195.129pt>
 File: figures/fig8_bands.pdf Graphic file (type pdf)
 <use figures/fig8_bands.pdf>
-Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 650.
+Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 717.
 (pdftex.def)             Requested size: 397.48499pt x 153.3195pt.
- [8]
-<figures/fig3_gsm8k.pdf, id=325, 252.945pt x 202.356pt>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [9]
+<figures/fig3_gsm8k.pdf, id=344, 252.945pt x 202.356pt>
 File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
 <use figures/fig3_gsm8k.pdf>
-Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 708.
+Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 777.
 (pdftex.def)             Requested size: 218.61795pt x 174.89658pt.
- [9pdfTeX warning (ext4): destination with the same identifier (name{figure.5})
- has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.771 ...ring-controlled multi-seed cell, queued.}
-                                                   <./figures/fig8_bands.pdf>]
-<figures/fig7_sharpening.pdf, id=362, 505.89pt x 202.356pt>
+
+[10 <./figures/fig8_bands.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [11 <./figures/fig3_gsm8k.pdf>]
+<figures/fig7_sharpening.pdf, id=407, 505.89pt x 202.356pt>
 File: figures/fig7_sharpening.pdf Graphic file (type pdf)
 <use figures/fig7_sharpening.pdf>
-Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 775.
+Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 854.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
-
-[10pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
- has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.817 
-       <./figures/fig3_gsm8k.pdf>] [11pdfTeX warning (ext4): destination with t
-he same identifier (name{figure.7}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.876 not yet saturated.}
-                          <./figures/fig7_sharpening.pdf>] [12] [13] [14]
-<figures/fig6_gym.pdf, id=491, 505.89pt x 202.356pt>
+ [12 <./figures/fig7_sharpening.pdf>] [13] [14] [15]
+<figures/fig6_gym.pdf, id=513, 505.89pt x 202.356pt>
 File: figures/fig6_gym.pdf Graphic file (type pdf)
 <use figures/fig6_gym.pdf>
-Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1118.
+Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1238.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
-<figures/fig9_ksweep.pdf, id=492, 245.718pt x 187.902pt>
+
+[16]
+<figures/fig9_ksweep.pdf, id=520, 245.718pt x 187.902pt>
 File: figures/fig9_ksweep.pdf Graphic file (type pdf)
 <use figures/fig9_ksweep.pdf>
-Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1149.
+Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1269.
 (pdftex.def)             Requested size: 218.61795pt x 167.18637pt.
-
-[15pdfTeX warning (ext4): destination with the same identifier (name{figure.8})
- has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.1174 \paragraph
-                 {6.7 posterior diagnostics and harness caveats (full).} <./fig
-ures/fig6_gym.pdf>]
+ [17 <./figures/fig6_gym.pdf> <./figures/fig9_ksweep.pdf>]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-Overfull \hbox (79.62979pt too wide) in paragraph at lines 1243--1255
- [][] 
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[16pdfTeX warning (ext4): destination with the same identifier (name{figure.9})
- has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.1269 
-        <./figures/fig9_ksweep.pdf>] [17pdfTeX warning (ext4): destination with
- the same identifier (name{table.2}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.1272 \end{document}
-                     pdfTeX warning (ext4): destination with the same identifie
-r (name{table.3}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.1272 \end{document}
-                     ] (./main_iclr.aux)
+[18]) [19] (./main_iclr.aux)
 Package rerunfilecheck Info: File `main_iclr.out' has not changed.
-(rerunfilecheck)             Checksum: 0CB2A3CA3A93033633272FB7EA65AC35;1833.
+(rerunfilecheck)             Checksum: 6339C22E5A9B3773FB19C2D7C53320E6;1935.
  ) 
 Here is how much of TeX's memory you used:
- 13470 strings out of 480806
- 195322 string characters out of 5905151
- 548014 words of memory out of 6000000
- 29939 multiletter control sequences out of 15000+600000
- 461592 words of font info for 456 fonts, out of 8000000 for 9000
+ 13481 strings out of 480806
+ 195516 string characters out of 5905151
+ 555603 words of memory out of 6000000
+ 29947 multiletter control sequences out of 15000+600000
+ 461629 words of font info for 447 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 61i,11n,75p,1174b,469s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,11n,75p,1284b,487s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
@@ -707,15 +652,16 @@ fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
 blic/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
 sfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courie
-r/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-di
-st/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-urw/times/utmri8a.pfb>
-Output written on main_iclr.pdf (17 pages, 589846 bytes).
+r/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrro8a.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/ut
+mri8a.pfb>
+Output written on main_iclr.pdf (19 pages, 619601 bytes).
 PDF statistics:
- 677 PDF objects out of 1000 (max. 8388607)
- 519 compressed objects within 6 object streams
- 113 named destinations out of 1000 (max. 500000)
- 72830 words of extra memory for PDF output out of 74296 (max. 10000000)
+ 715 PDF objects out of 1000 (max. 8388607)
+ 554 compressed objects within 6 object streams
+ 128 named destinations out of 1000 (max. 500000)
+ 73350 words of extra memory for PDF output out of 74296 (max. 10000000)
 

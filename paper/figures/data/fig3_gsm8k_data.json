@@ -1,0 +1,11 @@
+{
+ "_comment": "Versioned result table for fig3_gsm8k.py. Values were previously hard-coded literals in the script; this file is now the single source. Registered-run trajectories from GSM8K_ANALYSIS.md (val mean@4 at steps 0/25/50). eval_noise_sd is repeated-evaluation SD of one fixed checkpoint (evaluation noise, NOT training-seed uncertainty). Frozen 2026-08-04.",
+ "steps": [0, 25, 50],
+ "series": {
+  "grpo":          [0.078, 0.105, 0.120],
+  "grpo+teacher":  [0.072, 0.096, 0.093],
+  "maxrl":         [0.091, 0.097, 0.108],
+  "maxrl+teacher": [0.066, 0.099, 0.102]
+ },
+ "eval_noise_sd": 0.0094
+}

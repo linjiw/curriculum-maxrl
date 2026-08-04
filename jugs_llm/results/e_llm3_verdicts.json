@@ -1,0 +1,119 @@
+{
+ "n_cells": {
+  "B1": 3,
+  "B2": 3,
+  "B3": 3
+ },
+ "floors_loaded": true,
+ "P-J1": {
+  "n_pairs": 3,
+  "t0_mean16": {
+   "B1": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "B2": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "delta": 0.0,
+   "up_count": 0
+  },
+  "t0_pass16": {
+   "B1": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "B2": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "delta": 0.0,
+   "down_count": 0
+  },
+  "verdict": "NOT CONFIRMED",
+  "noise_note": {
+   "mean16_2sd": 0.007194290270763342,
+   "pass16_2sd": 0.0651920240520265
+  }
+ },
+ "P-J2": {
+  "n": 3,
+  "t0_pass16": [
+   0.45,
+   0.45,
+   0.45
+  ],
+  "t0_mean16": [
+   0.45,
+   0.45,
+   0.4243333333333333
+  ],
+  "coverage_recovered_frac": null,
+  "mean_kept_frac": null,
+  "verdict": "VACUOUS (P-J1 pattern absent: loss=0.000 gain=0.000)"
+ },
+ "P-J3": {
+  "B1": {
+   "t2_final_pass16": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ignited_count": 0
+  },
+  "B2": {
+   "t2_final_pass16": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ignited_count": 0
+  },
+  "B3": {
+   "t2_final_pass16": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ignited_count": 0
+  },
+  "verdict": "NOT CONFIRMED"
+ },
+ "P-J4_report": [
+  {
+   "cell": "jugsv1_maxrl_curfalse_hstrue_s1_16r",
+   "session": "session_2026-08-02_12-51-07_381884_3552821",
+   "mean_yield": 0.8760000000000001
+  },
+  {
+   "cell": "jugsv1_maxrl_curfalse_hstrue_s2_16r",
+   "session": "session_2026-08-02_21-48-32_054536_3596277",
+   "mean_yield": 0.886125
+  },
+  {
+   "cell": "jugsv1_maxrl_curfalse_hstrue_s3_16r",
+   "session": "session_2026-08-03_06-44-28_459881_3640202",
+   "mean_yield": 0.8814107142857143
+  },
+  {
+   "cell": "jugsv1_maxrl_curfalse_hstrue_gated_s1_16r",
+   "session": "session_2026-08-02_15-50-23_983237_3567456",
+   "mean_yield": 0.018600000000000002
+  },
+  {
+   "cell": "jugsv1_maxrl_curfalse_hstrue_gated_s2_16r",
+   "session": "session_2026-08-03_00-45-21_575122_3610854",
+   "mean_yield": 0.026000000000000002
+  },
+  {
+   "cell": "jugsv1_maxrl_curfalse_hstrue_gated_s3_16r",
+   "session": "session_2026-08-03_09-08-19_710604_3653718",
+   "mean_yield": 0.020800000000000003
+  }
+ ]
+}

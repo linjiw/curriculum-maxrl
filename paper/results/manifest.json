@@ -1,0 +1,104 @@
+{
+ "_comment": "Frozen input manifest for every paper figure. Regenerate any figure with its command from repo root; checksums are sha256[:16] of the exact inputs used. Values marked raw come from run artifacts; fig2/fig3 tables are transcribed endpoints with per-panel provenance inside the data files.",
+ "manuscript": {
+  "body": "paper/body.tex",
+  "wrappers": [
+   "paper/main.tex",
+   "paper/main_iclr.tex"
+  ],
+  "commit_at_freeze": "d1b460539a7388f48b0d46c31d9d9fe591182b6a"
+ },
+ "timing": {
+  "artifact": "paper/figures/data/generation_timing.json",
+  "checksum": "f823e116eb7e5d67",
+  "facts": {
+   "total_steps": 1188,
+   "overall_weighted_mean": 0.3117,
+   "gen_dominated_sessions": 8,
+   "gen_dominated_steps": 282,
+   "gen_dominated_weighted_mean": 0.8337
+  }
+ },
+ "figures": {
+  "fig1_utility": {
+   "script": "paper/figures/fig1_utility.py",
+   "inputs": [],
+   "notes": "analytic curves only; GRPO uses sample-SD convention matching curriculum_maxrl/estimators.py (ddof=1)",
+   "command": "python paper/figures/fig1_utility.py",
+   "checksums": {}
+  },
+  "fig2_ladder": {
+   "script": "paper/figures/fig2_ladder.py",
+   "inputs": [
+    "paper/figures/data/fig2_ladder_data.json"
+   ],
+   "command": "python paper/figures/fig2_ladder.py",
+   "checksums": {
+    "paper/figures/data/fig2_ladder_data.json": "8437780ce6a60672"
+   }
+  },
+  "fig3_gsm8k": {
+   "script": "paper/figures/fig3_gsm8k.py",
+   "inputs": [
+    "paper/figures/data/fig3_gsm8k_data.json"
+   ],
+   "command": "python paper/figures/fig3_gsm8k.py",
+   "checksums": {
+    "paper/figures/data/fig3_gsm8k_data.json": "2fae90adccc9ac71"
+   }
+  },
+  "fig4_algorithm": {
+   "script": "paper/figures/fig4_algorithm.py",
+   "inputs": [],
+   "command": "python paper/figures/fig4_algorithm.py",
+   "checksums": {}
+  },
+  "fig5_channels": {
+   "script": "paper/figures/fig5_channels.py",
+   "inputs": [],
+   "command": "python paper/figures/fig5_channels.py",
+   "checksums": {}
+  },
+  "fig6_gym": {
+   "script": "paper/figures/fig6_gym.py",
+   "inputs": [],
+   "command": "python paper/figures/fig6_gym.py",
+   "checksums": {}
+  },
+  "fig7_sharpening": {
+   "script": "paper/figures/fig7_sharpening.py",
+   "inputs": [
+    "paper/figures/data/b_scoreboard_3seed.json",
+    "paper/figures/data/b_cells_dynamics.json",
+    "paper/figures/data/b_strong_gate_1seed.json"
+   ],
+   "command": "python paper/figures/fig7_sharpening.py",
+   "checksums": {
+    "paper/figures/data/b_scoreboard_3seed.json": "f5c41f561f120d02",
+    "paper/figures/data/b_cells_dynamics.json": "e131d9c29e7296fa",
+    "paper/figures/data/b_strong_gate_1seed.json": "fec7993338cadb25"
+   }
+  },
+  "fig8_bands": {
+   "script": "paper/figures/fig8_bands.py",
+   "inputs": [
+    "paper/figures/data/fig8_run_manifest.json"
+   ],
+   "notes": "run cohort frozen in the manifest; raw runs in curriculum_maxrl/maze_gpu/ per manifest entries",
+   "command": "python paper/figures/fig8_bands.py",
+   "checksums": {
+    "paper/figures/data/fig8_run_manifest.json": "84f366c208086b87"
+   }
+  },
+  "fig9_ksweep": {
+   "script": "paper/figures/fig9_ksweep.py",
+   "inputs": [
+    "paper/figures/data/ksweep_results.json"
+   ],
+   "command": "python paper/figures/fig9_ksweep.py",
+   "checksums": {
+    "paper/figures/data/ksweep_results.json": "3e0bd4accd4c1b6e"
+   }
+  }
+ }
+}

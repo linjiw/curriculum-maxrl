@@ -3,10 +3,13 @@
 
 Panel A: u_N(p) = (1-(1-p)^N) - p for N in {4, 8, 16, 32}; peaks at
          p* = 1 - N^(-1/(N-1)) ~ ln N / N; dead zones annotated.
-Panel B: at N=16, all three curves are EXACT finite-N expected advantage
-         mass (same convention, mass/2): MaxRL u_N (Prop. 1), RLOO p(1-p)
-         (exact), GRPO (1/N) E[sqrt(K(N-K))], K~Bin(N,p) (MC-verified) —
-         not the population w(p) curves, which diverge at the tails.
+Panel B: at N=16, all three curves are EXACT finite-N expected coefficient
+         mass for the DEPLOYED estimators (same convention, mass/2):
+         MaxRL u_N = A_N/2 (Prop. 1), RLOO p(1-p) (exact), GRPO with
+         sample-SD normalization (ddof=1, matching estimators.py and
+         verl core_algos.py): sqrt((N-1)/N) * (1/N) E[sqrt(K(N-K))],
+         K~Bin(N,p) (MC-verified against the code) — not the population
+         w(p) curves, which diverge at the tails.
 
 Numbers/forms from paper/main.tex Section 3 (Prop. 1-3, Remark scope).
 """
@@ -98,24 +101,27 @@ axA.annotate("unreachable: nothing\nto sample toward\n(recycling acts here)",
 axA.set_xlim(0, 1)
 axA.set_ylim(0, 1.0)
 axA.set_xlabel("pass rate $p$")
-axA.set_ylabel(r"expected advantage mass $/\,2$")
+axA.set_ylabel(r"expected coefficient mass $/\,2$")
 axA.set_title(r"A   $u_N(p) = \mathrm{pass@}N - \mathrm{pass@}1$",
               loc="left")
 
 # ---------------------------------------------------------------- Panel B
-# All three curves are exact expected advantage mass / 2, same
+# All three curves are exact expected coefficient mass / 2, same
 # convention: sum of |per-rollout coefficients| in each estimator's
 # gradient (MaxRL w_i sums; RLOO/GRPO carry the 1/N prefactor).
-# GRPO exact: (1/N) E[ sqrt(K(N-K)) ], K ~ Bin(N, p).  MC-verified.
+# GRPO exact for the deployed sample-SD (ddof=1) normalization:
+# sqrt((N-1)/N) * (1/N) E[ sqrt(K(N-K)) ], K ~ Bin(N, p), because
+# s_K = sqrt(K(N-K)/(N(N-1))).  MC-verified against estimators.py.
 from math import comb
 
 N = 16
 u16 = u(p, N)                            # MaxRL mass / 2 (Prop. 1)
 rloo = p * (1 - p)                       # RLOO mass / 2 (exact)
-grpo = np.zeros_like(p)                  # GRPO mass / 2 (exact finite-N)
+grpo = np.zeros_like(p)                  # GRPO mass / 2 (exact, sample SD)
 for k in range(1, N):
     grpo += (comb(N, k) * p**k * (1 - p)**(N - k)
              * np.sqrt(k * (N - k)) / N)
+grpo *= np.sqrt((N - 1) / N)
 
 axB.plot(p, u16, color=BLUE, lw=1.8, ls="-")
 axB.plot(p, rloo, color=GREEN, lw=1.6, ls="--")
@@ -136,10 +142,11 @@ axB.annotate("", xy=(p0, u(p0, N) - 0.015), xytext=(p0, p0 * (1 - p0) + 0.015),
 axB.text(0.078, 0.205, "$\\to (N{-}1)\\times$ RLOO\nas $p \\to 0$",
          fontsize=7.5, color=GRAY, ha="left", va="center",
          linespacing=1.15)
-# mastered asymmetry: GRPO > MaxRL at p->1
+# mastered asymmetry: GRPO > MaxRL at p->1 (sample-SD tail ratio
+# (N-1)/sqrt(N); the symmetric sqrt(N-1) holds only for population SD)
 p1 = 0.93
 g1 = float(np.interp(p1, p, grpo))
-axB.annotate("$\\sqrt{N{-}1}\\times$ MaxRL's mass\non mastered prompts",
+axB.annotate("$\\frac{N-1}{\\sqrt{N}}\\times$ MaxRL's mass\non mastered prompts",
              xy=(p1, g1), xytext=(0.80, 0.68), fontsize=7.5,
              color=GRAY, ha="center", va="center", style="italic",
              linespacing=1.15,
@@ -150,7 +157,7 @@ axB.annotate("$\\sqrt{N{-}1}\\times$ MaxRL's mass\non mastered prompts",
 axB.set_xlim(0, 1)
 axB.set_ylim(0, 1.0)
 axB.set_xlabel("pass rate $p$")
-axB.set_ylabel(r"expected signal $/\,2$")
+axB.set_ylabel(r"expected coefficient mass $/\,2$")
 axB.set_title("B   what each estimator rewards ($N$=16)", loc="left")
 
 fig.tight_layout(pad=0.4, w_pad=1.2)

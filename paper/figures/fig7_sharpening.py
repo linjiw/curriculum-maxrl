@@ -9,10 +9,11 @@ ungated, B3 hindsight + utility gate):
     the mean but costs coverage (sharpening).  The gate slides the arm
     back down the dose axis: B3 under-gated (orange, operating point,
     3-seed) restores the mean to baseline, and the post-fix full-strength
-    gate (hollow orange, single seed, t1 .220/.564) pushes coverage above
-    baseline while giving the mean gain back — a dose-response frontier.
-    Data: b_scoreboard_3seed.json + Post-fix B3 section of
-    COUNTDOWN_ANALYSIS.md.
+    gate (hollow orange, single seed, corrected-decay code — setting
+    confounded with code version) pushes coverage above baseline while
+    giving the mean gain back.  The settings are CONSISTENT WITH a
+    mean-vs-coverage trade but do not establish a monotone dial (see
+    Sec 6.9).  Data: b_scoreboard_3seed.json + b_strong_gate_1seed.json.
 
 (b) "The mechanism" — B3 seed-1 gate rejection rate over training
     (orange), the monotone rise .12 -> .85 that IS the saturation story;
@@ -87,8 +88,10 @@ fig, (axa, axb, axc) = plt.subplots(1, 3, figsize=(7.0, 2.8))
 b1 = sb["B1_t1"]
 b2 = sb["B2_t1"]
 b3 = sb["B3_t1"]
-# post-fix full-strength gate, single seed (t1 pass@16 .564, mean@16 .220)
-pf_pass, pf_mean = 0.564, 0.220
+# post-fix full-strength gate, single seed, corrected-decay code —
+# vendored raw endpoint (b_strong_gate_1seed.json), not a literal
+pf = json.load(open(os.path.join(DATA, "b_strong_gate_1seed.json")))
+pf_pass, pf_mean = pf["tier1"]["pass_at_16"], pf["tier1"]["mean_at_16"]
 
 B1x, B1y = b1[2], b1[0]
 B2x, B2y = b2[2], b2[0]
@@ -136,8 +139,8 @@ axa.annotate("", xy=(pf_pass, pf_mean), xytext=(B3x, B3y),
              arrowprops=dict(arrowstyle="-|>", lw=1.0, color=ORANGE,
                              alpha=0.7, ls="--", shrinkA=7, shrinkB=7,
                              connectionstyle="arc3,rad=-0.28"), zorder=3)
-axa.text(0.512, 0.301, "gate strength:\na dial along the\ntrade", fontsize=7,
-         color=ORANGE, ha="left", va="center", style="italic",
+axa.text(0.512, 0.301, "gate strength:\nsettings trace the\ntrade (strong pt:\n1 seed, new code)",
+         fontsize=7, color=ORANGE, ha="left", va="center", style="italic",
          linespacing=1.1, bbox=LBL_BG, zorder=5)
 
 # point labels — left column (B2, B3) label left; B1/full-gate label right
