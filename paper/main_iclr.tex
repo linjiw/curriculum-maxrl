@@ -397,8 +397,10 @@ group-rollout loop (marked $\triangleright$).}
   \emph{for the requested task only}
 \STATE live groups ($1 \le K_x$): MaxRL advantages
   $w_i = r_i/K - 1/N$, unchanged
-\STATE $\triangleright$ \textbf{dead groups} ($K_x{=}0$): relabel to
-  the achieved sub-goal $g'$ (verified; conditioning rewritten)
+\STATE $\triangleright$ \textbf{dead groups} ($K_x{=}0$): relabel each
+  parseable failure to \emph{its own} achieved sub-goal $g'$
+  (verified; conditioning rewritten); unparseable rollouts stay
+  failures, so the group retains contrast ($K < N$)
 \STATE $\triangleright$ \quad admit the relabel only if
   $\hat p_{g'} \le$ \texttt{gate\_max\_p} \hfill(the gate: refuse the
   mastered tail)
@@ -408,14 +410,19 @@ group-rollout loop (marked $\triangleright$).}
 
 \section{Failure recycling}\label{sec:recycling}
 
-\begin{proposition}[Hindsight update, characterized]\label{prop:hindsight}
+\begin{remark}[Hindsight update, specialized]\label{prop:hindsight}
 Relabeling a dead group to the sub-goal $g'$ its trajectories actually
 achieved, rewriting the goal conditioning, and applying the same
-success-conditioned weights yields the ML gradient of task $g'$ under the
-conditional law induced by the \emph{original} task's sampling; it equals
-the fresh-rollout gradient exactly when the two conditional laws match,
-and is otherwise a distribution-shifted (biased) estimate of it.
-\end{proposition}
+success-conditioned weights yields the ML gradient of task $g'$ under
+the conditional law induced by the \emph{original} task's sampling;
+it equals the fresh-rollout gradient exactly when the two conditional
+laws match. This specializes known relabeling-bias structure --- the
+induced-distribution view of \citet{eysenbach} and the
+conditional-law gap in \citet{gcsl} --- to success-conditioned RLVR
+weights; we state it as a remark, not a result, and note that the
+sharpening phenomenon of \S 6.8 runs through the \emph{marginal}
+shift those works also identify, not this conditional exactness.
+\end{remark}
 \begin{interp}
 ``Exactness'' is a property to \emph{measure per environment}, not a
 blanket guarantee. On our validation testbed the laws match by
@@ -789,8 +796,11 @@ $\passat{16}$ coverage (tier-1: .571 vs.\ .645 for the no-relabel
 baseline). Recycled off-target successes concentrate the policy on
 reachable outputs at the expense of exploration breadth: the creation
 channel has its own safety trade-off, mirroring \S 6.3's weight-induced
-collapse --- data-induced rather than weight-induced, and to our knowledge
-unreported (no prior work measures $\passat{k}$ under hindsight in RLVR).
+collapse --- data-induced rather than weight-induced. The underlying
+concentration pathology is known in goal-conditioned RL (Skew-Fit's
+motivating failure mode; GCSL's marginal shift); what is unreported, to
+our knowledge, is its measurement in RLVR --- no prior work quantifies
+the $\passat{k}$ cost of hindsight relabeling in a verifier loop.
 Our algebra predicts it: a relabel to a self-achieved value is a task at
 $p \approx 1$, where $u(p)$ says training signal is zero --- the softmax
 pays for those updates out of the exploration tail.
@@ -890,6 +900,19 @@ form of both (water-filling spends its next rollout wherever
 $p(1-p)^N$ is largest, across or within). DAPO's dynamic sampling and
 GRESO cull dead prompts --- avoidance without allocation or creation. PKPO and Pass@k-training
 modify the objective toward $\passat{k}$ but keep uniform sampling.
+\textbf{Goal selection in HER.} Selecting \emph{which} goals to
+train on by difficulty or reachability is a decade-old idea in the
+relabeling literature: intermediate-difficulty goal generation
+\citep{goalgan}, value-based hindsight goal selection (HGG;
+\citealp{hgg}), curriculum-guided HER's proximity--diversity admission
+of relabel goals \citep{cher}, and Skew-Fit's $\alpha$ as a
+concentration-vs-coverage dial \citep{skewfit}. Our gate belongs to
+this mechanism class; what is new is not admission-by-difficulty but
+its \emph{derivation} --- the threshold is the mastered-tail zero of
+the same estimator functional $u_N$ that schedules sampling, so
+teacher and gate are one object with no separately tuned goal-selection
+heuristic --- and the coverage accounting it is validated against.
+
 \textbf{Hindsight and self-training for LLMs.} Exact-verifier
 relabeling has precedent outside RLVR loops --- CodeIt \citep{codeit}
 (ARC program synthesis, relabel + prioritized replay) and proof-tree
@@ -1013,6 +1036,21 @@ when it pays: efficient reinforcement learning for LLM reasoning via
 selective rollouts (GRESO). \emph{NeurIPS}, 2025.
 \bibitem[Andrychowicz et al.(2017)]{her} Andrychowicz, M., et al.
 Hindsight experience replay. \emph{NeurIPS}, 2017.
+\bibitem[Florensa et al.(2018)]{goalgan} Florensa, C., Held, D., Geng,
+X., Abbeel, P. Automatic goal generation for reinforcement learning
+agents. \emph{ICML}, 2018.
+\bibitem[Ren et al.(2019)]{hgg} Ren, Z., Dong, K., Zhou, Y., Liu, Q.,
+Peng, J. Exploration via hindsight goal generation. \emph{NeurIPS},
+2019.
+\bibitem[Fang et al.(2019)]{cher} Fang, M., Zhou, T., Du, Y., Han, L.,
+Zhang, Z. Curriculum-guided hindsight experience replay.
+\emph{NeurIPS}, 2019.
+\bibitem[Pong et al.(2020)]{skewfit} Pong, V.~H., Dalal, M., Lin, S.,
+Nair, A., Bahl, S., Levine, S. Skew-Fit: state-covering self-supervised
+reinforcement learning. \emph{ICML}, 2020.
+\bibitem[Eysenbach et al.(2020)]{eysenbach} Eysenbach, B., Geng, X.,
+Levine, S., Salakhutdinov, R. Rewriting history with inverse RL:
+hindsight inference for policy improvement. \emph{NeurIPS}, 2020.
 \bibitem[Ghosh et al.(2021)]{gcsl} Ghosh, D., et al. Learning to reach
 goals via iterated supervised learning. \emph{ICLR}, 2021.
 \bibitem[Ferbach et al.(2024)]{ferbach} Ferbach, D., et al. Self-consuming
