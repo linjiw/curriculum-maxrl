@@ -101,3 +101,12 @@ still single-run-conditional, and formatting/anonymization work is undone.
   pass); amendment A1 adds g3p (warm-start + power=4) after the g3s
   partial showed warm-start-alone doesn't move dead-sampled off the
   population rate. m3s training now; g3s/g3p/g3u follow.
+
+- 2026-08-04 pass 3: §4 opening, §5 interp+contracts, one-identity
+  corollary tightened; fig1 0.92x, fig5 0.5x; all compressions synced
+  into both editions (main.tex working draft + main_iclr.tex). ICLR
+  main text holding at 12pp — the last ~2pp are float-spacing bound
+  (pages 5-6 carry two half-empty float pages), not prose: next lever
+  is float packing ([t] -> [h]/[tb] consolidation + wrapping Alg 1 and
+  fig2 onto one page), then §6.7's remaining length after E-LLM-1b
+  verdicts replace the interim seed-2 text.
