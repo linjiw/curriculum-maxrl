@@ -1,14 +1,19 @@
-"""FrontierTeacher: the validated curriculum sampler.
+"""FrontierTeacher: the practical-MaxRL-aligned curriculum sampler.
 
-Utility (PROOFS.md P1): u(p) = (1-(1-p)^N) - p — the exact expected
-advantage mass of the MaxRL estimator per group, peaking at p* ≈ ln(N)/N.
-Posterior: decayed Beta per task (decay 0.7, VALIDATION.md V2b).
-Sampling: Thompson draw → u^gamma (V6: gamma tracks task-graph
-connectivity — 4 for chained/shared-skill pools, 1 for flat pools) →
-mix with uniform floor (P7: the floor bounds posterior staleness).
+For the practical centered/drop estimator, the normalized expected
+coefficient half-mass is
 
-Validated defaults are the constructor defaults; every knob's provenance
-is in its docstring line.
+    ν_N(p) = (1-p) - (1-p)^N = pass@N - pass@1.
+
+The full expected absolute coefficient mass is ``2ν_N``.  This exact
+finite-group activity profile peaks at ``1 - N**(-1/(N-1))`` (approximately
+``ln(N)/N``), but it is not the activity profile of raw MaxRL or the full
+control-variate estimator.  In particular, full CV retains a negative-only
+update at ``K=0``, while the practical estimator drops that group.
+
+Sampling uses a decayed Beta posterior, a Thompson draw, ``ν_N**gamma``,
+and a uniform floor.  Decay, gamma, and the floor are empirical controls,
+not consequences of the coefficient-mass derivation.
 """
 
 from __future__ import annotations
@@ -18,9 +23,9 @@ import numpy as np
 
 class FrontierTeacher:
     def __init__(self, n_tasks: int, n_rollouts: int = 16, *,
-                 decay: float = 0.7,      # V2b: tracking > memory
-                 floor: float = 0.1,      # P7/V3: staleness insurance
-                 gamma: float = 1.0,      # V6: raise to ~4 on chained pools
+                 decay: float = 0.7,      # empirical tracking control
+                 floor: float = 0.1,      # posterior-staleness insurance
+                 gamma: float = 1.0,      # empirical concentration control
                  seed: int = 0):
         self.n_tasks = n_tasks
         self.n_rollouts = n_rollouts
@@ -36,8 +41,9 @@ class FrontierTeacher:
     def observe(self, task_id: int, rewards: np.ndarray) -> None:
         """Update the task's posterior from one group's binary rewards.
 
-        Only requested-task evidence belongs here — feeding relabeled
-        successes back inflates the posterior (V4 + GPU A/B/C config C).
+        Only requested-task evidence belongs here: relabeled outcomes come
+        from a different proposal and feeding them back inflates the
+        requested task's posterior.
         """
         k = float(np.sum(rewards))
         n = float(len(rewards))
@@ -47,6 +53,7 @@ class FrontierTeacher:
 
     # -- sampling ---------------------------------------------------------
     def utility(self, p: np.ndarray) -> np.ndarray:
+        """Return ``ν_N(p)``, practical MaxRL's coefficient half-mass."""
         return np.maximum((1.0 - (1.0 - p) ** self.n_rollouts) - p, 0.0)
 
     def distribution(self) -> np.ndarray:

@@ -71,16 +71,17 @@ rather than needing an external heuristic.
   SEC's signal — the advantage-mass teacher is "oracle SEC for MaxRL," usable
   before a prompt is ever visited.
 
-### M4. Adaptive truncation order T (objective curriculum) — ❌ negative result
+### M4. Adaptive truncation order T (objective curriculum) — ⚠️ corrected, empirical status open
 
 - **Setup:** the repo's unpublished `c_sub_TN` subset estimator decouples T from N
-  (we verified: `c_{N,N}(K)=1/K` recovers Algorithm 1; `E[c·K] = 1−(1−p)^T` to 4
-  decimals). Annealed Tᵢ = clip(1/p̂ᵢ, 1, N) per prompt.
-- **Result:** slightly *underperforms* fixed T=N (AUC 0.698 vs 0.704 with advmass
-  teacher; 0.641 vs 0.653 uniform; 5 seeds). At N=16–32 variance is not the binding
-  constraint, so shrinking T only weakens the beneficial hard-prompt upweighting.
-- **Status:** documented, deprioritized. Revisit only for very small groups or
-  extreme p̂ spreads.
+  (`c_{N,N}(K)=1/K`; `E[c·K] = 1−(1−p)^T`). Its `-1/N` control variate must be
+  retained on K=0 groups for the estimator to remain unbiased.
+- **Correction:** the historical five-seed result dropped that K=0 baseline.
+  It therefore did not test the unbiased adaptive-T estimator, and the old
+  negative AUC comparison is withdrawn.
+- **Status:** the corrected implementation has exact endpoint and exhaustive
+  expectation tests. A schedule-matched fixed-full-CV control is still needed
+  before interpreting adaptive truncation empirically.
 
 ### M5. ALP anti-forgetting term — ⚠️ implemented, weak evidence
 

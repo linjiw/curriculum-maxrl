@@ -1,12 +1,13 @@
-"""FrontierTrainer: the validated training schedule, environment-agnostic.
+"""Environment-agnostic group training with explicit estimator semantics.
 
 Per step:
   1. teacher samples `tasks_per_step` task ids
   2. env rolls a group of `n_rollouts` per task
   3. teacher.observe(requested task, rewards)          [never relabeled ones]
-  4. live groups -> MaxRL weights -> policy.update
-  5. dead groups -> env.relabel -> K-style weights on the relabeled task,
-     scaled by hindsight_scale -> policy.update(relabeled_task, ...)
+  4. compute the configured finite-group estimator and apply any nonzero
+     update, including estimator-specific constant-group updates
+  5. if an all-fail group has no estimator update, optionally request an
+     exact, mixed-outcome relabel and update the relabeled task
 
 This module has no torch/gym dependency; numpy only.
 """
@@ -18,7 +19,13 @@ from typing import Callable, Optional
 
 import numpy as np
 
-from frontier_rl.estimators import grpo_weights, maxrl_weights, rloo_weights
+from frontier_rl.estimators import (
+    grpo_weights,
+    maxrl_full_cv_weights,
+    maxrl_raw_weights,
+    maxrl_weights,
+    rloo_weights,
+)
 from frontier_rl.interfaces import GroupResult, Policy, TaskSpace
 from frontier_rl.teacher import FrontierTeacher
 
@@ -41,10 +48,9 @@ class TrainerConfig:
                                     # (flow heads / weighted SFT — COSMOS3 Q1);
                                     # E[Σw⁺] = u(p) exactly, so the teacher's
                                     # algebra is unchanged
-    estimator: str = "maxrl"        # BASELINE ARMS ONLY: "grpo" (the H6
-                                    # collapse ablation — curricula amplify
-                                    # GRPO's coverage collapse) or "rloo".
-                                    # positive_weights applies to maxrl only.
+    estimator: str = "maxrl"        # "maxrl", "maxrl_full_cv", "maxrl_raw",
+                                    # "grpo", or "rloo". positive_weights
+                                    # applies to practical maxrl only.
     dapo_max_redraws: int = 0       # DAPO-style dynamic sampling baseline:
                                     # on a dead group, redraw a fresh task up
                                     # to this many times, PAYING for every
@@ -61,7 +67,11 @@ class TrainerConfig:
 @dataclass
 class StepStats:
     live_groups: int = 0
-    dead_groups: int = 0
+    dead_groups: int = 0           # backward-compatible: all constant groups
+    all_fail_groups: int = 0
+    all_pass_groups: int = 0
+    constant_group_updates: int = 0
+    all_fail_updates: int = 0
     relabeled_groups: int = 0
     mean_reward: float = 0.0
 
@@ -81,6 +91,10 @@ class FrontierTrainer:
         if self.cfg.estimator == "maxrl":
             return maxrl_weights(rewards,
                                  positive_part=self.cfg.positive_weights)
+        if self.cfg.estimator == "maxrl_full_cv":
+            return maxrl_full_cv_weights(rewards)
+        if self.cfg.estimator == "maxrl_raw":
+            return maxrl_raw_weights(rewards)
         if self.cfg.estimator == "grpo":
             return grpo_weights(rewards)
         if self.cfg.estimator == "rloo":
@@ -103,6 +117,10 @@ class FrontierTrainer:
             redraws = self.cfg.dapo_max_redraws
             while redraws > 0 and (r.sum() == 0 or r.sum() == len(r)):
                 stats.dead_groups += 1
+                if r.sum() == 0:
+                    stats.all_fail_groups += 1
+                else:
+                    stats.all_pass_groups += 1
                 redraws -= 1
                 task_id = int(self.teacher.sample_tasks(1)[0])
                 group = self.env.rollout_group(task_id, self.cfg.n_rollouts)
@@ -110,13 +128,36 @@ class FrontierTrainer:
                 self.teacher.observe(task_id, r)
                 rewards_seen.append(r.mean())
 
+            k = int(r.sum())
+            n = len(r)
             w = self._weights(r)
-            if np.any(w != 0):
+            if 0 < k < n:
                 stats.live_groups += 1
+                if np.any(w != 0):
+                    self.policy.update(task_id, group.trajectories, w)
+                continue
+
+            # Constant groups are accounted by their reward event, not by
+            # whether a particular estimator happens to emit nonzero weights.
+            stats.dead_groups += 1
+            if k == 0:
+                stats.all_fail_groups += 1
+            else:
+                stats.all_pass_groups += 1
+
+            # Raw MaxRL updates all-pass groups; full-CV updates all-fail
+            # groups. These are constant-group updates, never "live" groups.
+            if np.any(w != 0):
+                stats.constant_group_updates += 1
+                stats.all_fail_updates += int(k == 0)
                 self.policy.update(task_id, group.trajectories, w)
                 continue
 
-            stats.dead_groups += 1
+            # Hindsight's interface contract is all-fail only. In
+            # particular, an all-pass practical-MaxRL group must not be sent
+            # through a relabeler merely because its centered weights are 0.
+            if k != 0:
+                continue
             if not self.cfg.hindsight:
                 continue
             relabel = self.env.relabel(group)
@@ -135,6 +176,9 @@ class FrontierTrainer:
                 new_task, new_rewards = relabel
                 new_trajs = group.trajectories
             r2 = np.asarray(new_rewards, dtype=float)
+            k2 = int(r2.sum())
+            if not 0 < k2 < len(r2):
+                continue
             w2 = self._weights(r2) * self.cfg.hindsight_scale
             if np.any(w2 != 0):
                 stats.relabeled_groups += 1

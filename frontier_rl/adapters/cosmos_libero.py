@@ -10,7 +10,7 @@ team's "Self-Verified Frontier RL" proposal:
               cosmos/LIBERO, mirroring the isaaclab adapter's lazy pattern)
   verifier  = binary sim `info["success"]` for LIVE groups (never the model);
               a predicate verifier (oracle sim-BDDL, or the model's own
-              ID-prefilter + reasoner query) only ever scores DEAD groups
+              ID-prefilter + reasoner query) only ever scores ALL-FAIL groups
   relabel   = deepest achieved sub-conjunction of the failed task's own goal,
               falling back to pool/singleton predicate tasks (Q3.3), with the
               language conditioning rewritten from a FIXED TEMPLATE per
@@ -18,8 +18,9 @@ team's "Self-Verified Frontier RL" proposal:
               that a failed rollout is NEVER upgraded to a success of the
               original task (Q3.4)
   estimator = positive-part MaxRL weights (TrainerConfig.positive_weights=True
-              — weighted RFT; E[Σw⁺] = u(p) exactly, so P1 governs sampling
-              unchanged; see estimators.maxrl_weights)
+              — weighted RFT; E[Σw⁺] = ν_N(p), matching the teacher's
+              coefficient-sum score, but this is not the two-sided practical
+              centered estimator; see estimators.maxrl_weights)
   teacher   = MasteryFrontierTeacher — FrontierTeacher plus dynamic arm growth
               with hierarchical pseudo-count shrinkage toward the parent task
               (Q2.3: alpha_child = 1 + lam*(alpha_parent-1) + own evidence)
@@ -127,7 +128,7 @@ class MasteryFrontierTeacher(FrontierTeacher):
     """FrontierTeacher with relabel-only arms and mastery splits (Q2.2/Q2.3).
 
     `samplable`: bool mask over arms.  Non-samplable arms are RELABEL-ONLY —
-    auxiliary sub-goal tasks that exist so relabeled gradient has a stable
+    auxiliary sub-goal tasks that give each relabeled destination a stable
     (task_id, template) to be credited to, but that cannot be rolled out
     directly (no BDDL task file exists for an arbitrary sub-conjunction).
     They get zero sampling probability, zero floor share, and — since they
@@ -141,7 +142,7 @@ class MasteryFrontierTeacher(FrontierTeacher):
     are shrunk toward the parent's by pseudo-count fraction lam (default
     0.3): the cheap hierarchical-Beta — children start informed, own
     evidence dominates after a few groups.  The parent arm stays; its
-    saturated posterior retires it through u(p)->0 while the floor keeps
+    saturated posterior retires it through ν_N(p)->0 while the floor keeps
     retention probes on it.
     """
 
@@ -271,7 +272,7 @@ class CosmosLiberoSpace:
                            list(trajs), list(infos))
 
     def relabel(self, group: GroupResult) -> Optional[tuple]:
-        """Deepest achieved sub-conjunction, both P6 contracts enforced.
+        """Build one verified, rewritten destination group for hindsight.
 
         Search order (Q3.3): (a) largest strict sub-conjunction of the failed
         task's own goal achieved by >=1 rollout — the on-the-path target that
@@ -280,13 +281,18 @@ class CosmosLiberoSpace:
         construction (strict subsets only + the group was all-fail): the
         verifier can never upgrade a failure into a success of the task the
         sim already scored (Q3.4).
+
+        The trainer separately enforces destination contrast ``0 < K' < N``.
+        Exact verification makes these destination labels valid; because the
+        trajectories came from a source-task proposal, it does not generally
+        make the update an on-policy destination gradient.
         """
         # NB: if every rollout achieves the target sub-goal the relabeled
-        # group comes back all-success and maxrl_weights are zero (K=N
-        # self-retirement) — an uncontrasted group carries no likelihood
-        # signal, and a sub-goal every failure reaches is effectively
-        # mastered.  This is the framework-wide semantics (skill_chain and
-        # grid_reach behave identically), not an adapter quirk.
+        # group comes back all-success and practical maxrl_weights are zero
+        # (K=N self-retirement).  The trainer therefore skips this
+        # uncontrasted destination group.  This is practical-estimator
+        # semantics (skill_chain and grid_reach behave identically), not an
+        # adapter quirk.
         self.relabel_attempts += 1
         own_goal = self.tasks[group.task_id].goal
         achieved = []

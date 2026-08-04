@@ -53,18 +53,25 @@ class TaskSpace(Protocol):
         None if the env has no meaningful relabeling (the trainer then just
         skips the group, plain-MaxRL style).
 
-        Two contracts (both from P6 — the relabeled update is the ML gradient
-        of the relabeled task only if the conditional laws match):
+        Three contracts make the relabeled group semantically and
+        estimator-valid. They do not make source-generated trajectories
+        on-policy for the destination; equality with a fresh-destination
+        gradient additionally requires matching update moments (matching
+        conditional laws is sufficient):
 
-        1. EXACTNESS: a relabeled success must be a TRUE success of the
+        1. VERIFICATION: a relabeled success must be a TRUE success of the
            relabeled task under the env's own verifier.  Never return
            "almost reached" as success.
-        2. CONDITIONING: if trajectories embed the goal (goal-relative
+        2. COMMON DESTINATION + CONDITIONING: all rows in the returned group
+           share one relabeled task. If trajectories embed the goal (goal-relative
            features, desired_goal in observations, goal tokens in a prompt),
            return new_trajectories with the goal REWRITTEN to the relabeled
            one — training goal-A-conditioned actions as successes of goal B
            mis-trains the conditioning (this is HER's observation-rewrite,
            and skipping it silently *hurts*: see the grid_reach adapter note).
+        3. CONTRAST: return both successes and failures for that destination
+           (0 < K' < N). Constant destination groups cannot train a centered
+           group estimator and are skipped by the trainer.
         """
         ...
 

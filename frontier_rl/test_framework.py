@@ -7,8 +7,17 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 import numpy as np
 
-from frontier_rl import (FrontierTeacher, FrontierTrainer, TrainerConfig,
-                         maxrl_weights, grpo_weights, rloo_weights)
+from frontier_rl import (
+    FrontierTeacher,
+    FrontierTrainer,
+    GroupResult,
+    TrainerConfig,
+    grpo_weights,
+    maxrl_full_cv_weights,
+    maxrl_raw_weights,
+    maxrl_weights,
+    rloo_weights,
+)
 from frontier_rl.adapters.skill_chain import SkillChainSpace
 from frontier_rl.adapters.grid_reach import GridReachSpace
 from frontier_rl.adapters.cosmos_libero import (CosmosLiberoSpace,
@@ -23,6 +32,17 @@ def test_estimators():
     assert not maxrl_weights(np.zeros(4)).any()
     assert abs(rloo_weights(r).sum()) < 1e-12
     assert abs(grpo_weights(r).sum()) < 1e-12
+
+    all_fail = np.zeros(4)
+    all_pass = np.ones(4)
+    mixed = np.array([1.0, 0.0, 1.0, 0.0])
+    assert np.all(maxrl_raw_weights(all_fail) == 0)
+    assert np.allclose(maxrl_raw_weights(all_pass), 0.25)
+    assert np.allclose(maxrl_raw_weights(mixed), [0.5, 0.0, 0.5, 0.0])
+    assert np.allclose(maxrl_full_cv_weights(all_fail), -0.25)
+    assert np.allclose(maxrl_full_cv_weights(all_pass), 0.0)
+    assert np.allclose(
+        maxrl_full_cv_weights(mixed), [0.25, -0.25, 0.25, -0.25])
     print("estimators OK")
 
 
@@ -411,6 +431,44 @@ def test_baseline_estimator_arms():
     tr.train(steps=5)
     assert seen_w and all(abs(w.sum()) < 1e-9 for w in seen_w), \
         "grpo weights must be mean-zero"
+
+    class ConstantEnv:
+        n_tasks = 1
+
+        def __init__(self, reward):
+            self.reward = reward
+            self.relabel_calls = 0
+
+        def rollout_group(self, task_id, n_rollouts):
+            return GroupResult(task_id, np.full(n_rollouts, self.reward),
+                               [None] * n_rollouts)
+
+        def relabel(self, group):
+            self.relabel_calls += 1
+            return None
+
+    # Full-CV updates K=0 but telemetry still records an all-fail group,
+    # not a live group; its nonzero branch takes precedence over hindsight.
+    fail_env = ConstantEnv(0.0)
+    tr_fail = FrontierTrainer(
+        fail_env, SpyPolicy(),
+        TrainerConfig(seed=0, tasks_per_step=1, estimator="maxrl_full_cv",
+                      hindsight=True))
+    fail_stats = tr_fail.step()
+    assert fail_stats.live_groups == 0 and fail_stats.all_fail_groups == 1
+    assert fail_stats.all_fail_updates == 1 and fail_env.relabel_calls == 0
+
+    # An all-pass practical group has zero centered weights but must never
+    # fall through to the all-fail hindsight hook.
+    pass_env = ConstantEnv(1.0)
+    tr_pass = FrontierTrainer(
+        pass_env, SpyPolicy(),
+        TrainerConfig(seed=0, tasks_per_step=1, estimator="maxrl",
+                      hindsight=True))
+    pass_stats = tr_pass.step()
+    assert pass_stats.live_groups == 0 and pass_stats.all_pass_groups == 1
+    assert pass_stats.constant_group_updates == 0
+    assert pass_env.relabel_calls == 0
     # DAPO redraws convert dead draws into (counted) extra generation cost
     env2 = SkillChainSpace(seed=0)
     tr2 = FrontierTrainer(env2, env2,

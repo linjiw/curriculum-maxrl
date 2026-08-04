@@ -1,6 +1,9 @@
-"""Group advantage weights. MaxRL is the framework's estimator (P5: ~N x
-RLOO's signal on frontier tasks; H6: the only one of the three that is safe
-under a frontier curriculum). GRPO/RLOO are included for baselines."""
+"""Binary group-estimator coefficients used by the framework.
+
+The raw, full-control-variate, and practical MaxRL variants are deliberately
+separate: they optimize closely related objectives but have different
+finite-group activity profiles. GRPO and RLOO are included as baselines.
+"""
 
 from __future__ import annotations
 
@@ -9,21 +12,42 @@ import numpy as np
 EPS = 1e-6
 
 
+def maxrl_raw_weights(rewards: np.ndarray) -> np.ndarray:
+    """Raw success-conditioned estimator; zero on all-fail groups."""
+    k = rewards.sum()
+    if k == 0:
+        return np.zeros(len(rewards))
+    return rewards / k
+
+
+def maxrl_full_cv_weights(rewards: np.ndarray) -> np.ndarray:
+    """Eq.-10 estimator with its control variate retained at ``K=0``.
+
+    An all-fail group receives ``-1/N`` on every rollout rather than being
+    dropped. This is the variance-reduced ``T=N`` estimator, distinct from
+    the practical centered/drop convention in :func:`maxrl_weights`.
+    """
+    n = len(rewards)
+    k = rewards.sum()
+    if k == 0:
+        return np.full(n, -1.0 / n)
+    return rewards / k - 1.0 / n
+
+
 def maxrl_weights(rewards: np.ndarray, positive_part: bool = False) -> np.ndarray:
-    """w_i = r_i/K − 1/N; zero vector when K = 0 (paper eq. 10).
+    """Practical centered/drop weights: ``r_i/K - 1/N`` for ``K>0``.
 
-    positive_part=True keeps only the success weights (1/K − 1/N, failures 0)
-    — the weighted-RFT estimator for policies without tractable per-sample
-    log-probs (flow/diffusion action heads, weighted SFT: COSMOS3_RESPONSE.md
-    Q1). Two exact properties (MC-verified in test_framework.py):
+    positive_part=True keeps only the success weights (1/K − 1/N, failures
+    0). This is a weighted-RFT surrogate for policies without tractable
+    per-sample log-probabilities (for example, flow/diffusion action heads),
+    not the centered estimator and not generally an unbiased gradient of the
+    same objective. Its exact expected coefficient sum is
+    ``pass@N - pass@1``; this coefficient statistic can guide allocation but
+    does not establish the surrogate's full gradient geometry.
 
-      E[Σ w⁺·S] = Σ_{k=2}^{N} (1/k)·∇pass@k   (unbiased for the pass@k tail
-                                               objective; the dropped failure
-                                               term is a zero-mean baseline)
-      E[Σ w⁺]   = pass@N − pass@1              (the teacher utility u(p) —
-                                               P1 governs sampling exactly)
-
-    All-pass groups (K=N) self-retire: every weight is 0.
+    The whole group is zeroed at ``K=0`` and self-retires at ``K=N``. This
+    implementation is unbiased for truncation order ``T=N-1``; retaining the
+    control variate at ``K=0`` instead gives :func:`maxrl_full_cv_weights`.
     """
     n = len(rewards)
     k = rewards.sum()

@@ -57,7 +57,7 @@ Full LLM-experiment roadmap with novelty checks and differentiation map:
 | `GUIDE.md` | Design guide: approaches tried, verification status of each, and what's next |
 | `REPORT.md` | Full experiment report: math→algorithm→evidence chain, findings, goal assessment |
 | `SCHEDULE.md` | Live experiment tracking: executing queue, decision trees, next wave |
-| `curriculum_maxrl/THEORY.md` | Exact advantage-mass formulas per estimator (MC-verified), derived teacher utility, optimal allocation, adaptive-T negative result |
+| `curriculum_maxrl/THEORY.md` | Exact advantage-mass formulas per estimator (MC-verified), derived teacher utility, optimal allocation, and the corrected/open adaptive-T analysis |
 | `curriculum_maxrl/DESIGN.md` | Original integration design, hypotheses H1–H5, CPU validation tables |
 | `curriculum_maxrl/RESEARCH.md` | Deep-research synthesis of modern curriculum RL (PAIRED/PLR/ACCEL, ALP-GMM, SFL learnability, RLVR curricula) — 3-vote adversarially verified against primary sources |
 | `curriculum_maxrl/*.py` | CPU prototype: skill-chain testbed, 5 estimators, 5 teachers, experiment runners |
