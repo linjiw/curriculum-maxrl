@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  3 AUG 2026 23:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  4 AUG 2026 06:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -532,14 +532,14 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 File: figures/fig1_utility.pdf Graphic file (type pdf)
 <use figures/fig1_utility.pdf>
 Package pdftex.def Info: figures/fig1_utility.pdf  used on input line 179.
-(pdftex.def)             Requested size: 397.48499pt x 147.641pt.
+(pdftex.def)             Requested size: 365.68546pt x 135.82835pt.
 
 [3pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.239 \end{proposition}
-                        <./figures/fig1_utility.pdf>]
+l.253 \end{interp}
+                   <./figures/fig1_utility.pdf>]
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 2
 95.
 
@@ -550,137 +550,143 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `pcr' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [4]
-<figures/fig4_algorithm.pdf, id=191, 505.89pt x 231.26399pt>
+<figures/fig4_algorithm.pdf, id=171, 505.89pt x 231.26399pt>
 File: figures/fig4_algorithm.pdf Graphic file (type pdf)
 <use figures/fig4_algorithm.pdf>
-Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 355.
+Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 353.
 (pdftex.def)             Requested size: 397.48499pt x 181.712pt.
+ [4]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 382.
+put line 377.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 1264) has occurred while \output is active []
 
  [5pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.412 \end{proposition}
-                        <./figures/fig4_algorithm.pdf>]
-<figures/fig5_channels.pdf, id=238, 252.945pt x 216.81pt>
+l.417 \end{interp}
+                   <./figures/fig4_algorithm.pdf>]
+<figures/fig5_channels.pdf, id=241, 252.945pt x 216.81pt>
 File: figures/fig5_channels.pdf Graphic file (type pdf)
 <use figures/fig5_channels.pdf>
-Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 451.
-(pdftex.def)             Requested size: 246.43874pt x 211.23836pt.
+Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 442.
+(pdftex.def)             Requested size: 198.7425pt x 170.35501pt.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [6pdfTeX warning (ext4): destination with the same identifier (name{figure.3})
- has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.472 
-       <./figures/fig5_channels.pdf>]
-Overfull \hbox (19.77081pt too wide) in paragraph at lines 478--502
+Overfull \hbox (19.77081pt too wide) in paragraph at lines 469--493
  [][] 
  []
 
-<figures/fig2_ladder.pdf, id=268, 505.89pt x 202.356pt>
+<figures/fig2_ladder.pdf, id=243, 505.89pt x 202.356pt>
 File: figures/fig2_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ladder.pdf>
-Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 506.
+Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 497.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
-[7pdfTeX warning (ext4): destination with the same identifier (name{table.1}) h
-as been already used, duplicate ignored
+[6pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.542 ... intervention buys speed, not asymptote.}
-                                                  pdfTeX warning (ext4): destin
-ation with the same identifier (name{figure.4}) has been already used, duplicat
-e ignored
+l.533 ... intervention buys speed, not asymptote.}
+                                                   <./figures/fig5_channels.pdf
+>]
+Underfull \vbox (badness 1521) has occurred while \output is active []
+
+ [7pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.542 ... intervention buys speed, not asymptote.}
-                                                   <./figures/fig2_ladder.pdf>]
-[8]
-<figures/fig8_bands.pdf, id=313, 505.89pt x 195.129pt>
+l.552 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.552 
+       <./figures/fig2_ladder.pdf>]
+<figures/fig8_bands.pdf, id=308, 505.89pt x 195.129pt>
 File: figures/fig8_bands.pdf Graphic file (type pdf)
 <use figures/fig8_bands.pdf>
-Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 628.
+Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 619.
 (pdftex.def)             Requested size: 397.48499pt x 153.3195pt.
-<figures/fig3_gsm8k.pdf, id=317, 252.945pt x 202.356pt>
+
+Underfull \vbox (badness 3838) has occurred while \output is active []
+
+ [8]
+<figures/fig3_gsm8k.pdf, id=321, 252.945pt x 202.356pt>
 File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
 <use figures/fig3_gsm8k.pdf>
-Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 686.
+Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 677.
 (pdftex.def)             Requested size: 218.61795pt x 174.89658pt.
 
-Underfull \vbox (badness 3108) has occurred while \output is active []
+[9pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.740 ...ring-controlled multi-seed cell, queued.}
+                                                   <./figures/fig8_bands.pdf>]
+<figures/fig7_sharpening.pdf, id=357, 505.89pt x 202.356pt>
+File: figures/fig7_sharpening.pdf Graphic file (type pdf)
+<use figures/fig7_sharpening.pdf>
+Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 744.
+(pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
 
- [9pdfTeX warning (ext4): destination with the same identifier (name{figure.5})
+[10pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.749 ...ring-controlled multi-seed cell, queued.}
-                                                   <./figures/fig8_bands.pdf>]
+l.838 not yet saturated.}
+                          <./figures/fig3_gsm8k.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [10pdfTeX warning (ext4): destination with the same identifier (name{figure.6}
-) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.750 
-       <./figures/fig3_gsm8k.pdf>]
-<figures/fig7_sharpening.pdf, id=379, 505.89pt x 202.356pt>
-File: figures/fig7_sharpening.pdf Graphic file (type pdf)
-<use figures/fig7_sharpening.pdf>
-Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 753.
-(pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
  [11pdfTeX warning (ext4): destination with the same identifier (name{figure.7}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.847 not yet saturated.}
+l.838 not yet saturated.}
                           <./figures/fig7_sharpening.pdf>] [12] [13]
-<figures/fig6_gym.pdf, id=467, 505.89pt x 202.356pt>
+<figures/fig6_gym.pdf, id=469, 505.89pt x 202.356pt>
 File: figures/fig6_gym.pdf Graphic file (type pdf)
 <use figures/fig6_gym.pdf>
-Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1057.
+Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1048.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
  [14]
-Underfull \vbox (badness 2626) has occurred while \output is active []
 
- [15pdfTeX warning (ext4): destination with the same identifier (name{figure.8}
-) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  
-l.1133 
-        <./figures/fig6_gym.pdf>]
-Overfull \hbox (79.62979pt too wide) in paragraph at lines 1169--1181
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Overfull \hbox (79.62979pt too wide) in paragraph at lines 1160--1172
  [][] 
  []
 
-[16pdfTeX warning (ext4): destination with the same identifier (name{table.2}) 
-has been already used, duplicate ignored
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[15pdfTeX warning (ext4): destination with the same identifier (name{figure.8})
+ has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.1198 \end{document}
+l.1186 
+        <./figures/fig6_gym.pdf>] [16pdfTeX warning (ext4): destination with th
+e same identifier (name{table.2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.1189 \end{document}
                      pdfTeX warning (ext4): destination with the same identifie
 r (name{table.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.1198 \end{document}
+l.1189 \end{document}
                      ] (./main_iclr.aux)
 Package rerunfilecheck Info: File `main_iclr.out' has not changed.
 (rerunfilecheck)             Checksum: 0CB2A3CA3A93033633272FB7EA65AC35;1833.
  ) 
 Here is how much of TeX's memory you used:
- 13435 strings out of 480806
- 194759 string characters out of 5905151
- 548786 words of memory out of 6000000
+ 13420 strings out of 480806
+ 194618 string characters out of 5905151
+ 549966 words of memory out of 6000000
  29915 multiletter control sequences out of 15000+600000
- 461520 words of font info for 454 fonts, out of 8000000 for 9000
+ 460717 words of font info for 444 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 61i,11n,75p,1174b,475s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,12n,75p,1174b,495s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
@@ -704,10 +710,10 @@ r/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb
 xlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-di
 st/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/
 urw/times/utmri8a.pfb>
-Output written on main_iclr.pdf (16 pages, 566713 bytes).
+Output written on main_iclr.pdf (16 pages, 565268 bytes).
 PDF statistics:
- 624 PDF objects out of 1000 (max. 8388607)
- 480 compressed objects within 5 object streams
+ 625 PDF objects out of 1000 (max. 8388607)
+ 481 compressed objects within 5 object streams
  106 named destinations out of 1000 (max. 500000)
  72825 words of extra memory for PDF output out of 74296 (max. 10000000)
 

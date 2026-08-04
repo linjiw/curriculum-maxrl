@@ -176,7 +176,7 @@ reported in place (\S\ref{sec:limits}) and audited in the repository.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig1_utility}
+\includegraphics[width=0.92\linewidth]{figures/fig1_utility}
 \caption{\textbf{The estimator is the curriculum.} \emph{Left:} the derived
 utility $u_N(p) = (1-(1-p)^N)-p$ --- the estimator's expected advantage
 mass (Prop.~\ref{prop:mass}) --- for growing rollout budgets $N$. The peak
@@ -326,16 +326,14 @@ outcome.
 \noindent One identity, three literatures: learnability curricula
 \citep{sfl,lilo} are the $N{=}2$ slice of $u_N$; DAPO-style dynamic
 sampling and GRESO are its avoidance shadow (cull where $u\approx 0$);
-HER-style relabeling \citep{her} is its creation complement (manufacture $K>0$ where
-$u=0$ identically; \S\ref{sec:recycling}). Closest prior:
-DisCO \citep{disco} derives the per-question weights of the GRPO family
-($\omega(q)=\sqrt{p(1-p)}$ for GRPO, $p(1-p)$ for Dr.~GRPO) to diagnose
-difficulty bias, and SC-SDPO \citep{scsdpo} notes the residual
-$\sqrt{p(1-p)}$ acts as an implicit curriculum. Our identity generalizes
-this line to success-conditioned estimators (where the functional is
-$u_N = \passat{N}-\passat{1}$, compute-indexed by $N$), and --- the step
-neither takes --- uses it to predict how \emph{external} curricula and
-recyclers interact with each estimator, in coverage terms.
+HER-style relabeling \citep{her} is its creation complement
+(manufacture $K>0$ where $u=0$ identically; \S\ref{sec:recycling}).
+DisCO \citep{disco} and SC-SDPO \citep{scsdpo} derive analogous
+per-question weights for the GRPO family to diagnose difficulty bias;
+our identity generalizes that line to success-conditioned estimators
+and --- the step neither takes --- uses it to predict how
+\emph{external} curricula and recyclers interact with each estimator,
+in coverage terms.
 
 \paragraph{The partition, as a map of the paper
 (Fig.~\ref{fig:channels}).} The \textbf{teacher}
@@ -363,19 +361,16 @@ The posterior observes requested-task outcomes only.}
 
 \section{FrontierMax: the schedule}\label{sec:method}
 FrontierMax is a standard group-rollout RLVR loop with three modified
-lines (Alg.~\ref{alg:frontiermax}). A decayed Beta posterior (decay
-$0.7$) tracks each prompt's pass rate from observed group outcomes only
---- never from relabeled successes (violating this inflates the
-posterior: $\hat p$ 0.81 vs.\ eval 0.47). Thompson sampling draws
-$\tilde p$ and samples prompts $\propto u(\tilde p)^\gamma$ with a 10\%
-uniform floor; $\gamma\approx 4$ when tasks share skills (learning
-compounds --- validated on chains, and its non-transfer to broad pools
-was predicted in advance by a compounding model), $\gamma=1$ otherwise.
-Live groups train with unmodified MaxRL advantages. Knob inventory,
-stated plainly: decay, floor, and $\gamma$ exist, with validated
-defaults; what is \emph{derived} rather than tuned is the difficulty
-band itself --- location, width, and $N$-scaling --- which is exactly
-where competing curricula spend their hyperparameters.
+lines (Alg.~\ref{alg:frontiermax}). A decayed Beta posterior tracks
+each prompt's pass rate from observed group outcomes only --- never
+from relabeled successes, which inflate it ($\hat p$ 0.81 vs.\ eval
+0.47). Thompson sampling draws $\tilde p$ and samples prompts
+$\propto u(\tilde p)^\gamma$ with a uniform floor. The knobs (decay
+0.7, floor 0.1, $\gamma \in \{1, 4\}$) carry validated defaults
+(Table~\ref{tab:knobs}); what is \emph{derived} rather than tuned is
+the difficulty band itself --- location, width, and $N$-scaling ---
+which is exactly where competing curricula spend their
+hyperparameters.
 
 \begin{algorithm}[t]
 \caption{FrontierMax: one step. Three lines differ from a standard
@@ -411,44 +406,40 @@ the fresh-rollout gradient exactly when the two conditional laws match,
 and is otherwise a distribution-shifted (biased) estimate of it.
 \end{proposition}
 \begin{interp}
-So ``exactness'' is a property to \emph{measure per environment}, not a
+``Exactness'' is a property to \emph{measure per environment}, not a
 blanket guarantee. On our validation testbed the laws match by
-construction (prompt-independent skill execution), so cosine probes
-there are consistency checks, not evidence --- internal review showed
-several null relabeling schemes produce the same cosines on that
-testbed, and we do not cite them as support. The evidence that the
-relabel \emph{direction} carries information is behavioral instead:
-the placebo decomposition of \S 6.1 ($+0.037$ beyond dose-matched
-replay, the tightest arm in the battery; random-target relabels lose
-to replay 5/5 seeds). In Countdown the relabel keeps the trajectory's
-own achieved value --- the shift enters only through which expressions
-get attempted for which targets --- and the verified-success guarantee
-(contract 1) holds regardless. What the shift costs in general is an
-open, environment-specific question.
+construction, so cosine probes there are consistency checks, not
+evidence (several null relabeling schemes produce identical cosines);
+the evidence that the relabel direction carries information is
+behavioral --- the placebo decomposition below. What the
+distribution shift costs in general is an open, environment-specific
+question.
 \end{interp}
 
-Two contracts keep practice on the proof's side: \textbf{(1) exactness} ---
-a relabeled success must be a true success of the relabeled task under the
-environment's own verifier (never an LLM judge); \textbf{(2) conditioning}
---- goal-embedding trajectories must have their conditioning rewritten to
-the achieved goal. Skipping (2) turns the exact gradient into noise: on our
-gridworld, hindsight without the rewrite scores below teacher-only
-($0.600 < 0.658$); with it, it leads ($0.703$). Recycling is the only
-mechanism here that \emph{creates} signal, and we decompose its
-headline gain rather than let it inflate: of the $+0.22$ AUC on fixed
-task pools, a placebo replaying \emph{live} gradients on dead-group
-slots captures 83\% --- most of the benefit is extra gradient dose on
-otherwise-wasted slots --- while the relabel \emph{direction} carries
-$+0.037$ beyond the strongest placebo and is exactness-dependent
-(random-target relabels are harmful). Both numbers ship together. The
-value is regime-dependent in a way we can state precisely: the gain is
-proportional to how much a relabeled skill can compound --- $+0.22$ AUC
-on fixed task pools, $+0.01$ on one-shot task streams. Task-set
+Two contracts keep practice on the proof's side: \textbf{(1)
+exactness} --- a relabeled success must be a true success of the
+relabeled task under the environment's own verifier (never an LLM
+judge); \textbf{(2) conditioning} --- goal-embedding trajectories must
+have their conditioning rewritten to the achieved goal. Skipping (2)
+turns the exact gradient into noise: on our gridworld, hindsight
+without the rewrite scores below teacher-only ($0.600 < 0.658$); with
+it, it leads ($0.703$). Recycling is the only mechanism here that
+\emph{creates} signal, and we decompose its headline gain rather than
+let it inflate: of the $+0.22$ AUC on fixed task pools, a placebo
+replaying \emph{live} gradients on dead-group slots captures 83\% ---
+most of the benefit is extra gradient dose on otherwise-wasted slots
+--- while the relabel \emph{direction} carries $+0.037$ beyond the
+strongest placebo, is the tightest arm in the battery, and is
+exactness-dependent (random-target relabels lose to dose-matched
+replay 5/5). Both numbers ship together. The value is
+regime-dependent in a way we can state precisely: $+0.22$ AUC on
+fixed task pools, $+0.01$ on one-shot task streams --- the gain is
+proportional to how much a relabeled skill can compound, and task-set
 fixedness is the single most important regime variable we found.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.62\linewidth]{figures/fig5_channels}
+\includegraphics[width=0.5\linewidth]{figures/fig5_channels}
 \caption{\textbf{The partition as a map of the method.} The teacher
 allocates compute within the learnable band; recycling creates signal
 in the dead zone no sampler can reach; the gate refuses relabels that
