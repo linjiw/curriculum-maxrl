@@ -1,7 +1,16 @@
 # Curriculum-MaxRL: teacher-guided curricula driven by the MaxRL likelihood objective
 
-Working draft. Companion code: `testbed.py`, `estimators.py`, `teachers.py`,
-`run_experiment.py` (CPU prototype) and the verl integration sketch at the end.
+Historical working draft. Companion code: `testbed.py`, `estimators.py`,
+`teachers.py`, `run_experiment.py` (CPU prototype) and the verl integration
+sketch at the end.
+
+> **Status correction (2026-08-04).** This file preserves the original
+> hypothesis/design ledger and is not the authoritative method or evidence
+> statement. It conflates the raw/full-control-variate construction
+> (truncation order `N`) with the deployed practical centered/drop estimator
+> (order `N−1`), and several historical result claims below were withdrawn.
+> Use `paper/main.tex`, `curriculum_maxrl/THEORY.md`, and
+> `VALIDATION_2026-08-04.md` for the corrected taxonomy and claim boundaries.
 
 ## 1. What MaxRL is (recap of arXiv:2602.02710)
 

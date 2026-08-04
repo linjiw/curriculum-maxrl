@@ -7,47 +7,52 @@ ZPD/learnability targeting) with Maximum Likelihood Reinforcement Learning
 ([MaxRL, arXiv:2602.02710](https://arxiv.org/abs/2602.02710)). Built against the
 official MaxRL implementation (a [verl](https://github.com/verl-project/verl) fork).
 
+## Current evidence status (2026-08-04)
+
+The paper, `VALIDATION_2026-08-04.md`, and committed result JSON files are the
+authoritative evidence for this revision. Several older research notes in this
+repository record hypotheses and historical runs; they are not current claims.
+In particular, the historical maze and Countdown recyclers did not implement
+the proposed common-destination contrast, and no neural or LLM run yet combines
+that relabeler with the exact coefficient-mass sampler.
+
 ## The idea in one paragraph
 
-MaxRL reweights per-prompt gradients by ~1/pass-rate (a truncated Maclaurin expansion
-of `log p`), which acts as an *implicit, gradient-level* curriculum — but it cannot
-rescue prompts whose rollout groups come back all-fail (K=0 → group dropped, zero
-gradient), and it wastes compute re-rolling mastered prompts. We add an *explicit,
-data-level* teacher whose utility function is **derived from the estimator itself**:
-the expected total |advantage| a prompt receives from a group of N rollouts is exactly
+For the practical centered MaxRL estimator used here, constant-reward groups
+are dropped. Its expected absolute coefficient mass for a prompt with pass
+rate `p` and `N` rollouts is exactly
 
 ```
 E[Σ|w|] = 2 · (pass@N(p) − pass@1(p)) = 2 · ((1−(1−p)^N) − p)
 ```
 
-— twice the probability the prompt is *solvable within N attempts but not within one*.
-This is a compute-indexed formalization of the zone of proximal development, peaking at
-p* ≈ ln(N)/N. The teacher Thompson-samples a decayed Beta posterior over each prompt's
-pass rate and samples prompts proportional to this utility; the optimal per-prompt
-rollout allocation is greedy water-filling on the marginal `p(1−p)^N` (the probability
-the next rollout is a group's first success).
+— twice the probability the prompt is solvable within `N` attempts but not
+within one. This coefficient-mass profile peaks at
+`p* = 1 − N^(−1/(N−1))`. It motivates a posterior task sampler, but it is
+implementation-specific: raw MaxRL and full-control-variate MaxRL have order
+`N`, while the practical drop-all-fail estimator has order `N−1`. Full
+CV can assign negative coefficients on all-fail groups; in the new 20-seed
+tabular control, that branch does not reliably bootstrap the extreme frontier,
+whereas exact shared-prefix hindsight does.
 
-## The experiment ladder — what each experiment asks, and what to expect
+## Evidence ladder
 
-Every experiment isolates one or two *channels* of the method. Reader's map:
-the **teacher** reallocates compute (channel 1), **hindsight** creates signal
-from failures (channel 2), the **objective** decides whether a curriculum is
-safe at all (channel 3). Predictions are pre-registered (committed before any
-cell finishes) so results are readable as confirmations or refutations, not
-post-hoc stories.
+| setting | independent units | supported conclusion |
+|---|---:|---|
+| Exact-score skill chains | 20 paired seeds for new controls | full CV's all-fail coefficient branch is unreliable in the extreme frontier; shared-prefix hindsight unlocks it; three tuned centered estimators finish within 0.005 AUC |
+| Historical neural maze | 3 shared warm-start blocks; heterogeneous archive | descriptive estimator-associated coverage pattern under a legacy frontier-ALP teacher and positive-only recycler |
+| GSM8K 360M | 1–2 seeds per cell | treatment-delivery diagnosis only; posterior starvation and replacement confounding remain |
+| Historical Countdown v2 | three-seed aggregate endpoints; two trajectory pairs retained | legacy per-trace recycling has higher mean success and lower pass@16 coverage; the gate result is preliminary |
+| Gym binary-success controls | 3 paired seeds | task spread creates usable updates and shared parameters enable transfer |
+| IsaacLab Anymal-C | 1 seed | hypothesis-consistent pilot only |
 
-| experiment | the question | what we expected (pre-registered) | outcome |
-|---|---|---|---|
-| **CPU skill-chain** (36 tasks, exact gradients) | do the channels work at all, and can theory predict their sizes? | teacher > uniform; hindsight breaks the oracle ceiling | ✓ both: 0.65→0.73→0.89, full stack **beats the true-p oracle** (0.890 > 0.851 — artifact: `frontier_rl/examples/v7_oracle_result.json`) |
-| **V5 frontier-heavy regime** (max pool p=1e-5) | what happens when NO task is samplable? | pure samplers get exactly 0; hindsight invents the curriculum below the pool | ✓ categorical: 0.93 AUC vs 0.00 for uniform/DAPO/teacher-alone |
-| **GPU maze** (1.26M transformer, 13 distance levels, ~30 matched-wall-clock runs) | do the CPU results survive real gradients + generation? | teacher gains AUC every seed; GRPO collapses coverage under a curriculum (H6) | ✓ 6/6 paired wins; H6 reversal confirmed; 11× samples-to-coverage vs GRPO at the hardest solved level |
-| **E-LLM-1: GSM8K 2×2** ({maxrl,grpo} × {teacher,uniform}, SmolLM2-360M, one A10G) | do channels 1+3 transfer to LLM RLVR? | P-G2: grpo+teacher does NOT beat grpo (safety); P-G1: modest teacher gain; P-G5: ordering, not magnitude | **✓ P-G2 confirmed** — grpo+teacher is the only cell that *regresses* after step 25 (analysis: `GSM8K_ANALYSIS.md`); P-G1 pending final cell |
-| **E-LLM-2: Countdown 2×2×2** (+{hindsight,none}) | channel 2 at LLM scale: relabel a failed equation's target to the value it actually reached — an exact-verifier relabel nobody has published | hindsight ignites the operand tiers that stay at 0 for every hindsight-off cell (the V5 pattern at LLM scale) | staged + two-agent review-hardened (`curriculum_maxrl/countdown/` in the maxrl fork) |
-| **E-LLM-3: reasoning-gym streaming** | can the kernel-posterior teacher walk a *continuous* difficulty dial and beat the library's threshold curriculum? | match/beat published +13–40-pt gains without the hand-set threshold | planned |
+The exact protocol boundaries, withdrawals, and missing evidence are recorded
+in `VALIDATION_2026-08-04.md`.
 
-Full LLM-experiment roadmap with novelty checks and differentiation map:
-[`NEXT_EXPERIMENTS.md`](NEXT_EXPERIMENTS.md). Latest LLM results:
-[`GSM8K_ANALYSIS.md`](GSM8K_ANALYSIS.md).
+Historical planning and analysis notes remain in
+[`NEXT_EXPERIMENTS.md`](NEXT_EXPERIMENTS.md) and
+[`GSM8K_ANALYSIS.md`](GSM8K_ANALYSIS.md); consult the paper and validation
+record before treating any result in those notes as current evidence.
 
 ## Repo map
 
@@ -91,7 +96,7 @@ python3 analyze.py matched_*.jsonl
 ```
 +data.curriculum.enable=true
 +data.curriculum.floor=0.1            # uniform replay floor (anti-forgetting)
-+data.curriculum.decay=0.9            # posterior decay (tracks the moving policy)
++data.curriculum.decay=0.7            # historical tuned default; revalidate per suite
 +data.curriculum.utility=advmass      # derived utility; "frontier" = older heuristic
 ```
 
@@ -100,23 +105,21 @@ Teacher state is checkpointed/restored automatically; wandb gets
 `curriculum/frac_mastered_p_gt_0.9`. See `verl_integration/smollm_curriculum.sh`
 for a full GSM8K recipe.
 
-## Headline validated results
+## Reproduced headline controls
 
-On the CPU skill-chain testbed (36 tasks, initial pass rates 10^-level, 5 seeds):
-
-- **Curriculum and MaxRL are complementary.** Teacher fixes the K=0 dead zone MaxRL
-  can't reach; MaxRL extracts more per in-band group. `frontier+maxrl` is fastest to
-  the deepest level (206 steps vs 248 uniform+maxrl vs 262 zpd+grpo) and best in the
-  beyond-frontier-heavy regime (0.961 vs 0.871 / 0.847 for each alone).
-- **MaxRL already does most of what a curriculum does on moderate distributions**
-  (+0.01 from teacher) while GRPO needs the teacher badly (+0.23) — empirical support
-  for the paper's "implicit curriculum" reading.
-- **The derived advantage-mass utility matches the hand-tuned ZPD band with zero
-  band hyperparameters.**
-
-On the GPU maze testbed: uniform sampling wastes ~65% of rollout groups (dead K=0);
-the frontier teacher cuts that to ~49% and runs ~2× more steps in the same wall-clock.
-Matched-wall-clock sweep in progress; see `curriculum_maxrl/maze_gpu/EXPERIMENTS.md`.
+- In the balanced 20-seed common-rate test, raw MaxRL reaches
+  0.7209 ± 0.0210 AUC, full CV 0.6934 ± 0.0189, and practical MaxRL
+  0.7183 ± 0.0231. This is a mechanism control, not a tuned ranking.
+- In the frontier-heavy pool (maximum initial pass rate 1e-5), full CV
+  invokes the update callback on every all-fail group but reaches only
+  1.740e-6 mean AUC. Practical MaxRL plus exact shared-prefix hindsight
+  reaches 0.9269 ± 0.0032 and wins all 20 paired seeds.
+- With identical held-out schedules and separate tuning seeds, practical
+  MaxRL, GRPO, and RLOO finish within 0.005 AUC of one another on a
+  near-ceiling tabular pool.
+- Historical neural and LLM results are explicitly descriptive or pilot
+  evidence. They do not constitute end-to-end validation of the proposed
+  exact sampler plus shared-destination recycler.
 
 ## Citation / provenance
 

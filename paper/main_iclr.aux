@@ -1,19 +1,5 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
-\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
-\global\let\oldcontentsline\contentsline
-\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
-\global\let\oldnewlabel\newlabel
-\gdef\newlabel#1#2{\newlabelxx{#1}#2}
-\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
-\AtEndDocument{\ifx\hyper@anchor\@undefined
-\let\contentsline\oldcontentsline
-\let\newlabel\oldnewlabel
-\fi}
-\fi}
-\global\let\hyper@last\relax 
-\gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{dump}
@@ -21,133 +7,126 @@
 \citation{sec}
 \citation{lilo}
 \citation{dapo,greso}
-\citation{lfh}
+\citation{her,gcsl,lfh,hir}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
-\citation{gcsl}
-\citation{ferbach}
 \citation{maxrl}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {The estimator is the curriculum.} \emph  {Left:} the derived utility $u_N(p) = (1-(1-p)^N)-p$ --- the estimator's expected advantage mass (Prop.\nobreakspace  {}\ref  {prop:mass}) --- for growing rollout budgets $N$. The peak $p^*\approx \qopname  \relax o{ln}N/N$ walks toward harder prompts as compute grows; both tails are dead zones the weight function cannot reach. \emph  {Right:} all three curves are exact expected mass at $N{=}16$ (GRPO's is $\frac  {1}{N}\mathbb  {E}\sqrt  {K(N{-}K)}$, $K\sim \mathrm  {Bin}(N,p)$; MC-verified). MaxRL concentrates $\to (N{-}1)\times $ more mass than RLOO on frontier prompts (Prop.\nobreakspace  {}\ref  {prop:ratio}) and releases mastered prompts fastest; GRPO's variance normalization keeps $\sim \sqrt  {N{-}1}\times $ MaxRL's relative mass on mastered prompts --- the maintenance-of-easy-tasks its curriculum arms lose in \S  \ref  {sec:experiments}. RLOO's profile is exactly the published ``learnability'' objective --- the $N{=}2$ slice.}}{3}{figure.1}\protected@file@percent }
-\newlabel{fig:utility}{{1}{3}{\textbf {The estimator is the curriculum.} \emph {Left:} the derived utility $u_N(p) = (1-(1-p)^N)-p$ --- the estimator's expected advantage mass (Prop.~\ref {prop:mass}) --- for growing rollout budgets $N$. The peak $p^*\approx \ln N/N$ walks toward harder prompts as compute grows; both tails are dead zones the weight function cannot reach. \emph {Right:} all three curves are exact expected mass at $N{=}16$ (GRPO's is $\frac {1}{N}\mathbb {E}\sqrt {K(N{-}K)}$, $K\sim \mathrm {Bin}(N,p)$; MC-verified). MaxRL concentrates $\to (N{-}1)\times $ more mass than RLOO on frontier prompts (Prop.~\ref {prop:ratio}) and releases mastered prompts fastest; GRPO's variance normalization keeps $\sim \sqrt {N{-}1}\times $ MaxRL's relative mass on mastered prompts --- the maintenance-of-easy-tasks its curriculum arms lose in \S \ref {sec:experiments}. RLOO's profile is exactly the published ``learnability'' objective --- the $N{=}2$ slice}{figure.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Background: MaxRL in three lines}{3}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}The estimator is the curriculum}{3}{section.3}\protected@file@percent }
-\newlabel{sec:theory}{{3}{3}{The estimator is the curriculum}{section.3}{}}
-\newlabel{lem:trunc}{{1}{3}{Truncation order of the practical estimator}{lemma.1}{}}
-\newlabel{prop:mass}{{1}{3}{Advantage mass}{proposition.1}{}}
-\newlabel{eq:mass}{{1}{3}{Advantage mass}{equation.3.1}{}}
-\citation{sfl,lilo}
-\citation{her}
-\citation{disco}
-\citation{scsdpo}
-\newlabel{prop:ratio}{{2}{4}{Frontier amplification}{proposition.2}{}}
-\newlabel{prop:alloc}{{3}{4}{Allocation}{proposition.3}{}}
-\newlabel{rem:scope}{{1}{4}{Scope of the surrogate}{remark.1}{}}
-\newlabel{rem:objective}{{2}{4}{The curriculum changes the training distribution}{remark.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{The partition, as a map of the paper (Fig.\nobreakspace  {}\ref  {fig:channels}).}{4}{section*.1}\protected@file@percent }
-\citation{eysenbach}
-\citation{gcsl}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only.}}{5}{figure.2}\protected@file@percent }
-\newlabel{fig:algorithm}{{2}{5}{\textbf {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only}{figure.2}{}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces FrontierMax: one step. Three lines differ from a standard group-rollout loop (marked $\triangleright $).}}{5}{algorithm.1}\protected@file@percent }
-\newlabel{alg:frontiermax}{{1}{5}{FrontierMax: the schedule}{algorithm.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}FrontierMax: the schedule}{5}{section.4}\protected@file@percent }
-\newlabel{sec:method}{{4}{5}{FrontierMax: the schedule}{section.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Failure recycling}{5}{section.5}\protected@file@percent }
-\newlabel{sec:recycling}{{5}{5}{Failure recycling}{section.5}{}}
-\newlabel{prop:hindsight}{{3}{5}{Hindsight update, specialized}{remark.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {The partition as a map of the method.} The teacher allocates compute within the learnable band; recycling creates signal in the dead zone no sampler can reach; the gate refuses relabels that land in the mastered tail; the estimator underneath decides whether any of it is safe.}}{6}{figure.3}\protected@file@percent }
-\newlabel{fig:channels}{{3}{6}{\textbf {The partition as a map of the method.} The teacher allocates compute within the learnable band; recycling creates signal in the dead zone no sampler can reach; the gate refuses relabels that land in the mastered tail; the estimator underneath decides whether any of it is safe}{figure.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Experiments: an escalating ladder}{6}{section.6}\protected@file@percent }
-\newlabel{sec:experiments}{{6}{6}{Experiments: an escalating ladder}{section.6}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.1 Does allocation saturate? (exact-gradient skill chains; CPU, 5 seeds).}{6}{section*.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The ladder at a glance: every rung asks one question of the partition; scale rises, control falls.}}{7}{table.1}\protected@file@percent }
-\newlabel{tab:ladder}{{1}{7}{The ladder at a glance: every rung asks one question of the partition; scale rises, control falls}{table.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {The ladder.} (a) Exact-gradient chains: a floor-and-$\gamma $-matched true-pass-rate oracle \emph  {ties} the full stack --- allocation saturates --- and recycling still adds on top of the oracle. (b) Frontier-heavy regime: allocation scores exactly zero; recycling solves it, and does so equally under uniform sampling (.931 vs.\ .928) --- creation, not allocation, is the live channel. (c) Maze at matched wall-clock: 3/3 seeds on both meters. (d) GSM8K $2{\times }2$, registered run, error bars = measured same-model eval noise (SD .0094): GRPO+teacher is the only cell that regresses (pre-registered P-G2; a replication seed did not reproduce it --- \S  6.7); the teacher's MaxRL effect is a null at this budget (P-G1).}}{7}{figure.4}\protected@file@percent }
-\newlabel{fig:ladder}{{4}{7}{\textbf {The ladder.} (a) Exact-gradient chains: a floor-and-$\gamma $-matched true-pass-rate oracle \emph {ties} the full stack --- allocation saturates --- and recycling still adds on top of the oracle. (b) Frontier-heavy regime: allocation scores exactly zero; recycling solves it, and does so equally under uniform sampling (.931 vs.\ .928) --- creation, not allocation, is the live channel. (c) Maze at matched wall-clock: 3/3 seeds on both meters. (d) GSM8K $2{\times }2$, registered run, error bars = measured same-model eval noise (SD .0094): GRPO+teacher is the only cell that regresses (pre-registered P-G2; a replication seed did not reproduce it --- \S 6.7); the teacher's MaxRL effect is a null at this budget (P-G1)}{figure.4}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.2 Can any sampler act when nothing is learnable? (frontier-heavy regime, max pool pass rate $10^{-5}$; 5 seeds, artifact committed).}{7}{section*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.3 Does the estimator main effect survive real gradients? (maze transformer at matched wall-clock; 1.26M params, 13 levels, ${\sim }30$ runs, 3 seeds).}{8}{section*.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.4 Where and when does GRPO's coverage go? (level-resolved).}{8}{section*.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Where and when GRPO's coverage goes (maze, level-resolved, matched wall-clock).} \emph  {(a)} $\Delta \text  {pass@}8$ (final $-$ warmstart) by difficulty band: GRPO's loss lives on the easy/mid band (all 4 runs; dots are runs) while its $\text  {pass@}1$ there rises --- sharpening; MaxRL holds the easy band and gains on the frontier band (18 runs; band asymmetry exact permutation $p{=}0.0001$). \emph  {(b)} Diversity premium $\overline  {\text  {pass@}8-\text  {pass@}1}$ vs.\ wall-clock (mean and min--max across runs): GRPO's erosion begins within the first ${\sim }25$--$50$ steps, before any level saturates; MaxRL stabilizes after warmup.}}{9}{figure.5}\protected@file@percent }
-\newlabel{fig:bands}{{5}{9}{\textbf {Where and when GRPO's coverage goes (maze, level-resolved, matched wall-clock).} \emph {(a)} $\Delta \passat {8}$ (final $-$ warmstart) by difficulty band: GRPO's loss lives on the easy/mid band (all 4 runs; dots are runs) while its $\passat {1}$ there rises --- sharpening; MaxRL holds the easy band and gains on the frontier band (18 runs; band asymmetry exact permutation $p{=}0.0001$). \emph {(b)} Diversity premium $\overline {\passat {8}-\passat {1}}$ vs.\ wall-clock (mean and min--max across runs): GRPO's erosion begins within the first ${\sim }25$--$50$ steps, before any level saturates; MaxRL stabilizes after warmup}{figure.5}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.5 When does allocation \emph  {not} pay? (IsaacLab legged locomotion, pre-registered null).}{9}{section*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.6 What does a curriculum add beyond task spread? (Gymnasium control --- binary-success RLVR on classic control; official-task currency).}{9}{section*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.7 Does it transfer to LLM scale? (GSM8K $2{\times }2$, pre-registered; SmolLM2-360M, $N{=}16$, one A10G).}{9}{section*.8}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {GSM8K $2{\times }2$ (pre-registered; registered run shown; error bars = measured same-model eval noise, SD .0094).} GRPO+teacher is the only cell that regresses in its second half (P-G2 on this run; the load-bearing statistic is the endpoint gap vs.\ plain GRPO, $z{\approx }2$ --- the second-half dip alone is within noise; a replication seed with weaker measured steering climbed instead --- \S  6.7); under MaxRL the identical teacher trains stably to its best value but does not beat uniform at this budget (P-G1: null).}}{10}{figure.6}\protected@file@percent }
-\newlabel{fig:gsm8k}{{6}{10}{\textbf {GSM8K $2{\times }2$ (pre-registered; registered run shown; error bars = measured same-model eval noise, SD .0094).} GRPO+teacher is the only cell that regresses in its second half (P-G2 on this run; the load-bearing statistic is the endpoint gap vs.\ plain GRPO, $z{\approx }2$ --- the second-half dip alone is within noise; a replication seed with weaker measured steering climbed instead --- \S 6.7); under MaxRL the identical teacher trains stably to its best value but does not beat uniform at this budget (P-G1: null)}{figure.6}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.8 What does recycling cost? (Countdown $2{\times }2$, pre-registered): two nulls and a new phenomenon.}{10}{section*.9}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {Recycling-induced sharpening and its derived mitigation (Countdown, tier 1).} \emph  {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\text  {pass@}16$ coverage. On this tier the moderate gate (B3) gives back most of the mean without moving coverage --- tier-1 destinations saturate early, so admitted relabels are few --- while full-strength gating (corrected decay, 1 seed) returns coverage \emph  {above} baseline at the mean's full price: gate strength is a dial along the trade, and its useful middle lives on the frontier tier, where the same moderate setting restores coverage to baseline ($.279{\pm }.019$ vs.\ $.274$) keeping $\sim $60\% of the mean gain (\S  6.8). \emph  {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph  {(c)} Gated recycling preserves \emph  {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient.}}{11}{figure.7}\protected@file@percent }
-\newlabel{fig:sharpening}{{7}{11}{\textbf {Recycling-induced sharpening and its derived mitigation (Countdown, tier 1).} \emph {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\passat {16}$ coverage. On this tier the moderate gate (B3) gives back most of the mean without moving coverage --- tier-1 destinations saturate early, so admitted relabels are few --- while full-strength gating (corrected decay, 1 seed) returns coverage \emph {above} baseline at the mean's full price: gate strength is a dial along the trade, and its useful middle lives on the frontier tier, where the same moderate setting restores coverage to baseline ($.279{\pm }.019$ vs.\ $.274$) keeping $\sim $60\% of the mean gain (\S 6.8). \emph {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph {(c)} Gated recycling preserves \emph {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient}{figure.7}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.9 Does the gate recover it? (Countdown v2 pool, 3 seeds, pre-registered).}{11}{section*.10}\protected@file@percent }
-\citation{yue}
-\citation{cui}
-\citation{yuan}
-\citation{cai}
-\citation{scsdpo}
-\citation{agrae}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Finite-group estimator activity.} \emph  {Left:} normalized coefficient mass $\nu _N(p)=(1-p)-(1-p)^N$ for the practical centered/drop estimator. Its exact peak is $p^*=1-N^{-1/(N-1)}$; low activity near an endpoint is operationally important only relative to the deployed budget. \emph  {Right:} expected coefficient half-mass at $N{=}16$. The GRPO curve uses the code's sample-standard-deviation convention (fixed $10^{-6}$ stabilizer included), not the population-SD limit. The following endpoint ratios take the zero-stabilizer limit, as in Proposition~\ref {prop:ratio}; the stabilizer changes no plotted digit. As $p\to 0$, practical MaxRL/RLOO tends to $N-1$ and practical MaxRL/GRPO tends to $\sqrt  N$; as $p\to 1$, MaxRL and RLOO both decay linearly while GRPO/MaxRL tends to $(N-1)/\sqrt  N$. Under our normalization, RLOO is proportional to the $p(1-p)$ learnability score used by SFL and LILO.}}{3}{figure.7}\protected@file@percent }
+\newlabel{fig:utility}{{1}{3}{\textbf {Finite-group estimator activity.} \emph {Left:} normalized coefficient mass $\nu _N(p)=(1-p)-(1-p)^N$ for the practical centered/drop estimator. Its exact peak is $p^*=1-N^{-1/(N-1)}$; low activity near an endpoint is operationally important only relative to the deployed budget. \emph {Right:} expected coefficient half-mass at $N{=}16$. The GRPO curve uses the code's sample-standard-deviation convention (fixed $10^{-6}$ stabilizer included), not the population-SD limit. The following endpoint ratios take the zero-stabilizer limit, as in Proposition~\ref {prop:ratio}; the stabilizer changes no plotted digit. As $p\to 0$, practical MaxRL/RLOO tends to $N-1$ and practical MaxRL/GRPO tends to $\sqrt N$; as $p\to 1$, MaxRL and RLOO both decay linearly while GRPO/MaxRL tends to $(N-1)/\sqrt N$. Under our normalization, RLOO is proportional to the $p(1-p)$ learnability score used by SFL and LILO}{figure.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces \textbf  {Three MaxRL estimators.} Mass is expected total absolute score coefficient, \(A(p)=\mathbb  E\DOTSB \sum@ \slimits@ _i|w_i|\). The order-\(N-1\) statement applies only to the practical convention that drops the whole all-fail group.}}{3}{table.13}\protected@file@percent }
+\newlabel{tab:estimators}{{1}{3}{\textbf {Three MaxRL estimators.} Mass is expected total absolute score coefficient, \(A(p)=\mathbb E\sum _i|w_i|\). The order-\(N-1\) statement applies only to the practical convention that drops the whole all-fail group}{table.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}From MaxRL objectives to finite-group activity}{3}{section.8}\protected@file@percent }
+\newlabel{sec:theory}{{2}{3}{From MaxRL objectives to finite-group activity}{section.8}{}}
+\newlabel{lem:trunc}{{1}{4}{Order of the practical drop estimator}{lemma.14}{}}
+\newlabel{prop:mass}{{1}{4}{Coefficient mass and exact update factorization}{proposition.15}{}}
+\newlabel{eq:mass}{{4}{4}{Coefficient mass and exact update factorization}{equation.16}{}}
+\newlabel{eq:factor}{{5}{4}{Coefficient mass and exact update factorization}{equation.17}{}}
+\newlabel{prop:ratio}{{2}{4}{Finite-group comparisons}{proposition.18}{}}
+\newlabel{eq:grpo-sample}{{6}{4}{Finite-group comparisons}{equation.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Proposed FrontierMax step.} The teacher samples requested prompts by \(\nu _N\). A live requested group uses the practical estimator. For an all-fail group, the relabeler selects one common destination, rewrites and reverifies the group, and updates only if the destination group has contrast \(0<K'<N\). The resulting update is verified but generally off-policy for the destination. Posterior state is updated only from requested-task outcomes.}}{5}{figure.24}\protected@file@percent }
+\newlabel{fig:algorithm}{{2}{5}{\textbf {Proposed FrontierMax step.} The teacher samples requested prompts by \(\nu _N\). A live requested group uses the practical estimator. For an all-fail group, the relabeler selects one common destination, rewrites and reverifies the group, and updates only if the destination group has contrast \(0<K'<N\). The resulting update is verified but generally off-policy for the destination. Posterior state is updated only from requested-task outcomes}{figure.24}{}}
+\newlabel{prop:alloc}{{3}{5}{One-step fixed-rate allocation}{proposition.20}{}}
+\newlabel{rem:scope}{{1}{5}{Activity is not transfer}{remark.21}{}}
+\newlabel{rem:objective}{{2}{5}{Adaptive sampling changes the training distribution}{remark.22}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}FrontierMax: estimator-aligned allocation}{5}{section.25}\protected@file@percent }
+\newlabel{sec:method}{{3}{5}{FrontierMax: estimator-aligned allocation}{section.25}{}}
+\citation{gcsl,eysenbach}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces FrontierMax: one group step.}}{6}{algorithm.26}\protected@file@percent }
+\newlabel{alg:frontiermax}{{1}{6}{FrontierMax: estimator-aligned allocation}{algorithm.26}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Failure recycling and proposal shift}{6}{section.35}\protected@file@percent }
+\newlabel{sec:recycling}{{4}{6}{Failure recycling and proposal shift}{section.35}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Claims and evidence strength. ``Blocks'' are independent training seed/warm-start units; heterogeneous historical runs are not counted as independent factorial replicates.}}{7}{table.38}\protected@file@percent }
+\newlabel{tab:ladder}{{2}{7}{Claims and evidence strength. ``Blocks'' are independent training seed/warm-start units; heterogeneous historical runs are not counted as independent factorial replicates}{table.38}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experiments: an escalating ladder}{7}{section.36}\protected@file@percent }
+\newlabel{sec:experiments}{{5}{7}{Experiments: an escalating ladder}{section.36}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.1 Exact-score chains: what comes from allocation, dose, and direction?}{7}{section*.41}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Local estimator controls and sensitivity.} Panels (a--b) compare the three MaxRL variants and practical+hindsight at a common 3,200-group budget over 20 paired seeds. Full CV assigns negative coefficients and invokes the update callback on every frontier all-fail group but does not reliably bootstrap; hindsight does. Panel (c) is a post-hoc full-CV learning-rate sensitivity: rare large-step escapes do not form a reliable regime. Panel (d) shows the three-seed legacy per-trace Countdown mean/coverage trade; B3 is the unintended moderate gate operating point. All values load from committed JSON artifacts.}}{8}{figure.40}\protected@file@percent }
+\newlabel{fig:ladder}{{3}{8}{\textbf {Local estimator controls and sensitivity.} Panels (a--b) compare the three MaxRL variants and practical+hindsight at a common 3,200-group budget over 20 paired seeds. Full CV assigns negative coefficients and invokes the update callback on every frontier all-fail group but does not reliably bootstrap; hindsight does. Panel (c) is a post-hoc full-CV learning-rate sensitivity: rare large-step escapes do not form a reliable regime. Panel (d) shows the three-seed legacy per-trace Countdown mean/coverage trade; B3 is the unintended moderate gate operating point. All values load from committed JSON artifacts}{figure.40}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.2 Can a negative-only all-fail update bootstrap the frontier? (20 paired seeds; exact-score tabular testbed).}{8}{section*.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.3 Historical neural maze: legacy utility/recycling and a descriptive estimator-associated coverage pattern (1.26M parameters).}{9}{section*.43}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.4 Exploratory localization across the maze archive.}{9}{section*.44}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {Exploratory maze localization (matched wall-clock).} \emph  {(a)} \(\Delta \text  {pass@}8\) by difficulty band for a frozen archive of four GRPO and 18 heterogeneous practical-MaxRL runs. Dots are runs, not independent factorial replicates. \emph  {(b)} Mean and range of the coverage gap \(\overline  {\text  {pass@}8-\text  {pass@}1}\) over wall-clock. The figure localizes a historical association; it carries no pooled permutation test.}}{10}{figure.46}\protected@file@percent }
+\newlabel{fig:bands}{{4}{10}{\textbf {Exploratory maze localization (matched wall-clock).} \emph {(a)} \(\Delta \passat {8}\) by difficulty band for a frozen archive of four GRPO and 18 heterogeneous practical-MaxRL runs. Dots are runs, not independent factorial replicates. \emph {(b)} Mean and range of the coverage gap \(\overline {\passat {8}-\passat {1}}\) over wall-clock. The figure localizes a historical association; it carries no pooled permutation test}{figure.46}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.5 When does allocation \emph  {not} pay? (IsaacLab legged locomotion, one-seed pilot).}{10}{section*.47}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.6 What does a curriculum add beyond task spread? (Gymnasium control --- binary-success RLVR on classic control; official-task currency).}{10}{section*.48}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.7 GSM8K 360M: a two-seed legacy-utility treatment-delivery pilot.}{10}{section*.49}\protected@file@percent }
+\citation{goalgan,cher,skewfit,gcsl,eysenbach}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Legacy per-trace Countdown sharpening and gate evidence.} \emph  {(a--b)} Three-seed endpoints for saturated tier 1 and frontier tier 2. Ungated legacy recycling (B2) raises mean success and lowers \(\text  {pass@}16\). The unintended moderate gate setting (B3) returns frontier-tier coverage but not saturated-tier coverage. The corrected stronger setting is shown as one seed, not as an error bar or a dose-response curve. \emph  {(c)} In-run rejection and entropy telemetry for one B3 seed.}}{11}{figure.51}\protected@file@percent }
+\newlabel{fig:sharpening}{{5}{11}{\textbf {Legacy per-trace Countdown sharpening and gate evidence.} \emph {(a--b)} Three-seed endpoints for saturated tier 1 and frontier tier 2. Ungated legacy recycling (B2) raises mean success and lowers \(\passat {16}\). The unintended moderate gate setting (B3) returns frontier-tier coverage but not saturated-tier coverage. The corrected stronger setting is shown as one seed, not as an error bar or a dose-response curve. \emph {(c)} In-run rejection and entropy telemetry for one B3 seed}{figure.51}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.8 Countdown: a legacy per-trace recycler raises the mean while reducing coverage.}{11}{section*.52}\protected@file@percent }
+\citation{grpo,rloo}
+\citation{maxrl}
+\citation{mroueh}
+\citation{scsdpo,agrae}
+\citation{dump,adarft,sec,dapo,greso,sfl,lilo}
+\citation{odf}
 \citation{reinforceada}
-\citation{goalgan}
-\citation{hgg}
-\citation{cher}
-\citation{skewfit}
-\citation{codeit}
-\citation{minimo}
-\citation{lfh}
-\citation{ziprl}
-\citation{starcross}
-\citation{yuan}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Related work}{12}{section.7}\protected@file@percent }
+\citation{her}
+\citation{goalgan,hgg,cher,skewfit}
+\citation{gcsl,eysenbach}
+\@writefile{toc}{\contentsline {paragraph}{6.9 Destination saturation is promising for the legacy recycler, but the gate is not yet a validated dial.}{12}{section*.53}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Related work}{12}{section.54}\protected@file@percent }
+\citation{codeit,minimo}
+\citation{hir,hsl,agenther}
+\citation{lfh,ziprl}
+\citation{yue,cui,yuan,starcross}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Limitations and negative results}{13}{section.55}\protected@file@percent }
+\newlabel{sec:limits}{{7}{13}{Limitations and negative results}{section.55}{}}
+\@writefile{toc}{\contentsline {paragraph}{Identification and scale.}{13}{section*.56}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Estimator activity is not task transfer.}{13}{section*.57}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Hindsight is semantically verified but generally off-policy.}{13}{section*.58}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Pool support and shared transfer remain boundary hypotheses.}{13}{section*.59}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Negative transfers and artifact limits.}{13}{section*.60}\protected@file@percent }
 \bibcite{maxrl}{{1}{2026}{{Tajwar et al.}}{{}}}
-\bibcite{disco}{{2}{2025}{{Li et al.}}{{}}}
-\bibcite{scsdpo}{{3}{2026}{{Liu et al.}}{{}}}
-\bibcite{yue}{{4}{2025}{{Yue et al.}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and negative results}{13}{section.8}\protected@file@percent }
-\newlabel{sec:limits}{{8}{13}{Limitations and negative results}{section.8}{}}
-\@writefile{toc}{\contentsline {paragraph}{Scale.}{13}{section*.11}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Scope of the surrogate.}{13}{section*.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{13}{section*.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{13}{section*.14}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{13}{section*.15}\protected@file@percent }
-\bibcite{yuan}{{5}{2026}{{Yuan et al.}}{{}}}
-\bibcite{cui}{{6}{2025}{{Cui et al.}}{{}}}
-\bibcite{cai}{{7}{2026}{{Cai et al.}}{{}}}
-\bibcite{dump}{{8}{2025}{{Wang et al.}}{{}}}
-\bibcite{adarft}{{9}{2025}{{Shi et al.}}{{}}}
-\bibcite{sec}{{10}{2025}{{Chen et al.}}{{}}}
-\bibcite{lilo}{{11}{2025}{{Foster et al.}}{{}}}
-\bibcite{dapo}{{12}{2025}{{Yu et al.}}{{}}}
-\bibcite{reinforceada}{{13}{2025}{{Xiong et al.}}{{}}}
-\bibcite{greso}{{14}{2025}{{Zheng et al.}}{{}}}
-\bibcite{her}{{15}{2017}{{Andrychowicz et al.}}{{}}}
-\bibcite{goalgan}{{16}{2018}{{Florensa et al.}}{{}}}
-\bibcite{hgg}{{17}{2019}{{Ren et al.}}{{}}}
-\bibcite{cher}{{18}{2019}{{Fang et al.}}{{}}}
-\bibcite{skewfit}{{19}{2020}{{Pong et al.}}{{}}}
-\bibcite{eysenbach}{{20}{2020}{{Eysenbach et al.}}{{}}}
-\bibcite{gcsl}{{21}{2021}{{Ghosh et al.}}{{}}}
-\bibcite{ferbach}{{22}{2024}{{Ferbach et al.}}{{}}}
-\bibcite{lfh}{{23}{2026}{{Xu et al.}}{{}}}
-\bibcite{codeit}{{24}{2024}{{Butt et al.}}{{}}}
-\bibcite{minimo}{{25}{2024}{{Poesia et al.}}{{}}}
-\bibcite{ziprl}{{26}{2026}{{Hu et al.}}{{}}}
-\bibcite{starcross}{{27}{2026}{{Strozzi}}{{}}}
-\bibcite{agrae}{{28}{2026}{{Yu et al.}}{{}}}
-\bibcite{sfl}{{29}{2024}{{Rutherford et al.}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Full details for compressed experiment rungs}{14}{appendix.A}\protected@file@percent }
-\newlabel{app:rungs}{{A}{14}{Full details for compressed experiment rungs}{appendix.A}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$.}}{15}{figure.8}\protected@file@percent }
-\newlabel{fig:gym}{{8}{15}{\textbf {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$}{figure.8}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.1 control battery (full).}{15}{section*.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.5 IsaacLab protocol.}{15}{section*.18}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.6 gym control (full).}{15}{section*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{15}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{15}{section*.21}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \textbf  {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\text  {pass@}1$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference.}}{16}{figure.9}\protected@file@percent }
-\newlabel{fig:ksweep}{{9}{16}{\textbf {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\passat {1}$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference}{figure.9}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.7 posterior diagnostics and harness caveats (full).}{16}{section*.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  \ref  {sec:limits}).}{16}{section*.23}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B}Hyperparameters and compute}{16}{appendix.B}\protected@file@percent }
-\newlabel{app:hparams}{{B}{16}{Hyperparameters and compute}{appendix.B}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule.}}{17}{table.2}\protected@file@percent }
-\newlabel{tab:suites}{{2}{17}{Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule}{table.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Teacher and recycler knobs: value, provenance, and measured sensitivity.}}{17}{table.3}\protected@file@percent }
-\newlabel{tab:knobs}{{3}{17}{Teacher and recycler knobs: value, provenance, and measured sensitivity}{table.3}{}}
-\gdef \@abspage@last{17}
+\bibcite{rloo}{{2}{2024}{{Ahmadian et al.}}{{}}}
+\bibcite{grpo}{{3}{2024}{{Shao et al.}}{{}}}
+\bibcite{mroueh}{{4}{2025}{{Mroueh}}{{}}}
+\bibcite{scsdpo}{{5}{2026}{{Liu et al.}}{{}}}
+\bibcite{yue}{{6}{2025}{{Yue et al.}}{{}}}
+\bibcite{yuan}{{7}{2026}{{Yuan et al.}}{{}}}
+\bibcite{cui}{{8}{2025}{{Cui et al.}}{{}}}
+\bibcite{dump}{{9}{2025}{{Wang et al.}}{{}}}
+\bibcite{adarft}{{10}{2026}{{Shi et al.}}{{}}}
+\bibcite{odf}{{11}{2026}{{Bae et al.}}{{}}}
+\bibcite{sec}{{12}{2025}{{Chen et al.}}{{}}}
+\bibcite{lilo}{{13}{2025}{{Foster et al.}}{{}}}
+\bibcite{dapo}{{14}{2025}{{Yu et al.}}{{}}}
+\bibcite{reinforceada}{{15}{2025}{{Xiong et al.}}{{}}}
+\bibcite{greso}{{16}{2025}{{Zheng et al.}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{14}{section.61}\protected@file@percent }
+\bibcite{her}{{17}{2017}{{Andrychowicz et al.}}{{}}}
+\bibcite{goalgan}{{18}{2018}{{Florensa et al.}}{{}}}
+\bibcite{hgg}{{19}{2019}{{Ren et al.}}{{}}}
+\bibcite{cher}{{20}{2019}{{Fang et al.}}{{}}}
+\bibcite{skewfit}{{21}{2020}{{Pong et al.}}{{}}}
+\bibcite{eysenbach}{{22}{2020}{{Eysenbach et al.}}{{}}}
+\bibcite{gcsl}{{23}{2021}{{Ghosh et al.}}{{}}}
+\bibcite{lfh}{{24}{2026}{{Xu et al.}}{{}}}
+\bibcite{hir}{{25}{2026}{{Zhang et al.}}{{}}}
+\bibcite{hsl}{{26}{2026}{{Li et al.}}{{}}}
+\bibcite{agenther}{{27}{2026}{{Ding}}{{}}}
+\bibcite{codeit}{{28}{2024}{{Butt et al.}}{{}}}
+\bibcite{minimo}{{29}{2024}{{Poesia et al.}}{{}}}
+\bibcite{ziprl}{{30}{2026}{{Hu et al.}}{{}}}
+\bibcite{starcross}{{31}{2026}{{Strozzi}}{{}}}
+\bibcite{agrae}{{32}{2026}{{Yu et al.}}{{}}}
+\bibcite{sfl}{{33}{2024}{{Rutherford et al.}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Full details for compressed experiment rungs}{15}{appendix.63}\protected@file@percent }
+\newlabel{app:rungs}{{A}{15}{Full details for compressed experiment rungs}{appendix.63}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.1 control battery (full).}{15}{section*.64}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). Under the practical drop-constant-group estimator, the target-only arm (gray) remains empirically frozen; all-fail groups receive zero weights. A uniform-over-bins control (green) cracks both tasks but does not end at \(1.000\) in every seed; on MountainCar it is roughly \(3\times \) slower to hard-task 0.9. The gated FrontierMax stack converges to $1.000{\pm }0.000$.}}{16}{figure.67}\protected@file@percent }
+\newlabel{fig:gym}{{6}{16}{\textbf {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). Under the practical drop-constant-group estimator, the target-only arm (gray) remains empirically frozen; all-fail groups receive zero weights. A uniform-over-bins control (green) cracks both tasks but does not end at \(1.000\) in every seed; on MountainCar it is roughly \(3\times \) slower to hard-task 0.9. The gated FrontierMax stack converges to $1.000{\pm }0.000$}{figure.67}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.5 IsaacLab protocol.}{16}{section*.65}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.6 gym control (full).}{16}{section*.68}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{16}{section*.71}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.9 secondary read (exploratory).}{16}{section*.72}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.7 artifact and harness caveats.}{16}{section*.73}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} In this checkpoint pair, GRPO leads at $\text  {pass@}1$, the curves cross at $k{\approx }4$, and practical MaxRL leads by half a level at $k{=}64$. This is a secondary diagnostic, not a general estimator-selection rule.}}{17}{figure.70}\protected@file@percent }
+\newlabel{fig:ksweep}{{7}{17}{\textbf {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} In this checkpoint pair, GRPO leads at $\passat {1}$, the curves cross at $k{\approx }4$, and practical MaxRL leads by half a level at $k{=}64$. This is a secondary diagnostic, not a general estimator-selection rule}{figure.70}{}}
+\@writefile{toc}{\contentsline {paragraph}{Jugs feasibility screen (\S  \ref {sec:limits}).}{17}{section*.74}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Hyperparameters and compute}{17}{appendix.75}\protected@file@percent }
+\newlabel{app:hparams}{{B}{17}{Hyperparameters and compute}{appendix.75}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Per-suite configuration. These are the principal settings for each suite; tuning and evidence status are separated in Table~\ref {tab:knobs}.}}{17}{table.77}\protected@file@percent }
+\newlabel{tab:suites}{{3}{17}{Per-suite configuration. These are the principal settings for each suite; tuning and evidence status are separated in Table~\ref {tab:knobs}}{table.77}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Teacher and recycler knobs: value, provenance, and measured sensitivity.}}{18}{table.79}\protected@file@percent }
+\newlabel{tab:knobs}{{4}{18}{Teacher and recycler knobs: value, provenance, and measured sensitivity}{table.79}{}}
+\gdef \@abspage@last{18}

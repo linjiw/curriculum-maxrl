@@ -1,0 +1,18 @@
+{
+  "status": "preliminary_single_seed_endpoint",
+  "source": "COUNTDOWN_ANALYSIS.md, post-fix B3 rerun dated 2026-07-30",
+  "implementation": "corrected gate decay math",
+  "seed": 1,
+  "checkpoint": 60,
+  "tiers": {
+    "t1": {
+      "mean_at_16": 0.220,
+      "pass_at_16": 0.564
+    },
+    "t2": {
+      "mean_at_16": 0.083,
+      "pass_at_16": 0.238
+    }
+  },
+  "limitations": "Raw run log is not vendored; no uncertainty estimate is available."
+}

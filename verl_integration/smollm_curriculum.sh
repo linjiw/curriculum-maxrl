@@ -43,7 +43,7 @@ python3 -m verl.trainer.main_ppo \
   data.max_response_length=${MAX_RESPONSE_LENGTH} \
   +data.curriculum.enable=${CURRICULUM} \
   +data.curriculum.floor=0.1 \
-  +data.curriculum.decay=0.9 \
+  +data.curriculum.decay=0.7 \
   +data.curriculum.success_threshold=0.5 \
   actor_rollout_ref.model.path=${MODEL_PATH} \
   actor_rollout_ref.actor.optim.lr=${LR} \

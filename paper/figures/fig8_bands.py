@@ -1,19 +1,14 @@
 #!/usr/bin/env python
-"""Figure 8 — where and when GRPO's coverage goes (maze, level-resolved).
+"""Figure 8 — exploratory maze coverage localization.
 
-(a) Band-resolved d(pass@8) (final - warmstart): GRPO loses coverage
-    almost entirely on the easy/mid band L1-3 (all 4 runs) while its
-    L1-3 pass@1 RISES — it funds reliability by liquidating easy-band
-    coverage; MaxRL holds L1-3 flat and concentrates its gain on the
-    frontier band L4-6. Exact permutation p=0.0001 (L1-3 band).
-(b) Diversity premium G = mean_levels(pass@8 - pass@1) vs wall-clock:
-    GRPO's erosion starts within the first ~25-50 steps, long before
-    any level saturates; MaxRL's premium stabilizes after warmup.
+(a) Band-resolved change in pass@8 from warm start to final evaluation.
+(b) The coverage gap, mean_levels(pass@8 - pass@1), over wall-clock.
 
-Data: curriculum_maxrl/maze_gpu/matched_*.jsonl (passk field:
-16 mazes x 8 samples per level; band values average 3 levels x runs).
+The frozen archive comprises four GRPO-labelled and 18 nonempty practical-
+MaxRL-labelled logs. They are heterogeneous ablations, not independent
+factorial replicates; the figure is descriptive and performs no pooled test.
 """
-import glob
+import csv
 import json
 import os
 
@@ -24,7 +19,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-MAZE = os.path.join(HERE, "..", "..", "curriculum_maxrl", "maze_gpu")
+ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
+RUN_REGISTRY = os.path.join(HERE, "data", "fig8_maze_run_registry.csv")
 
 BLUE = "#2a78d6"      # MaxRL
 MAGENTA = "#e87ba4"   # GRPO
@@ -75,12 +71,19 @@ def gap_curve(rows, n_levels=13):
     return np.asarray(ts, float), np.asarray(gs, float)
 
 
-grpo_files = sorted(glob.glob(os.path.join(MAZE, "matched_*grpo*.jsonl")))
-maxrl_files = [p for p in sorted(glob.glob(os.path.join(MAZE, "matched_*.jsonl")))
-               if "grpo" not in p]
+with open(RUN_REGISTRY, newline="") as f:
+    registry = [row for row in csv.DictReader(f)
+                if row["figure_8_inclusion"] == "included"]
+
+assert len(registry) == len({row["log_path"] for row in registry})
+grpo_files = [os.path.join(ROOT, row["log_path"]) for row in registry
+              if row["estimator"] == "GRPO-labelled"]
+maxrl_files = [os.path.join(ROOT, row["log_path"]) for row in registry
+               if row["estimator"] == "practical-MaxRL-labelled"]
 grpo_runs = [series(p) for p in grpo_files]
 maxrl_runs = [series(p) for p in maxrl_files]
-maxrl_runs = [r for r in maxrl_runs if r]
+assert all(grpo_runs) and all(maxrl_runs)
+assert len(grpo_runs) == 4 and len(maxrl_runs) == 18
 
 fig, (axa, axb) = plt.subplots(1, 2, figsize=(7.0, 2.7))
 
@@ -97,7 +100,7 @@ for off, runs, color, label in ((-W / 2, grpo_runs, MAGENTA, "GRPO"),
         sds.append(np.std(v))
         pts.append(v)
     axa.bar(x + off, means, width=W, color=color, alpha=0.85, zorder=3,
-            label=f"{label} (n={len(runs)})")
+            label=f"{label}-labelled logs (n={len(runs)})")
     for xi, v in zip(x + off, pts):
         axa.scatter([xi] * len(v), v, s=7, color="#333333", alpha=0.55,
                     zorder=4, linewidths=0)
@@ -105,10 +108,10 @@ for off, runs, color, label in ((-W / 2, grpo_runs, MAGENTA, "GRPO"),
 axa.axhline(0, color=GRAY, lw=0.8, zorder=2)
 axa.set_xticks(x, [b[0] for b in bands])
 axa.set_ylabel(r"$\Delta$ pass@8 (final $-$ warmstart)")
-axa.set_title("(a) Where the coverage goes", loc="left", fontsize=9)
+axa.set_title("(a) Historical change by band", loc="left", fontsize=9)
 axa.legend(frameon=False, loc="upper left", handlelength=1.2)
-axa.text(0.44, -0.19, "GRPO also raises L1–3\npass@1 (+.02..+.14):\n"
-         "reliability bought\nwith coverage", fontsize=7, color=MAGENTA,
+axa.text(0.44, -0.19, "Easy/mid pass@8 loss\nis concentrated in the\n"
+         "GRPO-labelled logs", fontsize=7, color=MAGENTA,
          ha="left", va="center", style="italic", linespacing=1.15)
 axa.set_ylim(-0.33, 0.33)
 
@@ -128,15 +131,15 @@ for runs, color in ((maxrl_runs, BLUE), (grpo_runs, MAGENTA)):
 
 axb.text(1550, 0.115, "MaxRL", color=BLUE, fontsize=8.5, va="bottom")
 axb.text(1550, 0.038, "GRPO", color=MAGENTA, fontsize=8.5, va="bottom")
-axb.annotate("erosion starts in the\nfirst ~25–50 steps,\nno level saturated",
+axb.annotate("most endpoint erosion\nappears early",
              xy=(280, 0.085), xytext=(820, 0.155), fontsize=7.5, color=GRAY,
              ha="left", va="center", style="italic", linespacing=1.15,
              arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
                              connectionstyle="arc3,rad=0.2",
                              shrinkA=2, shrinkB=2))
 axb.set_xlabel("wall-clock (s), matched budget")
-axb.set_ylabel(r"diversity premium $\overline{p@8 - p@1}$")
-axb.set_title("(b) When it goes", loc="left", fontsize=9)
+axb.set_ylabel(r"coverage gap $\overline{p@8 - p@1}$")
+axb.set_title("(b) Coverage gap over time", loc="left", fontsize=9)
 axb.set_xlim(0, None)
 axb.set_ylim(0, None)
 

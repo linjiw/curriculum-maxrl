@@ -4,6 +4,13 @@
 environments, robotics simulators, or LLM prompt sets without touching the
 core. The core is NumPy-only, with no torch/gym dependency.
 
+> **Validation scope (2026-08-04).** The corrected adapters and unit tests
+> enforce the behavioral contracts below, but the proposed exact sampler plus
+> common-destination relabeler has not been validated end to end in a neural
+> or LLM run. Historical maze/Countdown experiments used different relabeling
+> semantics. Numerical claims require a committed artifact listed in
+> `VALIDATION_2026-08-04.md`; older non-vendored demo tables are omitted here.
+
 ## The algorithm (one screen)
 
 ```
@@ -53,9 +60,8 @@ it an on-policy destination gradient:
 2. **One destination and rewritten conditioning** — choose one common
    destination for the group; if trajectories embed the goal (goal-relative
    features, `desired_goal` observations, or prompt tokens), rewrite every
-   trajectory to that destination. We measured the cost of skipping this on
-   the gridworld: hindsight *hurts* without the rewrite (AUC 0.600 <
-   teacher-only 0.658) and reaches 0.703 with it.
+   trajectory to that destination. The grid and Countdown regression tests
+   verify this rewrite directly.
 3. **Destination contrast** — reverify every rewritten trajectory and train
    only when `0 < K' < N`; the trainer rejects constant destination groups.
 
@@ -65,59 +71,29 @@ result is therefore a verified but generally off-policy destination update.
 
 ## Adapters included
 
-| adapter | what it shows | result (AUC, uniform → teacher → +hindsight) |
+| adapter | role | current validation scope |
 |---|---|---|
-| `skill_chain` | regression anchor vs the validated testbed | 0.650 → 0.728 → **0.890** (matches REPORT.md) |
-| `grid_reach` | goal-conditioned robotics pattern (goal bins = distance rings, relabel = reached cell, REINFORCE tabular policy) | 0.592 → 0.658 → **0.703** |
-| `gym_classic` | **real gymnasium envs**: MountainCar positional curriculum (hard exploration) + CartPole survival curriculum | MC: 0.216 → 0.228 → **0.246**; CP: 0.190 → 0.225 → **0.246** (3 seeds) |
-| `gym_goal` | gymnasium GoalEnv skeleton: where reset/step/is_success go, how to bin continuous goals, HER-style relabel via `achieved_goal` | (skeleton — bring your env) |
-| `cosmos_libero` | **flow-policy VLA pattern** (Cosmos3/LIBERO): predicate-conjunction goals, positive-part weights, template conditioning rewrites, relabel-only sub-goal arms, mastery splits, per-class poison gating | frontier-heavy mock: uniform/teacher **0.000** → oracle-relabel **0.862**, self-verified 0.756, +gate 0.842 (3 seeds; `examples/run_cosmos_pilot.py`) |
+| `skill_chain` | exact-score shared-skill regression environment | used by the 20-seed estimator controls |
+| `grid_reach` | goal-conditioned grid reach with coarse distance-ring teacher IDs | shared anchor, all-row rewrite, reach-at-any-time re-verification, and mixed outcomes are unit-tested |
+| `countdown_llm` | dependency-free Countdown verifier/LLM hook with coarse tier IDs | shared integer anchor, all-prompt rewrite, exact re-verification, and mixed outcomes are unit-tested |
+| `gym_classic` | MountainCar and CartPole binary-success controls | three-seed paper evidence; task spread and shared-parameter transfer, not a universal ordering |
+| `gym_goal` | GoalEnv integration skeleton | interface example only |
+| `cosmos_libero` | flow-policy/VLA integration pattern | adapter and mock tests only; no real-robot or neural-policy validation |
 
-The gymnasium results reproduce the validated ordering
-(uniform < teacher < teacher+hindsight) on real environments with a
-deliberately weak tile-coded REINFORCE policy — MountainCar's sparse flag
-success is the real-world twin of our frontier-heavy regime, and its
-positional curriculum ("reach x ≥ x*, walking x* from valley to flag") is
-exactly the pattern to copy for robotics reach tasks. Budgets in the demo
-are small (~10 min CPU); scale `steps` for stronger separations.
+The adapter tests establish software and verifier semantics. They do not turn
+source-task trajectories into an on-policy destination sample and do not
+substitute for the missing balanced neural/LLM factorial.
 
-### MountainCar case study: the flag, solved — and a transfer lesson
+### Gym control: what is supported
 
-Scaled runs (600 steps) with **per-bin policy parameters** never reach the
-flag (hardest bin stays 0.000 for every method): each bin's tile table
-learns from scratch, so the curriculum has nothing to *transfer*. Giving
-all bins one **shared** policy (the task enters only the success predicate)
-changes everything — corrected study, 10 paired seeds, matched at 500k
-environment transitions:
-
-| shared-policy config | mean-pass AUC | final FLAG pass |
-|---|---|---|
-| flag-only (no curriculum) | 0.024±0.006 | **0.000±0.000** |
-| uniform over bins | 0.389±0.071 | 0.058±0.079 |
-| teacher (γ=4, exact ν_N score) | 0.530±0.059 | 0.664±0.232 |
-| **teacher (γ=4) + hindsight** | **0.727±0.023** | **0.848±0.058** |
-| (control) per-bin parameters + hindsight | 0.229±0.031 | **0.000±0.000** |
-
-*(Corrected 10-seed transition-matched study with paired bootstrap, from
-the audited branch; an earlier 3-seed table reporting flag pass up to
-1.000 had no persisted artifact and is retracted.)*
-
-Under the deployed practical estimator, the committed flag-only arm scores
-exactly zero at this budget: MountainCar's classic exploration wall. This is
-an empirical result, not a claim that every MaxRL variant must be silent at
-`K=0`; full CV can emit a negative-only update there. In these runs, mixing
-in easier targets cracks the wall through energy-pumping transfer, the
-teacher sharpens that mixture, and hindsight carries the flag bin to
-0.848±0.058. Two morals for practitioners:
-
-1. **Curricula operate through shared parameters.** Difficulty bins must
-   share the policy (condition on the goal, don't partition by it) or
-   there is no channel for competence to flow through — the per-bin
-   control row (0.000 with the full stack) is the same
-   generalization-cliff lesson as our maze-size finding, now in gym form.
-2. With sharing in place, the stack ordering (uniform < teacher <
-   teacher+hindsight) holds at every difficulty level, with the largest
-   gains exactly where sampling alone is weakest (the flag bin).
+The committed three-seed binary-success study supports two mechanisms:
+target-only practical MaxRL remains empirically frozen at the tested budget,
+while spreading training over easier bins creates usable updates; those
+updates transfer only when the policy parameters are shared across bins.
+The gated stack reaches the official-task endpoint in all three seeds and is
+faster and less variable than uniform in the reported controls. This is a
+small classic-control study, not a claim that curricula always help or that
+full-CV MaxRL is mathematically silent at `K=0`.
 
 Run them:
 
@@ -156,14 +132,14 @@ The algorithm is deliberately factored so each piece can be swapped to match
 the training regime without touching the others — the flexibility is the
 design, not an accident:
 
-| training regime | teacher variant | evidence stream | hindsight | validated on |
+| training regime | teacher variant | evidence stream | hindsight | software/evidence status |
 |---|---|---|---|---|
-| episodic groups, fixed task pool (RLVR/LLM prompts) | `FrontierTeacher` (Beta rows, Thompson) | group (task, K of N) | dense relabel via `TaskSpace.relabel` | skill chain, maze GPU, verl integration |
-| episodic groups, procedural tasks | `StreamingFrontierTeacher` (kernel posterior) | (difficulty, K of N) | same | continuous-goal reach |
-| goal-conditioned control (gym/robotics) | `FrontierTeacher` over goal bins | group | relabel + conditioning rewrite | gridworld, MountainCar, CartPole |
-| massively parallel sim (IsaacLab, 4096 envs) | `FrontierBinTeacher` (vectorized, evidence-scaled decay, deterministic optimism) | per-reset Bernoulli stream | statistics-half only (occupancy credit) | adapter + unit tests; SONIC design doc |
-| dense-reward PPO | any of the above with `utility="learnability"` | termination flag as verifier | usually skip (dense reward is the partial credit) | SONIC_RESPONSE.md analysis |
-| flow/diffusion action heads, no per-sample log-prob (VLA weighted SFT) | `MasteryFrontierTeacher` (samplable mask, mastery splits) | group (task, K of N) | dense relabel + **template** conditioning rewrite, per-class poison gate | cosmos_libero adapter + mock pilot; COSMOS3_RESPONSE.md |
+| episodic groups, fixed task pool (RLVR/LLM prompts) | `FrontierTeacher` (Beta rows, Thompson) | group (task, K of N) | `TaskSpace.relabel` | exact-score chain + unit tests; historical maze/LLM runs are not method validation |
+| episodic groups, procedural tasks | `StreamingFrontierTeacher` (kernel posterior) | (difficulty, K of N) | same | CPU demo only |
+| goal-conditioned control (gym/robotics) | `FrontierTeacher` over goal bins | group | shared destination + conditioning rewrite | GridReach regression + three-seed Gym mechanism control |
+| massively parallel sim (IsaacLab) | `FrontierBinTeacher` | per-reset Bernoulli stream | statistics-only occupancy credit | adapter tests + one-seed external pilot |
+| dense-reward PPO | `utility="learnability"` variant | termination flag | usually skip | design analysis only |
+| flow/diffusion heads (weighted SFT) | `MasteryFrontierTeacher` | group | positive-only template rewrite | adapter + mock pilot only |
 
 The swap points and what fixes each choice:
 
@@ -176,7 +152,8 @@ The swap points and what fixes each choice:
   for procedural sources; vectorized arrays with half-life-in-episode-
   equivalents decay when throughput varies by orders of magnitude (Q4).
 - **optimism** — Thompson when stochasticity is fine; `mean + k·std` under
-  determinism guardrails (Q3). Both validated equivalent when a floor exists.
+  determinism guardrails (Q3). Both are implemented; equivalence is not a
+  paper-level validated claim.
 - **γ** — 4 helped on the tight shared-skill chain; 1 is the default
   elsewhere after the concentrated setting failed to transfer to a broad
   pool. This remains an empirical tuning choice.
@@ -302,15 +279,16 @@ fixed task pool** (every task fresh: generated mazes, sampled goals,
 synthetic problems with a difficulty parameter d ∈ [0,1]). It replaces the
 per-task Beta rows with a kernel (Nadaraya-Watson) pass-rate posterior over
 the difficulty axis + Thompson sampling on a difficulty grid, with optional
-isotonic projection when d orders pass rates. Validated on a continuous-goal
-reach task (5 seeds, matched budgets): streaming **matches the discrete-bin
-teacher exactly** (AUC 0.684 vs 0.684; final 0.922 vs 0.919; uniform 0.648)
-— you lose nothing by dropping the pool assumption. Use it when your
-task generator has a difficulty dial; use bins when you have a fixed
+isotonic projection when d orders pass rates. A five-seed CPU demo reports
+similar streaming and discrete-bin endpoints, but it is not part of the
+paper's validated evidence and does not establish equivalence. Use this
+adapter when the task generator has a difficulty dial; use bins for a fixed
 prompt set.
 
 ## What this does NOT do
 - Replace your RL optimizer: `Policy.update` is yours; this package decides
   *what to train on and with what advantage weights*, not how to descend.
-- GRPO-style std-normalized advantages under a curriculum — measured to
-  amplify coverage collapse (REPORT.md F2). Use the MaxRL weights.
+- Establish a universal estimator ordering. The historical maze archive has
+  an estimator-associated coverage pattern, but its adaptive schedules,
+  warm-start reuse, and unbalanced sampler mix do not identify a causal
+  curriculum-by-estimator interaction.

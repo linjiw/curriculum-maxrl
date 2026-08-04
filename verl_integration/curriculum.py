@@ -14,7 +14,8 @@
 """Curriculum teacher + weighted sampler for MaxRL-style RL training.
 
 The teacher tracks a decayed Beta posterior over each prompt's pass rate and
-samples prompts by the *expected advantage mass* of the MaxRL estimator: for
+samples prompts by the expected coefficient mass of the practical
+centered/drop MaxRL estimator: for
 a group of N rollouts on a prompt with pass rate p, the expected total
 |advantage| emitted (Algorithm 1 of arXiv:2602.02710, w_succ = 1/K - 1/N,
 w_fail = -1/N, K=0 groups dropped) is exactly
@@ -22,8 +23,9 @@ w_fail = -1/N, K=0 groups dropped) is exactly
     E[sum_j |w_j|] = 2 * (pass@N(p) - pass@1(p)) = 2 * ((1-(1-p)^N) - p),
 
 i.e. twice the probability the prompt is solvable within N attempts but not
-within one.  Sampling proportional to this utility maximizes the learning
-signal the optimizer receives per group.  It peaks at p* ~ ln(N)/N, so
+within one. This estimator-side activity score motivates an empirical prompt
+sampler; it is not a gradient norm or a proof of optimal sequential
+performance. It peaks at p* ~ ln(N)/N, so
 larger group sizes automatically target harder prompts.  At N=2 it equals
 the "learnability" objective p(1-p) of Rutherford et al. (2024) (u_1 = 0).  The
 older heuristic frontier utility (1-(1-p)^N)(1-p) is available via
@@ -33,7 +35,7 @@ Enable via config:
 
     data.curriculum.enable=true
     data.curriculum.floor=0.1          # uniform replay floor
-    data.curriculum.decay=0.7          # posterior decay per observation (validated default)
+    data.curriculum.decay=0.7          # historical tuned default; revalidate per suite
     data.curriculum.success_threshold=0.5
     data.curriculum.utility=advmass    # or "frontier"
 
@@ -50,8 +52,8 @@ from torch.utils.data import Sampler
 class FrontierTeacher:
     def __init__(self, n_prompts, n_rollouts=16, decay=0.7, floor=0.1, seed=0,
                  success_threshold=0.5, utility="advmass", power=1.0):
-        # decay=0.7 validated in VALIDATION.md V2b: the oracle-vs-Thompson gap
-        # is a tracking problem; faster forgetting closes ~19% of it.
+        # decay=0.7 is a historical chain-tuned setting, not a universal
+        # validated constant; revalidate it for a new task distribution.
         # power: sample ∝ u^power (V6) — sharper concentration compounds on
         # chain-structured pools (γ≈4); keep 1.0 for flat prompt sets (GSM8K).
         assert utility in ("advmass", "frontier"), utility

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """Figure 1 — "The estimator is the curriculum" hero math figure.
 
-Panel A: u_N(p) = (1-(1-p)^N) - p for N in {4, 8, 16, 32}; peaks at
-         p* = 1 - N^(-1/(N-1)) ~ ln N / N; dead zones annotated.
-Panel B: at N=16, all three curves are EXACT finite-N expected advantage
-         mass (same convention, mass/2): MaxRL u_N (Prop. 1), RLOO p(1-p)
-         (exact), GRPO (1/N) E[sqrt(K(N-K))], K~Bin(N,p) (MC-verified) —
-         not the population w(p) curves, which diverge at the tails.
+Panel A: nu_N(p) = (1-p)-(1-p)^N for N in {4, 8, 16, 32}; peaks at
+         p* = 1 - N^(-1/(N-1)) ~ ln N / N; operational regimes annotated.
+Panel B: at N=16, all curves use expected coefficient half-mass. MaxRL is
+         nu_N, RLOO is p(1-p), and GRPO uses the deployed sample-SD
+         convention (ddof=1). These are finite-group curves, not population
+         objective weights.
 
 Numbers/forms from paper/main.tex Section 3 (Prop. 1-3, Remark scope).
 """
@@ -41,7 +41,7 @@ plt.rcParams.update({
 
 
 def u(p, N):
-    """Expected advantage mass / 2 under practical MaxRL weights (Prop. 1)."""
+    """Expected coefficient half-mass under practical MaxRL weights."""
     return (1.0 - (1.0 - p) ** N) - p
 
 
@@ -80,15 +80,15 @@ axA.annotate(r"$p^{*}\approx \ln N/N$", xy=(ps16, u(ps16, 16)),
                              connectionstyle="arc3,rad=-0.12",
                              shrinkA=2, shrinkB=5))
 
-# dead zone: mastered (p -> 1)
-axA.annotate("mastered:\nnothing to learn", xy=(0.975, 0.015),
+# saturated endpoint (p -> 1)
+axA.annotate("saturated:\nlittle contrast", xy=(0.975, 0.015),
              xytext=(0.97, 0.16), fontsize=8, color=GRAY,
              ha="right", va="bottom", style="italic",
              arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
                              shrinkA=2, shrinkB=2))
 
-# dead zone: unreachable (p -> 0); recycling channel acts here
-axA.annotate("unreachable: nothing\nto sample toward\n(recycling acts here)",
+# all-fail endpoint (p -> 0); finite budgets create an operational regime
+axA.annotate("all-fail at the\ndeployed budget",
              xy=(0.008, 0.04), xytext=(0.24, 0.09), fontsize=8,
              color=GRAY, ha="left", va="bottom", style="italic",
              arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
@@ -98,24 +98,27 @@ axA.annotate("unreachable: nothing\nto sample toward\n(recycling acts here)",
 axA.set_xlim(0, 1)
 axA.set_ylim(0, 1.0)
 axA.set_xlabel("pass rate $p$")
-axA.set_ylabel(r"expected advantage mass $/\,2$")
-axA.set_title(r"A   $u_N(p) = \mathrm{pass@}N - \mathrm{pass@}1$",
+axA.set_ylabel(r"coefficient half-mass $\nu_N(p)$")
+axA.set_title(r"A   $\nu_N(p) = (1-p)-(1-p)^N$",
               loc="left")
 
 # ---------------------------------------------------------------- Panel B
-# All three curves are exact expected advantage mass / 2, same
+# All three curves use expected coefficient half-mass, the same
 # convention: sum of |per-rollout coefficients| in each estimator's
 # gradient (MaxRL w_i sums; RLOO/GRPO carry the 1/N prefactor).
-# GRPO exact: (1/N) E[ sqrt(K(N-K)) ], K ~ Bin(N, p).  MC-verified.
+# GRPO uses sample standard deviation (ddof=1), matching both estimator
+# modules. The fixed 1e-6 stabilizer is included in the curve.
 from math import comb
 
 N = 16
 u16 = u(p, N)                            # MaxRL mass / 2 (Prop. 1)
 rloo = p * (1 - p)                       # RLOO mass / 2 (exact)
-grpo = np.zeros_like(p)                  # GRPO mass / 2 (exact finite-N)
+grpo = np.zeros_like(p)                  # GRPO half-mass, exact for code
 for k in range(1, N):
+    sample_std = np.sqrt(k * (N - k) / (N * (N - 1)))
+    half_mass = k * (N - k) / (N**2 * (sample_std + 1e-6))
     grpo += (comb(N, k) * p**k * (1 - p)**(N - k)
-             * np.sqrt(k * (N - k)) / N)
+             * half_mass)
 
 axB.plot(p, u16, color=BLUE, lw=1.8, ls="-")
 axB.plot(p, rloo, color=GREEN, lw=1.6, ls="--")
@@ -124,7 +127,7 @@ axB.plot(p, grpo, color=MAGENTA, lw=1.6, ls=":")
 # direct labels
 axB.text(0.135, 0.835, "MaxRL ($N$=16)", fontsize=8, color=BLUE,
          ha="left", va="bottom")
-axB.text(0.42, 0.335, "GRPO (exact, $N$=16)", fontsize=8,
+axB.text(0.42, 0.315, "GRPO (sample SD, $N$=16)", fontsize=8,
          color=MAGENTA, ha="center", va="top")
 axB.text(0.50, 0.135, "RLOO = learnability ($N$=2 slice)", fontsize=8,
          color=GREEN, ha="center", va="top")
@@ -139,7 +142,7 @@ axB.text(0.078, 0.205, "$\\to (N{-}1)\\times$ RLOO\nas $p \\to 0$",
 # mastered asymmetry: GRPO > MaxRL at p->1
 p1 = 0.93
 g1 = float(np.interp(p1, p, grpo))
-axB.annotate("$\\sqrt{N{-}1}\\times$ MaxRL's mass\non mastered prompts",
+axB.annotate("$(N{-}1)/\\sqrt{N}\\times$ MaxRL\nnear saturation",
              xy=(p1, g1), xytext=(0.80, 0.68), fontsize=7.5,
              color=GRAY, ha="center", va="center", style="italic",
              linespacing=1.15,
@@ -150,8 +153,8 @@ axB.annotate("$\\sqrt{N{-}1}\\times$ MaxRL's mass\non mastered prompts",
 axB.set_xlim(0, 1)
 axB.set_ylim(0, 1.0)
 axB.set_xlabel("pass rate $p$")
-axB.set_ylabel(r"expected signal $/\,2$")
-axB.set_title("B   what each estimator rewards ($N$=16)", loc="left")
+axB.set_ylabel(r"expected coefficient half-mass")
+axB.set_title("B   finite-group estimator activity ($N$=16)", loc="left")
 
 fig.tight_layout(pad=0.4, w_pad=1.2)
 fig.savefig(os.path.join(HERE, "fig1_utility.pdf"))

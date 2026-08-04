@@ -1,4 +1,4 @@
-# Advantage-mass analysis: a derived curriculum signal for MaxRL
+# Coefficient-mass analysis: a derived curriculum score for practical MaxRL
 
 Deep-dive into the MaxRL paper's math (arXiv:2602.02710, full text) yielding a
 *derived* (not heuristic) teacher utility. All formulas verified by Monte
@@ -8,26 +8,27 @@ snippet at the bottom.
 ## 1. Setup
 
 A prompt with true pass rate `p` gets a group of `N` i.i.d. rollouts with
-`K ~ Binomial(N, p)` successes. Each estimator assigns per-rollout advantage
-weights `w_j`. Define the **advantage mass** of the group as `Σ_j |w_j|` —
-the total magnitude of learning signal the optimizer receives from this
-prompt (the score functions `S_j` are multiplied by these weights, so mass ≈
-the gradient budget the prompt commands).
+`K ~ Binomial(N, p)` successes. Each estimator assigns per-rollout
+coefficients `w_j`. Define the **coefficient mass** of the group as
+`Σ_j |w_j|`. This is an estimator-side activity diagnostic, not the
+gradient norm: the actual expected update also depends on the score-function
+separation between successes and failures.
 
-## 2. Exact expected advantage mass per estimator
+## 2. Exact expected coefficient mass per estimator
 
-**MaxRL** (Algorithm 1: `w_succ = 1/K − 1/N`, `w_fail = −1/N`, group dropped
-at K=0). For K ≥ 1: `Σ|w| = K(1/K − 1/N) + (N−K)/N = 2(1 − K/N)`. Hence
+**Practical centered/drop MaxRL** (`w_succ = 1/K − 1/N`,
+`w_fail = −1/N`, with constant groups zeroed). For K ≥ 1:
+`Σ|w| = K(1/K − 1/N) + (N−K)/N = 2(1 − K/N)`. Hence
 
 ```
 E[Σ|w|] = 2·(P(K≥1) − E[K]/N) = 2·(pass@N(p) − p)   —  EXACT
         = 2·(pass@N − pass@1)
 ```
 
-**The expected MaxRL learning signal on a prompt equals twice the
+**The expected practical-MaxRL coefficient mass on a prompt equals twice the
 probability that it is solvable within N attempts but not within one.**
 This is a compute-indexed formalization of the zone of proximal development:
-the estimator, by its own algebra, allocates signal exactly to the band of
+the estimator, by its own algebra, allocates coefficient mass to the band of
 prompts the student can *sometimes but not reliably* solve. It vanishes both
 at p→0 (beyond frontier, group dropped) and p→1 (mastered), and peaks at
 
@@ -63,31 +64,32 @@ E[Σ|w|] = Σ_{K=1}^{N−1} P(K) · 2·sqrt( K(N−K)/(N(N−1)) ) / N · N ≈ 
 Numerically: at p=0.01, N=32 the population weight-function view of the paper
 (`w(p)=1/√(p(1−p))` → mass ≈ 0.199) overstates the realized finite-sample
 mass by 2× (exact: 0.100) because 72% of groups are all-fail and contribute
-nothing. **The paper's population-level w(p) curves describe the
-infinite-sample limit; at finite N every estimator's realized signal on hard
-prompts is throttled by pass@N.** This sharpens the case for a teacher: no
-choice of w(p) can put signal where groups die.
+nothing. **The paper's population-level w(p) curves do not by themselves
+determine finite-group activity.** Practical centered MaxRL, RLOO, and GRPO
+are silent on all-fail groups, but full-control-variate MaxRL retains a
+negative coefficient branch there. The new 20-seed control shows that
+invoking that branch still need not bootstrap an extreme frontier.
 
 ## 3. Consequences for the curriculum design
 
 1. **Derived teacher utility.** Replace the heuristic frontier utility
-   `u(p) = (1−(1−p)^N)(1−p)` with the exact advantage mass
+   `u(p) = (1−(1−p)^N)(1−p)` with the exact coefficient mass
    `u(p) = pass@N(p) − p = (1−(1−p)^N) − p`. Numerically the two are nearly
    identical (max deviation ~1% of range), which retroactively explains why
    the heuristic worked; but the derived form is (a) parameter-free, (b) an
-   unbiased target for what the optimizer actually receives, and (c) directly
-   estimable from group statistics.
+   an exact target for expected coefficient mass, and (c) directly estimable
+   from group statistics. It is not, by itself, an expected gradient norm.
 
 2. **Connection to SEC (Chen et al. 2025c, cited by the paper).** SEC drives
    a curriculum bandit with the *empirical* |advantage| as reward. For binary
-   rewards our formulas are the exact expectations of SEC's signal per
-   estimator. A Thompson teacher on `pass@N − p` is "oracle SEC for MaxRL":
-   same target, but computed from a Beta posterior over p instead of noisy
+   rewards our formulas are exact expectations of SEC's coefficient-side
+   statistic per estimator. A Thompson teacher on `pass@N − p` targets the
+   same practical-MaxRL statistic from a Beta posterior instead of noisy
    per-batch advantage sums, and therefore usable *before* a prompt is ever
    sampled (posterior prior + optimism), where SEC needs at least one visit.
 
 3. **Batch-level compute allocation rule.** Given budget B rollouts over a
-   candidate pool, allocating N_i per prompt to maximize total advantage mass
+   candidate pool, allocating N_i per prompt to maximize total coefficient mass
    Σ_i (1−(1−p_i)^{N_i} − p_i) subject to Σ N_i = B is a concave (diminishing
    returns in N_i) resource-allocation problem → greedy/water-filling is
    optimal. Marginal value of one more rollout on prompt i:

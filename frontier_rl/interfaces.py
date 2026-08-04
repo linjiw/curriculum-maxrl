@@ -67,8 +67,8 @@ class TaskSpace(Protocol):
            features, desired_goal in observations, goal tokens in a prompt),
            return new_trajectories with the goal REWRITTEN to the relabeled
            one — training goal-A-conditioned actions as successes of goal B
-           mis-trains the conditioning (this is HER's observation-rewrite,
-           and skipping it silently *hurts*: see the grid_reach adapter note).
+           violates the destination-conditioning contract (this is HER's
+           observation rewrite).
         3. CONTRAST: return both successes and failures for that destination
            (0 < K' < N). Constant destination groups cannot train a centered
            group estimator and are skipped by the trainer.
