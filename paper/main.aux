@@ -76,7 +76,6 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {Recycling-induced sharpening and its derived mitigation (Countdown, tier 1).} \emph  {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\text  {pass@}16$ coverage. On this tier the moderate gate (B3) gives back most of the mean without moving coverage --- tier-1 destinations saturate early, so admitted relabels are few --- while full-strength gating (corrected decay, 1 seed) returns coverage \emph  {above} baseline at the mean's full price: gate strength is a dial along the trade, and its useful middle lives on the frontier tier, where the same moderate setting restores coverage to baseline ($.279{\pm }.019$ vs.\ $.274$) keeping $\sim $60\% of the mean gain (\S  6.8). \emph  {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph  {(c)} Gated recycling preserves \emph  {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient.}}{11}{figure.7}\protected@file@percent }
 \newlabel{fig:sharpening}{{7}{11}{\textbf {Recycling-induced sharpening and its derived mitigation (Countdown, tier 1).} \emph {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\passat {16}$ coverage. On this tier the moderate gate (B3) gives back most of the mean without moving coverage --- tier-1 destinations saturate early, so admitted relabels are few --- while full-strength gating (corrected decay, 1 seed) returns coverage \emph {above} baseline at the mean's full price: gate strength is a dial along the trade, and its useful middle lives on the frontier tier, where the same moderate setting restores coverage to baseline ($.279{\pm }.019$ vs.\ $.274$) keeping $\sim $60\% of the mean gain (\S 6.8). \emph {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph {(c)} Gated recycling preserves \emph {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient}{figure.7}{}}
 \@writefile{toc}{\contentsline {paragraph}{6.8 What does recycling cost? (Countdown $2{\times }2$, pre-registered): two nulls and a new phenomenon.}{11}{section*.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.9 Does the gate recover it? (Countdown v2 pool, 3 seeds, pre-registered).}{11}{section*.10}\protected@file@percent }
 \citation{yue}
 \citation{cui}
 \citation{yuan}
@@ -88,6 +87,7 @@
 \citation{hgg}
 \citation{cher}
 \citation{skewfit}
+\@writefile{toc}{\contentsline {paragraph}{6.9 Does the gate recover it? (Countdown v2 pool, 3 seeds, pre-registered).}{12}{section*.10}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {7}Related work}{12}{section.7}\protected@file@percent }
 \citation{codeit}
 \citation{minimo}
@@ -101,9 +101,9 @@
 \@writefile{toc}{\contentsline {paragraph}{Scope of the surrogate.}{13}{section*.12}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{13}{section*.13}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{13}{section*.14}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{13}{section*.15}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$.}}{14}{figure.8}\protected@file@percent }
 \newlabel{fig:gym}{{8}{14}{\textbf {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$}{figure.8}{}}
+\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{14}{section*.15}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {A}Full details for compressed experiment rungs}{14}{appendix.A}\protected@file@percent }
 \newlabel{app:rungs}{{A}{14}{Full details for compressed experiment rungs}{appendix.A}{}}
 \@writefile{toc}{\contentsline {paragraph}{6.1 control battery (full).}{14}{section*.16}\protected@file@percent }
@@ -114,17 +114,17 @@
 \@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{15}{section*.19}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{15}{section*.20}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.7 posterior diagnostics and harness caveats (full).}{15}{section*.21}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  \ref  {sec:limits}).}{15}{section*.22}\protected@file@percent }
 \bibcite{maxrl}{{1}{2026}{{Tajwar et al.}}{{}}}
 \bibcite{disco}{{2}{2025}{{Li et al.}}{{}}}
-\bibcite{scsdpo}{{3}{2026}{{Liu et al.}}{{}}}
-\bibcite{yue}{{4}{2025}{{Yue et al.}}{{}}}
+\@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  \ref  {sec:limits}).}{16}{section*.22}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {B}Hyperparameters and compute}{16}{appendix.B}\protected@file@percent }
 \newlabel{app:hparams}{{B}{16}{Hyperparameters and compute}{appendix.B}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule.}}{16}{table.2}\protected@file@percent }
 \newlabel{tab:suites}{{2}{16}{Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule}{table.2}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Teacher and recycler knobs: value, provenance, and measured sensitivity.}}{16}{table.3}\protected@file@percent }
 \newlabel{tab:knobs}{{3}{16}{Teacher and recycler knobs: value, provenance, and measured sensitivity}{table.3}{}}
+\bibcite{scsdpo}{{3}{2026}{{Liu et al.}}{{}}}
+\bibcite{yue}{{4}{2025}{{Yue et al.}}{{}}}
 \bibcite{yuan}{{5}{2026}{{Yuan et al.}}{{}}}
 \bibcite{cui}{{6}{2025}{{Cui et al.}}{{}}}
 \bibcite{cai}{{7}{2026}{{Cai et al.}}{{}}}

@@ -66,9 +66,9 @@
 \@writefile{toc}{\contentsline {paragraph}{6.2 Can any sampler act when nothing is learnable? (frontier-heavy regime, max pool pass rate $10^{-5}$; 5 seeds, artifact committed).}{7}{section*.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.3 Does the estimator main effect survive real gradients? (maze transformer at matched wall-clock; 1.26M params, 13 levels, ${\sim }30$ runs, 3 seeds).}{8}{section*.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.4 Where and when does GRPO's coverage go? (level-resolved).}{8}{section*.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.5 When does allocation \emph  {not} pay? (IsaacLab legged locomotion, pre-registered null).}{8}{section*.6}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Where and when GRPO's coverage goes (maze, level-resolved, matched wall-clock).} \emph  {(a)} $\Delta \text  {pass@}8$ (final $-$ warmstart) by difficulty band: GRPO's loss lives on the easy/mid band (all 4 runs; dots are runs) while its $\text  {pass@}1$ there rises --- sharpening; MaxRL holds the easy band and gains on the frontier band (18 runs; band asymmetry exact permutation $p{=}0.0001$). \emph  {(b)} Diversity premium $\overline  {\text  {pass@}8-\text  {pass@}1}$ vs.\ wall-clock (mean and min--max across runs): GRPO's erosion begins within the first ${\sim }25$--$50$ steps, before any level saturates; MaxRL stabilizes after warmup.}}{9}{figure.5}\protected@file@percent }
 \newlabel{fig:bands}{{5}{9}{\textbf {Where and when GRPO's coverage goes (maze, level-resolved, matched wall-clock).} \emph {(a)} $\Delta \passat {8}$ (final $-$ warmstart) by difficulty band: GRPO's loss lives on the easy/mid band (all 4 runs; dots are runs) while its $\passat {1}$ there rises --- sharpening; MaxRL holds the easy band and gains on the frontier band (18 runs; band asymmetry exact permutation $p{=}0.0001$). \emph {(b)} Diversity premium $\overline {\passat {8}-\passat {1}}$ vs.\ wall-clock (mean and min--max across runs): GRPO's erosion begins within the first ${\sim }25$--$50$ steps, before any level saturates; MaxRL stabilizes after warmup}{figure.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.5 When does allocation \emph  {not} pay? (IsaacLab legged locomotion, pre-registered null).}{9}{section*.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.6 What does a curriculum add beyond task spread? (Gymnasium control --- binary-success RLVR on classic control; official-task currency).}{9}{section*.7}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.7 Does it transfer to LLM scale? (GSM8K $2{\times }2$, pre-registered; SmolLM2-360M, $N{=}16$, one A10G).}{9}{section*.8}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {GSM8K $2{\times }2$ (pre-registered; registered run shown; error bars = measured same-model eval noise, SD .0094).} GRPO+teacher is the only cell that regresses in its second half (P-G2 on this run; the load-bearing statistic is the endpoint gap vs.\ plain GRPO, $z{\approx }2$ --- the second-half dip alone is within noise; a replication seed with weaker measured steering climbed instead --- \S  6.7); under MaxRL the identical teacher trains stably to its best value but does not beat uniform at this budget (P-G1: null).}}{10}{figure.6}\protected@file@percent }
@@ -99,8 +99,6 @@
 \bibcite{disco}{{2}{2025}{{Li et al.}}{{}}}
 \bibcite{scsdpo}{{3}{2026}{{Liu et al.}}{{}}}
 \bibcite{yue}{{4}{2025}{{Yue et al.}}{{}}}
-\bibcite{yuan}{{5}{2026}{{Yuan et al.}}{{}}}
-\bibcite{cui}{{6}{2025}{{Cui et al.}}{{}}}
 \@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and negative results}{13}{section.8}\protected@file@percent }
 \newlabel{sec:limits}{{8}{13}{Limitations and negative results}{section.8}{}}
 \@writefile{toc}{\contentsline {paragraph}{Scale.}{13}{section*.11}\protected@file@percent }
@@ -108,6 +106,8 @@
 \@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{13}{section*.13}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{13}{section*.14}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{13}{section*.15}\protected@file@percent }
+\bibcite{yuan}{{5}{2026}{{Yuan et al.}}{{}}}
+\bibcite{cui}{{6}{2025}{{Cui et al.}}{{}}}
 \bibcite{cai}{{7}{2026}{{Cai et al.}}{{}}}
 \bibcite{dump}{{8}{2025}{{Wang et al.}}{{}}}
 \bibcite{adarft}{{9}{2025}{{Shi et al.}}{{}}}

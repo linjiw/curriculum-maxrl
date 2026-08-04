@@ -599,7 +599,14 @@ $0.332\to0.269$ with the teacher). The main-effect statistic,
 stated with its resolution: perfect separation of the 5 MaxRL vs.\ 4
 GRPO runs, one-sided exact permutation $p = 1/\binom{9}{4} = 0.0079$
 --- the design's floor, i.e.\ the strongest statement 9 runs can make,
-reported as zero exceptions rather than as a fine-grained magnitude. Whether the teacher \emph{amplifies} GRPO's decay is a
+reported as zero exceptions rather than as a fine-grained magnitude.
+Because runs pool across sampler arms and share per-seed warmstarts,
+we also report the conservative variants (artifact
+\texttt{permutation\_reanalysis.json}): stratified-by-arm permutation
+retains perfect separation at its own floor ($p{=}0.025$), and all
+three shared-warmstart pairs are individually positive; the run
+composition (5v4 because one uniform-MaxRL seed predates $\passat{k}$
+logging) is tabulated in the same artifact. Whether the teacher \emph{amplifies} GRPO's decay is a
 factorial (interaction) question this suite is not powered for; the
 GSM8K $2{\times}2$ below tests exactly that cell, pre-registered.
 Inference currency (one convention, every level: smallest $k$ reaching
