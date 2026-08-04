@@ -221,7 +221,13 @@ $\sum_{k=1}^{N}(1-p)^{k-1} - (1-p)^{N-1} = \sum_{k=1}^{N-1}(1-p)^{k-1}$.
 \begin{interp}
 A refinement to \citet{maxrl}, immaterial for their conclusions but
 load-bearing for our mass accounting at small $N$ --- all identities
-below are for the estimator as actually shipped.
+below are for the estimator as actually shipped. Magnitude at the
+deployed budgets: the relative gradient shortfall of $T{=}N{-}1$ vs.\
+$T{=}N$ is $(1-p)^{N-1}/\sum_{k=1}^{N}(1-p)^{k-1}$ --- at $N{=}16$ it
+is $5.8\%$ at $p{=}.01$, $1.1\%$ at the band peak $p^*{\approx}.17$,
+and ${<}10^{-4}$ at $p{=}.5$; at $N{=}8$ it reaches $12\%$ on the deep
+frontier. Bookkeeping at moderate $p$, material exactly where the
+frontier teacher concentrates sampling.
 \end{interp}
 
 \begin{proposition}[Expected coefficient mass]\label{prop:mass}
@@ -755,10 +761,15 @@ hindsight doses, a wide model, repeated seeds), so we report the band
 asymmetry descriptively --- every GRPO run negative on L1--3, the
 MaxRL spread centered at zero there --- and attach no permutation
 $p$-value; the 22 runs are not exchangeable replicates of one
-estimator contrast. This is the observable
-consequence of the mass curves in Fig.~\ref{fig:utility}: the
-$\sqrt{K(N{-}K)}$ weighting keeps spending updates on mastered prompts
-(sharpening them), where $u_N$ has already released them.
+estimator contrast. This is consistent with the mass curves in Fig.~\ref{fig:utility} ---
+the $\sqrt{K(N{-}K)}$ weighting keeps spending updates on mastered
+prompts where $u_N$ has already released them --- but the step from
+mass to coverage is a stated \emph{hypothesis}, not a derivation: mass
+is sign-blind, and ``mastered-tail updates sharpen'' requires an
+argument about the sign structure of near-saturated groups (a lone
+failure draws a large negative weight under variance normalization,
+pushing mass off the failure mode and onto the dominant one) that we
+support with the location and timing evidence here rather than prove.
 \emph{When:} the divergence is immediate, not saturation-triggered ---
 GRPO incurs 59--73\% of its total diversity-premium loss
 ($\overline{\passat{8}-\passat{1}}$: $.123\to.042$) within the first
