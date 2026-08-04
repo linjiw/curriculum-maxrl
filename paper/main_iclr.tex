@@ -56,8 +56,10 @@ and relabels that land in the mastered tail sharpen. This predicts an
 estimator-conditioned divergence we then measure: under identical
 curricula, every success-conditioned run grows $\passat{k}$ coverage
 and every GRPO run loses it (nine maze runs, exact permutation
-$p{=}0.0079$; the teacher-deficit direction replicates 2/2 seeds at
-LLM scale). It also predicts a failure mode of
+$p{=}0.0079$). At LLM scale the registered prediction landed on the
+registered run and partially replicated (the deficit's direction in
+2/2 seeds, its registered shape in 1 of 2) --- reported at that
+strength. It also predicts a failure mode of
 recycling we then observe in production --- hindsight arms improve mean
 accuracy while losing coverage, \textbf{recycling-induced sharpening}
 --- and supplies the mitigation: gating relabel admission by the

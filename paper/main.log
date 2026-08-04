@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  4 AUG 2026 07:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  4 AUG 2026 07:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -537,111 +537,111 @@ Package microtype Info: Loading generic protrusion settings for font family
 <figures/fig1_utility.pdf, id=88, 505.89pt x 187.902pt>
 File: figures/fig1_utility.pdf Graphic file (type pdf)
 <use figures/fig1_utility.pdf>
-Package pdftex.def Info: figures/fig1_utility.pdf  used on input line 183.
+Package pdftex.def Info: figures/fig1_utility.pdf  used on input line 185.
 (pdftex.def)             Requested size: 469.75502pt x 174.48326pt.
  [2] [3pdfTeX warning (ext4): destination with the same identifier (name{figure
 .1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.262 \end{proposition}
-                        <./figures/fig1_utility.pdf>]
-<figures/fig4_algorithm.pdf, id=167, 505.89pt x 231.26399pt>
+l.262 A
+       s $p \to 0$, the ratio of MaxRL's expected signal to RLOO's <./figures/f
+ig1_utility.pdf>]
+<figures/fig4_algorithm.pdf, id=166, 505.89pt x 231.26399pt>
 File: figures/fig4_algorithm.pdf Graphic file (type pdf)
 <use figures/fig4_algorithm.pdf>
-Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 357.
+Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 359.
 (pdftex.def)             Requested size: 469.75502pt x 214.74863pt.
  [4]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 381.
+put line 383.
  [5pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.443 
-       <./figures/fig4_algorithm.pdf>]
+l.423 \end{interp}
+                   <./figures/fig4_algorithm.pdf>]
 <figures/fig5_channels.pdf, id=232, 252.945pt x 216.81pt>
 File: figures/fig5_channels.pdf Graphic file (type pdf)
 <use figures/fig5_channels.pdf>
-Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 446.
+Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 448.
 (pdftex.def)             Requested size: 291.2458pt x 249.64383pt.
 <figures/fig2_ladder.pdf, id=234, 505.89pt x 202.356pt>
 File: figures/fig2_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ladder.pdf>
-Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 501.
+Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 503.
 (pdftex.def)             Requested size: 469.75502pt x 187.90506pt.
  [6pdfTeX warning (ext4): destination with the same identifier (name{figure.3})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.537 ... intervention buys speed, not asymptote.}
+l.539 ... intervention buys speed, not asymptote.}
                                                    <./figures/fig5_channels.pdf
 >] [7pdfTeX warning (ext4): destination with the same identifier (name{table.1}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.595 
+l.597 
       ]
 <figures/fig8_bands.pdf, id=275, 505.89pt x 195.129pt>
 File: figures/fig8_bands.pdf Graphic file (type pdf)
 <use figures/fig8_bands.pdf>
-Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 623.
+Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 625.
 (pdftex.def)             Requested size: 469.75502pt x 181.19415pt.
  [8pdfTeX warning (ext4): destination with the same identifier (name{figure.4})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.652 \paragraph
-                {6.6 What does a curriculum add beyond task spread? (Gymnasium 
-<./figures/fig2_ladder.pdf>]
-<figures/fig3_gsm8k.pdf, id=311, 252.945pt x 202.356pt>
+l.653 
+       <./figures/fig2_ladder.pdf>]
+<figures/fig3_gsm8k.pdf, id=310, 252.945pt x 202.356pt>
 File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
 <use figures/fig3_gsm8k.pdf>
-Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 681.
+Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 683.
 (pdftex.def)             Requested size: 258.36668pt x 206.6968pt.
  [9pdfTeX warning (ext4): destination with the same identifier (name{figure.5})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.744 ...ring-controlled multi-seed cell, queued.}
+l.746 ...ring-controlled multi-seed cell, queued.}
                                                    <./figures/fig8_bands.pdf>]
 <figures/fig7_sharpening.pdf, id=348, 505.89pt x 202.356pt>
 File: figures/fig7_sharpening.pdf Graphic file (type pdf)
 <use figures/fig7_sharpening.pdf>
-Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 748.
+Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 750.
 (pdftex.def)             Requested size: 469.75502pt x 187.90506pt.
 
 [10pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.787 
+l.789 
        <./figures/fig3_gsm8k.pdf>] [11pdfTeX warning (ext4): destination with t
 he same identifier (name{figure.7}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.842 not yet saturated.}
+l.844 not yet saturated.}
                           <./figures/fig7_sharpening.pdf>] [12] [13]
 <figures/fig6_gym.pdf, id=446, 505.89pt x 202.356pt>
 File: figures/fig6_gym.pdf Graphic file (type pdf)
 <use figures/fig6_gym.pdf>
-Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 989.
+Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 991.
 (pdftex.def)             Requested size: 469.75502pt x 187.90506pt.
 <figures/fig9_ksweep.pdf, id=447, 245.718pt x 187.902pt>
 File: figures/fig9_ksweep.pdf Graphic file (type pdf)
 <use figures/fig9_ksweep.pdf>
-Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1020.
+Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1022.
 (pdftex.def)             Requested size: 258.36668pt x 197.59822pt.
  [14pdfTeX warning (ext4): destination with the same identifier (name{figure.8}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.1063 
+l.1065 
         <./figures/fig6_gym.pdf>]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Overfull \hbox (62.66167pt too wide) in paragraph at lines 1114--1126
+Overfull \hbox (62.66167pt too wide) in paragraph at lines 1116--1128
  [][] 
  []
 
@@ -652,9 +652,9 @@ LaTeX Warning: `h' float specifier changed to `ht'.
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.1140 
+l.1142 
         <./figures/fig9_ksweep.pdf>]
-Underfull \hbox (badness 1117) in paragraph at lines 1174--1177
+Underfull \hbox (badness 1117) in paragraph at lines 1176--1179
 []\OT1/cmr/m/n/9 (+20) Xiong, W., et al. Reinforce-Ada: an adap-tive sam-pling 
 frame-work un-der non-linear RL ob-jec-tives.
  []
@@ -663,24 +663,24 @@ frame-work un-der non-linear RL ob-jec-tives.
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.1182 \bibitem[Ghosh et al.(2021)]{gcsl}
-                                          Ghosh, D., et al. Learning to reachpd
-fTeX warning (ext4): destination with the same identifier (name{table.3}) has b
-een already used, duplicate ignored
+l.1182 \bibitem[Andrychowicz et al.(2017)]{her}
+                                                Andrychowicz, M., et al.pdfTeX 
+warning (ext4): destination with the same identifier (name{table.3}) has been a
+lready used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.1182 \bibitem[Ghosh et al.(2021)]{gcsl}
-                                          Ghosh, D., et al. Learning to reach]
+l.1182 \bibitem[Andrychowicz et al.(2017)]{her}
+                                                Andrychowicz, M., et al.]
 [17] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 0CB2A3CA3A93033633272FB7EA65AC35;1833.
  ) 
 Here is how much of TeX's memory you used:
- 13256 strings out of 480806
- 193044 string characters out of 5905151
- 547928 words of memory out of 6000000
+ 13254 strings out of 480806
+ 193022 string characters out of 5905151
+ 549285 words of memory out of 6000000
  29957 multiletter control sequences out of 15000+600000
- 430701 words of font info for 266 fonts, out of 8000000 for 9000
+ 430583 words of font info for 265 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,10n,63p,1169b,509s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</us
@@ -713,7 +713,7 @@ e/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/public/cm-super/sfrm1000.pfb></usr/share/texlive/texmf-dist/fonts/ty
 pe1/public/cm-super/sfti0900.pfb>
-Output written on main.pdf (17 pages, 679303 bytes).
+Output written on main.pdf (17 pages, 679182 bytes).
 PDF statistics:
  657 PDF objects out of 1000 (max. 8388607)
  493 compressed objects within 5 object streams
