@@ -512,7 +512,7 @@ stack --- allocation saturates --- and recycling still adds on top of
 the oracle. (b) Frontier-heavy regime: allocation scores exactly zero;
 recycling solves it, and does so equally under uniform sampling
 (.931 vs.\ .928) --- creation, not allocation, is the live channel.
-(c) Maze at matched wall-clock: 6/6 paired seed wins. (d) GSM8K
+(c) Maze at matched wall-clock: 3/3 seeds on both meters. (d) GSM8K
 $2{\times}2$, registered run, error bars = measured same-model eval
 noise (SD .0094): GRPO+teacher is the only cell that regresses
 (pre-registered P-G2; a replication seed did not reproduce it ---
@@ -564,7 +564,9 @@ is discovery, not allocation.}
 \paragraph{6.3 Does the estimator main effect survive real gradients? (maze transformer at matched wall-clock; 1.26M params, 13
 levels, ${\sim}30$ runs, 3 seeds).} Champion (teacher + dense recycling)
 $0.252{\pm}0.005$ final / $0.229{\pm}0.009$ AUC vs.\ uniform
-$0.230{\pm}0.015$ / $0.211{\pm}0.011$; paired deltas positive 6/6 seeds;
+$0.230{\pm}0.015$ / $0.211{\pm}0.011$; paired deltas positive in
+3/3 seeds on both meters (final and AUC --- six correlated contrasts,
+not six seeds);
 22--35\% more optimization steps per GPU-hour. Attribution within that
 gain, stated plainly: matched \emph{wall-clock} lets curriculum arms
 take $1.2$--$1.4\times$ more optimization steps (dead groups skip the
@@ -586,8 +588,11 @@ only the band's boundaries. Safety, stated as what the design
 supports: an estimator \emph{main effect on coverage} --- all five
 MaxRL runs grow $\passat{8}$ (e.g.\ $0.316\to0.348$ under the teacher)
 and all four GRPO runs lose it ($0.308\to0.271$ uniform;
-$0.332\to0.269$ with the teacher), permutation $p{=}0.0079$ on the
-9-run main effect. Whether the teacher \emph{amplifies} GRPO's decay is a
+$0.332\to0.269$ with the teacher). The main-effect statistic,
+stated with its resolution: perfect separation of the 5 MaxRL vs.\ 4
+GRPO runs, one-sided exact permutation $p = 1/\binom{9}{4} = 0.0079$
+--- the design's floor, i.e.\ the strongest statement 9 runs can make,
+reported as zero exceptions rather than as a fine-grained magnitude. Whether the teacher \emph{amplifies} GRPO's decay is a
 factorial (interaction) question this suite is not powered for; the
 GSM8K $2{\times}2$ below tests exactly that cell, pre-registered.
 Inference currency (one convention, every level: smallest $k$ reaching
@@ -609,7 +614,8 @@ $\passat{1}$ \emph{rises} ($+.02$ to $+.14$, every run) --- it funds
 reliability by liquidating easy-band coverage; MaxRL holds L1--3 flat
 ($+.005{\pm}.058$ over 18 runs) and concentrates its gain on the
 frontier band L4--6 ($+.126{\pm}.063$ vs.\ GRPO's $+.057$). The band
-asymmetry is exact-permutation $p{=}0.0001$. This is the observable
+asymmetry is one-sided exact-permutation $p{=}0.0001$ (again the
+design floor, $1/\binom{22}{4}$; zero exceptions). This is the observable
 consequence of the mass curves in Fig.~\ref{fig:utility}: the
 $\sqrt{K(N{-}K)}$ weighting keeps spending updates on mastered prompts
 (sharpening them), where $u_N$ has already released them.
@@ -807,8 +813,12 @@ $1-(1-\passat{1})^{16}$ (ratios $.744/.783/.755$ across tiers) --- the
 baseline our headroom gate measures against. \textbf{Sharpening
 replicates:} at tier 1, recycling
 buys mean@16 $+.046$ ($.278{\pm}.054 \to .324{\pm}.012$) and pays
-$-.049$ of $\passat{16}$ ($.541{\pm}.020 \to .492{\pm}.011$), both
-outside seed noise; the frontier tier moves the same direction.
+$-.049$ of $\passat{16}$ ($.541{\pm}.020 \to .492{\pm}.011$). The
+coverage loss clears both arms' seed spreads ($>2\times$); the mean
+gain clears the treated arm's tight spread but sits within the noisier
+baseline's --- we report it as directionally consistent across seeds
+rather than individually significant. The frontier tier moves the same
+direction.
 \textbf{The timing is dose-then-damage:} recycling's frontier-tier mean
 gain is installed by step 30 --- $+.014{\pm}.008$ paired, all seeds
 positive, at only ${\sim}28\%$ of the eventual relabel dose --- while
