@@ -99,11 +99,11 @@
 \@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and negative results}{15}{section.55}\protected@file@percent }
 \newlabel{sec:limits}{{8}{15}{Limitations and negative results}{section.55}{}}
 \@writefile{toc}{\contentsline {paragraph}{Scale.}{15}{section*.56}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Scope of the surrogate.}{15}{section*.57}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{15}{section*.58}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{15}{section*.59}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{15}{section*.60}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{15}{section.61}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Where the teacher cannot work as specified.}{15}{section*.57}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scope of the surrogate.}{15}{section*.58}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{15}{section*.59}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{15}{section*.60}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{15}{section*.61}\protected@file@percent }
 \bibcite{maxrl}{{1}{2026}{{Tajwar et al.}}{{}}}
 \bibcite{disco}{{2}{2025}{{Li et al.}}{{}}}
 \bibcite{scsdpo}{{3}{2026}{{Liu et al.}}{{}}}
@@ -123,6 +123,7 @@
 \bibcite{hgg}{{17}{2019}{{Ren et al.}}{{}}}
 \bibcite{cher}{{18}{2019}{{Fang et al.}}{{}}}
 \bibcite{skewfit}{{19}{2020}{{Pong et al.}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{16}{section.62}\protected@file@percent }
 \bibcite{eysenbach}{{20}{2020}{{Eysenbach et al.}}{{}}}
 \bibcite{gcsl}{{21}{2021}{{Ghosh et al.}}{{}}}
 \bibcite{ferbach}{{22}{2024}{{Ferbach et al.}}{{}}}
@@ -133,23 +134,24 @@
 \bibcite{starcross}{{27}{2026}{{Strozzi}}{{}}}
 \bibcite{agrae}{{28}{2026}{{Yu et al.}}{{}}}
 \bibcite{sfl}{{29}{2024}{{Rutherford et al.}}{{}}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$.}}{17}{figure.67}\protected@file@percent }
-\newlabel{fig:gym}{{8}{17}{\textbf {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$}{figure.67}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Full details for compressed experiment rungs}{17}{appendix.63}\protected@file@percent }
-\newlabel{app:rungs}{{A}{17}{Full details for compressed experiment rungs}{appendix.63}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.1 control battery (full).}{17}{section*.64}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.5 IsaacLab protocol.}{17}{section*.65}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \textbf  {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\text  {pass@}1$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference.}}{18}{figure.70}\protected@file@percent }
-\newlabel{fig:ksweep}{{9}{18}{\textbf {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\passat {1}$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference}{figure.70}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.6 gym control (full).}{18}{section*.68}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{18}{section*.71}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{18}{section*.72}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.7 posterior diagnostics and harness caveats (full).}{18}{section*.73}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  \ref  {sec:limits}).}{18}{section*.74}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B}Hyperparameters and compute}{19}{appendix.75}\protected@file@percent }
-\newlabel{app:hparams}{{B}{19}{Hyperparameters and compute}{appendix.75}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule.}}{19}{table.77}\protected@file@percent }
-\newlabel{tab:suites}{{2}{19}{Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule}{table.77}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Teacher and recycler knobs: value, provenance, and measured sensitivity.}}{19}{table.79}\protected@file@percent }
-\newlabel{tab:knobs}{{3}{19}{Teacher and recycler knobs: value, provenance, and measured sensitivity}{table.79}{}}
-\gdef \@abspage@last{19}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Full details for compressed experiment rungs}{17}{appendix.64}\protected@file@percent }
+\newlabel{app:rungs}{{A}{17}{Full details for compressed experiment rungs}{appendix.64}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.1 control battery (full).}{17}{section*.65}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.5 IsaacLab protocol.}{17}{section*.66}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.6 gym control (full).}{17}{section*.69}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$.}}{18}{figure.68}\protected@file@percent }
+\newlabel{fig:gym}{{8}{18}{\textbf {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$}{figure.68}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \textbf  {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\text  {pass@}1$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference.}}{18}{figure.71}\protected@file@percent }
+\newlabel{fig:ksweep}{{9}{18}{\textbf {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\passat {1}$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference}{figure.71}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{18}{section*.72}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{18}{section*.73}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.7 posterior diagnostics and harness caveats (full).}{18}{section*.74}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Relabeling in a PPO-family loop: the wiring contract.}{19}{section*.75}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  \ref  {sec:limits}).}{19}{section*.76}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Hyperparameters and compute}{19}{appendix.77}\protected@file@percent }
+\newlabel{app:hparams}{{B}{19}{Hyperparameters and compute}{appendix.77}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule.}}{19}{table.79}\protected@file@percent }
+\newlabel{tab:suites}{{2}{19}{Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule}{table.79}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Teacher and recycler knobs: value, provenance, and measured sensitivity.}}{20}{table.81}\protected@file@percent }
+\newlabel{tab:knobs}{{3}{20}{Teacher and recycler knobs: value, provenance, and measured sensitivity}{table.81}{}}
+\gdef \@abspage@last{20}

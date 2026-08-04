@@ -1121,6 +1121,26 @@ claim, and it is exploratory; the balanced maze factorial and a
 steering-controlled multi-seed LLM cell are the decisive next
 experiments.
 
+\paragraph{Where the teacher cannot work as specified.} Two structural
+limits at production scale, stated as design constraints rather than
+future work. \emph{Posterior starvation is the generic regime}: a
+per-prompt Beta posterior needs multiple visits, but realistic RLVR
+pools see ${\sim}1$ epoch (${\le}2$--3 visits per prompt), so
+FrontierMax as specified is a small-pool instrument; deploying it on
+$10^5$-prompt pools requires coarser state --- bucket-level posteriors,
+a learned difficulty predictor, or warm starts --- and our external
+annotations transferred poorly ($\rho{=}-0.17$), so cold-start from
+off-model labels is not the answer. \emph{The throughput mechanism
+does not transfer}: at matched wall-clock the maze teacher's measured
+value is extra optimization steps from skipping dead groups' backward
+passes, but in generation-dominated LLM pipelines (85\% of step time)
+a dead group has paid its full cost before it is known dead --- the
+relevant LLM-scale comparisons are generation-budget-matched
+(resample-to-fill, prompt pre-filtering), and the teacher's value
+there rests on avoiding the generation itself, which requires the
+posterior it starves for. These two constraints compound, and we state
+them together because they bound the same deployment.
+
 \paragraph{Scope of the surrogate.} Coefficient mass is not gradient
 norm, SNR, or expected improvement (Remark~\ref{rem:scope}) --- it
 omits score-vector geometry, sequence length, token masking, optimizer
@@ -1380,6 +1400,31 @@ tokens) --- sharpening visible in a currency where token entropy is
 ambiguous. Prompt-uniqueness figures for the replacement confound:
 ${\sim}34\%$ unique prompts seen by teacher arms vs.\ ${\sim}43\%$
 uniform.
+
+\paragraph{Relabeling in a PPO-family loop: the wiring contract.}
+For adopters (the details a config cannot express). \emph{Placement}:
+relabeling runs after reward computation and \textbf{before}
+\texttt{compute\_log\_prob} --- old log-probs must be computed under
+the \emph{rewritten} conditioning, making the relabeled group an
+on-policy ML term with the estimator's own weights, not a
+policy-gradient ratio against stale context (our gridworld ablation
+priced the stale-context mistake at $-0.06$ AUC, worse than no
+hindsight). \emph{Rewrite}: the prompt's goal slot and the response's
+goal mentions are both rewritten (token IDs, attention mask, and
+position IDs rebuilt; 2-D RoPE only --- 3-D mrope is refused loudly);
+the answer artifact is untouched by construction. \emph{Group
+semantics}: each parseable failure relabels to its own achieved goal
+and keeps its group id, so one group can mix relabeled tasks;
+unparseable rollouts stay failures, preserving contrast ($K<N$). The
+group contrast is then ``reached some verified goal'' vs.\ ``reached
+none'' --- coarser than 1-of-$N$ of a single task, pre-registered as a
+deviation, with the verl-normalized advantage verified equal to
+$N\times$ the reference weights in direction. \emph{Hygiene}: the
+curriculum posterior observes pre-relabel scores only; no KL-to-
+reference is applied to relabeled groups in our runs
+(\texttt{kl\_coef=0}). Reference implementation in the repository
+(\texttt{verl/utils/hindsight.py}, ${\sim}270$ lines, with CPU
+integration tests).
 
 \paragraph{Jugs suite (pool-conditionality; \S\ref{sec:limits}).} Tier grid t0--t4
 (2--5 jugs, disjoint min-moves bands, 200 unique tasks/tier);
