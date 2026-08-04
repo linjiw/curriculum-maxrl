@@ -326,7 +326,13 @@ spending rollouts, (ii) its zeros are exact --- at $p\in\{0,1\}$ the
 estimator emits no gradient of any norm --- and (iii) on the
 exact-gradient testbed it \emph{ties} the true first-order expected
 improvement as a task ranking (Spearman within $.005$ at every
-snapshot; artifact \texttt{results\_bridge.json}). What it does not
+snapshot, and exactly $1.0$ against the full exact transfer matrix ---
+one expected group per task, exact $\Delta p$ on every other task ---
+at three training snapshots; artifacts \texttt{results\_bridge.json},
+\texttt{results\_transfer\_matrix.json}). That tie is a property of
+\emph{shared-prefix} task structure, where activity and transfer
+align; on pools without it, activity ranks what a task can emit, not
+where it helps (\S 6.5--6.6 measure that gap). What it does not
 claim to be is \emph{the} optimal sequential utility, and no
 state-local functional is: on independent tasks the true
 final-performance optimum is a planning solution (trajectory-knapsack
@@ -463,9 +469,18 @@ blanket guarantee. On our validation testbed the laws match by
 construction, so cosine probes there are consistency checks, not
 evidence (several null relabeling schemes produce identical cosines);
 the evidence that the relabel direction carries information is
-behavioral --- the placebo decomposition below. What the
-distribution shift costs in general is an open, environment-specific
-question.
+behavioral --- the placebo decomposition below. We measured the two
+gaps the remark names where they are measurable (exact chains, 5
+seeds; artifact \texttt{results\_proposal\_shift.json}): the applied
+relabel update's cosine against the exact fresh-destination gradient
+direction is $0.93$, the relabeled group's success rate exceeds the
+true fresh destination pass rate by only $+.003$ (selection guarantees
+$K'{\ge}1$, so the bias exists but is small here), and
+\emph{cross-fitting} the destination choice (select on half the group,
+update with the other half) removes the adaptive reuse at a real cost:
+alignment drops to $0.82$ and AUC falls $.883\to.829$, because the
+selected successes leave the update half. The off-policy caveat is
+real; its sign is environment-specific.
 \end{interp}
 
 Two contracts keep practice on the proof's side: \textbf{(1)
@@ -613,11 +628,24 @@ contributes nothing because there is nothing learnable to allocate
 toward. Equivalently: a designer who hand-added the achieved sub-goals
 to the pool would also escape the zero --- what recycling buys is
 \emph{discovering} that sub-pool from the policy's own failures, with
-no task engineering.
+no task engineering. One loss-level alternative remains: the MaxRL
+paper's own Eq.~(10) keeps the control-variate term $-\frac1N\sum_i
+S_i$ on all-fail groups, so that estimator is \emph{not} silent at
+$K{=}0$ ($\mathbb{E}[\hat g \mid K{=}0] = \nabla p/(1-p)$, MC-verified).
+We ran it (5 seeds, matched budget; artifact
+\texttt{results\_fullcv\_baseline.json}): on this pool the full-CV
+variant spends 100\% of its update norm on all-fail groups and still
+scores $0.000$ in every seed, with or without the teacher --- the
+all-fail term pushes down every sampled action symmetrically and
+cannot ignite a pool this deep, while recycling under either variant
+reaches $0.98$. On the balanced pool the two variants tie (paired
+$\Delta$AUC straddles zero, 5 seeds).
 \takeaway{Where nothing is learnable at budget, sampling policy is
 irrelevant --- uniform and teacher tie at zero without recycling and
-tie at 0.93 with it. Creation is the only live channel, and its value
-is discovery, not allocation.}
+tie at 0.93 with it. Even the estimator family's nonzero all-fail
+update (full control variate) stays at zero here: creation is the
+only channel we tested that ignites a dead pool, and its value is
+discovery, not allocation.}
 
 \paragraph{6.3 Does the estimator main effect survive real gradients? (maze transformer at matched wall-clock; 1.26M params, 13
 levels, ${\sim}30$ runs, 3 seeds).} Champion (teacher + dense recycling)
@@ -667,7 +695,17 @@ same artifact. The confirmatory design this motivates is a balanced
 $\{$MaxRL, GRPO$\}\times\{$uniform, teacher$\}$ factorial over at
 least six independent seed blocks with identical warmstarts and one
 prespecified endpoint --- fewer than six blocks cannot reach
-two-sided $p<.05$ even with unanimous signs.
+two-sided $p<.05$ even with unanimous signs. At the exact-gradient
+rung, where the design is cheap, we already ran its schedule-matched
+core: freeze each seed's \emph{realized} prompt sequence (one recorded
+teacher trajectory, one uniform), then replay the identical sequence
+under each estimator from the same init --- the estimator ordering on
+exact summed $\passat{8}$ survives with the schedule held fixed
+(MaxRL over GRPO in 10/10 seed$\times$schedule pairs; artifact
+\texttt{results\_schedule\_matched.json}), with the caveat that on
+that learnable-everywhere pool GRPO still gains coverage --- the
+neural-scale \emph{loss} is what the balanced maze factorial must
+test.
 Whether the teacher \emph{amplifies} GRPO's decay is a
 factorial (interaction) question this suite is not powered for; the
 GSM8K $2{\times}2$ below tests exactly that cell, pre-registered.

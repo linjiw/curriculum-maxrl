@@ -115,3 +115,35 @@ still single-run-conditional, and formatting/anonymization work is undone.
   5 corrected (GRESO title+venue, DisCO title, SC-SDPO author, 
   Reinforce-Ada retitle, LILO author list). N1 CLOSED: fig9_ksweep
   (maze crossing) added to App B. Site + both PDFs pushed for review.
+
+- 2026-08-04 expert-guidance pass (PR #2 merged; 54pp review under
+  research_guidance/2026-08-04/). Prose P0s resolved in the parallel
+  math-review pass (69b7704). New EXPERIMENTS closing the guidance's
+  evidence gaps, all committed with artifacts:
+  - verify_guidance_math.py — MC-confirms the three-estimator table
+    (raw/full-CV/practical masses), T=N-1 gradient identity, the
+    factorization E[g]=nu_N(p)(mu+−mu−), the nonzero full-CV all-fail
+    update ∇p/q, the exact peak, and the DEPLOYED sample-SD GRPO tail
+    ratios (√N hard, (N−1)/√N easy) that replace the population-SD
+    √(N−1) claims.
+  - run_fullcv_baseline.py (P0.5/P1.1) — the full control-variate
+    all-fail baseline the guidance demanded before saying "only
+    channel": full-CV scores 0.000 in every seed on the frontier-heavy
+    pool while recycling ignites either variant to 0.98; §6.2 now
+    reports it.
+  - run_schedule_matched.py (P1.2, exact rung) — frozen realized
+    schedules replayed under MaxRL/GRPO/RLOO from identical inits:
+    estimator coverage ordering survives schedule matching 10/10
+    paired contrasts; §6.3 now points to it as the schedule-matched
+    core of the confirmatory factorial.
+  - run_proposal_shift.py — hindsight proposal-law diagnostics
+    (cos 0.93 vs exact fresh-destination direction, p_Q−p_Π=+.003)
+    + cross-fitted destination selection (alignment 0.82, AUC
+    .883→.829: adaptive reuse is mildly helpful here); cited in the
+    hindsight remark's interpretation.
+  - run_transfer_matrix.py — exact activity-vs-transfer matrix;
+    Spearman(activity, one-step pool value)=1.0 on chains at 3
+    snapshots; rem:scope now scopes the tie to shared-prefix pools.
+  Remaining from guidance: GPU items unchanged (E-LLM-1b running,
+  corrected-gate 3-seed sweep, GRPO-own-teacher + no-std arms queued);
+  balanced maze factorial (≥6 seed blocks) still the big open design.
