@@ -9,6 +9,12 @@ Pipeline per run:
   3. Periodic eval on a fixed held-out set per level (pass@1 greedy-free,
      sampled) -> results JSONL.
 
+Important historical-semantics note: ``--hindsight`` and
+``--hindsight-dense`` below create isolated positive imitation examples
+with per-trajectory reached-cell conditioning. They are legacy recycler
+modes, not the common-destination, mixed-outcome group relabeler specified by
+the revised paper. Existing maze artifacts must be interpreted accordingly.
+
 Usage:
   python3 train.py --teacher uniform --estimator maxrl --steps 300 --seed 0
 """
@@ -93,7 +99,7 @@ class FrontierTeacher(Teacher):
 
 
 class LearnabilityTeacher(Teacher):
-    """SFL-style u(p) = p(1-p) — the N=1 special case of frontier utility."""
+    """SFL-style u(p) = p(1-p) — practical ``nu_N`` at N=2."""
 
     def __init__(self, n_rollouts: int, seed: int, floor: float = 0.15):
         super().__init__(n_rollouts, seed)

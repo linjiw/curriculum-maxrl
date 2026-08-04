@@ -1,11 +1,11 @@
 """Countdown (TinyZero/reasoning-gym) as a TaskSpace — the E-LLM-2 design.
 
-The flagship hindsight task at LLM scale (NEXT_EXPERIMENTS.md): a failed
-trace that uses the numbers correctly still evaluates to SOME value v, so
-relabeling target := v yields an EXACT success of a same-tier task (P6
-contract 1), and the conditioning rewrite (contract 2) is a template edit —
-swap the target in the prompt. No 2024–2026 work does this (agent-verified);
-the niche is open.
+A failed trace that uses the numbers correctly still evaluates to a value
+``v``. The corrected adapter chooses one achieved value as a shared anchor,
+rewrites every row to that target, and re-verifies the whole group. This
+produces a genuine fixed-destination contrast when ``0 < K' < N``. Historical
+Countdown runs used per-trace targets instead; they do not validate this
+corrected contract.
 
 Task bins for the teacher = difficulty tiers (operand count), matching the
 maze's goal-distance axis. Individual instances stream within a tier; the
@@ -158,26 +158,47 @@ class CountdownSpace:
         return GroupResult(task_id, rewards, trajectories=trajs, infos=infos)
 
     def relabel(self, group: GroupResult):
-        """Dense exact relabel: each failed trace that reached SOME integer
-        value becomes a success of (same numbers, target=v), same tier,
-        with the prompt's target slot rewritten (contract 2)."""
+        """Relabel the entire group to one achieved integer target.
+
+        The most frequent admissible achieved value is used as the shared
+        anchor (ties prefer the value closest to the requested target, then
+        the smaller value). Every prompt is rewritten and every completion
+        is re-verified under that anchor. Constant destination groups are
+        rejected because a centered estimator requires ``0 < K' < N``.
+        """
         info = group.infos[0]
         numbers, old_target = info["numbers"], info["target"]
-        new_rewards, new_trajs = [], []
+        achieved = [achieved_value(t["completion"], numbers)
+                    for t in group.trajectories]
+        counts = {
+            value: achieved.count(value)
+            for value in set(achieved)
+            if value is not None and value != old_target
+        }
+        n = len(group.trajectories)
+        candidates = [value for value, count in counts.items()
+                      if 0 < count < n]
+        if not candidates:
+            return None
+        anchor = min(
+            candidates,
+            key=lambda value: (-counts[value], abs(value - old_target), value),
+        )
+
+        new_trajs = []
         for traj in group.trajectories:
-            v = achieved_value(traj["completion"], numbers)
-            if v is None or v == old_target:
-                new_rewards.append(0.0)
-                new_trajs.append(traj)
-                continue
-            rewritten = rewrite_prompt(traj["prompt"], old_target, v)
+            rewritten = rewrite_prompt(traj["prompt"], old_target, anchor)
             if rewritten is None:
-                new_rewards.append(0.0)
-                new_trajs.append(traj)
-                continue
-            new_rewards.append(1.0)
-            new_trajs.append({"prompt": rewritten, "completion": traj["completion"],
-                              "relabeled_target": v})
-        if not any(new_rewards):
+                return None
+            new_trajs.append({
+                "prompt": rewritten,
+                "completion": traj["completion"],
+                "relabeled_target": anchor,
+            })
+        new_rewards = np.asarray([
+            float(verify(t["completion"], numbers, anchor))
+            for t in new_trajs
+        ])
+        if not 0 < new_rewards.sum() < n:
             return None
         return group.task_id, np.asarray(new_rewards), new_trajs

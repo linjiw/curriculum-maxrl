@@ -19,7 +19,7 @@ from frontier_rl import (
     rloo_weights,
 )
 from frontier_rl.adapters.skill_chain import SkillChainSpace
-from frontier_rl.adapters.grid_reach import GridReachSpace
+from frontier_rl.adapters.grid_reach import GridReachSpace, MOVES
 from frontier_rl.adapters.cosmos_libero import (CosmosLiberoSpace,
                                                 MasteryFrontierTeacher,
                                                 PoisonRateMeter)
@@ -117,14 +117,40 @@ def test_hindsight_contract_gridworld():
         new_task, new_r, new_trajs = rel
         assert 0 <= new_task < env.n_tasks
         assert new_r.sum() >= 1, "relabel must create at least one success"
+        assert new_r.sum() < len(new_r), "destination group must retain contrast"
         ring = new_task + 1
+        shared_goal = tuple(int(v) for v in new_trajs[0]["goal"])
         for r, info, nt in zip(new_r, g.infos, new_trajs):
-            end_ring = max(abs(info["final_pos"][0]), abs(info["final_pos"][1]))
-            if r == 1.0:
-                # exactness (P6 contract 1): success truly ended on that ring
-                assert end_ring == ring
-                # conditioning (contract 2): goal rewritten to achieved cell
-                assert np.array_equal(nt["goal"], info["final_pos"])
+            assert tuple(int(v) for v in nt["goal"]) == shared_goal
+            visited = [tuple(int(v) for v in (np.asarray(pos) + MOVES[action]))
+                       for pos, action in zip(nt["positions"], nt["actions"])]
+            assert r == float(shared_goal in visited)
+        assert max(abs(shared_goal[0]), abs(shared_goal[1])) == ring
+
+    # A row that crosses the shared anchor and later ends elsewhere must
+    # still be a success under the reach-at-any-time verifier.
+    manual = GroupResult(
+        2,
+        np.zeros(3),
+        trajectories=[
+            {"positions": [np.array([0, 0])], "actions": [0],
+             "goal": np.array([3, 0])},
+            {"positions": [np.array([0, 0]), np.array([-1, 0])],
+             "actions": [0, 1], "goal": np.array([3, 0])},
+            {"positions": [np.array([0, 0])], "actions": [2],
+             "goal": np.array([3, 0])},
+        ],
+        infos=[
+            {"final_pos": np.array([-1, 0])},
+            {"final_pos": np.array([0, 0])},
+            {"final_pos": np.array([0, -1])},
+        ],
+    )
+    manual_rel = env.relabel(manual)
+    assert manual_rel is not None
+    _, manual_rewards, manual_trajs = manual_rel
+    assert np.array_equal(manual_rewards, [1, 1, 0])
+    assert all(np.array_equal(t["goal"], [-1, 0]) for t in manual_trajs)
     print("hindsight contract OK")
 
 
@@ -555,24 +581,27 @@ def test_countdown_llm_adapter():
     assert "equals 20" in r and r.endswith("21 rules.")
     assert rewrite_prompt("no slot here 21", 21, 20) is None
 
-    # end-to-end: mock LLM that always produces (a+b) regardless of target
-    pool = [CountdownInstance([3, 7], 10, 0), CountdownInstance([3, 7], 99, 0),
+    # End-to-end: one all-fail group with two achieved values. The adapter
+    # must choose one shared anchor, rewrite every row, and retain failures.
+    pool = [CountdownInstance([3, 7], 99, 0),
             CountdownInstance([2, 5, 8], 80, 1)]
     def mock_llm(prompt, n):
         nums = re.findall(r"\[([\d, ]+)\]", prompt)[0].split(",")
         a, b = int(nums[0]), int(nums[1])
-        return [f"<think>.</think><answer>{a} + {b}</answer>"] * n
+        forms = [f"{a} + {b}", f"{b} - {a}"]
+        return [f"<think>.</think><answer>{forms[i % 2]}</answer>"
+                for i in range(n)]
     import re
     env = CountdownSpace(pool, tiers=[2, 3], rollout_fn=mock_llm, seed=0)
-    # target-99 group: all fail, but every trace reached 10 -> dense relabel
+    # Target-99 group: all fail; half reach 10 and half reach 4.
     g = env.rollout_group(0, 4)
-    if g.rewards.sum() == 0:                       # instance was target=99
-        rel = env.relabel(g)
-        assert rel is not None
-        new_task, new_r, new_trajs = rel
-        assert new_task == 0 and new_r.sum() == 4
-        assert all("equals 10" in t["prompt"] for t in new_trajs)
-        assert all(t["relabeled_target"] == 10 for t in new_trajs)
+    assert g.rewards.sum() == 0
+    rel = env.relabel(g)
+    assert rel is not None
+    new_task, new_r, new_trajs = rel
+    assert new_task == 0 and np.array_equal(new_r, [1, 0, 1, 0])
+    assert all("equals 10" in t["prompt"] for t in new_trajs)
+    assert all(t["relabeled_target"] == 10 for t in new_trajs)
     print("countdown LLM adapter OK")
 
 

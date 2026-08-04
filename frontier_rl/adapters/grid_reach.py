@@ -7,10 +7,10 @@ goal-conditioned softmax over 4 moves with a tabular feature (relative goal
 direction × distance bucket) — deliberately simple so the framework, not
 the function approximator, is what's under test.
 
-Hindsight: a failed episode's final cell IS a reached goal; relabel the
-group to the ring of the farthest final cell, marking rollouts that ended
-in that ring as successes (exact under the env's own verifier — P6's
-contract).
+Hindsight: every cell visited after an action is a reached goal. The corrected
+adapter chooses one final cell as a shared destination, rewrites every row
+to that cell, and re-scores every trajectory with the original reach-at-any-
+time verifier. The ring remains the coarse task ID used by the teacher.
 
 This mirrors Fetch-style sparse-reward reach tasks: replace `step()` with a
 mujoco/bullet sim and `ring of final cell` with `distance-band of achieved
@@ -91,25 +91,44 @@ class GridReachSpace:
         return GroupResult(task_id, np.array(rewards), trajs, infos)
 
     def relabel(self, group: GroupResult):
-        """Relabel to the farthest reached ring, REWRITING the goal in each
-        successful trajectory to its own final cell (interfaces.py contract 2:
-        goal-relative features must be recomputed against the achieved goal,
-        else goal-A-conditioned actions get credited to goal B)."""
-        rings = [max(abs(i["final_pos"][0]), abs(i["final_pos"][1]))
-                 for i in group.infos]
-        best = max((r for r in rings if 1 <= r <= self.R), default=0)
-        if best < 1:
+        """Relabel every row to one shared achieved cell and re-score it."""
+        cells = [tuple(int(v) for v in info["final_pos"])
+                 for info in group.infos]
+        n = len(cells)
+        candidates = [cell for cell in set(cells)
+                      if 1 <= max(abs(cell[0]), abs(cell[1])) <= self.R]
+
+        def reached(traj, cell):
+            return any(
+                tuple(int(v) for v in (np.asarray(pos) + MOVES[action])) == cell
+                for pos, action in zip(traj["positions"], traj["actions"])
+            )
+
+        rescored = {
+            cell: np.asarray([float(reached(traj, cell))
+                              for traj in group.trajectories])
+            for cell in candidates
+        }
+        candidates = [cell for cell in candidates
+                      if 0 < rescored[cell].sum() < n]
+        if not candidates:
             return None
-        new_rewards = np.array([1.0 if r == best else 0.0 for r in rings])
+
+        # Prefer more verified support, then a farther ring, then
+        # lexicographic order.
+        anchor = min(
+            candidates,
+            key=lambda cell: (-rescored[cell].sum(),
+                              -max(abs(cell[0]), abs(cell[1])), cell),
+        )
+        ring = max(abs(anchor[0]), abs(anchor[1]))
+        new_rewards = rescored[anchor]
         new_trajs = []
-        for traj, info, r in zip(group.trajectories, group.infos, rings):
-            if r == best:
-                nt = dict(traj)
-                nt["goal"] = info["final_pos"]   # achieved goal
-                new_trajs.append(nt)
-            else:
-                new_trajs.append(traj)
-        return best - 1, new_rewards, new_trajs
+        for traj in group.trajectories:
+            nt = dict(traj)
+            nt["goal"] = np.asarray(anchor, dtype=int)
+            new_trajs.append(nt)
+        return ring - 1, new_rewards, new_trajs
 
     # ---- Policy ----
     def update(self, task_id: int, trajectories, weights) -> None:

@@ -224,10 +224,11 @@ def allocate_rollouts_adaptive(teacher: Teacher, task_ids: np.ndarray,
     """Compute-indexed curriculum: split a fixed rollout budget across the
     selected tasks so that harder tasks get more rollouts.
 
-    MaxRL's truncation order equals the group size (T = N), so giving a hard
-    task a larger N simultaneously (a) raises pass@N, the chance its group is
-    not dropped, and (b) raises the fidelity of the ML approximation on that
-    task.  Allocation ~ 1/max(p̂, 1/n_max), clipped to [n_min, n_max] and
+    Practical drop-all-fail MaxRL has order T = N-1 (raw/full-CV are order
+    N), so giving a hard task a larger N simultaneously (a) raises pass@N,
+    the chance its group is not dropped, and (b) raises the approximation
+    order on that task. Allocation ~ 1/max(p̂, 1/n_max), clipped to
+    [n_min, n_max] and
     renormalized to the budget.
     """
     p_hat = np.array([
