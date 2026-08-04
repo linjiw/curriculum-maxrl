@@ -110,3 +110,8 @@ still single-run-conditional, and formatting/anonymization work is undone.
   is float packing ([t] -> [h]/[tb] consolidation + wrapping Alg 1 and
   fig2 onto one page), then §6.7's remaining length after E-LLM-1b
   verdicts replace the interim seed-2 text.
+
+- 2026-08-04 S2 CLOSED: all 15 bibliography entries web-verified;
+  5 corrected (GRESO title+venue, DisCO title, SC-SDPO author, 
+  Reinforce-Ada retitle, LILO author list). N1 CLOSED: fig9_ksweep
+  (maze crossing) added to App B. Site + both PDFs pushed for review.
