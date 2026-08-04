@@ -2,16 +2,17 @@
 
 | Reviewer | Background | Rating | Confidence |
 |---|---|---|---|
-| R1 | RL theory (bandits, UED, curricula) | (rerunning) | — |
+| R1 | RL theory (bandits, UED, curricula) | **6** | 4 |
 | R2 | RLVR practitioner (verl, 7B+ pipelines) | **4** | 4 |
 | R3 | Methodology / statistics | **5** | 4 |
 | R4 | HER / goal-conditioned RL | **5** | 4 |
 | R5 | Senior AC | **6** | 4 |
 
-Current average ≈ 5.0 — borderline-reject territory at ICLR. The
-distribution matches R5's prediction ("polarizes 4-vs-8 on
-scale-vs-concept"), skewed low because three of four reviewers weight
-LLM-scale evidence heavily.
+**Final average 5.2 (4,5,5,6,6)** — borderline at ICLR; would likely
+land reject-with-encouragement or borderline-AC-discussion. The
+distribution matches R5's prediction. Every reviewer independently
+scored the honesty apparatus as the best they'd seen and the LLM-scale
+evidence as the binding constraint.
 
 ## Convergent demands (multiple reviewers, highest priority)
 
@@ -76,3 +77,26 @@ every LLM-scale sentence to what the runs support. The lasting-value
 framing to protect in all edits: "measure pass@k under your data
 intervention, conditioned on your estimator" + sharpening named before
 it ships at 70B.
+
+## R1 (theory) additions to the plan
+
+- NEW DECISIVE ABLATION (R1-Q3, unanimousable): Dr.-GRPO / no-std arm.
+  Theory predicts mass ~ RLOO => easy-band coverage held. Sharpest
+  falsifiable consequence; also disambiguates success-conditioning vs
+  variance normalization. Maze arm cost ~2.4h x 3 seeds. QUEUE IT.
+- State the mass->coverage bridge as an explicit hypothesis (text fix).
+- Reframe partition as exposition; put Prop 2's tail ratios forward as
+  the estimator-specific content (text fix, aligns with R5-W6).
+- Quantify Lemma 1 magnitude at N=16 (one MC cell, CPU).
+- Step-matched uniform-only GRPO arm (R1-Q7) — partially answerable
+  from existing step-matched analysis; check opus5 data first.
+
+## Final convergence map (what >=3 reviewers demand)
+
+1. Multi-seed steering-controlled LLM cell (R1,R2,R3,R5) — RUNNING.
+2. GRPO-family estimator ablations: own-teacher (R2,R5) + no-std
+   (R1) — own-teacher QUEUED; no-std arm to add to same sweep.
+3. Gate at designed operating point >=3 seeds (R2,R3,R4) — TO QUEUE.
+4. Section 6 restructure + claims table (R1,R2,R5) — after E-LLM-1b.
+5. Scale honesty: abstract/title claims vs 360M evidence (R1,R2,R3,R5)
+   — partially fixed; final pass after verdicts land.
