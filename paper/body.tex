@@ -241,10 +241,25 @@ and $\mathbb{E}[2(1-\tfrac KN)\mathbf 1\{K\ge1\}]
 = 2(\Pr[K\ge1] - p) = 2(\passat{N}-\passat{1})$. The sampling utility
 used everywhere below (figures, Algorithm~\ref{alg:frontiermax}, code)
 is $u_N$; the factor two matters only when quoting exact mass, and we
-carry it explicitly as $A_N = 2u_N$. A useful exact companion:
+carry it explicitly as $A_N = 2u_N$. Two exact companions tie mass to
+the gradient. \emph{Factorization}: writing $\mu_{\pm}(x) =
+\mathbb{E}[S \mid r{=}1/0, x]$ for the success/failure-conditioned
+score means, exchangeability gives, for every group size,
+\begin{equation}
+\mathbb{E}[\hat g \mid x] \;=\; u_N(p)\,\big(\mu_+(x) - \mu_-(x)\big),
+\label{eq:factorization}
+\end{equation}
+so $u_N$ is exactly the estimator-controlled scalar multiplying the
+prompt's success--failure score contrast --- the part of the expected
+update a sampler can know before rolling out; the contrast (and where
+it transfers) is the part it cannot. \emph{Weight view}: since
+$\mu_+ - \mu_- = \nabla p/(p(1-p))$,
+Eq.~\eqref{eq:factorization} is equivalent to
 $u_N(p) = p(1-p)\,w_{N-1}(p)$ with $w_T(p) = (1-(1-p)^T)/p$ the
 truncated weight function of Lemma~\ref{lem:trunc} --- mass and the
 practical estimator's weight view are linked, not identical objects.
+(Both identities MC-verified; artifact
+\texttt{verify\_guidance\_math.json}.)
 \end{proposition}
 \begin{interp}
 The estimator's expected coefficient mass on a prompt is twice the

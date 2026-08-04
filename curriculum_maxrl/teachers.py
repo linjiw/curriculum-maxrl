@@ -157,11 +157,13 @@ class AdvMassTeacher(Teacher):
     """Teacher driven by the *exact* expected MaxRL advantage mass.
 
     THEORY.md section 2: for a group of N rollouts, the expected total
-    |advantage| the MaxRL estimator emits on a prompt with pass rate p is
-    2*(pass@N(p) - p) = 2*((1-(1-p)^N) - p) — the probability the prompt is
-    solvable within N attempts but not within one.  Sampling proportional to
-    this quantity maximizes expected learning signal per group.  Thompson
-    sampling over the Beta posterior supplies optimism.
+    |advantage| (coefficient mass) the MaxRL estimator emits on a prompt
+    with pass rate p is 2*(pass@N(p) - p) = 2*((1-(1-p)^N) - p) — the
+    probability the prompt is solvable within N attempts but not within
+    one.  Sampling proportional to this quantity maximizes expected
+    coefficient mass per group (a pre-rollout surrogate, not gradient
+    norm; see paper rem:scope).  Thompson sampling over the Beta
+    posterior supplies optimism.
 
     ``power`` (VALIDATION.md V6): sample ∝ u^power.  Proportional sampling
     (power=1) maximizes mass per draw, but learning compounds — steps on the
