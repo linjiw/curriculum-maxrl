@@ -253,8 +253,15 @@ within one. Coefficient mass is a \emph{surrogate} for learning signal
 (Remark~\ref{rem:scope}), but its two zeros are exact, and they anchor
 three regimes of difficulty: a \emph{dead zone} at $p = 0$
 (nothing to condition on; under the current policy and support,
-sampling alone cannot produce a success there), a \emph{learnable
-region} with a unique interior peak at
+sampling alone cannot produce a success there --- and at small $p > 0$
+a task is \emph{operationally} dead at budget $(B,N)$ when its
+live-group probability $1 - (1 - \ell_N(p))^{B}$, with
+$\ell_N(p) = 1 - p^N - (1-p)^N$ and $B$ its share of groups, is too
+small to sustain training: on the frontier-heavy pool of \S 6.2
+($p \le 10^{-5}$, ${\sim}133$ groups per task) that probability is
+${\le}2\%$ per task, and the one live group observed across all
+uniform seeds did not ignite --- dead in the budgeted sense, not by
+fiat), a \emph{learnable region} with a unique interior peak at
 $p^* = 1 - N^{-1/(N-1)} \approx \ln N/N$ (unique because
 $u_N'' = -N(N-1)(1-p)^{N-2} < 0$), and a \emph{mastered tail} at
 $p = 1$ (no contrast left). The regimes are continuous --- the only
