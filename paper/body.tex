@@ -461,7 +461,8 @@ group-rollout loop (marked $\triangleright$).}
   failures, so the group retains contrast ($K < N$)
 \STATE $\triangleright$ \quad admit the relabel only if
   $\hat p_{g'} \le$ \texttt{gate\_max\_p} \hfill(the gate: refuse the
-  mastered tail)
+  mastered tail; never-seen destinations start at the Beta(1,1) prior
+  $\hat p = .5$, admitted at the default threshold)
 \STATE one policy-gradient step on live $+$ admitted relabeled groups
 \end{algorithmic}
 \end{algorithm}
@@ -806,7 +807,7 @@ budget to the frontier. Coverage is the currency that sees it.}
 \paragraph{6.5 When does allocation \emph{not} pay? (IsaacLab legged
 locomotion, pre-registered null).} A 5-arm Anymal-C rough-terrain pilot
 (one seed, run by an independent team on a co-designed protocol;
-App.~\ref{app:rungs}) lands its pre-registered null exactly: on a
+App.~\ref{app:rungs}) is consistent with its pre-registered null --- underpowered alone at one seed, weight-bearing only jointly with the maze and Countdown regime evidence: on a
 terrain grid where every level is learnable at budget, the stock greedy
 curriculum beats the frontier teacher outright (mean pass .372 vs.\
 .278). Read with the maze step-matched analysis and Countdown, the
