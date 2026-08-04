@@ -19,6 +19,15 @@
 \newcommand{\takeaway}[1]{\par\vspace{3pt}\noindent\fcolorbox{black!20}{black!4}{\parbox{0.96\linewidth}{\small\textbf{Takeaway.} #1}}\vspace{4pt}}
 \newcommand{\passat}[1]{\text{pass@}#1}
 
+% float packing: relax LaTeX's conservative float fractions so figure
+% pages fill and floats share pages with text
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.8}
+\setcounter{topnumber}{3}
+\setcounter{totalnumber}{5}
+
 \title{The Estimator Decides: What Curricula and Failure\\
 Recycling Can and Cannot Do in RL with Verifiable Rewards}
 \author{Anonymous authors\\
@@ -348,9 +357,9 @@ where both failure modes live (\S\ref{sec:experiments}). One line:
 \emph{the teacher allocates, hindsight creates, the estimator decides
 whether either is safe.}
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
-\includegraphics[width=\linewidth]{figures/fig4_algorithm}
+\includegraphics[width=0.85\linewidth]{figures/fig4_algorithm}
 \caption{\textbf{One FrontierMax step.} A Thompson-sampled posterior
 allocates rollouts by the derived utility; live groups train with
 unmodified MaxRL weights; dead groups are relabeled to the sub-goal they
@@ -372,7 +381,7 @@ the difficulty band itself --- location, width, and $N$-scaling ---
 which is exactly where competing curricula spend their
 hyperparameters.
 
-\begin{algorithm}[t]
+\begin{algorithm}[tb]
 \caption{FrontierMax: one step. Three lines differ from a standard
 group-rollout loop (marked $\triangleright$).}
 \label{alg:frontiermax}
@@ -437,7 +446,7 @@ fixed task pools, $+0.01$ on one-shot task streams --- the gain is
 proportional to how much a relabeled skill can compound, and task-set
 fixedness is the single most important regime variable we found.
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 \includegraphics[width=0.5\linewidth]{figures/fig5_channels}
 \caption{\textbf{The partition as a map of the method.} The teacher
