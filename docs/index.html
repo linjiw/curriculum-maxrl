@@ -186,7 +186,7 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <body>
 
 <header class="hero">
-  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-07-30</p>
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-04</p>
   <h1>The estimator decides</h1>
   <p class="lede">
     RL with verifiable rewards leans on two data-level fixes — <em>difficulty curricula</em>
@@ -194,12 +194,15 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     as successes of what they actually achieved). Both are treated as objective-agnostic
     add-ons. <strong>They are not.</strong> We derive the curriculum from the estimator's own
     algebra — a prompt's expected learning signal is exactly
-    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong> — and use it to predict, pre-register, and
+    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>, whose two zeros partition difficulty into a
+    dead zone, a learnable band, and a mastered tail — and use it to predict, pre-register, and
     confirm two failure modes nobody was measuring: the <em>same</em> curriculum that trains
     stably under MaxRL <strong>degrades GRPO</strong> (maze + LLM scale), and recycling buys
     mean accuracy <strong>with pass@k coverage</strong> (recycling-induced sharpening — a new
     finding). The same algebra supplies the fix: gate relabels by their destination's pass
-    rate, and coverage comes back with most of the gain kept.
+    rate, and coverage comes back with most of the gain kept. The claim's boundary is measured
+    too: a pre-registered fifth suite whose band collapses to one template stratum defeats
+    <em>every</em> estimator — the partition needs a graded band to act on.
   </p>
   <div class="card" style="margin-top:18px">
     <p class="eyebrow" style="margin-bottom:8px">Three headline results</p>
@@ -210,16 +213,17 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     CartPole, so the zero is a property of the sparse setting RLVR actually lives in.
     &nbsp;·&nbsp; <strong>Safety, pre-registered:</strong> on the maze, every MaxRL run grows
     coverage and every GRPO run loses it (9 runs, permutation p=0.0079, zero exceptions). On
-    GSM8K the registered run landed the predicted sign (GRPO+teacher the only regressing cell);
-    a replication seed with weaker measured steering did not reproduce it — reported as measured.
+    GSM8K the teacher-deficit direction under GRPO now replicates 2/2 seeds on both meters
+    (magnitude tracks delivered steering — a dose effect, not a sign flip); the
+    steering-controlled decisive cells are training now.
     &nbsp;·&nbsp; <strong>Sharpening + the gate:</strong> recycling trades coverage for accuracy
     (3 seeds, outside noise); the utility gate restores coverage keeping ~60% of the gain — and
     the gate threshold traces a mean-vs-coverage dial.</p>
   </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
-    <a class="btn" href="paper-draft.pdf">📄 Paper PDF</a>
-    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/PAPER.md">Markdown draft ↗</a>
+    <a class="btn" href="paper-draft.pdf">📄 Paper PDF (working draft)</a>
+    <a class="btn" href="paper-iclr.pdf">📄 ICLR-format PDF</a>
     <a class="btn" href="https://arxiv.org/abs/2602.02710">MaxRL paper ↗</a>
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/GUIDE.md">Design guide ↗</a>
     <button id="themeToggle" type="button">Toggle theme</button>
