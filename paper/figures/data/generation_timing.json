@@ -1,0 +1,163 @@
+{
+ "sessions": {
+  "session_2026-07-22_23-32-48_050122_213441": {
+   "n_steps": 14,
+   "gen_frac_mean": 0.8696,
+   "gen_frac_min": 0.8652,
+   "gen_frac_max": 0.8796
+  },
+  "session_2026-07-23_06-14-27_098159_444653": {
+   "n_steps": 30,
+   "gen_frac_mean": 0.8514,
+   "gen_frac_min": 0.496,
+   "gen_frac_max": 0.8706
+  },
+  "session_2026-07-24_07-12-44_583853_2331884": {
+   "n_steps": 50,
+   "gen_frac_mean": 0.8252,
+   "gen_frac_min": 0.3938,
+   "gen_frac_max": 0.8702
+  },
+  "session_2026-07-25_01-20-02_711832_2480383": {
+   "n_steps": 50,
+   "gen_frac_mean": 0.8273,
+   "gen_frac_min": 0.4685,
+   "gen_frac_max": 0.8697
+  },
+  "session_2026-07-25_19-24-55_658447_2541009": {
+   "n_steps": 50,
+   "gen_frac_mean": 0.8302,
+   "gen_frac_min": 0.3686,
+   "gen_frac_max": 0.8708
+  },
+  "session_2026-07-27_04-26-23_045772_2625184": {
+   "n_steps": 25,
+   "gen_frac_mean": 0.8215,
+   "gen_frac_min": 0.4394,
+   "gen_frac_max": 0.8797
+  },
+  "session_2026-07-27_20-25-55_186595_93742": {
+   "n_steps": 19,
+   "gen_frac_mean": 0.1839,
+   "gen_frac_min": 0.0789,
+   "gen_frac_max": 0.2101
+  },
+  "session_2026-07-27_21-49-57_490462_192073": {
+   "n_steps": 32,
+   "gen_frac_mean": 0.164,
+   "gen_frac_min": 0.0659,
+   "gen_frac_max": 0.2122
+  },
+  "session_2026-07-27_23-46-06_661668_221787": {
+   "n_steps": 11,
+   "gen_frac_mean": 0.1198,
+   "gen_frac_min": 0.111,
+   "gen_frac_max": 0.13
+  },
+  "session_2026-07-28_00-23-54_711537_235055": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1329,
+   "gen_frac_min": 0.0564,
+   "gen_frac_max": 0.2119
+  },
+  "session_2026-07-28_03-36-56_301170_258673": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1532,
+   "gen_frac_min": 0.06,
+   "gen_frac_max": 0.2379
+  },
+  "session_2026-07-28_06-57-18_460146_304748": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1544,
+   "gen_frac_min": 0.0654,
+   "gen_frac_max": 0.2121
+  },
+  "session_2026-07-28_10-21-52_099123_358472": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1392,
+   "gen_frac_min": 0.0619,
+   "gen_frac_max": 0.2112
+  },
+  "session_2026-07-28_21-56-13_106256_688591": {
+   "n_steps": 4,
+   "gen_frac_mean": 0.1924,
+   "gen_frac_min": 0.1684,
+   "gen_frac_max": 0.2028
+  },
+  "session_2026-07-28_22-26-01_026845_876164": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1401,
+   "gen_frac_min": 0.0393,
+   "gen_frac_max": 0.3266
+  },
+  "session_2026-07-29_02-01-38_589618_1174492": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1505,
+   "gen_frac_min": 0.0607,
+   "gen_frac_max": 0.2073
+  },
+  "session_2026-07-29_05-50-33_774647_1204108": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1572,
+   "gen_frac_min": 0.0608,
+   "gen_frac_max": 0.209
+  },
+  "session_2026-07-29_09-36-44_060297_1287013": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1384,
+   "gen_frac_min": 0.0533,
+   "gen_frac_max": 0.2101
+  },
+  "session_2026-07-29_13-08-05_451554_1345668": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1447,
+   "gen_frac_min": 0.0649,
+   "gen_frac_max": 0.2092
+  },
+  "session_2026-07-29_16-39-06_743598_1402244": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1565,
+   "gen_frac_min": 0.0639,
+   "gen_frac_max": 0.2342
+  },
+  "session_2026-07-29_20-02-44_688089_1473293": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1673,
+   "gen_frac_min": 0.0614,
+   "gen_frac_max": 0.2104
+  },
+  "session_2026-07-29_23-42-33_003643_1717108": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1354,
+   "gen_frac_min": 0.0597,
+   "gen_frac_max": 0.237
+  },
+  "session_2026-07-30_03-06-33_344816_1787275": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1379,
+   "gen_frac_min": 0.0602,
+   "gen_frac_max": 0.2109
+  },
+  "session_2026-07-30_06-29-14_095910_1856044": {
+   "n_steps": 60,
+   "gen_frac_mean": 0.1648,
+   "gen_frac_min": 0.0641,
+   "gen_frac_max": 0.2299
+  },
+  "session_2026-07-30_18-59-20_834173_2063242": {
+   "n_steps": 50,
+   "gen_frac_mean": 0.8281,
+   "gen_frac_min": 0.438,
+   "gen_frac_max": 0.8771
+  },
+  "session_2026-07-31_16-29-58_665682_2454643": {
+   "n_steps": 13,
+   "gen_frac_mean": 0.8704,
+   "gen_frac_min": 0.8617,
+   "gen_frac_max": 0.883
+  }
+ },
+ "overall_weighted_mean": 0.3117,
+ "total_steps": 1188,
+ "provenance": "timing_s/gen / timing_s/step from verl in-run telemetry, /tmp/ray session worker logs, GSM8K 2x2 + Countdown runs"
+}

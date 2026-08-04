@@ -51,16 +51,21 @@ class TilePolicy:
     """
 
     def __init__(self, n_bins_per_dim, obs_low, obs_high, n_tasks, n_actions,
-                 lr=0.15, seed=0, share_across_tasks=False):
+                 lr=0.15, seed=0, shared=True):
         self.bins = np.asarray(n_bins_per_dim)
         self.low = np.asarray(obs_low, dtype=float)
         self.high = np.asarray(obs_high, dtype=float)
-        self.n_tasks = n_tasks
-        self.share_across_tasks = share_across_tasks
-        self.n_task_slots = 1 if share_across_tasks else n_tasks
+        # shared=True: ONE policy for all bins (task enters only the success
+        # predicate). This is the validated configuration — the per-bin
+        # variant (shared=False) partitions parameters by task and never
+        # reaches the hardest bin (the transfer-cliff control in the
+        # 10-seed MountainCar study). Default was silently per-bin until
+        # 2026-07-29; the convergence study exposed it.
+        self.shared = shared
+        self.n_tasks = 1 if shared else n_tasks
         self.n_actions = n_actions
         self.lr = lr
-        n_tiles = int(np.prod(self.bins)) * self.n_task_slots
+        n_tiles = int(np.prod(self.bins)) * self.n_tasks
         self.theta = np.zeros((n_tiles, n_actions))
         self.rng = np.random.default_rng(seed)
 
@@ -71,8 +76,9 @@ class TilePolicy:
         flat = 0
         for i, b in zip(idx, self.bins):
             flat = flat * b + i
-        task_slot = 0 if self.share_across_tasks else task_id
-        return int(flat) * self.n_task_slots + task_slot
+        if self.shared:
+            return int(flat)
+        return int(flat) * self.n_tasks + task_id
 
     def probs(self, tile):
         z = self.theta[tile] - self.theta[tile].max()

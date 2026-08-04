@@ -18,7 +18,7 @@ from typing import Callable, Optional
 
 import numpy as np
 
-from frontier_rl.estimators import maxrl_success_weights, maxrl_weights
+from frontier_rl.estimators import grpo_weights, maxrl_weights, rloo_weights
 from frontier_rl.interfaces import GroupResult, Policy, TaskSpace
 from frontier_rl.teacher import FrontierTeacher
 
@@ -30,12 +30,28 @@ class TrainerConfig:
     hindsight: bool = True          # dense relabeling of dead groups (F3)
     hindsight_scale: float = 1.0    # natural K=1 group weight; tune down if
                                     # self-imitation entrenches errors
-    hindsight_estimator: str = "maxrl"  # "maxrl" (centered) or "success_only"
+    hindsight_gate: bool = False    # utility-gate relabel DESTINATIONS: skip
+                                    # relabels to tasks the posterior rates
+                                    # p_hat > gate_max_p (u(p)->0 as p->1:
+                                    # recycled updates there buy sharpening,
+                                    # not signal — E-LLM-2b validated)
+    gate_max_p: float = 0.5
     positive_weights: bool = False  # weighted-RFT: success weights only, for
                                     # policies without per-sample log-probs
                                     # (flow heads / weighted SFT — COSMOS3 Q1);
                                     # E[Σw⁺] = u(p) exactly, so the teacher's
                                     # algebra is unchanged
+    estimator: str = "maxrl"        # BASELINE ARMS ONLY: "grpo" (the H6
+                                    # collapse ablation — curricula amplify
+                                    # GRPO's coverage collapse) or "rloo".
+                                    # positive_weights applies to maxrl only.
+    dapo_max_redraws: int = 0       # DAPO-style dynamic sampling baseline:
+                                    # on a dead group, redraw a fresh task up
+                                    # to this many times, PAYING for every
+                                    # draw (V5's matched-generation protocol).
+                                    # 0 = off. Mutually exclusive in spirit
+                                    # with hindsight (DAPO discards failures;
+                                    # hindsight recycles them).
     teacher_gamma: float = 1.0      # V6: ~4 on chained pools
     teacher_decay: float = 0.7
     teacher_floor: float = 0.1
@@ -63,6 +79,16 @@ class FrontierTrainer:
             decay=self.cfg.teacher_decay, floor=self.cfg.teacher_floor,
             gamma=self.cfg.teacher_gamma, seed=self.cfg.seed)
 
+    def _weights(self, rewards: np.ndarray) -> np.ndarray:
+        if self.cfg.estimator == "maxrl":
+            return maxrl_weights(rewards,
+                                 positive_part=self.cfg.positive_weights)
+        if self.cfg.estimator == "grpo":
+            return grpo_weights(rewards)
+        if self.cfg.estimator == "rloo":
+            return rloo_weights(rewards)
+        raise ValueError(f"unknown estimator {self.cfg.estimator!r}")
+
     def step(self) -> StepStats:
         stats = StepStats()
         rewards_seen = []
@@ -87,11 +113,21 @@ class FrontierTrainer:
                 stats.env_steps += sum(int(info["n_steps"])
                                        for info in group.infos)
 
-            k = float(r.sum())
-            if 0.0 < k < len(r):
-                w = maxrl_weights(
-                    r, positive_part=self.cfg.positive_weights
-                )
+            # DAPO baseline: redraw fresh tasks until the group is live
+            # (0 < K < N), paying for every discarded draw — the trainer
+            # counts them as dead groups so budget accounting stays honest
+            redraws = self.cfg.dapo_max_redraws
+            while redraws > 0 and (r.sum() == 0 or r.sum() == len(r)):
+                stats.dead_groups += 1
+                redraws -= 1
+                task_id = int(self.teacher.sample_tasks(1)[0])
+                group = self.env.rollout_group(task_id, self.cfg.n_rollouts)
+                r = np.asarray(group.rewards, dtype=float)
+                self.teacher.observe(task_id, r)
+                rewards_seen.append(r.mean())
+
+            w = self._weights(r)
+            if np.any(w != 0):
                 stats.live_groups += 1
                 self.policy.update(task_id, group.trajectories, w)
                 continue
@@ -109,27 +145,20 @@ class FrontierTrainer:
             relabel = self.env.relabel(group)
             if relabel is None:
                 continue
+            if self.cfg.hindsight_gate:
+                # destination posterior from the teacher's own Beta rows —
+                # on CPU testbeds tasks ARE the destinations
+                dest = int(relabel[0])
+                a, b = self.teacher.alpha[dest], self.teacher.beta[dest]
+                if a / (a + b) > self.cfg.gate_max_p:
+                    continue
             if len(relabel) == 3:           # env rewrote goal-conditioning
                 new_task, new_rewards, new_trajs = relabel
             else:
                 new_task, new_rewards = relabel
                 new_trajs = group.trajectories
             r2 = np.asarray(new_rewards, dtype=float)
-            if self.cfg.hindsight_estimator == "maxrl":
-                w2 = maxrl_weights(
-                    r2, positive_part=self.cfg.positive_weights
-                )
-            elif self.cfg.hindsight_estimator == "success_only":
-                # The raw success average is the estimator directly justified
-                # by the ML conditional-expectation identity.  Relabeling can
-                # still shift the trajectory law, so this is proof-aligned,
-                # not automatically unbiased for an arbitrary relabeler.
-                w2 = maxrl_success_weights(r2)
-            else:
-                raise ValueError(
-                    "hindsight_estimator must be 'maxrl' or 'success_only'"
-                )
-            w2 = w2 * self.cfg.hindsight_scale
+            w2 = self._weights(r2) * self.cfg.hindsight_scale
             if np.any(w2 != 0):
                 stats.relabeled_groups += 1
                 self.policy.update(int(new_task), new_trajs, w2)

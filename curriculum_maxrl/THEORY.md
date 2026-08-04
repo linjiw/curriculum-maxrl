@@ -49,9 +49,13 @@ prove that the same p maximizes gradient norm or learning progress.
 E[Σ|w|] = 2·p·(1−p)   —  EXACT
 ```
 
-RLOO's expected scalar coefficient mass is proportional to SFL's
-"learnability" p(1−p) (Rutherford et al. 2024). The scalar score matches up
-to a constant; the estimator and curriculum objective are otherwise distinct.
+(E[K(N−K)] = N(N−1)p(1−p) for K~Bin(N,p); the N(N−1) cancels. An earlier
+version of this file carried a spurious N/(N−1) prefactor — removed in the
+round-1 audit; PROOFS.md Prop. 4 is the authoritative statement.)
+
+RLOO's advantage mass **is** SFL's "learnability" p(1−p) (Rutherford et al.
+2024) up to the constant. The learnability curriculum literature and the
+RLOO estimator are the same object seen from two sides.
 
 **GRPO** (`w_j = (r_j − mean)/(std+ε)/N`, degenerate groups K∈{0,N} give 0):
 

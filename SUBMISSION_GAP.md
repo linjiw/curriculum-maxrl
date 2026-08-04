@@ -1,0 +1,117 @@
+# Distance to an ICLR-ready submission (assessed 2026-08-03)
+
+Reference bar: ICLR main text ≤ 9 pages (10 for camera-ready), unlimited
+appendix; typical accepted empirical-RL papers carry 3+ seeds on headline
+claims, complete related work, anonymized artifacts, and a reproducibility
+statement. Assessment against the current 16-page draft (14 main + 2 back).
+
+## Verdict in one line
+
+The *science* is ~85% submission-ready (theory verified, headline result
+pre-registered and multi-scale, negatives documented); the *manuscript* is
+~60% ready — main text is 40% over budget, one LLM-scale replication is
+still single-run-conditional, and formatting/anonymization work is undone.
+
+## BLOCKING (cannot submit without)
+
+- **B1. Page budget.** 14pp main → 9pp. The escalating-ladder section
+  (6.1–6.9, ~7pp) is the target: each rung's Setup→Result→Takeaway can
+  compress to ~½ column with full details in appendix. Plan: keep 6.1
+  (ladder table + saturation), 6.3–6.4 (headline sign flip + mechanism),
+  6.8–6.9 (sharpening + gate) at full length; compress 6.2/6.5/6.6/6.7
+  to one paragraph each pointing to appendix sections. [~1 day of editing]
+- **B2. ICLR class file + anonymization.** Currently article class with a
+  GitHub URL on the title page and repo pointers throughout. Needs
+  iclr2027 style, anonymized artifact link (anonymous.4open.science),
+  and scrubbing "our repository" references. [half day]
+- **B3. The LLM-scale interaction claim needs its decisive run.** The
+  paper currently says "1-of-2 seeds, dose effect" — reviewers will
+  probe exactly this. E-LLM-1b (g3s/g3u/m3s, treatment-delivered,
+  pre-registered) is TRAINING NOW; its result lands either way as the
+  §6.7 update (confirm → claim upgraded; refute → claim scoped to maze
+  + the pool-conditionality story). [~2 days GPU, running]
+
+## STRONG (reviewers will ding without)
+
+- **S1. Second seed for the Countdown corrected-gate operating point**
+  (the full-strength point in Fig 8a is 1 seed) and for the maze
+  GRPO+teacher arm (single-seed, labeled). GPU-cheap (~8h total), queue
+  after E-LLM-1b.
+- **S2. Reference hygiene**: 4 entries still cite arXiv IDs with "et al."
+  reconstructed from abstracts — verify against the PDFs; LILO/SFL/DUMP
+  entries lack arXiv IDs; dapo bibitem says NeurIPS 2025 (check venue).
+- **S3. Figure 4/5 (algorithm + partition map) refer to §ordering that
+  changed; re-audit all \S references after B1 restructure.**
+- **S4. The Jugs pool-conditionality paragraph cites repo postmortem —
+  after B1, promote its mechanism (rollout-set diversity as a design
+  gate) into the appendix with the entropy trajectories figure.**
+
+## NICE (improves odds, not required)
+
+- N1. A pass@k-vs-k sweep figure for the maze (the crossing-at-k≈4
+  result is currently prose).
+- N2. Countdown gate_max_p dose sweep (pre-registered as standing
+  follow-up; would turn Fig 8a's 3-point frontier into a curve).
+- N3. Whittle-index theory paragraph (parked; only if a theory reviewer
+  is anticipated).
+
+## What is already at or above the bar
+
+- Prop 1 + Lemma 1 machine-verified; MC scripts committed.
+- Headline safety result: 9 runs, exact permutation p=0.0079, direction
+  replicated 2/2 seeds at LLM scale.
+- Pre-registration discipline documented with timestamps and one spent
+  prereg (E-LLM-3) correctly recorded as nulls + postmortem.
+- Negative-results section with mechanisms, not apologies.
+- Appendix A hyperparameter/knob tables; compute statement; per-figure
+  regeneration from committed JSON.
+
+## Order of work (while E-LLM-1b trains)
+
+1. B1 restructure (biggest lever, no GPU dependency) — start now.
+2. B2 class file + anonymization pass immediately after.
+3. S2/S3 hygiene sweeps on the restructured text.
+4. When E-LLM-1b lands: fold the P-S1..P-S3 verdicts into §6.7 (either
+   direction), then S1 seeds, then freeze for internal review round 4.
+
+## Progress log
+
+- 2026-08-03 pass 1: App B created (full details for compressed rungs);
+  §6.1/6.5/6.6/6.7/6.9 compressed; fig6_gym → appendix. Main text
+  14pp → 13pp. Remaining ~3pp must come from: §3 interpretations
+  (tighten), §6.3 (split attribution detail to App B), Q2/Q3 intro
+  compression, and the ICLR two-column-free format change itself
+  (article→iclr style typically saves ~10% through tighter spacing).
+  Note: B2 blocked locally — no ICLR .sty on this machine; vendor
+  iclr2027_conference.sty into paper/ when network fetch is possible,
+  or hand off to the user.
+- Sentence pass: worst dash-chains split (Q1), "honestly read" label
+  removed; §6.7/6.9/related-work chains remain (4-9 dashes/paragraph,
+  mostly structural lists — acceptable) — revisit after E-LLM-1b text
+  lands.
+- 2026-08-03 pass 2: rem:scope, §6.3 efficiency detail, Q2 compressed;
+  hardcoded §refs → \ref. Main text 13pp → 12pp.
+- 2026-08-03 B2 DONE: main_iclr.tex builds with vendored
+  iclr2026_conference.sty — double-blind header, line numbers,
+  author-year citations, bib-before-appendix ordering, no repo URLs.
+  12pp main in ICLR format (target 9-10; remaining compression:
+  §3 interp blocks, §4/§5 prose, fig1 sizing).
+- E-LLM-1b status: g3s OOM'd at step 3 (node RAM); queue hardened
+  (ray cleanup between cells, done-markers on global_step:50, retry
+  pass); amendment A1 adds g3p (warm-start + power=4) after the g3s
+  partial showed warm-start-alone doesn't move dead-sampled off the
+  population rate. m3s training now; g3s/g3p/g3u follow.
+
+- 2026-08-04 pass 3: §4 opening, §5 interp+contracts, one-identity
+  corollary tightened; fig1 0.92x, fig5 0.5x; all compressions synced
+  into both editions (main.tex working draft + main_iclr.tex). ICLR
+  main text holding at 12pp — the last ~2pp are float-spacing bound
+  (pages 5-6 carry two half-empty float pages), not prose: next lever
+  is float packing ([t] -> [h]/[tb] consolidation + wrapping Alg 1 and
+  fig2 onto one page), then §6.7's remaining length after E-LLM-1b
+  verdicts replace the interim seed-2 text.
+
+- 2026-08-04 S2 CLOSED: all 15 bibliography entries web-verified;
+  5 corrected (GRESO title+venue, DisCO title, SC-SDPO author, 
+  Reinforce-Ada retitle, LILO author list). N1 CLOSED: fig9_ksweep
+  (maze crossing) added to App B. Site + both PDFs pushed for review.

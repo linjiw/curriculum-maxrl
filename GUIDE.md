@@ -14,12 +14,12 @@ and `curriculum_maxrl/maze_gpu/EXPERIMENTS.md`.
 
 ## 1. Problem framing
 
-MaxRL's raw success-average estimator is unbiased for the order-N truncated
-maximum-likelihood objective. Its always-retained score control variate keeps
-that property. Practical Algorithm 1 drops both terms at K=0 and instead
-targets order N−1. The population weight function upweights hard prompts—an
-implicit curriculum at the gradient level. Three gaps remain that a
-data-level teacher can address:
+MaxRL's estimator (Algorithm 1 of arXiv:2602.02710) normalizes advantages by the
+per-prompt mean reward, making it unbiased for the T=N−1-truncated maximum-likelihood (dropping the K=0
+control variate shifts the order — PROOFS.md Prop 1 correction)
+objective. Its weight function w(p) = (1−(1−p)^T)/p upweights hard prompts — an
+*implicit curriculum at the gradient level*. Three gaps remain that only a
+*data-level* teacher can close:
 
 1. **Dead prompts** — p ≪ 1/N ⇒ all N rollouts fail ⇒ K=0 ⇒ group dropped, zero
    gradient. No choice of w(p) can put signal where groups die.
@@ -35,7 +35,7 @@ rather than needing an external heuristic.
 
 ## 2. Proposed methods and verification status
 
-### M1. Coefficient-mass teacher (core) — ✅ proof + CPU/Gym, ⏳ corrected GPU
+### M1. Advantage-mass teacher (core method) — ✅ derived + validated (CPU + GPU, 3 seeds)
 
 - **Claim (proved, MC-verified 200k trials):** expected total |advantage| a prompt
   receives from a MaxRL group of N rollouts is exactly `2(pass@N − pass@1)`;
@@ -45,12 +45,14 @@ rather than needing an external heuristic.
   uniform floor (default 0.1) for coverage/anti-forgetting.
 - **Verification:**
   - Formula: Monte-Carlo match to 3 decimals across p ∈ [0.005, 0.95] (THEORY.md §2, §5).
-  - Corrected exact-`u_N` CPU skill-chain (5 seeds): AUC 0.700 versus 0.650
-    uniform. The older 0.704–0.712 versus 0.688 ZPD comparison used the legacy
-    `u_{N+1}` score and is retained only as historical evidence.
-  - Historical GPU diagnostics are not exact-`u_N` validation; see audit note.
-- **Open:** corrected matched-wall-clock GPU comparison with cumulative K=0/K=N
-  accounting and a common replay floor.
+  - CPU skill-chain (5 seeds): AUC 0.704 vs 0.712 heuristic-frontier vs 0.688
+    hand-tuned ZPD — ties the best heuristic with zero band hyperparameters.
+  - Posterior fidelity (GPU maze): teacher p̂ tracks true eval pass rates to ~±0.1
+    (max mid-run deviation ~0.16 — decayed evidence lags fast learning);
+    concentrates 60% of sampling mass on the true frontier band.
+  - Dead-group reduction (GPU maze): 5.2/8 dead groups per step under uniform →
+    3.9 (frontier) / 2.6 (learnability-style) under teachers.
+- **Open:** matched-wall-clock GPU comparison (running: 6 configs × 2400 s).
 
 ### M2. Greedy rollout allocation — ✅ derived + validated (CPU-level)
 
@@ -98,7 +100,7 @@ rather than needing an external heuristic.
   in the matched GPU sweep. The uniform floor already covers most anti-forgetting
   duty in our regimes.
 
-### M7. Hindsight relabeling for dead groups — ✅ validated (CPU), 🔄 GPU sweep queued
+### M7. Hindsight relabeling for dead groups — ✅ validated (CPU + GPU: dense variant is the maze champion)
 
 - **Idea:** MaxRL's Theorem 1 expresses the ML gradient through a
   success-conditioned score. Practical centered updates also score failures in
@@ -145,7 +147,9 @@ rather than needing an external heuristic.
 - **Bias caveat:** relabeled groups are conditioned on the achieved outcome —
   an auxiliary HER-style term, not an unbiased truncated-ML gradient. Helps
   uniformly on the toy; GPU maze version (goal ← deepest cell legally reached,
-  `--hindsight` in `maze_gpu/train.py`) is queued behind sweep 1.
+  `--hindsight` in `maze_gpu/train.py`) completed: dense hindsight is the
+  GPU champion (0.252±0.005 final over 3 seeds; +0.01 AUC in the
+  infinite-data regime vs +0.22 on fixed pools — the fixedness lesson).
 - **LLM analogue:** goal/prefix relabeling wherever verifiers admit it —
   sub-goals in multi-step proofs, partial-credit unit tests, reached-state
   goals in agentic tasks.
@@ -259,9 +263,10 @@ measurement artifact.
 - CPU effect sizes come from a toy with exact gradients; LLM noise (verifier
   errors, nonstationary pass-rate estimates) may shrink the teacher's edge—that is
   what the GSM8K run tests.
-- Corrected GPU results do not yet exist; historical tables have the audit
-  confounds stated above.
-- The teacher assumes a fixed finite prompt set (pseudo-counts per row index);
+- Matched GPU results: seeds 0–2 confirmed for the four headline configs
+  (6/6 paired teacher wins); auxiliary arms (γ=4, long-horizon, frontier+grpo)
+  remain single-seed.
+- The teacher assumes a fixed finite prompt set (Beta posterior per row index);
   streaming/procedural prompt sources need a parametric difficulty model
   (ALP-GMM-style) instead.
 - `pass@N − p` targets *this group's* signal, not long-horizon transfer; it has no

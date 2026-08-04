@@ -31,6 +31,28 @@ prioritizes prompts by this utility; the myopic known-pass-rate rollout
 allocation is greedy water-filling on the marginal `p(1−p)^N` (the probability
 the next rollout is a group's first success).
 
+## The experiment ladder — what each experiment asks, and what to expect
+
+Every experiment isolates one or two *channels* of the method. Reader's map:
+the **teacher** reallocates compute (channel 1), **hindsight** creates signal
+from failures (channel 2), the **objective** decides whether a curriculum is
+safe at all (channel 3). Predictions are pre-registered (committed before any
+cell finishes) so results are readable as confirmations or refutations, not
+post-hoc stories.
+
+| experiment | the question | what we expected (pre-registered) | outcome |
+|---|---|---|---|
+| **CPU skill-chain** (36 tasks, exact gradients) | do the channels work at all, and can theory predict their sizes? | teacher > uniform; hindsight breaks the oracle ceiling | ✓ both: 0.65→0.73→0.89, full stack **beats the true-p oracle** (0.890 > 0.851 — artifact: `frontier_rl/examples/v7_oracle_result.json`) |
+| **V5 frontier-heavy regime** (max pool p=1e-5) | what happens when NO task is samplable? | pure samplers get exactly 0; hindsight invents the curriculum below the pool | ✓ categorical: 0.93 AUC vs 0.00 for uniform/DAPO/teacher-alone |
+| **GPU maze** (1.26M transformer, 13 distance levels, ~30 matched-wall-clock runs) | do the CPU results survive real gradients + generation? | teacher gains AUC every seed; GRPO collapses coverage under a curriculum (H6) | ✓ 6/6 paired wins; H6 reversal confirmed; 11× samples-to-coverage vs GRPO at the hardest solved level |
+| **E-LLM-1: GSM8K 2×2** ({maxrl,grpo} × {teacher,uniform}, SmolLM2-360M, one A10G) | do channels 1+3 transfer to LLM RLVR? | P-G2: grpo+teacher does NOT beat grpo (safety); P-G1: modest teacher gain; P-G5: ordering, not magnitude | **✓ P-G2 confirmed** — grpo+teacher is the only cell that *regresses* after step 25 (analysis: `GSM8K_ANALYSIS.md`); P-G1 pending final cell |
+| **E-LLM-2: Countdown 2×2×2** (+{hindsight,none}) | channel 2 at LLM scale: relabel a failed equation's target to the value it actually reached — an exact-verifier relabel nobody has published | hindsight ignites the operand tiers that stay at 0 for every hindsight-off cell (the V5 pattern at LLM scale) | staged + two-agent review-hardened (`curriculum_maxrl/countdown/` in the maxrl fork) |
+| **E-LLM-3: reasoning-gym streaming** | can the kernel-posterior teacher walk a *continuous* difficulty dial and beat the library's threshold curriculum? | match/beat published +13–40-pt gains without the hand-set threshold | planned |
+
+Full LLM-experiment roadmap with novelty checks and differentiation map:
+[`NEXT_EXPERIMENTS.md`](NEXT_EXPERIMENTS.md). Latest LLM results:
+[`GSM8K_ANALYSIS.md`](GSM8K_ANALYSIS.md).
+
 ## Repo map
 
 | path | contents |

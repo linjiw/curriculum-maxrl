@@ -154,19 +154,37 @@ class FrontierALPTeacher(FrontierTeacher):
         return (1 - self.floor) * probs + self.floor * unif
 
 
-class AdvMassTeacher(Teacher):
-    """Exact half-mass score for N practical dropped-group MaxRL rollouts."""
+class FrontierUNTeacher(FrontierTeacher):
+    """The paper's exact derived utility u_N(p) = (1-(1-p)^N) - p.
 
-    def __init__(self, n_rollouts: int, seed: int, floor: float = 0.1,
-                 power: float = 1.0):
-        super().__init__(n_rollouts, seed, power)
-        self.floor = floor
+    The legacy FrontierTeacher above uses (1-(1-p)^N)(1-p) — a
+    pre-derivation heuristic (opus5 M4). Chains show the two within
+    noise (v7 battery: 0.728 vs 0.733); this arm tests that on the maze.
+    """
 
     def distribution(self) -> np.ndarray:
         p = self.rng.beta(self.alpha, self.beta)
-        u = np.maximum(
-            1.0 - (1.0 - p) ** self.n_rollouts - p, 0.0
-        ) ** self.power
+        u = (1.0 - (1.0 - p) ** self.n_rollouts) - p
+        u = np.maximum(u, 0.0)
+        if u.sum() <= 1e-12:
+            u[:] = 1.0
+        probs = u / u.sum()
+        unif = np.full(len(LEVELS), 1.0 / len(LEVELS))
+        return (1 - self.floor) * probs + self.floor * unif
+
+
+class FrontierUNTiltTeacher(FrontierTeacher):
+    """Horizon-tilted utility (1-p) * u_N(p) (BRIDGE_ANALYSIS part E, alpha=1).
+
+    The bridge experiments found the tilt a deployable improvement over
+    plain u_N on both CPU pools through posterior noise; this arm is its
+    first GPU test.
+    """
+
+    def distribution(self) -> np.ndarray:
+        p = self.rng.beta(self.alpha, self.beta)
+        u = (1.0 - p) * ((1.0 - (1.0 - p) ** self.n_rollouts) - p)
+        u = np.maximum(u, 0.0)
         if u.sum() <= 1e-12:
             u[:] = 1.0
         probs = u / u.sum()
@@ -180,6 +198,8 @@ TEACHERS = {
     "advmass": AdvMassTeacher,
     "learnability": LearnabilityTeacher,
     "frontier_alp": FrontierALPTeacher,
+    "frontier_un": FrontierUNTeacher,
+    "frontier_un_tilt": FrontierUNTiltTeacher,
 }
 
 

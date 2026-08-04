@@ -1,0 +1,39 @@
+{
+ "model": "/home/ec2-user/ckpt/jugs_sft_v1",
+ "n": 16,
+ "two_shot": false,
+ "per_tier": 40,
+ "temperature": 0.7,
+ "tiers": {
+  "t0": {
+   "pass1": 0.0,
+   "pass16": 0.0,
+   "relabel_yield_on_fail": 0.8484375,
+   "n_tasks": 40
+  },
+  "t1": {
+   "pass1": 0.003125,
+   "pass16": 0.05,
+   "relabel_yield_on_fail": 0.9153605015673981,
+   "n_tasks": 40
+  },
+  "t2": {
+   "pass1": 0.0,
+   "pass16": 0.0,
+   "relabel_yield_on_fail": 0.915625,
+   "n_tasks": 40
+  },
+  "t3": {
+   "pass1": 0.0,
+   "pass16": 0.0,
+   "relabel_yield_on_fail": 0.9328125,
+   "n_tasks": 40
+  },
+  "t4": {
+   "pass1": 0.0,
+   "pass16": 0.0,
+   "relabel_yield_on_fail": 0.8921875,
+   "n_tasks": 40
+  }
+ }
+}

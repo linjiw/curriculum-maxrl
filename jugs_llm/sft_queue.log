@@ -1,0 +1,38 @@
+=== two-shot feasibility done, starting SFT (Sun Aug  2 03:29:35 UTC 2026) ===
+{'loss': 0.6187, 'grad_norm': 3.1875, 'learning_rate': 7.994809135073211e-06, 'epoch': 0.64}
+{'loss': 0.5811, 'grad_norm': 3.203125, 'learning_rate': 7.25834600822649e-06, 'epoch': 0.75}
+{'loss': 0.5398, 'grad_norm': 3.015625, 'learning_rate': 6.454018404623313e-06, 'epoch': 0.85}
+{'loss': 0.521, 'grad_norm': 3.65625, 'learning_rate': 5.60599678873656e-06, 'epoch': 0.96}
+{'loss': 0.515, 'grad_norm': 2.859375, 'learning_rate': 4.739764652923327e-06, 'epoch': 1.06}
+{'loss': 0.4764, 'grad_norm': 2.71875, 'learning_rate': 3.881352725173231e-06, 'epoch': 1.17}
+{'loss': 0.4791, 'grad_norm': 3.046875, 'learning_rate': 3.056556732140231e-06, 'epoch': 1.28}
+{'loss': 0.4724, 'grad_norm': 3.4375, 'learning_rate': 2.2901622240872638e-06, 'epoch': 1.38}
+{'loss': 0.4697, 'grad_norm': 3.015625, 'learning_rate': 1.6051997561589244e-06, 'epoch': 1.49}
+{'loss': 0.4583, 'grad_norm': 3.03125, 'learning_rate': 1.0222528081738186e-06, 'epoch': 1.6}
+{'loss': 0.4587, 'grad_norm': 3.015625, 'learning_rate': 5.588392403082338e-07, 'epoch': 1.7}
+{'loss': 0.462, 'grad_norm': 2.953125, 'learning_rate': 2.288848722507736e-07, 'epoch': 1.81}
+{'loss': 0.4706, 'grad_norm': 2.953125, 'learning_rate': 4.230500504926405e-08, 'epoch': 1.92}
+{'train_runtime': 554.1817, 'train_samples_per_second': 21.654, 'train_steps_per_second': 0.675, 'train_loss': 0.582791774668158, 'epoch': 1.99}
+saved /home/ec2-user/ckpt/jugs_sft_v1
+=== SFT done, running post-SFT zero-shot feasibility (Sun Aug  2 03:39:06 UTC 2026) ===
+[70/200] 74s t0:p1=0.000,p@16=0.00 t1:p1=0.004,p@16=0.07
+[80/200] 100s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05
+[90/200] 126s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00
+[100/200] 169s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00
+[110/200] 178s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00
+[120/200] 186s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00
+[130/200] 222s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00
+[140/200] 256s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00
+[150/200] 265s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00
+[160/200] 292s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00
+[170/200] 311s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00 t4:p1=0.000,p@16=0.00
+[180/200] 364s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00 t4:p1=0.000,p@16=0.00
+[190/200] 379s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00 t4:p1=0.000,p@16=0.00
+[200/200] 414s t0:p1=0.000,p@16=0.00 t1:p1=0.003,p@16=0.05 t2:p1=0.000,p@16=0.00 t3:p1=0.000,p@16=0.00 t4:p1=0.000,p@16=0.00
+t0 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.8484375, 'n_tasks': 40}
+t1 {'pass1': 0.003125, 'pass16': 0.05, 'relabel_yield_on_fail': 0.9153605015673981, 'n_tasks': 40}
+t2 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.915625, 'n_tasks': 40}
+t3 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.9328125, 'n_tasks': 40}
+t4 {'pass1': 0.0, 'pass16': 0.0, 'relabel_yield_on_fail': 0.8921875, 'n_tasks': 40}
+wrote /home/ec2-user/work/curriculumrl/curriculum-maxrl/jugs_llm/feasibility_jugs_sft_v1.json
+SFT+FEASIBILITY DONE Sun Aug  2 03:46:06 UTC 2026

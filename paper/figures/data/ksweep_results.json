@@ -1,0 +1,26 @@
+{
+ "grpo_curfalse": {
+  "pass@1": 0.0383,
+  "pass@4": 0.1107,
+  "pass@8": 0.1681,
+  "pass@16": 0.2383
+ },
+ "grpo_curtrue": {
+  "pass@1": 0.0305,
+  "pass@4": 0.091,
+  "pass@8": 0.1434,
+  "pass@16": 0.2148
+ },
+ "maxrl_curfalse": {
+  "pass@1": 0.0327,
+  "pass@4": 0.0986,
+  "pass@8": 0.1567,
+  "pass@16": 0.2305
+ },
+ "maxrl_curtrue": {
+  "pass@1": 0.0281,
+  "pass@4": 0.0844,
+  "pass@8": 0.1384,
+  "pass@16": 0.2148
+ }
+}

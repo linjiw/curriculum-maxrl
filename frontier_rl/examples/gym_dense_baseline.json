@@ -1,0 +1,921 @@
+{
+ "cp": [
+  {
+   "curve": [
+    {
+     "episodes": 2400,
+     "survive400": 0.0,
+     "mean_len": 39.625
+    },
+    {
+     "episodes": 4800,
+     "survive400": 0.0,
+     "mean_len": 91.04166666666667
+    },
+    {
+     "episodes": 7200,
+     "survive400": 0.16666666666666666,
+     "mean_len": 218.83333333333334
+    },
+    {
+     "episodes": 9600,
+     "survive400": 0.4583333333333333,
+     "mean_len": 363.625
+    },
+    {
+     "episodes": 12000,
+     "survive400": 0.7916666666666666,
+     "mean_len": 432.9166666666667
+    },
+    {
+     "episodes": 14400,
+     "survive400": 0.75,
+     "mean_len": 431.9166666666667
+    },
+    {
+     "episodes": 16800,
+     "survive400": 0.9583333333333334,
+     "mean_len": 483.1666666666667
+    },
+    {
+     "episodes": 19200,
+     "survive400": 1.0,
+     "mean_len": 498.5416666666667
+    }
+   ],
+   "final": {
+    "survive400": 0.92,
+    "mean_len": 476.82
+   }
+  },
+  {
+   "curve": [
+    {
+     "episodes": 2400,
+     "survive400": 0.0,
+     "mean_len": 41.875
+    },
+    {
+     "episodes": 4800,
+     "survive400": 0.0,
+     "mean_len": 104.91666666666667
+    },
+    {
+     "episodes": 7200,
+     "survive400": 0.08333333333333333,
+     "mean_len": 198.83333333333334
+    },
+    {
+     "episodes": 9600,
+     "survive400": 0.25,
+     "mean_len": 247.79166666666666
+    },
+    {
+     "episodes": 12000,
+     "survive400": 0.4583333333333333,
+     "mean_len": 379.125
+    },
+    {
+     "episodes": 14400,
+     "survive400": 0.625,
+     "mean_len": 380.125
+    },
+    {
+     "episodes": 16800,
+     "survive400": 0.9583333333333334,
+     "mean_len": 490.6666666666667
+    },
+    {
+     "episodes": 19200,
+     "survive400": 0.9166666666666666,
+     "mean_len": 480.4583333333333
+    },
+    {
+     "episodes": 21600,
+     "survive400": 0.9583333333333334,
+     "mean_len": 484.0833333333333
+    },
+    {
+     "episodes": 24000,
+     "survive400": 0.9583333333333334,
+     "mean_len": 493.5833333333333
+    },
+    {
+     "episodes": 26400,
+     "survive400": 0.9583333333333334,
+     "mean_len": 493.4583333333333
+    },
+    {
+     "episodes": 28800,
+     "survive400": 1.0,
+     "mean_len": 500.0
+    }
+   ],
+   "final": {
+    "survive400": 0.98,
+    "mean_len": 495.05
+   }
+  },
+  {
+   "curve": [
+    {
+     "episodes": 2400,
+     "survive400": 0.0,
+     "mean_len": 44.333333333333336
+    },
+    {
+     "episodes": 4800,
+     "survive400": 0.0,
+     "mean_len": 83.375
+    },
+    {
+     "episodes": 7200,
+     "survive400": 0.0,
+     "mean_len": 151.20833333333334
+    },
+    {
+     "episodes": 9600,
+     "survive400": 0.25,
+     "mean_len": 301.0
+    },
+    {
+     "episodes": 12000,
+     "survive400": 0.5833333333333334,
+     "mean_len": 397.125
+    },
+    {
+     "episodes": 14400,
+     "survive400": 0.7916666666666666,
+     "mean_len": 446.25
+    },
+    {
+     "episodes": 16800,
+     "survive400": 0.9166666666666666,
+     "mean_len": 479.5833333333333
+    },
+    {
+     "episodes": 19200,
+     "survive400": 0.9583333333333334,
+     "mean_len": 481.25
+    },
+    {
+     "episodes": 21600,
+     "survive400": 0.9583333333333334,
+     "mean_len": 486.3333333333333
+    },
+    {
+     "episodes": 24000,
+     "survive400": 1.0,
+     "mean_len": 493.125
+    }
+   ],
+   "final": {
+    "survive400": 0.99,
+    "mean_len": 498.45
+   }
+  }
+ ],
+ "mc": [
+  {
+   "curve": [
+    {
+     "episodes": 2400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 4800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 7200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 9600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 12000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 14400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 16800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 19200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 21600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 24000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 26400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 28800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 31200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 33600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 36000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 38400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 40800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 43200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 45600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 48000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 50400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 52800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 55200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 57600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 60000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 62400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 64800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 67200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 69600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 72000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 74400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 76800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 79200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 81600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 84000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 86400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 88800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 91200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 93600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 96000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 98400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 100800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 103200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 105600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 108000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 110400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 112800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 115200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 117600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 120000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 122400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 124800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 127200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 129600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 132000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 134400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 136800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 139200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 141600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 144000,
+     "flag": 0.0
+    }
+   ],
+   "final": {
+    "flag": 0.0
+   }
+  },
+  {
+   "curve": [
+    {
+     "episodes": 2400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 4800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 7200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 9600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 12000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 14400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 16800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 19200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 21600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 24000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 26400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 28800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 31200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 33600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 36000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 38400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 40800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 43200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 45600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 48000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 50400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 52800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 55200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 57600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 60000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 62400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 64800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 67200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 69600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 72000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 74400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 76800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 79200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 81600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 84000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 86400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 88800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 91200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 93600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 96000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 98400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 100800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 103200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 105600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 108000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 110400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 112800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 115200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 117600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 120000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 122400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 124800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 127200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 129600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 132000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 134400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 136800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 139200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 141600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 144000,
+     "flag": 0.0
+    }
+   ],
+   "final": {
+    "flag": 0.0
+   }
+  },
+  {
+   "curve": [
+    {
+     "episodes": 2400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 4800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 7200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 9600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 12000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 14400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 16800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 19200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 21600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 24000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 26400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 28800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 31200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 33600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 36000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 38400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 40800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 43200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 45600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 48000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 50400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 52800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 55200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 57600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 60000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 62400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 64800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 67200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 69600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 72000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 74400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 76800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 79200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 81600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 84000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 86400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 88800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 91200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 93600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 96000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 98400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 100800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 103200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 105600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 108000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 110400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 112800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 115200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 117600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 120000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 122400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 124800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 127200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 129600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 132000,
+     "flag": 0.0
+    },
+    {
+     "episodes": 134400,
+     "flag": 0.0
+    },
+    {
+     "episodes": 136800,
+     "flag": 0.0
+    },
+    {
+     "episodes": 139200,
+     "flag": 0.0
+    },
+    {
+     "episodes": 141600,
+     "flag": 0.0
+    },
+    {
+     "episodes": 144000,
+     "flag": 0.0
+    }
+   ],
+   "final": {
+    "flag": 0.0
+   }
+  }
+ ]
+}

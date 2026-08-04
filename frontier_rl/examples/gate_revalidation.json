@@ -1,0 +1,30 @@
+{
+ "skill_chain": {
+  "auc": 0.8876066959412443,
+  "auc_std": 0.0021442086484624186,
+  "final": 0.9857487690919084,
+  "coverage_final": 1.0,
+  "coverage_std": 0.0
+ },
+ "skill_chain_gated": {
+  "auc": 0.8878894695763794,
+  "auc_std": 0.0017003094806402775,
+  "final": 0.9854931618393945,
+  "coverage_final": 1.0,
+  "coverage_std": 0.0
+ },
+ "grid_reach": {
+  "auc": 0.900545634920635,
+  "auc_std": 0.006181518880823173,
+  "final": 0.9885416666666667,
+  "coverage_final": 1.0,
+  "coverage_std": 0.0
+ },
+ "grid_reach_gated": {
+  "auc": 0.900545634920635,
+  "auc_std": 0.006181518880823173,
+  "final": 0.9885416666666667,
+  "coverage_final": 1.0,
+  "coverage_std": 0.0
+ }
+}

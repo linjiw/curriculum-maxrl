@@ -82,49 +82,39 @@ x* from valley to flag") is the pattern being tested.
 
 ### MountainCar case study: opening the sparse flag through transfer
 
-The corrected study matches methods by **500,000 environment transitions**,
-uses evaluation that preserves training RNG state, distinguishes all-fail
-from all-pass groups, and commits the shared-policy implementation and raw
-per-seed curves. It uses ten paired seeds, 64 evaluation episodes for each of
-ten custom thresholds, and the complete final rollout group (so actual counts
-are at least 500k). Values are mean ± sample SD:
+Scaled runs (600 steps) with **per-bin policy parameters** never reach the
+flag (hardest bin stays 0.000 for every method): each bin's tile table
+learns from scratch, so the curriculum has nothing to *transfer*. Giving
+all bins one **shared** policy (the task enters only the success predicate)
+changes everything — corrected study, 10 paired seeds, matched at 500k
+environment transitions:
 
-| config | mean-pass AUC | final mean pass | final FLAG pass |
-|---|---:|---:|---:|
-| flag-only, shared policy | 0.024 ± 0.006 | 0.024 ± 0.006 | **0.000 ± 0.000** |
-| uniform curriculum, shared | 0.389 ± 0.071 | 0.684 ± 0.094 | 0.058 ± 0.079 |
-| exact mass γ=1, shared | 0.414 ± 0.081 | 0.758 ± 0.127 | 0.208 ± 0.266 |
-| legacy `u_{N+1}` γ=1, shared | 0.414 ± 0.078 | 0.745 ± 0.121 | 0.175 ± 0.274 |
-| learnability γ=1, shared | 0.411 ± 0.037 | 0.697 ± 0.088 | 0.080 ± 0.143 |
-| exact mass γ=4, shared | 0.530 ± 0.059 | 0.928 ± 0.056 | 0.664 ± 0.232 |
-| exact γ=4 + centered hindsight, shared | 0.720 ± 0.029 | 0.969 ± 0.013 | 0.842 ± 0.062 |
-| **exact γ=4 + success-only hindsight, shared** | **0.727 ± 0.023** | **0.970 ± 0.014** | **0.848 ± 0.058** |
-| centered hindsight, **per-bin parameters** | 0.229 ± 0.031 | 0.284 ± 0.028 | **0.000 ± 0.000** |
+| shared-policy config | mean-pass AUC | final FLAG pass |
+|---|---|---|
+| flag-only (no curriculum) | 0.024±0.006 | **0.000±0.000** |
+| uniform over bins | 0.389±0.071 | 0.058±0.079 |
+| teacher (γ=4, exact mass) | 0.530±0.059 | 0.664±0.232 |
+| **teacher (γ=4) + hindsight** | **0.727±0.023** | **0.848±0.058** |
+| (control) per-bin parameters + hindsight | 0.229±0.031 | **0.000±0.000** |
 
-Paired bootstrap AUC deltas are +0.141 [0.076, 0.202] for exact γ=4
-versus uniform, +0.116 [0.060, 0.172] for γ=4 versus γ=1, +0.191
-[0.155, 0.231] for centered hindsight, and +0.197 [0.160, 0.238]
-for success-only hindsight. All four remain supported by exact paired
-sign-flip tests after Holm correction across the nine AUC contrasts.
-By contrast, exact γ=1 is not separated from uniform, legacy `u_{N+1}`, or
-learnability, and centered versus success-only is not separated after that
-correction. Neither relabeling update is claimed unbiased under arbitrary
-goal selection. Two practical conclusions:
+*(Corrected 10-seed transition-matched study with paired bootstrap, from
+the audited branch; an earlier 3-seed table reporting flag pass up to
+1.000 had no persisted artifact and is retracted.)*
 
-1. **This aligned nested-threshold curriculum needs a transfer channel.**
-   A task-agnostic shared policy transfers here; ten disjoint parameter tables
-   do not at this budget. This negative control is not capacity/data matched
-   and is not a universal proof that every curriculum must omit task identity.
-2. With sharing in place, concentration and auxiliary hindsight matter more
-   than the small fixed-N distinction among the three γ=1 scores. The
-   corrected matched-transition result is flag-only 0.000 → exact γ=4
-   0.664 → full stack 0.848 mean flag pass; the per-bin control remains
-   0.000.
+Training on the flag alone — the standard sparse-reward setup — scores
+exactly zero: MountainCar's classic exploration wall. *Any* mixture over
+easier targets cracks the wall (energy-pumping transfers), the teacher
+sharpens it substantially, and hindsight carries the flag bin to
+0.848±0.058. Two morals for practitioners:
 
-These are custom binary-threshold metrics on official `MountainCar-v0`
-dynamics, not the environment's standard episodic return. Full confidence
-intervals and the multiple-comparison table are in
-`curriculum_maxrl/VALIDATION.md`.
+1. **Curricula operate through shared parameters.** Difficulty bins must
+   share the policy (condition on the goal, don't partition by it) or
+   there is no channel for competence to flow through — the per-bin
+   control row (0.000 with the full stack) is the same
+   generalization-cliff lesson as our maze-size finding, now in gym form.
+2. With sharing in place, the stack ordering (uniform < teacher <
+   teacher+hindsight) holds at every difficulty level, with the largest
+   gains exactly where sampling alone is weakest (the flag bin).
 
 Run them:
 
@@ -283,9 +273,10 @@ for RLVR on flow-matching VLA policies (no tractable per-sample log-prob):
   vocabulary at a precision gate (the action is removal of a class, never
   lowering the gate).
 
-`examples/run_cosmos_pilot.py` runs the four preregistered Phase-1 arms on a
-CPU mock (Bernoulli predicate skills, exact pass rates): frontier-heavy pool
-where uniform and teacher-alone score **0.000 in every seed** while
+`examples/run_cosmos_pilot.py` runs the preregistered Phase-1 arms **plus
+baselines** (DAPO dynamic resampling, GRPO estimator arms) on a CPU mock
+(Bernoulli predicate skills, exact pass rates): frontier-heavy pool where
+uniform, DAPO, and teacher-alone score **0.000 in every seed** while
 oracle-relabel reaches **0.862**, self-verified 0.756, and per-class gating
 recovers most of the poison gap (0.842) — the V5 categorical result and the
 poison→gate story reproduced end-to-end on the exact code path the real
@@ -294,6 +285,35 @@ Pilot 0: with rare true achievements, precision measured on failure-heavy
 rollouts is dominated by false-positive opportunity (~65:1 at q=0.015), so
 the probe set must be enriched with successes or the gate will mis-prune
 clean classes.
+
+The rest of the pipeline to real training is in place and unit-tested with
+fakes that mirror the verified cosmos-framework APIs:
+
+- `adapters/cosmos_live.py` — `LiveRolloutBackend` (one group = one
+  `/predict_batch` wave against SubprocVectorEnv, per-episode init states,
+  end-of-episode predicate snapshots for dead groups only),
+  `goal_predicates_of` (BDDL `goal_state` → canonical predicates),
+  `WeightedCFMBuffer` (Policy → JSONL manifest for the weighted
+  flow-matching SFT: `(w·per_instance_loss).sum()/w.sum()` at the existing
+  `compute_flow_matching_loss` call site), `Phase1Round` (collect → train →
+  redeploy loop with teacher-state persistence).
+- `evaluation.py` — unbiased success@k, easy-decile retention (fixed probe),
+  teacher-calibration (the posterior-inflation detector), `RunLedger` +
+  `matched_budget_report` (both currencies: matched rollouts AND matched
+  wall-clock, with live/relabel update counts separated).
+- `pilot0.py` — the three gate instruments (within-group variance, poison
+  rate with success-enriched probes, surrogate-fidelity cosine) and the
+  go/no-go verdict.
+- `trainer.py` — baseline arms: `estimator="grpo"/"rloo"`,
+  `dapo_max_redraws` (paid redraws, V5 protocol). Note: the H6 GRPO-collapse
+  ablation requires function approximation — it does not reproduce on
+  tabular-exact testbeds (a measured non-result, consistent with DESIGN.md
+  §8) — so it is a real-model Phase-2 claim, in per-seed success@k currency.
+
+`../READINESS.md` is the launch runbook: what is done, the ordered R1–R6
+checklist to real training-vs-baseline (env plumbing → checkpoint/data
+freeze → Pilot 0 → weighted-SFT hook → four-arm launch → baselines), each
+with its gate.
 
 ## Streaming / procedural task sources
 

@@ -46,15 +46,14 @@ not yet received a clean GPU rerun:
 
 | Math result (PROOFS.md) | Algorithm component | CPU evidence | GPU evidence |
 |---|---|---|---|
-| **P1**: raw/always-CV estimators target `T=N`; practical drop-both targets `T=N-1` | explicit estimator conventions | exact binomial error ≤1.33e-15 | production estimator audit required |
-| **P2**: E[Σ\|w\|] = 2(pass@N − pass@1), exact coefficient mass | AdvMass teacher utility | corrected γ=1 run beats uniform on the skill chain (V2: AUC 0.700 vs 0.650) | historical teacher used nearby `u_{N+1}`; exact run pending |
-| **P2**: peak at p\* ≈ ln N/N, strictly concave | compute-indexed ZPD band | historical p̂ roughly preserved the frontier ordering; no calibrated error bound | historical diagnostic only |
-| **P3**: greedy water-filling exact for fixed-p, bounded, one-step Σ mass | `allocate_rollouts_greedy` | theorem and boundary regression; older +18% pilot is archived without a retained driver | (phase 2 — needs per-prompt n in rollout worker) |
+| **P1**: E[Σ\|w\|] = 2(pass@N − pass@1), exact | AdvMass teacher utility | ties hand-tuned ZPD with 0 hyperparams (V2: AUC 0.700 vs 0.688) | teacher beats uniform 6/6 paired seeds; dead groups 5.8→3.4/8 |
+| **P2**: peak at p\* ≈ ln N/N, strictly concave | compute-indexed ZPD band; no band tuning | posterior tracks true p (CPU) | teacher p̂ tracks eval per level to ~±0.1 (max mid-run deviation ~0.16); ~70% of mass on true frontier |
+| **P3**: greedy water-filling optimal for Σ mass | `allocate_rollouts_greedy` | +18% mass vs uniform split | (phase 2 — needs per-prompt n in rollout worker) |
 | **P4**: RLOO mass = 2p(1−p) ≡ SFL learnability | unifies curriculum literature w/ estimator algebra | exact MC match | — (interpretive) |
-| **P5**: MaxRL coefficient mass / RLOO ∈[1,N−1] | finite-N comparison | exact enumeration | GRPO/MaxRL interaction remains empirical, not implied by mass alone |
-| **P6**: law equality is sufficient for hindsight exactness; moment equality is necessary/sufficient | centered or success-only relabeling | centered mean cosine 1.000 but scale 0.94–1.04; success-only scale 1.000 on-chain | historical dense auxiliary MLE point estimate is confounded; corrected rerun pending |
-| **P7**: floor guarantees revisit time/tail | floor 0.1 | exact visitation lemma; V3 floor flat 0–0.4 | defaults shipped in verl module |
-| V6 (empirical): learning compounds ⇒ γ>1 | `power` knob, sample ∝ u^γ | γ=4: AUC 0.782 vs 0.728 | historical legacy-score GPU run was negative; corrected exact run pending |
+| **P5**: MaxRL mass ≈ (N−1)× RLOO's as p→0 | why the teacher is safe with MaxRL specifically | — | GRPO+teacher collapses (H6 reversed; single-seed arm — GRPO's decay itself is every-seed); MaxRL+teacher grows pass@8 every seed |
+| **P6**: hindsight update = ML gradient under shifted conditional; exact when laws match | dense hindsight relabeling | V1: per-group cosine = fresh-group cosine (0.956 vs 0.958); mean cosine 1.000 | dense hindsight = GPU champion (final 0.258, best 0.269) |
+| **P7**: posterior lag & floor as staleness bound | decay 0.7, floor 0.1 | V2b: decay 0.7 closes ~19% of oracle gap; V3: floor flat 0–0.4 | defaults shipped in verl module |
+| V6 (empirical): learning compounds ⇒ γ>1 | `power` knob, sample ∝ u^γ | γ=4: AUC 0.782 vs 0.728 | GPU: γ=4 did NOT transfer (0.231 vs 0.236) — as the V6b ODE model pre-registered; γ=1 GPU default |
 
 The two places the chain *broke* were as informative as where it held:
 
@@ -339,18 +338,24 @@ different control, a mean-pass primary metric, and a local-mechanism role.
    and the all-pass regime were absent. ✅
 
 **Not yet achieved:**
-1. **The deep frontier remains uncrossed at fixed budget** — level 6+
-   (distance ≥ 16) sits at ~0.01–0.02 after 2400 s in every config. Dense
-   historical hindsight improved shallow levels, but the old relabeler used
-   path length rather than BFS depth. Whether the remaining barrier is
-   duration, exploration, or representation is unresolved.
-2. **LLM-scale transfer** — the verl integration is implemented and locally unit-tested but
-   data-scarce GSM8K regime is precisely where hindsight's fixed-prompt-set
-   compounding should shine (the infinite-data maze understates it), but the
-   single A10G cannot fit the 8-GPU recipe. Open until a larger node.
-3. **Inference-efficiency currency** — historical checkpoint results exist,
-   but corrected teacher/hindsight checkpoints are needed before comparison.
-4. **P3 (myopic fixed-p rollout allocation) has no GPU test**—needs per-prompt
+1. **The deep frontier remains uncrossed — and it is NOT a duration
+   question.** The 4× long run (`long_falp_hsdense_s0.jsonl`, 9600 s) refuted
+   the duration hypothesis: level 5 doubles but level 6 stays 0.01–0.02.
+   The depth study's diagnosis is a per-step-legality ceiling (q≈0.87 →
+   geometric reach ≈ 6.7); meanwhile the frontier DID move in coverage
+   currency (L6 coverage@64: 0.125 → 0.188 → 0.312 → 0.438 across
+   GRPO/champion/long/wide) — invisible to pass@1. Depth needs capacity or
+   deeper warmstarts, not more schedule.
+2. **LLM-scale transfer** — a GSM8K 2×2 (SmolLM2-360M, N=16) is RUNNING
+   on the A10G with pre-registered predictions
+   (`curriculum_maxrl/GSM8K_A10G_PLAN.md` P-G1..P-G5); the paper-scale 8-GPU
+   recipe remains hardware-blocked. Hindsight-in-verl (the fixed-pool
+   compounding test) is the next engineering step after the 2×2.
+3. **Inference-efficiency currency** — COMPLETE (`efficiency.json`):
+   1.2×/2.7×/11× samples-to-coverage vs GRPO at levels 2/3/5, growing with
+   difficulty; honest reversal at L4 (0.5×, GRPO sharpening onto its
+   solvable subset).
+4. **P3 (optimal rollout allocation) has no GPU test** — needs per-prompt
    group sizes in the rollout path.
 5. **Score specificity** — exact `u_N`, legacy `u_{N+1}`, and learnability are
    empirically tied at γ=1 on MountainCar; a regime with smaller N or more
@@ -381,31 +386,22 @@ and test a tolerance-aware reconstruction rule before sealing fresh V5C seeds.
 The V5B artifact and post-hoc compatibility audit may diagnose the verifier
 defect but may not authorize or tune a primary outcome claim.
 
-For independent neural transfer, MountainCar V1R2 completed development but
-stopped at its predeclared gate. Do not use the untouched confirmatory seeds.
-A V2 design should first establish native-goal variation and dead/mixed/all-pass
-coverage on fresh development seeds using an outcome-blind adequacy rule; only
-then should a new confirmatory protocol be reviewed and sealed.
+*(This list is preserved as written; all five items have since executed —
+outcomes inline.)*
 
-Ranked by expected information per GPU-hour:
-
-1. **Corrected teacher factorial:** uniform vs exact `u_N` vs legacy
-   `u_{N+1}` vs learnability, common floor and γ=1, no hindsight, paired SFT.
-2. **Concentration ablation:** exact `u_N` at γ=1 vs γ=4 only after (1)
-   establishes a teacher effect.
-3. **Hindsight factorial:** none vs centered vs success-only/positive-only,
-   using maximum BFS depth and cumulative K=0/K=N accounting.
-4. **Preregister V5C after verifier repair:** retain V5B as a procedural
-   NO-GO; define finite-value and absolute/ULP tolerances before fresh seeds,
-   preserve the same scientific contrast family where justified, and do not
-   use V5B outcomes to tune the new rule.
-5. **Multi-seed replication:** expand only the effects whose paired pilot
-   intervals exclude zero.
-6. **LLM 2×2:** curriculum × {MaxRL, GRPO} when hardware permits.
-7. **Neural MountainCar V2 adequacy development:** on fresh development seeds,
-   calibrate the actor/optimizer/budget so the native goal varies and all three
-   group regimes occur before freezing any performance comparison. The old
-   CartPole group-matched smoke result is not evidence.
+1. **Long-horizon run** — DONE, hypothesis REFUTED: 9600 s lifts level 5
+   (0.03→0.23) but level 6 stays ≈0.01; the mechanism revision it called for
+   became the depth study (per-step-legality ceiling) + capacity probe
+   (wide model = new records, L6 leaves the floor in coverage@64).
+2. **γ=4 on GPU** — DONE, did NOT transfer (AUC 0.231 vs 0.236); the V6b ODE
+   model pre-registered exactly this (weak compounding on broad pools); γ=1
+   stays the GPU default.
+3. **Efficiency table** — DONE: 1.2×/2.7×/11× at L2/3/5, 0.5× reversal at L4.
+4. **Multi-seed dense hindsight** — DONE: champion 0.252±0.005 final /
+   0.229±0.009 AUC, 6/6 paired deltas positive vs uniform; final-margin edge
+   concentrated in seed 0 (honest headline: reliable AUC gain, never worse).
+5. **GSM8K 2×2** — RUNNING on the A10G (pre-registered:
+   `curriculum_maxrl/GSM8K_A10G_PLAN.md`).
 
 ## 6. Threats to validity (kept current)
 

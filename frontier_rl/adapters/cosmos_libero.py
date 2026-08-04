@@ -236,6 +236,7 @@ class CosmosLiberoSpace:
         self.relabel_attempts = 0
         self.relabel_successes = 0
         self.relabels_by_target = defaultdict(int)
+        self._rollout_takes_task_id: Optional[bool] = None
 
     # ---- TaskSpace -------------------------------------------------------
     @property
@@ -249,8 +250,23 @@ class CosmosLiberoSpace:
 
     def rollout_group(self, task_id: int, n_rollouts: int) -> GroupResult:
         t = self.tasks[task_id]
-        rewards, trajs, infos = self.rollout_fn(t.template, t.init_bin,
-                                                n_rollouts)
+        # live backends (cosmos_live.LiveRolloutBackend) also need the arm id
+        # for env caching / init-state lookup; simple mocks may not accept it
+        if self._rollout_takes_task_id is None:
+            import inspect
+            try:
+                params = inspect.signature(self.rollout_fn).parameters
+                self._rollout_takes_task_id = ("task_id" in params or any(
+                    p.kind == inspect.Parameter.VAR_KEYWORD
+                    for p in params.values()))
+            except (TypeError, ValueError):
+                self._rollout_takes_task_id = False
+        if self._rollout_takes_task_id:
+            rewards, trajs, infos = self.rollout_fn(
+                t.template, t.init_bin, n_rollouts, task_id=task_id)
+        else:
+            rewards, trajs, infos = self.rollout_fn(t.template, t.init_bin,
+                                                    n_rollouts)
         return GroupResult(task_id, np.asarray(rewards, dtype=float),
                            list(trajs), list(infos))
 

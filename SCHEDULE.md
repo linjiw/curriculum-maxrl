@@ -70,15 +70,10 @@ transition, new OOM, checkpoint, or queue drain.
 
 **GPU QUEUE DRAINED (all E and F runs complete).** Next wave now unblocked.
 
-**Parallel CPU P2 (done): corrected tile-coded MountainCar paired study.** Ten paired
-seeds, at least 500,000 transitions per condition, 64 fixed common-random-number
-evaluation episodes per target, and a task-agnostic shared tile policy. The
-environment uses official MountainCar-v0 dynamics with custom nested binary
-thresholds, so pass-rate AUC is not standard Gymnasium return. AUC mean ± sample
-SD is 0.389±0.071 uniform, 0.414±0.081 exact adv-mass teacher γ=1,
-0.530±0.059 exact adv-mass teacher γ=4, 0.720±0.029 γ=4 + centered hindsight,
-and 0.727±0.023 γ=4 + success-only hindsight. The per-bin centered control is
-0.229±0.031.
+**Parallel CPU (done): MountainCar categorical result** — flag-only 0.000 →
+uniform 0.058 → teacher 0.664 → **full stack 0.848±0.058** (corrected 10-seed transition-matched study; the earlier 0.889/0.944/1.000 figures had no artifact and are retracted); plus
+the transfer lesson (per-bin params never reach the flag: curricula operate
+through shared parameters).
 
 Paired AUC effects with 95% bootstrap CIs that survive Holm correction of exact
 sign-flip tests are γ=4 over uniform (+0.141 [0.076, 0.202]), γ=4 over γ=1

@@ -16,43 +16,24 @@ what lets you predict where the method will and won't help.
 ### Channel 1 — WASTE AVOIDANCE (the teacher)
 *"Don't roll out where the estimator will emit nothing."*
 
-- Mechanism: sample ∝ `u_N(p) = pass@N − pass@1` (P1: half the practical
-  estimator's exact expected scalar coefficient mass). The practical
-  drop-both estimator targets `T=N−1`; `u_2(p)=p(1−p)` and `u_1≡0`. The score
-  is zero at mastered (`p→1`) and unreachable (`p→0`) tasks.
-- What it bought in the historical maze mechanism logs: the legacy
-  zero-weight counter fell from 5.8→3.4 of 8; 22–35% more optimization steps
-  ran per GPU-hour (frontier rollouts also ended earlier); and all six paired
-  seeds favored the teacher. Those logs conflated all-fail (`K=0`) with
-  all-pass (`K=N`) groups and used the legacy score, so they motivate—but do
-  not close—the corrected mechanism claim.
-- Retained evidence: the teacher improved shared-H64 Acrobot transition-AUC
-  by `+0.03635` over uniform across 20 paired seeds. In tile-coded
-  MountainCar, exact-mass `γ=4` improved AUC by `+0.141`, while the
-  predeclared `γ=1` exact-mass arm was not separated from uniform,
-  learnability, or the legacy score. These results establish local efficacy,
-  not a universal effect size.
-- UniLab/Motrix now supplies a native Mac-CPU simulator development test of
-  the exact grouped estimator.  On the current eleven-radius ladder,
-  proportional-`u_8` sampling delivered its predicted mechanism—about 14%
-  more raw coefficient mass—but exact `rho/q` target correction reduced
-  weighted mass back near the uniform expectation and lowered importance ESS
-  to 0.768, with no stable performance gain (`+.0006` AUC, `-.0059` final
-  macro).  A theorem-linked gradient-second-moment sampler improved ESS to
-  0.949 and lowered observed corrected-gradient second moment by about 10% on
-  average, yet remained a performance null versus uniform (`-.0004` AUC,
-  `-.0062` final macro; three paired development seeds).  This validates the
-  native CPU pipeline and two mechanisms, not sampler superiority or robotics
-  generality.
-- The new V7 CPU artifact makes the earlier “oracle ceiling” wording more
-  precise. A true-pass-rate proposal reached mean AUC .851 at `gamma=1` and
-  .884 at `gamma=4`, versus .728 for the Thompson teacher; the complete
-  `gamma=4` plus success-only-hindsight procedure reached .890. These five
-  synthetic skill-chain seeds show both a large proposal-tracking gap and a
-  small auxiliary-stream gain beyond the matched pure sampler. They do not
-  define a universal ceiling: timing, estimation, gradient direction, and
-  valid signal creation remain separate mechanisms. The persisted summary is
-  `frontier_rl/examples/v7_oracle_result.json`.
+- Mechanism: sample ∝ u(p) = pass@N − pass@1 (P1: the estimator's exact
+  expected signal). Zero at mastered (p→1) and unreachable (p→0) tasks.
+- What it buys, measured: dead groups 5.8→3.4 of 8 (maze — historical
+  zero-weight-group counter, mechanism-open per the EXPERIMENTS.md audit:
+  it pools K=0 with K=N and cannot isolate dead-group waste); 22–35% more
+  optimization steps per GPU-hour (frontier rollouts also end earlier);
+  6/6 paired-seed wins vs uniform.
+- Ceiling: the ORACLE bound — CORRECTED (Opus5 review B3 + our control
+  battery, `frontier_rl/examples/hindsight_controls.json`). The published
+  "oracle" carried a 10% floor handicap; the honest no-floor γ-matched
+  oracle reaches 0.8885, TYING the full stack (0.8895). Creation still
+  adds on top of perfect allocation (+0.005, oracle+HS 0.8935) but the
+  channels substitute more than they compose: "beats the oracle by 0.039"
+  is retracted; "+0.005 on top of the best sampler including an oracle"
+  is the honest number. Realized Thompson-teacher gain is +0.05–0.08 AUC
+  on CPU and ~+0.01 on the maze.
+- When it's the dominant channel: mixed-difficulty pools with real spread
+  (the balanced regime), and any setting where rollouts are the cost center.
 
 ### Channel 2 — SIGNAL CREATION (hindsight recycling)
 *"Manufacture verified successes from the failures you already paid for."*
@@ -80,14 +61,22 @@ what lets you predict where the method will and won't help.
 - Mechanism: P5 — MaxRL concentrates ≈(N−1)× more signal than RLOO on
   frontier tasks as p→0, and unlike GRPO its weight function doesn't invert
   at p→1.
-- Historical observation: the same teacher interacted in opposite directions
-  with MaxRL and GRPO in an old maze sweep. That run used the pre-audit score,
-  counters, budgets, and AUC protocol, so it motivates a corrected
-  objective-by-teacher factorial but cannot establish that GRPO curricula are
-  generally unsafe.
-- Exact positive-part weighting has a pass@k-tail gradient identity only with
-  true trajectory scores. For weighted flow/SFT surrogates, the coefficient
-  mass remains exact but update-direction fidelity is empirical.
+- Decomposition (control battery, 5 seeds): of the +0.22 hindsight gap
+  on fixed pools, an extra-gradient placebo (replaying LIVE gradients on
+  dead-group slots, zero relabel information) captures 83%, lr×2 captures
+  68%, and random-target relabeling 69%. The relabel DIRECTION carries
+  +0.037 beyond the strongest placebo — real, exactness-dependent (fake
+  labels are actively harmful), but the headline "+0.22 from signal
+  creation" decomposes into ~0.18 gradient-dose effect + ~0.04 direction
+  information. Both numbers ship together from now on.
+- What it buys, measured: the H6 reversal. The identical teacher GREW
+  coverage under MaxRL every seed (pass@8 0.316→0.348); GRPO decayed
+  coverage every seed, and in the seed run with a teacher the collapse
+  was AMPLIFIED (0.332→0.269, easy-retention lost — single-seed arm).
+  GRPO's inverted weighting was silently maintaining easy tasks; the
+  curriculum removes that maintenance.
+- This is a compatibility theorem in empirical form: **channels 1+2 are not
+  objective-agnostic add-ons.** Ship them on GRPO and you make it worse.
 
 **The one-line synthesis: the teacher reallocates groups, hindsight adds
 auxiliary targets, and the learner converts those data into updates.**
@@ -158,17 +147,17 @@ Decision procedure distilled from every ablation:
 
 | claim | strongest single piece of evidence | grade |
 |---|---|---|
-| `2u_N(p)` = practical estimator's exact expected coefficient mass | P1 proof + 200k-trial MC | proved |
-| teacher can beat uniform locally | Acrobot V3 `+0.03635`, 20 paired seeds | narrow neural result |
-| `γ=4` concentration can matter | MountainCar `+0.116` over `γ=1` | corrected local result |
-| verifier-valid hindsight can help | skill chain +0.105; MountainCar about +0.19 | local, exactness unproved |
-| pure sampling cannot revive a zero-signal pool | frontier-heavy construction | synthetic mechanism |
-| exact grouped robotic-simulator training is viable on Mac CPU | native UniLab Stewart V2: nine seed-level multi-arm replicates (33 arm runs), strict warm-start/evaluation provenance, reloadable artifacts | development pipeline result |
-| shared transfer causes the gain | current controls confounded/inadequate | open |
-| MaxRL makes curricula safe | historical objective interaction only | open |
-| compounding predicts hindsight size | retained fixed-pool positives; maze side historical | hypothesis |
-| corrected GPU/LLM/robotics generality | one narrow robotics development pilot; no confirmatory/general result | open |
-| full procedure can edge a pure known-pass-rate proposal locally | V7 skill chain: `.890` full stack vs `.884` matched `gamma=4` oracle proposal, five seeds | corrected synthetic result; no inference |
+| u(p) = estimator's exact expected signal | P1 proof + 200k-trial MC | proved |
+| teacher beats uniform (matched clock) | 6/6 paired seeds; step-matched, teacher-only is n.s. (+0.006, p≈0.36) — the clock gain is largely throughput | multi-seed, decomposed |
+| hindsight direction carries information | control battery: +0.037 beyond dose-matched replay, tightest arm (±.0025); random-target loses to replay 5/5 — cosine table RETIRED as evidence (no discriminating power, Opus5 B5) | controlled |
+| full stack ties matched oracle; creation adds +0.005 on top | `hindsight_controls.json`: no-floor γ-matched oracle 0.8885 ≈ full stack 0.8895; oracle+HS 0.8935. ("beats the oracle 0.890 vs 0.851" RETRACTED — floor handicap) | multi-seed CPU |
+| creation is the only live channel in dead regimes | V5 frontier-heavy w/ uniform+HS control (0.931 ≈ teacher+HS 0.928, both vs 0.000): allocation contributes nothing there; artifact `results_baselines_regimes.json` | controlled |
+| curricula require likelihood weighting | H6: estimator main effect 9/9 runs, perm p=0.0079; LLM-scale interaction 1-of-2 seeds, tracks steering intensity | multi-seed / 1-of-2-seeds* |
+| compounding drives hindsight's size | CPU +0.22 (83% captured by replay placebo — ship both numbers) vs maze +0.01 | cross-regime, decomposed |
+| coverage is the right meter | L6 0.125→0.438 invisible to pass@1 | single-ckpt* |
+| efficiency grows with difficulty | 11× at L5 / tie L2–3 / 3× worse L4 at the stated absolute-0.25 convention (old 1.2×/0.5× cells not reproducible from artifact — corrected) | single-seed* |
+| sharing is the transfer channel | MountainCar per-bin 0 vs shared 1.000 | controlled |
+| γ tracks structure | V6 + ODE model + GPU non-transfer *prediction* | pre-registered |
 
 The historical maze coverage and efficiency multipliers remain useful for
 experiment design, not for external performance claims.
