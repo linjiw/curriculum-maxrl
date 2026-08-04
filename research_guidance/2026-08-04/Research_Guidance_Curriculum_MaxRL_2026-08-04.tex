@@ -1,0 +1,2096 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.82in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,tabularx,longtable,array,multirow}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{cleveref}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{float}
+
+\definecolor{navy}{HTML}{19324D}
+\definecolor{bluegray}{HTML}{EAF0F6}
+\definecolor{teal}{HTML}{176B70}
+\definecolor{palegreen}{HTML}{EAF6F1}
+\definecolor{amber}{HTML}{9A6700}
+\definecolor{paleyellow}{HTML}{FFF7D6}
+\definecolor{red}{HTML}{9E2A2B}
+\definecolor{palered}{HTML}{FCEBEC}
+\definecolor{graytext}{HTML}{4A5560}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=navy,
+  citecolor=teal,
+  urlcolor=teal,
+  pdftitle={Research Review and Revision Guide: Curriculum Learning x MaxRL},
+  pdfsubject={Mathematical audit, reviewer questions, and rewriting guidance},
+  pdfauthor={Internal research review}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Curriculum Learning $\times$ MaxRL}
+\fancyhead[R]{\small Mathematical Review and Rewrite Guide}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\linespread{1.035}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prb}{\mathbb{P}}
+\newcommand{\ind}{\mathbf{1}}
+\newcommand{\grad}{\nabla_{\!\theta}}
+\newcommand{\PassAt}[1]{\mathrm{pass@}#1}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\KL}{\operatorname{KL}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\sg}{\operatorname{sg}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\given}{\,\middle|\,}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newtcolorbox{prioritybox}[1][]{
+  breakable, colback=palered, colframe=red, boxrule=0.7pt,
+  title={\textbf{Priority}}, fonttitle=\bfseries, #1}
+\newtcolorbox{questionbox}[1][]{
+  breakable, colback=paleyellow, colframe=amber, boxrule=0.7pt,
+  title={\textbf{Questions to answer}}, fonttitle=\bfseries, #1}
+\newtcolorbox{rewritebox}[1][]{
+  breakable, colback=bluegray, colframe=navy, boxrule=0.7pt,
+  title={\textbf{Ready-to-use rewrite}}, fonttitle=\bfseries, #1}
+\newtcolorbox{evidencebox}[1][]{
+  breakable, colback=palegreen, colframe=teal, boxrule=0.7pt,
+  title={\textbf{Evidence boundary}}, fonttitle=\bfseries, #1}
+\newtcolorbox{takeawaybox}[1][]{
+  breakable, colback=white, colframe=navy, boxrule=1pt,
+  title={\textbf{Main takeaway}}, fonttitle=\bfseries, #1}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false
+}
+
+\title{\vspace{-1.3cm}\textbf{Research Review and Revision Guide}\\[0.3em]
+\Large Curriculum Learning $\times$ MaxRL\\[0.25em]
+\large Mathematical proofs, reviewer questions, and rewriting guidance}
+\author{Internal research review workbook}
+\date{Updated 2026-08-04}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\begin{minipage}{0.92\textwidth}
+\small
+\textbf{Evidence base.} This guide reviews the 17-page working draft \emph{The Estimator Decides: What Curricula and Failure Recycling Can and Cannot Do in RL with Verifiable Rewards} (working draft v0.9, August 4, 2026) against Tajwar, Zeng, et al., \emph{Maximum Likelihood Reinforcement Learning} (arXiv:2602.02710v1). It also consolidates the earlier Markdown review into a self-contained mathematical and writing document.
+
+\textbf{Scope.} This is a paper review and derivation audit. It is not an independent reproduction of the repository, a formal verification of every implementation path, or an exhaustive novelty search over all 2025--2026 literature. Whenever the source files do not establish a claim, the guide labels the point as a reviewer inference, a proposed theorem, or a requested experiment rather than silently treating it as fact.
+\end{minipage}
+\end{center}
+
+\vspace{0.5em}
+\begin{takeawaybox}
+There is a strong paper here. Its most defensible thesis is narrower and deeper than the current broad slogan: \emph{the practical finite-group estimator defines an exact activity profile that constrains where prompt allocation can produce reward contrast; task transfer remains structure-dependent; relabeling can create contrast beyond allocation, but its destination distribution can also concentrate the policy and reduce multi-sample coverage.}
+\end{takeawaybox}
+
+\tableofcontents
+\newpage
+
+\part{Executive review and revision priorities}
+
+\section{Overall assessment}
+
+The draft contains a genuine conceptual contribution. MaxRL derives how a task is weighted in expectation after it is sampled. Your extension asks an earlier, data-level question: before generation compute is spent, how likely is a finite rollout group to produce a contrastive update under the estimator that will consume it? For the practical centered MaxRL implementation, that question has a closed-form answer. This connects four levels that are usually discussed separately:
+
+\begin{enumerate}[leftmargin=2em]
+\item the population objective and its pass-rate weight function;
+\item the finite-group event structure, especially all-fail and all-success groups;
+\item the curriculum's pre-rollout allocation decision;
+\item the destination distribution created by hindsight relabeling.
+\end{enumerate}
+
+The project also demonstrates unusually good scientific discipline. The draft reports nulls, identifies a posterior-feedback failure, distinguishes wall-clock from step-matched effects, discloses a gate decay bug, retracts an oracle comparison, and includes a suite that defeats the broad safety story. Those are strengths. The remaining task is to make the claims match the exact estimator, sampling law, statistical unit, and evidence level.
+
+\subsection{Central risks in the current version}
+
+\begin{prioritybox}
+The highest-risk statements are not the equations themselves; they are the nouns attached to them. The draft repeatedly calls coefficient mass ``the expected learning signal,'' calls an implementation-dependent all-fail convention a universal dead zone, calls a coverage main effect a curriculum-by-estimator interaction, and calls semantically valid relabels exact destination ML gradients. Each can be repaired without abandoning the core idea.
+\end{prioritybox}
+
+The main revision risks are:
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Quantity naming.} The exact theorem computes coefficient or advantage mass, not gradient norm, signal-to-noise ratio, or expected improvement. The right repair is an exact factorization theorem, not only weaker prose.
+\item \textbf{Estimator ambiguity.} The MaxRL baseline contains a raw estimator, a full control-variate estimator, and a practical algorithm that drops the all-fail control-variate term. They do not have the same objective order or coefficient-mass profile.
+\item \textbf{Interaction identification.} The maze supports an estimator-conditioned coverage main effect across curriculum variants. It does not, by itself, prove that adding the teacher harms GRPO.
+\item \textbf{Hindsight sampling law.} Exact verification and prompt rewriting establish semantic validity, but source-generated data are generally off-policy for the destination prompt.
+\item \textbf{Gate evidence.} The three-seed gate operating point was produced by a disclosed decay bug; the corrected setting currently has one seed in the draft.
+\item \textbf{Statistical units.} The manuscript alternates between five and eighteen MaxRL observations and calls six configuration-seed contrasts ``six seeds.'' The run inventory and clustering must be explicit.
+\item \textbf{Narrative breadth.} Nine experimental rungs, preliminary LLM cells, classic control, IsaacLab, inference multipliers, and several audit stories compete with the central theorem.
+\item \textbf{Anonymity.} The anonymous manuscript links to a public repository whose URL reveals the author identity.
+\end{enumerate}
+
+\section{Revision priorities}
+
+\subsection{P0: submission-blocking changes}
+
+\begin{enumerate}[leftmargin=2em,label=\textbf{P0.\arabic*.}]
+\item \textbf{Anonymize the paper and artifacts.} Replace the public repository URL, scrub usernames and metadata, and inspect the PDF, supplementary archive, generated JSON, commit history, and code comments.
+\item \textbf{Distinguish all three MaxRL estimators.} State explicitly that Tajwar et al.'s Theorem 2 is correct for the raw estimator, while your $T=N-1$ result concerns the practical centered implementation that zeros the entire $K=0$ group.
+\item \textbf{Fix the factor-of-two notation.} Reserve $A_N$ for full coefficient mass and $\nu_N=A_N/2$ for the normalized sampling utility.
+\item \textbf{Replace ``exact expected learning signal.''} Add the coefficient-mass factorization in \cref{sec:factorization}; call $\nu_N$ the estimator-controlled scalar multiplying the success-versus-failure score contrast.
+\item \textbf{Scope the dead-zone statement.} The full control-variate estimator emits a nonzero sample update on $K=0$. Run or discuss that missing baseline before saying recycling is the only possible channel.
+\item \textbf{Rewrite the hindsight theorem.} Present it as a verified destination semi-gradient under a source-induced proposal law, exact only under a measurable law-matching condition.
+\item \textbf{Separate main effect from interaction.} Use the maze for the estimator main effect; reserve the stronger teacher-harms-GRPO claim for a powered, schedule-matched factorial experiment.
+\item \textbf{Reanalyze statistical units.} Publish a one-row-per-run registry and use seed/warmstart clusters in permutation or bootstrap inference.
+\item \textbf{Rerun the corrected gate.} The final coverage-restoration claim should use the intended decay and multiple paired seeds.
+\end{enumerate}
+
+\subsection{P1: decisive experiments}
+
+\begin{enumerate}[leftmargin=2em,label=\textbf{P1.\arabic*.}]
+\item Practical drop-$K=0$ MaxRL versus full-control-variate MaxRL on a chain, the frontier-heavy suite, and one maze setting.
+\item A frozen or externally generated prompt schedule replayed identically under MaxRL and GRPO.
+\item A corrected gate-strength sweep with three to five paired seeds and destination-pass-rate telemetry.
+\item A uniform-with-replacement GSM8K control to isolate repetition from curriculum steering.
+\item Generated-token or environment-transition matching in addition to wall-clock and optimizer-step matching.
+\item A source-versus-destination distribution-shift diagnostic and, ideally, a cross-fitted relabel ablation.
+\end{enumerate}
+
+\subsection{P2: narrative and presentation}
+
+\begin{enumerate}[leftmargin=2em,label=\textbf{P2.\arabic*.}]
+\item Reduce the main paper to three decisive experiment stories plus one boundary-condition synthesis.
+\item Move preliminary GSM8K interaction evidence, the single-checkpoint $11\times$ threshold result, detailed classic-control curves, and most audit history to the appendix unless the decisive replications finish.
+\item Replace recurring slogans with one stable vocabulary: coefficient mass, estimator activity, operationally dead regime, coverage-stable, sampling premium, one-step mass oracle, and destination semi-gradient.
+\item Make every figure caption state the estimator convention, group size, statistical unit, and whether the schedule is matched or merely generated by the same rule.
+\end{enumerate}
+
+\section{The strongest defensible thesis}
+
+\begin{rewritebox}[title={\textbf{Recommended one-sentence thesis}}]
+For a fixed group estimator, its finite-sample coefficient profile determines where a sampled prompt can produce reward contrast; this profile can guide allocation, but it does not determine cross-task transfer, and hindsight relabeling can create contrast beyond allocation while shifting training toward destinations that may reduce multi-sample coverage.
+\end{rewritebox}
+
+A shorter hook, positioned directly against MaxRL, is:
+
+\begin{rewritebox}[title={\textbf{Recommended opening contrast with MaxRL}}]
+MaxRL derives how a prompt is weighted after it is sampled. We derive the finite-group activity profile that tells a curriculum whether sampling that prompt can produce contrast at all.
+\end{rewritebox}
+
+\section{Claim-to-evidence boundary}
+
+\small
+\begin{longtable}{p{0.20\textwidth}p{0.23\textwidth}p{0.28\textwidth}p{0.22\textwidth}}
+\toprule
+\textbf{Current claim} & \textbf{Why a reviewer may object} & \textbf{Defensible rewrite now} & \textbf{Evidence needed for the stronger claim}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Current claim} & \textbf{Why a reviewer may object} & \textbf{Defensible rewrite now} & \textbf{Evidence needed for the stronger claim}\\
+\midrule
+\endhead
+``Expected learning signal is exactly $2(\PassAt{N}-\PassAt{1})$.'' & The theorem computes $\E\sum_i|w_i|$, not gradient norm, SNR, or improvement. & ``The expected coefficient mass is exact, and its half-mass is the scalar multiplying the success--failure score contrast for balanced binary estimators.'' & Direct bridge to expected improvement or a task-transfer model.\\
+\addlinespace
+``The dead zone no sampler can reach.'' & A sampled all-fail group can receive a nonzero full-control-variate update; small $p>0$ can also be reached with enough budget. & ``Under the practical zero-constant-group estimator, all-fail groups are silent; at a fixed $(B,N)$ budget, low-$p$ tasks can be operationally dead.'' & Full-CV baseline and a budget-indexed definition.\\
+\addlinespace
+``Recycling is the only channel into the dead zone.'' & This is only true with the practical estimator held fixed and after excluding other all-fail updates. & ``Relabeling is the signal-creation mechanism studied here; reallocation alone cannot create contrast for a dropped all-fail group.'' & Compare full-CV, unlikelihood, entropy, or other negative-only updates.\\
+\addlinespace
+``The same curriculum degrades GRPO.'' & The maze mainly shows an estimator coverage main effect; adaptive teachers produce different realized schedules. & ``Coverage behavior separates by estimator across curriculum variants; the teacher interaction remains suggestive.'' & Same realized schedule, paired factorial design, adequate seeds, delivered steering.\\
+\addlinespace
+``Hindsight yields the exact ML gradient of the achieved task.'' & Source-generated trajectories are not generally sampled from the destination-conditioned policy. & ``Hindsight yields a verified destination semi-gradient under the source-induced proposal; it matches the fresh destination update under a conditional-law matching condition.'' & Fresh-destination comparison, distribution-shift diagnostic, or cross-fitting.\\
+\addlinespace
+``Perfect pass-rate information is worth almost nothing.'' & Oracle-only strongly exceeds posterior-only in the reported chain; oracle ties posterior plus recycling, not posterior alone. & ``Recycling can compensate for allocation error; perfect allocation still improves substantially over posterior-only allocation.'' & Matched oracle-only versus posterior-only analysis.\\
+\addlinespace
+``The gate restores coverage.'' & The intended setting has one corrected seed; three-seed runs used an unintended effective threshold. & ``An unintended intermediate gate strength restores frontier coverage in three seeds; a corrected one-seed run shows the stronger endpoint.'' & Corrected multi-seed sweep.\\
+\addlinespace
+``Confirmed at LLM scale.'' & Two seeds, weak steering, replacement confound, and one regression-shape replication. & ``The LLM experiment diagnoses posterior starvation and yields a same-sign endpoint contrast under GRPO, with magnitude tracking delivered steering.'' & Strong steering, replacement control, three to five paired seeds.\\
+\addlinespace
+``No new difficulty hyperparameters.'' & Band center is derived, but decay, floor, concentration, dose, and gate strength remain. & ``No hand-set target difficulty or band width is required; several implementation and safety knobs remain.'' & None; this is the accurate framing.\\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\part{Mathematical audit and complete derivations}
+
+\section{Setup and notation}
+
+Fix a task or prompt $x$. Let
+\[
+ z_i \overset{\mathrm{i.i.d.}}{\sim} m_\theta(\cdot\mid x),\qquad
+ r_i=R(x,z_i)\in\{0,1\},\qquad
+ K=\sum_{i=1}^{N}r_i,
+\]
+with score
+\[
+ S_i=\grad\log m_\theta(z_i\mid x).
+\]
+Write
+\[
+ p=p_\theta(x)=\Prb(r=1\mid x),\qquad q=1-p,
+\]
+and
+\[
+ \PassAt{k}(p)=1-q^k.
+\]
+The MaxRL truncated objective of order $T$ has gradient
+\[
+ \grad J_{\mathrm{MaxRL}}^{(T)}(x)
+ =\sum_{j=0}^{T-1}q^j\grad p
+ =\frac{1-q^T}{p}\grad p.
+\]
+All exact score identities below assume $0<p<1$ and extend to endpoints by limits when the model is smooth and has full support.
+
+\section{The baseline contains three different estimators}
+\label{sec:three-estimators}
+
+The most important correction in the paper is conceptual, not adversarial: Tajwar et al.'s raw theorem, their full control-variate expression, and their practical algorithm are distinct estimators.
+
+\subsection{Raw success-conditioned estimator}
+
+The baseline's Eq.~(9) and Theorem~2 use
+\begin{equation}
+\widehat g_N^{\mathrm{raw}}
+=\ind\{K\ge1\}\frac{1}{K}\sum_{i=1}^{N}r_iS_i.
+\label{eq:raw}
+\end{equation}
+This estimator is unbiased for order $T=N$.
+
+\subsection{Full control-variate estimator}
+
+The baseline's Eq.~(10) subtracts the unconditional average score:
+\begin{equation}
+\widehat g_N^{\mathrm{full}}
+=\ind\{K\ge1\}\frac{1}{K}\sum_{i=1}^{N}r_iS_i
+-\frac{1}{N}\sum_{i=1}^{N}S_i.
+\label{eq:fullcv}
+\end{equation}
+The second term is retained at $K=0$. Since $\E[S_i]=0$, this remains unbiased for $T=N$.
+
+\subsection{Practical centered, drop-all-fail estimator}
+
+The baseline's practical Algorithm~1 drops both terms when $K=0$:
+\begin{equation}
+\widehat g_N^{\mathrm{prac}}
+=\ind\{K\ge1\}\sum_{i=1}^{N}
+\left(\frac{r_i}{K}-\frac{1}{N}\right)S_i.
+\label{eq:practical}
+\end{equation}
+This is the estimator analyzed by the working draft. It is unbiased for order $T=N-1$, not $T=N$.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{The three MaxRL-related estimators should be named separately. Here ``mass'' means $\E\sum_i|w_i|$.}
+\begin{tabularx}{\textwidth}{@{}p{0.19\textwidth}p{0.16\textwidth}p{0.11\textwidth}p{0.17\textwidth}X@{}}
+\toprule
+\textbf{Estimator} & \textbf{$K=0$ behavior} & \textbf{Objective order} & \textbf{Expected coefficient mass} & \textbf{Endpoint profile}\\
+\midrule
+Raw success average & zero & $T=N$ & $1-q^N$ & zero only at $p=0$\\
+Full control variate & $-N^{-1}\sum_i S_i$ & $T=N$ & $2q-q^N$ & nonzero as $p\downarrow0$\\
+Practical centered/drop & zero & $T=N-1$ & $2(q-q^N)$ & zero at $p=0$ and $p=1$\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{evidencebox}
+The two-ended, zone-of-proximal-development-shaped coefficient profile is not a generic property of every success-conditioned estimator. It is created by the combination of centering and the practical convention that discards the entire all-fail group.
+\end{evidencebox}
+
+\section{Conditional score identities}
+
+\begin{lemma}[Success and failure score means]
+Define
+\[
+\mu_+(x)=\E[S\mid r=1,x],\qquad
+\mu_-(x)=\E[S\mid r=0,x].
+\]
+Then
+\begin{equation}
+\mu_+(x)=\frac{\grad p}{p},\qquad
+\mu_-(x)=-\frac{\grad p}{q},
+\label{eq:conditional-score}
+\end{equation}
+and therefore
+\begin{equation}
+\mu_+(x)-\mu_-(x)=\frac{\grad p}{pq}.
+\label{eq:score-contrast}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The likelihood-ratio identity gives
+\[
+\grad p
+=\grad\E[r]
+=\E[rS]
+=p\,\E[S\mid r=1]
+=p\mu_+.
+\]
+Also $\E[S]=0$, so
+\[
+0=p\mu_+ + q\mu_-.
+\]
+Substituting $p\mu_+=\grad p$ yields $q\mu_-=-\grad p$. Subtracting the two conditional means gives \cref{eq:score-contrast}.
+\end{proof}
+
+\section{A general coefficient-mass factorization}
+\label{sec:factorization}
+
+The strongest repair to the phrase ``expected learning signal'' is an exact theorem for the family of balanced binary group estimators that includes practical MaxRL, RLOO, and finite-group GRPO.
+
+\begin{definition}[Balanced binary group estimator]
+For $1\le K=k\le N-1$, suppose a symmetric group estimator assigns each success coefficient $a_k/k$ and each failure coefficient $-a_k/(N-k)$, where $a_k\ge0$, and assigns zero coefficients to constant groups $K\in\{0,N\}$. Then its full coefficient mass conditional on $K=k$ is $2a_k$.
+\end{definition}
+
+\begin{theorem}[Coefficient-mass factorization]
+\label{thm:factorization}
+For a balanced binary group estimator,
+\begin{equation}
+\E[\widehat g\mid x]
+=\nu_N(p)\bigl(\mu_+(x)-\mu_-(x)\bigr),
+\qquad
+\nu_N(p):=\E[a_K]
+=\frac12\E\left[\sum_i|w_i|\right].
+\label{eq:mass-factorization}
+\end{equation}
+Equivalently,
+\begin{equation}
+\E[\widehat g\mid x]
+=\frac{\nu_N(p)}{p(1-p)}\grad p.
+\label{eq:weight-from-mass}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Condition on $K=k$ with $1\le k\le N-1$. The total positive coefficient is
+\[
+k\frac{a_k}{k}=a_k,
+\]
+and the total negative coefficient is
+\[
+(N-k)\left(-\frac{a_k}{N-k}\right)=-a_k.
+\]
+By exchangeability, successful trajectories have conditional score mean $\mu_+$ and failed trajectories have conditional score mean $\mu_-$. Therefore
+\[
+\E[\widehat g\mid K=k,x]
+=a_k\mu_+-a_k\mu_-
+=a_k(\mu_+-\mu_-).
+\]
+Constant groups contribute zero. Averaging over $K$ yields \cref{eq:mass-factorization}; substituting \cref{eq:score-contrast} yields \cref{eq:weight-from-mass}.
+\end{proof}
+
+\begin{takeawaybox}
+The exact statement is not that coefficient mass equals the whole learning signal. It is that normalized half-mass $\nu_N(p)$ is the estimator-controlled scalar multiplying the task-specific success--failure score separation. Score geometry and cross-task transfer still matter, but $\nu_N$ is more than an arbitrary heuristic.
+\end{takeawaybox}
+
+\section{Exact results for the three MaxRL variants}
+
+\subsection{Raw estimator: order $T=N$}
+
+\begin{proposition}[Raw estimator expectation]
+For \cref{eq:raw},
+\begin{equation}
+\E[\widehat g_N^{\mathrm{raw}}\mid x]
+=\left(1-q^N\right)\mu_+
+=\frac{1-q^N}{p}\grad p
+=\sum_{j=0}^{N-1}q^j\grad p.
+\end{equation}
+Thus the raw estimator is unbiased for $J_{\mathrm{MaxRL}}^{(N)}$.
+\end{proposition}
+
+\begin{proof}
+Conditional on $K\ge1$, the average score over successful samples has expectation $\mu_+$. The event occurs with probability $1-q^N$. Substitute $\mu_+=\grad p/p$ and expand the geometric series.
+\end{proof}
+
+Its expected coefficient mass is simply
+\[
+\E\sum_i|w_i|=\Prb(K\ge1)=1-q^N.
+\]
+This mass does not vanish at $p=1$, illustrating why mass alone cannot be called the entire gradient: at $p=1$, the conditional success law equals the unconditional law and its mean score is zero even though the raw coefficients sum to one.
+
+\subsection{Full control variate: order $T=N$ and a nonzero all-fail update}
+
+\begin{proposition}[Full control-variate mass]
+For \cref{eq:fullcv},
+\begin{equation}
+\E[\widehat g_N^{\mathrm{full}}\mid x]
+=\E[\widehat g_N^{\mathrm{raw}}\mid x],
+\end{equation}
+and
+\begin{equation}
+\E\left[\sum_i|w_i|\right]
+=2q-q^N.
+\label{eq:fullcv-mass}
+\end{equation}
+Moreover,
+\begin{equation}
+\E[\widehat g_N^{\mathrm{full}}\mid K=0,x]
+=-\mu_-(x)
+=\frac{\grad p}{q}.
+\label{eq:allfail-cv}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The unconditional average score has mean zero, so subtracting it preserves the raw estimator's expectation. When $K\ge1$, the coefficient mass is $2(1-K/N)$. When $K=0$, all $N$ coefficients equal $-1/N$, so the mass is one. Therefore
+\begin{align*}
+\E\sum_i|w_i|
+&=q^N+2\E\left[\left(1-\frac{K}{N}\right)\ind\{K\ge1\}\right]\\
+&=q^N+2\left(1-q^N-p\right)\\
+&=2q-q^N.
+\end{align*}
+Conditional on $K=0$, each score has mean $\mu_-$; hence the negative average score has mean $-\mu_-$. Apply \cref{eq:conditional-score}.
+\end{proof}
+
+\begin{prioritybox}
+This estimator is the cleanest mathematical challenge to an unconditional statement that ``no loss-level update can act on an all-fail group.'' The practical algorithm may still outperform it because the conditional update can be noisy or unstable. That is an empirical question and a valuable baseline, not a reason to omit the distinction.
+\end{prioritybox}
+
+\subsection{Practical centered estimator: order $T=N-1$}
+
+For $1\le K=k\le N-1$, the total positive and negative coefficient magnitudes of \cref{eq:practical} are both
+\[
+a_k=1-\frac{k}{N}.
+\]
+Therefore it is balanced and \cref{thm:factorization} applies.
+
+\begin{theorem}[Practical MaxRL activity and objective order]
+\label{thm:practical}
+For $N\ge2$, define
+\begin{equation}
+A_N(p):=\E\left[\sum_i|w_i|\right],
+\qquad
+\nu_N(p):=\frac12A_N(p).
+\end{equation}
+Then the practical centered, drop-all-fail estimator satisfies
+\begin{align}
+\nu_N(p)
+&=\Prb(K\ge1)-\frac{\E K}{N}
+=q-q^N
+=\PassAt{N}(p)-\PassAt{1}(p),
+\label{eq:nu}\\
+A_N(p)
+&=2(q-q^N),
+\label{eq:mass-prac}\\
+\E[\widehat g_N^{\mathrm{prac}}\mid x]
+&=\nu_N(p)(\mu_+-\mu_-)
+=\frac{1-q^{N-1}}{p}\grad p
+=\sum_{j=0}^{N-2}q^j\grad p.
+\label{eq:practical-gradient}
+\end{align}
+Consequently, the practical estimator is unbiased for $J_{\mathrm{MaxRL}}^{(N-1)}$.
+\end{theorem}
+
+\begin{proof}
+The normalized half-mass is
+\begin{align*}
+\E[a_K]
+&=\E\left[\left(1-\frac{K}{N}\right)\ind\{K\ge1\}\right]\\
+&=\Prb(K\ge1)-\frac{\E K}{N}\\
+&=(1-q^N)-p\\
+&=q-q^N.
+\end{align*}
+The full mass is twice this value. The factorization theorem gives
+\[
+\E[\widehat g_N^{\mathrm{prac}}\mid x]
+=(q-q^N)\frac{\grad p}{pq}
+=\frac{1-q^{N-1}}{p}\grad p.
+\]
+The final equality follows from the geometric series
+\[
+\frac{1-q^{N-1}}{1-q}=\sum_{j=0}^{N-2}q^j.
+\]
+Since $p=1-q$, the estimator targets the order-$N-1$ truncated objective.
+\end{proof}
+
+\begin{rewritebox}[title={\textbf{Recommended theorem interpretation}}]
+The quantity $\nu_N(p)=\PassAt{N}(p)-\PassAt{1}(p)$ is exactly the estimator-controlled scalar multiplying the success--failure score contrast. It is the probability that a task is solved within $N$ attempts but not in one, but it is not by itself the gradient norm or the expected improvement of training on that task.
+\end{rewritebox}
+
+\subsection{Why the $T=N-1$ refinement is collegial, not a correction of Theorem 2}
+
+The precise sentence to use is:
+
+\begin{rewritebox}
+Tajwar et al.'s Theorem 2 is exact for the raw success-conditioned estimator in their Eq.~(9). Their practical Algorithm~1 additionally zeroes the all-fail control-variate term; that implementation corresponds to truncation order $T=N-1$.
+\end{rewritebox}
+
+Avoid phrases such as ``the MaxRL theorem is wrong.'' The contribution is an implementation-level refinement that matters for your finite-group activity accounting.
+
+\section{Shape, peak, and operational regimes}
+
+\begin{proposition}[Strict concavity and peak]
+For $N\ge2$,
+\[
+\nu_N(p)=q-q^N
+\]
+is strictly concave on $(0,1)$, vanishes at $p=0$ and $p=1$, and has the unique maximizer
+\begin{equation}
+ p_N^*=1-N^{-1/(N-1)}.
+\label{eq:pstar}
+\end{equation}
+At the maximum,
+\begin{equation}
+ \nu_N(p_N^*)=\left(1-\frac1N\right)N^{-1/(N-1)}.
+\label{eq:numax}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Differentiate with $q=1-p$:
+\[
+\nu_N'(p)=-1+Nq^{N-1},
+\qquad
+\nu_N''(p)=-N(N-1)q^{N-2}<0.
+\]
+Thus there is one critical point and it is the strict maximum. Solving $Nq^{N-1}=1$ gives $q^*=N^{-1/(N-1)}$ and \cref{eq:pstar}. Since $(q^*)^{N}=q^*/N$, the peak value is $q^*(1-1/N)$.
+\end{proof}
+
+For large $N$, writing $a_N=\log N/(N-1)$,
+\begin{equation}
+ p_N^*=1-e^{-a_N}
+ =\frac{\log N}{N-1}
+ -\frac{(\log N)^2}{2(N-1)^2}
+ +O\!\left(\frac{(\log N)^3}{N^3}\right).
+\end{equation}
+The common shorthand $p_N^*\approx \log N/N$ is acceptable in prose, but the theorem and figure caption should retain the exact expression.
+
+\begin{table}[H]
+\centering
+\caption{Exact activity peak for common rollout counts.}
+\begin{tabular}{@{}rcc@{}}
+\toprule
+$N$ & $p_N^*$ & $\nu_N(p_N^*)$\\
+\midrule
+2 & 0.5000 & 0.2500\\
+4 & 0.3700 & 0.4725\\
+8 & 0.2570 & 0.6501\\
+16 & 0.1688 & 0.7793\\
+32 & 0.1058 & 0.8663\\
+64 & 0.0639 & 0.9215\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Tail expansions}
+
+As $p\downarrow0$,
+\begin{equation}
+\nu_N(p)=(N-1)p-\binom{N}{2}p^2+O(p^3).
+\label{eq:hardtail}
+\end{equation}
+As $p\uparrow1$, with $q=1-p$,
+\begin{equation}
+\nu_N(p)=q-q^N\sim q.
+\label{eq:easytail}
+\end{equation}
+Thus the hard-tail activity grows by a factor of approximately $N-1$ relative to the $N=2$ slice, while the mastered tail decays linearly.
+
+\subsection{Do not call two point zeros a uniquely defined band width}
+
+The endpoint zeros and unique interior maximum induce three useful operational regimes, but a mathematical ``band width'' requires a level-set convention. One clean definition is
+\begin{equation}
+\mathcal B_{N,\eta}
+=\left\{p\in[0,1]:\nu_N(p)\ge \eta\nu_N(p_N^*)\right\},
+\qquad 0<\eta<1.
+\label{eq:band-levelset}
+\end{equation}
+Because $\eta$ is a choice, the strongest hyperparameter-free statement is:
+
+\begin{rewritebox}
+The rollout count $N$ determines the utility profile and its peak without requiring a hand-set target difficulty or band width.
+\end{rewritebox}
+
+\section{A budget-indexed definition of an operationally dead task}
+
+For the practical centered estimator, a group has nonzero coefficients exactly when $0<K<N$. Define the live-group probability
+\begin{equation}
+\ell_N(p)=\Prb(0<K<N)=1-p^N-q^N.
+\label{eq:liveprob}
+\end{equation}
+If a task receives $B$ independent groups, the probability that it produces no live group is
+\begin{equation}
+\Prb(\text{no live group in }B\text{ attempts})
+=\left(1-\ell_N(p)\right)^B.
+\label{eq:no-live}
+\end{equation}
+
+\begin{definition}[Operationally $\delta$-dead at budget $(B,N)$]
+A task is operationally $\delta$-dead if
+\begin{equation}
+1-\left(1-\ell_N(p)\right)^B\le\delta,
+\label{eq:delta-dead}
+\end{equation}
+meaning that the probability of observing even one live contrastive group within the allocated budget is at most $\delta$.
+\end{definition}
+
+For the hard tail, $\ell_N(p)=Np+O(p^2)$; for the mastered tail, $\ell_N(p)=Nq+O(q^2)$. The approximation $B\ell_N(p)\ll1$ gives a simple budget diagnostic.
+
+\begin{evidencebox}
+At $p=0$ or $p=1$, the practical estimator is structurally silent. At small but nonzero $p$, the task is not mathematically unreachable; it may be operationally dead at the deployed rollout and training budget. Use ``operationally dead'' rather than treating every low-pass-rate task as a literal zero.
+\end{evidencebox}
+
+\section{RLOO and finite-group GRPO}
+
+\subsection{RLOO is the $N=2$ activity slice}
+
+Use the convention
+\begin{equation}
+\widehat g_N^{\mathrm{RLOO}}
+=\frac1N\sum_{i=1}^{N}
+\left(r_i-\frac{1}{N-1}\sum_{j\ne i}r_j\right)S_i.
+\label{eq:rloo}
+\end{equation}
+For a group with $K=k$, the aggregate positive coefficient is
+\begin{equation}
+ a_k^{\mathrm{RLOO}}=\frac{k(N-k)}{N(N-1)}.
+\end{equation}
+Therefore
+\begin{equation}
+\nu_N^{\mathrm{RLOO}}(p)
+=\E[a_K^{\mathrm{RLOO}}]
+=pq,
+\qquad
+\E\sum_i|w_i|=2pq.
+\label{eq:rloo-mass}
+\end{equation}
+The factorization theorem gives
+\[
+\E[\widehat g_N^{\mathrm{RLOO}}\mid x]=\grad p,
+\]
+as required for expected-reward RL.
+
+For practical MaxRL at $N=2$,
+\[
+\nu_2(p)=q-q^2=pq,
+\]
+so the learnability profile $p(1-p)$ is exactly the $N=2$ practical-MaxRL activity profile under this normalization.
+
+\subsection{Finite-group GRPO}
+
+Assume GRPO uses the population standard deviation within the group and averages the trajectory updates by $1/N$:
+\begin{equation}
+\widehat g_N^{\mathrm{GRPO}}
+=\frac1N\sum_{i=1}^{N}
+\frac{r_i-K/N}{\sqrt{(K/N)(1-K/N)}}S_i,
+\qquad 0<K<N,
+\label{eq:grpo}
+\end{equation}
+with zero update on constant groups. For $K=k$, the aggregate positive coefficient is
+\begin{equation}
+ a_k^{\mathrm{GRPO}}=\frac{\sqrt{k(N-k)}}{N}.
+\end{equation}
+Hence the exact finite-group half-mass is
+\begin{equation}
+\nu_N^{\mathrm{GRPO}}(p)
+=\frac1N\E_{K\sim\mathrm{Bin}(N,p)}\sqrt{K(N-K)},
+\label{eq:grpo-mass}
+\end{equation}
+and the finite-$N$ population gradient weight is
+\begin{equation}
+ w_N^{\mathrm{GRPO}}(p)
+=\frac{\nu_N^{\mathrm{GRPO}}(p)}{pq}.
+\label{eq:grpo-weight-finite}
+\end{equation}
+As $N\to\infty$ at fixed $p\in(0,1)$,
+\[
+\nu_N^{\mathrm{GRPO}}(p)\to\sqrt{pq},
+\qquad
+w_N^{\mathrm{GRPO}}(p)\to\frac1{\sqrt{pq}},
+\]
+recovering the population curve in the MaxRL baseline.
+
+If the implementation uses the sample standard deviation with denominator $N-1$, multiply \cref{eq:grpo-mass} by $\sqrt{(N-1)/N}$. State the convention in the paper and code audit.
+
+\subsection{Exact tail comparisons}
+
+As $p\downarrow0$, the $K=1$ event dominates:
+\begin{equation}
+\nu_N^{\mathrm{GRPO}}(p)
+=p\sqrt{N-1}+O(p^2).
+\end{equation}
+Together with \cref{eq:hardtail},
+\begin{equation}
+\frac{\nu_N^{\mathrm{MaxRL}}(p)}{\nu_N^{\mathrm{RLOO}}(p)}\to N-1,
+\qquad
+\frac{\nu_N^{\mathrm{MaxRL}}(p)}{\nu_N^{\mathrm{GRPO}}(p)}\to\sqrt{N-1}.
+\label{eq:hard-ratios}
+\end{equation}
+As $p\uparrow1$,
+\begin{equation}
+\nu_N^{\mathrm{MaxRL}}(p)\sim q,
+\qquad
+\nu_N^{\mathrm{RLOO}}(p)\sim q,
+\qquad
+\nu_N^{\mathrm{GRPO}}(p)\sim q\sqrt{N-1}.
+\label{eq:easy-ratios}
+\end{equation}
+Therefore MaxRL and RLOO have the same first-order mastered-tail decay; GRPO retains a $\sqrt{N-1}$-larger coefficient mass under the stated finite-group convention.
+
+\begin{rewritebox}[title={\textbf{Corrected Figure 1 interpretation}}]
+At fixed $N$, practical MaxRL concentrates $(N-1)\times$ more normalized coefficient mass than RLOO on the hard tail and $\sqrt{N-1}\times$ more than finite-group GRPO. In the mastered tail, MaxRL and RLOO both decay linearly, while GRPO retains a $\sqrt{N-1}$-larger mass.
+\end{rewritebox}
+
+\section{One-step rollout allocation and water-filling}
+
+For fixed pass rate $p_i$ and group size $n\ge1$, define the normalized practical-MaxRL activity
+\[
+U_i(n)=q_i-q_i^n,
+\qquad q_i=1-p_i.
+\]
+The marginal activity from adding one rollout to a group of current size $n$ is
+\begin{equation}
+\Delta_i(n)
+=U_i(n+1)-U_i(n)
+=p_iq_i^n.
+\label{eq:marginal-first-success}
+\end{equation}
+This is exactly the probability that the new rollout is the first success after $n$ failures.
+
+\begin{proposition}[Discrete one-step mass water-filling]
+Suppose each selected task begins with a fixed initial group size $n_i\ge1$, pass rates remain fixed during allocation, and an additional integer rollout budget is allocated to maximize
+\[
+\sum_i U_i(n_i).
+\]
+Because $\Delta_i(n)=p_iq_i^n$ is nonincreasing in $n$, repeatedly allocating the next rollout to the task with the largest current marginal is optimal for this separable one-step activity objective.
+\end{proposition}
+
+\begin{proof}
+Each $U_i$ is discretely concave because its forward differences $p_iq_i^n$ decrease with $n$. Maximizing a sum of separable discretely concave utilities under a cardinality constraint is solved by selecting the largest available marginal increments. An exchange argument shows that any allocation containing a smaller chosen marginal while excluding a larger available marginal can be improved by swapping them.
+\end{proof}
+
+\begin{evidencebox}
+This is a one-step mass oracle, not a universal ceiling on AUC or final held-out performance. Sequential curricula change the policy, transfer across tasks, interfere through shared parameters, update the posterior, and alter future pass rates. Use ``mass-optimal allocator under fixed pass rates'' rather than ``oracle ceiling for pure samplers.''
+\end{evidencebox}
+
+\section{What estimator activity cannot decide: task transfer}
+
+The exact activity profile answers whether a task can emit a contrastive update. It does not answer whether that update improves the held-out objective. For evaluation objective $J_\rho(\theta)$ and a small step $\eta$, training on task $i$ has first-order value
+\begin{equation}
+\Delta J_\rho(i)
+\approx
+\eta\,\grad J_\rho(\theta)^{\!\top}
+\E[\widehat g_i].
+\label{eq:transfer-value}
+\end{equation}
+Using \cref{eq:mass-factorization},
+\begin{equation}
+\Delta J_\rho(i)
+\approx
+\eta\,\nu_N(p_i)
+\grad J_\rho(\theta)^{\!\top}
+\left(\mu_{i,+}-\mu_{i,-}\right).
+\label{eq:activity-transfer}
+\end{equation}
+The first factor is estimator activity. The second is transfer/alignment. A curriculum requires both.
+
+This distinction explains several results already present in the draft:
+
+\begin{itemize}[leftmargin=2em]
+\item shared-policy MountainCar can transfer progress from easier goals to the flag, while per-bin parameters cannot;
+\item sharper concentration helps structured skill chains where learning compounds, but not flat pools;
+\item one-shot task streams provide little opportunity for a relabeled skill to compound;
+\item on learnable-everywhere terrain, breadth can beat frontier focus;
+\item a narrow template stratum may provide activity without enough rollout-set diversity or transferable structure.
+\end{itemize}
+
+\begin{rewritebox}
+The estimator determines whether a task can emit contrast under the current group budget; shared representation and task geometry determine where that contrast transfers.
+\end{rewritebox}
+
+\section{Hindsight relabeling: a correct sampling-law theorem}
+\label{sec:hindsight}
+
+The current draft has already moved toward a conditional-law caveat, but the theorem should be made fully explicit.
+
+Fix a destination task $g$. Let $Q_\theta^{x\to g}$ denote the proposal law over rewritten trajectories produced by sampling under source task $x$, selecting destination $g$, and applying the conditioning rewrite. Let
+\[
+\Pi_\theta^g(\dd z)=\pi_\theta(\dd z\mid g)
+\]
+be the fresh destination policy law. Define destination verifier $R_g(z)\in\{0,1\}$ and destination score
+\[
+s_g(z)=\grad\log\pi_\theta(z\mid g).
+\]
+When taking the relabel update, treat the sampled proposal as stop-gradient data; the following is a semi-gradient statement.
+
+\subsection{Fixed-destination proposal theorem}
+
+\begin{theorem}[Relabeled-group factorization]
+\label{thm:relabel-factor}
+Suppose $z_1,\ldots,z_N$ are i.i.d. from a fixed proposal $Q^{x\to g}$, rewards are recomputed as $r_i=R_g(z_i)$, and the practical balanced coefficients are applied to the destination scores $s_g(z_i)$. Define
+\[
+p_Q=\E_Q[R_g(z)],
+\quad
+\mu_{Q,+}^g=\E_Q[s_g(z)\mid R_g=1],
+\quad
+\mu_{Q,-}^g=\E_Q[s_g(z)\mid R_g=0].
+\]
+Then the expected hindsight semi-gradient is
+\begin{equation}
+G_H(g)
+=\nu_N(p_Q)\left(\mu_{Q,+}^g-\mu_{Q,-}^g\right).
+\label{eq:hindsight-semigrad}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The proof is identical to \cref{thm:factorization}: conditional on $K=k$, the total positive coefficient is $a_k$ and the total negative coefficient is $-a_k$, but the conditional score means are taken under the proposal $Q$ while the score itself is evaluated under the destination policy.
+\end{proof}
+
+The fresh on-policy practical MaxRL update at destination $g$ is
+\begin{equation}
+G_{\mathrm{on}}(g)
+=\nu_N(p_\Pi)
+\left(\mu_{\Pi,+}^g-\mu_{\Pi,-}^g\right)
+=\frac{1-(1-p_\Pi)^{N-1}}{p_\Pi}\grad p_\Pi,
+\label{eq:fresh-destination}
+\end{equation}
+where $p_\Pi=\E_{\Pi^g}[R_g]$.
+
+\begin{corollary}[Exact equality condition]
+The hindsight and fresh destination updates are equal if and only if
+\begin{equation}
+\nu_N(p_Q)
+\left(\mu_{Q,+}^g-\mu_{Q,-}^g\right)
+=
+\nu_N(p_\Pi)
+\left(\mu_{\Pi,+}^g-\mu_{\Pi,-}^g\right).
+\label{eq:equality-condition}
+\end{equation}
+A sufficient condition is equality of the proposal and destination laws, $Q^{x\to g}=\Pi^g$. Matching both conditional laws and the success probability is also sufficient.
+\end{corollary}
+
+\begin{remark}[Why success-law matching alone is insufficient for the centered estimator]
+The practical centered estimator uses successful trajectories positively and failed trajectories negatively. Therefore equality of only the success-conditioned laws is insufficient unless the failure contribution also matches or cancels. A raw success-only estimator would require a different equality condition.
+\end{remark}
+
+\begin{remark}[All-success relabel groups are silent]
+If the rewrite makes every trajectory in the group a success, then $p_Q=1$ and $\nu_N(1)=0$. The practical centered estimator produces zero update. The paper must specify how the relabeled destination is chosen and how the new success count $K'$ retains contrast.
+\end{remark}
+
+\subsection{A distribution-shift bias bound}
+
+Assume $\|s_g(z)\|\le B$ under all relevant conditional laws. Let $Q_+,Q_-$ and $\Pi_+,\Pi_-$ denote success- and failure-conditioned laws. Then
+\begin{proposition}[A simple total-variation bound]
+\begin{align}
+\|G_H(g)-G_{\mathrm{on}}(g)\|
+&\le 2B\left|\nu_N(p_Q)-\nu_N(p_\Pi)\right|\\
+&\quad+2B\nu_N(p_Q)
+\left[\TV(Q_+,\Pi_+)+\TV(Q_-,\Pi_-)\right].
+\label{eq:tv-bound}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+Add and subtract $\nu_N(p_Q)(\mu_{\Pi,+}^g-\mu_{\Pi,-}^g)$ and apply the triangle inequality. Since each conditional mean has norm at most $B$, the target score contrast has norm at most $2B$. For any vector-valued function bounded by $B$, the difference in expectations under two laws is at most $2B$ times their total variation distance. Apply this separately to success and failure conditional means.
+\end{proof}
+
+This bound is diagnostic rather than a guarantee; neural-network scores are not globally bounded unless clipped. It nevertheless makes the required measurements clear.
+
+\subsection{Same-group destination selection creates an additional selection issue}
+
+If the destination $g=H(z_{1:N})$ is selected from the same group later used for the update---for example, the deepest achieved subgoal---then the trajectories are not generally i.i.d. from a fixed proposal conditional on the selected destination. The cleanest theorem applies to a fixed or cross-fitted destination.
+
+A cross-fitted variant is:
+
+\begin{enumerate}[leftmargin=2em]
+\item split the dead source group into a destination-selection subset and an update subset;
+\item choose $g$ using only the selection subset;
+\item rewrite and reverify the disjoint update subset at $g$;
+\item apply the practical estimator to the update subset.
+\end{enumerate}
+
+This does not remove source-to-destination off-policy shift, but it removes adaptive reuse of the same trajectories for choosing and estimating the destination update.
+
+\begin{rewritebox}[title={\textbf{Recommended hindsight proposition}}]
+A relabeled group yields a verified destination-conditioned semi-gradient under the source-induced proposal law. It equals the fresh destination practical-MaxRL update only when the proposal activity and success--failure score contrast match those of fresh destination rollouts; equality of the full laws is sufficient. Exact verification guarantees semantic correctness, not on-policy destination sampling.
+\end{rewritebox}
+
+\section{Recycling-induced sharpening: what can be formalized}
+
+Let $q_t(g)$ be the source-induced frequency with which candidate relabel destinations are produced at training time $t$, and let $a_t(g)\in[0,1]$ be the admission rule. The admitted destination marginal is
+\begin{equation}
+\widetilde q_t(g)
+=\frac{q_t(g)a_t(g)}{\sum_h q_t(h)a_t(h)}.
+\label{eq:destination-marginal}
+\end{equation}
+Without importance correction to a desired destination distribution $\rho(g)$, the relabel stream tilts training toward $\widetilde q_t$.
+
+A useful concentration statistic is
+\begin{equation}
+C(q_t)=\sum_g q_t(g)^2
+=\E_{G\sim q_t}[q_t(G)],
+\label{eq:collision}
+\end{equation}
+which is the collision probability. Destinations sampled from the policy's achieved outcomes are, descriptively, drawn more often from high-occupancy modes.
+
+\begin{evidencebox}
+Equation \cref{eq:collision} does not by itself prove sharpening. Under perfectly matched, unfiltered self-sampling, $\E_{G\sim q}[\grad\log q(G)]=0$. A nonzero concentration effect must come from curation, cross-task law mismatch, adaptive destination selection, unequal success/failure contrast, finite-sample optimization, or some combination. Treat occupancy bias as a mechanism to test, not a completed proof.
+\end{evidencebox}
+
+The Countdown finding is still important: mean accuracy rises while pass@16 falls across three seeds. The stronger mechanism section should show which of the following explains it:
+
+\begin{enumerate}[leftmargin=2em]
+\item destination-marginal shift toward a small set of reachable values;
+\item off-policy score mismatch at the destination;
+\item larger effective gradient dose on a subset of tasks;
+\item reduced within-task output support;
+\item selection of destinations from the same group used for updating.
+\end{enumerate}
+
+High-value controls are destination-frequency-matched fresh rollouts, inverse-propensity weighting, a pass-rate-matched random destination, live-gradient replay, and cross-fitted destination selection.
+
+\section{The gate: what is derived and what remains tuned}
+
+The endpoint behavior of $\nu_N(p)$ motivates rejecting saturated destinations. It does not uniquely derive the hard threshold used in the current algorithm.
+
+\subsection{Hard upper-pass-rate gate}
+
+The deployed rule is
+\begin{equation}
+ a_\tau(g)=\ind\{\widehat p_g\le\tau\}.
+\label{eq:hard-gate}
+\end{equation}
+This is simple and interpretable, but $\tau$ is tuned.
+
+\subsection{Utility-based gate}
+
+A more algebraically faithful alternative is
+\begin{equation}
+ a_{\lambda}(g)=\ind\{\nu_N(\widehat p_g)\ge\lambda\},
+\label{eq:utility-gate}
+\end{equation}
+or a soft rule
+\begin{equation}
+ a_{\beta}(g)
+=\frac{\nu_N(\widehat p_g)^\beta}
+{\max_h\nu_N(\widehat p_h)^\beta+\varepsilon}.
+\label{eq:soft-gate}
+\end{equation}
+These reject both extremely hard and saturated destinations; whether that is desirable is empirical.
+
+\begin{rewritebox}
+The estimator's endpoint zero motivates a saturation-aware admission rule. We instantiate that principle with a tunable pass-rate threshold; the gate strength, posterior decay, replay dose, concentration exponent, and uniform floor remain implementation parameters.
+\end{rewritebox}
+
+The current three-seed gate result should be labeled an unintended intermediate operating point because the decay bug changed the effective threshold. The final paper should report a corrected fixed-decay sweep, not reinterpret the bug as if it had been designed.
+
+\section{Theory-to-code contract}
+
+A paper whose headline is estimator algebra should include a compact audit table connecting assumptions to code.
+
+\small
+\begin{longtable}{p{0.27\textwidth}p{0.30\textwidth}p{0.35\textwidth}}
+\toprule
+\textbf{Theory assumption} & \textbf{Code question} & \textbf{Consequence if different}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Theory assumption} & \textbf{Code question} & \textbf{Consequence if different}\\
+\midrule
+\endhead
+Binary rewards & Are rewards exactly $0/1$ after every verifier and rewrite? & Continuous or shaped rewards invalidate the binomial and coefficient-mass formulas.\\
+I.i.d. rollouts within a group & Are rollouts independent, or coupled by shared decoding state, batching, or diversity constraints? & $K$ need not be binomial; pass@N and mass formulas change.\\
+Exact denominator $K/N$ & Is an epsilon added? & With $\varepsilon>0$, the estimator is slightly rescaled. For $\varepsilon=10^{-6}$ and $N\le128$, the relative error is at most roughly $1.3\times10^{-4}$ for live groups, but ``exact'' should still be qualified.\\
+One sequence score per trajectory & Is loss normalized by prompts, trajectories, or total nonpadding tokens? & Total-token normalization introduces response-length-dependent prompt weighting and modifies exact prompt-level objective equivalence.\\
+Fully on-policy requested-task data & Are there multiple optimizer epochs, stale rollout policies, clipping, or importance ratios? & PPO-style clipping and stale data add bias not captured by the theorem.\\
+Destination data sampled from target law & Are relabeled trajectories generated under the destination prompt? & If not, the update is a destination semi-gradient under a proposal law.\\
+Global group statistics & Are mean and standard deviation computed across the full group or per device shard? & Per-shard normalization changes coefficients and exact mass.\\
+GRPO population standard deviation & Does implementation use denominator $N$ or $N-1$? & Tail constants and finite-group mass differ by $\sqrt{(N-1)/N}$.\\
+Constant groups set to zero & Does the code retain the full control-variate term at $K=0$? & The activity profile and objective order change from the practical formulas.\\
+Requested-only posterior updates & Are relabeled successes excluded from the teacher posterior? & Including them estimates proposal/relabel reachability rather than requested-task pass rate and can inflate the posterior.\\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\part{Questions to raise before submission}
+
+\section{Mathematical questions reviewers will ask}
+
+\begin{questionbox}[title={\textbf{Before using the word ``exact''}}]
+\begin{enumerate}[leftmargin=2em]
+\item What is the random variable whose expectation is exact: coefficient mass, gradient, norm, improvement, or pass-rate change?
+\item Under which sampling law is the expectation taken: the requested prompt policy, a source-induced relabel proposal, or the destination policy?
+\item Is the score function evaluated under the same law that generated the sample?
+\item Is the relabel destination fixed before sampling, selected from an independent group, or chosen from the same trajectories used for updating?
+\item Does the implementation add epsilon, clip importance ratios, average by tokens, or use stale rollouts?
+\item Are the endpoint statements literal at $p\in\{0,1\}$ or asymptotic for a full-support softmax model?
+\end{enumerate}
+\end{questionbox}
+
+Questions to answer in the theory section:
+
+\begin{enumerate}[leftmargin=2em]
+\item Why is coefficient mass the correct pre-rollout quantity rather than live-group probability $\ell_N(p)$, gradient variance, or an expected-improvement proxy?
+\item Can two prompts with the same $p$ and $\nu_N(p)$ have opposite transfer to held-out performance? If so, what exactly does the curriculum theorem promise?
+\item Does the water-filling proposition allocate total rollouts across prompts, or only additional rollouts after each selected prompt has a mandatory group?
+\item What is the exact definition of the learnable band's width? If there is no threshold, should the paper claim only the profile and peak are derived?
+\item Which MaxRL estimator is used in every theorem and experiment: raw, full control variate, or practical drop-all-fail?
+\item What is the coefficient convention for RLOO and the standard-deviation convention for GRPO?
+\item Does the practical $T=N-1$ result survive the actual token-normalized LLM loss, or only the sequence-level idealization?
+\item If all relabeled trajectories succeed at the new destination, why does the centered estimator not vanish? Where does relabeled contrast come from in code?
+\item Is the gate meant to reject only saturated destinations, or both hard and saturated destinations? Which objective derives that choice?
+\item Is the ``frontier'' defined by $p_N^*$, a level set of $\nu_N$, a posterior quantile, or an empirical task stratum?
+\end{enumerate}
+
+\section{Causal identification questions}
+
+\begin{questionbox}[title={\textbf{Before claiming the curriculum harms or helps an estimator}}]
+\begin{enumerate}[leftmargin=2em]
+\item Did MaxRL and GRPO receive the same realized prompt sequence, or only the same adaptive teacher rule?
+\item If schedules differ, is the claim about the estimator alone or the full estimator--teacher feedback loop?
+\item Was the treatment actually delivered? How far did the sampled task distribution move from uniform?
+\item Are replacement, prompt repetition, early termination, skipped backward passes, and response length alternative explanations?
+\item Are wall-clock, optimizer steps, generated tokens, and verifier calls all matched or separately reported?
+\end{enumerate}
+\end{questionbox}
+
+For the maze and GSM8K studies, define the interaction estimand explicitly. For paired seed or warmstart $s$, let
+\[
+Y_{E,C,s}
+\]
+be the outcome for estimator $E\in\{M,G\}$ (MaxRL or GRPO) and curriculum $C\in\{T,U\}$ (teacher or uniform). The curriculum-by-estimator interaction is
+\begin{equation}
+D_s=\bigl(Y_{M,T,s}-Y_{M,U,s}\bigr)
+-\bigl(Y_{G,T,s}-Y_{G,U,s}\bigr).
+\label{eq:interaction}
+\end{equation}
+A coverage main effect of estimator is a different estimand. Do not substitute one for the other.
+
+Questions to answer:
+
+\begin{enumerate}[leftmargin=2em]
+\item Is the primary endpoint final pass@k, change from warmstart, AUC, or multi-sample coverage gain? Was it pre-declared?
+\item Is the teacher's effect estimated relative to uniform-without-replacement, uniform-with-replacement, or a fixed external schedule?
+\item Does the teacher change only task identity, or also sequence length and the number of optimizer steps per hour?
+\item If recycling fills otherwise empty update slots, is the gain label information, gradient dose, or both? Which placebo isolates each component?
+\item Does a relabel improve the destination task, the source task, neighboring tasks, or only the aggregate mean? Where is transfer measured?
+\item Does the gate recover coverage because it rejects saturated destinations, because it lowers total dose, or because it changes destination diversity?
+\end{enumerate}
+
+\section{Statistical questions}
+
+The exact one-sided permutation value $0.0079$ is recognizable: with five labels of one kind and four of another, complete separation gives
+\begin{equation}
+ p_{\min}=\binom{9}{4}^{-1}=\frac1{126}\approx0.00794.
+\label{eq:minperm}
+\end{equation}
+That calculation is valid only if the nine observations are exchangeable under the null.
+
+\begin{questionbox}[title={\textbf{Before reporting a small exact $p$-value}}]
+\begin{enumerate}[leftmargin=2em]
+\item Are the nine observations independent training runs, or do several share seeds, warmstarts, schedules, or evaluation samples?
+\item Why do five MaxRL observations enter one test while eighteen enter another?
+\item Were all eligible configurations and exclusion rules declared before inspecting the outcome?
+\item Are two teacher variants within one random seed being counted as two independent seeds?
+\item Is the permutation blocked within warmstart or seed clusters?
+\item Are multiple metrics and difficulty bands being tested without a declared primary contrast?
+\end{enumerate}
+\end{questionbox}
+
+Recommended reporting:
+
+\begin{enumerate}[leftmargin=2em]
+\item provide a public run registry with one row per training run;
+\item plot every paired seed/warmstart contrast;
+\item use blocked randomization or cluster bootstrap at the warmstart/seed level;
+\item call six variant-by-seed comparisons ``six paired contrasts within three random seeds,'' not six seeds;
+\item report effect sizes and confidence intervals even when an exact sign pattern is striking;
+\item distinguish confirmatory runs from exploratory variants and post-hoc analyses.
+\end{enumerate}
+
+\section{Implementation and reproducibility questions}
+
+\begin{enumerate}[leftmargin=2em]
+\item Can a reader reconstruct every coefficient used by MaxRL, GRPO, and RLOO from the paper without opening code?
+\item Are group statistics computed before or after distributed sharding?
+\item Is the policy update averaged per prompt, per trajectory, or per token?
+\item Are relabeled prompts and responses both rewritten? Are verifier inputs and training inputs identical after rewrite?
+\item Is the relabeled success count $K'$ recomputed for the whole group?
+\item Does the posterior receive only requested-task evidence? How are decay and checkpoint restoration implemented?
+\item Are gate keys unique to relabeled tasks, or can destinations collide by value across templates?
+\item Are pass@k estimates computed by the same harness across trainer validation and final evaluation? The current draft discloses a roughly $3\times$ absolute discrepancy; that must be reconciled or isolated.
+\item Are all figures generated from immutable JSON artifacts with a manifest mapping run IDs to panels?
+\item Does the anonymous artifact contain usernames, absolute paths, Git remotes, experiment-tracking URLs, or PDF metadata?
+\end{enumerate}
+
+\section{Mechanism questions for recycling-induced sharpening}
+
+\begin{questionbox}[title={\textbf{What would falsify the proposed mechanism?}}]
+\begin{enumerate}[leftmargin=2em]
+\item If relabel destinations are frequency-matched but generated freshly under the destination prompt, does coverage still fall?
+\item If relabel dose is matched with live-gradient replay, how much loss remains?
+\item If inverse destination-frequency weighting is used, does pass@k recover?
+\item If the destination is selected from a disjoint group, does the effect shrink?
+\item If destination pass rate is held fixed while occupancy varies, which variable predicts the damage?
+\item Does the same mean--coverage trade occur with raw MaxRL, practical MaxRL, full-CV MaxRL, and GRPO?
+\item Is coverage loss within tasks, across task strata, or both?
+\end{enumerate}
+\end{questionbox}
+
+Telemetry that would make the mechanism persuasive:
+
+\begin{itemize}[leftmargin=2em]
+\item histograms of requested-task and destination $\widehat p$ over time;
+\item destination occupancy, collision probability, and effective support;
+\item admitted versus rejected destination distributions;
+\item cumulative relabel dose and the time ordering of mean gain versus coverage loss;
+\item fresh-destination versus relabeled-destination score statistics;
+\item per-tier pass@1, pass@k, and output-support summaries.
+\end{itemize}
+
+\section{Writing questions for every paragraph}
+
+Before keeping a sentence, ask:
+
+\begin{enumerate}[leftmargin=2em]
+\item Is this a theorem, an empirical result, a mechanism hypothesis, or an interpretation? Does the verb reveal which one it is?
+\item Does ``same curriculum'' mean the same algorithm or the same realized schedule?
+\item Does ``safe'' mean no reduction in pass@k at one $k$, no reduction in area under the coverage curve, or no held-out regression at all?
+\item Does ``coverage'' refer to pass@k, summed pass@k over levels, the number of prompts solved, or output diversity?
+\item Is the numerical claim paired with its seed count, uncertainty, compute currency, and primary endpoint?
+\item Is a negative result diagnosed by evidence, or rationalized after the fact?
+\item Does the paragraph make a broader claim than the table or figure actually shows?
+\item Can one slogan be removed without losing information?
+\item Is the result load-bearing enough for the main paper, or should it be an appendix boundary condition?
+\item Would a skeptical reviewer know exactly what experiment would overturn the statement?
+\end{enumerate}
+
+\part{Complete rewriting guide}
+
+\section{Title and positioning}
+
+The current title is memorable, but ``what curricula and failure recycling can and cannot do'' sounds universal. Three options are:
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Keep the current title, narrow the subtitle in the abstract:} \emph{The Estimator Decides: Finite-Group Curricula and Failure Recycling in RL with Verifiable Rewards}.
+\item \textbf{More technical:} \emph{Finite-Group Estimator Activity for Curricula and Hindsight Relabeling in RLVR}.
+\item \textbf{Best balance of hook and scope:} \emph{The Estimator Decides Where a Curriculum Can Act}.
+\end{enumerate}
+
+The paper should position itself as a complement to MaxRL, not a competitor:
+
+\begin{rewritebox}
+Tajwar et al. characterize the population objective induced by success-conditioned normalization. We characterize the finite-group activity of the practical centered implementation and use that activity before rollout generation, where a curriculum must decide which prompts receive compute.
+\end{rewritebox}
+
+\section{Recommended abstract for the current evidence}
+
+\begin{rewritebox}[title={\textbf{Conservative abstract---ready to paste}}]
+Difficulty curricula and hindsight relabeling are often treated as objective-agnostic modules for reinforcement learning with verifiable binary rewards. We show that their effect depends on the group estimator underneath. For the practical centered MaxRL estimator that zeros constant-reward groups, a prompt with pass rate $p$ and $N$ rollouts has expected coefficient mass
+\[
+A_N(p)=2\bigl[1-(1-p)^N-p\bigr].
+\]
+Its normalized half-mass $\nu_N=A_N/2$ also factorizes the expected update as
+\[
+\E[\widehat g\mid x]=\nu_N(p)\bigl(\mu_+(x)-\mu_-(x)\bigr),
+\]
+so the curve is exactly the estimator-controlled scalar multiplying the prompt's success--failure score contrast. The profile has a unique interior maximum and vanishes at $p=0$ and $p=1$, motivating a prompt sampler that tracks the moving frontier without hand-setting a target difficulty. The same analysis exposes a limit: with this practical estimator held fixed, reallocating prompts cannot create contrast in an all-fail group. When an exact relabel map exists, hindsight can convert failed source rollouts into verified destination examples, but those examples are generally off-policy for the destination and can tilt training toward already-reachable outcomes. Across maze curriculum variants, MaxRL runs increase pass@8 while GRPO runs decrease it. On Countdown arithmetic, relabeling raises mean success but lowers pass@16 across three seeds; a saturation-aware destination gate recovers frontier coverage at an unintended intermediate operating point while retaining part of the mean gain. A boundary suite shows that the benefits require a graded task pool and transferable shared parameters.
+\end{rewritebox}
+
+This version deliberately does not put the preliminary LLM interaction, $11\times$ inference threshold, or corrected one-seed full-strength gate in the headline.
+
+\section{Stronger abstract after the missing experiments}
+
+Use the following only after schedule matching, corrected multi-seed gating, and stronger LLM steering are complete.
+
+\begin{rewritebox}[title={\textbf{Post-replication abstract template}}]
+Difficulty curricula and failure recycling are usually evaluated independently of the objective and estimator that consume them. We derive their finite-group interaction for success-conditioned RL. For the practical centered MaxRL estimator, the expected coefficient mass of a prompt with pass rate $p$ and $N$ rollouts is $2(\PassAt{N}-\PassAt{1})$, and the normalized mass is exactly the scalar multiplying the success--failure score contrast. This yields a compute-indexed frontier sampler and predicts where reallocation is silent. We then characterize relabeling as a verified destination semi-gradient and show that destination saturation creates a mean--coverage trade. In schedule-matched experiments, the same prompt sequence preserves pass@k under MaxRL but reduces it under GRPO. In corrected multi-seed Countdown runs, a saturation-aware gate traces a monotone mean-versus-coverage frontier. Across controlled chains, mazes, and LLM reasoning tasks, allocation improves efficiency where a graded frontier exists, while relabeling is necessary when the requested pool is operationally dead. These results show that estimator activity constrains where curricula can act and that relabel destination selection is a first-class coverage decision.
+\end{rewritebox}
+
+\section{Recommended introduction opening}
+
+\begin{rewritebox}[title={\textbf{Opening two paragraphs---ready to paste}}]
+Post-training with binary verifiers is constrained by a simple event: a practical group-relative update needs reward contrast. If all $N$ rollouts fail or all $N$ succeed, the centered estimator is silent. This event-level constraint is not visible in population weight functions, which describe how a prompt is weighted after averaging over sampling. A curriculum acts one step earlier, deciding which prompts receive the rollout budget that makes those weights observable at all.
+
+MaxRL shows that likelihood-style objectives place more population weight on hard prompts after they are sampled. We ask the complementary finite-group question: given a rollout budget $N$, which prompts can emit a contrastive update before that budget is spent? For the practical centered MaxRL estimator, the answer is closed form. Its normalized expected coefficient mass is $\PassAt{N}(p)-\PassAt{1}(p)$, and this quantity exactly multiplies the prompt's success--failure score contrast. The result gives a principled allocation profile, clarifies the implementation-level gap between raw and practical MaxRL, and exposes what prompt reallocation cannot do.
+\end{rewritebox}
+
+Then introduce relabeling:
+
+\begin{rewritebox}
+The same boundary motivates a complementary intervention. When a requested-task group is all-fail, reallocation cannot recover the compute already spent. If the environment provides an exact relabel map, the trajectories may still form a verified group for an achieved destination. This creates contrast, but it also changes the destination distribution and generally produces off-policy destination data. We therefore study allocation and relabeling as separate channels: one decides where existing contrast is likely, the other changes which task the data train.
+\end{rewritebox}
+
+\section{Short contribution list}
+
+\begin{rewritebox}[title={\textbf{Four contributions---ready to paste}}]
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Finite-group theory.} We distinguish the raw, full-control-variate, and practical MaxRL estimators and derive the practical estimator's exact coefficient-mass profile and $T=N-1$ objective order.
+\item \textbf{Estimator-derived allocation.} We use the normalized profile as a prompt-sampling utility and show that its $N=2$ slice recovers the standard learnability curve, while its finite-$N$ comparison with GRPO predicts different hard- and mastered-tail activity.
+\item \textbf{Relabeling characterization and coverage cost.} We characterize hindsight as a verified but generally off-policy destination semi-gradient and identify recycling-induced sharpening: mean success can rise while pass@k coverage falls.
+\item \textbf{Admission and boundaries.} A destination-saturation gate traces a mean-versus-coverage trade, while negative suites identify the conditions required for benefit: a graded pool, shared transfer, and reusable relabeled skills.
+\end{enumerate}
+\end{rewritebox}
+
+\section{Recommended paper structure}
+
+\subsection{1. Introduction}
+One problem, one theorem preview, three empirical claims, and one explicit evidence boundary.
+
+\subsection{2. From MaxRL's population weight to finite-group activity}
+
+\begin{itemize}[leftmargin=2em]
+\item notation and binary verifier setup;
+\item raw, full-CV, and practical estimators in one table;
+\item conditional score identities;
+\item coefficient-mass factorization;
+\item practical $T=N-1$ corollary.
+\end{itemize}
+
+\subsection{3. Estimator-derived allocation}
+
+\begin{itemize}[leftmargin=2em]
+\item $\nu_N$, exact peak, tails, and operational budget definition;
+\item RLOO and finite-group GRPO comparison;
+\item Thompson posterior sampler and optional one-step water-filling;
+\item explicit limitation: activity does not equal transfer.
+\end{itemize}
+
+\subsection{4. Failure recycling and destination admission}
+
+\begin{itemize}[leftmargin=2em]
+\item exact verifier and conditioning-rewrite contracts;
+\item source proposal versus destination policy law;
+\item relabeled-group factorization and equality condition;
+\item destination-marginal shift and gate.
+\end{itemize}
+
+\subsection{5. Experiments}
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Exact chains and frontier-heavy attribution:} utility, full-CV baseline, replay placebo, allocation versus creation.
+\item \textbf{Schedule-matched maze study:} estimator coverage effect, level/time mechanism, wall-clock versus token/step decomposition.
+\item \textbf{Countdown sharpening and corrected gate:} mean--coverage trade, destination telemetry, multi-seed sweep.
+\item \textbf{Boundary synthesis:} Gym shared-parameter ablation, Jugs, IsaacLab, and one-shot streams in one table.
+\end{enumerate}
+
+\subsection{6. Related work, limitations, and conclusion}
+
+Move preliminary GSM8K, single-checkpoint inference thresholds, detailed classic-control curves, and most audit history to appendices until their evidence is stronger.
+
+\section{Theorem statements ready for the manuscript}
+
+\begin{rewritebox}[title={\textbf{Lemma: practical objective order}}]
+\textbf{Lemma (Objective order of the practical estimator).} Let $K$ be the number of successes among $N$ i.i.d. binary-reward rollouts. The raw success-conditioned estimator is unbiased for the order-$N$ MaxRL objective. If the unconditional average-score control variate is subtracted but the entire group is zeroed when $K=0$, the resulting practical estimator is unbiased for order $N-1$.
+\end{rewritebox}
+
+\begin{rewritebox}[title={\textbf{Proposition: coefficient mass and factorization}}]
+\textbf{Proposition (Finite-group activity).} For the practical centered estimator,
+\[
+A_N(p)=\E\sum_i|w_i|=2\bigl[(1-p)-(1-p)^N\bigr].
+\]
+Writing $\nu_N=A_N/2$, the expected update satisfies
+\[
+\E[\widehat g_N\mid x]
+=\nu_N(p)\left(\E[S\mid r=1,x]-\E[S\mid r=0,x]\right).
+\]
+Thus $\nu_N$ is the estimator-controlled scalar multiplying the prompt-specific success--failure score contrast.
+\end{rewritebox}
+
+\begin{rewritebox}[title={\textbf{Proposition: peak}}]
+\textbf{Proposition (Compute-indexed activity peak).} The function $\nu_N(p)=(1-p)-(1-p)^N$ is strictly concave on $(0,1)$ and has the unique maximizer $p_N^*=1-N^{-1/(N-1)}$. Its hard-tail expansion is $(N-1)p+O(p^2)$ and its mastered-tail expansion is $(1-p)+o(1-p)$.
+\end{rewritebox}
+
+\begin{rewritebox}[title={\textbf{Proposition: relabeled update}}]
+\textbf{Proposition (Relabeled destination semi-gradient).} Fix a destination $g$ and let $Q^{x\to g}$ be the source-induced proposal over rewritten trajectories. Applying the practical centered coefficients to destination scores yields
+\[
+G_H(g)=\nu_N(p_Q)\bigl(\mu_{Q,+}^g-\mu_{Q,-}^g\bigr).
+\]
+This equals the fresh destination update only when the proposal activity and conditional score contrast match those of rollouts sampled from $\pi_\theta(\cdot\mid g)$. Exact verification guarantees semantic correctness of the relabeled reward, not equality of the sampling laws.
+\end{rewritebox}
+
+\section{Section-by-section rewriting guidance}
+
+\subsection{Abstract}
+
+Remove or qualify:
+
+\begin{itemize}[leftmargin=2em]
+\item ``expected learning signal'' $\rightarrow$ ``expected coefficient mass'';
+\item ``recycling is the only channel'' $\rightarrow$ ``with the practical zero-constant-group estimator fixed, reallocation cannot create contrast in an all-fail group'';
+\item ``the same curriculum degrades GRPO'' $\rightarrow$ ``coverage behavior separates by estimator across curriculum variants'';
+\item ``teacher-deficit direction replicates 2/2 seeds'' $\rightarrow$ ``the endpoint contrast has the same sign in two seeds, while the pre-registered regression shape appears in one'';
+\item ``gate restores coverage'' $\rightarrow$ state the unintended operating point and corrected rerun status;
+\item ``pre-registered fifth suite defeats every estimator'' $\rightarrow$ explain the measured boundary: narrow template support and insufficient rollout diversity at the deployed $N$.
+\end{itemize}
+
+\subsection{Introduction}
+
+The current introduction has three strong questions, but the prose repeats the partition slogan before the estimator distinctions are established. Reorder:
+
+\begin{enumerate}[leftmargin=2em]
+\item constant-group event and compute waste;
+\item MaxRL population weight versus finite-group activity;
+\item exact practical estimator result;
+\item allocation channel;
+\item relabel channel and off-policy destination issue;
+\item coverage metric and empirical questions;
+\item contributions.
+\end{enumerate}
+
+Do not introduce ``safe'' until the metric is defined. Prefer ``coverage-stable on held-out pass@k.''
+
+\subsection{Theory section}
+
+Put the three-estimator table before the $T=N-1$ lemma. This prevents a reviewer from reading the lemma as a contradiction of the baseline theorem. Follow every theorem with two interpretation sentences:
+
+\begin{enumerate}[leftmargin=2em]
+\item what is exact;
+\item what is not implied.
+\end{enumerate}
+
+For Proposition 1, use $A_N$ and $\nu_N$ consistently. Replace ``the estimator's expected learning signal'' with the factorization interpretation.
+
+For the comparison proposition, correct the mastered-tail statement: MaxRL and RLOO decay at the same first order; GRPO retains the larger mass.
+
+For water-filling, call it a fixed-pass-rate one-step mass oracle and state the minimum group-size assumption.
+
+\subsection{FrontierMax method section}
+
+Clarify the deployed sampler and the optional allocator as different algorithms. The practical sampler uses fixed $N$ and samples prompts according to a posterior-derived utility. The water-filling oracle changes $N_i$ and therefore changes both activity and objective order.
+
+The algorithm should explicitly show:
+
+\begin{enumerate}[leftmargin=2em]
+\item requested prompt $x$;
+\item requested-task success count $K$;
+\item destination $g'$ selected from a dead group;
+\item rewritten prompt and response;
+\item reverified relabeled success count $K'$;
+\item admission based on destination evidence;
+\item posterior updated only with requested-task outcomes.
+\end{enumerate}
+
+\subsection{Failure recycling section}
+
+Replace the headline ``Hindsight gradients are exact, not approximate'' with the proposal-law theorem. Keep the placebo decomposition, because it is one of the draft's best pieces of scientific honesty:
+
+\begin{rewritebox}
+Most of recycling's fixed-pool AUC gain is explained by filling otherwise-unused update slots with additional gradient dose; the relabel direction contributes a smaller but reproducible increment beyond the strongest replay placebo. We therefore report dose and direction as separate effects.
+\end{rewritebox}
+
+Do not use cosine probes as primary evidence if null relabeling schemes produce the same cosine. The behavioral placebo battery is stronger.
+
+\subsection{Maze section}
+
+Lead with what the design establishes:
+
+\begin{rewritebox}
+Across selected curriculum and recycling variants, held-out pass@8 changes separate perfectly by estimator: the MaxRL variants increase coverage and the GRPO variants decrease it. This is an estimator-conditioned coverage main effect robust to the data-level variants tested. Whether the teacher itself amplifies GRPO's decline is a separate factorial interaction question.
+\end{rewritebox}
+
+Then show the level/time mechanism. Rename ``diversity premium'' to ``multi-sample coverage gain'' or ``sampling premium.'' Explain the $n=5$ versus $n=18$ inclusion rules in the paper, not only the repository.
+
+\subsection{GSM8K section}
+
+The most interesting current result is posterior starvation, not a confirmed interaction. Rewrite the section around treatment delivery:
+
+\begin{rewritebox}
+The prompt-level posterior learns a weak but real difficulty ordering, yet the rollout budget visits too few of 7,473 prompts for the posterior to become decisive. As a result, the delivered sampling distribution remains near uniform. The registered GRPO teacher deficit has the same endpoint sign in two seeds but the pre-registered regression trajectory appears in one; magnitude tracks the small amount of measured steering. We therefore treat this experiment as a diagnosis of posterior starvation and as motivation for a stronger, steering-controlled replication.
+\end{rewritebox}
+
+Disclose the replacement confound next to the result, not in a later caveat.
+
+\subsection{Countdown and gate sections}
+
+Split saturated and frontier tiers. At tier 1, the moderate gate mostly neutralizes recycling. At the frontier tier, it reportedly retains about 60\% of the mean gain while restoring coverage. Do not place the frontier claim only in a tier-1 caption.
+
+Use this wording for the bug:
+
+\begin{rewritebox}
+A decay implementation error made the three-seed gate weaker than intended and produced an unintended intermediate operating point. We report it because it is informative about the tradeoff, but the final claim is based on a fixed-decay sweep rather than treating the bugged setting as designed.
+\end{rewritebox}
+
+\subsection{Limitations}
+
+The limitation section is already strong. Make it more synthetic by grouping failures into necessary conditions:
+
+\begin{table}[H]
+\centering
+\small
+\caption{Recommended boundary-condition synthesis.}
+\begin{tabularx}{\textwidth}{@{}p{0.23\textwidth}p{0.31\textwidth}X@{}}
+\toprule
+\textbf{Required condition} & \textbf{Failure when absent} & \textbf{Evidence in the draft}\\
+\midrule
+Nonconstant group probability at budget & target-only group-relative training freezes & sparse Gym official tasks\\
+Shared transferable parameters & easier goals do not unlock harder goals & per-bin policy ablation\\
+Graded support over difficulty & no frontier exists for the teacher to walk & Jugs template stratum\\
+Meaningful avoidable dead region & breadth can beat focus & IsaacLab pilot\\
+Reusable relabeled skills & relabel gains do not compound & one-shot stream versus fixed pool\\
+Unsaturated destinations & relabel dose concentrates mean at coverage's expense & Countdown\\
+Correct task keying and rewrite & gate collisions or semantically invalid updates & Jugs key bug and gridworld rewrite ablation\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Sentence-level replacement table}
+
+\small
+\begin{longtable}{p{0.31\textwidth}p{0.61\textwidth}}
+\toprule
+\textbf{Current phrasing} & \textbf{Recommended replacement}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Current phrasing} & \textbf{Recommended replacement}\\
+\midrule
+\endhead
+``The estimator learns only from successes.'' & ``The practical estimator is success-gated: a group contributes only after at least one success appears; within a live group, successes receive positive coefficients and failures negative coefficients.''\\
+\addlinespace
+``The expected learning signal is exactly $2(\PassAt{N}-\PassAt{1})$.'' & ``The expected coefficient mass is exactly $2(\PassAt{N}-\PassAt{1})$, and its half-mass is the scalar multiplying the success--failure score contrast.''\\
+\addlinespace
+``The two zeros partition difficulty into a dead zone, a learnable band, and a mastered tail.'' & ``The endpoint zeros and unique interior maximum define three operational regimes at a fixed budget: negligible contrast, high estimator activity near the frontier, and a saturated tail.''\\
+\addlinespace
+``No sampler can reach the dead zone.'' & ``At the deployed $(B,N)$ budget, a low-pass-rate task can be operationally dead for the practical zero-constant-group estimator.''\\
+\addlinespace
+``Recycling is the only channel into the dead zone.'' & ``With the practical estimator held fixed, prompt reallocation cannot manufacture contrast in an all-fail group; relabeling is the signal-creation mechanism studied here.''\\
+\addlinespace
+``MaxRL releases mastered prompts fastest.'' & ``MaxRL and RLOO both decay linearly in the mastered tail, while finite-group GRPO retains a $\sqrt{N-1}$-larger coefficient mass.''\\
+\addlinespace
+``The same curriculum degrades GRPO.'' & ``Coverage behavior separates by estimator across curriculum variants; the teacher interaction is tested separately.''\\
+\addlinespace
+``A failed trajectory is a verified success for the goal it reached.'' & ``An exact relabel map can convert a failed source trajectory into a semantically valid example for an achieved destination, although the destination data are generally off-policy.''\\
+\addlinespace
+``Hindsight gradients are exact, not approximate.'' & ``Hindsight yields a verified destination semi-gradient; it equals the fresh destination update under a conditional-law matching condition.''\\
+\addlinespace
+``Perfect difficulty information is worth almost nothing.'' & ``The mass oracle improves over posterior-only allocation, while recycling allows the posterior-based stack to approach the oracle's empirical level.''\\
+\addlinespace
+``The gate is derived from the same algebra.'' & ``The endpoint algebra motivates a saturation-aware gate; its operating threshold remains a tunable coverage--mean tradeoff parameter.''\\
+\addlinespace
+``The bug favorably sampled the middle.'' & ``The bug produced an unintended intermediate effective gate strength; corrected multi-seed sweeps are required for the final claim.''\\
+\addlinespace
+``Diversity premium.'' & ``Multi-sample coverage gain,'' ``sampling premium,'' or simply $\PassAt{k}-\PassAt{1}$.\\
+\addlinespace
+``Environment-agnostic framework.'' & ``Environment-independent core with domain-specific task, verifier, and relabel adapters.''\\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Figure and caption guidance}
+
+\subsection{Figure 1: estimator activity curves}
+
+Keep the figure, but make these changes:
+
+\begin{enumerate}[leftmargin=2em]
+\item label the y-axis ``normalized expected coefficient mass $\nu_N$'';
+\item state ``practical MaxRL, group size $N$, objective order $T=N-1$'';
+\item use $A_N$ for full mass and $\nu_N$ for half-mass consistently;
+\item correct the mastered-tail comparison with RLOO;
+\item distinguish finite-group GRPO from the population GRPO weight curve;
+\item use a logit axis or tail insets so both endpoints are visible;
+\item make the caption state the standard-deviation convention.
+\end{enumerate}
+
+Suggested caption:
+
+\begin{rewritebox}
+\textbf{Finite-group estimator activity.} Left: $\nu_N(p)=(1-p)-(1-p)^N$ for the practical centered MaxRL estimator. The exact peak $p_N^*=1-N^{-1/(N-1)}$ shifts toward harder prompts as $N$ grows. Right: normalized expected coefficient mass at $N=16$ for practical MaxRL, RLOO, and finite-group GRPO under population-standard-deviation normalization. MaxRL amplifies the hard tail relative to both baselines; MaxRL and RLOO share the same first-order mastered-tail decay, while GRPO retains a $\sqrt{N-1}$-larger mass.
+\end{rewritebox}
+
+\subsection{Method diagram}
+
+The method diagram should show the source and destination laws explicitly. Add labels for source prompt $x$, destination $g'$, rewrite, re-verification, relabeled success count $K'$, and destination gate. Do not imply that every trajectory becomes a success; the centered estimator needs relabeled contrast.
+
+\subsection{Maze mechanism figure}
+
+This is the strongest empirical figure. Keep it in the main paper, but:
+
+\begin{itemize}[leftmargin=2em]
+\item show paired seed/warmstart units rather than unstructured run dots;
+\item explain $n=18$ versus $n=4$ in the caption;
+\item rename the sampling premium;
+\item use cluster-aware intervals;
+\item separate the estimator main effect from teacher interaction language.
+\end{itemize}
+
+\subsection{Countdown figure}
+
+Use separate saturated-tier and frontier-tier panels. Each should show no recycling, ungated, and at least two corrected gate strengths. Add destination pass-rate distributions beneath the outcome plane so the gate mechanism is visible rather than inferred.
+
+\subsection{Appendix candidates}
+
+Move the preliminary GSM8K four-cell bar chart, classic-control convergence curves, and single-checkpoint inference multiplier to the appendix unless the corresponding evidence is strengthened.
+
+\section{What to borrow from the baseline MaxRL paper's writing}
+
+The MaxRL baseline is effective because it separates objective, estimator, variance reduction, and implementation; gives one memorable algebraic change; uses a population weight-function view; and escalates experiments in four clean stages. Your paper should mirror that discipline one level earlier in the pipeline:
+
+\begin{enumerate}[leftmargin=2em]
+\item distinguish the three estimator variants;
+\item derive finite-group activity;
+\item connect activity to the exact finite-$N$ weight through the factorization theorem;
+\item use the profile before sampling;
+\item characterize relabeling under its true proposal law;
+\item test coverage with matched schedules and destination telemetry.
+\end{enumerate}
+
+The openings left by the baseline are sufficient for novelty positioning:
+
+\begin{itemize}[leftmargin=2em]
+\item it does not distinguish the raw $T=N$ theorem from the practical $T=N-1$ drop-all-fail algorithm;
+\item its GRPO analysis is population-level, not finite-group constant-event analysis;
+\item it does not study adaptive prompt allocation;
+\item it conjectures easy-tail sharpening but does not replay identical schedules across estimators;
+\item it does not study exact-verifier relabeling or destination-induced pass@k loss.
+\end{itemize}
+
+Do not claim that one scalar fully determines curriculum quality. Claim that it exactly determines the estimator-controlled activity component.
+
+\part{Experimental and statistical completion plan}
+
+\section{Decisive experiment 1: full control variate versus practical drop-all-fail}
+
+\subsection{Question}
+
+Is relabeling uniquely necessary because all-fail groups are silent, or because a verified positive anchor is empirically better than the noisy all-fail control-variate update?
+
+\subsection{Arms}
+
+At minimum:
+
+\begin{enumerate}[leftmargin=2em]
+\item practical MaxRL, zero the full $K=0$ group;
+\item full-CV MaxRL, retain $-N^{-1}\sum_iS_i$ at $K=0$;
+\item practical MaxRL plus recycling;
+\item full-CV MaxRL plus recycling, if stable;
+\item an optional negative-only or entropy control matched for update count.
+\end{enumerate}
+
+\subsection{Suites}
+
+Run first on the exact chain, the $p\le10^{-5}$ frontier-heavy regime, and one maze configuration. These three settings answer complementary questions: mathematical behavior, ignition from an operationally dead pool, and neural-gradient stability.
+
+\subsection{Measurements}
+
+Report:
+
+\begin{itemize}[leftmargin=2em]
+\item conditional gradient norm and variance on $K=0$ groups;
+\item alignment with the exact target gradient where available;
+\item time to first natural success;
+\item final/AUC pass rate and pass@k;
+\item optimizer stability and policy entropy;
+\item fraction of total update norm contributed by all-fail groups.
+\end{itemize}
+
+\subsection{Interpretation}
+
+If full-CV fails while recycling succeeds, the paper can say that a nonzero all-fail update is not enough; a verified positive anchor is empirically important. If full-CV works, revise ``creation'' to include control-variate-based all-fail learning and position relabeling as one robust mechanism rather than the only one.
+
+\section{Decisive experiment 2: schedule-matched estimator comparison}
+
+\subsection{Question}
+
+Does coverage separate because of the estimator itself, or because adaptive teachers generate different schedules as policies diverge?
+
+\subsection{Design}
+
+Use two phases:
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Frozen schedule.} Generate prompt IDs, order, and group sizes from an external oracle, a frozen warmstart posterior, or a previously recorded teacher trajectory. Replay the exact schedule under MaxRL and GRPO with paired warmstarts.
+\item \textbf{Adaptive feedback.} Restore each estimator's own teacher posterior and report the full deployed loop.
+\end{enumerate}
+
+The frozen phase identifies the estimator under a controlled data schedule. The adaptive phase measures the system-level interaction.
+
+\subsection{Primary endpoints}
+
+Predeclare:
+
+\begin{itemize}[leftmargin=2em]
+\item held-out pass@1;
+\item held-out pass@8 or the relevant pass@k;
+\item multi-sample coverage gain $\PassAt{k}-\PassAt{1}$;
+\item easy/mid and frontier band changes;
+\item area under the pass@k trajectory.
+\end{itemize}
+
+\subsection{Analysis}
+
+For each paired seed $s$, report the estimator contrast under the same schedule. For the adaptive factorial study, report the interaction $D_s$ in \cref{eq:interaction}. With three to five seeds, show raw paired values and use blocked randomization rather than relying on asymptotic normality.
+
+\section{Decisive experiment 3: corrected gate sweep}
+
+\subsection{Question}
+
+Does destination saturation, rather than merely lower total relabel dose, explain the mean--coverage trade?
+
+\subsection{Arms}
+
+Use no recycling, ungated recycling, and at least three gate strengths under fixed, corrected decay. Include both the current hard upper-pass-rate gate and, if inexpensive, one utility-based gate.
+
+\subsection{Predeclared tier and metric}
+
+Choose one frontier tier as primary before looking at results. Keep the saturated tier as a mechanism contrast. Declare whether the primary utility is mean@16, pass@16, or a scalarized combination.
+
+\subsection{Telemetry}
+
+Record:
+
+\begin{itemize}[leftmargin=2em]
+\item effective threshold over time;
+\item destination $\widehat p$ before admission;
+\item accepted and rejected destination counts;
+\item cumulative relabel dose;
+\item destination collision probability and effective support;
+\item actor entropy and response/output support;
+\item mean and coverage trajectories at every tier.
+\end{itemize}
+
+\subsection{Required wording}
+
+Until this is complete, call the three-seed result an unintended intermediate operating point and the corrected one-seed result a directional follow-up.
+
+\section{Decisive experiment 4: LLM treatment delivery}
+
+The current GSM8K result is posterior-starved because 3,200 group draws are spread over 7,473 prompts. A stronger test should reduce the teacher's statistical resolution problem.
+
+\subsection{Recommended designs}
+
+\begin{enumerate}[leftmargin=2em]
+\item bucket prompts by a stable external difficulty estimate and learn a posterior over buckets;
+\item use a kernel or hierarchical posterior over prompt features;
+\item increase revisit rate by using a smaller fixed prompt pool;
+\item pretrain the posterior on a short uniform warmup, then freeze it for the estimator comparison;
+\item add uniform-with-replacement as the direct repetition control.
+\end{enumerate}
+
+\subsection{Delivered steering metrics}
+
+Report more than the dead-sampled fraction. Useful metrics are
+\begin{equation}
+\TV(q_t,\rho)=\frac12\sum_x|q_t(x)-\rho(x)|,
+\end{equation}
+\begin{equation}
+\operatorname{ESS}(q_t)=\frac{1}{\sum_x q_t(x)^2},
+\end{equation}
+and the cumulative steering dose
+\begin{equation}
+\mathcal D_T=\sum_{t=1}^{T}\TV(q_t,\rho).
+\end{equation}
+A dose-response analysis is meaningful only after the treatment is visibly separated from uniform.
+
+\section{High-value mechanism experiments}
+
+\subsection{Destination-law shift}
+
+For a set of relabeled destinations, compare rewritten source trajectories against fresh destination rollouts using:
+
+\begin{itemize}[leftmargin=2em]
+\item a two-sample classifier;
+\item maximum mean discrepancy;
+\item response-length and verifier-path summaries;
+\item score-mean and score-covariance differences;
+\item success- and failure-conditioned comparisons separately.
+\end{itemize}
+
+This directly operationalizes \cref{eq:tv-bound}.
+
+\subsection{Cross-fitted relabel selection}
+
+Compare same-group deepest-achieved relabeling with cross-fitted selection. If the effect changes, adaptive destination reuse is part of the mechanism.
+
+\subsection{Transfer matrix}
+
+Estimate a local transfer matrix by applying a small update from task or tier $i$ and measuring short-horizon pass-rate changes on tier $j$. This distinguishes estimator activity from cross-task transfer and can explain why concentration helps chains but not flat pools.
+
+\subsection{Generated-token matching}
+
+For maze and LLM studies, report outcomes against:
+
+\begin{enumerate}[leftmargin=2em]
+\item wall-clock;
+\item optimizer steps;
+\item generated tokens or environment transitions;
+\item verifier calls;
+\item successful/live groups.
+\end{enumerate}
+
+A wall-clock-only gain is still valuable, but it is a systems-throughput result rather than a pure allocation-efficiency result.
+
+\section{Run registry and statistical analysis}
+
+\subsection{Required run registry}
+
+Use one row per independent training run:
+
+\small
+\begin{longtable}{p{0.07\textwidth}p{0.08\textwidth}p{0.08\textwidth}p{0.07\textwidth}p{0.07\textwidth}p{0.06\textwidth}p{0.06\textwidth}p{0.08\textwidth}p{0.08\textwidth}p{0.12\textwidth}}
+\toprule
+Run ID & Suite & Estimator & Teacher & Recycler & Gate & Seed & Warmstart & Schedule & Confirmatory role\\
+\midrule
+\endfirsthead
+\toprule
+Run ID & Suite & Estimator & Teacher & Recycler & Gate & Seed & Warmstart & Schedule & Confirmatory role\\
+\midrule
+\endhead
+\multicolumn{10}{c}{\emph{Populate directly from the experiment manifest.}}\\
+\bottomrule
+\end{longtable}
+\normalsize
+
+Add columns for inclusion in each figure/test, code commit, artifact path, wall-clock budget, step count, generated tokens, and evaluation harness version in the actual repository table.
+
+\subsection{Blocked permutation}
+
+If treatments are paired within warmstart blocks, permute treatment labels only within each block. Do not permute individual configuration runs freely when they share a warmstart or seed.
+
+\subsection{Cluster bootstrap}
+
+Bootstrap warmstart/seed clusters, carrying all configurations within a selected cluster together. This preserves within-cluster dependence and gives uncertainty for aggregate effects.
+
+\subsection{Small-$n$ reporting}
+
+With three seeds, prioritize:
+
+\begin{itemize}[leftmargin=2em]
+\item raw paired lines;
+\item all seed-level contrasts;
+\item median and mean effect;
+\item exact sign count;
+\item sensitivity to leaving one seed out;
+\item a clearly labeled exploratory $p$-value if used.
+\end{itemize}
+
+Avoid presenting multiple configuration contrasts as independent replication merely because there are more plotted dots.
+
+\section{Main-paper evidence map}
+
+A compact main paper can be built around the following evidence chain:
+
+\begin{table}[H]
+\centering
+\small
+\caption{Recommended main-paper evidence map.}
+\begin{tabularx}{\textwidth}{@{}p{0.16\textwidth}p{0.24\textwidth}p{0.28\textwidth}X@{}}
+\toprule
+\textbf{Rung} & \textbf{Question} & \textbf{Decisive evidence} & \textbf{Claim earned}\\
+\midrule
+Theory & What does the practical estimator do at finite $N$? & three-estimator distinction, factorization, tails & exact activity profile and implementation-level $T=N-1$\\
+Chains/frontier & What can allocation versus relabeling contribute? & mass oracle, replay placebo, full-CV baseline, zero-to-solved suite & allocation and signal creation are separable channels\\
+Schedule-matched maze & Does estimator choice change coverage under the same data? & paired frozen schedule and level/time decomposition & estimator-conditioned coverage effect\\
+Countdown & What can relabeling cost, and can admission control it? & replicated mean-up/coverage-down effect and corrected gate sweep & destination admission is a coverage decision\\
+Boundary table & When should the method not work? & shared-parameter, graded-pool, breadth, and one-shot nulls & explicit applicability conditions\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{What belongs in the appendix}
+
+Unless strengthened, place these in appendices:
+
+\begin{itemize}[leftmargin=2em]
+\item preliminary GSM8K interaction and pass@k sweep;
+\item single-checkpoint $11\times$ inference threshold;
+\item detailed classic-control convergence and dense-reward controls;
+\item one-seed IsaacLab pilot;
+\item full audit and retraction timeline;
+\item every secondary utility variant and concentration exponent;
+\item detailed hyperparameter sweeps;
+\item code integration snippets and adapter API;
+\item extra negative results whose role is boundary diagnosis rather than the main claim.
+\end{itemize}
+
+\part{Page-specific audit of the current working draft}
+
+\section{Page 1: title, abstract, and anonymity}
+
+\begin{prioritybox}
+The manuscript is labeled anonymous but links directly to a repository under a personal username. Remove or replace this before any anonymous submission. Also inspect PDF metadata and supplementary files.
+\end{prioritybox}
+
+Abstract changes:
+
+\begin{itemize}[leftmargin=2em]
+\item replace expected advantage ``learning signal'' with coefficient mass and the factorization statement;
+\item scope the dead zone to the practical estimator and fixed budget;
+\item remove ``recycling is the only channel'' until full-CV is tested;
+\item replace the nine-run result with the accurate estimator main effect;
+\item do not say the teacher deficit replicates in the same sense as the pre-registered regression shape;
+\item identify the gate's current three-seed setting as unintended;
+\item keep the boundary suite, but define the missing condition as graded support/rollout diversity rather than saying the band simply ``collapses.''
+\end{itemize}
+
+\section{Page 2: research questions and contributions}
+
+Q1 is strong but should say mass is the part of the expected update controlled by the estimator before sampling, not the whole signal. Q2 should define ``safe'' as held-out coverage-stable. Q3 should state that the gate is motivated by saturation and tuned empirically.
+
+Contribution 2 currently says relabeling yields the ML gradient of the achieved task under the original sampling law. Replace it with the proposal-law semi-gradient theorem. Contribution 3 should not claim confirmation across four suites unless every suite directly tests the same estimator-conditioned prediction.
+
+\section{Page 3: Figure 1, Lemma 1, and Proposition 1}
+
+Required corrections:
+
+\begin{enumerate}[leftmargin=2em]
+\item fix $u_N$ versus $2u_N$ notation;
+\item label the practical estimator and $T=N-1$ in the figure;
+\item distinguish finite-group GRPO mass from population GRPO weight;
+\item replace ``MaxRL releases mastered prompts fastest'' with the correct MaxRL/RLOO/GRPO tail comparison;
+\item replace Proposition 1's interpretation with the factorization theorem;
+\item retain the exact peak $1-N^{-1/(N-1)}$.
+\end{enumerate}
+
+\section{Page 4: frontier amplification, water-filling, and scope remarks}
+
+Proposition 2's hard-tail ratios are useful. Correct the mastered-tail RLOO statement. Proposition 3 should be a one-step mass allocation theorem under fixed pass rates, not a universal curriculum optimum.
+
+Remark 1 is directionally right but can become shorter after the factorization theorem: mass controls estimator activity; transfer and sequential value remain outside the scalar. Remark 2 correctly admits that an adaptive curriculum changes the training mixture; keep this and consider making it more prominent.
+
+The claim that a true-pass-rate oracle ties the posterior should be rewritten. The reported oracle ties posterior plus recycling, while oracle-only materially exceeds posterior-only.
+
+\section{Page 5: method diagram and hindsight proposition}
+
+The method diagram should show $K'$ after relabeling. A dead requested-task group cannot simply be declared an all-success destination group under centered MaxRL, because that would also produce zero coefficients.
+
+Replace Proposition 4 with \cref{thm:relabel-factor}. State whether the destination is selected from the same group and whether the proof assumes cross-fitting or a fixed destination.
+
+\section{Page 6: partition map and recycling decomposition}
+
+``Creation is the only live channel'' should be scoped to the practical estimator and the compared samplers. Add full-CV to the control battery.
+
+The placebo decomposition is excellent. Keep the exact numbers together: replay captures most of the fixed-pool AUC gain, while the true relabel direction adds a smaller reliable increment. Do not lead with the cosine table after finding null relabels with the same cosine.
+
+\section{Pages 7--9: maze results and run counts}
+
+The central maze claim should be the estimator coverage main effect. The statement ``whether the teacher amplifies GRPO's decay is a factorial question'' is already appropriately cautious; align the abstract and introduction with that caution.
+
+Explain exactly why five MaxRL runs enter the nine-run complete-separation test and eighteen enter the level-resolved analysis. Identify seeds, warmstarts, and configurations. Use cluster-aware inference.
+
+The wall-clock decomposition is useful. Elevate the three-currency analysis to a figure: wall-clock, steps, and generated tokens/transitions.
+
+\section{Page 10: GSM8K}
+
+Keep the endpoint sign and steering-dose observation, but frame the run primarily as a treatment-delivery failure. The teacher visits too few prompts to become decisive. Add uniform-with-replacement and stronger steering before using this as a headline interaction.
+
+The pass@k harness discrepancy must be reconciled. Until then, quote only within-harness contrasts and label them secondary.
+
+\section{Pages 11--12: Countdown sharpening and gate}
+
+The sharpening result is one of the paper's strongest new empirical observations. Lead with the replicated three-seed mean-up/coverage-down trade.
+
+The mechanism sentence ``a self-achieved value is at $p\approx1$'' is too strong. Show the destination-pass-rate distribution. Use destination-marginal shift and saturation as hypotheses supported by telemetry.
+
+Separate tier 1 and the frontier tier. Report the decay bug as an unintended operating point and rerun the corrected sweep.
+
+\section{Page 13: limitations and Jugs boundary}
+
+The limitations section is unusually good. Strengthen it by separating possible causes in Jugs:
+
+\begin{itemize}[leftmargin=2em]
+\item narrow template support;
+\item low within-group trajectory diversity;
+\item shared-parameter interference;
+\item capacity or representation limits;
+\item destination-key collision in the gate.
+\end{itemize}
+
+Do not let ``the band collapses'' absorb all of these mechanisms into one phrase.
+
+\section{Pages 14--16: appendices, hyperparameters, and reproducibility}
+
+The classic-control result is useful as a boundary demonstration that sparse verifier-style reward can create a strict zero-update freeze and that shared task conditioning is necessary. It is not central enough to carry the main narrative unless the LLM evidence is removed.
+
+The hyperparameter table should distinguish derived quantities from tuned defaults. ``Gate max $p=0.5$, derived zero at $p\to1$, midpoint tuned'' is accurately described as motivated plus tuned, not derived.
+
+Add a theory-to-code contract table and a run manifest. The statement that every figure is artifact-backed is strong; make the mapping from figure panel to run IDs visible.
+
+\part{Final reviewer-style verdict and checklist}
+
+\section{Reviewer-style verdict}
+
+\subsection{Strengths}
+
+\begin{itemize}[leftmargin=2em]
+\item A coherent estimator-first explanation of finite-group curriculum activity.
+\item A useful implementation-level refinement of practical MaxRL when scoped to the correct estimator.
+\item An exact closed-form coefficient profile and a stronger factorization connecting it to the finite-$N$ gradient weight.
+\item Strong negative-result discipline, placebo controls, and correction history.
+\item A compelling empirical phenomenon: relabeling can improve mean accuracy while reducing multi-sample coverage.
+\item Good mechanistic instincts: requested-only posterior updates, conditioning rewrite, dose controls, and step-matched analysis.
+\item Boundary suites that make the applicability conditions visible rather than hiding failures.
+\end{itemize}
+
+\subsection{Current weaknesses}
+
+\begin{itemize}[leftmargin=2em]
+\item The central quantity is named more strongly than the theorem supports.
+\item The dead-zone impossibility omits the baseline's full control-variate alternative.
+\item The curriculum-by-estimator interaction is not yet conclusively identified.
+\item Hindsight exactness remains too broad relative to source/destination distribution shift.
+\item The primary gate evidence uses an unintended effective setting.
+\item Statistical independence and run inclusion are not transparent enough.
+\item Preliminary LLM and inference results receive too much headline weight.
+\item The manuscript is not anonymous in its present artifact form.
+\end{itemize}
+
+\subsection{Bottom line}
+
+\begin{takeawaybox}
+This is a major-revision paper, not a conceptual restart. The best version stops trying to prove that one scalar decides every aspect of curriculum learning and instead establishes a precise decomposition: the estimator defines finite-group activity; task structure defines transfer; relabeling changes the trained destination distribution; and coverage reveals when either channel concentrates rather than expands behavior.
+\end{takeawaybox}
+
+\section{Final pre-submission checklist}
+
+\begin{enumerate}[leftmargin=2em,label=$\square$]
+\item The PDF and artifact are genuinely anonymous.
+\item Raw, full-CV, and practical MaxRL estimators are distinguished everywhere.
+\item Tajwar et al.'s raw $T=N$ theorem is not described as incorrect.
+\item $A_N$ denotes full mass and $\nu_N=A_N/2$ denotes normalized activity.
+\item ``Learning signal'' is replaced by coefficient mass/activity, with the factorization theorem added.
+\item The dead zone is budget-indexed and scoped to the practical estimator.
+\item The full-control-variate all-fail baseline is included or its omission is explicitly justified.
+\item The exact peak is used; ``band width'' is defined or removed.
+\item The mastered-tail comparison with RLOO is corrected.
+\item Finite-group GRPO and population GRPO are clearly separated.
+\item Water-filling is described as a fixed-pass-rate one-step mass oracle.
+\item Oracle-only is compared correctly with posterior-only; oracle-plus-recycling is not used to dismiss information value.
+\item Estimator activity is separated from cross-task transfer.
+\item Hindsight is described as a destination semi-gradient under a proposal law.
+\item The relabeled success count $K'$ and contrast mechanism are explicit.
+\item Same-group destination selection is discussed or cross-fitted.
+\item The gate is described as motivated by saturation and tuned in strength.
+\item Corrected multi-seed gate runs replace the bugged setting as the primary evidence.
+\item Maze statistics use seed/warmstart clusters and a public run registry.
+\item Five-versus-eighteen MaxRL inclusion rules are explained.
+\item ``Six seeds'' is changed to six contrasts within three seeds.
+\item Main effect and interaction claims are separated.
+\item Frozen-schedule estimator comparison is included.
+\item Uniform-with-replacement controls prompt repetition in GSM8K.
+\item Delivered steering is quantified by distributional metrics, not only dead-group fractions.
+\item Wall-clock, optimizer steps, and generated tokens/transitions are all reported.
+\item The pass@k evaluation harness discrepancy is reconciled.
+\item ``Diversity premium'' is renamed to a coverage-based term.
+\item Countdown figures separate saturated and frontier tiers.
+\item Destination-pass-rate and occupancy telemetry support the sharpening mechanism.
+\item The main paper contains at most three decisive experiment stories plus one boundary synthesis.
+\item Every load-bearing number appears in the paper or appendix, not only external Markdown files.
+\item Every theorem states its sampling law, estimator convention, and implementation assumptions.
+\end{enumerate}
+
+\appendix
+
+\section{Compact derivation reference}
+
+For quick use while rewriting:
+
+\begin{align*}
+p&=\Prb(r=1\mid x),\qquad q=1-p,\qquad K\sim\mathrm{Bin}(N,p),\\
+\mu_+&=\frac{\grad p}{p},\qquad
+\mu_-=-\frac{\grad p}{q},\qquad
+\mu_+-\mu_-=\frac{\grad p}{pq},\\
+\E[\widehat g_N^{\mathrm{raw}}]
+&=\frac{1-q^N}{p}\grad p
+=\sum_{j=0}^{N-1}q^j\grad p,\\
+\E[\widehat g_N^{\mathrm{full}}]
+&=\E[\widehat g_N^{\mathrm{raw}}],\\
+\E\sum|w_i|_{\mathrm{full}}
+&=2q-q^N,\\
+\nu_N^{\mathrm{prac}}(p)
+&=q-q^N=\PassAt{N}(p)-p,\\
+\E\sum|w_i|_{\mathrm{prac}}
+&=2(q-q^N),\\
+\E[\widehat g_N^{\mathrm{prac}}]
+&=\frac{1-q^{N-1}}{p}\grad p
+=\sum_{j=0}^{N-2}q^j\grad p,\\
+p_N^*&=1-N^{-1/(N-1)},\\
+\nu_N^{\mathrm{RLOO}}(p)&=pq,\\
+\nu_N^{\mathrm{GRPO}}(p)
+&=\frac1N\E\sqrt{K(N-K)},\\
+\ell_N(p)&=1-p^N-q^N,\\
+\nu_{n+1}(p)-\nu_n(p)&=pq^n.
+\end{align*}
+
+\section{Suggested notation table}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning}\\
+\midrule
+$p$ & requested-task pass rate under the current policy\\
+$q=1-p$ & failure probability\\
+$N$ & rollout group size\\
+$K$ & observed number of successes in a group\\
+$S_i$ & trajectory score $\grad\log m_\theta(z_i\mid x)$\\
+$A_N(p)$ & expected full coefficient mass $\E\sum_i|w_i|$\\
+$\nu_N(p)$ & normalized half-mass $A_N/2$; sampling activity utility\\
+$\ell_N(p)$ & probability of a nonconstant group $0<K<N$\\
+$\mu_+,\mu_-$ & success- and failure-conditioned score means\\
+$Q^{x\to g}$ & source-induced proposal law after relabeling to destination $g$\\
+$\Pi^g$ & fresh destination policy law\\
+$K'$ & success count after destination rewrite and re-verification\\
+$\rho$ & fixed evaluation/task distribution\\
+$q_t$ & adaptive curriculum sampling distribution at step $t$\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Source map}
+
+The review relies on these locations in the supplied documents:
+
+\begin{itemize}[leftmargin=2em]
+\item Working draft page 1: abstract, title, public repository link, and headline claims.
+\item Working draft pages 2--4: research questions, contribution list, $T=N-1$ lemma, coefficient mass, estimator comparisons, water-filling, and scope remarks.
+\item Working draft page 5: FrontierMax algorithm and hindsight proposition.
+\item Working draft pages 6--12: chain/frontier/maze/GSM8K/Countdown evidence and the gate bug disclosure.
+\item Working draft page 13: limitations, Jugs boundary, and correction history.
+\item MaxRL baseline page 5: raw success-conditioned estimator and Theorem 2, order $T=N$.
+\item MaxRL baseline page 6: full control variate and practical Algorithm 1 that drops $K=0$.
+\item MaxRL baseline page 7: population weight-function view.
+\item MaxRL baseline pages 30--32: formal proofs and MaxRL weight derivation.
+\end{itemize}
+
+\section{References}
+
+\begin{thebibliography}{9}
+
+\bibitem{workingdraft}
+Anonymous authors.
+\newblock \emph{The Estimator Decides: What Curricula and Failure Recycling Can and Cannot Do in RL with Verifiable Rewards}.
+\newblock Working draft v0.9, August 4, 2026.
+
+\bibitem{maxrl}
+Fahim Tajwar, Guanning Zeng, Yueer Zhou, Yuda Song, Daman Arora, Yiding Jiang, Jeff Schneider, Ruslan Salakhutdinov, Haiwen Feng, and Andrea Zanette.
+\newblock \emph{Maximum Likelihood Reinforcement Learning}.
+\newblock arXiv:2602.02710v1, 2026.
+
+\end{thebibliography}
+
+\end{document}
