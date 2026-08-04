@@ -186,7 +186,7 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <body>
 
 <header class="hero">
-  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-04</p>
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-05</p>
   <h1>The estimator decides</h1>
   <p class="lede">
     RL with verifiable rewards leans on two data-level fixes — <em>difficulty curricula</em>
@@ -196,13 +196,15 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     algebra — a prompt's expected learning signal is exactly
     <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>, whose two zeros partition difficulty into a
     dead zone, a learnable band, and a mastered tail — and use it to predict, pre-register, and
-    confirm two failure modes nobody was measuring: the <em>same</em> curriculum that trains
-    stably under MaxRL <strong>degrades GRPO</strong> (maze + LLM scale), and recycling buys
-    mean accuracy <strong>with pass@k coverage</strong> (recycling-induced sharpening — a new
-    finding). The same algebra supplies the fix: gate relabels by their destination's pass
-    rate, and coverage comes back with most of the gain kept. The claim's boundary is measured
-    too: a pre-registered fifth suite whose band collapses to one template stratum defeats
-    <em>every</em> estimator — the partition needs a graded band to act on.
+    confirm two failure modes nobody was measuring: across nine maze runs every
+    success-conditioned run grew pass@k coverage and every GRPO run lost it (exploratory —
+    heterogeneous pool; a two-seed GSM8K pilot points the same direction), and recycling buys
+    mean accuracy <strong>with pass@k coverage</strong> (recycling-induced sharpening — first
+    measurement of this cost in RLVR). The same algebra motivates the fix: gate relabels by
+    their destination's pass rate — at the frontier tier the gate returns coverage to baseline
+    keeping most of the gain (one validated operating point; the dose sweep is queued). The
+    claim's boundary is measured too: a pre-registered fifth suite whose learnable region
+    collapses to one template stratum defeats <em>every</em> estimator.
   </p>
   <div class="card" style="margin-top:18px">
     <p class="eyebrow" style="margin-bottom:8px">Three headline results</p>
@@ -211,11 +213,13 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     zero-update freeze (0.000 on the flag and survive-400) — the gated stack reaches
     <strong>1.000±0.000 on both</strong>; with dense native rewards plain REINFORCE solves
     CartPole, so the zero is a property of the sparse setting RLVR actually lives in.
-    &nbsp;·&nbsp; <strong>Safety, pre-registered:</strong> on the maze, every MaxRL run grows
-    coverage and every GRPO run loses it (9 runs, permutation p=0.0079, zero exceptions). On
-    GSM8K the teacher-deficit direction under GRPO now replicates 2/2 seeds on both meters
-    (magnitude tracks delivered steering — a dose effect, not a sign flip); the
-    steering-controlled decisive cells are training now.
+    &nbsp;·&nbsp; <strong>Safety:</strong> on the maze, every MaxRL run grows
+    coverage and every GRPO run loses it (9 runs, zero sign exceptions; one-sided exact
+    permutation p=0.0079 — the design floor, with stratified and paired variants holding).
+    On GSM8K the teacher-deficit direction under GRPO replicates 2/2 seeds; the registered
+    regression shape is 1-of-2 — the steering-controlled decisive cells are training now,
+    alongside reviewer-demanded controls (GRPO scheduled by its own mass; a no-std GRPO
+    variant; the gate at its designed operating point ×3 seeds).
     &nbsp;·&nbsp; <strong>Sharpening + the gate:</strong> recycling trades coverage for accuracy
     (3 seeds, outside noise); the utility gate restores coverage keeping ~60% of the gain — and
     the gate threshold traces a mean-vs-coverage dial.</p>
