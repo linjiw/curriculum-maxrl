@@ -138,12 +138,18 @@ factorial resolves which claims survive.
   captions state "shape 1-of-2, sign 2-of-2". Data tables and manifest
   checksums refrozen.
 - **Artifact**: `verl/utils/hindsight.py` vendored verbatim at
-  execution commit 0ad11b1 (`verl_integration/vendored/` + provenance
-  README); body.tex reference fixed; fig6_gym manifest inputs +
-  checksums added; GSM8K 3x harness discrepancy moved into Known gaps
-  with its status. Still open: fig2/fig3 endpoint tables derived from
-  seed-level logs (currently transcribed; disclosed), IsaacLab raw
-  logs (other team; disclosed).
+  execution commit (`verl_integration/vendored/` + provenance README);
+  body.tex reference fixed; fig6_gym manifest inputs + checksums
+  added; GSM8K 3x harness discrepancy moved into Known gaps with its
+  status. **fig2 panels (a) and (c) now regenerate from per-seed
+  artifacts / raw seed logs via checked-in verification scripts that
+  fail on mismatch** (`verify_fig2a_from_artifacts.py`,
+  `verify_fig2c_from_logs.py`; all bars verify — including tracing the
+  oracle bar to the correct post-retraction artifact). Result literals
+  in fig7/8/9 scripts re-audited: remaining numerics are annotation
+  coordinates, not result values (results come from the frozen data
+  JSONs). Still open: fig2 panels b/d + fig3 remain transcribed with
+  per-panel provenance; IsaacLab raw logs (other team; disclosed).
 - **Novelty**: "first exact-verifier hindsight experiment in RLVR" →
   "our first ... in an RLVR loop" + precedent pointer; retained claims
   prefixed "to our knowledge" with an explicit no-exhaustive-search
