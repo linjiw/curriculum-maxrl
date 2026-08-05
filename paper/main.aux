@@ -79,6 +79,8 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {Recycling-induced sharpening and its saturation-gate mitigation (Countdown, tier 1).} \emph  {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\text  {pass@}16$ coverage; the moderate gate (B3) gives most of the mean back on this early-saturating tier, and full-strength gating (hollow; 1 seed, corrected decay) returns coverage above baseline at the mean's full price --- \S  6.9 states what these settings do and do not establish. \emph  {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph  {(c)} Gated recycling preserves \emph  {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient.}}{13}{figure.55}\protected@file@percent }
 \newlabel{fig:sharpening}{{7}{13}{\textbf {Recycling-induced sharpening and its saturation-gate mitigation (Countdown, tier 1).} \emph {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\passat {16}$ coverage; the moderate gate (B3) gives most of the mean back on this early-saturating tier, and full-strength gating (hollow; 1 seed, corrected decay) returns coverage above baseline at the mean's full price --- \S 6.9 states what these settings do and do not establish. \emph {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph {(c)} Gated recycling preserves \emph {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient}{figure.55}{}}
 \@writefile{toc}{\contentsline {paragraph}{6.8 What does recycling cost? (Countdown $2{\times }2$, pre-registered): two nulls and a new phenomenon.}{13}{section*.56}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Sharpening is a crossing in $k$ (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).} Ungated recycling sits above baseline at $k{=}1$ (mean up) and below by $k{=}4$ (coverage down), the deficit widening with $k$. The two gate settings bracket the trade --- moderate tracks baseline at low $k$ with a smaller high-$k$ deficit; full-strength (hollow; one seed, corrected decay) pays at $k{=}1$ and finishes above baseline at $k{=}16$ --- consistent with a strength dial, though \S  6.9 details why these settings do not yet establish one. Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry from the seed-1 logs.}}{14}{figure.60}\protected@file@percent }
+\newlabel{fig:passk}{{8}{14}{\textbf {Sharpening is a crossing in $k$ (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).} Ungated recycling sits above baseline at $k{=}1$ (mean up) and below by $k{=}4$ (coverage down), the deficit widening with $k$. The two gate settings bracket the trade --- moderate tracks baseline at low $k$ with a smaller high-$k$ deficit; full-strength (hollow; one seed, corrected decay) pays at $k{=}1$ and finishes above baseline at $k{=}16$ --- consistent with a strength dial, though \S 6.9 details why these settings do not yet establish one. Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry from the seed-1 logs}{figure.60}{}}
 \@writefile{toc}{\contentsline {paragraph}{6.9 Does the gate recover it? (Countdown v2 pool, 3 seeds, pre-registered).}{14}{section*.57}\protected@file@percent }
 \citation{yue}
 \citation{cui}
@@ -91,30 +93,28 @@
 \citation{hgg}
 \citation{cher}
 \citation{skewfit}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Sharpening is a crossing in $k$ (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).} Ungated recycling sits above baseline at $k{=}1$ (mean up) and below by $k{=}4$ (coverage down), the deficit widening with $k$. The two gate settings bracket the trade --- moderate tracks baseline at low $k$ with a smaller high-$k$ deficit; full-strength (hollow; one seed, corrected decay) pays at $k{=}1$ and finishes above baseline at $k{=}16$ --- consistent with a strength dial, though \S  6.9 details why these settings do not yet establish one. Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry from the seed-1 logs.}}{15}{figure.60}\protected@file@percent }
-\newlabel{fig:passk}{{8}{15}{\textbf {Sharpening is a crossing in $k$ (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).} Ungated recycling sits above baseline at $k{=}1$ (mean up) and below by $k{=}4$ (coverage down), the deficit widening with $k$. The two gate settings bracket the trade --- moderate tracks baseline at low $k$ with a smaller high-$k$ deficit; full-strength (hollow; one seed, corrected decay) pays at $k{=}1$ and finishes above baseline at $k{=}16$ --- consistent with a strength dial, though \S 6.9 details why these settings do not yet establish one. Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry from the seed-1 logs}{figure.60}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Related work}{15}{section.61}\protected@file@percent }
 \citation{codeit}
 \citation{minimo}
 \citation{lfh}
 \citation{ziprl}
 \citation{starcross}
 \citation{yuan}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Related work}{15}{section.61}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {8}Limitations and negative results}{16}{section.62}\protected@file@percent }
 \newlabel{sec:limits}{{8}{16}{Limitations and negative results}{section.62}{}}
 \@writefile{toc}{\contentsline {paragraph}{Scale, and what the retraction taught about design.}{16}{section*.63}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Where the teacher cannot work as specified.}{16}{section*.64}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Scope of the surrogate.}{16}{section*.65}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{16}{section*.66}\protected@file@percent }
 \bibcite{maxrl}{{1}{2026}{{Tajwar et al.}}{{}}}
 \bibcite{disco}{{2}{2025}{{Li et al.}}{{}}}
 \bibcite{scsdpo}{{3}{2026}{{Liu et al.}}{{}}}
-\@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{17}{section*.66}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{17}{section*.67}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{17}{section*.68}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{17}{section.69}\protected@file@percent }
 \bibcite{yue}{{4}{2025}{{Yue et al.}}{{}}}
 \bibcite{yuan}{{5}{2026}{{Yuan et al.}}{{}}}
 \bibcite{cui}{{6}{2025}{{Cui et al.}}{{}}}
+\@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{17}{section*.67}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{17}{section*.68}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{17}{section.69}\protected@file@percent }
 \bibcite{cai}{{7}{2026}{{Cai et al.}}{{}}}
 \bibcite{dump}{{8}{2025}{{Wang et al.}}{{}}}
 \bibcite{adarft}{{9}{2025}{{Shi et al.}}{{}}}

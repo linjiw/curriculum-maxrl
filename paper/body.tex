@@ -628,7 +628,7 @@ no: only creation scores \\
 6.3a & does the curriculum pay? & maze cohort, 1.26M & 3 &
 throughput + recycling signal \\
 6.3b & estimator effect, real grads? & maze factorial & 6 blocks &
-endpoint failed; AUC 12/12 (expl.) \\
+endpoint failed; expl.\ AUC 12/12 \\
 6.4 & where/when does coverage go? & maze, level-resolved & 22 runs &
 easy band, immediately \\
 6.5$^{*}$ & when does allocation not pay? & IsaacLab Anymal-C & 1 &
@@ -834,19 +834,12 @@ the $\sqrt{K(N{-}K)}$ weighting keeps spending updates on mastered
 prompts where $u_N$ has already released them --- but the step from
 mass to coverage is a stated \emph{hypothesis}, not a derivation: mass
 is sign-blind, and ``mastered-tail updates sharpen'' requires an
-argument about the sign structure of near-saturated groups (a lone
-failure draws a large negative weight under variance normalization,
-pushing mass off the failure mode and onto the dominant one) that we
+argument about the sign structure of near-saturated groups that we
 support with the location and timing evidence here rather than prove.
-The hypothesis has a committed falsifier --- remove variance
-normalization and the tail signature should vanish --- and the two
-rungs split on it (\S 6.3b): at the exact rung the no-SD ablation
-moves GRPO's coverage profile onto RLOO's, as the mass curves
-predict, but in the balanced factorial no-SD GRPO loses the easy band
-in 6/6 seeds like sample-SD GRPO. The mechanism account is therefore
-per-task-exact only; through shared parameters something beyond
-variance normalization drives the easy-band loss, and we bound the
-claim accordingly.
+Its committed falsifier (remove variance normalization and the tail
+signature should vanish) split across the rungs, as \S 6.3b reports:
+the mechanism account is per-task-exact only, and we bound the claim
+accordingly.
 \emph{When:} the divergence is immediate, not saturation-triggered ---
 GRPO incurs 59--73\% of its total coverage--reliability gap loss
 ($\overline{\passat{8}-\passat{1}}$: $.123\to.042$) within the first
