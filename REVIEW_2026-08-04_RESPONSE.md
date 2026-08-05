@@ -79,7 +79,26 @@ normalization/failure conditioning; the LLM-side test is the flag).
 Artifact: `results_row_vs_group.json`. The LLM ablation run itself is
 queued behind the factorial and reviewer arms.
 
-## P0-3: causal identification — the factorial is running
+## P0-3: causal identification — RESOLVED: the factorial ran and the claim is retracted
+
+**Verdict (2026-08-05, `maze_gpu/FACTORIAL_VERDICT.md`): P-F1 FAILED at
+the registered endpoint** (3/6 paired blocks under uniform, 1/3 under
+the teacher; only 3/10 MaxRL cells grew coverage). The committed
+falsification branch executed in full: abstract, intro, contribution 3,
+§6.3, §6.4, limitations (retraction paragraph), and conclusion all
+rescoped — the zero-exception cohort claim is **retracted, not
+softened** (the cohort conflated recycling's coverage contribution with
+the estimator effect). Survivors, stated at their level: exact-rung
+ordering robust (10/10 frozen schedules + both controls); exploratory
+time-integrated coverage ordering at neural scale (MaxRL over GRPO 9/9
+paired blocks, easy-band concentrated) named as the next registered
+endpoint. P-G0a confirmed (GRPO under its own scheduler loses coverage
+the same — mismatch closed at both rungs). P-G0c failed (no-SD GRPO
+loses the easy band 5/5 at neural scale, contradicting the exact rung
+— the variance-normalization mechanism is per-task-exact only; both
+rungs reported side by side per the committed revision).
+
+Original design notes below for the record.
 
 `run_factorial.sh` + `fact_analyze.py` committed (maxrl repo,
 `curriculum_maxrl/maze_gpu/`), pre-registered 2026-08-05 before any
