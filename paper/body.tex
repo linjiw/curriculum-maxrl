@@ -806,7 +806,14 @@ vs.\ RLOO's $.161$ under the teacher schedule; sample-SD GRPO $.762$)
 $\sqrt{K(N{-}K)}$ normalization its expected mass is
 $2K(N{-}K)/N^2 \approx$ RLOO's $2p(1{-}p)$; the variance
 normalization, not mean-centering, is what moves GRPO's mass onto the
-tails.
+tails. A second reviewer control at the same rung asks whether the
+gap is teacher--estimator \emph{mismatch}: scheduling GRPO by its own
+exact mass functional ($\frac1N\mathbb{E}\sqrt{K(N{-}K)}$,
+Thompson-sampled) does not close the gap to MaxRL (5/5 seeds) and in
+fact serves GRPO \emph{worse} than the $u_N$ teacher does (0/5;
+artifact \texttt{results\_grpo\_own\_mass.json}) --- on this pool no
+scheduler choice rescues the estimator, which is the point; the
+neural-scale version (P-G0a) runs in the pre-registered factorial.
 Whether the teacher \emph{amplifies} GRPO's decay is a
 factorial (interaction) question this suite is not powered for; the
 GSM8K $2{\times}2$ below tests exactly that cell, pre-registered.
