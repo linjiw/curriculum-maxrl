@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  5 AUG 2026 13:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  5 AUG 2026 13:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -580,54 +580,53 @@ Underfull \vbox (badness 3872) has occurred while \output is active []
 <figures/fig8_bands.pdf, id=353, 505.89pt x 195.129pt>
 File: figures/fig8_bands.pdf Graphic file (type pdf)
 <use figures/fig8_bands.pdf>
-Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 869.
+Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 873.
 (pdftex.def)             Requested size: 397.48499pt x 153.3195pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [11 <./figures/fig8_bands.pdf>]
-<figures/fig3_gsm8k.pdf, id=389, 252.945pt x 202.356pt>
+<figures/fig3_gsm8k.pdf, id=356, 252.945pt x 202.356pt>
 File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
 <use figures/fig3_gsm8k.pdf>
-Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 910.
+Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 914.
 (pdftex.def)             Requested size: 218.61795pt x 174.89658pt.
- [12 <./figures/fig3_gsm8k.pdf>]
+
+[11] [12 <./figures/fig8_bands.pdf> <./figures/fig3_gsm8k.pdf>]
 <figures/fig7_sharpening.pdf, id=428, 505.89pt x 202.356pt>
 File: figures/fig7_sharpening.pdf Graphic file (type pdf)
 <use figures/fig7_sharpening.pdf>
-Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 979.
+Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 983.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
- [13 <./figures/fig7_sharpening.pdf>] [14] [15]
-Underfull \vbox (badness 3746) has occurred while \output is active []
-
- [16]
-[17] [18]
-<figures/fig6_gym.pdf, id=546, 505.89pt x 202.356pt>
-File: figures/fig6_gym.pdf Graphic file (type pdf)
-<use figures/fig6_gym.pdf>
-Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1450.
-(pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
-<figures/fig9_ksweep.pdf, id=547, 245.718pt x 187.902pt>
-File: figures/fig9_ksweep.pdf Graphic file (type pdf)
-<use figures/fig9_ksweep.pdf>
-Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1481.
-(pdftex.def)             Requested size: 218.61795pt x 167.18637pt.
- [19 <./figures/fig6_gym.pdf> <./figures/fig9_ksweep.pdf>]
+ [13 <./figures/fig7_sharpening.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [20])
-[21] [22] (./main_iclr.aux)
+ [14]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15]
+[16] [17] [18]
+<figures/fig6_gym.pdf, id=545, 505.89pt x 202.356pt>
+File: figures/fig6_gym.pdf Graphic file (type pdf)
+<use figures/fig6_gym.pdf>
+Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1454.
+(pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
+<figures/fig9_ksweep.pdf, id=546, 245.718pt x 187.902pt>
+File: figures/fig9_ksweep.pdf Graphic file (type pdf)
+<use figures/fig9_ksweep.pdf>
+Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1485.
+(pdftex.def)             Requested size: 218.61795pt x 167.18637pt.
+ [19 <./figures/fig6_gym.pdf>]
+Underfull \vbox (badness 2726) has occurred while \output is active []
+
+ [20 <./figures/fig9_ksweep.pdf>] [21]) [22] (./main_iclr.aux)
 Package rerunfilecheck Info: File `main_iclr.out' has not changed.
 (rerunfilecheck)             Checksum: 8F2DDD495C9E9A34E093BF663380ED78;2145.
  ) 
 Here is how much of TeX's memory you used:
- 13509 strings out of 480806
- 195790 string characters out of 5905151
- 553735 words of memory out of 6000000
+ 13503 strings out of 480806
+ 195730 string characters out of 5905151
+ 557478 words of memory out of 6000000
  29953 multiletter control sequences out of 15000+600000
- 461908 words of font info for 459 fonts, out of 8000000 for 9000
+ 461478 words of font info for 455 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 61i,12n,75p,1375b,499s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,12n,75p,1375b,497s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
@@ -652,7 +651,7 @@ r/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrro8a.pfb
 dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
 e1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/ut
 mri8a.pfb>
-Output written on main_iclr.pdf (22 pages, 652365 bytes).
+Output written on main_iclr.pdf (22 pages, 652727 bytes).
 PDF statistics:
  750 PDF objects out of 1000 (max. 8388607)
  581 compressed objects within 6 object streams
