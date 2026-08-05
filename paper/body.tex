@@ -762,12 +762,13 @@ recycling's is signal. Utility-form controls (3-seed reruns, artifact
 noise of the legacy deployed form on the maze itself, and a
 CPU-winning $(1{-}p)$-tilted refinement loses 0/3 here --- within-band
 utility choices are testbed-sensitive, which is why the theory claims
-only the band's boundaries. \textbf{Safety --- what a pre-registered
-factorial confirmed and what it retired.} An earlier nine-run cohort
-showed perfect sign separation --- every MaxRL-labeled run grew
-$\passat{8}$, every GRPO-labeled run lost it --- but the pool mixed
-sampler configurations and hindsight doses and reused warmstarts, so
-we pre-registered the clean test: a balanced
+only the band's boundaries.
+
+\subparagraph{The factorial, and what it retired.} An earlier
+nine-run cohort showed perfect sign separation --- every MaxRL-labeled
+run grew $\passat{8}$, every GRPO-labeled run lost it --- but the pool
+mixed sampler configurations and hindsight doses and reused
+warmstarts, so we pre-registered the clean test: a balanced
 $\{$MaxRL, GRPO$\}\times\{$uniform, $u_N$-teacher$\}$ factorial, six
 independent seed blocks, identical per-block warmstarts, matched
 generation-and-optimization budgets (250 fixed steps), one registered
@@ -777,47 +778,50 @@ and a committed falsification branch. \textbf{The endpoint failed:
 MaxRL cells grew coverage at all --- the cohort's zero-exception
 divergence is retracted, not softened} (prereg + raw cells + verdict:
 \texttt{curriculum\_maxrl/maze\_gpu\_factorial/}, vendored with
-execution-commit provenance). The cohort pattern had
-conflated recycling's coverage contribution with the estimator effect
-(its MaxRL runs included hindsight arms; the factorial isolates the
-estimator). Two things survive, stated at their evidence level.
-\emph{Exploratory, from the same factorial}: on time-integrated
-coverage (mean in-training $\passat{8}$ minus warmstart --- a
-noise-integrating secondary we did not register), MaxRL retains more
-coverage than GRPO in \textbf{12/12} paired blocks across both samplers,
-and the difference concentrates in the easy band (GRPO's easy-band
+execution-commit provenance). The cohort pattern had conflated
+recycling's coverage contribution with the estimator effect: its MaxRL
+runs included hindsight arms, and the factorial isolates the
+estimator.
+
+\subparagraph{What survives, at its evidence level.}
+\emph{Confirmed, exact rung}: frozen realized schedules replayed under
+each estimator preserve MaxRL over GRPO in 10/10
+seed$\times$schedule pairs (artifact
+\texttt{results\_schedule\_matched.json}) --- the ordering is robust
+where gradients are exact. \emph{Exploratory, from the same
+factorial}: on time-integrated coverage (mean in-training $\passat{8}$
+minus warmstart, a noise-integrating secondary we did not register),
+MaxRL retains more coverage than GRPO in \textbf{12/12} paired blocks
+across both samplers, concentrated in the easy band (GRPO's easy-band
 loss $2\times$ MaxRL's, 9/12 pairs) --- where the mass curves say GRPO
-overspends; this is the hypothesis a future registered endpoint should
-target, powered against the ${\sim}{\pm}.03$ single-eval noise that
-the registered endpoint was not. \emph{Confirmed, exact rung}: the
-ordering is robust where gradients are exact --- frozen realized
-schedules replayed under each estimator preserve MaxRL over GRPO in
-10/10 seed$\times$schedule pairs (artifact
-\texttt{results\_schedule\_matched.json}). Three controls close
-alternative readings. \emph{Teacher--estimator mismatch is closed at
-both rungs}: GRPO scheduled by its \emph{own} exact mass functional
-($\frac1N\mathbb{E}\sqrt{K(N{-}K)}$, Thompson-sampled) does not close
-the gap on chains (5/5) and loses coverage like every other GRPO arm
-in the factorial (5/6 cells negative, mean $-.042$ vs.\ uniform-GRPO
-$-.042$). \emph{The no-SD ablation separates the rungs}: on chains,
-mean-centered un-normalized GRPO drops to RLOO's coverage profile
-($.148$ vs.\ RLOO $.161$; sample-SD GRPO $.762$), exactly as the mass
-account predicts --- but in the factorial it loses the easy band in
-6/6 seeds, indistinguishable from sample-SD GRPO, so \textbf{at neural
-scale the easy-band liquidation is not explained by variance
-normalization alone}: the Fig.~\ref{fig:utility} mechanism story holds
-per-task under exact gradients and does not transfer through shared
-parameters unmodified --- a committed revision we make rather than
-bury (pre-registered falsification branch P-G0c).
+overspends. That is the hypothesis a registered endpoint should
+target, and a confirmation wave on six fresh seed blocks is running
+with exactly that endpoint and a committed falsification branch.
+
+\subparagraph{Three controls close alternative readings.}
+\emph{Scheduler mismatch}: GRPO driven by its \emph{own} exact mass
+functional ($\frac1N\mathbb{E}\sqrt{K(N{-}K)}$, Thompson-sampled) does
+not close the gap on chains (5/5) and loses coverage like every other
+GRPO arm in the factorial (5/6 cells negative, mean $-.042$, equal to
+uniform-GRPO) --- no scheduler choice rescues the estimator.
+\emph{Variance normalization}: on chains, removing GRPO's SD
+normalization drops it to RLOO's coverage profile exactly as the mass
+account predicts ($.148$ vs.\ RLOO $.161$; sample-SD $.762$) --- but
+in the factorial the no-SD arm loses the easy band in 6/6 seeds,
+indistinguishable from sample-SD GRPO, so \textbf{at neural scale the
+easy-band liquidation is not explained by variance normalization
+alone}: the Fig.~\ref{fig:utility} mechanism holds per-task under
+exact gradients and does not transfer through shared parameters
+unmodified (committed revision, falsification branch P-G0c).
 \emph{Interaction}: the teacher does not amplify GRPO's coverage loss
 in the factorial (teacher$-$uniform $\Delta$cov@8 under GRPO: mean
 $+.015$, mildly protective) --- the GSM8K P-G2 regression pattern
-receives no corroboration from the maze at this budget.
-Inference currency (single checkpoint pair; convention and per-level
-detail in App.~\ref{app:rungs}): our checkpoint needs
-$\mathbf{11\times}$ fewer samples at level 5, ties GRPO at levels
-2--3 --- the summed-coverage curves cross at $k{\approx}4$, so choose
-the estimator by how many samples you will draw at inference.
+receives no corroboration from the maze at this budget. Inference
+currency (single checkpoint pair; convention and per-level detail in
+App.~\ref{app:rungs}): our checkpoint needs $\mathbf{11\times}$ fewer
+samples at level 5, ties GRPO at levels 2--3 --- the summed-coverage
+curves cross at $k{\approx}4$, so choose the estimator by how many
+samples you will draw at inference.
 
 \paragraph{6.4 Where and when does GRPO's coverage go? (level-resolved;
 cohort data --- read with \S 6.3's retraction).}
