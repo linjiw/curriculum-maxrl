@@ -548,16 +548,14 @@ we treat the deployed variant's results as evidence about the
 weighted-SFT objective, not about a per-destination MaxRL gradient.
 Where the three variants are exactly implementable (skill chains, 10
 paired seeds; artifact \texttt{results\_row\_vs\_group.json}) the
-coupling itself is what costs: per-row relabels each trained as their
-own $K{=}1$ group lead (AUC $.952$), one-destination-per-group is
-next ($.881$), and the shared-$K$ coupled form --- the deployed LLM
-group semantics --- forfeits most of recycling's value ($.749$,
-vs.\ $.705$ with no recycling at all; both orderings 10/10 seeds).
-Whether the deployed LLM loop pays this coupling penalty is an open
-empirical question this rung cannot answer --- its group semantics
-differ in normalization and in what the failure rows condition on ---
-and the artifact ships a single-destination ablation flag
-(\texttt{one\_target\_per\_group}) for exactly that test.
+coupling itself is what costs: per-row relabels as their own $K{=}1$
+groups lead (AUC $.952$), one-destination-per-group is next ($.881$),
+and the shared-$K$ coupled form forfeits most of recycling's value
+($.749$ vs.\ no-recycling $.705$; both orderings 10/10). Whether the
+deployed LLM loop pays this penalty is a question this rung cannot
+answer (its normalization and failure conditioning differ); the
+artifact ships a single-destination ablation flag
+(\texttt{one\_target\_per\_group}) for that test.
 \end{remark}
 \begin{interp}
 ``Exactness'' is a property to \emph{measure per environment}, not a
@@ -798,22 +796,20 @@ exact summed $\passat{8}$ survives with the schedule held fixed
 \texttt{results\_schedule\_matched.json}), with the caveat that on
 that learnable-everywhere pool GRPO still gains coverage --- the
 neural-scale \emph{loss} is what the balanced maze factorial must
-test. The same replay includes the reviewer-requested no-SD ablation:
-a mean-centered, un-normalized GRPO (Dr.GRPO-style) drops to RLOO's
-coverage profile under both frozen schedules ($\Delta$cov@8 $.148$
-vs.\ RLOO's $.161$ under the teacher schedule; sample-SD GRPO $.762$)
---- exactly what the mass account predicts, since without the
-$\sqrt{K(N{-}K)}$ normalization its expected mass is
-$2K(N{-}K)/N^2 \approx$ RLOO's $2p(1{-}p)$; the variance
-normalization, not mean-centering, is what moves GRPO's mass onto the
-tails. A second reviewer control at the same rung asks whether the
-gap is teacher--estimator \emph{mismatch}: scheduling GRPO by its own
+test. Two controls at the same rung close two alternative readings.
+\emph{No-SD ablation}: a mean-centered, un-normalized GRPO
+(Dr.GRPO-style) drops to RLOO's coverage profile under both frozen
+schedules ($\Delta$cov@8 $.148$ vs.\ RLOO $.161$; sample-SD GRPO
+$.762$) --- as the mass account predicts, since without
+$\sqrt{K(N{-}K)}$ its expected mass is
+$2K(N{-}K)/N^2 \approx 2p(1{-}p)$: variance normalization, not
+mean-centering, moves GRPO's mass onto the tails.
+\emph{Teacher--estimator mismatch}: scheduling GRPO by its \emph{own}
 exact mass functional ($\frac1N\mathbb{E}\sqrt{K(N{-}K)}$,
-Thompson-sampled) does not close the gap to MaxRL (5/5 seeds) and in
-fact serves GRPO \emph{worse} than the $u_N$ teacher does (0/5;
-artifact \texttt{results\_grpo\_own\_mass.json}) --- on this pool no
-scheduler choice rescues the estimator, which is the point; the
-neural-scale version (P-G0a) runs in the pre-registered factorial.
+Thompson-sampled) does not close the gap to MaxRL (5/5 seeds) and
+serves GRPO worse than the $u_N$ teacher (0/5; artifact
+\texttt{results\_grpo\_own\_mass.json}); the neural-scale versions of
+both run in the pre-registered factorial.
 Whether the teacher \emph{amplifies} GRPO's decay is a
 factorial (interaction) question this suite is not powered for; the
 GSM8K $2{\times}2$ below tests exactly that cell, pre-registered.
@@ -1028,20 +1024,17 @@ and the threshold $0.5$ is a tuned midpoint, not a derived zero
 ($u_N$'s exact high-$p$ zero is at $p{=}1$, which would admit
 everything). A gate on a genuine task-conditioned $\hat p_{g'}$ is
 the derived object, and where destination pass rates are exactly
-measurable (the skill-chain testbed) we ran the comparison, 10 paired
-seeds: the true-$p$ gate preserves essentially all of ungated
-recycling's value (AUC $.879$ vs.\ $.881$) while the frequency
-heuristic pays a real toll ($.798$; true-$p$ over frequency 10/10
-seeds), and the heuristic's statistic is \emph{not} a pass-rate proxy
---- at decision time its correlation with true $p(g')$ is
-\emph{negative} ($-.27$), because it tracks the recycler's own
-recent output, not the policy's competence; the two rules converge
-only late, once everything saturates (admission agreement
-$.66 \to .99$; artifact \texttt{results\_gate\_variants.json}). So
-the LLM-scale gate results in \S 6.9 are evidence about a
-recency-novelty filter that happens to approximate saturation late in
-training --- implementing a genuine destination pass-rate estimate in
-the LLM loop is the indicated upgrade.}
+measurable (skill chains, 10 paired seeds; artifact
+\texttt{results\_gate\_variants.json}) the true-$p$ gate preserves
+essentially all of ungated recycling's value (AUC $.879$ vs.\ $.881$)
+while the frequency heuristic pays a toll ($.798$; 10/10). The
+heuristic is \emph{not} a pass-rate proxy --- at decision time its
+statistic anti-correlates with true $p(g')$ ($-.27$; it tracks the
+recycler's own recent output) --- and the two rules agree only once
+everything saturates ($.66 \to .99$). The \S 6.9 results are
+therefore evidence about a recency-novelty filter that approximates
+saturation late in training; a genuine destination pass-rate estimate
+in the LLM loop is the indicated upgrade.}
 
 \paragraph{6.9 Does the gate recover it? (Countdown v2 pool, 3
 seeds, pre-registered).} We rebuilt the pool with real structure
