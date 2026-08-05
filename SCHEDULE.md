@@ -19,6 +19,15 @@ and the falsification branch executes (claim rescopes from "the
 estimator decides" toward sampler-conditioned). Exactly what the
 factorial exists to decide; wait for 6 blocks.
 
+## New CPU results (2026-08-05, all prereg'd in-script, all in paper)
+
+| experiment | verdict | artifact |
+|---|---|---|
+| gate-variants (Q1/Q8): freq heuristic vs true-p gate, 10 seeds | true-p gate keeps ~all recycling value (.879 vs ungated .881); freq gate pays (.798, 0/10); f_hat anti-correlates with true p(g') (−.27) | `results_gate_variants.json` |
+| row-vs-group relabel (Q2/P0-2), 10 seeds | per-row-uncoupled .952 > one-target .881 > shared-K coupled .749 (≈ no-recycling .705); coupling is the cost, both orderings 10/10 | `results_row_vs_group.json` |
+| schedule-matched + grpo_nostd (Q7), 5 seeds × 2 frozen schedules | no-SD GRPO collapses onto RLOO's coverage profile (.148 vs RLOO .161 vs GRPO .762) — variance normalization is the tail mechanism | `results_schedule_matched.json` |
+| grpo-own-mass teacher (Q6), 5 seeds | GRPO scheduled by its own mass functional does NOT close the gap (5/5) and serves GRPO worse than the u_N teacher (0/5) | `results_grpo_own_mass.json` |
+
 ## Previous wave (2026-07-23, standing loop)
 
 | # | run | status | purpose |
