@@ -191,3 +191,33 @@ operating point (with the F5 disclosure), the post-fix run as the
 strong-gating end, and gate_max_p sweep as future work. The theory
 gains a refinement: destination-saturation gating trades recycled mean
 for preserved exploration monotonically.
+
+---
+
+## ARM-A (designed gate, P-R1) — seed 1 interim (2026-08-05, NO verdict until 3 seeds)
+
+Cell `cdb3fix_s1` (corrected decay + task-keyed destinations = the
+designed operating point), step-60 endpoint, same SFT init as the B
+arms (step-0 val identical: t1 .062/.328):
+
+| arm (seed 1 only) | t1 mean@16 | t1 pass@16 |
+|---|---|---|
+| B1 baseline (s1) | .310 | .559 |
+| B2 ungated (s1) | .324* | .492* |
+| ARM-A designed gate (s1) | **.212** | **.513** |
+
+*(B2 3-seed means shown; s1-specific in b_cells_dynamics.)*
+
+Gate telemetry: ~6 relabeled rollouts/step admitted vs B2's ~108 (~95%
+gated), `gated_saturated` ≈ 93/step. Trajectory: t1 mean peaked .268
+at step 15 then drifted down to .212; pass@16 .328→.513.
+
+Interim read against P-R1's window (mean gain in [0%,60%] of B2's,
+coverage in [baseline, baseline+.03]): seed 1 lands **below baseline on
+both axes** — mean .212 < .310 (≈2 seed-sd; t1 mean sd ±.054) and
+coverage .513 < .559. If this replicates in seeds 2–3, P-R1 is refuted
+and the committed branch executes (Fig 7a becomes a scatter, not a
+frontier — the "dial" claim falls). Seed-1 alone is within the range
+where val noise + seed variation could explain the mean gap; the
+prediction is decided at 3 seeds per the prereg. Seeds 2–3 queued
+behind the wave-2 factorial on the GPU.
