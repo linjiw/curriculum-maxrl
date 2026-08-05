@@ -1,43 +1,29 @@
 
 \begin{abstract}
-Post-training with verifiable rewards increasingly relies on two
-data-level interventions: \emph{difficulty curricula}, which reallocate
-rollout budget toward learnable prompts, and \emph{failure recycling}
-(hindsight relabeling), which converts failed rollouts into verified
-successes of the tasks they actually achieved. Both are treated as
-objective-agnostic add-ons. We show they are not: the advantage
-estimator underneath shapes what each can contribute, in closed form.
-For success-conditioned (MaxRL-style) advantages, the expected
-absolute coefficient mass a prompt emits from $N$ rollouts is exactly
+Difficulty curricula and failure recycling (hindsight relabeling) are
+designed today as estimator-agnostic add-ons to RL with verifiable
+rewards. We show they are not. \emph{Exact result:} for
+success-conditioned (MaxRL-style) advantages, the expected absolute
+coefficient mass a prompt emits from $N$ rollouts is exactly
 $2(\passat{N}-\passat{1})$ --- a compute-indexed learnability
-functional, vanishing exactly at pass rates $0$ and $1$ with a single
-interior peak set by the rollout budget alone --- and the practical
-drop-all-fail implementation is unbiased for the truncation-order
-$T{=}N{-}1$ objective, not $T{=}N$. Coefficient mass is a surrogate
-(it is not gradient norm), but it is knowable before spending a
-rollout, and it predicts an estimator-conditioned divergence we then
-measure: across nine heterogeneous maze runs, every
-success-conditioned run grew $\passat{k}$ coverage and every GRPO run
-lost it --- consistent, exploratory evidence that motivates the
-balanced factorial we outline. A two-seed GSM8K pilot points the same
-direction (teacher-deficit sign under GRPO in 2/2 seeds; the
-registered regression shape in 1 of 2). The same algebra flags a
-failure mode of recycling that we observe and replicate at three
-seeds on Countdown: relabels to already-reachable destinations improve
-mean accuracy while \emph{losing} $\passat{k}$ coverage ---
-\textbf{recycling-induced sharpening} --- and it motivates an
-admission rule: refuse relabels whose destination the recycler has
-recently reinforced (a decayed achieved-destination frequency
-statistic --- a saturation heuristic the mastered-tail zero motivates,
-not an estimate of the destination's fresh pass rate). At the frontier
-tier the moderate gate returned coverage to the no-recycling baseline
-while keeping most of the mean gain; the tested settings give one
-useful operating point, not yet a monotonicity guarantee. The boundary of the safety claim is measured
-too: a pre-registered fifth suite whose learnable region collapses to
-one template stratum defeats \emph{every} estimator. One diagnosis
-covers all of it: audit the estimator before shipping a curriculum or
-a recycler, and measure coverage alongside mean accuracy --- the
-currency in which every failure mode here is visible.
+functional vanishing exactly at pass rates $0$ and $1$ with one
+interior peak --- and the practical drop-all-fail implementation is
+unbiased for truncation order $T{=}N{-}1$, not $N$. The algebra
+motivates a hypothesis we grade as exploratory-but-consistent: the
+same data intervention can grow $\passat{k}$ coverage under one
+estimator and destroy it under another. \emph{Replicated experiment:}
+on Countdown, exact-verifier recycling improves mean accuracy while
+\emph{losing} $\passat{k}$ coverage --- \textbf{recycling-induced
+sharpening}, three seeds --- and a saturation heuristic on relabel
+destinations returns frontier-tier coverage to baseline while keeping
+most of the mean gain at one validated operating point.
+\emph{Practical consequence:} report $\passat{k}$ coverage beside mean
+accuracy whenever a curriculum or recycler ships, conditioned on the
+estimator it ships on. \emph{Limitation:} the estimator-conditioned
+coverage divergence is exploratory --- observed without exception
+across our maze cohort and pointed the same way by a two-seed LLM
+pilot, but awaiting the balanced factorial we pre-register and
+specify.
 \end{abstract}
 
 \section{Introduction}
@@ -682,10 +668,12 @@ recycling still adds on top of the oracle. (b) Frontier-heavy regime: allocation
 recycling solves it, and does so equally under uniform sampling
 (.931 vs.\ .928) --- creation, not allocation, is the live channel.
 (c) Maze at matched wall-clock: 3/3 seeds on both meters. (d) GSM8K
-$2{\times}2$, registered run, error bars = measured same-model eval
-noise (SD .0094): GRPO+teacher is the only cell that regresses
-(pre-registered P-G2; a replication seed did not reproduce it ---
-\S 6.7); the teacher's MaxRL effect is a null at this budget (P-G1).}
+$2{\times}2$: bars are the registered run, open markers the
+replication seed (GRPO cells; eval-noise SD .0094 quoted in-panel):
+GRPO+teacher is the only regressing cell on the registered run
+(pre-registered P-G2; the replication seed did not reproduce the
+shape --- \S 6.7); the teacher's MaxRL effect is a null at this
+budget (P-G1).}
 \label{fig:ladder}
 \end{figure}
 
@@ -767,14 +755,10 @@ descriptive given its normality sensitivity --- an exact sign-flip
 test cannot go below $.25$ at three blocks) --- on the maze the
 teacher's
 measured value is \emph{throughput} (buying more steps per GPU-hour),
-recycling's is signal. The maze teacher uses
-the legacy frontier form; a pre-registered 3-seed rerun with the exact
-$u_N$ measures the two within noise \emph{on the maze itself} (AUC
-$.2138{\pm}.0059$ vs.\ $.2135{\pm}.0104$; artifact
-\texttt{un\_form\_verdicts.json}), closing the gap between the deployed
-form and the derived one. The same sweep refutes a CPU-derived
-within-band refinement (a $(1{-}p)$-tilted utility that won 10/10 on
-the testbed loses 0/3 on the maze on every meter) --- within-band
+recycling's is signal. Utility-form controls (3-seed reruns, artifact
+\texttt{un\_form\_verdicts.json}): the exact $u_N$ measures within
+noise of the legacy deployed form on the maze itself, and a
+CPU-winning $(1{-}p)$-tilted refinement loses 0/3 here --- within-band
 utility choices are testbed-sensitive, which is why the theory claims
 only the band's boundaries. Safety, stated as what the design
 supports: an estimator-\emph{associated} coverage difference --- all
@@ -787,13 +771,8 @@ GRPO four span uniform and one frontier) and reuses seed blocks and
 warmstarts, so the runs are not exchangeable and a label-permutation
 $p$-value would answer a randomization this design did not perform ---
 we therefore report zero exceptions descriptively and do not attach
-one. Two sensitivity reads support the same direction without curing
-the design (artifact \texttt{permutation\_reanalysis.json}):
-restricting permutations within matched sampler arms preserves the
-perfect separation, and all three shared-warmstart pairs are
-individually positive; the run composition (5v4 because one
-uniform-MaxRL seed predates $\passat{k}$ logging) is tabulated in the
-same artifact. The confirmatory design this motivates is a balanced
+one (sensitivity reads and the 5v4 run composition:
+\texttt{permutation\_reanalysis.json}). The confirmatory design this motivates is a balanced
 $\{$MaxRL, GRPO$\}\times\{$uniform, teacher$\}$ factorial over at
 least six independent seed blocks with identical warmstarts and one
 prespecified endpoint --- fewer than six blocks cannot reach
@@ -811,15 +790,11 @@ test.
 Whether the teacher \emph{amplifies} GRPO's decay is a
 factorial (interaction) question this suite is not powered for; the
 GSM8K $2{\times}2$ below tests exactly that cell, pre-registered.
-Inference currency (one convention, every level: smallest $k$ reaching
-absolute coverage $0.25$; single checkpoint pair): our checkpoint needs
+Inference currency (single checkpoint pair; convention and per-level
+detail in App.~\ref{app:rungs}): our checkpoint needs
 $\mathbf{11\times}$ fewer samples at level 5, ties GRPO at levels
-2--3, and needs $3\times$ more at level 4 --- the frontier is where
-the efficiency gain lives. The summed-coverage view agrees without a
-target choice: GRPO ahead at $\passat{1}$, curves crossing at
-$k{\approx}4$, MaxRL ahead by half a level at $k{=}64$
-(App.~\ref{app:rungs}) --- choose the estimator by how many samples
-you will draw at inference.
+2--3 --- the summed-coverage curves cross at $k{\approx}4$, so choose
+the estimator by how many samples you will draw at inference.
 
 \paragraph{6.4 Where and when does GRPO's coverage go? (level-resolved).}
 Decomposing the main effect by difficulty band turns it into a
@@ -877,45 +852,24 @@ effect now has a located mechanism: GRPO liquidates easy-band coverage
 for reliability from the first updates; MaxRL reallocates the same
 budget to the frontier. Coverage is the currency that sees it.}
 
-\paragraph{6.5 When does allocation \emph{not} pay? (IsaacLab legged
-locomotion, pre-registered null).} A 5-arm Anymal-C rough-terrain pilot
-(one seed, run by an independent team on a co-designed protocol;
-App.~\ref{app:rungs}) is consistent with its pre-registered null --- underpowered alone at one seed, weight-bearing only jointly with the maze and Countdown regime evidence: on a
-terrain grid where every level is learnable at budget, the stock greedy
-curriculum beats the frontier teacher outright (mean pass .372 vs.\
-.278). Read with the maze step-matched analysis and Countdown, the
-consistent regime pattern --- at one seed here, so a pilot-level
-observation rather than proof --- is: \textbf{allocation pays where
-unlearnable-at-budget regions exist to avoid}; on
-learnable-everywhere pools, breadth beat focus in every case we
-measured.
-
-\paragraph{6.6 What does a curriculum add beyond task spread? (Gymnasium
-control --- binary-success RLVR on classic control; official-task
-currency).}
-All arms train on \emph{binary task success} (MountainCar: reach the
-flag; CartPole: survive 400) --- the classic-control analogue of a
-verifier reward. The \textbf{target-only} arm is then a provable
-zero-update freeze, not a slow learner: every group is all-fail, every
-group-relative estimator emits exactly zero weights on constant
-rewards, and telemetry confirms zero parameter updates over the full
-budget (random-policy success $< 3{\times}10^{-6}$; no budget ignites
-it). The gated full stack under the identical reward reaches
-\textbf{1.000$\pm$0.000 on both official tasks} (3 seeds,
-Fig.~\ref{fig:gym}). A dense-reward control confirms the zero is a
-property of sparse verifier-style reward (REINFORCE on CartPole's
-native reward solves it; App.~\ref{app:rungs}). Attribution at a
-common horizon: uniform-over-bins task spread supplies most of the
-effect (existence of a gradient), recycling-without-allocation
-plateaus below ceiling, and the teacher's remaining contribution is
-speed and stability ($3\times$ faster to hard-task 0.9,
-$2.5$--$6\times$ smaller cross-seed variance). A methods note we keep
-because it generalizes: our own first version used per-bin
-task-partitioned policy parameters and reproduced the known failure
-(0.000 in every arm) --- curricula operate through shared parameters,
-or not at all.
-
-\takeaway{Curricula operate through shared parameters, or not at all.}
+\paragraph{6.5--6.6 Two boundary rungs (compressed; full protocols,
+figures, and attribution in App.~\ref{app:rungs}).} An IsaacLab
+Anymal-C pilot (5 arms, one seed, independent team, pre-registered
+null) marks where allocation does \emph{not} pay: on a terrain grid
+learnable everywhere at budget, the stock greedy curriculum beats the
+frontier teacher outright (.372 vs.\ .278) --- with the maze
+step-matched analysis and Countdown, the regime pattern is
+\textbf{allocation pays where unlearnable-at-budget regions exist to
+avoid}. A Gymnasium control suite (binary task success, 3 seeds)
+marks the opposite boundary: training on the target task alone is a
+provable zero-update freeze (every group all-fail, so every
+group-relative estimator emits exactly zero), while the gated full
+stack reaches $1.000{\pm}0.000$ on both official tasks
+(Fig.~\ref{fig:gym}); attribution
+shows task spread supplies gradient existence, the teacher speed and
+stability, and a per-bin-parameters ablation reproduces the known
+failure --- \textbf{curricula operate through shared parameters, or
+not at all}.
 
 \begin{figure}[t!]
 \centering
@@ -956,42 +910,30 @@ means are indistinguishable (.66--.67 in all cells) --- the delivered
 treatment was weak, which is the posterior-starvation mechanism below,
 and it bounds how much of the GRPO gap the curriculum can own.
 \textbf{A replication seed does not reproduce the regression shape:}
-seed 2 of the same cell climbs monotonically ($.073\to.095\to.118$),
-and its steering telemetry shows the treatment was weaker (min
-dead-sampled fraction $.53$, mean $.66 \approx$ population --- a
-near-uniform teacher on average). The completed \emph{within-seed} pair
-(grpo-uniform seed 2: $.081\to.085\to.125$, final $\passat{4}$ $.229$;
-artifact \texttt{grpo\_uniform\_seed2.json}) sharpens the read: the
-endpoint teacher deficit under GRPO has the same \emph{sign} in both
-seeds on both meters (mean@4 and $\passat{4}$ are computed from the
-same generations and strongly correlated, so this is two seed-level
-confirmations read on two coupled meters, not four; seed 2: $-.007$
-mean@4, within noise, $-.026$ $\passat{4}$, $\sim$1.5$\times$ its
-floor) with
+seed 2 of the same cell climbs monotonically ($.073\to.095\to.118$)
+under measurably weaker steering (near-uniform teacher on average).
+The completed within-seed pair (grpo-uniform seed 2:
+$.081\to.085\to.125$; artifact \texttt{grpo\_uniform\_seed2.json})
+sharpens the read: the endpoint teacher deficit under GRPO has the
+same \emph{sign} in both seeds on both (coupled) meters, with
 magnitude tracking steering intensity --- a dose effect, not a sign
-flip. The pre-registered \emph{second-half-regression} shape remains
-1 of 2 seeds: suggestive, not established. MaxRL+teacher trains stably to its best value
-($.066\to.102$); the uniform-MaxRL cell finishes at $.108$, making
-P-G1 (a teacher gain for MaxRL) a \emph{null at this budget} ---
-predicted in advance by the posterior-starvation analysis below. A
-$\passat{k}$ sweep on the registered checkpoints: the teacher's deficit
-under GRPO \emph{widens monotonically with $k$} ($-.008$ at $k{=}1$ to
-$-.024$ at $k{=}16$) --- curriculum damage lives in coverage, as the
-maze predicted, though each individual delta is within single-seed
-noise (harness caveats in App.~\ref{app:rungs}). One design confound
-is disclosed rather than dismissed: the teacher samples with
-replacement, so curriculum cells revisit prompts more --- a repetition
-effect is an alternative reading that a uniform-with-replacement
-control cell separates; it is running with the steering-controlled
-replication. The mechanism behind the weak treatment: the teacher's
-posterior \emph{learns} real difficulty from ${\sim}1$ visit per prompt
-($\rho = -0.17$ against independent 7B-model solve-rate annotations,
-$p\approx 10^{-17}$; cross-run posterior agreement $3\times$ its
-agreement with the external key --- it learns \emph{this model's}
-landscape) but its allocation is \emph{posterior-starved}: 3{,}200
-draws over 7{,}473 prompts leave the estimated utility landscape
-nearly flat, so Thompson sampling stays near-uniform (full posterior
-diagnostics in App.~\ref{app:rungs}). Small model; the pre-registered
+flip; the pre-registered second-half-regression \emph{shape} remains
+1 of 2 seeds, suggestive not established. MaxRL+teacher trains stably
+to its best value ($.066\to.102$) but does not beat uniform's $.108$
+--- P-G1 is a \emph{null at this budget}, predicted in advance by
+posterior starvation: the teacher's posterior learns this model's
+real difficulty landscape from ${\sim}1$ visit per prompt, but
+3{,}200 draws over 7{,}473 prompts leave the estimated utility nearly
+flat, so Thompson sampling stays near-uniform (diagnostics in
+App.~\ref{app:rungs}). A $\passat{k}$ sweep on the registered
+checkpoints has the teacher's GRPO deficit \emph{widening
+monotonically with $k$} ($-.008$ at $k{=}1$ to $-.024$ at $k{=}16$)
+--- curriculum damage lives in coverage, as the maze predicted,
+though each delta is within single-seed noise. One design confound is
+disclosed rather than dismissed: teacher cells sample with
+replacement and so revisit prompts more; a uniform-with-replacement
+control cell separates the repetition reading and runs with the
+steering-controlled replication. Small model; the pre-registered
 outcomes were orderings and signs on the registered run.
 \takeaway{The maze sign pattern stands on nine heterogeneous runs; the LLM-scale
 interaction is 1-of-2-seeds and tracks steering intensity --- the
@@ -1061,14 +1003,11 @@ seeds, pre-registered).} We rebuilt the pool with real structure
 (random operand permutation, parenthesization, exact division; a
 headroom gate excluded guesser-saturated tiers) and ran three arms
 $\times$ three seeds: no recycling (B1), ungated recycling (B2), gated
-recycling (B3). Setup note with a theory reading: recycling has a
-\emph{syntactic prerequisite} --- the pre-SFT base model produces zero
-verifier-valid failures (relabel yield $0.000$, $n{=}384$), so there is
-nothing to recycle until SFT installs the output format; post-SFT the
-model is a near-independent guesser whose $\passat{16}$ sits at a
-tier-invariant ${\sim}75\%$ of the independence bound
-$1-(1-\passat{1})^{16}$ (ratios $.744/.783/.755$ across tiers) --- the
-baseline our headroom gate measures against. \textbf{Sharpening
+recycling (B3). One setup note kept for its theory reading: recycling
+has a \emph{syntactic prerequisite} --- the pre-SFT base model
+produces zero verifier-valid failures, so there is nothing to recycle
+until SFT installs the output format (pool construction and baseline
+calibration in App.~\ref{app:rungs}). \textbf{Sharpening
 replicates:} at tier 1, recycling
 buys mean@16 $+.046$ ($.278{\pm}.054 \to .324{\pm}.012$) and pays
 $-.049$ of $\passat{16}$ ($.541{\pm}.020 \to .492{\pm}.011$). The
@@ -1299,7 +1238,9 @@ whole family of interventions fails together. The confirmatory
 experiments these results specify --- a balanced estimator-by-sampler
 factorial at six or more seed blocks, a fixed-code gate-strength
 sweep, and a steering-controlled multi-seed LLM cell --- are
-pre-registered and queued. The portable practice we advocate is
+pre-registered in the artifact with committed falsification branches:
+each either confirms the corresponding claim or, by the registered
+criteria, retires it. The portable practice we advocate is
 independent of our method: measure coverage next to mean accuracy
 whenever a curriculum or recycler ships, conditioned on the estimator
 it ships on.
@@ -1465,7 +1406,13 @@ $3.24$ vs.\ MaxRL $3.07$ at $\passat{1}$; crossing at $k{\approx}4$;
 $5.12$ vs.\ $4.62$ at $k{=}64$, with GRPO's level-2/4 curves saturating
 at $0.88/0.56$ where MaxRL's reach $1.00/0.62$.
 
-\paragraph{6.9 secondary reads (full).} Training-side damage: ungated
+\paragraph{6.9 secondary reads (full).} Pool construction and
+baseline calibration: the pre-SFT base model's relabel yield is
+$0.000$ ($n{=}384$) --- the syntactic prerequisite; post-SFT the
+model is a near-independent guesser whose $\passat{16}$ sits at a
+tier-invariant ${\sim}75\%$ of the independence bound
+$1-(1-\passat{1})^{16}$ (ratios $.744/.783/.755$ across tiers), the
+baseline the headroom gate measures against. Training-side damage: ungated
 recycling ends with more unsolvable-at-16 frontier training prompts
 than baseline in every seed (paired $+.083/+.063/+.034$). Entropy at 3
 seeds: the gate's retention replicates ($+.072$ paired over baseline,
@@ -1483,12 +1430,13 @@ self-consistency with a shared latent) vs.\ $.10$--$.22$ against
 external 7B-model annotations, from ${\sim}1.25$ visits per prompt.
 Across external-difficulty quintiles spanning solve rates $.33 \to
 .98$, mean $\hat p$ moves only $.076 \to .103$ --- the compressed
-landscape that starves allocation. Response length separates runs by
-estimator, perfectly: all three GRPO runs compress to
-$209.6{\pm}1.8$ tokens while both MaxRL runs sit at $232.4{\pm}5.7$
-(common ${\sim}365$-token warmstart; the teacher moves length $\le 3$
-tokens) --- sharpening visible in a currency where token entropy is
-ambiguous. Prompt-uniqueness figures for the replacement confound:
+landscape that starves allocation. A response-length read we
+advanced after five runs (three GRPO runs compressed harder than both
+MaxRL runs) did \emph{not} survive the sixth: the within-seed control
+run finished longer than every earlier run (252 vs.\ 208--236 tokens
+from a common ${\sim}365$-token warmstart), so output length does not
+separate the estimators at this scale and we withdraw it as a
+sharpening signature. Prompt-uniqueness figures for the replacement confound:
 ${\sim}34\%$ unique prompts seen by teacher arms vs.\ ${\sim}43\%$
 uniform.
 
