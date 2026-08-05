@@ -1,5 +1,14 @@
 # Curriculum-MaxRL: Experiment Report and Research Assessment
 
+> **Currency note (2026-08-06):** this document is a point-in-time
+> snapshot. Claims about the maze estimator effect (H6 family) predate
+> the balanced factorial, which retired the zero-exception form at its
+> registered endpoint; the oracle comparison predates the floor-handicap
+> correction (matched oracle TIES the full stack). The paper
+> (`paper/`, compiled at `docs/paper-draft.pdf`) and
+> `maze_gpu_factorial/FACTORIAL_VERDICT.md` are authoritative.
+
+
 *Status: 2026-07-21. All numbers reproduce from this repo; provenance for each
 table is the JSONL logs in `curriculum_maxrl/` and `curriculum_maxrl/maze_gpu/`.*
 
