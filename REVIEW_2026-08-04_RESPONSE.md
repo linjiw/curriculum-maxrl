@@ -111,16 +111,27 @@ weak treatment (inconclusive-by-design per prereg gate), m3s reached
 step 25 before the node OOM. The queue (`run_reviewer_arms.sh`,
 holding its lock) waits for GPU headroom behind the factorial.
 
-## P0-4: length — deferred to a dedicated pass
+## P0-4: length — pass 1 done, deep cut pending factorial
 
-Not addressed in this round (the other P0s change what several sections
-must say before a cut pass is stable). Plan on file: cut to ICLR
-9+refs+appendix by (i) moving IsaacLab/Gym/Jugs/run-history to the
-appendix, (ii) removing Prop 3 from the main text if the factorial
-lands (it is not used by the deployed teacher — review's "best fix"),
-(iii) 180–220-word abstract with one exact result, one confirmatory
-experiment, one consequence, one limitation. Do this after the
-factorial resolves which claims survive.
+Live CFP checked (ICLR 2026 Author Guide, 2026-08-05): **9 pages main
+text at submission, desk-reject enforced**; references + appendix
+unlimited; no stated abstract word limit.
+
+Pass 1 (2026-08-05, commits fd218ab..ad2b41e): abstract rewritten to
+197 words with the reviewer's four-element structure (exact result /
+replicated experiment / consequence / limitation); §6.5+§6.6
+compressed to one boundary-rungs paragraph (full protocols already in
+appendix); §6.3/§6.7/§6.9 detail moved to appendix sections;
+"queued/running" language removed from the conclusion (committed
+falsification branches instead). Main text now ends ~p15 (was ~p16 of
+21).
+
+Deep cut (~6 more pages) remains gated on the factorial: which of
+§6.1–6.4 collapses into a single confirmatory story depends on whether
+P-F1 confirms or the falsification branch executes. Committed plan
+unchanged: theory (Prop 1 + Lemma, drop Prop 3 from main), one
+decisive factorial section, recycling+gate as the application,
+everything else appendix.
 
 ## P1 resolutions (this commit)
 
