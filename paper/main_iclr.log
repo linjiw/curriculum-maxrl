@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  4 AUG 2026 21:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  5 AUG 2026 00:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -557,79 +557,85 @@ LaTeX Font Info:    Font shape `OT1/pcr/m/it' in size <9> not available
 <figures/fig4_algorithm.pdf, id=198, 505.89pt x 231.26399pt>
 File: figures/fig4_algorithm.pdf Graphic file (type pdf)
 <use figures/fig4_algorithm.pdf>
-Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 422.
+Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 429.
 (pdftex.def)             Requested size: 337.86465pt x 154.45555pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [5]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 446.
- [6 <./figures/fig4_algorithm.pdf>]
+put line 453.
+
+[6 <./figures/fig4_algorithm.pdf>]
 <figures/fig5_channels.pdf, id=264, 252.945pt x 216.81pt>
 File: figures/fig5_channels.pdf Graphic file (type pdf)
 <use figures/fig5_channels.pdf>
-Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 541.
+Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 548.
 (pdftex.def)             Requested size: 198.7425pt x 170.35501pt.
  [7 <./figures/fig5_channels.pdf>]
 <figures/fig2_ladder.pdf, id=296, 505.89pt x 202.356pt>
 File: figures/fig2_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ladder.pdf>
-Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 608.
+Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 615.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
  [8 <./figures/fig2_ladder.pdf>] [9]
 <figures/fig8_bands.pdf, id=340, 505.89pt x 195.129pt>
 File: figures/fig8_bands.pdf Graphic file (type pdf)
 <use figures/fig8_bands.pdf>
-Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 789.
+Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 796.
 (pdftex.def)             Requested size: 397.48499pt x 153.3195pt.
- [10]
-<figures/fig3_gsm8k.pdf, id=353, 252.945pt x 202.356pt>
-File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
-<use figures/fig3_gsm8k.pdf>
-Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 849.
-(pdftex.def)             Requested size: 218.61795pt x 174.89658pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [11 <./figures/fig8_bands.pdf> <./figures/fig3_gsm8k.pdf>]
-<figures/fig7_sharpening.pdf, id=408, 505.89pt x 202.356pt>
+ [10]
+<figures/fig3_gsm8k.pdf, id=351, 252.945pt x 202.356pt>
+File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
+<use figures/fig3_gsm8k.pdf>
+Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 856.
+(pdftex.def)             Requested size: 218.61795pt x 174.89658pt.
+
+[11 <./figures/fig8_bands.pdf>]
+<figures/fig7_sharpening.pdf, id=388, 505.89pt x 202.356pt>
 File: figures/fig7_sharpening.pdf Graphic file (type pdf)
 <use figures/fig7_sharpening.pdf>
-Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 926.
+Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 933.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
 
-Underfull \vbox (badness 4060) has occurred while \output is active []
+Underfull \vbox (badness 1178) has occurred while \output is active []
 
- [12]
-[13 <./figures/fig7_sharpening.pdf>] [14] [15] [16]
+ [12 <./figures/fig3_gsm8k.pdf>] [13 <./figures/fig7_sharpening.pdf>] [14] [15]
+ [16]
 <figures/fig6_gym.pdf, id=520, 505.89pt x 202.356pt>
 File: figures/fig6_gym.pdf Graphic file (type pdf)
 <use figures/fig6_gym.pdf>
-Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1330.
+Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1337.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
-<figures/fig9_ksweep.pdf, id=521, 245.718pt x 187.902pt>
+
+[17]
+<figures/fig9_ksweep.pdf, id=527, 245.718pt x 187.902pt>
 File: figures/fig9_ksweep.pdf Graphic file (type pdf)
 <use figures/fig9_ksweep.pdf>
-Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1361.
+Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1368.
 (pdftex.def)             Requested size: 218.61795pt x 167.18637pt.
- [17] [18 <./figures/fig6_gym.pdf> <./figures/fig9_ksweep.pdf>]
+ [18 <./figures/fig6_gym.pdf> <./figures/fig9_ksweep.pdf>]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Underfull \vbox (badness 2253) has occurred while \output is active []
+LaTeX Warning: `h' float specifier changed to `ht'.
 
- [19])
-[20] (./main_iclr.aux)
+[19]) [20] (./main_iclr.aux)
 Package rerunfilecheck Info: File `main_iclr.out' has not changed.
 (rerunfilecheck)             Checksum: 01AD03247942499635F84E4C8EB99EF6;1935.
  ) 
 Here is how much of TeX's memory you used:
  13506 strings out of 480806
  195777 string characters out of 5905151
- 555496 words of memory out of 6000000
+ 554754 words of memory out of 6000000
  29951 multiletter control sequences out of 15000+600000
  463370 words of font info for 460 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 61i,11n,75p,1284b,497s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,11n,75p,1284b,487s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
@@ -654,7 +660,7 @@ r/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrro8a.pfb
 dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
 e1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/ut
 mri8a.pfb>
-Output written on main_iclr.pdf (20 pages, 634363 bytes).
+Output written on main_iclr.pdf (20 pages, 634815 bytes).
 PDF statistics:
  723 PDF objects out of 1000 (max. 8388607)
  561 compressed objects within 6 object streams

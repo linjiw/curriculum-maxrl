@@ -48,22 +48,22 @@
 \@writefile{toc}{\contentsline {paragraph}{The three regimes, as a map of the paper (Fig.\nobreakspace  {}\ref  {fig:channels}).}{5}{section*.18}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4}FrontierMax: the schedule}{5}{section.21}\protected@file@percent }
 \newlabel{sec:method}{{4}{5}{FrontierMax: the schedule}{section.21}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Failure recycling}{5}{section.30}\protected@file@percent }
-\newlabel{sec:recycling}{{5}{5}{Failure recycling}{section.30}{}}
-\newlabel{prop:hindsight}{{3}{5}{Hindsight update, characterized}{remark.31}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only.}}{6}{figure.20}\protected@file@percent }
 \newlabel{fig:algorithm}{{2}{6}{\textbf {One FrontierMax step.} A Thompson-sampled posterior allocates rollouts by the derived utility; live groups train with unmodified MaxRL weights; dead groups are relabeled to the sub-goal they actually achieved (conditioning rewritten) and train as verified successes. The posterior observes requested-task outcomes only}{figure.20}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces FrontierMax: one step. Three lines differ from a standard group-rollout loop (marked $\triangleright $).}}{6}{algorithm.22}\protected@file@percent }
 \newlabel{alg:frontiermax}{{1}{6}{FrontierMax: the schedule}{algorithm.22}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Failure recycling}{6}{section.30}\protected@file@percent }
+\newlabel{sec:recycling}{{5}{6}{Failure recycling}{section.30}{}}
+\newlabel{prop:hindsight}{{3}{6}{Hindsight update, characterized}{remark.31}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {The three regimes as a map of the method.} The teacher allocates compute within the learnable region; recycling creates signal where sampling the requested task yields none; the gate refuses relabels that land in the mastered tail; the estimator underneath decides whether any of it is safe.}}{7}{figure.33}\protected@file@percent }
 \newlabel{fig:channels}{{3}{7}{\textbf {The three regimes as a map of the method.} The teacher allocates compute within the learnable region; recycling creates signal where sampling the requested task yields none; the gate refuses relabels that land in the mastered tail; the estimator underneath decides whether any of it is safe}{figure.33}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Experiments: an escalating ladder}{7}{section.34}\protected@file@percent }
 \newlabel{sec:experiments}{{6}{7}{Experiments: an escalating ladder}{section.34}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.1 Does allocation saturate? (exact-gradient skill chains; CPU, 5 seeds).}{7}{section*.39}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The ladder at a glance: every rung asks one question of the three-regime structure; scale rises, control falls.}}{8}{table.36}\protected@file@percent }
 \newlabel{tab:ladder}{{1}{8}{The ladder at a glance: every rung asks one question of the three-regime structure; scale rises, control falls}{table.36}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {The ladder.} (a) Exact-gradient chains: a no-floor, $\gamma $-matched true-pass-rate oracle matches the full stack within the observed five-seed variation --- allocation saturates --- and recycling still adds on top of the oracle. (b) Frontier-heavy regime: allocation scores exactly zero; recycling solves it, and does so equally under uniform sampling (.931 vs.\ .928) --- creation, not allocation, is the live channel. (c) Maze at matched wall-clock: 3/3 seeds on both meters. (d) GSM8K $2{\times }2$, registered run, error bars = measured same-model eval noise (SD .0094): GRPO+teacher is the only cell that regresses (pre-registered P-G2; a replication seed did not reproduce it --- \S  6.7); the teacher's MaxRL effect is a null at this budget (P-G1).}}{8}{figure.38}\protected@file@percent }
 \newlabel{fig:ladder}{{4}{8}{\textbf {The ladder.} (a) Exact-gradient chains: a no-floor, $\gamma $-matched true-pass-rate oracle matches the full stack within the observed five-seed variation --- allocation saturates --- and recycling still adds on top of the oracle. (b) Frontier-heavy regime: allocation scores exactly zero; recycling solves it, and does so equally under uniform sampling (.931 vs.\ .928) --- creation, not allocation, is the live channel. (c) Maze at matched wall-clock: 3/3 seeds on both meters. (d) GSM8K $2{\times }2$, registered run, error bars = measured same-model eval noise (SD .0094): GRPO+teacher is the only cell that regresses (pre-registered P-G2; a replication seed did not reproduce it --- \S 6.7); the teacher's MaxRL effect is a null at this budget (P-G1)}{figure.38}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.1 Does allocation saturate? (exact-gradient skill chains; CPU, 5 seeds).}{8}{section*.39}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.2 Can any sampler act when nothing is learnable? (frontier-heavy regime, max pool pass rate $10^{-5}$; 5 seeds, artifact committed).}{9}{section*.40}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.3 Does the estimator main effect survive real gradients? (maze transformer at matched wall-clock; 1.26M params, 13 levels, ${\sim }30$ runs, 3 seeds).}{9}{section*.41}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.4 Where and when does GRPO's coverage go? (level-resolved).}{10}{section*.42}\protected@file@percent }
@@ -115,10 +115,10 @@
 \bibcite{lilo}{{11}{2025}{{Foster et al.}}{{}}}
 \bibcite{dapo}{{12}{2025}{{Yu et al.}}{{}}}
 \bibcite{reinforceada}{{13}{2025}{{Xiong et al.}}{{}}}
-\bibcite{greso}{{14}{2025}{{Zheng et al.}}{{}}}
 \@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{16}{section*.60}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{16}{section*.61}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{16}{section.62}\protected@file@percent }
+\bibcite{greso}{{14}{2025}{{Zheng et al.}}{{}}}
 \bibcite{her}{{15}{2017}{{Andrychowicz et al.}}{{}}}
 \bibcite{goalgan}{{16}{2018}{{Florensa et al.}}{{}}}
 \bibcite{hgg}{{17}{2019}{{Ren et al.}}{{}}}

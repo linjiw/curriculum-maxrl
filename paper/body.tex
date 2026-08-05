@@ -372,7 +372,14 @@ other's metric (8--10/10 paired seeds each way; App.~\ref{app:rungs}).
 ``Best curriculum utility'' is ill-posed until that objective is
 fixed; we report both currencies throughout. The load-bearing claim
 is the pair of exact zeros at $p\in\{0,1\}$, which every candidate
-utility shares.
+utility shares --- though the zeros alone do not suffice: a
+uniform-over-band control (sample the in-band indicator, discard the
+shape) forfeits most of the allocation gain on chains ($0.681$ vs.\
+$0.743$ AUC, 0/10 seeds; artifact \texttt{results\_bridge.json}).
+$u_N$'s standing is therefore: the shape matters, the best shape is
+objective- and testbed-dependent, and $u_N$ is the one shape that
+ties the exact first-order objective as a predictor, requires no
+tuning, and transfers to the maze within noise.
 \end{remark}
 
 \begin{remark}[The curriculum changes the training distribution]
