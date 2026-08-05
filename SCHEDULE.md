@@ -2,7 +2,24 @@
 
 *Living document — updated as runs complete. Times are A10G wall-clock.*
 
-## Currently executing (2026-07-23, standing loop)
+## Currently executing (2026-08-05: balanced factorial wave)
+
+| # | run | status | purpose |
+|---|---|---|---|
+| FACT | balanced maze factorial {maxrl,grpo}×{uniform,frontier_un}×6 blocks + grpo_mass + grpo_nostd (250 fixed steps) | **RUNNING** (`maze_gpu/run_factorial.sh`, resumable; ~50 min/cell-pair) | draft-review P0-3: P-F1 prereg, falsification branch committed |
+| ARM-A/B | designed-gate B3 ×3 + replay control ×3 (Countdown) | queued (lock held, waits for GPU headroom) | fixed-code gate validation + dose-matched replay |
+| E-LLM-1b | steering-controlled GSM8K (m3s died at step-25 ckpt, node OOM) | chained behind ARM-B completion | decisive LLM-scale cell |
+
+Seed-0 block interim read (1/6 blocks — NO conclusions): uniform sampler
+maxrl +.024 vs grpo −.130 Δcov8 (easy band −.396, as predicted); teacher
+sampler REVERSES it this block (maxrl −.038 vs grpo −.019) — under the
+u_N teacher, GRPO's coverage loss shrank and MaxRL's went negative.
+If that pattern holds across blocks, P-F1's "both samplers" clause fails
+and the falsification branch executes (claim rescopes from "the
+estimator decides" toward sampler-conditioned). Exactly what the
+factorial exists to decide; wait for 6 blocks.
+
+## Previous wave (2026-07-23, standing loop)
 
 | # | run | status | purpose |
 |---|---|---|---|
