@@ -35,7 +35,8 @@
    "command": "python paper/figures/fig2_ladder.py",
    "checksums": {
     "paper/figures/data/fig2_ladder_data.json": "4046e7caeb588ddd"
-   }
+   },
+   "verification": "paper/figures/verify_fig2c_from_logs.py \u2014 derives panel (c) maze endpoints from raw seed logs (ddof=0 seed SD); panels (a),(b),(d) remain transcribed with per-panel provenance in the data file"
   },
   "fig3_gsm8k": {
    "script": "paper/figures/fig3_gsm8k.py",

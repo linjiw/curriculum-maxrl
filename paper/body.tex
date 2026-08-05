@@ -1612,7 +1612,11 @@ pilot is reported from an independent team's summary (raw logs live
 with that team); per-step timing fractions come from verl's in-run
 telemetry (\texttt{generation\_timing.json}); the fig2/fig3 endpoint
 tables are transcribed from run analyses rather than derived from a
-seed-level results table; and the GSM8K pass@$k$ harness sits
+seed-level results table (the maze panel now carries a checked-in
+derivation script, \texttt{verify\_fig2c\_from\_logs.py}, that
+regenerates its endpoints from raw seed logs and fails on mismatch;
+the remaining panels keep per-panel provenance in the data file); and
+the GSM8K pass@$k$ harness sits
 ${\sim}3\times$ below the trainer's val metric (unreconciled; only
 within-sweep contrasts are quoted, and the reconciliation script is
 queued behind the running arms). A one-row-per-run registry
