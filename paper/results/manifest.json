@@ -36,7 +36,7 @@
    "checksums": {
     "paper/figures/data/fig2_ladder_data.json": "4046e7caeb588ddd"
    },
-   "verification": "paper/figures/verify_fig2c_from_logs.py (panel c from raw maze seed logs) + paper/figures/verify_fig2a_from_artifacts.py (panel a from per-seed chain artifacts); panels b/d remain transcribed with per-panel provenance in the data file"
+   "verification": "verify_fig2a_from_artifacts.py (panels a+b from per-seed artifacts: v7_oracle_result.json, hindsight_controls.json, curriculum_maxrl/results_baselines_regimes.json) + verify_fig2c_from_logs.py (panel c from raw maze seed logs); panel d transcribed with provenance"
   },
   "fig3_gsm8k": {
    "script": "paper/figures/fig3_gsm8k.py",

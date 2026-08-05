@@ -35,10 +35,22 @@ SOURCES = {
 }
 
 
+PANEL_B_SOURCES = {
+    # frontier-heavy regime arms in results_baselines_regimes.json
+    "uniform":    "uniform+maxrl",
+    "DAPO":       "dapo+maxrl",
+    "teacher":    "teacher+maxrl",
+    "+recycling": "uniform+maxrl+hindsight",   # the bar quotes the
+    # uniform+recycling arm (.931); teacher+recycling ties at .928
+}
+
+
 def main():
-    table = json.load(open(os.path.join(
-        HERE, "data", "fig2_ladder_data.json")))["panel_a"]
+    data = json.load(open(os.path.join(HERE, "data",
+                                       "fig2_ladder_data.json")))
     ok = True
+
+    table = data["panel_a"]
     for i, label in enumerate(table["labels"]):
         fname, key = SOURCES[label]
         arm = json.load(open(os.path.join(EXAMPLES, fname)))[key]
@@ -46,11 +58,25 @@ def main():
         tm = table["auc"][i]
         line_ok = abs(m - tm) <= 0.002
         ok &= line_ok
-        print(f"{label:>12}: derived {m:.4f} (n={len(arm['auc_per_seed'])}) "
+        print(f"(a) {label:>12}: derived {m:.4f} (n={len(arm['auc_per_seed'])}) "
               f"vs table {tm} {'OK' if line_ok else 'MISMATCH'}")
+
+    tb = data["panel_b"]
+    regimes = json.load(open(os.path.join(
+        HERE, "..", "..", "curriculum_maxrl",
+        "results_baselines_regimes.json")))["frontier-heavy"]
+    for i, label in enumerate(tb["labels"]):
+        arm = regimes[PANEL_B_SOURCES[label]]
+        m = float(np.mean(arm["auc_per_seed"]))
+        tm = tb["auc"][i]
+        line_ok = abs(m - tm) <= 0.005   # bar stores 2 decimals (.93)
+        ok &= line_ok
+        print(f"(b) {label:>12}: derived {m:.4f} (n={len(arm['auc_per_seed'])}) "
+              f"vs table {tm} {'OK' if line_ok else 'MISMATCH'}")
+
     if not ok:
         sys.exit(1)
-    print("fig2 panel (a) endpoints verified against per-seed artifacts")
+    print("fig2 panels (a)+(b) endpoints verified against per-seed artifacts")
 
 
 if __name__ == "__main__":
