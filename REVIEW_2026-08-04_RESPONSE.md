@@ -167,7 +167,11 @@ everything else appendix.
   caveat; "one method, no per-domain switches" replaced by the honest
   statement (per-domain relabel map + destination key, Jugs keying bug
   cited); "derived gate/mitigation" → "motivated/saturation gate"
-  globally.
+  globally. **Citation audit 2026-08-05**: all five 2026 concurrent
+  works fetched and checked against their arXiv abstracts — lfh,
+  scsdpo, ziprl, agrae, cai verify exactly (LfH is VLM-judged, not
+  exact-verifier; none measures pass@k under relabeling); one error
+  found and fixed: starcross's crossover is at pass@64, not pass@256.
 
 ## Running now (check back)
 
