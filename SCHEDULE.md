@@ -4,6 +4,15 @@
 
 ## Currently executing (2026-08-05: balanced factorial wave)
 
+**Title decision, committed in advance (fresh-eyes review finding 5):**
+the title "The Estimator Decides" is conditional on wave-2 P-F2. If
+P-F2 confirms (covAUC ordering >=5/6 both samplers on fresh blocks),
+the title stands on that registered result. If P-F2 fails, the title
+becomes the subtitle ("What Curricula and Failure Recycling Can and
+Cannot Do in RL with Verifiable Rewards") — the slogan may not outlive
+the claim it names.
+
+
 | # | run | status | purpose |
 |---|---|---|---|
 | FACT-W2 | confirmation factorial wave 2: {maxrl,grpo}×{uniform,frontier_un}× fresh blocks 6–11 | **RUNNING** (`maze_gpu/run_factorial_wave2.sh`, prereg d6aea90 committed pre-launch) | P-F2: the 12/12 exploratory covAUC ordering becomes the registered primary on new blocks; falsification branch: ≤4/6 either sampler → no cross-estimator coverage claim of any kind at neural scale. P-F3: easy-band majority sign test |
