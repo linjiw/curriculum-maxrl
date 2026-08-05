@@ -353,38 +353,14 @@ the mastered-tail difference becoming an active failure under a
 curriculum.
 \end{interp}
 
-\begin{proposition}[Allocation, static]\label{prop:alloc}
-Consider the static problem
-$\max_{\{N_i\}} \sum_i u_{N_i}(p_i)$ subject to $\sum_i N_i = B$ and
-integer $N_i \ge 1$ (every prompt receives a mandatory initial
-rollout; feasibility requires $B \ge$ the number of prompts), with
-pass rates $p_i$ fixed and known and one group per prompt. Because
-the marginal gain $u_{N+1}(p) - u_N(p) = p(1-p)^N$ is decreasing in
-$N$, greedy water-filling of the $B - \#\text{prompts}$ remaining
-rollouts on this marginal --- the probability that the next rollout
-is a group's first success --- is optimal. The restriction to
-$N_i \ge 1$ is not cosmetic: the formula $u_N$ extends to $N{=}0$ as
-$u_0(p) = -p$, but the true mass of an unallocated prompt is $0$ (as
-is a single-rollout group's, $u_1 \equiv 0$), so with optional
-activation ($N_i \ge 0$) the objective is not
-$\sum_i u_{N_i}(p_i)$ and the problem acquires an activation
-structure outside this proposition's scope.
-\end{proposition}
-\begin{interp}
-This is a mass-optimal \emph{reference} allocator for the static,
-known-$p$ problem only; it does not prove that sampling prompts
-$\propto u^\gamma$ is optimal (at fixed group size, expected immediate
-mass is linear in the sampling distribution, so the unconstrained
-myopic optimum is a brittle arg-max), nor does it describe the
-\S 6.1 oracle, which samples prompts by true-$p$ utility at fixed
-group size rather than varying $N_i$. The practical teacher
-(\S\ref{sec:method}) keeps fixed group sizes and samples prompts
-$\propto u^\gamma$ with a floor, trading myopic optimality for
-group-parallel batching and exploration. We measure what the gap
-costs: a \textbf{true-pass-rate utility oracle} (no floor,
-$\gamma$-matched) ties the Thompson teacher in end performance
-(\S 6.1).
-\end{interp}
+The static known-$p$ allocation problem this utility induces has a
+clean water-filling solution, but the deployed teacher does not use
+it (it keeps fixed group sizes and samples $\propto u^\gamma$ with a
+floor, trading myopic optimality for group-parallel batching and
+exploration); we state the allocator and its boundary conditions in
+App.~\ref{app:alloc} and measure what the gap costs in \S 6.1, where
+a no-floor, $\gamma$-matched true-pass-rate oracle ties the Thompson
+teacher in end performance.
 
 \begin{remark}[Scope of the surrogate]\label{rem:scope}
 Coefficient mass counts weighted rollouts, not score-vector geometry. We
@@ -1154,9 +1130,8 @@ our derived utility. Reinforce-Ada \citep{reinforceada} --- the adaptive
 sampler MaxRL itself points to --- adapts the rollout count \emph{within}
 a prompt until a signal criterion is met, holding the prompt distribution
 fixed; our teacher is the complementary move, reallocating \emph{across}
-prompts at fixed group size, and Prop.~\ref{prop:alloc} is the idealized
-form of both (water-filling spends its next rollout wherever
-$p(1-p)^N$ is largest, across or within). DAPO's dynamic sampling and
+prompts at fixed group size, and the static water-filling reference
+(App.~\ref{app:alloc}) is the idealized form of both. DAPO's dynamic sampling and
 GRESO cull dead prompts --- avoidance without allocation or creation. PKPO and Pass@k-training
 modify the objective toward $\passat{k}$ but keep uniform sampling.
 \textbf{Goal selection in HER.} Selecting \emph{which} goals to
@@ -1409,6 +1384,38 @@ discovery. \emph{NeurIPS}, 2024.
 \end{thebibliography}
 
 \appendix
+\section{The static allocation reference}\label{app:alloc}
+
+\begin{proposition}[Allocation, static]\label{prop:alloc}
+Consider the static problem
+$\max_{\{N_i\}} \sum_i u_{N_i}(p_i)$ subject to $\sum_i N_i = B$ and
+integer $N_i \ge 1$ (every prompt receives a mandatory initial
+rollout; feasibility requires $B \ge$ the number of prompts), with
+pass rates $p_i$ fixed and known and one group per prompt. Because
+the marginal gain $u_{N+1}(p) - u_N(p) = p(1-p)^N$ is decreasing in
+$N$, greedy water-filling of the $B - \#\text{prompts}$ remaining
+rollouts on this marginal --- the probability that the next rollout
+is a group's first success --- is optimal. The restriction to
+$N_i \ge 1$ is not cosmetic: the formula $u_N$ extends to $N{=}0$ as
+$u_0(p) = -p$, but the true mass of an unallocated prompt is $0$ (as
+is a single-rollout group's, $u_1 \equiv 0$), so with optional
+activation ($N_i \ge 0$) the objective is not
+$\sum_i u_{N_i}(p_i)$ and the problem acquires an activation
+structure outside this proposition's scope.
+\end{proposition}
+\begin{interp}
+A mass-optimal \emph{reference} allocator for the static, known-$p$
+problem only; it does not prove that sampling prompts
+$\propto u^\gamma$ is optimal (at fixed group size, expected immediate
+mass is linear in the sampling distribution, so the unconstrained
+myopic optimum is a brittle arg-max), nor does it describe the \S 6.1
+oracle, which samples prompts by true-$p$ utility at fixed group size
+rather than varying $N_i$. It is also the idealized common form of
+across-prompt reallocation (our teacher) and within-prompt rollout
+adaptation (Reinforce-Ada): water-filling spends its next rollout
+wherever $p(1-p)^N$ is largest.
+\end{interp}
+
 \section{Full details for compressed experiment rungs}\label{app:rungs}
 
 Material moved from \S 6 during the page-budget pass; every number here
