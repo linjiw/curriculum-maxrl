@@ -995,8 +995,21 @@ the gate never rolls out $g'$ and never observes a $g'$ failure ---
 and the threshold $0.5$ is a tuned midpoint, not a derived zero
 ($u_N$'s exact high-$p$ zero is at $p{=}1$, which would admit
 everything). A gate on a genuine task-conditioned $\hat p_{g'}$ is
-the derived object; measuring whether it improves on the frequency
-heuristic is open.}
+the derived object, and where destination pass rates are exactly
+measurable (the skill-chain testbed) we ran the comparison, 10 paired
+seeds: the true-$p$ gate preserves essentially all of ungated
+recycling's value (AUC $.879$ vs.\ $.881$) while the frequency
+heuristic pays a real toll ($.798$; true-$p$ over frequency 10/10
+seeds), and the heuristic's statistic is \emph{not} a pass-rate proxy
+--- at decision time its correlation with true $p(g')$ is
+\emph{negative} ($-.27$), because it tracks the recycler's own
+recent output, not the policy's competence; the two rules converge
+only late, once everything saturates (admission agreement
+$.66 \to .99$; artifact \texttt{results\_gate\_variants.json}). So
+the LLM-scale gate results in \S 6.9 are evidence about a
+recency-novelty filter that happens to approximate saturation late in
+training --- implementing a genuine destination pass-rate estimate in
+the LLM loop is the indicated upgrade.}
 
 \paragraph{6.9 Does the gate recover it? (Countdown v2 pool, 3
 seeds, pre-registered).} We rebuilt the pool with real structure

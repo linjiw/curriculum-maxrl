@@ -1,0 +1,9 @@
+     arm              AUC            final           d cov8
+    none +0.7050±0.0207 +0.9787±0.0008 +0.9454±0.0000
+ ungated +0.8813±0.0053 +0.9838±0.0003 +0.9454±0.0000
+    freq +0.7981±0.0130 +0.9817±0.0005 +0.9454±0.0000
+   truep +0.8785±0.0038 +0.9837±0.0003 +0.9454±0.0000
+
+P-GV2 truep-freq AUC: 10/10 positive, mean +0.08035
+P-GV1 admission agreement: overall 0.824, early 0.655, late 0.993; corr(f_hat, true p) -0.274
+wrote /home/ec2-user/work/curriculumrl/curriculum-maxrl/curriculum_maxrl/results_gate_variants.json
