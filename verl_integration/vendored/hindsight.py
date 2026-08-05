@@ -69,7 +69,8 @@ class CountdownHindsight:
                  max_response_length: int = 1024,
                  scale: float = 1.0, max_groups_per_step: int = 8,
                  utility_gate: bool = False, gate_max_p: float = 0.5,
-                 gate_decay: float = 0.9):
+                 gate_decay: float = 0.9,
+                 one_target_per_group: bool = False):
         self.tokenizer = tokenizer
         self.max_prompt_length = max_prompt_length
         self.max_response_length = max_response_length
@@ -86,6 +87,16 @@ class CountdownHindsight:
         self.utility_gate = utility_gate
         self.gate_max_p = gate_max_p
         self.gate_decay = gate_decay
+        # Draft-review 2026-08-04 P0-2 ablation arm: when True, pick ONE
+        # destination per dead group (the modal achieved value across the
+        # group's parseable failures; ties -> least gate-saturated, then
+        # smallest) and relabel ONLY the rows that certify that value.
+        # Every relabeled row in a uid group then trains toward the same
+        # rewritten task, so the group contrast is K-of-N of a single
+        # destination -- the object Remark 3 licenses -- instead of the
+        # per-row weighted-SFT update. Rows achieving other values stay
+        # failures (contrast preserved).
+        self.one_target_per_group = one_target_per_group
         self._dest_hits: dict = {}    # v -> [alpha-1, beta-1] decayed counts
         self._batch_hits: set = set() # values reinforced in the current batch
 
@@ -217,12 +228,51 @@ class CountdownHindsight:
             gt = ntb["reward_model"][rows[0]]["ground_truth"]
             old_target, context = self._gt_context(gt)
             group_hit = False
+            group_target = None
+            if self.one_target_per_group:
+                # pass 1: modal achieved value across the group's parseable
+                # failures; ties -> least gate-saturated, then smallest
+                counts: dict = {}
+                for i in rows:
+                    resp_ids = batch.batch["responses"][i]
+                    txt = self.tokenizer.decode(
+                        resp_ids[response_mask[i].bool()],
+                        skip_special_tokens=True)
+                    for c in self._relabel_candidates(txt, context):
+                        if c != old_target:
+                            counts[c] = counts.get(c, 0) + 1
+                if not counts:
+                    continue
+
+                def _sat(c):
+                    a, b = self._dest_hits.get(
+                        self._dest_key(c, context), (0.0, 0.0))
+                    return (a + 1.0) / (a + b + 2.0)
+                group_target = min(counts,
+                                   key=lambda c: (-counts[c], _sat(c), c))
+                if self.utility_gate:
+                    # gate once per GROUP (one destination -> one decision;
+                    # per-row checks would record duplicate hits for the
+                    # same key and inflate the posterior)
+                    key = self._dest_key(group_target, context)
+                    a, b = self._dest_hits.get(key, (0.0, 0.0))
+                    p_hat = (a + 1.0) / (a + b + 2.0)
+                    self._dest_hits[key] = (a * self.gate_decay + 1.0,
+                                            b * self.gate_decay)
+                    self._batch_hits.add(key)
+                    if p_hat > self.gate_max_p:
+                        stats["hindsight/gated_saturated"] = \
+                            stats.get("hindsight/gated_saturated", 0) + 1
+                        continue
             for i in rows:
                 resp_ids = batch.batch["responses"][i]
                 resp_text = self.tokenizer.decode(
                     resp_ids[response_mask[i].bool()], skip_special_tokens=True)
                 cands = [c for c in self._relabel_candidates(resp_text, context)
                          if c != old_target]
+                if self.one_target_per_group:
+                    # only rows that certify the group's single destination
+                    cands = [c for c in cands if c == group_target]
                 if not cands:
                     continue
                 # least-saturated candidate first when gating (the gate's
@@ -235,7 +285,9 @@ class CountdownHindsight:
                         return (a + 1.0) / (a + b + 2.0)
                     cands.sort(key=p_hat_of)
                 v = cands[0]
-                if self.utility_gate:
+                if self.utility_gate and not self.one_target_per_group:
+                    # per-row gate (one-target mode gates once per group,
+                    # above, to avoid duplicate posterior hits per key)
                     key = self._dest_key(v, context)
                     a, b = self._dest_hits.get(key, (0.0, 0.0))
                     p_hat = (a + 1.0) / (a + b + 2.0)   # Beta(1,1) prior

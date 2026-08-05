@@ -6,9 +6,12 @@ review, "artifact is not yet self-contained").
 
 | file | source | execution commit | last change |
 |---|---|---|---|
-| `hindsight.py` | `maxrl/verl/utils/hindsight.py` (sibling execution fork) | `0ad11b1` (fork HEAD at vendor time) | `df8b2cf` 2026-08-03 (gate granularity fix: task-keyed posterior) |
+| `hindsight.py` | `maxrl/verl/utils/hindsight.py` (sibling execution fork) | `2700198` (fork HEAD at vendor time) | `2700198` 2026-08-05 (one_target_per_group ablation mode, draft-review P0-2; runs to date all used per-row mode) |
 
-md5 at vendor time: `c16aad224433d85bf8f83eb15dcdc5dc`.
+md5 at vendor time: `33b75833cb7fe6895c437d349055efba`. The revision
+all published runs executed (per-row mode, before the ablation flag)
+was fork commit `0ad11b1`, md5 `c16aad224433d85bf8f83eb15dcdc5dc` —
+the flag defaults to False, so behavior is identical.
 
 Provenance notes:
 
