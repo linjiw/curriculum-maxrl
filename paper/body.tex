@@ -1210,10 +1210,15 @@ divergence did not confirm (3/6 and 4/6 paired blocks), and we
 retract it rather than re-grade it. Two design lessons are recorded
 with the verdict: the cohort had conflated recycling's coverage
 contribution with the estimator effect, and the registered endpoint
-(one 16-maze/level eval) was under-powered against ${\sim}{\pm}.03$
-eval noise for effects of $.02$--$.05$ --- the surviving
-time-integrated ordering (12/12 blocks, exploratory) is what a
-properly powered registered endpoint should target next. The
+was under-powered --- computed from all 36 runs' successive-eval
+differences, per-eval noise is $\sigma \approx .017$, giving the
+paired single-eval endpoint a contrast sd of $.024$ and power
+$0.4$--$0.8$ at the effect size the data itself displays
+($+.025$/$+.031$ paired means); the time-integrated version of the
+same contrast cuts that sd by $\sqrt{10}$ (power ${\approx}1$ at
+$+.02$), which is why it is the registered primary of the
+confirmation wave now running on six fresh seed blocks, with a
+committed falsification branch. The
 LLM-scale teacher$\times$estimator interaction
 is 1-of-2 seeds and tracks steering intensity: the replication seed of
 the GRPO+teacher cell did not reproduce the registered regression, and
