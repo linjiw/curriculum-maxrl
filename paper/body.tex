@@ -93,19 +93,18 @@ it pays (\S\ref{sec:experiments}).
 answer depends on the estimator. MaxRL concentrates $(N{-}1)\times$
 more mass than RLOO on hard tasks as $p \to 0$ and releases mastered
 tasks; GRPO's variance-normalized weights keep spending on both tails.
-At the exact-gradient rung the predicted coverage ordering is robust
---- it survives frozen schedules, 10/10 paired replays (\S 6.3) ---
-but at neural scale our own balanced factorial \emph{retired the
-strong form of the claim}: an earlier nine-run cohort showed perfect
-sign separation (every MaxRL run growing $\passat{8}$, every GRPO run
-losing it), and the pre-registered
-$\{$MaxRL,GRPO$\}\times\{$uniform,teacher$\}$ factorial failed to
-confirm it at the registered endpoint (3/6 and 4/6 paired blocks;
-\S 6.3) --- the cohort pattern had conflated recycling's coverage
-contribution with the estimator effect. What the factorial leaves
-standing, exploratory: a weaker time-integrated ordering (MaxRL over
-GRPO, 12/12 paired blocks) concentrated where the mass curves say GRPO
-overspends, the easy band. On GSM8K, the pre-registered
+At the exact-gradient rung the predicted coverage ordering is robust:
+it survives frozen schedules, 10/10 paired replays (\S 6.3). At neural
+scale our own balanced factorial \emph{retired the strong form of the
+claim}. An earlier nine-run cohort showed perfect sign separation
+(every MaxRL run growing $\passat{8}$, every GRPO run losing it); the
+pre-registered $\{$MaxRL,GRPO$\}\times\{$uniform,teacher$\}$ factorial
+failed to confirm it at the registered endpoint (3/6 and 4/6 paired
+blocks; \S 6.3), because the cohort pattern had conflated recycling's
+coverage contribution with the estimator effect. What the factorial
+leaves standing, exploratory: a weaker time-integrated ordering (MaxRL
+over GRPO, 12/12 paired blocks) concentrated where the mass curves say
+GRPO overspends --- the easy band. On GSM8K, the pre-registered
 prediction that GRPO+teacher would be the only regressing cell landed
 on the registered run but not its replication seed (\S 6.7).
 Recycling has its own failure mode,
