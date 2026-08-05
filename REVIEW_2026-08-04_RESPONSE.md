@@ -33,11 +33,19 @@ the review says: an achieved-goal frequency/novelty filter.
 
 Resolution taken (review's option 2, rename): abstract, Q3, Algorithm 1
 (`f_hat` with definition), the §6.8 takeaway (explicit "what this is
-not"), related work, knobs table, contribution 4, conclusion. The
-takeaway also states the open item: a genuine task-conditioned
-`p_hat(g')` gate is the derived object; whether it beats the frequency
-heuristic is an open experiment (cheapest venue: frontier_rl testbed,
-where fresh destination rollouts are free).
+not"), related work, knobs table, contribution 4, conclusion.
+
+**Measured 2026-08-05** (`run_gate_variants.py`, 10 paired seeds, skill
+chains where true p(g') is exact — closes reviewer Q1/Q8): the derived
+true-p gate preserves ~all of ungated recycling's value (AUC .879 vs
+.881) while the frequency heuristic pays a real toll (.798; true-p
+wins 10/10). At decision time the heuristic's statistic
+**anti-correlates** with true p(g') (−.27) — it tracks the recycler's
+own recent output, not policy competence; the two rules agree only
+once everything saturates (.66 early → .99 late). §6.8 now says the
+LLM gate results are evidence about a recency-novelty filter and names
+the genuine pass-rate gate as the indicated upgrade. Artifact:
+`results_gate_variants.json`.
 
 The second mismatch (u_N's high-p zero is at p=1, threshold 0.5 is
 tuned) is now stated wherever the threshold appears.
@@ -57,11 +65,19 @@ single-destination object of the remark, and the appendix wiring
 contract cross-references this. All Countdown/Jugs hindsight results
 are now explicitly evidence about the weighted-SFT objective.
 
-Not yet done (experiment): a one-destination-per-group LLM variant
-(regroup rows by destination, recompute K' per destination — the
-review's recommended fix) as an ablation against per-row. Cheap to
-implement in `relabel_batch` (rewrite uid keys); queued behind the
-running arms.
+**Implemented 2026-08-05** (maxrl fork commit 2700198): the
+one-destination-per-group variant ships as a config flag
+(`+data.hindsight.one_target_per_group=true` — modal achieved value
+per dead group, only certifying rows relabeled, group-level gating),
+CPU-tested. **Measured at the exact rung** (`run_row_vs_group_relabel.py`,
+10 paired seeds): per-row relabels as their own K=1 groups lead (AUC
+.952) > one-destination-per-group (.881) > shared-K coupled per-row
+(.749, barely above no-recycling .705); both orderings 10/10 seeds.
+The coupling is what costs — Remark 3 now carries the measurement,
+scoped to what it can say about the deployed loop (different
+normalization/failure conditioning; the LLM-side test is the flag).
+Artifact: `results_row_vs_group.json`. The LLM ablation run itself is
+queued behind the factorial and reviewer arms.
 
 ## P0-3: causal identification — the factorial is running
 
