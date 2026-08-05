@@ -18,15 +18,13 @@ most of the mean gain at one validated operating point.
 \emph{Practical consequence:} report $\passat{k}$ coverage beside mean
 accuracy whenever a curriculum or recycler ships, conditioned on the
 estimator it ships on. \emph{Limitation, from our own pre-registered
-test:} the sharpest coverage claim our earlier runs suggested ---
-success-conditioned runs grow $\passat{k}$ while GRPO runs lose it,
-without exception --- \emph{failed} its balanced
+test:} the sharpest coverage claim our earlier runs suggested (a
+zero-exception estimator divergence) failed its balanced
 estimator$\times$sampler factorial at the registered endpoint and is
-retracted here; what survives that factorial, as an exploratory
-finding we state for future confirmation, is a weaker ordering ---
-MaxRL retains more time-integrated coverage than GRPO in 12/12 paired
-blocks, concentrated in the easy band --- alongside the exact-rung
-results and the recycling phenomenon, which are unaffected.
+retracted here. What survives: the exact-gradient ordering, the
+recycling phenomenon, and --- exploratory, stated for confirmation ---
+a weaker time-integrated version of the ordering (12/12 paired
+blocks, concentrated in the easy band).
 \end{abstract}
 
 \section{Introduction}
