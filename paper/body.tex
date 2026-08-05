@@ -6,9 +6,9 @@ rewards. We show they are not. \emph{Exact result:} for
 success-conditioned (MaxRL-style) advantages, the expected absolute
 coefficient mass a prompt emits from $N$ rollouts is exactly
 $2(\passat{N}-\passat{1})$ --- a compute-indexed learnability
-functional vanishing exactly at pass rates $0$ and $1$ with one
-interior peak --- and the practical drop-all-fail implementation is
-unbiased for truncation order $T{=}N{-}1$, not $N$.
+functional vanishing exactly at pass rates $0$ and $1$, partitioning
+difficulty into a dead zone, a learnable region, and a mastered tail,
+with the region's peak and $N$-scaling derived rather than tuned.
 \emph{Replicated experiment:}
 on Countdown, exact-verifier recycling improves mean accuracy while
 \emph{losing} $\passat{k}$ coverage --- \textbf{recycling-induced
@@ -18,13 +18,12 @@ most of the mean gain at one validated operating point.
 \emph{Practical consequence:} report $\passat{k}$ coverage beside mean
 accuracy whenever a curriculum or recycler ships, conditioned on the
 estimator it ships on. \emph{Limitation, from our own pre-registered
-test:} the sharpest coverage claim our earlier runs suggested (a
-zero-exception estimator divergence) failed its balanced
-estimator$\times$sampler factorial at the registered endpoint and is
-retracted here. What survives: the exact-gradient ordering, the
-recycling phenomenon, and --- exploratory, stated for confirmation ---
-a weaker time-integrated version of the ordering (12/12 paired
-blocks, concentrated in the easy band).
+test:} the sharpest coverage claim our earlier runs suggested failed
+its balanced factorial at the registered endpoint and is retracted
+here; the exact-gradient ordering, the recycling phenomenon, and an
+exploratory time-integrated form of the ordering survive. We also
+note a refinement to MaxRL: its practical drop-all-fail estimator is
+unbiased for truncation order $T{=}N{-}1$, not $N$.
 \end{abstract}
 
 \section{Introduction}
@@ -61,10 +60,10 @@ they are tuned against.
 
 This paper shows that neither assumption survives contact with the
 estimator's own algebra. The organizing fact is the shape of one
-function. \textbf{The estimator's expected coefficient mass $u_N(p)$
-vanishes exactly at pass rates $0$ and $1$ and peaks once in between,
-tracing three regimes of difficulty: a dead zone, a learnable region,
-and a mastered tail. Curricula reallocate compute within the learnable
+function. \textbf{The estimator's derived utility $u_N(p)$ --- half
+its expected coefficient mass --- vanishes exactly at pass rates $0$
+and $1$ and peaks once in between, tracing three regimes of
+difficulty: a dead zone, a learnable region, and a mastered tail. Curricula reallocate compute within the learnable
 region; verified relabeling is a way to create a positive update for
 an all-fail requested task; and relabels that land in the mastered
 tail buy sharpening, not signal. The estimator shapes all three.}
@@ -91,26 +90,18 @@ it pays (\S\ref{sec:experiments}).
 
 \emph{Q2: When is either intervention safe?} The same algebra says the
 answer depends on the estimator. MaxRL concentrates $(N{-}1)\times$
-more mass than RLOO on hard tasks as $p \to 0$ and releases mastered
-tasks; GRPO's variance-normalized weights keep spending on both tails.
-At the exact-gradient rung the predicted coverage ordering is robust:
-it survives frozen schedules, 10/10 paired replays (\S 6.3). At neural
-scale our own balanced factorial \emph{retired the strong form of the
-claim}. An earlier nine-run cohort showed perfect sign separation
-(every MaxRL run growing $\passat{8}$, every GRPO run losing it); the
-pre-registered $\{$MaxRL,GRPO$\}\times\{$uniform,teacher$\}$ factorial
-failed to confirm it at the registered endpoint (3/6 and 4/6 paired
-blocks; \S 6.3), because the cohort pattern had conflated recycling's
-coverage contribution with the estimator effect. What the factorial
-leaves standing, exploratory: a weaker time-integrated ordering (MaxRL
-over GRPO, 12/12 paired blocks) concentrated where the mass curves say
-GRPO overspends --- the easy band. On GSM8K, the pre-registered
-prediction that GRPO+teacher would be the only regressing cell landed
-on the registered run but not its replication seed (\S 6.7).
-Recycling has its own failure mode,
-and the algebra flags it: relabels that land in the mastered tail
-sharpen. On
-Countdown arithmetic this is \textbf{recycling-induced sharpening} ---
+more mass than RLOO (the unnormalized leave-one-out baseline
+estimator) on hard tasks as $p \to 0$ and releases mastered tasks;
+GRPO's variance-normalized weights keep spending on both tails. The
+predicted coverage ordering is robust where gradients are exact, and
+our own pre-registered factorial \emph{retired its strong neural
+form} --- an earlier cohort's zero-exception divergence had conflated
+recycling's contribution with the estimator effect --- leaving a
+weaker time-integrated ordering, exploratory, concentrated where the
+mass curves say GRPO overspends (\S 6.3b tells that story once, in
+full). Recycling has its own failure mode, and the algebra flags it:
+relabels that land in the mastered tail sharpen. On Countdown
+arithmetic this is \textbf{recycling-induced sharpening} ---
 exact-verifier relabeling improves mean accuracy while \emph{losing}
 $\passat{k}$ coverage --- the data-induced sibling of GRPO's
 weight-induced collapse, formally hindsight's marginal-distribution
@@ -129,15 +120,14 @@ a threshold should exist}; the statistic itself is a heuristic proxy
 task, and the threshold value is tuned (\S\ref{sec:recycling},
 Table~\ref{tab:knobs}). Across three seeds the moderate gate
 returns frontier-tier coverage to the no-recycling baseline while
-keeping most of recycling's mean gain; the available settings
-(moderate at three seeds, strong at one seed under corrected code)
-sketch a mean-versus-coverage trade but do not yet establish a
-monotone dial (\S 6.9). Where recycling is healthy the gate
-is transparent: hard-destination relabels pass untouched, so the
-validated testbeds reproduce their results with the gate enabled. The
-gate is one mechanism across domains, but not switch-free: each domain
-supplies a relabel map and a destination key, and Jugs showed the key
-choice is load-bearing (\S\ref{sec:limits}).
+keeping most of recycling's mean gain; whether gate strength traces a
+monotone trade is an open question \S 6.9 states precisely. Where
+recycling is healthy the gate is transparent: hard-destination
+relabels pass untouched, so the exact-gradient testbeds of \S 6.1
+reproduce their results with the gate enabled. The gate is one
+mechanism across domains, but not switch-free: each domain supplies a
+relabel map and a destination key, and Jugs showed the key choice is
+load-bearing (\S\ref{sec:limits}).
 
 Our contributions:
 \begin{enumerate}
@@ -156,15 +146,11 @@ Our contributions:
   --- on-policy for the achieved task only under an explicit
   distribution-matching condition (Remark~\ref{prop:hindsight}).
 \item \textbf{An estimator-conditioned coverage ordering, tested and
-  cut down to what survives} (\S\ref{sec:experiments}): the strong
-  divergence our nine-run cohort exhibited (every success-conditioned
-  run growing $\passat{k}$, every GRPO run losing it) \emph{failed its
-  pre-registered balanced factorial at the registered endpoint and is
-  retracted}; what survives is exact-rung robustness (10/10 frozen
-  schedules), a weaker exploratory neural ordering (time-integrated
-  coverage, MaxRL over GRPO 12/12 paired blocks, concentrated in the
-  easy band), and two controls that close alternative readings (no
-  scheduler rescues GRPO; the no-SD ablation separates the rungs).
+  cut down to what survives} (\S\ref{sec:experiments}): our own
+  pre-registered factorial retired the cohort's zero-exception
+  divergence at its registered endpoint; what survives is exact-rung
+  robustness, a weaker exploratory time-integrated ordering, and two
+  controls that close alternative readings (\S 6.3b).
 \item \textbf{A new failure mode and a motivated mitigation}
   (\S 6.8--6.9): exact-verifier recycling improves mean accuracy while
   losing coverage --- recycling-induced sharpening, replicated at
@@ -639,7 +625,9 @@ rung & question & setting & seeds & outcome \\
 yes: oracle ties posterior \\
 6.2 & anything to sample toward? & frontier-heavy pool & 5 &
 no: only creation scores \\
-6.3 & main effect, real grads? & maze factorial, 1.26M & 6 blocks &
+6.3a & does the curriculum pay? & maze cohort, 1.26M & 3 &
+throughput + recycling signal \\
+6.3b & estimator effect, real grads? & maze factorial & 6 blocks &
 endpoint failed; AUC 12/12 (expl.) \\
 6.4 & where/when does coverage go? & maze, level-resolved & 22 runs &
 easy band, immediately \\
@@ -736,32 +724,31 @@ update (full control variate) stays at zero here: creation is the
 only channel we tested that ignites a dead pool, and its value is
 discovery, not allocation.}
 
-\paragraph{6.3 Does the estimator main effect survive real gradients? (maze transformer at matched wall-clock; 1.26M params, 13
-levels, ${\sim}30$ runs, 3 seeds).} Champion (teacher + dense recycling)
-$0.252{\pm}0.005$ final / $0.229{\pm}0.009$ AUC vs.\ uniform
-$0.230{\pm}0.015$ / $0.211{\pm}0.011$; paired deltas positive in
-3/3 seeds on both meters (final and AUC --- six correlated contrasts,
-not six seeds);
-22--35\% more optimization steps per GPU-hour. Attribution within that
-gain, stated plainly: matched \emph{wall-clock} lets curriculum arms
-take $1.2$--$1.4\times$ more optimization steps (dead groups skip the
-backward pass), and step-matched truncation shows the extra steps are
-most of the pure teacher's effect (step-matched teacher-only
-$\Delta$AUC $+0.006$, within seed noise) while teacher+recycling
-survives step-matching (positive in all three paired seed blocks; a
-paired $t$ at $n{=}3$ gives $p{\approx}.04$, which we report as
-descriptive given its normality sensitivity --- an exact sign-flip
-test cannot go below $.25$ at three blocks) --- on the maze the
-teacher's
-measured value is \emph{throughput} (buying more steps per GPU-hour),
-recycling's is signal. Utility-form controls (3-seed reruns, artifact
+\paragraph{6.3a Does the curriculum pay on the maze? (transformer at
+matched wall-clock; 1.26M params, 13 levels, 3 seeds).} Champion
+(teacher + dense recycling) $0.252{\pm}0.005$ final /
+$0.229{\pm}0.009$ AUC vs.\ uniform $0.230{\pm}0.015$ /
+$0.211{\pm}0.011$; paired deltas positive in 3/3 seeds on both meters
+(six correlated contrasts, not six seeds); 22--35\% more optimization
+steps per GPU-hour. Attribution: matched \emph{wall-clock} lets
+curriculum arms take $1.2$--$1.4\times$ more optimization steps (dead
+groups skip the backward pass), and step-matched truncation shows the
+extra steps are most of the pure teacher's effect (step-matched
+teacher-only $\Delta$AUC $+0.006$, within seed noise) while
+teacher+recycling survives step-matching, positive in all three paired
+seed blocks\footnote{A paired $t$ at $n{=}3$ gives $p{\approx}.04$,
+reported as descriptive given its normality sensitivity; an exact
+sign-flip test cannot go below $.25$ at three blocks.} --- on the maze
+the teacher's measured value is \emph{throughput}, recycling's is
+signal. Utility-form controls (3-seed reruns, artifact
 \texttt{un\_form\_verdicts.json}): the exact $u_N$ measures within
 noise of the legacy deployed form on the maze itself, and a
 CPU-winning $(1{-}p)$-tilted refinement loses 0/3 here --- within-band
 utility choices are testbed-sensitive, which is why the theory claims
 only the band's boundaries.
 
-\subparagraph{The factorial, and what it retired.} An earlier
+\paragraph{6.3b Does the estimator effect survive real gradients?
+(the pre-registered factorial).} An earlier
 nine-run cohort showed perfect sign separation --- every MaxRL-labeled
 run grew $\passat{8}$, every GRPO-labeled run lost it --- but the pool
 mixed sampler configurations and hindsight doses and reused
@@ -821,7 +808,7 @@ curves cross at $k{\approx}4$, so choose the estimator by how many
 samples you will draw at inference.
 
 \paragraph{6.4 Where and when does GRPO's coverage go? (level-resolved;
-cohort data --- read with \S 6.3's retraction).}
+cohort data --- read with \S 6.3b's retraction).}
 This section decomposes the \emph{original heterogeneous cohort} by
 difficulty band; after the factorial, its value is the location and
 timing of GRPO's loss (which the factorial's easy-band asymmetry
@@ -849,7 +836,7 @@ pushing mass off the failure mode and onto the dominant one) that we
 support with the location and timing evidence here rather than prove.
 The hypothesis has a committed falsifier --- remove variance
 normalization and the tail signature should vanish --- and the two
-rungs split on it (\S 6.3): at the exact rung the no-SD ablation
+rungs split on it (\S 6.3b): at the exact rung the no-SD ablation
 moves GRPO's coverage profile onto RLOO's, as the mass curves
 predict, but in the balanced factorial no-SD GRPO loses the easy band
 in 6/6 seeds like sample-SD GRPO. The mechanism account is therefore
@@ -1014,7 +1001,7 @@ sharpening} --- hindsight arms improved mean@16 while \emph{losing}
 $\passat{16}$ coverage (tier-1: .571 vs.\ .645 for the no-relabel
 baseline). Recycled off-target successes concentrate the policy on
 reachable outputs at the expense of exploration breadth: the creation
-channel has its own safety trade-off, mirroring \S 6.3's weight-induced
+channel has its own safety trade-off, mirroring \S 6.3b's weight-induced
 collapse --- data-induced rather than weight-induced. The underlying
 concentration pathology is known in goal-conditioned RL (Skew-Fit's
 motivating failure mode; GCSL's marginal shift); what is unreported, to
@@ -1024,32 +1011,35 @@ Our algebra flags the mechanism: the achieved-goal marginal
 overweights destinations the policy already reaches, so relabel
 updates concentrate toward the mastered tail, where $u(p)$ says fresh
 training signal vanishes --- the softmax pays for those updates out of
-the exploration tail. \emph{Takeaway: recycling needs an admission
-rule, and the utility's mastered-tail zero motivates one. The rule we
-implement and test is a saturation heuristic: a decayed frequency
-statistic $\hat f_{g'}$ over the recycler's own recent relabel
-destinations, thresholded at \texttt{gate\_max\_p}. We are explicit
-about what this is not: it is not an estimate of the destination
-task's fresh-rollout pass rate $p_\theta(\text{success} \mid g')$ ---
-the gate never rolls out $g'$ and never observes a $g'$ failure ---
-and the threshold $0.5$ is a tuned midpoint, not a derived zero
-($u_N$'s exact high-$p$ zero is at $p{=}1$, which would admit
-everything). A gate on a genuine task-conditioned $\hat p_{g'}$ is
-the derived object, and where destination pass rates are exactly
-measurable (skill chains, 10 paired seeds; artifact
-\texttt{results\_gate\_variants.json}) the true-$p$ gate preserves
-essentially all of ungated recycling's value (AUC $.879$ vs.\ $.881$)
-while the frequency heuristic pays a toll ($.798$; 10/10). The
-heuristic is \emph{not} a pass-rate proxy --- at decision time its
-statistic anti-correlates with true $p(g')$ ($-.27$; it tracks the
-recycler's own recent output) --- and the two rules agree only once
-everything saturates ($.66 \to .99$). The \S 6.9 results are
-therefore evidence about a recency-novelty filter that approximates
-saturation late in training; a genuine destination pass-rate estimate
-in the LLM loop is the indicated upgrade.}
+the exploration tail.
+\takeaway{Recycling needs an admission rule, and the utility's
+mastered-tail zero motivates one --- designed and tested next.}
 
 \paragraph{6.9 Does the gate recover it? (Countdown v2 pool, 3
-seeds, pre-registered).} We rebuilt the pool with real structure
+seeds, pre-registered).}
+\emph{The gate, and what it is not.} The rule we implement is a
+saturation heuristic: a decayed frequency statistic $\hat f_{g'}$ over
+the recycler's own recent relabel destinations, thresholded at
+\texttt{gate\_max\_p}. It is \emph{not} an estimate of the destination
+task's fresh-rollout pass rate $p_\theta(\text{success} \mid g')$ ---
+the gate never rolls out $g'$ and never observes a $g'$ failure ---
+and the threshold $0.5$ is a tuned midpoint, not a derived
+zero.\footnote{$u_N$'s exact high-$p$ zero is at $p{=}1$, which would
+admit everything; a gate on a genuine task-conditioned $\hat p_{g'}$
+is the derived object.} Where destination pass rates are exactly
+measurable (skill chains, 10 paired seeds; artifact
+\texttt{results\_gate\_variants.json}), the true-$p$ gate preserves
+essentially all of ungated recycling's value (AUC $.879$ vs.\ $.881$)
+while the frequency heuristic pays a toll ($.798$; 10/10); at decision
+time the heuristic's statistic \emph{anti-correlates} with true
+$p(g')$ ($-.27$ --- it tracks the recycler's own recent output), and
+the two rules agree only once everything saturates ($.66 \to .99$).
+The results below are therefore evidence about a recency-novelty
+filter that approximates saturation late in training; a genuine
+destination pass-rate estimate in the LLM loop is the indicated
+upgrade.
+
+\emph{The experiment.} We rebuilt the pool with real structure
 (random operand permutation, parenthesization, exact division; a
 headroom gate excluded guesser-saturated tiers) and ran three arms
 $\times$ three seeds: no recycling (B1), ungated recycling (B2), gated
@@ -1069,17 +1059,16 @@ $k{=}16$ --- the crossing is the phenomenon.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.52\linewidth]{figures/fig9_passk}
-\caption{\textbf{Sharpening is a crossing in $k$, and the gate rotates
-it (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16
-samples, $n{=}128$).} Ungated recycling is above baseline at $k{=}1$
-(mean up) and below by $k{=}4$ (coverage down), the deficit widening
-with $k$. Gate strength rotates the curve: the moderate gate tracks
-baseline at low $k$ with a smaller high-$k$ deficit; the full-strength
-gate (hollow) pays at $k{=}1$ and finishes \emph{above} baseline at
-$k{=}16$ --- one dial trading the two ends of the same curve.
-Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry from
-the seed-1 logs. The \S 6.9 ARM-A rerun at the designed operating
-point (in flight) will test whether this rotation is stable.}
+\caption{\textbf{Sharpening is a crossing in $k$ (Countdown tier 1,
+step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).}
+Ungated recycling sits above baseline at $k{=}1$ (mean up) and below
+by $k{=}4$ (coverage down), the deficit widening with $k$. The two
+gate settings bracket the trade --- moderate tracks baseline at low
+$k$ with a smaller high-$k$ deficit; full-strength (hollow; one seed,
+corrected decay) pays at $k{=}1$ and finishes above baseline at
+$k{=}16$ --- consistent with a strength dial, though \S 6.9 details
+why these settings do not yet establish one. Endpoints cross-check
+the 3-seed scoreboard; per-$k$ telemetry from the seed-1 logs.}
 \label{fig:passk}
 \end{figure} The
 coverage loss clears both arms' seed spreads ($>2\times$); the mean
@@ -1208,22 +1197,17 @@ admission heuristic against that cost.
 
 \section{Limitations and negative results}\label{sec:limits}
 
-\paragraph{Scale, and a retraction.} The balanced maze factorial
-(\S 6.3) retired this paper's strongest neural safety claim at its
-registered endpoint: the nine-run cohort's zero-exception coverage
-divergence did not confirm (3/6 and 4/6 paired blocks), and we
-retract it rather than re-grade it. Two design lessons are recorded
-with the verdict: the cohort had conflated recycling's coverage
-contribution with the estimator effect, and the registered endpoint
-was under-powered --- computed from all 36 runs' successive-eval
+\paragraph{Scale, and what the retraction taught about design.} The
+factorial retraction is reported in full in \S 6.3b; what belongs here
+is its power lesson. Computed from all 36 runs' successive-eval
 differences, per-eval noise is $\sigma \approx .017$, giving the
-paired single-eval endpoint a contrast sd of $.024$ and power
-$0.4$--$0.8$ at the effect size the data itself displays
-($+.025$/$+.031$ paired means); the time-integrated version of the
+registered paired single-eval endpoint a contrast sd of $.024$ and
+power only $0.4$--$0.8$ at the effect size the data itself displays
+($+.025$/$+.031$ paired means). The time-integrated version of the
 same contrast cuts that sd by $\sqrt{10}$ (power ${\approx}1$ at
-$+.02$), which is why it is the registered primary of the
-confirmation wave now running on six fresh seed blocks, with a
-committed falsification branch. The
+$+.02$), which is why it is the registered primary of the confirmation
+wave now running on six fresh seed blocks, with a committed
+falsification branch. The
 LLM-scale teacher$\times$estimator interaction
 is 1-of-2 seeds and tracks steering intensity: the replication seed of
 the GRPO+teacher cell did not reproduce the registered regression, and
@@ -1316,7 +1300,7 @@ we have been explicit about where each stronger reading fails ---
 including against ourselves: the balanced estimator-by-sampler
 factorial we pre-registered retired our own strongest neural claim at
 its registered endpoint, and this paper reports that retraction in
-place rather than re-grading it (\S 6.3). What the record supports:
+place rather than re-grading it (\S 6.3b). What the record supports:
 an exact-rung estimator-conditioned coverage ordering that survives
 frozen schedules and its own controls, an exploratory time-integrated
 version of the same ordering at neural scale (12/12 paired factorial
@@ -1637,7 +1621,7 @@ compute/run & CPU-min & 0.7 A10G-h & ${\sim}20$ A10G-h & ${\sim}6$ A10G-h \\
 \end{tabular}
 
 \smallskip
-{\footnotesize $^{\dagger}$cohort runs (\S 6.3) used 2{,}400 s
+{\footnotesize $^{\dagger}$cohort runs (\S 6.3a) used 2{,}400 s
 wall-clock; the balanced factorial and its confirmation wave use 250
 fixed steps (matched generation and optimization budget) over six seed
 blocks --- the two protocols are never mixed within a comparison.}
