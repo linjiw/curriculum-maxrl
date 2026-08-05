@@ -195,14 +195,13 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     add-ons. <strong>They are not.</strong> We derive the curriculum from the estimator's own
     algebra — a prompt's expected learning signal is exactly
     <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>, whose two zeros partition difficulty into a
-    dead zone, a learnable band, and a mastered tail — and use it to predict, pre-register, and
-    confirm two failure modes nobody was measuring: across nine maze runs every
-    success-conditioned run grew pass@k coverage and every GRPO run lost it (exploratory —
-    heterogeneous pool; a two-seed GSM8K pilot points the same direction), and recycling buys
-    mean accuracy <strong>with pass@k coverage</strong> (recycling-induced sharpening — first
-    measurement of this cost in RLVR). The same algebra motivates the fix: gate relabels by
-    their destination's pass rate — at the frontier tier the gate returns coverage to baseline
-    keeping most of the gain (one validated operating point; the dose sweep is queued). The
+    dead zone, a learnable band, and a mastered tail — and use it to find, measure, and
+    stress-test the failure modes of both interventions, <em>including our own claims</em>:
+    the replicated finding is that recycling buys mean accuracy <strong>with pass@k
+    coverage</strong> (recycling-induced sharpening — first measurement of this cost in RLVR,
+    3 seeds), the algebra motivates a relabel-admission gate with one validated operating
+    point, and the estimator-coverage divergence our early runs showed was cut down by our
+    own pre-registered factorial to exactly what survives (details in the card below). The
     claim's boundary is measured too: a pre-registered fifth suite whose learnable region
     collapses to one template stratum defeats <em>every</em> estimator.
   </p>
