@@ -1470,6 +1470,14 @@ smaller seed variance); the $N{=}2$ slice $p(1{-}p)$ is a wash against
 uniform ($-.007$, 2/5 wins) where $u_N$ carries $+.078$ (5/5). AUC
 spread across arms is $9\times$ the final-performance spread.
 
+\paragraph{6.3 inference-efficiency detail.} Convention: smallest $k$
+reaching absolute coverage $0.25$, log-interpolated; artifact
+\texttt{maze\_gpu/efficiency.json}; Fig.~\ref{fig:ksweep} plots the
+summed-coverage crossing. Summed coverage over L0--6: GRPO
+$3.24$ vs.\ MaxRL $3.07$ at $\passat{1}$; crossing at $k{\approx}4$;
+$5.12$ vs.\ $4.62$ at $k{=}64$, with GRPO's level-2/4 curves saturating
+at $0.88/0.56$ where MaxRL's reach $1.00/0.62$.
+
 \paragraph{6.5 IsaacLab protocol.} Five arms: frontier teacher, stock
 greedy walker, uniform, scripted ramp, no-motion control; fixed-grid
 per-level evaluation; Anymal-C rough terrain; one seed, executed by an
@@ -1518,28 +1526,6 @@ $k{=}64$ --- choose the estimator by how many samples you will draw at
 inference.}
 \label{fig:ksweep}
 \end{figure}
-
-\paragraph{6.3 inference-efficiency detail.} Convention: smallest $k$
-reaching absolute coverage $0.25$, log-interpolated; artifact
-\texttt{maze\_gpu/efficiency.json}; Fig.~\ref{fig:ksweep} plots the
-summed-coverage crossing. Summed coverage over L0--6: GRPO
-$3.24$ vs.\ MaxRL $3.07$ at $\passat{1}$; crossing at $k{\approx}4$;
-$5.12$ vs.\ $4.62$ at $k{=}64$, with GRPO's level-2/4 curves saturating
-at $0.88/0.56$ where MaxRL's reach $1.00/0.62$.
-
-\paragraph{6.9 secondary reads (full).} Pool construction and
-baseline calibration: the pre-SFT base model's relabel yield is
-$0.000$ ($n{=}384$) --- the syntactic prerequisite; post-SFT the
-model is a near-independent guesser whose $\passat{16}$ sits at a
-tier-invariant ${\sim}75\%$ of the independence bound
-$1-(1-\passat{1})^{16}$ (ratios $.744/.783/.755$ across tiers), the
-baseline the headroom gate measures against. Training-side damage: ungated
-recycling ends with more unsolvable-at-16 frontier training prompts
-than baseline in every seed (paired $+.083/+.063/+.034$). Entropy at 3
-seeds: the gate's retention replicates ($+.072$ paired over baseline,
-all seeds positive, ${\sim}1.6\times$); ungated recycling's endpoint
-entropy is seed-unstable (spread $\pm.062$, $4$--$9\times$ the other
-arms'), consistent with its noisy frontier-coverage endpoints.
 
 \paragraph{6.7 posterior diagnostics and harness caveats (full).}
 The $\passat{k}$ sweep's absolute level sits ${\sim}3\times$ below the
@@ -1604,6 +1590,20 @@ the lowest entropy ($0.02$--$0.03$); the value-keyed gate rejected
 $99.8\%$ of relabels (the granularity bug described in \S\ref{sec:limits}, since
 fixed and regression-tested). Postmortem and per-cell artifacts in the
 repository.
+
+\paragraph{6.9 secondary reads (full).} Pool construction and
+baseline calibration: the pre-SFT base model's relabel yield is
+$0.000$ ($n{=}384$) --- the syntactic prerequisite; post-SFT the
+model is a near-independent guesser whose $\passat{16}$ sits at a
+tier-invariant ${\sim}75\%$ of the independence bound
+$1-(1-\passat{1})^{16}$ (ratios $.744/.783/.755$ across tiers), the
+baseline the headroom gate measures against. Training-side damage: ungated
+recycling ends with more unsolvable-at-16 frontier training prompts
+than baseline in every seed (paired $+.083/+.063/+.034$). Entropy at 3
+seeds: the gate's retention replicates ($+.072$ paired over baseline,
+all seeds positive, ${\sim}1.6\times$); ungated recycling's endpoint
+entropy is seed-unstable (spread $\pm.062$, $4$--$9\times$ the other
+arms'), consistent with its noisy frontier-coverage endpoints.
 
 \section{Hyperparameters and compute}\label{app:hparams}
 
