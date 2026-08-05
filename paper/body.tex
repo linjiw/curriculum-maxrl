@@ -631,9 +631,9 @@ throughput + recycling signal \\
 endpoint failed; AUC 12/12 (expl.) \\
 6.4 & where/when does coverage go? & maze, level-resolved & 22 runs &
 easy band, immediately \\
-6.5 & when does allocation not pay? & IsaacLab Anymal-C & 1 &
+6.5$^{*}$ & when does allocation not pay? & IsaacLab Anymal-C & 1 &
 learnable-everywhere: null \\
-6.6 & beyond task spread? & MountainCar/CartPole & 3 &
+6.6$^{*}$ & beyond task spread? & MountainCar/CartPole & 3 &
 spread$=$existence; tea.$=$speed \\
 6.7 & LLM scale? & GSM8K 2$\times$2, 360M & 1--2 &
 sign landed; replication open \\
@@ -643,6 +643,10 @@ mean up, coverage down \\
 one useful trade point \\
 \bottomrule
 \end{tabular}
+
+\smallskip
+{\footnotesize $^{*}$boundary rungs, compressed to one paragraph in
+the main text; full protocols and figures in App.~\ref{app:rungs}.}
 \end{table}
 
 \begin{figure}[t]
@@ -900,19 +904,13 @@ not at all}.
 \begin{figure}[t!]
 \centering
 \includegraphics[width=0.55\linewidth]{figures/fig3_gsm8k}
-\caption{\textbf{GSM8K $2{\times}2$ (pre-registered; both GRPO seeds
-shown as paired trajectories --- registered seed thick, replication
-seed thin; the gray bar is the repeated-eval noise floor of one fixed
-checkpoint, $\pm$SD .0094, drawn once as a scale, not per-point method
-uncertainty).} On the registered run GRPO+teacher is the only cell
-that regresses in its second half (P-G2; the deciding statistic is
-the endpoint gap vs.\ plain GRPO, $2$--$4\times$ the repeated-eval
-noise --- a descriptive signal-to-noise read, not a test); the
-replication seed, with weaker measured steering, climbs instead ---
-the regression \emph{shape} is 1 of 2 seeds, while the endpoint
-teacher-deficit \emph{sign} holds in both (\S 6.7); under MaxRL the
-identical teacher trains stably to its best value but does not beat
-uniform at this budget (P-G1: null).}
+\caption{\textbf{GSM8K $2{\times}2$, val mean@4 over training.} Both
+GRPO seeds shown as paired trajectories (registered seed thick,
+replication thin); gray bar: repeated-eval noise floor of one fixed
+checkpoint ($\pm$SD .0094), drawn once as a scale. On the registered
+run GRPO+teacher is the only cell that regresses in its second half;
+the replication seed climbs instead. \S 6.7 gives the statistics and
+the steering telemetry that separates the two seeds.}
 \label{fig:gsm8k}
 \end{figure}
 
@@ -970,17 +968,12 @@ decisive experiment is a steering-controlled multi-seed cell.}
 \centering
 \includegraphics[width=\linewidth]{figures/fig7_sharpening}
 \caption{\textbf{Recycling-induced sharpening and its
-saturation-gate mitigation (Countdown, tier 1).} \emph{(a)} Three seeds, both axes:
-recycling (B2) buys mean@16 with $\passat{16}$ coverage. On this tier
-the moderate gate (B3) gives back most of the mean without moving
-coverage --- tier-1 destinations saturate early, so admitted relabels
-are few --- while full-strength gating (corrected decay, 1 seed)
-returns coverage \emph{above} baseline at the mean's full price. The
-settings are consistent with a mean-vs-coverage trade (not yet a
-monotone dial: the strong point is one seed on different code), and
-the useful middle lives on the frontier tier, where the same moderate
-setting restores coverage to baseline ($.279{\pm}.019$ vs.\ $.274$)
-keeping $\sim$60\% of the mean gain (\S 6.8). \emph{(b)} The mechanism in-run: the gate's rejection
+saturation-gate mitigation (Countdown, tier 1).} \emph{(a)} Three
+seeds, both axes: recycling (B2) buys mean@16 with $\passat{16}$
+coverage; the moderate gate (B3) gives most of the mean back on this
+early-saturating tier, and full-strength gating (hollow; 1 seed,
+corrected decay) returns coverage above baseline at the mean's full
+price --- \S 6.9 states what these settings do and do not establish. \emph{(b)} The mechanism in-run: the gate's rejection
 rate rises monotonically as the model's reachable set saturates its
 relabel destinations, while the ungated dose rides its cap. \emph{(c)}
 Gated recycling preserves \emph{more} policy entropy than no recycling
