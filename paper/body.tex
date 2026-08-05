@@ -1285,10 +1285,10 @@ For the practical success-conditioned estimator under i.i.d.\ binary
 rewards, the expected absolute coefficient mass of a prompt is exactly
 $2(\passat{N} - \passat{1})$, and the drop-all-fail implementation
 targets truncation order $N{-}1$. That identity supplies a
-compute-aware sampling heuristic and an admission threshold for
-verified relabels; it does not by itself prove a learning band,
-optimal prompt allocation, or on-policy hindsight, and we have been
-explicit about where each stronger reading fails. Empirically,
+compute-aware sampling heuristic and motivates a saturation-based
+admission rule for verified relabels; it does not by itself prove a
+learning band, optimal prompt allocation, or on-policy hindsight, and
+we have been explicit about where each stronger reading fails. Empirically,
 estimator choice and relabel admission changed the trade between mean
 accuracy and $\passat{k}$ coverage everywhere we looked: an
 exploratory but zero-exception coverage divergence between MaxRL- and
@@ -1603,12 +1603,19 @@ run manifest --- adding a run file cannot silently change the figure,
 and missing inputs are a hard error. The Jugs preregistration, raw
 cells, verdicts, and postmortem are vendored in
 \texttt{jugs\_llm/results/} with preregistration- and execution-commit
-provenance. Known gaps, stated rather than papered over: the IsaacLab
+provenance. The LLM-scale relabeling implementation is vendored
+verbatim with execution-commit provenance
+(\texttt{verl\_integration/vendored/}), so the loop the Countdown and
+Jugs suites executed is inspectable in this repository. Known gaps,
+stated rather than papered over: the IsaacLab
 pilot is reported from an independent team's summary (raw logs live
 with that team); per-step timing fractions come from verl's in-run
 telemetry (\texttt{generation\_timing.json}); the fig2/fig3 endpoint
 tables are transcribed from run analyses rather than derived from a
-seed-level results table. A one-row-per-run registry
+seed-level results table; and the GSM8K pass@$k$ harness sits
+${\sim}3\times$ below the trainer's val metric (unreconciled; only
+within-sweep contrasts are quoted, and the reconciliation script is
+queued behind the running arms). A one-row-per-run registry
 (\texttt{curriculum\_maxrl/run\_registry.json}; 48 rows spanning the
 maze, Countdown, and GSM8K artifacts, with arm/seed/protocol per row)
 indexes every run this paper draws on; the maze main-effect subset and

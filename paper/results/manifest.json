@@ -61,9 +61,18 @@
   },
   "fig6_gym": {
    "script": "paper/figures/fig6_gym.py",
-   "inputs": [],
+   "inputs": [
+    "frontier_rl/examples/gym_convergence.json",
+    "frontier_rl/examples/gym_performance.json",
+    "frontier_rl/examples/gym_performance_3x.json"
+   ],
    "command": "python paper/figures/fig6_gym.py",
-   "checksums": {}
+   "checksums": {
+    "frontier_rl/examples/gym_convergence.json": "5662f83722888827",
+    "frontier_rl/examples/gym_performance.json": "a4a73dd1892163e9",
+    "frontier_rl/examples/gym_performance_3x.json": "5c8e57e1565ae70c"
+   },
+   "notes": "inputs added 2026-08-05 (draft-review artifact gap: manifest previously listed no input for the empirical Gym figure)"
   },
   "fig7_sharpening": {
    "script": "paper/figures/fig7_sharpening.py",
