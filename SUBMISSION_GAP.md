@@ -147,3 +147,15 @@ still single-run-conditional, and formatting/anonymization work is undone.
   Remaining from guidance: GPU items unchanged (E-LLM-1b running,
   corrected-gate 3-seed sweep, GRPO-own-teacher + no-std arms queued);
   balanced maze factorial (≥6 seed blocks) still the big open design.
+
+- 2026-08-05: Review-round-4 resolution complete. All text-fixable items
+  from 5 reviews FIXED (see reviews_round4/RESOLUTION_MATRIX.md); part J
+  (flat-over-band control) run and folded into the Remark — the zeros
+  alone forfeit the gain (0/10), settling R5-Q3 with data; deployment-
+  limits paragraph (R2-W3/W4) + wiring contract (R2-Q4) shipped; site
+  aligned with rescoped claims. Runability audit passed on all queued
+  arms (syntax, estimator edge cases, g3p power path, data deps, disk).
+  REMAINING (all experiment-gated): E-LLM-1b verdicts -> 6.7 rewrite;
+  GRPO-own/no-std maze arms -> title-claim scope; ARM A/B/C ->
+  gate-dial + dose-baseline + harness paragraphs; then the section-6
+  restructure + claims table, final float pass, camera-ready hashes.
