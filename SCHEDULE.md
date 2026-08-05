@@ -6,7 +6,7 @@
 
 | # | run | status | purpose |
 |---|---|---|---|
-| FACT | balanced maze factorial {maxrl,grpo}×{uniform,frontier_un}×6 blocks + grpo_mass + grpo_nostd (250 fixed steps) | **RUNNING** (`maze_gpu/run_factorial.sh`, resumable; ~50 min/cell-pair) | draft-review P0-3: P-F1 prereg, falsification branch committed |
+| FACT | balanced maze factorial {maxrl,grpo}×{uniform,frontier_un}×6 blocks + grpo_mass + grpo_nostd (250 fixed steps) | **DONE — P-F1 FAILED, claim retracted in paper (e27b5d9); P-G0a confirmed; P-G0c failed. Verdict: `maze_gpu/FACTORIAL_VERDICT.md`. Repair pass folding in contention casualties.** | draft-review P0-3: P-F1 prereg, falsification branch committed — and executed |
 | ARM-A/B | designed-gate B3 ×3 + replay control ×3 (Countdown) | queued (lock held, waits for GPU headroom) | fixed-code gate validation + dose-matched replay |
 | E-LLM-1b | steering-controlled GSM8K (m3s died at step-25 ckpt, node OOM) | chained behind ARM-B completion | decisive LLM-scale cell |
 
