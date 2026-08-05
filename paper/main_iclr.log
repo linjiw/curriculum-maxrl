@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  5 AUG 2026 13:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  5 AUG 2026 14:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -620,11 +620,11 @@ Package rerunfilecheck Info: File `main_iclr.out' has not changed.
 (rerunfilecheck)             Checksum: 8F2DDD495C9E9A34E093BF663380ED78;2145.
  ) 
 Here is how much of TeX's memory you used:
- 13503 strings out of 480806
- 195730 string characters out of 5905151
- 557478 words of memory out of 6000000
+ 13506 strings out of 480806
+ 195757 string characters out of 5905151
+ 557480 words of memory out of 6000000
  29953 multiletter control sequences out of 15000+600000
- 461478 words of font info for 455 fonts, out of 8000000 for 9000
+ 461594 words of font info for 457 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  61i,12n,75p,1375b,497s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
@@ -651,7 +651,7 @@ r/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrro8a.pfb
 dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
 e1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/ut
 mri8a.pfb>
-Output written on main_iclr.pdf (22 pages, 652727 bytes).
+Output written on main_iclr.pdf (22 pages, 652677 bytes).
 PDF statistics:
  750 PDF objects out of 1000 (max. 8388607)
  581 compressed objects within 6 object streams

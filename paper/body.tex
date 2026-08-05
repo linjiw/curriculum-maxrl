@@ -24,7 +24,7 @@ without exception --- \emph{failed} its balanced
 estimator$\times$sampler factorial at the registered endpoint and is
 retracted here; what survives that factorial, as an exploratory
 finding we state for future confirmation, is a weaker ordering ---
-MaxRL retains more time-integrated coverage than GRPO in 9/9 paired
+MaxRL retains more time-integrated coverage than GRPO in 12/12 paired
 blocks, concentrated in the easy band --- alongside the exact-rung
 results and the recycling phenomenon, which are unaffected.
 \end{abstract}
@@ -100,11 +100,11 @@ strong form of the claim}: an earlier nine-run cohort showed perfect
 sign separation (every MaxRL run growing $\passat{8}$, every GRPO run
 losing it), and the pre-registered
 $\{$MaxRL,GRPO$\}\times\{$uniform,teacher$\}$ factorial failed to
-confirm it at the registered endpoint (3/6 and 1/3 paired blocks;
+confirm it at the registered endpoint (3/6 and 4/6 paired blocks;
 \S 6.3) --- the cohort pattern had conflated recycling's coverage
 contribution with the estimator effect. What the factorial leaves
 standing, exploratory: a weaker time-integrated ordering (MaxRL over
-GRPO, 9/9 paired blocks) concentrated where the mass curves say GRPO
+GRPO, 12/12 paired blocks) concentrated where the mass curves say GRPO
 overspends, the easy band. On GSM8K, the pre-registered
 prediction that GRPO+teacher would be the only regressing cell landed
 on the registered run but not its replication seed (\S 6.7).
@@ -163,7 +163,7 @@ Our contributions:
   pre-registered balanced factorial at the registered endpoint and is
   retracted}; what survives is exact-rung robustness (10/10 frozen
   schedules), a weaker exploratory neural ordering (time-integrated
-  coverage, MaxRL over GRPO 9/9 paired blocks, concentrated in the
+  coverage, MaxRL over GRPO 12/12 paired blocks, concentrated in the
   easy band), and two controls that close alternative readings (no
   scheduler rescues GRPO; the no-SD ablation separates the rungs).
 \item \textbf{A new failure mode and a motivated mitigation}
@@ -773,7 +773,7 @@ independent seed blocks, identical per-block warmstarts, matched
 generation-and-optimization budgets (250 fixed steps), one registered
 endpoint (paired $\Delta$ mean $\passat{8}$, final minus warmstart),
 and a committed falsification branch. \textbf{The endpoint failed:
-3/6 paired blocks under uniform, 1/3 under the teacher, and only 3/10
+3/6 paired blocks under uniform, 4/6 under the teacher, and only 4/12
 MaxRL cells grew coverage at all --- the cohort's zero-exception
 divergence is retracted, not softened} (prereg + raw cells + verdict:
 \texttt{curriculum\_maxrl/maze\_gpu\_factorial/}, vendored with
@@ -784,9 +784,9 @@ estimator). Two things survive, stated at their evidence level.
 \emph{Exploratory, from the same factorial}: on time-integrated
 coverage (mean in-training $\passat{8}$ minus warmstart --- a
 noise-integrating secondary we did not register), MaxRL retains more
-coverage than GRPO in \textbf{9/9} paired blocks across both samplers,
+coverage than GRPO in \textbf{12/12} paired blocks across both samplers,
 and the difference concentrates in the easy band (GRPO's easy-band
-loss $2\times$ MaxRL's, 7/9 pairs) --- where the mass curves say GRPO
+loss $2\times$ MaxRL's, 9/12 pairs) --- where the mass curves say GRPO
 overspends; this is the hypothesis a future registered endpoint should
 target, powered against the ${\sim}{\pm}.03$ single-eval noise that
 the registered endpoint was not. \emph{Confirmed, exact rung}: the
@@ -798,7 +798,7 @@ alternative readings. \emph{Teacher--estimator mismatch is closed at
 both rungs}: GRPO scheduled by its \emph{own} exact mass functional
 ($\frac1N\mathbb{E}\sqrt{K(N{-}K)}$, Thompson-sampled) does not close
 the gap on chains (5/5) and loses coverage like every other GRPO arm
-in the factorial (4/5 cells negative, mean $-.040$ vs.\ uniform-GRPO
+in the factorial (5/6 cells negative, mean $-.042$ vs.\ uniform-GRPO
 $-.042$). \emph{The no-SD ablation separates the rungs}: on chains,
 mean-centered un-normalized GRPO drops to RLOO's coverage profile
 ($.148$ vs.\ RLOO $.161$; sample-SD GRPO $.762$), exactly as the mass
@@ -811,7 +811,7 @@ parameters unmodified --- a committed revision we make rather than
 bury (pre-registered falsification branch P-G0c).
 \emph{Interaction}: the teacher does not amplify GRPO's coverage loss
 in the factorial (teacher$-$uniform $\Delta$cov@8 under GRPO: mean
-$+.020$, mildly protective) --- the GSM8K P-G2 regression pattern
+$+.015$, mildly protective) --- the GSM8K P-G2 regression pattern
 receives no corroboration from the maze at this budget.
 Inference currency (single checkpoint pair; convention and per-level
 detail in App.~\ref{app:rungs}): our checkpoint needs
@@ -824,7 +824,7 @@ cohort data --- read with \S 6.3's retraction).}
 This section decomposes the \emph{original heterogeneous cohort} by
 difficulty band; after the factorial, its value is the location and
 timing of GRPO's loss (which the factorial's easy-band asymmetry
-corroborates, 7/9 pairs), not the retired zero-exception contrast
+corroborates, 9/12 pairs), not the retired zero-exception contrast
 (Fig.~\ref{fig:bands}). \emph{Where:} GRPO's $\passat{8}$
 loss is concentrated almost entirely on the easy/mid band L1--3
 ($-.224$ mean over its four runs, every run negative) while its L1--3
@@ -886,7 +886,7 @@ steps, before any level saturates; MaxRL stabilizes after warmup.}
 \takeaway{The easy band is where the estimators differ --- GRPO
 liquidates it for reliability from the first updates, and the
 factorial's exploratory read keeps that asymmetry (GRPO's easy-band
-loss $2\times$ MaxRL's, 7/9 pairs) --- but the mechanism attribution
+loss $2\times$ MaxRL's, 9/12 pairs) --- but the mechanism attribution
 to variance normalization holds only at the exact rung. Coverage is
 the currency that sees all of it.}
 
@@ -1189,13 +1189,13 @@ admission heuristic against that cost.
 \paragraph{Scale, and a retraction.} The balanced maze factorial
 (\S 6.3) retired this paper's strongest neural safety claim at its
 registered endpoint: the nine-run cohort's zero-exception coverage
-divergence did not confirm (3/6 and 1/3 paired blocks), and we
+divergence did not confirm (3/6 and 4/6 paired blocks), and we
 retract it rather than re-grade it. Two design lessons are recorded
 with the verdict: the cohort had conflated recycling's coverage
 contribution with the estimator effect, and the registered endpoint
 (one 16-maze/level eval) was under-powered against ${\sim}{\pm}.03$
 eval noise for effects of $.02$--$.05$ --- the surviving
-time-integrated ordering (9/9 blocks, exploratory) is what a
+time-integrated ordering (12/12 blocks, exploratory) is what a
 properly powered registered endpoint should target next. The
 LLM-scale teacher$\times$estimator interaction
 is 1-of-2 seeds and tracks steering intensity: the replication seed of
@@ -1292,7 +1292,7 @@ its registered endpoint, and this paper reports that retraction in
 place rather than re-grading it (\S 6.3). What the record supports:
 an exact-rung estimator-conditioned coverage ordering that survives
 frozen schedules and its own controls, an exploratory time-integrated
-version of the same ordering at neural scale (9/9 paired factorial
+version of the same ordering at neural scale (12/12 paired factorial
 blocks --- the next registered endpoint), a three-seed replication of
 recycling-induced sharpening on Countdown with one gated operating
 point that buys the coverage back, and a pre-registered negative
