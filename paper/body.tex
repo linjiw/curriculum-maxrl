@@ -546,6 +546,18 @@ MaxRL form --- one destination per dead group, all $N$ rows rewritten
 and reverified against it --- is the design this remark licenses, and
 we treat the deployed variant's results as evidence about the
 weighted-SFT objective, not about a per-destination MaxRL gradient.
+Where the three variants are exactly implementable (skill chains, 10
+paired seeds; artifact \texttt{results\_row\_vs\_group.json}) the
+coupling itself is what costs: per-row relabels each trained as their
+own $K{=}1$ group lead (AUC $.952$), one-destination-per-group is
+next ($.881$), and the shared-$K$ coupled form --- the deployed LLM
+group semantics --- forfeits most of recycling's value ($.749$,
+vs.\ $.705$ with no recycling at all; both orderings 10/10 seeds).
+Whether the deployed LLM loop pays this coupling penalty is an open
+empirical question this rung cannot answer --- its group semantics
+differ in normalization and in what the failure rows condition on ---
+and the artifact ships a single-destination ablation flag
+(\texttt{one\_target\_per\_group}) for exactly that test.
 \end{remark}
 \begin{interp}
 ``Exactness'' is a property to \emph{measure per environment}, not a
