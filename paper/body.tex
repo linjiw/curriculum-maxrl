@@ -1060,6 +1060,23 @@ calibration in App.~\ref{app:rungs}). \textbf{Sharpening
 replicates:} at tier 1, recycling
 buys mean@16 $+.046$ ($.278{\pm}.054 \to .324{\pm}.012$) and pays
 $-.049$ of $\passat{16}$ ($.541{\pm}.020 \to .492{\pm}.011$). The
+claim quantifies over $k$, so Fig.~\ref{fig:passk} shows it over $k$:
+the ungated arm starts \emph{above} baseline at $k{=}1$ and crosses
+below between $k{=}2$ and $k{=}4$, with the deficit widening to
+$k{=}16$ --- the crossing is the phenomenon.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.52\linewidth]{figures/fig9_passk}
+\caption{\textbf{Sharpening is a crossing in $k$ (Countdown tier 1,
+step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).}
+Ungated recycling is above baseline at $k{=}1$ (mean up) and below by
+$k{=}4$ (coverage down); the deficit widens with $k$. The gated arm
+tracks baseline at low $k$ with a smaller high-$k$ deficit. Endpoints
+cross-check the 3-seed scoreboard; per-$k$ telemetry is from the seed-1
+logs.}
+\label{fig:passk}
+\end{figure} The
 coverage loss clears both arms' seed spreads ($>2\times$); the mean
 gain clears the treated arm's tight spread but sits within the noisier
 baseline's --- we report it as directionally consistent across seeds
