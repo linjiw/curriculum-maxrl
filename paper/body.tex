@@ -1625,11 +1625,17 @@ policy & exact tabular & 1.26M transformer & SmolLM2-360M & SmolLM2-360M (SFT) \
 rollouts $N$ & 16 & 32 & 16 & 16 \\
 groups/step & 1 & 8 & 64 & 64 \\
 optimizer, lr & SGD, 0.5 & AdamW, $10^{-4}$ & AdamW, $10^{-5}$ & AdamW, $10^{-5}$ \\
-budget & 3{,}200 groups & 2{,}400 s clock & 50 steps & 60 steps \\
-seeds (headline) & 5--10 & 3 & 1--2/cell & 3/arm \\
+budget & 3{,}200 groups & 2{,}400 s / 250 steps$^{\dagger}$ & 50 steps & 60 steps \\
+seeds (headline) & 5--10 & 3 / 6 blocks$^{\dagger}$ & 1--2/cell & 3/arm \\
 compute/run & CPU-min & 0.7 A10G-h & ${\sim}20$ A10G-h & ${\sim}6$ A10G-h \\
 \bottomrule
 \end{tabular}
+
+\smallskip
+{\footnotesize $^{\dagger}$cohort runs (\S 6.3) used 2{,}400 s
+wall-clock; the balanced factorial and its confirmation wave use 250
+fixed steps (matched generation and optimization budget) over six seed
+blocks --- the two protocols are never mixed within a comparison.}
 \end{table}
 
 \begin{table}[h]
