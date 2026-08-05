@@ -12,12 +12,14 @@ Endpoint: paired (same seed block, same sampler) MaxRL − GRPO on
 Δ mean pass@8 (final step-250 eval minus post-SFT), ≥5/6 blocks
 positive under BOTH samplers required.
 
+Final counts (all 12 blocks, repair pass folded in):
+
 - uniform: **3/6 positive** (+.154, +.014, −.014, −.019, .000, +.014)
-- frontier_un (blocks complete so far): **1/3 positive**
+- frontier_un: **4/6 positive**
 
 Per the committed branch: the abstract's estimator-conditioned
 coverage claim is **dropped, not softened**. Additional damage to the
-old cohort claim: only **3/10 MaxRL cells grew coverage at all** —
+old cohort claim: only **4/12 MaxRL cells grew coverage at all** —
 "every MaxRL-labeled run grows pass@8" does not replicate in a
 balanced, no-hindsight design. The cohort pattern conflated
 recycling's coverage contribution with the estimator effect (the
@@ -27,12 +29,12 @@ the estimator).
 ## What survives (exploratory, NOT registered — next prereg's hypothesis)
 
 - **Time-integrated coverage ordering**: MaxRL > GRPO on coverage-AUC
-  (mean in-training cov8 minus init) in **9/9 completed pairs across
-  both samplers** (would be p=.0039 had it been registered; it was
-  not). Means: uniform −.009 vs −.027; teacher +.007 vs −.025.
+  (mean in-training cov8 minus init) in **12/12 pairs across both
+  samplers** (would be p=.0005 had it been registered; it was not).
+  Arm means: uniform −.009 vs −.027; teacher +.005 vs −.025.
 - **Easy-band asymmetry**: MaxRL loses less easy-band (L1–3) coverage
-  in 7/9 pairs (p=.18); GRPO's mean easy-band loss is 2× MaxRL's
-  (−.208 vs −.101 under uniform).
+  in 9/12 pairs (p=.15); GRPO's mean easy-band loss is ~2× MaxRL's
+  (−.208 vs −.101 under uniform; −.139 vs −.024 under the teacher).
 - The endpoint metric is a single 16-maze/level eval (noise ~±.03 per
   eval) against effects of ~.02–.05 — the registered endpoint was
   likely underpowered relative to eval noise. Design lesson recorded;
@@ -41,15 +43,15 @@ the estimator).
 ## P-G0a (grpo_mass; standing prereg 2026-08-04): CONFIRMED
 
 GRPO scheduled by its own mass functional loses coverage like every
-other GRPO arm (mean Δcov8 −.040 vs uniform-GRPO −.042; 4/5 cells
-negative). No scheduler choice rescued the estimator — the
-"teacher-estimator mismatch" alternative is closed at neural scale
+other GRPO arm (final: mean Δcov8 −.042 = uniform-GRPO's −.042; 5/6
+cells negative, one zero). No scheduler choice rescued the estimator —
+the "teacher-estimator mismatch" alternative is closed at neural scale
 too (matches the exact-rung result).
 
 ## P-G0c (grpo_nostd holds easy band): FAILED → committed revision executes
 
 Prediction: no-std GRPO holds easy-band pass@8 in ≥2/3 seeds.
-Result: easy band negative in **5/5 seeds** (mean −.213, same as
+Result: easy band negative in **6/6 seeds** (mean −.201, same as
 sample-SD GRPO's −.208). Per the committed branch: at neural scale
 the easy-band liquidation is NOT explained by variance normalization
 alone — mean-centered advantages without normalization lose the easy
@@ -62,11 +64,11 @@ by side.
 
 ## Interaction (exploratory): teacher does NOT amplify GRPO's decay
 
-teacher−uniform Δcov8 under GRPO: +.111, +.019, +.038, −.024, −.043
-(mean +.020 — mildly protective, not amplifying). Under MaxRL:
-−.062, +.067, +.058, +.029 (mean +.023). The GSM8K P-G2 story
-(teacher-induced GRPO regression) receives NO corroboration from the
-maze factorial at this budget.
+Final: teacher−uniform Δcov8 under GRPO: +.111, +.019, −.014, +.038,
+−.024, −.043 (mean +.015 — mildly protective, not amplifying). Under
+MaxRL: −.062, +.019, +.067, +.058, +.029, +.014 (mean +.021). The
+GSM8K P-G2 story (teacher-induced GRPO regression) receives NO
+corroboration from the maze factorial at this budget.
 
 ## Protocol notes
 
