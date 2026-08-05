@@ -37,12 +37,14 @@ import os
 import numpy as np
 
 from testbed import SkillChainEnv
-from estimators import weights_maxrl, weights_grpo, weights_rloo
+from estimators import (weights_maxrl, weights_grpo, weights_rloo,
+                        weights_grpo_nostd)
 from teachers import AdvMassTeacher
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-ESTS = {"maxrl": weights_maxrl, "grpo": weights_grpo, "rloo": weights_rloo}
+ESTS = {"maxrl": weights_maxrl, "grpo": weights_grpo, "rloo": weights_rloo,
+        "grpo_nostd": weights_grpo_nostd}
 
 
 def coverage(env: SkillChainEnv, k: int) -> float:

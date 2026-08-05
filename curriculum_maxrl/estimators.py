@@ -31,6 +31,19 @@ def weights_grpo(r: np.ndarray) -> np.ndarray:
     return (r - r.mean()) / (std + EPS) / n
 
 
+def weights_grpo_nostd(r: np.ndarray) -> np.ndarray:
+    """Dr.-GRPO-style: mean-centered, NO std normalization (R1-Q3 arm).
+
+    Expected mass E[sum|w|] = 2K(N-K)/N^2 -> 2p(1-p): RLOO's profile
+    (Prop 2), so the mass account predicts this variant does NOT
+    over-serve the mastered tail the way sample-SD GRPO does. If it
+    still loses coverage under a fixed schedule, the mechanism is
+    mean-centering (success conditioning), not variance normalization.
+    """
+    n = len(r)
+    return (r - r.mean()) / n
+
+
 def weights_maxrl(r: np.ndarray) -> np.ndarray:
     """Variance-reduced MaxRL estimator, eq. (10)/Algorithm 1 of the paper.
 

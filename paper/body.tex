@@ -798,7 +798,15 @@ exact summed $\passat{8}$ survives with the schedule held fixed
 \texttt{results\_schedule\_matched.json}), with the caveat that on
 that learnable-everywhere pool GRPO still gains coverage --- the
 neural-scale \emph{loss} is what the balanced maze factorial must
-test.
+test. The same replay includes the reviewer-requested no-SD ablation:
+a mean-centered, un-normalized GRPO (Dr.GRPO-style) drops to RLOO's
+coverage profile under both frozen schedules ($\Delta$cov@8 $.148$
+vs.\ RLOO's $.161$ under the teacher schedule; sample-SD GRPO $.762$)
+--- exactly what the mass account predicts, since without the
+$\sqrt{K(N{-}K)}$ normalization its expected mass is
+$2K(N{-}K)/N^2 \approx$ RLOO's $2p(1{-}p)$; the variance
+normalization, not mean-centering, is what moves GRPO's mass onto the
+tails.
 Whether the teacher \emph{amplifies} GRPO's decay is a
 factorial (interaction) question this suite is not powered for; the
 GSM8K $2{\times}2$ below tests exactly that cell, pre-registered.
