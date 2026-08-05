@@ -6,6 +6,11 @@
 
 | # | run | status | purpose |
 |---|---|---|---|
+| FACT-W2 | confirmation factorial wave 2: {maxrl,grpo}×{uniform,frontier_un}× fresh blocks 6–11 | **RUNNING** (`maze_gpu/run_factorial_wave2.sh`, prereg d6aea90 committed pre-launch) | P-F2: the 12/12 exploratory covAUC ordering becomes the registered primary on new blocks; falsification branch: ≤4/6 either sampler → no cross-estimator coverage claim of any kind at neural scale. P-F3: easy-band majority sign test |
+
+
+| # | run | status | purpose |
+|---|---|---|---|
 | FACT | balanced maze factorial {maxrl,grpo}×{uniform,frontier_un}×6 blocks + grpo_mass + grpo_nostd (250 fixed steps) | **DONE — P-F1 FAILED, claim retracted in paper (e27b5d9); P-G0a confirmed; P-G0c failed. Verdict: `maze_gpu/FACTORIAL_VERDICT.md`. Repair pass folding in contention casualties.** | draft-review P0-3: P-F1 prereg, falsification branch committed — and executed |
 | ARM-A/B | designed-gate B3 ×3 + replay control ×3 (Countdown) | queued (lock held, waits for GPU headroom) | fixed-code gate validation + dose-matched replay |
 | E-LLM-1b | steering-controlled GSM8K (m3s died at step-25 ckpt, node OOM) | chained behind ARM-B completion | decisive LLM-scale cell |
