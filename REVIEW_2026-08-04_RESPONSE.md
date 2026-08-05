@@ -8,16 +8,16 @@ verdicts below with what changed and what is running.
 
 | finding | verdict | resolution |
 |---|---|---|
-| P0-1 gate is not a destination pass-rate gate | **VALID** | reframed in text (renamed); genuine `p(g')` gate open |
-| P0-2 mixed-target relabel groups ≠ MaxRL objective | **VALID** | characterized as weighted-SFT in Remark 3 |
-| P0-3 title claim not causally identified | **VALID** | balanced factorial RUNNING (prereg committed) |
-| P0-4 page/abstract budget | **VALID (deferred)** | needs a dedicated cut pass — see plan |
-| P1 Prop 3 false at `N_i = 0` | **VALID** | fixed: `n_i >= 1` mandatory + defect stated |
-| P1 intended gate not validated | **VALID** | already disclosed in 6.9; ARM A (designed gate, 3 seeds) queued |
-| P1 mass magnitudes normalization-dependent | **VALID** | caveat added to Prop 2 interp; grpo_nostd arm running |
-| P1 LLM figure outruns evidence | **VALID** | fig3 + fig2d now show both seeds; noise as scale bar |
-| P1 artifact not self-contained | **VALID** | hindsight.py vendored + manifest gaps closed (partial) |
-| P1 novelty wording | **VALID** | narrowed, "to our knowledge" + search caveat |
+| P0-1 gate is not a destination pass-rate gate | **VALID** | renamed everywhere + **measured**: true-p gate beats freq heuristic 10/10; f_hat anti-correlates with p(g') |
+| P0-2 mixed-target relabel groups ≠ MaxRL objective | **VALID** | Remark 3 characterization + **measured** (coupling costs, 10/10) + LLM ablation flag shipped |
+| P0-3 title claim not causally identified | **VALID — RESOLVED BY RETRACTION**: factorial ran, P-F1 failed, falsification branch executed in paper + site |
+| P0-4 page/abstract budget | **VALID** | CFP verified (9pp strict); abstract restructured; pass-1 cuts done; Prop 3 → appendix |
+| P1 Prop 3 false at `N_i = 0` | **VALID** | fixed (`n_i >= 1` + defect stated) and moved to appendix per review's best-fix |
+| P1 intended gate not validated | **VALID** | disclosed in 6.9; ARM A (designed gate ×3 seeds) queued on GPU |
+| P1 mass magnitudes normalization-dependent | **VALID** | caveat in Prop 2 interp; no-std measured at BOTH rungs (they split — reported side by side) |
+| P1 LLM figure outruns evidence | **VALID** | fig3 + fig2d show both seeds; noise as scale bar |
+| P1 artifact not self-contained | **VALID** | hindsight.py + factorial prereg/verdict vendored; fig2 a/b/c regenerate with mismatch-fail scripts |
+| P1 novelty wording | **VALID** | narrowed + all five 2026 citations verified (one k-value error found & fixed) |
 | Venue: ICLR not ICRA | **AGREE** | ICLR wrapper is primary |
 
 ## P0-1: the gate statistic (verified against code — the review is right)
