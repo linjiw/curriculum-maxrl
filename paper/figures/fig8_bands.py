@@ -160,7 +160,7 @@ axb.annotate("erosion starts in the\nfirst ~25–50 steps,\nno level saturated",
                              connectionstyle="arc3,rad=0.2",
                              shrinkA=2, shrinkB=2))
 axb.set_xlabel("wall-clock (s), matched budget")
-axb.set_ylabel(r"diversity premium $\overline{p@8 - p@1}$")
+axb.set_ylabel(r"coverage--reliability gap $\overline{p@8 - p@1}$")
 axb.set_title("(b) When it goes", loc="left", fontsize=9)
 axb.set_xlim(0, None)
 axb.set_ylim(0, None)

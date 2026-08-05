@@ -44,7 +44,7 @@
    ],
    "command": "python paper/figures/fig3_gsm8k.py",
    "checksums": {
-    "paper/figures/data/fig3_gsm8k_data.json": "2fae90adccc9ac71"
+    "paper/figures/data/fig3_gsm8k_data.json": "cf19fc758d2e7c56"
    }
   },
   "fig4_algorithm": {
