@@ -39,7 +39,7 @@ RUNNING / DEFERRED (with reason) / DISPUTED (with counter-evidence).
 | Outcome switching | FIXED (abstract) |
 | Noise-floor inconsistency (Countdown +.046) | FIXED (requalified as directional) |
 | 6/6 tally | FIXED |
-| IsaacLab n=1 framing (Q7) | OPEN — reword 'lands the null exactly' to 'consistent with the null; underpowered alone' |
+| IsaacLab n=1 framing (Q7) | FIXED ('consistent with the null; underpowered alone at one seed') |
 
 ## R4 (HER, 5)
 | Item | Status |
@@ -51,14 +51,14 @@ RUNNING / DEFERRED (with reason) / DISPUTED (with counter-evidence).
 | Gate stats | QUEUED (ARM A) |
 | Exactness instrument | OPEN — honest sentence exists; no new instrument proposed (acknowledge in rebuttal) |
 | Granularity (Q2) | FIXED (Alg 1 line 5) |
-| Gate cold-start (Q3) | OPEN — one sentence needed: Beta(1,1) prior => p_hat=.5 => admitted at gate_max_p=.5 boundary; specify tie-break |
+| Gate cold-start (Q3) | FIXED (Alg 1 line: Beta(1,1) prior p_hat=.5, admitted at default threshold) |
 
 ## R5 (AC, 6)
 | Item | Status |
 |---|---|
 | Abstract inversion | FIXED |
 | GRPO-own-teacher | QUEUED |
-| Theory-scope vs method tension (flat-over-band arm) | OPEN — cheap CPU arm; worth running (chains harness exists) |
+| Theory-scope vs method tension (flat-over-band arm) | FIXED WITH DATA (part J: indicator-over-band loses 0/10, .681 vs .743 — zeros alone don't suffice; Remark updated with u_N's refined standing) |
 | Compression damage / 6.7 | DEFERRED to post-verdict restructure |
 | n=1 links | QUEUED (ARM A) / labeled |
 | 'Closed-form curriculum' oversold | OPEN — retitle contribution 1 in restructure |
