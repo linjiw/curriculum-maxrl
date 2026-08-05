@@ -119,28 +119,39 @@ axc.set_ylabel("AUC")
 axc.set_title("(c) Maze (3 seeds)", loc="left", fontsize=9)
 
 # ------------------------------------------------- (d) GSM8K 2x2
+# review fix 2026-08-05: both seeds plotted (registered = bar,
+# replication seed 2 = open marker); no per-bar error whiskers — the
+# repeated-eval SD reads as method-level uncertainty when drawn on
+# bars, so it is quoted in the corner note instead
 vals_d = DATA["panel_d"]["mean_at_4"]
+vals_d2 = DATA["panel_d"].get("mean_at_4_seed2", [None] * 4)
 labels_d = DATA["panel_d"]["labels"]
 colors_d = [MAGENTA, MAGENTA, BLUE, BLUE]
-# same-model eval noise floor (repeated evals of one checkpoint):
-# evaluation noise, not training-seed uncertainty
 NOISE_SD = DATA["panel_d"]["eval_noise_sd"]
-axd.bar(range(4), vals_d, color=colors_d, yerr=[NOISE_SD] * 4, capsize=3,
-        error_kw=dict(lw=0.8, ecolor="#333333", zorder=4), **BAR_KW)
+axd.bar(range(4), vals_d, color=colors_d, **BAR_KW)
 for i, v in enumerate(vals_d):
-    axd.text(i, v + NOISE_SD + 0.004, f"{v:.3f}".lstrip("0"),
+    axd.text(i, v + 0.004, f"{v:.3f}".lstrip("0"),
              fontsize=VAL_FS, ha="center", va="bottom", color="#333333")
+for i, v in enumerate(vals_d2):
+    if v is None:
+        continue
+    axd.plot([i], [v], marker="o", ms=4, mfc="white", mec=colors_d[i],
+             mew=1.1, zorder=5)
+    axd.text(i + 0.13, v, f"{v:.3f}".lstrip("0"), fontsize=6.5,
+             ha="left", va="center", color=colors_d[i])
 axd.annotate("only regressing\ncell (reg. run)", xy=(1.3, 0.080),
              xytext=(2.1, 0.032), fontsize=7.5, color=GRAY,
              ha="center", va="center", style="italic",
              arrowprops=dict(arrowstyle="->", lw=0.7, color=GRAY,
                              connectionstyle="arc3,rad=-0.2",
                              shrinkA=2, shrinkB=3))
-axd.text(0.02, 0.985, "bars: same-model\neval noise SD",
+axd.text(0.02, 0.985,
+         "bars: registered seed\n○: replication seed\n"
+         f"(eval noise SD {NOISE_SD:.4f})".replace("0.", "."),
          transform=axd.transAxes, fontsize=7, color=GRAY,
          ha="left", va="top", style="italic")
 slanted_ticks(axd, labels_d)
-axd.set_ylim(0, 0.168)
+axd.set_ylim(0, 0.185)
 axd.set_ylabel("final val mean@4")
 axd.set_title("(d) GSM8K 2×2\n(pre-registered)", loc="left", fontsize=9)
 

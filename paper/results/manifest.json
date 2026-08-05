@@ -34,7 +34,7 @@
    ],
    "command": "python paper/figures/fig2_ladder.py",
    "checksums": {
-    "paper/figures/data/fig2_ladder_data.json": "8437780ce6a60672"
+    "paper/figures/data/fig2_ladder_data.json": "4046e7caeb588ddd"
    }
   },
   "fig3_gsm8k": {
