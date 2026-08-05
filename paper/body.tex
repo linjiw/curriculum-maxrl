@@ -1068,13 +1068,17 @@ $k{=}16$ --- the crossing is the phenomenon.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.52\linewidth]{figures/fig9_passk}
-\caption{\textbf{Sharpening is a crossing in $k$ (Countdown tier 1,
-step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).}
-Ungated recycling is above baseline at $k{=}1$ (mean up) and below by
-$k{=}4$ (coverage down); the deficit widens with $k$. The gated arm
-tracks baseline at low $k$ with a smaller high-$k$ deficit. Endpoints
-cross-check the 3-seed scoreboard; per-$k$ telemetry is from the seed-1
-logs.}
+\caption{\textbf{Sharpening is a crossing in $k$, and the gate rotates
+it (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16
+samples, $n{=}128$).} Ungated recycling is above baseline at $k{=}1$
+(mean up) and below by $k{=}4$ (coverage down), the deficit widening
+with $k$. Gate strength rotates the curve: the moderate gate tracks
+baseline at low $k$ with a smaller high-$k$ deficit; the full-strength
+gate (hollow) pays at $k{=}1$ and finishes \emph{above} baseline at
+$k{=}16$ --- one dial trading the two ends of the same curve.
+Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry from
+the seed-1 logs. The \S 6.9 ARM-A rerun at the designed operating
+point (in flight) will test whether this rotation is stable.}
 \label{fig:passk}
 \end{figure} The
 coverage loss clears both arms' seed spreads ($>2\times$); the mean

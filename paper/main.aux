@@ -88,8 +88,8 @@
 \citation{hgg}
 \citation{cher}
 \citation{skewfit}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Sharpening is a crossing in $k$ (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).} Ungated recycling is above baseline at $k{=}1$ (mean up) and below by $k{=}4$ (coverage down); the deficit widens with $k$. The gated arm tracks baseline at low $k$ with a smaller high-$k$ deficit. Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry is from the seed-1 logs.}}{15}{figure.53}\protected@file@percent }
-\newlabel{fig:passk}{{8}{15}{\textbf {Sharpening is a crossing in $k$ (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).} Ungated recycling is above baseline at $k{=}1$ (mean up) and below by $k{=}4$ (coverage down); the deficit widens with $k$. The gated arm tracks baseline at low $k$ with a smaller high-$k$ deficit. Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry is from the seed-1 logs}{figure.53}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {Sharpening is a crossing in $k$, and the gate rotates it (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).} Ungated recycling is above baseline at $k{=}1$ (mean up) and below by $k{=}4$ (coverage down), the deficit widening with $k$. Gate strength rotates the curve: the moderate gate tracks baseline at low $k$ with a smaller high-$k$ deficit; the full-strength gate (hollow) pays at $k{=}1$ and finishes \emph  {above} baseline at $k{=}16$ --- one dial trading the two ends of the same curve. Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry from the seed-1 logs. The \S  6.9 ARM-A rerun at the designed operating point (in flight) will test whether this rotation is stable.}}{15}{figure.53}\protected@file@percent }
+\newlabel{fig:passk}{{8}{15}{\textbf {Sharpening is a crossing in $k$, and the gate rotates it (Countdown tier 1, step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).} Ungated recycling is above baseline at $k{=}1$ (mean up) and below by $k{=}4$ (coverage down), the deficit widening with $k$. Gate strength rotates the curve: the moderate gate tracks baseline at low $k$ with a smaller high-$k$ deficit; the full-strength gate (hollow) pays at $k{=}1$ and finishes \emph {above} baseline at $k{=}16$ --- one dial trading the two ends of the same curve. Endpoints cross-check the 3-seed scoreboard; per-$k$ telemetry from the seed-1 logs. The \S 6.9 ARM-A rerun at the designed operating point (in flight) will test whether this rotation is stable}{figure.53}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7}Related work}{15}{section.54}\protected@file@percent }
 \citation{codeit}
 \citation{minimo}
@@ -102,12 +102,12 @@
 \@writefile{toc}{\contentsline {paragraph}{Scale, and a retraction.}{16}{section*.56}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Where the teacher cannot work as specified.}{16}{section*.57}\protected@file@percent }
 \bibcite{maxrl}{{1}{2026}{{Tajwar et al.}}{{}}}
-\bibcite{disco}{{2}{2025}{{Li et al.}}{{}}}
 \@writefile{toc}{\contentsline {paragraph}{Scope of the surrogate.}{17}{section*.58}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{The coverage main effect is pool-conditional.}{17}{section*.59}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{17}{section*.60}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{17}{section*.61}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{17}{section.62}\protected@file@percent }
+\bibcite{disco}{{2}{2025}{{Li et al.}}{{}}}
 \bibcite{scsdpo}{{3}{2026}{{Liu et al.}}{{}}}
 \bibcite{yue}{{4}{2025}{{Yue et al.}}{{}}}
 \bibcite{yuan}{{5}{2026}{{Yuan et al.}}{{}}}
@@ -143,12 +143,12 @@
 \@writefile{toc}{\contentsline {paragraph}{6.1 control battery (full).}{19}{section*.67}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.5 IsaacLab protocol.}{19}{section*.68}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.6 gym control (full).}{19}{section*.71}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{19}{section*.74}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \textbf  {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$.}}{20}{figure.70}\protected@file@percent }
 \newlabel{fig:gym}{{9}{20}{\textbf {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$}{figure.70}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces \textbf  {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\text  {pass@}1$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference.}}{20}{figure.73}\protected@file@percent }
 \newlabel{fig:ksweep}{{10}{20}{\textbf {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\passat {1}$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference}{figure.73}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{20}{section*.75}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{20}{section*.74}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{21}{section*.75}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{6.7 posterior diagnostics and harness caveats (full).}{21}{section*.76}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Relabeling in a PPO-family loop: the wiring contract.}{21}{section*.77}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  \ref  {sec:limits}).}{21}{section*.78}\protected@file@percent }

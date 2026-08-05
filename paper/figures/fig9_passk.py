@@ -44,10 +44,12 @@ plt.rcParams.update({
 
 K = [1, 2, 4, 8, 16]
 # step-60 tier-1 unbiased best@k, seed 1 (ray sessions 07-29_05 B1,
-# 07-28_22 B2, 07-29_02 B3; mean@16 as the k=1 point)
+# 07-28_22 B2, 07-29_02 B3, 07-30_06 full-strength gate;
+# mean@16 as the k=1 point)
 B1 = [0.310, 0.384, 0.451, 0.509, 0.559]
 B2 = [0.334, 0.388, 0.428, 0.459, 0.485]
 B3 = [0.309, 0.374, 0.425, 0.459, 0.475]
+FG = [0.220, 0.316, 0.412, 0.499, 0.564]
 
 fig, ax = plt.subplots(figsize=(3.6, 2.8))
 
@@ -56,6 +58,8 @@ ax.plot(K, B2, color=MAGENTA, marker="s", ms=4, lw=1.6, ls="--",
         label="recycling, ungated")
 ax.plot(K, B3, color=ORANGE, marker="^", ms=4.5, lw=1.6, ls="-.",
         label="recycling + gate")
+ax.plot(K, FG, color=ORANGE, marker="^", ms=4.5, lw=1.3, ls=":",
+        mfc="white", label="full-strength gate")
 
 ax.set_xscale("log", base=2)
 ax.set_xticks(K, [str(k) for k in K])
