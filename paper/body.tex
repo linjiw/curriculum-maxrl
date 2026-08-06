@@ -786,7 +786,11 @@ normalization caveat as a limitation: on pools where everything is
 learnable, more learning of any kind buys coverage, and only the
 premium separates the estimators; the neural-scale claim (below) is
 the one tested at matched budgets \emph{and} identical optimizer
-settings. \emph{Found exploratorily, then registered
+settings --- and its premium version also holds there (exploratory,
+computed after the lr sweep identified the premium as the invariant
+currency: time-integrated premium delta positive in 24/24 paired
+factorial blocks across both waves; artifact
+\texttt{premium\_reanalysis.json}). \emph{Found exploratorily, then registered
 and confirmed on fresh randomness}: on time-integrated coverage (mean
 in-training $\passat{8}$ minus warmstart), MaxRL retains more coverage
 than GRPO in \textbf{12/12} wave-1 paired blocks --- a

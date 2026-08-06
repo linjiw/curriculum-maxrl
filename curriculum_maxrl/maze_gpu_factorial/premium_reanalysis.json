@@ -1,0 +1,55 @@
+{
+ "_comment": "EXPLORATORY post-hoc reanalysis (2026-08-06, after the lr-matched sweep identified the coverage-reliability premium as the recalibration-invariant currency): time-integrated premium (mean over in-training evals of [mean pass@8 - mean sampled pass] minus warmstart), paired MaxRL - GRPO per block. NOT registered for either wave; stated as exploratory wherever quoted.",
+ "wave1/uniform": {
+  "n_pos": 6,
+  "n": 6,
+  "mean": 0.0204,
+  "per_seed": [
+   0.0337,
+   0.0271,
+   0.02,
+   0.0075,
+   0.0178,
+   0.0166
+  ]
+ },
+ "wave1/frontier_un": {
+  "n_pos": 6,
+  "n": 6,
+  "mean": 0.0355,
+  "per_seed": [
+   0.0321,
+   0.0497,
+   0.0389,
+   0.0306,
+   0.036,
+   0.0255
+  ]
+ },
+ "wave2/uniform": {
+  "n_pos": 6,
+  "n": 6,
+  "mean": 0.0175,
+  "per_seed": [
+   0.0203,
+   0.0168,
+   0.013,
+   0.0103,
+   0.0113,
+   0.0334
+  ]
+ },
+ "wave2/frontier_un": {
+  "n_pos": 6,
+  "n": 6,
+  "mean": 0.0288,
+  "per_seed": [
+   0.0303,
+   0.0353,
+   0.0348,
+   0.026,
+   0.0079,
+   0.0384
+  ]
+ }
+}
