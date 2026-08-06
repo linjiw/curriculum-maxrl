@@ -776,15 +776,22 @@ estimator.
 each estimator preserve MaxRL over GRPO in 10/10
 seed$\times$schedule pairs (artifact
 \texttt{results\_schedule\_matched.json}) --- the ordering is robust
-where gradients are exact. \emph{Exploratory, from the same
-factorial}: on time-integrated coverage (mean in-training $\passat{8}$
-minus warmstart, a noise-integrating secondary we did not register),
-MaxRL retains more coverage than GRPO in \textbf{12/12} paired blocks
-across both samplers, concentrated in the easy band (GRPO's easy-band
-loss $2\times$ MaxRL's, 9/12 pairs) --- where the mass curves say GRPO
-overspends. That is the hypothesis a registered endpoint should
-target, and a confirmation wave on six fresh seed blocks is running
-with exactly that endpoint and a committed falsification branch.
+where gradients are exact. \emph{Found exploratorily, then registered
+and confirmed on fresh randomness}: on time-integrated coverage (mean
+in-training $\passat{8}$ minus warmstart), MaxRL retains more coverage
+than GRPO in \textbf{12/12} wave-1 paired blocks --- a
+noise-integrating secondary we had not registered, so we
+pre-registered it as the primary of a confirmation wave on six fresh
+seed blocks (P-F2, $\ge$5/6 under both samplers, committed
+falsification branch) and it \textbf{confirmed at 6/6 under each
+sampler} (exact two-sided sign $p{=}0.031$ per sampler; means
+$+.015$/$+.024$), with the easy-band concentration replicating at
+10/12 pairs (P-F3; GRPO's easy-band loss ${\sim}2\times$ MaxRL's) ---
+where the mass curves say GRPO overspends. Across both waves the
+ordering stands 24/24 paired blocks. The retired \emph{endpoint}
+contrast, unregistered on the fresh blocks, landed 5/6 there ---
+consistent with the power analysis (\S\ref{sec:limits}) and left
+retired; the claim this paper makes is the time-integrated one.
 
 \subparagraph{Three controls close alternative readings.}
 \emph{Scheduler mismatch}: GRPO driven by its \emph{own} exact mass
@@ -1094,12 +1101,17 @@ gate setting is confounded with the decay-code version, and at tier 1
 the moderate gate moved \emph{both} point estimates below the ungated
 arm. We claim the moderate frontier-tier setting as one useful
 operating point and defer the dial claim to the pre-registered
-fixed-decay sweep. In-run telemetry shows the mechanism
-(Fig.~\ref{fig:sharpening}b--c): rejection rises $.12 \to .85$ as the
-reachable set saturates, and the gated arm ends with \emph{more} policy
-entropy than the no-recycling baseline. A pre-registered
-$\texttt{gate\_max\_p}$ dose sweep at fixed decay is the standing
-follow-up.
+fixed-decay sweep. The first designed-operating-point seed from that
+sweep (rejection fraction $.93$; artifact
+\texttt{armA\_b3fix\_s1.json}) lands at the recycling-off end ---
+tier-1 mean \emph{below} the no-recycling baseline --- consistent with
+``strong gating $\approx$ no recycling'' rather than a wide usable
+middle; remaining seeds are running, and if they agree, the usable
+range of the trade is narrower than the design intended. In-run
+telemetry shows the mechanism (Fig.~\ref{fig:sharpening}b--c):
+rejection rises $.12 \to .85$ as the reachable set saturates, and the
+gated arm ends with \emph{more} policy entropy than the no-recycling
+baseline.
 \takeaway{Sharpening is a reproducible property of exact-verifier
 recycling, and the saturation gate buys back frontier-tier coverage at
 a measured mean price --- one validated operating point, with the
