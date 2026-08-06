@@ -650,7 +650,8 @@ budget (P-G1).}
 \end{figure}
 
 \paragraph{6.1 Does allocation saturate? (exact-gradient skill chains; CPU, 5 seeds).} Uniform 0.650
-$\to$ teacher 0.728 $\to$ full stack $\mathbf{0.890 \pm 0.002}$ AUC. An
+$\to$ teacher 0.728 $\to$ full stack $\mathbf{0.890 \pm 0.002}$ AUC
+(Fig.~\ref{fig:ladder}a). An
 eight-arm control battery (App.~\ref{app:rungs}) orders into a
 \emph{gradient-information ladder}, each rung a 5/5 paired-seed win:
 zero-information dose ($0.798$--$0.800$) $<$ replayed correct direction
@@ -893,7 +894,8 @@ the steering telemetry that separates the two seeds.}
 
 \paragraph{6.7 Does it transfer to LLM scale? (GSM8K $2{\times}2$,
 pre-registered; SmolLM2-360M, $N{=}16$, one A10G).} Predictions committed before any cell
-finished. \textbf{P-G2 landed on the registered run:} GRPO+teacher
+finished. \textbf{P-G2 landed on the registered run
+(Fig.~\ref{fig:gsm8k}):} GRPO+teacher
 was the only cell that regressed in its second half; the deciding
 statistic is the endpoint deficit against plain GRPO, $2$--$4\times$
 the measured same-model eval noise (mean@4 $-.027$; $\passat{4}$
