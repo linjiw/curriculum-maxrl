@@ -112,6 +112,12 @@
    "checksums": {
     "paper/figures/data/ksweep_results.json": "3e0bd4accd4c1b6e"
    }
+  },
+  "fig9_passk": {
+   "script": "paper/figures/fig9_passk.py",
+   "inputs": [],
+   "command": "python paper/figures/fig9_passk.py",
+   "notes": "per-k points transcribed in-script from ray worker logs (sessions 07-29_05 B1, 07-28_22 B2, 07-29_02 B3, 07-30_06 full-strength), seed 1, step-60 unbiased best@k, n=128; endpoints cross-check b_scoreboard_3seed.json; full-strength curve retained faded with the P-R1 refutation note in the caption (2026-08-06)"
   }
  }
 }
