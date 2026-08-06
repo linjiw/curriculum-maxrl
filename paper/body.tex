@@ -693,18 +693,14 @@ contributes nothing because there is nothing learnable to allocate
 toward. Equivalently: a designer who hand-added the achieved sub-goals
 to the pool would also escape the zero --- what recycling buys is
 \emph{discovering} that sub-pool from the policy's own failures, with
-no task engineering. One loss-level alternative remains: the MaxRL
-paper's own Eq.~(10) keeps the control-variate term $-\frac1N\sum_i
-S_i$ on all-fail groups, so that estimator is \emph{not} silent at
-$K{=}0$ ($\mathbb{E}[\hat g \mid K{=}0] = \nabla p/(1-p)$, MC-verified).
-We ran it (5 seeds, matched budget; artifact
-\texttt{results\_fullcv\_baseline.json}): on this pool the full-CV
-variant spends 100\% of its update norm on all-fail groups and still
-scores $0.000$ in every seed, with or without the teacher --- the
-all-fail term pushes down every sampled action symmetrically and
-cannot ignite a pool this deep, while recycling under either variant
-reaches $0.98$. On the balanced pool the two variants tie (paired
-$\Delta$AUC straddles zero, 5 seeds).
+no task engineering. The one loss-level alternative --- the full
+control-variate estimator, which is \emph{not} silent at $K{=}0$ ---
+also scores $0.000$ in every seed on this pool despite spending 100\%
+of its update norm on all-fail groups: the all-fail term pushes every
+sampled action down symmetrically and cannot ignite a pool this deep
+(5 seeds, matched budget; artifact
+\texttt{results\_fullcv\_baseline.json}; detail in
+App.~\ref{app:rungs}).
 \takeaway{Where nothing is learnable at budget, sampling policy is
 irrelevant --- uniform and teacher tie at zero without recycling and
 tie at 0.93 with it. Even the estimator family's nonzero all-fail
@@ -1274,30 +1270,21 @@ postmortems live in the repository's audit trail.
 For the practical success-conditioned estimator under i.i.d.\ binary
 rewards, the expected absolute coefficient mass of a prompt is exactly
 $2(\passat{N} - \passat{1})$, and the drop-all-fail implementation
-targets truncation order $N{-}1$. That identity supplies a
+targets truncation order $N{-}1$. The identity supplies a
 compute-aware sampling heuristic and motivates a saturation-based
-admission rule for verified relabels; it does not by itself prove a
-learning band, optimal prompt allocation, or on-policy hindsight, and
-we have been explicit about where each stronger reading fails ---
-including against ourselves: the balanced estimator-by-sampler
-factorial we pre-registered retired our own strongest neural claim at
-its registered endpoint, this paper reports that retraction in place
-rather than re-grading it, and the ordering that survived was then
-registered on fresh seed blocks and confirmed (\S 6.3b). What the
-record supports:
-an exact-rung estimator-conditioned coverage ordering that survives
-frozen schedules and its own controls, its time-integrated
-neural-scale form --- exploratory in wave 1 (12/12), registered and
-confirmed in wave 2 (6/6 per sampler, $p{=}.031$ each; 24/24 across
-both waves) --- a three-seed replication of
-recycling-induced sharpening on Countdown with one gated operating
-point that buys the coverage back, and a pre-registered negative
-(Jugs) marking where the whole family of interventions fails
-together. The remaining confirmatory experiments --- a fixed-code
-gate-strength sweep and a steering-controlled multi-seed LLM cell ---
-are pre-registered in the artifact with committed falsification
-branches, and the factorial shows we execute those branches when they
-fire. The portable practice we advocate is
+relabel admission rule; where each stronger reading fails, we say so
+--- including against ourselves: our first pre-registered factorial
+retired our strongest neural claim at its registered endpoint, and the
+ordering that survived was then registered on fresh seed blocks and
+confirmed (\S 6.3b). What the record supports: the exact-rung
+coverage ordering with its controls; its time-integrated neural form,
+confirmed in wave 2 (6/6 per sampler, 24/24 across waves);
+recycling-induced sharpening at three seeds with one gated operating
+point; and a pre-registered negative (Jugs) marking where the whole
+intervention family fails together. Remaining experiments (fixed-code
+gate sweep, steering-controlled LLM cell) are pre-registered with
+committed falsification branches --- which this paper demonstrably
+executes. The portable practice is
 independent of our method: measure coverage next to mean accuracy
 whenever a curriculum or recycler ships, conditioned on the estimator
 it ships on.
@@ -1459,6 +1446,18 @@ frontier form $0.733{\pm}.013$ (the derived form's payoff is $7\times$
 smaller seed variance); the $N{=}2$ slice $p(1{-}p)$ is a wash against
 uniform ($-.007$, 2/5 wins) where $u_N$ carries $+.078$ (5/5). AUC
 spread across arms is $9\times$ the final-performance spread.
+
+\paragraph{6.2 full-control-variate baseline (full).} The MaxRL
+paper's own Eq.~(10) keeps the control-variate term
+$-\frac1N\sum_i S_i$ on all-fail groups, so that estimator is
+\emph{not} silent at $K{=}0$
+($\mathbb{E}[\hat g \mid K{=}0] = \nabla p/(1-p)$, MC-verified). On
+the frontier-heavy pool it spends 100\% of its update norm on
+all-fail groups and still scores $0.000$ in every seed, with or
+without the teacher, while recycling under either variant reaches
+$0.98$; on the balanced pool the two variants tie (paired
+$\Delta$AUC straddles zero, 5 seeds). Artifact
+\texttt{results\_fullcv\_baseline.json}.
 
 \paragraph{6.3 inference-efficiency detail.} Convention: smallest $k$
 reaching absolute coverage $0.25$, log-interpolated; artifact

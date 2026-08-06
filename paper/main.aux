@@ -73,9 +73,9 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Where and when GRPO's coverage goes (maze, level-resolved, matched wall-clock).} \emph  {(a)} $\Delta \text  {pass@}8$ (final $-$ warmstart) by difficulty band: GRPO's loss lives on the easy/mid band (all 4 runs; dots are runs) while its $\text  {pass@}1$ there rises --- sharpening; MaxRL holds the easy band and gains on the frontier band (18 runs; a heterogeneous run inventory --- descriptive, no $p$-value). \emph  {(b)} Coverage--reliability gap $\overline  {\text  {pass@}8-\text  {pass@}1}$ vs.\ wall-clock (mean and min--max across runs): GRPO's erosion begins within the first ${\sim }25$--$50$ steps, before any level saturates; MaxRL stabilizes after warmup.}}{11}{figure.49}\protected@file@percent }
 \newlabel{fig:bands}{{5}{11}{\textbf {Where and when GRPO's coverage goes (maze, level-resolved, matched wall-clock).} \emph {(a)} $\Delta \passat {8}$ (final $-$ warmstart) by difficulty band: GRPO's loss lives on the easy/mid band (all 4 runs; dots are runs) while its $\passat {1}$ there rises --- sharpening; MaxRL holds the easy band and gains on the frontier band (18 runs; a heterogeneous run inventory --- descriptive, no $p$-value). \emph {(b)} Coverage--reliability gap $\overline {\passat {8}-\passat {1}}$ vs.\ wall-clock (mean and min--max across runs): GRPO's erosion begins within the first ${\sim }25$--$50$ steps, before any level saturates; MaxRL stabilizes after warmup}{figure.49}{}}
 \@writefile{toc}{\contentsline {paragraph}{6.5--6.6 Two boundary rungs (compressed; full protocols, figures, and attribution in App.\nobreakspace  {}\ref  {app:rungs}).}{11}{section*.50}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.7 Does it transfer to LLM scale? (GSM8K $2{\times }2$, pre-registered; SmolLM2-360M, $N{=}16$, one A10G).}{11}{section*.53}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {GSM8K $2{\times }2$, val mean@4 over training.} Both GRPO seeds shown as paired trajectories (registered seed thick, replication thin); gray bar: repeated-eval noise floor of one fixed checkpoint ($\pm $SD .0094), drawn once as a scale. On the registered run GRPO+teacher is the only cell that regresses in its second half; the replication seed climbs instead. \S  6.7 gives the statistics and the steering telemetry that separates the two seeds.}}{12}{figure.52}\protected@file@percent }
 \newlabel{fig:gsm8k}{{6}{12}{\textbf {GSM8K $2{\times }2$, val mean@4 over training.} Both GRPO seeds shown as paired trajectories (registered seed thick, replication thin); gray bar: repeated-eval noise floor of one fixed checkpoint ($\pm $SD .0094), drawn once as a scale. On the registered run GRPO+teacher is the only cell that regresses in its second half; the replication seed climbs instead. \S 6.7 gives the statistics and the steering telemetry that separates the two seeds}{figure.52}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.7 Does it transfer to LLM scale? (GSM8K $2{\times }2$, pre-registered; SmolLM2-360M, $N{=}16$, one A10G).}{12}{section*.53}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {Recycling-induced sharpening and its saturation-gate mitigation (Countdown, tier 1).} \emph  {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\text  {pass@}16$ coverage; the moderate gate (B3) gives most of the mean back on this early-saturating tier, and full-strength gating (hollow; 1 seed, corrected decay) returns coverage above baseline at the mean's full price --- \S  6.9 states what these settings do and do not establish. \emph  {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph  {(c)} Gated recycling preserves \emph  {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient.}}{13}{figure.56}\protected@file@percent }
 \newlabel{fig:sharpening}{{7}{13}{\textbf {Recycling-induced sharpening and its saturation-gate mitigation (Countdown, tier 1).} \emph {(a)} Three seeds, both axes: recycling (B2) buys mean@16 with $\passat {16}$ coverage; the moderate gate (B3) gives most of the mean back on this early-saturating tier, and full-strength gating (hollow; 1 seed, corrected decay) returns coverage above baseline at the mean's full price --- \S 6.9 states what these settings do and do not establish. \emph {(b)} The mechanism in-run: the gate's rejection rate rises monotonically as the model's reachable set saturates its relabel destinations, while the ungated dose rides its cap. \emph {(c)} Gated recycling preserves \emph {more} policy entropy than no recycling --- admitted relabels are a spread-preserving gradient}{figure.56}{}}
 \@writefile{toc}{\contentsline {paragraph}{6.8 What does recycling cost? (Countdown $2{\times }2$, pre-registered): two nulls and a new phenomenon.}{13}{section*.57}\protected@file@percent }
@@ -113,15 +113,15 @@
 \bibcite{yuan}{{5}{2026}{{Yuan et al.}}{{}}}
 \bibcite{cui}{{6}{2025}{{Cui et al.}}{{}}}
 \bibcite{cai}{{7}{2026}{{Cai et al.}}{{}}}
-\@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{17}{section*.68}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{17}{section*.69}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{17}{section.70}\protected@file@percent }
 \bibcite{dump}{{8}{2025}{{Wang et al.}}{{}}}
 \bibcite{adarft}{{9}{2025}{{Shi et al.}}{{}}}
 \bibcite{sec}{{10}{2025}{{Chen et al.}}{{}}}
 \bibcite{lilo}{{11}{2025}{{Foster et al.}}{{}}}
 \bibcite{dapo}{{12}{2025}{{Yu et al.}}{{}}}
 \bibcite{reinforceada}{{13}{2025}{{Xiong et al.}}{{}}}
+\@writefile{toc}{\contentsline {paragraph}{What did not transfer.}{17}{section*.68}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Corrections along the way.}{17}{section*.69}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{17}{section.70}\protected@file@percent }
 \bibcite{greso}{{14}{2025}{{Zheng et al.}}{{}}}
 \bibcite{her}{{15}{2017}{{Andrychowicz et al.}}{{}}}
 \bibcite{goalgan}{{16}{2018}{{Florensa et al.}}{{}}}
@@ -138,29 +138,30 @@
 \bibcite{starcross}{{27}{2026}{{Strozzi}}{{}}}
 \bibcite{agrae}{{28}{2026}{{Yu et al.}}{{}}}
 \bibcite{sfl}{{29}{2024}{{Rutherford et al.}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Mixed-target relabel groups: full characterization}{19}{appendix.72}\protected@file@percent }
-\newlabel{app:mixed}{{A}{19}{Mixed-target relabel groups: full characterization}{appendix.72}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Mixed-target relabel groups: full characterization}{18}{appendix.72}\protected@file@percent }
+\newlabel{app:mixed}{{A}{18}{Mixed-target relabel groups: full characterization}{appendix.72}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {B}The static allocation reference}{19}{appendix.73}\protected@file@percent }
 \newlabel{app:alloc}{{B}{19}{The static allocation reference}{appendix.73}{}}
 \newlabel{prop:alloc}{{3}{19}{Allocation, static}{proposition.74}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {C}Full details for compressed experiment rungs}{19}{appendix.75}\protected@file@percent }
 \newlabel{app:rungs}{{C}{19}{Full details for compressed experiment rungs}{appendix.75}{}}
 \@writefile{toc}{\contentsline {paragraph}{6.1 control battery (full).}{19}{section*.76}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{19}{section*.77}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \textbf  {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$.}}{20}{figure.80}\protected@file@percent }
-\newlabel{fig:gym}{{9}{20}{\textbf {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$}{figure.80}{}}
-\@writefile{toc}{\contentsline {paragraph}{6.5 IsaacLab protocol.}{20}{section*.78}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.6 gym control (full).}{20}{section*.81}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.7 posterior diagnostics and harness caveats (full).}{20}{section*.84}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces \textbf  {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\text  {pass@}1$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference.}}{21}{figure.83}\protected@file@percent }
-\newlabel{fig:ksweep}{{10}{21}{\textbf {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\passat {1}$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference}{figure.83}{}}
-\@writefile{toc}{\contentsline {paragraph}{Relabeling in a PPO-family loop: the wiring contract.}{21}{section*.85}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  \ref  {sec:limits}).}{21}{section*.86}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{21}{section*.87}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {D}Hyperparameters and compute}{22}{appendix.88}\protected@file@percent }
-\newlabel{app:hparams}{{D}{22}{Hyperparameters and compute}{appendix.88}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule.}}{22}{table.90}\protected@file@percent }
-\newlabel{tab:suites}{{2}{22}{Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule}{table.90}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Teacher and recycler knobs: value, provenance, and measured sensitivity.}}{22}{table.92}\protected@file@percent }
-\newlabel{tab:knobs}{{3}{22}{Teacher and recycler knobs: value, provenance, and measured sensitivity}{table.92}{}}
-\gdef \@abspage@last{23}
+\@writefile{toc}{\contentsline {paragraph}{6.2 full-control-variate baseline (full).}{19}{section*.77}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.3 inference-efficiency detail.}{19}{section*.78}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.5 IsaacLab protocol.}{19}{section*.79}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.6 gym control (full).}{19}{section*.82}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \textbf  {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph  {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$.}}{20}{figure.81}\protected@file@percent }
+\newlabel{fig:gym}{{9}{20}{\textbf {Gym control under binary task-success reward, trained to plateau (3 seeds).} Solid: mean pass rate across curriculum bins; dashed: the \emph {official} task (MountainCar flag / CartPole survive-400). The target-only arm (gray) is a provable zero-update freeze under sparse verifier-style reward; a uniform-over-bins control (green) also cracks the task, $3\times $ slower and off-ceiling; the gated FrontierMax stack converges to $1.000{\pm }0.000$}{figure.81}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces \textbf  {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\text  {pass@}1$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference.}}{20}{figure.84}\protected@file@percent }
+\newlabel{fig:ksweep}{{10}{20}{\textbf {Summed maze coverage vs.\ inference samples $k$ (final uniform-arm checkpoints).} GRPO leads at $\passat {1}$; the curves cross at $k{\approx }4$; MaxRL leads by half a level at $k{=}64$ --- choose the estimator by how many samples you will draw at inference}{figure.84}{}}
+\@writefile{toc}{\contentsline {paragraph}{6.7 posterior diagnostics and harness caveats (full).}{20}{section*.85}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Relabeling in a PPO-family loop: the wiring contract.}{21}{section*.86}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Jugs suite (pool-conditionality; \S  \ref  {sec:limits}).}{21}{section*.87}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{6.9 secondary reads (full).}{21}{section*.88}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {D}Hyperparameters and compute}{21}{appendix.89}\protected@file@percent }
+\newlabel{app:hparams}{{D}{21}{Hyperparameters and compute}{appendix.89}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule.}}{22}{table.91}\protected@file@percent }
+\newlabel{tab:suites}{{2}{22}{Per-suite configuration. Teacher knobs (decay, floor, $\gamma $) are shared across suites with the defaults below; what varies per suite is scale, not schedule}{table.91}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Teacher and recycler knobs: value, provenance, and measured sensitivity.}}{22}{table.93}\protected@file@percent }
+\newlabel{tab:knobs}{{3}{22}{Teacher and recycler knobs: value, provenance, and measured sensitivity}{table.93}{}}
+\gdef \@abspage@last{22}
