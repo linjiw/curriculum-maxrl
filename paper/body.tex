@@ -329,15 +329,18 @@ $\sqrt{N{-}1}$ holds only under population-SD normalization). MaxRL
 over-serves the frontier and releases mastered prompts; GRPO silently
 keeps ${\sim}(N{-}1)/\sqrt{N}\times$ more of its mass on mastered
 prompts --- maintenance a curriculum then removes. One caveat governs
-every cross-estimator magnitude in this paper: each estimator's
-coefficients carry a conventional global scale (absorbable into the
-learning rate), so absolute ratios like these are facts about the
-implementations as shipped under a common learning rate, not
-invariant properties of the objectives. What survives any
+every cross-estimator magnitude in this paper, and we measured its
+bite: each estimator's coefficients carry a conventional global scale
+(absorbable into the learning rate), so absolute ratios like these
+are facts about the implementations as shipped under a common
+learning rate, not invariant properties of the objectives --- and on
+a learnable-everywhere pool an lr sweep shows a $2$--$4\times$ raise
+lets GRPO match MaxRL's raw coverage \emph{delta} (though not its
+coverage--reliability premium; \S 6.3b). What survives any
 recalibration is the \emph{shape}: where each estimator's mass
 concentrates as a function of $p$, and its exact zeros --- which is
-why the empirical claims are about tails and signs, not
-magnitudes. Concentrating sampling on the frontier only helps if the
+why the empirical claims are about tails, signs, and
+premium-vs-reliability trades, not magnitudes. Concentrating sampling on the frontier only helps if the
 estimator extracts signal there, and \S\ref{sec:experiments} shows
 the mastered-tail difference becoming an active failure under a
 curriculum.
@@ -757,11 +760,23 @@ runs included hindsight arms, and the factorial isolates the
 estimator.
 
 \subparagraph{What survives, at its evidence level.}
-\emph{Confirmed, exact rung}: frozen realized schedules replayed under
-each estimator preserve MaxRL over GRPO in 10/10
-seed$\times$schedule pairs (artifact
-\texttt{results\_schedule\_matched.json}) --- the ordering is robust
-where gradients are exact. \emph{Found exploratorily, then registered
+\emph{Confirmed, exact rung --- at matched learning rate}: frozen
+realized schedules replayed under each estimator preserve MaxRL over
+GRPO in 10/10 seed$\times$schedule pairs at the common deployed lr
+(artifact \texttt{results\_schedule\_matched.json}). A pre-registered
+lr sweep then tested whether this is an lr-calibration artifact
+(reviewer-posed; P-LR1, committed branch), and on this
+learnable-everywhere pool it partly is: a global $2$--$4\times$ lr
+raise lets GRPO match MaxRL's $\Delta$cov@8 --- by saturating
+$\passat{1}$, so its coverage--reliability premium collapses to
+$.013$ where MaxRL holds $.050$ (artifact
+\texttt{results\_lr\_matched.json}). Per the committed branch we
+state the exact-rung ordering as an at-matched-lr fact and carry the
+normalization caveat as a limitation: on pools where everything is
+learnable, more learning of any kind buys coverage, and only the
+premium separates the estimators; the neural-scale claim (below) is
+the one tested at matched budgets \emph{and} identical optimizer
+settings. \emph{Found exploratorily, then registered
 and confirmed on fresh randomness}: on time-integrated coverage (mean
 in-training $\passat{8}$ minus warmstart), MaxRL retains more coverage
 than GRPO in \textbf{12/12} wave-1 paired blocks --- a

@@ -1,0 +1,23 @@
+         arm           d cov8          d pass1
+       maxrl +0.9385±0.0153 +0.9340±0.0215
+        rloo +0.1607±0.0147 +0.1193±0.0142
+  grpo_x0.25 +0.0939±0.0093 +0.0531±0.0072
+   grpo_x0.5 +0.2349±0.0096 +0.1826±0.0107
+   grpo_x1.0 +0.7618±0.0672 +0.7030±0.0762
+   grpo_x2.0 +0.9383±0.0157 +0.9710±0.0230
+   grpo_x4.0 +0.9390±0.0142 +0.9771±0.0226
+P-LR1 grpo x0.25: maxrl wins 5/5
+P-LR1 grpo x0.5: maxrl wins 5/5
+P-LR1 grpo x1.0: maxrl wins 5/5
+P-LR1 grpo x2.0: maxrl wins 1/5  << GAP CLOSED
+P-LR1 grpo x4.0: maxrl wins 0/5  << GAP CLOSED
+
+P-LR1: FALSIFIED (restate at matched lr)
+premium        maxrl: +0.0499 at pass1 0.9433
+premium         rloo: +0.0868 at pass1 0.1285
+premium   grpo_x0.25: +0.0861 at pass1 0.0624
+premium    grpo_x0.5: +0.0978 at pass1 0.1918
+premium    grpo_x1.0: +0.1042 at pass1 0.7123
+premium    grpo_x2.0: +0.0128 at pass1 0.9802
+premium    grpo_x4.0: +0.0073 at pass1 0.9863
+wrote /home/ec2-user/work/curriculumrl/curriculum-maxrl/curriculum_maxrl/results_lr_matched.json
