@@ -17,13 +17,16 @@ destinations returns frontier-tier coverage to baseline while keeping
 most of the mean gain at one validated operating point.
 \emph{Practical consequence:} report $\passat{k}$ coverage beside mean
 accuracy whenever a curriculum or recycler ships, conditioned on the
-estimator it ships on. \emph{Limitation, from our own pre-registered
-test:} the sharpest coverage claim our earlier runs suggested failed
-its balanced factorial at the registered endpoint and is retracted
-here; the exact-gradient ordering, the recycling phenomenon, and an
-exploratory time-integrated form of the ordering survive. We also
-note a refinement to MaxRL: its practical drop-all-fail estimator is
-unbiased for truncation order $T{=}N{-}1$, not $N$.
+estimator it ships on. \emph{Tested against ourselves:} the sharpest
+coverage claim our earlier runs suggested failed its pre-registered
+balanced factorial at the registered endpoint and is retracted here;
+the time-integrated ordering that survived it was then registered on
+six fresh seed blocks and \emph{confirmed} --- MaxRL retains more
+coverage than GRPO in 6/6 paired blocks under each sampler
+($p{=}.031$ per sampler; 24/24 across both waves), concentrated in
+the easy band the mass curves indict. We also note a refinement to
+MaxRL: its practical drop-all-fail estimator is unbiased for
+truncation order $T{=}N{-}1$, not $N$.
 \end{abstract}
 
 \section{Introduction}
@@ -93,13 +96,14 @@ answer depends on the estimator. MaxRL concentrates $(N{-}1)\times$
 more mass than RLOO (the unnormalized leave-one-out baseline
 estimator) on hard tasks as $p \to 0$ and releases mastered tasks;
 GRPO's variance-normalized weights keep spending on both tails. The
-predicted coverage ordering is robust where gradients are exact, and
-our own pre-registered factorial \emph{retired its strong neural
-form} --- an earlier cohort's zero-exception divergence had conflated
-recycling's contribution with the estimator effect --- leaving a
-weaker time-integrated ordering, exploratory, concentrated where the
-mass curves say GRPO overspends (\S 6.3b tells that story once, in
-full). Recycling has its own failure mode, and the algebra flags it:
+predicted coverage ordering is robust where gradients are exact; at
+neural scale our first pre-registered factorial \emph{retired its
+strong form} --- an earlier cohort's zero-exception divergence had
+conflated recycling's contribution with the estimator effect --- and
+a second factorial on fresh seed blocks then \emph{confirmed} the
+time-integrated ordering that survived, 6/6 paired blocks under each
+sampler, concentrated where the mass curves say GRPO overspends
+(\S 6.3b tells that story once, in full). Recycling has its own failure mode, and the algebra flags it:
 relabels that land in the mastered tail sharpen. On Countdown
 arithmetic this is \textbf{recycling-induced sharpening} ---
 exact-verifier relabeling improves mean accuracy while \emph{losing}
@@ -145,12 +149,15 @@ Our contributions:
   characterized as a verified, adaptively selected auxiliary update
   --- on-policy for the achieved task only under an explicit
   distribution-matching condition (Remark~\ref{prop:hindsight}).
-\item \textbf{An estimator-conditioned coverage ordering, tested and
-  cut down to what survives} (\S\ref{sec:experiments}): our own
-  pre-registered factorial retired the cohort's zero-exception
-  divergence at its registered endpoint; what survives is exact-rung
-  robustness, a weaker exploratory time-integrated ordering, and two
-  controls that close alternative readings (\S 6.3b).
+\item \textbf{An estimator-conditioned coverage ordering, retired in
+  its strong form and confirmed in its measured one}
+  (\S\ref{sec:experiments}): our first pre-registered factorial
+  retired the cohort's zero-exception divergence at its registered
+  endpoint; the time-integrated ordering that survived it was then
+  registered as the primary of a second factorial on fresh seed
+  blocks and confirmed 6/6 under both samplers ($p{=}.031$ each;
+  24/24 paired blocks across both waves), with controls closing the
+  scheduler-mismatch and variance-normalization readings (\S 6.3b).
 \item \textbf{A new failure mode and a motivated mitigation}
   (\S 6.8--6.9): exact-verifier recycling improves mean accuracy while
   losing coverage --- recycling-induced sharpening, replicated at
@@ -498,58 +505,35 @@ conditional-law gap in \citet{gcsl} --- to success-conditioned RLVR
 weights; we state it as a remark, not a result, and note that the
 sharpening phenomenon of \S 6.8 runs through the \emph{marginal}
 shift those works also identify, not this conditional matching.
-One further gap separates this remark from the deployed LLM loop and
-must be stated at the object level: the remark is written for a
-group with \emph{one} destination $g'$, but Algorithm~1 relabels each
-parseable failure to \emph{its own} achieved goal, so one group can
-mix rewritten tasks. Once destinations differ within a group, the
-shared success count $K$ couples unrelated tasks and the update is
-not a $J_{N-1}$ gradient for \emph{any} single achieved task --- not
-even under the matching condition above. The honest reading of the
-deployed per-row variant is a \emph{verified weighted-likelihood
-(weighted-SFT) update}: each relabeled row is a true success of its
-own rewritten prompt trained at weight $1/K - 1/N$, with two
-consequences we accept and disclose --- the $-1/N$ failure weight
-acts as a conditional push-down on unparseable rollouts rather than
-a zero-mean baseline, and success weights couple across unrelated
-destinations. (The CPU reference implementation instead trains each
-relabeled trajectory as its own $K{=}1$ group at weight $1 - 1/N$,
-which \emph{is} the single-destination object of this remark; the
-per-row LLM variant was pre-registered as a deviation because
-Countdown groups rarely share achieved values.) The single-destination
-MaxRL form --- one destination per dead group, all $N$ rows rewritten
-and reverified against it --- is the design this remark licenses, and
-we treat the deployed variant's results as evidence about the
-weighted-SFT objective, not about a per-destination MaxRL gradient.
-Where the three variants are exactly implementable (skill chains, 10
-paired seeds; artifact \texttt{results\_row\_vs\_group.json}) the
-coupling itself is what costs: per-row relabels as their own $K{=}1$
-groups lead (AUC $.952$), one-destination-per-group is next ($.881$),
-and the shared-$K$ coupled form forfeits most of recycling's value
-($.749$ vs.\ no-recycling $.705$; both orderings 10/10). Whether the
-deployed LLM loop pays this penalty is a question this rung cannot
-answer (its normalization and failure conditioning differ); the
-artifact ships a single-destination ablation flag
-(\texttt{one\_target\_per\_group}) for that test.
+One further gap separates this remark from the deployed LLM loop:
+the remark is written for a group with \emph{one} destination $g'$,
+but Algorithm~1 relabels each parseable failure to \emph{its own}
+achieved goal, so one group can mix rewritten tasks --- and once
+destinations differ within a group, the shared success count $K$
+couples unrelated tasks and the update is not a $J_{N-1}$ gradient
+for \emph{any} single achieved task. We therefore read the deployed
+per-row variant as a \emph{verified weighted-SFT update}, treat its
+results as evidence about that objective, and measure the coupling's
+cost where all variants are exactly implementable: per-row relabels
+as their own $K{=}1$ groups lead (AUC $.952$),
+one-destination-per-group is next ($.881$), and the shared-$K$
+coupled form forfeits most of recycling's value ($.749$ vs.\
+no-recycling $.705$; both orderings 10/10 paired seeds; artifact
+\texttt{results\_row\_vs\_group.json}). Full object-level
+characterization, the CPU-reference contrast, and the LLM-side
+ablation flag: App.~\ref{app:mixed}.
 \end{remark}
 \begin{interp}
 ``Exactness'' is a property to \emph{measure per environment}, not a
-blanket guarantee. On our validation testbed the laws match by
-construction, so cosine probes there are consistency checks, not
-evidence (several null relabeling schemes produce identical cosines);
-the evidence that the relabel direction carries information is
-behavioral --- the placebo decomposition below. We measured the two
-gaps the remark names where they are measurable (exact chains, 5
-seeds; artifact \texttt{results\_proposal\_shift.json}): the applied
-relabel update's cosine against the exact fresh-destination gradient
-direction is $0.93$, the relabeled group's success rate exceeds the
-true fresh destination pass rate by only $+.003$ (selection guarantees
-$K'{\ge}1$, so the bias exists but is small here), and
-\emph{cross-fitting} the destination choice (select on half the group,
-update with the other half) removes the adaptive reuse at a real cost:
-alignment drops to $0.82$ and AUC falls $.883\to.829$, because the
-selected successes leave the update half. The off-policy caveat is
-real; its sign is environment-specific.
+blanket guarantee. We measured the two gaps the remark names where
+they are measurable (exact chains, 5 seeds; artifact
+\texttt{results\_proposal\_shift.json}): the applied relabel update's
+cosine against the exact fresh-destination gradient is $0.93$; the
+selection bias on the destination's success rate is small here
+($+.003$); and cross-fitting the destination choice removes the
+adaptive reuse at a real cost (alignment $\to 0.82$, AUC
+$.883\to.829$). The off-policy caveat is real; its sign is
+environment-specific.
 \end{interp}
 
 Two contracts keep practice on the proof's side: \textbf{(1)
@@ -1203,9 +1187,9 @@ registered paired single-eval endpoint a contrast sd of $.024$ and
 power only $0.4$--$0.8$ at the effect size the data itself displays
 ($+.025$/$+.031$ paired means). The time-integrated version of the
 same contrast cuts that sd by $\sqrt{10}$ (power ${\approx}1$ at
-$+.02$), which is why it is the registered primary of the confirmation
-wave now running on six fresh seed blocks, with a committed
-falsification branch. The
+$+.02$), which is why it became the registered primary of the
+confirmation wave on six fresh seed blocks --- where it confirmed
+(P-F2, 6/6 per sampler; \S 6.3b). The
 LLM-scale teacher$\times$estimator interaction
 is 1-of-2 seeds and tracks steering intensity: the replication seed of
 the GRPO+teacher cell did not reproduce the registered regression, and
@@ -1297,12 +1281,15 @@ learning band, optimal prompt allocation, or on-policy hindsight, and
 we have been explicit about where each stronger reading fails ---
 including against ourselves: the balanced estimator-by-sampler
 factorial we pre-registered retired our own strongest neural claim at
-its registered endpoint, and this paper reports that retraction in
-place rather than re-grading it (\S 6.3b). What the record supports:
+its registered endpoint, this paper reports that retraction in place
+rather than re-grading it, and the ordering that survived was then
+registered on fresh seed blocks and confirmed (\S 6.3b). What the
+record supports:
 an exact-rung estimator-conditioned coverage ordering that survives
-frozen schedules and its own controls, an exploratory time-integrated
-version of the same ordering at neural scale (12/12 paired factorial
-blocks --- the next registered endpoint), a three-seed replication of
+frozen schedules and its own controls, its time-integrated
+neural-scale form --- exploratory in wave 1 (12/12), registered and
+confirmed in wave 2 (6/6 per sampler, $p{=}.031$ each; 24/24 across
+both waves) --- a three-seed replication of
 recycling-induced sharpening on Countdown with one gated operating
 point that buys the coverage back, and a pre-registered negative
 (Jugs) marking where the whole family of interventions fails
@@ -1398,6 +1385,28 @@ discovery. \emph{NeurIPS}, 2024.
 \end{thebibliography}
 
 \appendix
+\section{Mixed-target relabel groups: full characterization}
+\label{app:mixed}
+
+The deployed per-row LLM variant trains each relabeled row as a true
+success of its own rewritten prompt at weight $1/K - 1/N$, with two
+consequences we accept and disclose: the $-1/N$ failure weight acts as
+a conditional push-down on unparseable rollouts rather than a
+zero-mean baseline, and success weights couple across unrelated
+destinations. The CPU reference implementation instead trains each
+relabeled trajectory as its own $K{=}1$ group at weight $1 - 1/N$,
+which \emph{is} the single-destination object of
+Remark~\ref{prop:hindsight}; the per-row LLM variant was
+pre-registered as a deviation because Countdown groups rarely share
+achieved values. The single-destination MaxRL form --- one destination
+per dead group, all $N$ rows rewritten and reverified against it ---
+is the design the remark licenses. Whether the deployed loop pays the
+chain-rung coupling penalty is a question that rung cannot answer
+(verl's normalization and failure conditioning differ); the artifact
+ships a single-destination ablation flag
+(\texttt{one\_target\_per\_group}, CPU-tested) and its pre-registered
+LLM run for exactly that test.
+
 \section{The static allocation reference}\label{app:alloc}
 
 \begin{proposition}[Allocation, static]\label{prop:alloc}
