@@ -8,7 +8,7 @@ RUNNING / DEFERRED (with reason) / DISPUTED (with counter-evidence).
 |---|---|
 | Partition decorative; foreground tail ratios | PARTIAL — hypothesis reframe done (6.4); intro reframe deferred to the post-verdict restructure |
 | Mass->coverage bridge = hypothesis | FIXED (6.4 restated w/ sign-structure sketch) |
-| Dr.-GRPO/no-std ablation | QUEUED (P-G0c, falsification branch committed) |
+| Dr.-GRPO/no-std ablation | RESOLVED: P-G0c FAILED at neural scale (no-SD loses easy band 6/6, contradicting exact rung) — mechanism claim bounded in 6.3b/6.4 |
 | Prop 3 orphaned | DEFERRED to restructure — candidate: move to App with the oracle tie as its only use |
 | Lemma 1 magnitude | FIXED (shortfall table in interp: 5.8%/1.1%/12%) |
 | Step-matched uniform-only GRPO arm (Q7) | PARTIAL — existing step-matched analysis covers teacher arms; uniform GRPO pass@8 loss at matched steps still open (needs run) |
@@ -23,7 +23,7 @@ RUNNING / DEFERRED (with reason) / DISPUTED (with counter-evidence).
 | W4 throughput non-transfer | FIXED; ARM B (dose-matched replay) 2/3 seeds: replay exceeds recycling on both axes — 6.8 carries it; s3 pending |
 | W5 recycling under-specified | FIXED (App B wiring contract: placement, rewrite scope, group semantics, KL) |
 | W6 gate designed-point n=1 | RESOLVED 2026-08-06: ARM A ran (3 seeds); P-R1 REFUTED — designed point = recycling-off; dial claim dropped, Fig 7a redrawn as scatter |
-| W7 GRPO-native teacher | QUEUED (GRPOMassTeacher, P-G0a/b) |
+| W7 GRPO-native teacher | RESOLVED: P-G0a confirmed 5/6 (grpo_mass does not rescue GRPO, both rungs) — in 6.3b controls |
 | W8 pool-conditional | Already in paper (Jugs paragraph) — R2 counts it as honest scope erosion; stands |
 | W9 estimator set thin | PARTIAL: +grpo_nostd queued; RLOO/PPO-critic arms not planned (stated scope) |
 | W10 harness 3x | QUEUED (ARM C w/ decision tree) |
@@ -57,7 +57,7 @@ RUNNING / DEFERRED (with reason) / DISPUTED (with counter-evidence).
 | Item | Status |
 |---|---|
 | Abstract inversion | FIXED |
-| GRPO-own-teacher | QUEUED |
+| GRPO-own-teacher | RESOLVED (same as W7: P-G0a confirmed) |
 | Theory-scope vs method tension (flat-over-band arm) | FIXED WITH DATA (part J: indicator-over-band loses 0/10, .681 vs .743 — zeros alone don't suffice; Remark updated with u_N's refined standing) |
 | Compression damage / 6.7 | DEFERRED to post-verdict restructure |
 | n=1 links | RESOLVED: ARM A 3-seed (n=1 point superseded/faded in figs) |
