@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 21:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 21:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -614,19 +614,25 @@ File: figures/fig9_ksweep.pdf Graphic file (type pdf)
 Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1545.
 (pdftex.def)             Requested size: 258.36668pt x 197.59822pt.
  [20 <./figures/fig6_gym.pdf>] [21 <./figures/fig9_ksweep.pdf>]
-Underfull \hbox (badness 1210) in paragraph at lines 1685--1685
-[]\OT1/cmr/m/n/8 (+20) recycling-induced sharp-en-ing (mean up,
+Underfull \hbox (badness 10000) in paragraph at lines 1663--1663
+[]\OT1/cmr/m/n/8 (+20) drop-$\OML/cmm/m/it/8 K[]\OT1/cmr/m/n/8 (+20) 0$ es-ti-m
+a-tor un-bi-ased for
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1674--1674
+[]\OT1/cmr/m/n/8 (+20) time-integrated cov-er-age or-der-ing
+ []
+
+
+Underfull \hbox (badness 3965) in paragraph at lines 1693--1694
+[]\OT1/cmr/m/n/8 (+20) designed-strength sweep P-R1: mean-kept
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 1696--1696
 []\OT1/cmr/m/n/8 (+20) LLM teacher$\OMS/cmsy/m/n/8 ^^B$\OT1/cmr/m/n/8 (+20) est
 imator in-ter-ac-tion
- []
-
-
-Overfull \hbox (0.86656pt too wide) in paragraph at lines 1655--1704
- [][] 
  []
 
 [22]
@@ -644,11 +650,11 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 22E7D4B60F1772C379F03444ECEB7B50;2601.
  ) 
 Here is how much of TeX's memory you used:
- 13444 strings out of 480806
- 195155 string characters out of 5905151
+ 13448 strings out of 480806
+ 195185 string characters out of 5905151
  559355 words of memory out of 6000000
  30016 multiletter control sequences out of 15000+600000
- 434272 words of font info for 306 fonts, out of 8000000 for 9000
+ 434372 words of font info for 308 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,18n,63p,1370b,499s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</us
@@ -688,7 +694,7 @@ sfbx1000.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm080
 0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb><
 /usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb>
-Output written on main.pdf (24 pages, 838113 bytes).
+Output written on main.pdf (24 pages, 838217 bytes).
 PDF statistics:
  845 PDF objects out of 1000 (max. 8388607)
  647 compressed objects within 7 object streams

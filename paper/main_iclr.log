@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 21:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 21:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -630,24 +630,31 @@ Underfull \hbox (badness 10000) in paragraph at lines 1660--1661
  []
 
 
-Underfull \hbox (badness 1924) in paragraph at lines 1663--1663
-[]\OT1/ptm/m/n/9 (+20) drop-$\OML/cmm/m/it/9 K[]\OT1/cmr/m/n/9 0$ \OT1/ptm/m/n/
-9 (+20) es-ti-ma-tor un-bi-ased for
+Underfull \hbox (badness 10000) in paragraph at lines 1669--1670
+[]\OT1/ptm/m/n/9 (+20) uniform+recycling $\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 931 \
+OMS/cmsy/m/n/9 ^^Y$
  []
 
 
-Underfull \hbox (badness 6268) in paragraph at lines 1674--1674
-[]\OT1/ptm/m/n/9 (+20) time-integrated cov-er-age or-der-ing
+Underfull \hbox (badness 4479) in paragraph at lines 1669--1670
+\OT1/ptm/m/n/9 (+20) teacher+recycling $\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 928$ \O
+T1/ptm/m/n/9 (+20) vs. $\OT1/cmr/m/n/9 0\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 000$ \O
+T1/ptm/m/n/9 (+20) all
  []
 
 
-Underfull \hbox (badness 2326) in paragraph at lines 1680--1680
-[]\OT1/ptm/m/n/9 (+20) variance nor-mal-iza-tion is the tail
+Underfull \hbox (badness 1953) in paragraph at lines 1677--1678
+[]\OT1/ptm/m/n/9 (+20) wave-2 reg-is-tered P-F3: 10/12 pairs;
  []
 
 
-Overfull \hbox (18.97969pt too wide) in paragraph at lines 1655--1704
- [][] 
+Underfull \hbox (badness 10000) in paragraph at lines 1685--1685
+[]\OT1/ptm/m/n/9 (+20) recycling-induced sharp-en-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1699--1700
+[]\OT1/ptm/m/n/9 (+20) pre-registered all-null with entropy-
  []
 
 
@@ -661,11 +668,11 @@ Package rerunfilecheck Info: File `main_iclr.out' has not changed.
 (rerunfilecheck)             Checksum: 22E7D4B60F1772C379F03444ECEB7B50;2601.
  ) 
 Here is how much of TeX's memory you used:
- 13611 strings out of 480806
- 197089 string characters out of 5905151
+ 13629 strings out of 480806
+ 197245 string characters out of 5905151
  563973 words of memory out of 6000000
  29989 multiletter control sequences out of 15000+600000
- 467177 words of font info for 487 fonts, out of 8000000 for 9000
+ 467891 words of font info for 499 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  61i,18n,75p,1375b,480s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
@@ -693,7 +700,7 @@ texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type
 1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
 ri8a.pfb>
-Output written on main_iclr.pdf (23 pages, 692528 bytes).
+Output written on main_iclr.pdf (23 pages, 692504 bytes).
 PDF statistics:
  828 PDF objects out of 1000 (max. 8388607)
  644 compressed objects within 7 object streams

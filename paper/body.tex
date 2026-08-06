@@ -1652,7 +1652,7 @@ $\downarrow$ = refuted, committed branch executed; $\circ$ =
 descriptive/exploratory (no registered endpoint); $\rightarrow$ =
 registered, run pending.}
 \label{tab:claims}
-\begin{tabular}{@{}p{0.34\linewidth}p{0.40\linewidth}cl@{}}
+\begin{tabular}{@{}p{0.32\linewidth}p{0.38\linewidth}cl@{}}
 \toprule
 claim & strongest evidence & status & where \\
 \midrule
@@ -1679,12 +1679,12 @@ easy-band concentration of GRPO's loss & wave-2 registered P-F3:
 $\uparrow$ & \S 6.4 \\
 variance normalization is the tail mechanism & exact rung: no-SD
 GRPO collapses onto RLOO ($.148$ vs.\ $.161$); neural rung: P-G0c
-\emph{failed} (loses easy band 6/6) & split; bounded & \S 6.3b--6.4 \\
+\emph{failed} (loses easy band 6/6) & split & \S 6.3b--6.4 \\
 GRPO's own-mass teacher doesn't rescue it & P-G0a confirmed 5/6,
 both rungs & $\uparrow$ & \S 6.3b \\
 recycling-induced sharpening (mean up, $\passat{k}$ down) & 3 seeds,
 loss clears $2\times$ seed spread; crossing in $k$; dose-then-damage
-timing & $\uparrow$ replicated & \S 6.8 \\
+timing & $\uparrow$ & \S 6.8 \\
 extra-updates dose control at LLM scale & replay (2 epochs) beats
 recycling's mean gain \emph{with} coverage gain, 2/3 seeds &
 $\rightarrow$ (s3) & \S 6.8 \\
@@ -1692,12 +1692,12 @@ moderate gate = one useful operating point & frontier-tier coverage
 to baseline at ${\sim}60\%$ mean kept, 3 seeds & $\uparrow$ & \S 6.9 \\
 gate strength is a monotone dial & designed-strength sweep P-R1:
 mean-kept $-0.26 \notin [0,.60]$, coverage $.525 < .541$, 3 seeds &
-$\downarrow$ branch executed & \S 6.9 \\
+$\downarrow$ & \S 6.9 \\
 LLM teacher$\times$estimator interaction (GSM8K) & 1-of-2 seeds;
 tracks steering dose; controlled cell registered &
 $\rightarrow$ & \S 6.7 \\
 pool-conditionality: Jugs defeats every arm & pre-registered
-all-null with entropy-collapse mechanism & $\uparrow$ negative &
+all-null with entropy-collapse mechanism & $\uparrow$ &
 \S\ref{sec:limits} \\
 \bottomrule
 \end{tabular}
