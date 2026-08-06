@@ -44,9 +44,9 @@ still single-run-conditional, and formatting/anonymization work is undone.
   entries lack arXiv IDs; dapo bibitem says NeurIPS 2025 (check venue).
 - **S3. Figure 4/5 (algorithm + partition map) refer to §ordering that
   changed; re-audit all \S references after B1 restructure.**
-- **S4. The Jugs pool-conditionality paragraph cites repo postmortem —
-  after B1, promote its mechanism (rollout-set diversity as a design
-  gate) into the appendix with the entropy trajectories figure.**
+- **S4. RESOLVED 2026-08-06:** Jugs entropy-collapse figure added to the
+  appendix (fig10_jugs_entropy, all 9 trajectories, manifest entry) with
+  the rollout-set-diversity design gate stated in the caption + limitations.
 
 ## NICE (improves odds, not required)
 
