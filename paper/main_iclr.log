@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 22:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 22:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -560,26 +560,27 @@ put line 458.
 <figures/fig5_channels.pdf, id=284, 252.945pt x 216.81pt>
 File: figures/fig5_channels.pdf Graphic file (type pdf)
 <use figures/fig5_channels.pdf>
-Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 568.
+Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 569.
 (pdftex.def)             Requested size: 198.7425pt x 170.35501pt.
 <figures/fig2_ladder.pdf, id=287, 505.89pt x 202.356pt>
 File: figures/fig2_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ladder.pdf>
-Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 641.
+Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 642.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
- [7]
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [8 <./figures/fig5_channels.pdf>] [9 <./figures/fig2_ladder.pdf>] [10]
+ [7]
+[8 <./figures/fig5_channels.pdf>] [9 <./figures/fig2_ladder.pdf>] [10]
 <figures/fig8_bands.pdf, id=377, 505.89pt x 195.129pt>
 File: figures/fig8_bands.pdf Graphic file (type pdf)
 <use figures/fig8_bands.pdf>
-Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 849.
+Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 850.
 (pdftex.def)             Requested size: 397.48499pt x 153.3195pt.
 <figures/fig3_gsm8k.pdf, id=380, 252.945pt x 202.356pt>
 File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
 <use figures/fig3_gsm8k.pdf>
-Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 890.
+Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 891.
 (pdftex.def)             Requested size: 218.61795pt x 174.89658pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -588,21 +589,21 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 <figures/fig7_sharpening.pdf, id=418, 505.89pt x 202.356pt>
 File: figures/fig7_sharpening.pdf Graphic file (type pdf)
 <use figures/fig7_sharpening.pdf>
-Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 952.
+Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 953.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
  [12 <./figures/fig3_gsm8k.pdf>] [13 <./figures/fig7_sharpening.pdf>]
 <figures/fig9_passk.pdf, id=491, 260.17201pt x 202.356pt>
 File: figures/fig9_passk.pdf Graphic file (type pdf)
 <use figures/fig9_passk.pdf>
-Package pdftex.def Info: figures/fig9_passk.pdf  used on input line 1064.
+Package pdftex.def Info: figures/fig9_passk.pdf  used on input line 1065.
 (pdftex.def)             Requested size: 206.69388pt x 160.77036pt.
 LaTeX Font Info:    Trying to load font information for OMS+pcr on input line 1
-107.
+108.
  (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omspcr.fd
 File: omspcr.fd 
 )
 LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1107.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1108.
 
  [14 <./figures/fig9_passk.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -612,52 +613,52 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 <figures/fig6_gym.pdf, id=616, 505.89pt x 202.356pt>
 File: figures/fig6_gym.pdf Graphic file (type pdf)
 <use figures/fig6_gym.pdf>
-Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1518.
+Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1519.
 (pdftex.def)             Requested size: 397.48499pt x 158.99802pt.
 <figures/fig9_ksweep.pdf, id=617, 245.718pt x 187.902pt>
 File: figures/fig9_ksweep.pdf Graphic file (type pdf)
 <use figures/fig9_ksweep.pdf>
-Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1549.
+Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1550.
 (pdftex.def)             Requested size: 218.61795pt x 167.18637pt.
 
 Underfull \vbox (badness 2626) has occurred while \output is active []
 
  [20 <./figures/fig6_gym.pdf>] [21 <./figures/fig9_ksweep.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 1664--1665
+Underfull \hbox (badness 10000) in paragraph at lines 1665--1666
 []\OT1/ptm/m/n/9 (+20) proof + MC
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1664--1665
+Underfull \hbox (badness 10000) in paragraph at lines 1665--1666
 \OT1/ptm/m/n/9 (+20) (\OT1/pcr/m/n/9 verify[]guidance[]math.json\OT1/ptm/m/n/9 
 (+20) );
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1673--1674
+Underfull \hbox (badness 10000) in paragraph at lines 1674--1675
 []\OT1/ptm/m/n/9 (+20) uniform+recycling $\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 931 \
 OMS/cmsy/m/n/9 ^^Y$
  []
 
 
-Underfull \hbox (badness 4479) in paragraph at lines 1673--1674
+Underfull \hbox (badness 4479) in paragraph at lines 1674--1675
 \OT1/ptm/m/n/9 (+20) teacher+recycling $\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 928$ \O
 T1/ptm/m/n/9 (+20) vs. $\OT1/cmr/m/n/9 0\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 000$ \O
 T1/ptm/m/n/9 (+20) all
  []
 
 
-Underfull \hbox (badness 1953) in paragraph at lines 1681--1682
+Underfull \hbox (badness 1953) in paragraph at lines 1682--1683
 []\OT1/ptm/m/n/9 (+20) wave-2 reg-is-tered P-F3: 10/12 pairs;
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1689--1689
+Underfull \hbox (badness 10000) in paragraph at lines 1690--1690
 []\OT1/ptm/m/n/9 (+20) recycling-induced sharp-en-ing
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1703--1704
+Underfull \hbox (badness 10000) in paragraph at lines 1704--1705
 []\OT1/ptm/m/n/9 (+20) pre-registered all-null with entropy-
  []
 
@@ -672,11 +673,11 @@ Package rerunfilecheck Info: File `main_iclr.out' has not changed.
 (rerunfilecheck)             Checksum: 22E7D4B60F1772C379F03444ECEB7B50;2601.
  ) 
 Here is how much of TeX's memory you used:
- 13629 strings out of 480806
- 197245 string characters out of 5905151
- 563973 words of memory out of 6000000
+ 13632 strings out of 480806
+ 197269 string characters out of 5905151
+ 563881 words of memory out of 6000000
  29989 multiletter control sequences out of 15000+600000
- 467891 words of font info for 499 fonts, out of 8000000 for 9000
+ 467985 words of font info for 501 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  61i,18n,75p,1375b,480s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
@@ -704,7 +705,7 @@ texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type
 1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
 ri8a.pfb>
-Output written on main_iclr.pdf (23 pages, 692735 bytes).
+Output written on main_iclr.pdf (23 pages, 692765 bytes).
 PDF statistics:
  828 PDF objects out of 1000 (max. 8388607)
  644 compressed objects within 7 object streams
