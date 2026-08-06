@@ -58,8 +58,11 @@ ax.plot(K, B2, color=MAGENTA, marker="s", ms=4, lw=1.6, ls="--",
         label="recycling, ungated")
 ax.plot(K, B3, color=ORANGE, marker="^", ms=4.5, lw=1.6, ls="-.",
         label="recycling + gate")
-ax.plot(K, FG, color=ORANGE, marker="^", ms=4.5, lw=1.3, ls=":",
-        mfc="white", label="full-strength gate")
+# superseded: the strength-dial reading this 1-seed curve suggested was
+# refuted at 3 seeds (P-R1, Sec 6.9) — kept faded for the record
+ax.plot(K, FG, color=ORANGE, marker="^", ms=4.5, lw=1.1, ls=":",
+        mfc="white", alpha=0.45,
+        label="full-strength (1 seed; P-R1 refuted)")
 
 ax.set_xscale("log", base=2)
 ax.set_xticks(K, [str(k) for k in K])
