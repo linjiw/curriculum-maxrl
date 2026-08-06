@@ -1785,7 +1785,11 @@ queued behind the running arms). A one-row-per-run registry
 maze, Countdown, and GSM8K artifacts, with arm/seed/protocol per row)
 indexes every run this paper draws on; the maze main-effect subset and
 its 5v4 composition are tabulated in
-\texttt{permutation\_reanalysis.json}, committed alongside. The
+\texttt{permutation\_reanalysis.json}, committed alongside. Data
+hygiene is checked, not assumed: both LLM pools carry zero
+train/eval task overlap and zero intra-split duplicate tasks
+(Countdown identity = target plus sorted operand multiset; GSM8K =
+prompt text; artifact \texttt{data\_integrity\_check.json}). The
 framework is a dependency-light package (\texttt{frontier\_rl},
 numpy-only core) with adapters for LLM pools (verl), gym control,
 IsaacLab parallel sim, and flow-policy VLAs.
