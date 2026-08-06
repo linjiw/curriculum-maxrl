@@ -221,3 +221,30 @@ frontier — the "dial" claim falls). Seed-1 alone is within the range
 where val noise + seed variation could explain the mean gap; the
 prediction is decided at 3 seeds per the prereg. Seeds 2–3 queued
 behind the wave-2 factorial on the GPU.
+
+## ARM-A FINAL VERDICT (2026-08-06, 3 seeds): P-R1 REFUTED
+
+Seeds 2–3 completed (`armA_b3fix_s2.json`, `armA_b3fix_s3.json`; seed 2
+reran after a node OOM — marker correctly withheld until step-60). Tier-1
+endpoints (mean@16 / pass@16 / reject frac):
+
+| seed | mean@16 | pass@16 | reject |
+|---|---|---|---|
+| 1 | .212 | .513 | .934 |
+| 2 | .322 | .573 | .934 |
+| 3 | .264 | .488 | .944 |
+| agg | .266±.045 | .525±.036 | — |
+
+Against the registered window: mean-kept fraction (.266−.278)/(.324−.278)
+= **−0.26** (window [0, .60]); coverage **.525 < .541** (window
+[.541, .571]). Both criteria fail → **the committed falsification branch
+executed**: Fig 7a is now an operating-point scatter, §6.9 and the site
+drop the dial language, and the dose-response table above is historical.
+The post-fix 1-seed "coverage above baseline" endpoint (.564) sits inside
+ARM-A's seed spread (.488–.573) — it did not replicate. Designed-strength
+gating ≈ recycling-off plus seed noise; the moderate (under-gated)
+setting remains the one validated operating point.
+
+Verdict artifacts: `curriculum_maxrl/countdown_reviewer_arms/` (paper
+repo) — prereg script, per-seed JSONs, PROVENANCE.md, machine-readable
+verdicts.
