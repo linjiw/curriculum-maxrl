@@ -1135,7 +1135,8 @@ a prompt until a signal criterion is met, holding the prompt distribution
 fixed; our teacher is the complementary move, reallocating \emph{across}
 prompts at fixed group size, and the static water-filling reference
 (App.~\ref{app:alloc}) is the idealized form of both. DAPO's dynamic sampling and
-GRESO cull dead prompts --- avoidance without allocation or creation. PKPO and Pass@k-training
+GRESO cull dead prompts --- avoidance without allocation or creation.
+PKPO \citep{pkpo} and Pass@$k$ training \citep{passk}
 modify the objective toward $\passat{k}$ but keep uniform sampling.
 \textbf{Goal selection in HER.} Selecting \emph{which} goals to
 train on by difficulty or reachability is a decade-old idea in the
@@ -1339,6 +1340,12 @@ objectives. arXiv:2510.04996, 2025.
 \bibitem[Zheng et al.(2025)]{greso} Zheng, H., et al. Act only
 when it pays: efficient reinforcement learning for LLM reasoning via
 selective rollouts (GRESO). \emph{NeurIPS}, 2025.
+\bibitem[Walder and Karkhanis(2025)]{pkpo} Walder, C., Karkhanis, D.
+Pass@$k$ policy optimization: solving harder reinforcement learning
+problems. arXiv:2505.15201, 2025.
+\bibitem[Chen et al.(2025)]{passk} Chen, Z., et al. Pass@$k$ training
+for adaptively balancing exploration and exploitation of large
+reasoning models. arXiv:2508.10751, 2025.
 \bibitem[Andrychowicz et al.(2017)]{her} Andrychowicz, M., et al.
 Hindsight experience replay. \emph{NeurIPS}, 2017.
 \bibitem[Florensa et al.(2018)]{goalgan} Florensa, C., Held, D., Geng,
