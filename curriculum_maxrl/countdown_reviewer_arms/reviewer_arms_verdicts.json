@@ -25,17 +25,24 @@
   "verdict": "REFUTED"
  },
  "P_R2": {
-  "arm": "ARM B replay ppo_epochs=2, 2/3 seeds",
+  "arm": "ARM B replay ppo_epochs=2, 3/3 seeds",
   "t1_mean16": [
    0.459,
-   0.475
+   0.475,
+   0.5
   ],
   "t1_pass16": [
    0.585,
-   0.674
+   0.674,
+   0.646
   ],
-  "mean_captured_fraction_of_B2_gain": 4.057,
-  "coverage_vs_B1": 0.089,
-  "verdict": "INTERIM"
+  "mean_captured_fraction_of_B2_gain": 4.293,
+  "coverage_vs_B1": 0.094,
+  "verdict": "CONFIRMED-STRONG (captures >all of B2's gain, no coverage loss)",
+  "per_seed_meets_window": [
+   true,
+   true,
+   true
+  ]
  }
 }

@@ -49,27 +49,28 @@ Prereg P-R2: replay captures ≥ half of B2's tier-1 mean@16 gain with
 no pass@16 loss; committed branch — "If it captures ~all, recycling's
 LLM-scale case reduces to the direction term and 6.8 must say so."
 
-Results so far (step-60 val, tier 1; `armB_replay_s{1,2}.json`;
-seed 3 training at vendor time):
+Results, final (step-60 val, tier 1; `armB_replay_s{1,2,3}.json`):
 
 | seed | mean@16 | pass@16 |
 |---|---|---|
 | 1 | .459 | .585 |
 | 2 | .475 | .674 |
-| interim agg | .467 | .629 |
+| 3 | .500 | .646 |
+| agg | .478±.021 | .635±.045 |
 
-**INTERIM (2/3 seeds): P-R2's strongest branch is firing.** Replay
-does not merely capture B2's mean gain (.278→.324) — it exceeds it
-(.467), while GAINING coverage over baseline (.629 vs .541) where
-recycling paid coverage (.492). Both seeds individually exceed B2 on
-both axes. If seed 3 agrees, §6.8 must state that at this scale the
-dose control dominates hindsight recycling on both axes: the mean gain
-recycling buys is available from extra optimizer epochs on live groups
-alone, and the relabel direction's marginal contribution is negative
-on both axes relative to the dose control. Dose caveat fixed at design
-time: ppo_epochs=2 doubles updates on all live groups, which is
-"roughly B2's extra update dose", not an exact match.
-
-Final verdict to be recorded here when `armB_replay_s3.json` lands.
+**FINAL (3/3 seeds): P-R2 CONFIRMED-STRONG** (verdict computed by
+`extract_arm_results.py` from the prereg window; every seed
+individually inside it — `reviewer_arms_verdicts.json`). Replay does
+not merely capture B2's mean gain (.278→.324) — it exceeds it (.478,
+mean-captured fraction 4.3× of B2's gain), while GAINING coverage over
+baseline (.635 vs .541) where recycling paid coverage (.492). §6.8
+states the consequence: on this pool recycling's mean gain was never
+specifically about relabels — generic extra updates on live groups buy
+more of it without the coverage bill — so recycling's distinctive
+value lives in the all-fail regime (§6.2), not where live groups
+already carry signal. Dose caveat fixed at design time: ppo_epochs=2
+doubles updates on all live groups, which is "roughly B2's extra
+update dose", not an exact match; the arm bounds what extra updates
+buy rather than isolating the direction term.
 
 Machine-readable verdicts: `reviewer_arms_verdicts.json`.

@@ -994,16 +994,20 @@ training signal vanishes --- the softmax pays for those updates out of
 the exploration tail. A pre-registered dose control at this scale
 (P-R2: extra optimizer epochs on live groups,
 \texttt{ppo\_epochs=2}, hindsight off --- the CPU battery's replay
-placebo transplanted) sharpens the accounting: at 2 of 3 seeds
-complete, replay \emph{exceeds} recycling's tier-1 mean gain
-($.467$ vs.\ $.324$) while \emph{gaining} coverage ($.629$ vs.\
-$.541$ baseline) where recycling paid it ($.492$) --- though its
-update dose is larger than recycling's ($2\times$ all live groups
-vs.\ ${\sim}19\%$ added relabel groups), so it bounds what extra
-updates buy rather than isolating the direction term. If the third
-seed agrees, the practical conclusion is that recycling's mean gain
-here was never specifically about relabels --- generic extra updates
-on live groups buy more of it, without the coverage bill.
+placebo transplanted) sharpens the accounting, now complete at 3/3
+seeds: replay \emph{exceeds} recycling's tier-1 mean gain (mean@16
+$.478{\pm}.021$ vs.\ B2's $.324$) while \emph{gaining} coverage
+($\passat{16}$ $.635{\pm}.045$ vs.\ baseline $.541$) where recycling
+paid it ($.492$) --- every seed inside the registered window
+(artifact \texttt{countdown\_reviewer\_arms/}). Its update dose is
+larger than recycling's ($2\times$ all live groups vs.\ ${\sim}19\%$
+added relabel groups), so it bounds what extra updates buy rather
+than isolating the direction term --- but the practical conclusion
+stands: on this pool, recycling's mean gain was never specifically
+about relabels; generic extra updates on live groups buy more of it,
+without the coverage bill. Recycling's distinctive value therefore
+lives where extra live-group updates are impossible --- the all-fail
+regime of \S 6.2 --- not where live groups already carry signal.
 \takeaway{Recycling needs an admission rule, and the utility's
 mastered-tail zero motivates one --- designed and tested next.}
 
@@ -1686,8 +1690,8 @@ recycling-induced sharpening (mean up, $\passat{k}$ down) & 3 seeds,
 loss clears $2\times$ seed spread; crossing in $k$; dose-then-damage
 timing & $\uparrow$ & \S 6.8 \\
 extra-updates dose control at LLM scale & replay (2 epochs) beats
-recycling's mean gain \emph{with} coverage gain, 2/3 seeds &
-$\rightarrow$ (s3) & \S 6.8 \\
+recycling's mean gain \emph{with} coverage gain, P-R2 3/3 seeds &
+$\uparrow$ & \S 6.8 \\
 moderate gate = one useful operating point & frontier-tier coverage
 to baseline at ${\sim}60\%$ mean kept, 3 seeds & $\uparrow$ & \S 6.9 \\
 gate strength is a monotone dial & designed-strength sweep P-R1:
