@@ -1217,7 +1217,8 @@ annotations transferred poorly ($\rho{=}-0.17$), so cold-start from
 off-model labels is not the answer. \emph{The throughput mechanism
 does not transfer}: at matched wall-clock the maze teacher's measured
 value is extra optimization steps from skipping dead groups' backward
-passes, but in generation-dominated LLM pipelines (85\% of step time)
+passes, but in generation-dominated LLM pipelines (up to 83\% of step
+time in our generation-dominated sessions; App.~\ref{app:hparams})
 a dead group has paid its full cost before it is known dead --- the
 relevant LLM-scale comparisons are generation-budget-matched
 (resample-to-fill, prompt pre-filtering), and the teacher's value
@@ -1701,7 +1702,7 @@ the GSM8K pass@$k$ harness sits
 ${\sim}3\times$ below the trainer's val metric (unreconciled; only
 within-sweep contrasts are quoted, and the reconciliation script is
 queued behind the running arms). A one-row-per-run registry
-(\texttt{curriculum\_maxrl/run\_registry.json}; 48 rows spanning the
+(\texttt{curriculum\_maxrl/run\_registry.json}; 53 rows spanning the
 maze, Countdown, and GSM8K artifacts, with arm/seed/protocol per row)
 indexes every run this paper draws on; the maze main-effect subset and
 its 5v4 composition are tabulated in
