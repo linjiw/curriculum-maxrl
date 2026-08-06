@@ -115,23 +115,18 @@ shift \citep{gcsl} composed with curation-driven self-consumption
 \emph{Q3: Does the algebra also supply the fix?} It motivates one. A
 relabel to a destination the model reliably reaches sits in the
 mastered tail, where mass vanishes, so we gate relabel admission by a
-saturation statistic on the destination: a decayed frequency estimate
-of how often that destination has recently appeared in the recycler's
-own relabel stream, thresholded before another relabel is admitted. The mastered-tail zero
-of the same utility that schedules sampling motivates \emph{that such
-a threshold should exist}; the statistic itself is a heuristic proxy
---- it is not a fresh-rollout pass-rate estimate for the destination
-task, and the threshold value is tuned (\S\ref{sec:recycling},
-Table~\ref{tab:knobs}). Across three seeds the moderate gate
-returns frontier-tier coverage to the no-recycling baseline while
-keeping most of recycling's mean gain; whether gate strength traces a
-monotone trade is an open question \S 6.9 states precisely. Where
-recycling is healthy the gate is transparent: hard-destination
-relabels pass untouched, so the exact-gradient testbeds of \S 6.1
-reproduce their results with the gate enabled. The gate is one
-mechanism across domains, but not switch-free: each domain supplies a
-relabel map and a destination key, and Jugs showed the key choice is
-load-bearing (\S\ref{sec:limits}).
+saturation statistic on the destination --- a decayed frequency over
+the recycler's own recent relabel stream. The mastered-tail zero
+motivates \emph{that such a threshold should exist}; the statistic
+itself is a tuned heuristic, not a destination pass-rate estimate
+(\S 6.8 states exactly what it is and is not). Across three seeds the
+moderate gate returns frontier-tier coverage to the no-recycling
+baseline while keeping most of recycling's mean gain (\S 6.9); where
+recycling is healthy the gate is transparent (hard-destination
+relabels pass untouched). It is one mechanism across domains, but not
+switch-free: each domain supplies a relabel map and a destination
+key, and Jugs showed the key choice is load-bearing
+(\S\ref{sec:limits}).
 
 Our contributions:
 \begin{enumerate}
@@ -908,37 +903,35 @@ $\pm.009$/$\pm.017$ bars are repeated-eval noise of a fixed
 checkpoint --- they bound evaluation variability, not training-seed
 variability --- so deficit-to-noise ratios are descriptive reads, not
 hypothesis tests.}
-Steering telemetry, read against its own controls: the teacher's sampled-dead
-fraction \emph{minimum} reaches .48 vs.\ uniform's .52, but the run
-means are indistinguishable (.66--.67 in all cells) --- the delivered
-treatment was weak, which is the posterior-starvation mechanism below,
-and it bounds how much of the GRPO gap the curriculum can own.
 \textbf{A replication seed does not reproduce the regression shape:}
 seed 2 of the same cell climbs monotonically ($.073\to.095\to.118$)
-under measurably weaker steering (near-uniform teacher on average).
-The completed within-seed pair (grpo-uniform seed 2:
-$.081\to.085\to.125$; artifact \texttt{grpo\_uniform\_seed2.json})
-sharpens the read: the endpoint teacher deficit under GRPO has the
-same \emph{sign} in both seeds on both (coupled) meters, with
-magnitude tracking steering intensity --- a dose effect, not a sign
-flip; the pre-registered second-half-regression \emph{shape} remains
-1 of 2 seeds, suggestive not established. MaxRL+teacher trains stably
-to its best value ($.066\to.102$) but does not beat uniform's $.108$
---- P-G1 is a \emph{null at this budget}, predicted in advance by
-posterior starvation: the teacher's posterior learns this model's
-real difficulty landscape from ${\sim}1$ visit per prompt, but
-3{,}200 draws over 7{,}473 prompts leave the estimated utility nearly
-flat, so Thompson sampling stays near-uniform (diagnostics in
-App.~\ref{app:rungs}). A $\passat{k}$ sweep on the registered
-checkpoints has the teacher's GRPO deficit \emph{widening
-monotonically with $k$} ($-.008$ at $k{=}1$ to $-.024$ at $k{=}16$)
---- curriculum damage lives in coverage, as the maze predicted,
-though each delta is within single-seed noise. One design confound is
-disclosed rather than dismissed: teacher cells sample with
-replacement and so revisit prompts more; a uniform-with-replacement
-control cell separates the repetition reading and runs with the
-steering-controlled replication. Small model; the pre-registered
-outcomes were orderings and signs on the registered run.
+under measurably weaker steering (near-uniform teacher on average;
+telemetry in App.~\ref{app:rungs}). The completed within-seed pair
+(grpo-uniform seed 2: $.081\to.085\to.125$; artifact
+\texttt{grpo\_uniform\_seed2.json}) sharpens the read: the endpoint
+teacher deficit under GRPO has the same \emph{sign} in both seeds on
+both (coupled) meters, with magnitude tracking steering intensity ---
+a dose effect, not a sign flip; the pre-registered
+second-half-regression \emph{shape} remains 1 of 2 seeds, suggestive
+not established. MaxRL+teacher trains stably to its best value
+($.066\to.102$) but does not beat uniform's $.108$ --- P-G1 is a
+\emph{null at this budget}, predicted in advance by posterior
+starvation: the teacher's posterior learns this model's real
+difficulty landscape from ${\sim}1$ visit per prompt, but 3{,}200
+draws over 7{,}473 prompts leave the estimated utility nearly flat,
+so Thompson sampling stays near-uniform and the delivered treatment
+was weak in every cell (run-mean dead-sampled fractions
+indistinguishable; diagnostics in App.~\ref{app:rungs}). A
+$\passat{k}$ sweep on the registered checkpoints has the teacher's
+GRPO deficit \emph{widening monotonically with $k$} ($-.008$ at
+$k{=}1$ to $-.024$ at $k{=}16$) --- curriculum damage lives in
+coverage, as the maze predicted, though each delta is within
+single-seed noise. One design confound is disclosed rather than
+dismissed: teacher cells sample with replacement and so revisit
+prompts more; a uniform-with-replacement control cell separates the
+repetition reading and runs with the steering-controlled replication.
+Small model; the pre-registered outcomes were orderings and signs on
+the registered run.
 \takeaway{The LLM-scale
 interaction is 1-of-2-seeds, tracks steering intensity, and is not
 corroborated by the maze factorial's interaction read --- the
