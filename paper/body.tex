@@ -775,8 +775,8 @@ realized schedules replayed under each estimator preserve MaxRL over
 GRPO in 10/10 seed$\times$schedule pairs at the common deployed lr
 (artifact \texttt{results\_schedule\_matched.json}). A pre-registered
 lr sweep then tested whether this is an lr-calibration artifact
-(reviewer-posed; P-LR1, committed branch), and on this
-learnable-everywhere pool it partly is: a global $2$--$4\times$ lr
+(reviewer-posed; P-LR1 --- falsified as registered, branch
+executed), and on this learnable-everywhere pool it partly is: a global $2$--$4\times$ lr
 raise lets GRPO match MaxRL's $\Delta$cov@8 --- by saturating
 $\passat{1}$, so its coverage--reliability premium collapses to
 $.007$--$.013$ where MaxRL holds $.050$ (artifact
@@ -1020,8 +1020,8 @@ training signal vanishes --- the softmax pays for those updates out of
 the exploration tail. A pre-registered dose control at this scale
 (P-R2: extra optimizer epochs on live groups,
 \texttt{ppo\_epochs=2}, hindsight off --- the CPU battery's replay
-placebo transplanted) sharpens the accounting, now complete at 3/3
-seeds: replay \emph{exceeds} recycling's tier-1 mean gain (mean@16
+placebo transplanted) sharpens the accounting; its strongest
+registered branch confirmed at 3/3 seeds: replay \emph{exceeds} recycling's tier-1 mean gain (mean@16
 $.478{\pm}.021$ vs.\ B2's $.324$) while \emph{gaining} coverage
 ($\passat{16}$ $.635{\pm}.045$ vs.\ baseline $.541$) where recycling
 paid it ($.492$) --- every seed inside the registered window
@@ -1062,8 +1062,8 @@ also practical, not just derived: an \emph{estimated}-$p$ gate fed by
 probe rollouts of proposed destinations recovers $98\%$ of the
 oracle-vs-frequency gap at matched \emph{total} rollouts with even
 one probe per step (10/10 seeds at every probe budget tested,
-insensitive to the budget over $1$--$16$; pre-registered P-PB1;
-artifact \texttt{results\_gate\_probe\_budget.json}) --- destination
+insensitive to the budget over $1$--$16$; pre-registered P-PB1,
+confirmed; artifact \texttt{results\_gate\_probe\_budget.json}) --- destination
 pass rates are cheap to estimate because the gate only needs them
 coarsely ($\lessgtr 0.5$), so the LLM-loop version costs a
 negligible slice of generation budget.
