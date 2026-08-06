@@ -43,9 +43,18 @@ wins 10/10). At decision time the heuristic's statistic
 **anti-correlates** with true p(g') (−.27) — it tracks the recycler's
 own recent output, not policy competence; the two rules agree only
 once everything saturates (.66 early → .99 late). §6.8 now says the
-LLM gate results are evidence about a recency-novelty filter and names
-the genuine pass-rate gate as the indicated upgrade. Artifact:
+LLM gate results are evidence about a recency-novelty filter. Artifact:
 `results_gate_variants.json`.
+
+**Measured 2026-08-06** (`run_gate_probe_budget.py`, prereg P-PB1/2):
+the upgrade is practical, not just derived — an estimated-p gate fed
+by probe rollouts (charged against the same generation budget;
+training shortened to match total rollouts) recovers **98% of the
+oracle-vs-frequency gap with even one probe per step** (P-PB1 10/10
+seeds at every probe budget 1/4/16). Admission only needs p(g')
+coarsely (≶.5), so the LLM-loop version costs a negligible slice of
+generation budget. In §6.8. Artifact:
+`results_gate_probe_budget.json`.
 
 The second mismatch (u_N's high-p zero is at p=1, threshold 0.5 is
 tuned) is now stated wherever the threshold appears.
