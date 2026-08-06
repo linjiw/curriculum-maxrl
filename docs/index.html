@@ -227,8 +227,9 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     regression shape is 1-of-2 and receives no corroboration from the factorial's
     interaction read.
     &nbsp;·&nbsp; <strong>Sharpening + the gate:</strong> recycling trades coverage for accuracy
-    (3 seeds, outside noise); the utility gate restores coverage keeping ~60% of the gain — and
-    the gate threshold traces a mean-vs-coverage dial.</p>
+    (3 seeds, outside noise); the saturation gate restores frontier-tier coverage keeping ~60% of the
+    gain at one validated operating point — the stronger "dial" reading was refuted in its
+    pre-registered 3-seed sweep (P-R1): designed-strength gating is recycling-off plus seed noise.</p>
   </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
@@ -782,17 +783,20 @@ run; the pre-registered kill criterion did its job.)</p>
   <em>data-induced</em> rather than weight-induced. A ~30-paper review found no prior
   report of hindsight-induced pass@k loss in RLVR: the nearest works never measured
   coverage.</p></div>
-  <div class="card"><h3>The fix falls out of our own algebra — and it's a dial</h3>
+  <div class="card"><h3>The fix falls out of our own algebra — one operating point, not a dial</h3>
   <p>A relabel to a value the model just produced is a task at p≈1 — exactly where
   u(p) = pass@N − pass@1 says training signal is <em>zero</em>. So the estimator
-  provides the admission rule: <strong>gate the relabel destination by its estimated
-  pass rate</strong>. Measured across three seeds: at the frontier tier the gate
+  motivates the admission rule: <strong>gate relabels by a destination-saturation
+  statistic</strong>. Measured across three seeds: at the frontier tier the gate
   restores coverage to baseline (.279±.019 vs .274) while keeping ~60% of recycling's
-  mean gain; a full-strength rerun pushes tier-1 coverage <em>above</em> baseline at
-  the mean's full price. Gate strength traces a monotone mean-vs-coverage trade —
-  a dial, not a switch. In-run telemetry shows the mechanism: rejection rises
-  .12 → .85 as the model's reachable set saturates, and the gated arm ends with
-  <em>more</em> policy entropy than no recycling at all. Full synthesis:
+  mean gain. The stronger reading — that gate strength traces a monotone
+  mean-vs-coverage <em>dial</em> — was pre-registered and <strong>refuted</strong>
+  (P-R1, 3 seeds at the designed strength, rejection ~.94): those runs land on the
+  no-recycling point with seed spread covering most of the baseline↔recycling range,
+  and the earlier single-seed "coverage above baseline" endpoint sits inside that
+  spread. Strong gating ≈ recycling off. In-run telemetry still shows the mechanism:
+  rejection rises .12 → .85 as the model's reachable set saturates, and the gated arm
+  ends with <em>more</em> policy entropy than no recycling at all. Full synthesis:
   <span class="mono">SHARPENING_SYNTHESIS.md</span>.</p></div>
 </div>
 
