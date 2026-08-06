@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 23:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 23:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -543,7 +543,7 @@ Package pdftex.def Info: figures/fig1_utility.pdf  used on input line 176.
 (pdftex.def)             Requested size: 432.17375pt x 160.52599pt.
 
 [3 <./figures/fig1_utility.pdf>] [4]
-<figures/fig4_algorithm.pdf, id=213, 505.89pt x 231.26399pt>
+<figures/fig4_algorithm.pdf, id=214, 505.89pt x 231.26399pt>
 File: figures/fig4_algorithm.pdf Graphic file (type pdf)
 <use figures/fig4_algorithm.pdf>
 Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 437.
@@ -551,39 +551,39 @@ Package pdftex.def Info: figures/fig4_algorithm.pdf  used on input line 437.
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 461.
  [5] [6 <./figures/fig4_algorithm.pdf>]
-<figures/fig5_channels.pdf, id=276, 252.945pt x 216.81pt>
+<figures/fig5_channels.pdf, id=277, 252.945pt x 216.81pt>
 File: figures/fig5_channels.pdf Graphic file (type pdf)
 <use figures/fig5_channels.pdf>
 Package pdftex.def Info: figures/fig5_channels.pdf  used on input line 572.
 (pdftex.def)             Requested size: 234.8775pt x 201.32684pt.
 
 [7 <./figures/fig5_channels.pdf>]
-<figures/fig2_ladder.pdf, id=308, 505.89pt x 202.356pt>
+<figures/fig2_ladder.pdf, id=309, 505.89pt x 202.356pt>
 File: figures/fig2_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ladder.pdf>
 Package pdftex.def Info: figures/fig2_ladder.pdf  used on input line 645.
 (pdftex.def)             Requested size: 469.75502pt x 187.90506pt.
  [8] [9 <./figures/fig2_ladder.pdf>] [10]
-<figures/fig8_bands.pdf, id=369, 505.89pt x 195.129pt>
+<figures/fig8_bands.pdf, id=370, 505.89pt x 195.129pt>
 File: figures/fig8_bands.pdf Graphic file (type pdf)
 <use figures/fig8_bands.pdf>
 Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 865.
 (pdftex.def)             Requested size: 469.75502pt x 181.19415pt.
 
 [11 <./figures/fig8_bands.pdf>]
-<figures/fig3_gsm8k.pdf, id=404, 252.945pt x 202.356pt>
+<figures/fig3_gsm8k.pdf, id=405, 252.945pt x 202.356pt>
 File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
 <use figures/fig3_gsm8k.pdf>
 Package pdftex.def Info: figures/fig3_gsm8k.pdf  used on input line 906.
 (pdftex.def)             Requested size: 258.36668pt x 206.6968pt.
  [12 <./figures/fig3_gsm8k.pdf>]
-<figures/fig7_sharpening.pdf, id=446, 505.89pt x 202.356pt>
+<figures/fig7_sharpening.pdf, id=447, 505.89pt x 202.356pt>
 File: figures/fig7_sharpening.pdf Graphic file (type pdf)
 <use figures/fig7_sharpening.pdf>
 Package pdftex.def Info: figures/fig7_sharpening.pdf  used on input line 968.
 (pdftex.def)             Requested size: 469.75502pt x 187.90506pt.
  [13 <./figures/fig7_sharpening.pdf>]
-<figures/fig9_passk.pdf, id=481, 260.17201pt x 202.356pt>
+<figures/fig9_passk.pdf, id=482, 260.17201pt x 202.356pt>
 File: figures/fig9_passk.pdf Graphic file (type pdf)
 <use figures/fig9_passk.pdf>
 Package pdftex.def Info: figures/fig9_passk.pdf  used on input line 1080.
@@ -604,12 +604,12 @@ frame-work un-der non-linear RL ob-jec-tives.
  []
 
 [18] [19]
-<figures/fig6_gym.pdf, id=586, 505.89pt x 202.356pt>
+<figures/fig6_gym.pdf, id=587, 505.89pt x 202.356pt>
 File: figures/fig6_gym.pdf Graphic file (type pdf)
 <use figures/fig6_gym.pdf>
 Package pdftex.def Info: figures/fig6_gym.pdf  used on input line 1534.
 (pdftex.def)             Requested size: 469.75502pt x 187.90506pt.
-<figures/fig9_ksweep.pdf, id=587, 245.718pt x 187.902pt>
+<figures/fig9_ksweep.pdf, id=588, 245.718pt x 187.902pt>
 File: figures/fig9_ksweep.pdf Graphic file (type pdf)
 <use figures/fig9_ksweep.pdf>
 Package pdftex.def Info: figures/fig9_ksweep.pdf  used on input line 1565.
@@ -695,10 +695,10 @@ sfbx1000.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm080
 0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb><
 /usr/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb>
-Output written on main.pdf (24 pages, 840528 bytes).
+Output written on main.pdf (24 pages, 840565 bytes).
 PDF statistics:
- 845 PDF objects out of 1000 (max. 8388607)
- 647 compressed objects within 7 object streams
+ 846 PDF objects out of 1000 (max. 8388607)
+ 648 compressed objects within 7 object streams
  153 named destinations out of 1000 (max. 500000)
  60067 words of extra memory for PDF output out of 61914 (max. 10000000)
 
