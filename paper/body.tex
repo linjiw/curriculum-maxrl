@@ -910,17 +910,17 @@ the steering telemetry that separates the two seeds.}
 \paragraph{6.7 Does it transfer to LLM scale? (GSM8K $2{\times}2$,
 pre-registered; SmolLM2-360M, $N{=}16$, one A10G).} Predictions committed before any cell
 finished. \textbf{P-G2 landed on the registered run:} GRPO+teacher
-was the only cell that regressed in its second half, and the deficit
-against plain GRPO at the endpoint is $2$--$4\times$ the measured
-same-model eval noise (mean@4 $-.027$; $\passat{4}$ $-.048$; the
-second-half dip itself, $.096\to.093$, is within the $\pm.009$ noise
-floor and carries no weight on its own) while plain GRPO climbed
-monotonically ($.078\to.105\to.120$). One uncertainty caveat governs
-every GSM8K number: the $\pm.009$/$\pm.017$ bars are repeated-eval
-noise of a fixed checkpoint --- they bound evaluation variability, not
-training-seed variability --- so deficit-to-noise ratios are
-descriptive signal-to-noise reads, not hypothesis tests; training-seed
-uncertainty at $n{=}2$ is what a multi-seed cell would measure.
+was the only cell that regressed in its second half; the deciding
+statistic is the endpoint deficit against plain GRPO, $2$--$4\times$
+the measured same-model eval noise (mean@4 $-.027$; $\passat{4}$
+$-.048$), while plain GRPO climbed monotonically
+($.078\to.105\to.120$).\footnote{The second-half dip itself
+($.096\to.093$) is within the $\pm.009$ noise floor and carries no
+weight on its own. One caveat governs every GSM8K number: the
+$\pm.009$/$\pm.017$ bars are repeated-eval noise of a fixed
+checkpoint --- they bound evaluation variability, not training-seed
+variability --- so deficit-to-noise ratios are descriptive reads, not
+hypothesis tests.}
 Steering telemetry, read against its own controls: the teacher's sampled-dead
 fraction \emph{minimum} reaches .48 vs.\ uniform's .52, but the run
 means are indistinguishable (.66--.67 in all cells) --- the delivered
