@@ -8,7 +8,8 @@ paper repository is self-contained for the §6.3 factorial claims.
 |---|---|
 | `run_factorial.sh` | the pre-registration (committed in the fork BEFORE any run; prereg text in the header) |
 | `fact_analyze.py` | the analyzer (registered endpoint + tagged exploratory secondary) |
-| `results_factorial.json` | per-cell endpoints as analyzed for the verdict (31 complete cells at verdict time; the repair pass folds in GPU-contention casualties — reruns of identical commands — and cannot flip P-F1, already ≤4/6 under uniform) |
+| `results_factorial_wave1.json` | wave-1 per-cell endpoints (seeds 0–5 + grpo_mass/grpo_nostd arms, 36 cells, repair pass folded; the P-F1 verdict file). Regenerate: `fact_analyze.py --seed-start 0 --seeds 6` |
+| `results_factorial_wave2.json` | wave-2 per-cell endpoints (fresh seeds 6–11, 24 cells; the P-F2 verdict file). Regenerate: `fact_analyze.py --seed-start 6 --seeds 6` |
 | `FACTORIAL_VERDICT.md` | verdict against every prereg criterion |
 
 Raw per-step seed logs (`fact250_*.jsonl`, ~36 files) live in the fork
