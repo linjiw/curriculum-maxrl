@@ -1795,6 +1795,13 @@ relabel dose cap & 12 groups/step & tuned & sets \emph{where} coverage is spent 
 \end{table}
 
 \section*{Reproducibility}
+One command verifies the artifact end to end:
+\texttt{bash reproduce.sh} runs the proposition and integration
+tests, re-derives the figure endpoints from per-seed artifacts
+(failing on mismatch), checks every manifest checksum, regenerates
+every figure from its frozen inputs, and spot-checks each quoted
+prereg verdict against its committed artifact
+(\texttt{--build} additionally rebuilds both PDF wrappers).
 Every proposition has an enumeration/Monte-Carlo verification script
 (\texttt{test\_mass\_formulas.py} in \texttt{curriculum\_maxrl/}
 checks the MaxRL, RLOO, and both GRPO-SD mass formulas against exact
