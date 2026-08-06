@@ -159,3 +159,18 @@ still single-run-conditional, and formatting/anonymization work is undone.
   GRPO-own/no-std maze arms -> title-claim scope; ARM A/B/C ->
   gate-dial + dose-baseline + harness paragraphs; then the section-6
   restructure + claims table, final float pass, camera-ready hashes.
+
+- 2026-08-06: ARM A COMPLETE, **P-R1 REFUTED** at 3 seeds (mean-kept
+  −0.26, window [0,.60]; coverage .525 vs floor .541): falsification
+  branch executed — Fig 7a redrawn as operating-point scatter, §6.9 +
+  fig9 caption + conclusion + site de-dialed; artifacts vendored to
+  curriculum_maxrl/countdown_reviewer_arms/ (commit 0fd5f70). ARM B
+  interim (2/3 seeds): replay ppo_epochs=2 EXCEEDS recycling on both
+  axes (t1 mean .467 vs .324; pass16 .629 vs .492) — §6.8 carries the
+  dose-control paragraph with the dose caveat; final verdict on s3.
+  REMAINING (experiment-gated): ARM B s3 -> P-R2 final; g3p ->
+  E-LLM-1b verdict -> 6.7 rewrite; maze grpo_mass/nostd/fullcv sweeps
+  (queued); ARM C harness reconciliation; OTG ablation (P-OTG1/2).
+  Then: section-6 restructure + claims-vs-evidence table, page
+  compression toward 9pp, camera-ready hashes, anonymized artifact
+  mirror.
