@@ -164,7 +164,9 @@ Along the way we state a refinement to the MaxRL paper --- the practical
 drop-$K{=}0$ estimator is unbiased for the $T{=}N{-}1$ objective, not
 $T{=}N$ (Lemma~\ref{lem:trunc}) --- and every prediction below was
 committed before the deciding runs, with negatives and retractions
-reported in place (\S\ref{sec:limits}) and audited in the repository.
+reported in place (\S\ref{sec:limits}) and audited in the repository;
+App.~\ref{app:claims} tabulates every load-bearing claim with its
+evidence and registration status.
 
 \begin{figure}[t]
 \centering
@@ -1609,6 +1611,73 @@ were mean-kept $\in [0,.60]$ of B2's gain and coverage
 $\in [.541,.571]$; observed mean-kept $-0.26$, coverage $.525$.
 Artifacts \texttt{armA\_b3fix\_s\{1,2,3\}.json} with prereg and
 verdict in \texttt{countdown\_reviewer\_arms/}.
+
+\section{Claims and evidence}\label{app:claims}
+
+Every load-bearing claim, its strongest evidence, and its
+pre-registered status. ``Registered'' means the prediction and its
+falsification branch were committed before the deciding run; executed
+branches are marked. Artifacts named per row live in the repository
+with the run registry (\texttt{run\_registry.json}).
+
+\begin{table}[h]
+\centering\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\caption{Claim inventory. $\uparrow$ = confirmed as registered;
+$\downarrow$ = refuted, committed branch executed; $\circ$ =
+descriptive/exploratory (no registered endpoint); $\rightarrow$ =
+registered, run pending.}
+\label{tab:claims}
+\begin{tabular}{@{}p{0.34\linewidth}p{0.40\linewidth}cl@{}}
+\toprule
+claim & strongest evidence & status & where \\
+\midrule
+mass identity $A_N = 2u_N$; factorization
+$\mathbb{E}[\hat g|x] = u_N(\mu_+{-}\mu_-)$ & proof + MC
+(\texttt{verify\_guidance\_math.json}); enumeration test in CI &
+proved & Prop.~1 \\
+drop-$K{=}0$ estimator unbiased for $T{=}N{-}1$ & three-line
+derivation + SymPy check & proved & Lem.~1 \\
+allocation saturates: oracle ties full stack & no-floor
+$\gamma$-matched oracle $.8885 \approx .8895$, 5 seeds & $\circ$ &
+\S 6.1 \\
+creation is the only live channel at $p{\approx}0$ &
+uniform+recycling $.931 \approx$ teacher+recycling $.928$ vs.\
+$0.000$ all pure samplers, 5 seeds & $\circ$ & \S 6.2 \\
+zero-exception coverage divergence (9-run cohort) & failed balanced
+factorial at registered endpoint (3/6, 4/6 vs.\ $\ge$5/6 both) &
+$\downarrow$ retracted & \S 6.3b \\
+time-integrated coverage ordering (MaxRL $>$ GRPO) & wave-2
+registered primary on fresh blocks: 6/6 per sampler, $p{=}.031$
+each; 24/24 both waves & $\uparrow$ & \S 6.3b \\
+easy-band concentration of GRPO's loss & wave-2 registered P-F3:
+10/12 pairs; GRPO ${\sim}2\times$ MaxRL's easy-band loss &
+$\uparrow$ & \S 6.4 \\
+variance normalization is the tail mechanism & exact rung: no-SD
+GRPO collapses onto RLOO 10/10; neural rung: P-G0c \emph{failed}
+(loses easy band 5/5) & split; bounded & \S 6.3b--6.4 \\
+GRPO's own-mass teacher doesn't rescue it & P-G0a confirmed 5/6,
+both rungs & $\uparrow$ & \S 6.3b \\
+recycling-induced sharpening (mean up, $\passat{k}$ down) & 3 seeds,
+loss clears $2\times$ seed spread; crossing in $k$; dose-then-damage
+timing & $\uparrow$ replicated & \S 6.8 \\
+extra-updates dose control at LLM scale & replay
+\texttt{ppo\_epochs=2}: exceeds recycling's mean gain with coverage
+\emph{gain}, 2/3 seeds & $\rightarrow$ (s3) & \S 6.8 \\
+moderate gate = one useful operating point & frontier-tier coverage
+to baseline at ${\sim}60\%$ mean kept, 3 seeds & $\uparrow$ & \S 6.9 \\
+gate strength is a monotone dial & designed-strength sweep P-R1:
+mean-kept $-0.26 \notin [0,.60]$, coverage $.525 < .541$, 3 seeds &
+$\downarrow$ branch executed & \S 6.9 \\
+LLM teacher$\times$estimator interaction (GSM8K) & 1-of-2 seeds,
+tracks steering intensity; steering-controlled cell registered &
+$\rightarrow$ & \S 6.7 \\
+pool-conditionality: Jugs defeats every arm & pre-registered
+all-null with entropy-collapse mechanism & $\uparrow$ negative &
+\S\ref{sec:limits} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Hyperparameters and compute}\label{app:hparams}
 
