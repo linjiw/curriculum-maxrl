@@ -34,9 +34,11 @@ still single-run-conditional, and formatting/anonymization work is undone.
 ## STRONG (reviewers will ding without)
 
 - **S1. Second seed for the Countdown corrected-gate operating point**
-  (the full-strength point in Fig 8a is 1 seed) and for the maze
-  GRPO+teacher arm (single-seed, labeled). GPU-cheap (~8h total), queue
-  after E-LLM-1b.
+  ~~(the full-strength point in Fig 8a is 1 seed)~~ **RESOLVED
+  2026-08-06 by ARM A (3 seeds): the 1-seed point did NOT replicate —
+  P-R1 refuted, Fig 7a redrawn as scatter.** Maze GRPO+teacher
+  single-seed arm: superseded by the balanced factorial (6 blocks both
+  samplers ×2 waves).
 - **S2. Reference hygiene**: 4 entries still cite arXiv IDs with "et al."
   reconstructed from abstracts — verify against the PDFs; LILO/SFL/DUMP
   entries lack arXiv IDs; dapo bibitem says NeurIPS 2025 (check venue).
@@ -50,8 +52,9 @@ still single-run-conditional, and formatting/anonymization work is undone.
 
 - N1. A pass@k-vs-k sweep figure for the maze (the crossing-at-k≈4
   result is currently prose).
-- N2. Countdown gate_max_p dose sweep (pre-registered as standing
-  follow-up; would turn Fig 8a's 3-point frontier into a curve).
+- N2. Countdown gate_max_p dose sweep — **CLOSED 2026-08-06: the
+  fixed-decay designed-strength sweep (ARM A) refuted the dose-response
+  reading (P-R1); there is no curve to draw. Fig 7a is a scatter.**
 - N3. Whittle-index theory paragraph (parked; only if a theory reviewer
   is anticipated).
 
