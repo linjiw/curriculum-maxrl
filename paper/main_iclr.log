@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 23:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2026.7.27)  6 AUG 2026 23:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -585,6 +585,9 @@ File: figures/fig8_bands.pdf Graphic file (type pdf)
 <use figures/fig8_bands.pdf>
 Package pdftex.def Info: figures/fig8_bands.pdf  used on input line 865.
 (pdftex.def)             Requested size: 397.48499pt x 153.3195pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [11 <./figures/fig8_bands.pdf>]
 <figures/fig3_gsm8k.pdf, id=411, 252.945pt x 202.356pt>
 File: figures/fig3_gsm8k.pdf Graphic file (type pdf)
@@ -605,14 +608,14 @@ Package pdftex.def Info: figures/fig9_passk.pdf  used on input line 1080.
 (pdftex.def)             Requested size: 206.69388pt x 160.77036pt.
 LaTeX Font Info:    Trying to load font information for OMS+pcr on input line 1
 123.
-
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omspcr.fd
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omspcr.fd
 File: omspcr.fd 
 )
 LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1123.
 
- [14] [15 <./figures/fig9_passk.pdf>] [16] [17] [18] [19]
+ [14]
+[15 <./figures/fig9_passk.pdf>] [16] [17] [18] [19]
 <figures/fig6_gym.pdf, id=615, 505.89pt x 202.356pt>
 File: figures/fig6_gym.pdf Graphic file (type pdf)
 <use figures/fig6_gym.pdf>
@@ -671,11 +674,11 @@ Package rerunfilecheck Info: File `main_iclr.out' has not changed.
 (rerunfilecheck)             Checksum: 22E7D4B60F1772C379F03444ECEB7B50;2601.
  ) 
 Here is how much of TeX's memory you used:
- 13628 strings out of 480806
- 197237 string characters out of 5905151
+ 13631 strings out of 480806
+ 197261 string characters out of 5905151
  556990 words of memory out of 6000000
  29989 multiletter control sequences out of 15000+600000
- 467721 words of font info for 497 fonts, out of 8000000 for 9000
+ 467837 words of font info for 499 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  61i,18n,75p,1375b,523s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
@@ -703,7 +706,7 @@ texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type
 1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
 ri8a.pfb>
-Output written on main_iclr.pdf (24 pages, 694313 bytes).
+Output written on main_iclr.pdf (24 pages, 694295 bytes).
 PDF statistics:
  832 PDF objects out of 1000 (max. 8388607)
  647 compressed objects within 7 object streams
