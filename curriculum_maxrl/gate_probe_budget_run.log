@@ -1,0 +1,11 @@
+     arm              AUC            final eff_steps
+ ungated +0.8813±0.0053 +0.9838±0.0003       400
+    freq +0.7981±0.0130 +0.9817±0.0005       400
+   truep +0.8785±0.0038 +0.9837±0.0003       400
+   estp1 +0.8774±0.0022 +0.9836±0.0004       397
+   estp4 +0.8769±0.0055 +0.9832±0.0002       388
+  estp16 +0.8769±0.0044 +0.9816±0.0004       356
+
+P-PB1 estp16 recovers >=80% of oracle-freq gap: 10/10 seeds (mean recovery 0.98)
+P-PB2 monotone in probe budget: 1/10
+wrote /home/ec2-user/work/curriculumrl/curriculum-maxrl/curriculum_maxrl/results_gate_probe_budget.json

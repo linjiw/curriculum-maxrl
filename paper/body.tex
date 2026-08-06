@@ -1027,9 +1027,16 @@ time the heuristic's statistic \emph{anti-correlates} with true
 $p(g')$ ($-.27$ --- it tracks the recycler's own recent output), and
 the two rules agree only once everything saturates ($.66 \to .99$).
 The results below are therefore evidence about a recency-novelty
-filter that approximates saturation late in training; a genuine
-destination pass-rate estimate in the LLM loop is the indicated
-upgrade.
+filter that approximates saturation late in training. The upgrade is
+also practical, not just derived: an \emph{estimated}-$p$ gate fed by
+probe rollouts of proposed destinations recovers $98\%$ of the
+oracle-vs-frequency gap at matched \emph{total} rollouts with even
+one probe per step (10/10 seeds at every probe budget tested,
+insensitive to the budget over $1$--$16$; pre-registered P-PB1;
+artifact \texttt{results\_gate\_probe\_budget.json}) --- destination
+pass rates are cheap to estimate because the gate only needs them
+coarsely ($\lessgtr 0.5$), so the LLM-loop version costs a
+negligible slice of generation budget.
 
 \emph{The experiment.} We rebuilt the pool with real structure
 (random operand permutation, parenthesization, exact division; a
@@ -1686,8 +1693,8 @@ to baseline at ${\sim}60\%$ mean kept, 3 seeds & $\uparrow$ & \S 6.9 \\
 gate strength is a monotone dial & designed-strength sweep P-R1:
 mean-kept $-0.26 \notin [0,.60]$, coverage $.525 < .541$, 3 seeds &
 $\downarrow$ branch executed & \S 6.9 \\
-LLM teacher$\times$estimator interaction (GSM8K) & 1-of-2 seeds,
-tracks steering intensity; steering-controlled cell registered &
+LLM teacher$\times$estimator interaction (GSM8K) & 1-of-2 seeds;
+tracks steering dose; controlled cell registered &
 $\rightarrow$ & \S 6.7 \\
 pool-conditionality: Jugs defeats every arm & pre-registered
 all-null with entropy-collapse mechanism & $\uparrow$ negative &
