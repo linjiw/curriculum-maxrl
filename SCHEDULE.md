@@ -21,7 +21,8 @@ the claim it names.
 | # | run | status | purpose |
 |---|---|---|---|
 | FACT | balanced maze factorial {maxrl,grpo}×{uniform,frontier_un}×6 blocks + grpo_mass + grpo_nostd (250 fixed steps) | **DONE — P-F1 FAILED, claim retracted in paper (e27b5d9); P-G0a confirmed; P-G0c failed. Verdict: `maze_gpu/FACTORIAL_VERDICT.md`. Repair pass folding in contention casualties.** | draft-review P0-3: P-F1 prereg, falsification branch committed — and executed |
-| ARM-A/B | designed-gate B3 ×3 + replay control ×3 (Countdown) | queued (lock held, waits for GPU headroom) | fixed-code gate validation + dose-matched replay |
+| ARM-A/B | designed-gate B3 ×3 + replay control ×3 (Countdown) | **RUNNING** — s1 done; s2 OOMed near end (marker withheld, no step-60 ckpt); s3 in flight; repair pass armed behind the driver lock (`smollm/run_reviewer_arms_repair.sh`) | fixed-code gate validation + dose-matched replay |
+| OTG | E-LLM-2c one_target_per_group ×3 (Countdown; prereg `bdca4aa` P-OTG1/2) | queued behind ARM-B + chained jobs | P0-2 LLM-side test: does the shared-K coupling penalty transfer through verl normalization? |
 | E-LLM-1b | steering-controlled GSM8K (m3s died at step-25 ckpt, node OOM) | chained behind ARM-B completion | decisive LLM-scale cell |
 
 Seed-0 block interim read (1/6 blocks — NO conclusions): uniform sampler
