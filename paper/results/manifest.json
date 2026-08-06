@@ -118,6 +118,17 @@
    "inputs": [],
    "command": "python paper/figures/fig9_passk.py",
    "notes": "per-k points transcribed in-script from ray worker logs (sessions 07-29_05 B1, 07-28_22 B2, 07-29_02 B3, 07-30_06 full-strength), seed 1, step-60 unbiased best@k, n=128; endpoints cross-check b_scoreboard_3seed.json; full-strength curve retained faded with the P-R1 refutation note in the caption (2026-08-06)"
+  },
+  "fig10_jugs_entropy": {
+   "script": "paper/figures/fig10_jugs_entropy.py",
+   "inputs": [
+    "jugs_llm/results/entropy_trajectories.json"
+   ],
+   "command": "python paper/figures/fig10_jugs_entropy.py",
+   "checksums": {
+    "jugs_llm/results/entropy_trajectories.json": "aaa5736f96ec4dbd"
+   },
+   "notes": "appendix Jugs pool-conditionality figure, added 2026-08-06 (gap-tracker S4)"
   }
  }
 }

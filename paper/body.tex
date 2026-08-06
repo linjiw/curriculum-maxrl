@@ -1648,8 +1648,23 @@ t1 $\passat{16}$ $0.15 \to 0$, actor entropy $1.36 \to 0.02$--$0.21$.
 Ungated recycling ran 169 relabels/step at yield $.88$ and ended with
 the lowest entropy ($0.02$--$0.03$); the value-keyed gate rejected
 $99.8\%$ of relabels (the granularity bug described in \S\ref{sec:limits}, since
-fixed and regression-tested). Postmortem and per-cell artifacts in the
+fixed and regression-tested). Fig.~\ref{fig:jugs} shows all nine
+trajectories: the collapse is the pool's property, not any
+intervention's. Postmortem and per-cell artifacts in the
 repository.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.55\linewidth]{figures/fig10_jugs_entropy}
+\caption{\textbf{Jugs pool-conditionality: every arm collapses
+(3 arms $\times$ 3 seeds).} On a pool whose learnable band is a
+single stratum of 1--2-move template solutions, plain MaxRL's policy
+entropy collapses ($1.36 \to 0.01$--$0.21$) with no recycling
+involved; ungated recycling ends lowest, and the gate merely delays
+the fall. Rollout-set diversity at initialization is the design gate
+this suite motivates (\S\ref{sec:limits}).}
+\label{fig:jugs}
+\end{figure}
 
 \paragraph{6.9 secondary reads (full).} Pool construction and
 baseline calibration: the pre-SFT base model's relabel yield is
