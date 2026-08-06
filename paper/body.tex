@@ -1078,30 +1078,22 @@ early, so the gate blocks nearly all relabels) it neutralizes recycling
 almost entirely. Implementation disclosure: a decay-math bug made all
 three-seed gated runs gate \emph{weaker} than designed (effective
 destination threshold $\hat p \approx 0.64$ where the design implies
-$0.92$), so the reported operating point is an under-gated one; the
-corrected-decay rerun (1 seed) gates ${\sim}3\times$ harder and pushes
-tier-1 coverage \emph{above} baseline at the mean's full price
-(Fig.~\ref{fig:sharpening}a). The three settings are \emph{consistent
-with} a mean-vs-coverage trade --- no gate: full mean gain, coverage
-lost; under-gated: $\sim$60\% of the gain, frontier coverage restored;
-full-strength: gain erased, coverage above baseline --- but they do
-not establish a monotone dose--response: the strong point is one seed,
-gate setting is confounded with the decay-code version, and at tier 1
-the moderate gate moved \emph{both} point estimates below the ungated
-arm. We claim the moderate frontier-tier setting as one useful
-operating point; the dial claim went to a pre-registered fixed-decay
-sweep at the designed strength (rejection fraction $.93$--$.94$,
-3 seeds; artifacts \texttt{armA\_b3fix\_s\{1,2,3\}.json}) and
-\textbf{was refuted there} (P-R1): tier-1 mean $.266{\pm}.045$ is
-indistinguishable from the no-recycling baseline ($.278{\pm}.054$;
-mean-kept fraction $-0.26$, below the registered $[0,.60]$ window),
-coverage $.525{\pm}.036$ is \emph{not} restored above baseline
-($.541$), and the earlier single-seed coverage-above-baseline reading
-sits inside this arm's seed spread ($.488$--$.573$) --- it did not
-replicate. Strong gating is recycling-off plus seed noise, not a
-third rung: the gate's usable range is the moderate setting, and
-Fig.~\ref{fig:sharpening}a draws the designed arm as a scatter per
-the committed falsification branch. In-run
+$0.92$), so the reported operating point is an under-gated one. An
+early corrected-decay run (1 seed) suggested gate strength might
+trace a monotone mean-vs-coverage \emph{dial}; the dial claim went to
+a pre-registered fixed-code sweep at the designed strength (rejection
+fraction $.93$--$.94$, 3 seeds; artifacts
+\texttt{armA\_b3fix\_s\{1,2,3\}.json}) and \textbf{was refuted there}
+(P-R1): tier-1 mean $.266{\pm}.045$ is indistinguishable from the
+no-recycling baseline ($.278{\pm}.054$; mean-kept fraction $-0.26$,
+below the registered $[0,.60]$ window), coverage $.525{\pm}.036$ is
+\emph{not} restored above baseline ($.541$), and the single-seed
+coverage-above-baseline reading sits inside this arm's seed spread
+($.488$--$.573$) --- it did not replicate. Strong gating is
+recycling-off plus seed noise, not a third rung: the gate's usable
+range is the moderate setting, and Fig.~\ref{fig:sharpening}a draws
+the designed arm as a scatter per the committed falsification branch.
+In-run
 telemetry shows the mechanism (Fig.~\ref{fig:sharpening}b--c):
 rejection rises $.12 \to .85$ as the reachable set saturates, and the
 gated arm ends with \emph{more} policy entropy than the no-recycling
