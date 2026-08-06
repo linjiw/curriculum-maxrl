@@ -163,12 +163,15 @@ Our contributions:
   blocks and confirmed 6/6 under both samplers ($p{=}.031$ each;
   24/24 paired blocks across both waves), with controls closing the
   scheduler-mismatch and variance-normalization readings (\S 6.3b).
-\item \textbf{A new failure mode and a motivated mitigation}
-  (\S 6.8--6.9): exact-verifier recycling improves mean accuracy while
-  losing coverage --- recycling-induced sharpening, replicated at
-  three seeds --- and gating relabels by an achieved-destination
-  saturation statistic yields an operating point that restores
-  frontier-tier coverage while keeping most of the mean gain.
+\item \textbf{A new failure mode, its dose accounting, and a
+  motivated mitigation} (\S 6.8--6.9): exact-verifier recycling
+  improves mean accuracy while losing coverage --- recycling-induced
+  sharpening, replicated at three seeds; a pre-registered replay
+  control shows the mean gain is not relabel-specific (3/3 seeds),
+  scoping recycling's distinctive value to the all-fail regime; and
+  gating relabels by an achieved-destination saturation statistic
+  yields an operating point that restores frontier-tier coverage
+  while keeping most of the mean gain.
 \end{enumerate}
 Along the way we state a refinement to the MaxRL paper --- the practical
 drop-$K{=}0$ estimator is unbiased for the $T{=}N{-}1$ objective, not
