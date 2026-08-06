@@ -1,20 +1,18 @@
 {
  "P_R1": {
-  "arm": "ARM A designed-gate B3 (reject frac .93-.94), 3 seeds",
+  "arm": "ARM A designed-gate B3, 3 seeds",
   "t1_mean16": [
    0.212,
    0.322,
    0.264
   ],
-  "t1_mean16_agg": "0.266\u00b10.045",
   "t1_pass16": [
    0.513,
    0.573,
    0.488
   ],
-  "t1_pass16_agg": "0.525\u00b10.036",
-  "mean_kept_fraction": -0.24839400428265543,
-  "P_R1_window": {
+  "mean_kept_fraction": -0.25,
+  "window": {
    "mean_kept": [
     0.0,
     0.6
@@ -24,10 +22,10 @@
     0.571
    ]
   },
-  "verdict": "REFUTED: mean-kept -0.26 (below window; ~ recycling-off within noise of B1 .278\u00b1.054); coverage .525\u00b1.036 BELOW baseline .541, not restored above it. The designed operating point ~ recycling-off with no coverage bonus; the dial's usable middle is the moderate (formerly 'under-gated') setting only. Fig 7a: three-point frontier -> operating-points scatter."
+  "verdict": "REFUTED"
  },
- "P_R2_interim": {
-  "arm": "ARM B replay ppo_epochs=2 (INTERIM 2/3 seeds)",
+ "P_R2": {
+  "arm": "ARM B replay ppo_epochs=2, 2/3 seeds",
   "t1_mean16": [
    0.459,
    0.475
@@ -36,8 +34,8 @@
    0.585,
    0.674
   ],
-  "vs_B2_recycling": "mean 0.467 vs .324 (replay HIGHER by .14); pass16 0.629 vs .492 (replay HIGHER by .14)",
-  "vs_B1_baseline": "mean +0.189; pass16 +0.089",
-  "interim_read": "P-R2's strongest branch is firing: the dose control does not just capture recycling's mean gain, it EXCEEDS it while also GAINING coverage. If s3 agrees, 6.8 must state that at this scale extra optimizer epochs dominate hindsight recycling on both axes -- recycling's LLM-scale case here is negative."
+  "mean_captured_fraction_of_B2_gain": 4.057,
+  "coverage_vs_B1": 0.089,
+  "verdict": "INTERIM"
  }
 }
