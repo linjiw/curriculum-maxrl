@@ -14,7 +14,7 @@ verdicts below with what changed and what is running.
 | P0-4 page/abstract budget | **VALID** | CFP verified (9pp strict); abstract restructured; pass-1 cuts done; Prop 3 → appendix |
 | P1 Prop 3 false at `N_i = 0` | **VALID** | fixed (`n_i >= 1` + defect stated) and moved to appendix per review's best-fix |
 | P1 intended gate not validated | **VALID** | disclosed in 6.9; ARM A (designed gate ×3 seeds) queued on GPU |
-| P1 mass magnitudes normalization-dependent | **VALID** | caveat in Prop 2 interp; no-std measured at BOTH rungs (they split — reported side by side) |
+| P1 mass magnitudes normalization-dependent | **VALID — now measured (Q4 closed)** | Prop-2 caveat carries the measured bite: prereg'd lr sweep (P-LR1) showed a 2–4× lr raise lets GRPO match MaxRL's raw Δcov on the learnable-everywhere pool (branch executed: exact-rung ordering restated "at matched lr") — but its coverage-reliability premium collapses (.013 vs .050), so the premium, tails, and signs are what survive recalibration. no-std measured at BOTH rungs (split — reported side by side) |
 | P1 LLM figure outruns evidence | **VALID** | fig3 + fig2d show both seeds; noise as scale bar |
 | P1 artifact not self-contained | **VALID** | hindsight.py + factorial prereg/verdict vendored; fig2 a/b/c regenerate with mismatch-fail scripts |
 | P1 novelty wording | **VALID** | narrowed + all five 2026 citations verified (one k-value error found & fixed) |
