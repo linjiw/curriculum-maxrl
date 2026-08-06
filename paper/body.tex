@@ -130,13 +130,15 @@ key, and Jugs showed the key choice is load-bearing
 
 Our contributions:
 \begin{enumerate}
-\item \textbf{A closed-form curriculum} (\S\ref{sec:theory}): the
-  expected coefficient mass of a prompt under success-conditioned RL is
-  exactly $2(\passat{N}-\passat{1})$, a compute-indexed learnability
-  functional whose peak location and $N$-scaling are derived rather
-  than tuned, and whose exact zeros at $p\in\{0,1\}$ anchor the dead
+\item \textbf{A closed-form learnability functional}
+  (\S\ref{sec:theory}): the expected coefficient mass of a prompt
+  under success-conditioned RL is exactly $2(\passat{N}-\passat{1})$,
+  compute-indexed, with peak location and $N$-scaling derived rather
+  than tuned, and exact zeros at $p\in\{0,1\}$ anchoring the dead
   zone, the learnable region, and the mastered tail; published
-  learnability curricula are its $N{=}2$ slice.
+  learnability curricula are its $N{=}2$ slice. (The functional is
+  closed-form; the sampler built on it still estimates $p$ and keeps
+  standard knobs.)
 \item \textbf{A derived teacher and a characterized recycler}
   (\S\ref{sec:method}--\ref{sec:recycling}): FrontierMax schedules
   prompts by this functional with the per-group estimator untouched,

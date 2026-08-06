@@ -61,7 +61,7 @@ RUNNING / DEFERRED (with reason) / DISPUTED (with counter-evidence).
 | Theory-scope vs method tension (flat-over-band arm) | FIXED WITH DATA (part J: indicator-over-band loses 0/10, .681 vs .743 — zeros alone don't suffice; Remark updated with u_N's refined standing) |
 | Compression damage / 6.7 | DEFERRED to post-verdict restructure |
 | n=1 links | RESOLVED: ARM A 3-seed (n=1 point superseded/faded in figs) |
-| 'Closed-form curriculum' oversold | OPEN — retitle contribution 1 in restructure |
+| 'Closed-form curriculum' oversold | RESOLVED 2026-08-06: contribution 1 retitled 'closed-form learnability functional' + explicit caveat that the sampler still estimates p and keeps knobs |
 
 ## Verdict on reviewer validity
 All five reviews were substantively valid. Two pushbacks recorded:
