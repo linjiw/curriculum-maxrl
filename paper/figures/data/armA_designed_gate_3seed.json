@@ -1,0 +1,12 @@
+{
+ "_comment": "ARM A: designed-strength gate (corrected-decay code, reject frac .93-.94), Countdown v2, 3 seeds, step-60 val. Pre-registered P-R1 (run_reviewer_arms.sh, maxrl 79473b2) REFUTED: mean-kept fraction -0.26 (window [0,.60]); coverage .525 not in [.541,.571]. The 1-seed b_strong_gate point (.564/.220) sits inside this arm's seed spread and did not replicate as coverage-above-baseline. Source: curriculum_maxrl/countdown_reviewer_arms/armA_b3fix_s{1,2,3}.json. Frozen 2026-08-06.",
+ "tier1": {
+  "pass_at_16_per_seed": [0.513, 0.573, 0.488],
+  "mean_at_16_per_seed": [0.212, 0.322, 0.264],
+  "pass_at_16": 0.525, "pass_at_16_sd": 0.036,
+  "mean_at_16": 0.266, "mean_at_16_sd": 0.045,
+  "gate_reject_frac": [0.934, 0.934, 0.944]
+ },
+ "n_seeds": 3,
+ "code_version": "corrected-decay"
+}

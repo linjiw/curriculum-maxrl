@@ -1,7 +1,7 @@
 {
  "generated": "2026-08-05",
  "note": "one row per run/artifact; maze runs carry arm+seed parsed from filenames; the 9-run main-effect subset and its 5v4 composition are in permutation_reanalysis.json",
- "n_rows": 48,
+ "n_rows": 53,
  "rows": [
   {
    "file": "matched_falp_maxrl_hs_s0.jsonl",
@@ -386,6 +386,46 @@
    "seed": null,
    "n_eval_rows": null,
    "protocol": "see GSM8K_ANALYSIS.md"
+  },
+  {
+   "file": "armA_b3fix_s1.json",
+   "suite": "countdown",
+   "arm": "countdown-designed-gate-B3",
+   "seed": 1,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  },
+  {
+   "file": "armA_b3fix_s2.json",
+   "suite": "countdown",
+   "arm": "countdown-designed-gate-B3",
+   "seed": 2,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  },
+  {
+   "file": "armA_b3fix_s3.json",
+   "suite": "countdown",
+   "arm": "countdown-designed-gate-B3",
+   "seed": 3,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  },
+  {
+   "file": "armB_replay_s1.json",
+   "suite": "countdown",
+   "arm": "countdown-replay-ppo2",
+   "seed": 1,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  },
+  {
+   "file": "armB_replay_s2.json",
+   "suite": "countdown",
+   "arm": "countdown-replay-ppo2",
+   "seed": 2,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
   }
  ]
 }

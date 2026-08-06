@@ -944,9 +944,13 @@ decisive experiment is a steering-controlled multi-seed cell.}
 saturation-gate mitigation (Countdown, tier 1).} \emph{(a)} Three
 seeds, both axes: recycling (B2) buys mean@16 with $\passat{16}$
 coverage; the moderate gate (B3) gives most of the mean back on this
-early-saturating tier, and full-strength gating (hollow; 1 seed,
-corrected decay) returns coverage above baseline at the mean's full
-price --- \S 6.9 states what these settings do and do not establish. \emph{(b)} The mechanism in-run: the gate's rejection
+early-saturating tier. The pre-registered designed-strength arm
+(diamonds; 3 seeds, corrected decay, rejection ${\sim}.94$) refuted
+the strength-dial reading: its seeds scatter around the no-recycling
+point rather than extending a frontier (P-R1, \S 6.9), so it is drawn
+as a scatter per the committed falsification branch; the superseded
+1-seed point (faint) sits inside that spread. \emph{(b)} The
+mechanism in-run: the gate's rejection
 rate rises monotonically as the model's reachable set saturates its
 relabel destinations, while the ungated dose rides its cap. \emph{(c)}
 Gated recycling preserves \emph{more} policy entropy than no recycling
@@ -977,7 +981,19 @@ Our algebra flags the mechanism: the achieved-goal marginal
 overweights destinations the policy already reaches, so relabel
 updates concentrate toward the mastered tail, where $u(p)$ says fresh
 training signal vanishes --- the softmax pays for those updates out of
-the exploration tail.
+the exploration tail. A pre-registered dose control at this scale
+(P-R2: extra optimizer epochs on live groups,
+\texttt{ppo\_epochs=2}, hindsight off --- the CPU battery's replay
+placebo transplanted) sharpens the accounting: at 2 of 3 seeds
+complete, replay \emph{exceeds} recycling's tier-1 mean gain
+($.467$ vs.\ $.324$) while \emph{gaining} coverage ($.629$ vs.\
+$.541$ baseline) where recycling paid it ($.492$) --- though its
+update dose is larger than recycling's ($2\times$ all live groups
+vs.\ ${\sim}19\%$ added relabel groups), so it bounds what extra
+updates buy rather than isolating the direction term. If the third
+seed agrees, the practical conclusion is that recycling's mean gain
+here was never specifically about relabels --- generic extra updates
+on live groups buy more of it, without the coverage bill.
 \takeaway{Recycling needs an admission rule, and the utility's
 mastered-tail zero motivates one --- designed and tested next.}
 
@@ -1028,12 +1044,12 @@ $k{=}16$ --- the crossing is the phenomenon.
 \caption{\textbf{Sharpening is a crossing in $k$ (Countdown tier 1,
 step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).}
 Ungated recycling sits above baseline at $k{=}1$ (mean up) and below
-by $k{=}4$ (coverage down), the deficit widening with $k$. The two
-gate settings bracket the trade --- moderate tracks baseline at low
-$k$ with a smaller high-$k$ deficit; full-strength (hollow; one seed,
-corrected decay) pays at $k{=}1$ and finishes above baseline at
-$k{=}16$ --- consistent with a strength dial, though \S 6.9 details
-why these settings do not yet establish one. Endpoints cross-check
+by $k{=}4$ (coverage down), the deficit widening with $k$. The
+moderate gate tracks baseline at low $k$ with a smaller high-$k$
+deficit; the full-strength curve (hollow; one seed, corrected decay)
+pays at $k{=}1$ and finishes above baseline at $k{=}16$, but the
+strength-dial reading this suggests was refuted in the 3-seed
+designed-strength sweep (P-R1, \S 6.9). Endpoints cross-check
 the 3-seed scoreboard; per-$k$ telemetry from the seed-1 logs.}
 \label{fig:passk}
 \end{figure} The
@@ -1073,22 +1089,28 @@ not establish a monotone dose--response: the strong point is one seed,
 gate setting is confounded with the decay-code version, and at tier 1
 the moderate gate moved \emph{both} point estimates below the ungated
 arm. We claim the moderate frontier-tier setting as one useful
-operating point and defer the dial claim to the pre-registered
-fixed-decay sweep. The first designed-operating-point seed from that
-sweep (rejection fraction $.93$; artifact
-\texttt{armA\_b3fix\_s1.json}) lands at the recycling-off end ---
-tier-1 mean \emph{below} the no-recycling baseline --- consistent with
-``strong gating $\approx$ no recycling'' rather than a wide usable
-middle; remaining seeds are running, and if they agree, the usable
-range of the trade is narrower than the design intended. In-run
+operating point; the dial claim went to a pre-registered fixed-decay
+sweep at the designed strength (rejection fraction $.93$--$.94$,
+3 seeds; artifacts \texttt{armA\_b3fix\_s\{1,2,3\}.json}) and
+\textbf{was refuted there} (P-R1): tier-1 mean $.266{\pm}.045$ is
+indistinguishable from the no-recycling baseline ($.278{\pm}.054$;
+mean-kept fraction $-0.26$, below the registered $[0,.60]$ window),
+coverage $.525{\pm}.036$ is \emph{not} restored above baseline
+($.541$), and the earlier single-seed coverage-above-baseline reading
+sits inside this arm's seed spread ($.488$--$.573$) --- it did not
+replicate. Strong gating is recycling-off plus seed noise, not a
+third rung: the gate's usable range is the moderate setting, and
+Fig.~\ref{fig:sharpening}a draws the designed arm as a scatter per
+the committed falsification branch. In-run
 telemetry shows the mechanism (Fig.~\ref{fig:sharpening}b--c):
 rejection rises $.12 \to .85$ as the reachable set saturates, and the
 gated arm ends with \emph{more} policy entropy than the no-recycling
 baseline.
 \takeaway{Sharpening is a reproducible property of exact-verifier
 recycling, and the saturation gate buys back frontier-tier coverage at
-a measured mean price --- one validated operating point, with the
-monotone-dial question deferred to a fixed-code sweep.}
+a measured mean price --- one validated operating point. The
+pre-registered fixed-code sweep refuted the monotone dial: strong
+gating is recycling-off, not a settable trade.}
 
 \section{Related work}
 \textbf{The coverage tension.} RLVR itself trades coverage for precision:
@@ -1273,11 +1295,12 @@ confirmed (\S 6.3b). What the record supports: the exact-rung
 coverage ordering with its controls; its time-integrated neural form,
 confirmed in wave 2 (6/6 per sampler, 24/24 across waves);
 recycling-induced sharpening at three seeds with one gated operating
-point; and a pre-registered negative (Jugs) marking where the whole
-intervention family fails together. Remaining experiments (fixed-code
-gate sweep, steering-controlled LLM cell) are pre-registered with
-committed falsification branches --- which this paper demonstrably
-executes. The portable practice is
+point --- whose strength-dial extension the fixed-code sweep then
+refuted per its committed branch (\S 6.9); and a pre-registered
+negative (Jugs) marking where the whole intervention family fails
+together. The remaining experiment (the steering-controlled LLM
+cell) is pre-registered with committed falsification branches ---
+which this paper demonstrably executes. The portable practice is
 independent of our method: measure coverage next to mean accuracy
 whenever a curriculum or recycler ships, conditioned on the estimator
 it ships on.
@@ -1586,6 +1609,13 @@ seeds: the gate's retention replicates ($+.072$ paired over baseline,
 all seeds positive, ${\sim}1.6\times$); ungated recycling's endpoint
 entropy is seed-unstable (spread $\pm.062$, $4$--$9\times$ the other
 arms'), consistent with its noisy frontier-coverage endpoints.
+Designed-strength sweep (P-R1) per-seed tier-1 endpoints
+(mean@16/$\passat{16}$, rejection fraction): $.212/.513$ ($.934$),
+$.322/.573$ ($.934$), $.264/.488$ ($.944$) --- the registered windows
+were mean-kept $\in [0,.60]$ of B2's gain and coverage
+$\in [.541,.571]$; observed mean-kept $-0.26$, coverage $.525$.
+Artifacts \texttt{armA\_b3fix\_s\{1,2,3\}.json} with prereg and
+verdict in \texttt{countdown\_reviewer\_arms/}.
 
 \section{Hyperparameters and compute}\label{app:hparams}
 

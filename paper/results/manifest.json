@@ -80,14 +80,17 @@
    "inputs": [
     "paper/figures/data/b_scoreboard_3seed.json",
     "paper/figures/data/b_cells_dynamics.json",
-    "paper/figures/data/b_strong_gate_1seed.json"
+    "paper/figures/data/b_strong_gate_1seed.json",
+    "paper/figures/data/armA_designed_gate_3seed.json"
    ],
    "command": "python paper/figures/fig7_sharpening.py",
    "checksums": {
     "paper/figures/data/b_scoreboard_3seed.json": "f5c41f561f120d02",
     "paper/figures/data/b_cells_dynamics.json": "e131d9c29e7296fa",
-    "paper/figures/data/b_strong_gate_1seed.json": "fec7993338cadb25"
-   }
+    "paper/figures/data/b_strong_gate_1seed.json": "fec7993338cadb25",
+    "paper/figures/data/armA_designed_gate_3seed.json": "48b738edd4e527e9"
+   },
+   "notes": "armA_designed_gate_3seed.json added 2026-08-06: P-R1 refuted, panel (a) redrawn as operating-point scatter per committed branch"
   },
   "fig8_bands": {
    "script": "paper/figures/fig8_bands.py",
