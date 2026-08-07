@@ -294,3 +294,53 @@ and decide the gate's status *now* rather than letting E5 dictate the
 schedule. The paper this becomes — "the estimator decides what curricula and
 recycling can do, and mean accuracy alone hides the coverage bill" — is
 narrower than the project's ambitions and stronger than its current draft.
+
+---
+
+## Part V — GPU queue status and amended guidance (2026-08-07 ~21:15 UTC)
+
+Checked live while pushing this document. This changes the near-term queue
+recommendation in Part IV.
+
+**Observed state:**
+
+- `.done_h6_g3p` exists; the g3p repair driver exited cleanly at 18:01 UTC.
+- A watcher armed on that marker (PID 2060603) then relaunched
+  `smollm/run_h6_steered.sh`, whose two-pass OOM-retry loop is now **rerunning
+  the E-LLM-1b cells that lack done-markers: g3s (training now, step 5/50 at
+  ~27 min/step), then g3u, then m3s** — roughly 3 days of A10G time end to
+  end.
+- The OTG ablation driver (E-LLM-2c) launched at 18:13, hit the occupied GPU,
+  died at vLLM engine-core init, and exited (its `flock -n` does not retry).
+  The fullcv maze chain still waits behind OTG markers that will now never
+  appear without a relaunch.
+
+**The arithmetic that matters:** g3s's dead-sampled fraction averages 0.698
+over its first 5 steps. To pass its preregistered delivery gate (run-mean
+< 0.60) the remaining 45 steps would have to average below 0.589 — when g3p,
+which adds the power-4 sharpener specifically to strengthen steering, only
+achieved 0.601. **g3s is arithmetically near-certain to fail the same gate
+it exists to pass.** g3u (repetition control) and m3s (MaxRL safety contrast)
+are only interpretable *relative to a treatment-delivered cell*, and none
+exists or is in prospect. The entire remaining steered queue is therefore
+artifact-completeness only — it cannot change any paper claim, per the
+committed P-S1 branch already executed in Part I.
+
+**Amended recommendation (supersedes Part IV's queue for the next 72h):**
+
+1. **Stop the steered pass-2 queue** (watcher PID 2060603 and the running
+   `run_h6_steered.sh` tree) — or, at minimum, let the in-flight g3s cell
+   finish and touch the remaining done-markers so g3u/m3s do not launch.
+   I have NOT killed it: it belongs to a concurrent session's armed protocol,
+   and stopping another session's preregistered run is an owner decision.
+   But the numbers above say every additional GPU-hour it consumes is spent
+   on a foregone conclusion, against a 2026-08-28 training hard stop.
+   Record the archive decision in the run registry either way ("pass-2
+   retry superseded by executed P-S1 inconclusive branch, 2026-08-07").
+2. **The freed GPU goes to the Part IV order**: gate decision by 08-10 →
+   E5 (only if the gate is retained) → E2 → E3 generation.
+3. **Re-arm the OTG ablation driver** after the GPU clears (it preregistered
+   P-OTG1/2 and crashed on contention, not on its own logic) and the fullcv
+   chain behind it — both are committed preregs and cheap relative to E2/E5.
+4. The GSM8K paper actions in Part I/IV are unchanged and unblocked: the
+   verdict is already in hand; nothing running or queued can alter it.
