@@ -1,0 +1,27 @@
+{
+ "countdown_v2": {
+  "train_rows": 10000,
+  "train_unique_tasks": 10000,
+  "test_rows": 384,
+  "test_unique_tasks": 384,
+  "train_test_overlap": 0,
+  "train_tier_counts": {
+   "countdown_tier1": 4000,
+   "countdown_tier2": 4000,
+   "countdown_tier0": 2000
+  },
+  "test_tier_counts": {
+   "countdown_tier0": 128,
+   "countdown_tier1": 128,
+   "countdown_tier2": 128
+  }
+ },
+ "gsm8k": {
+  "train_rows": 7473,
+  "train_unique_prompts": 7473,
+  "val256_rows": 256,
+  "val256_unique": 256,
+  "train_val_overlap": 0
+ },
+ "_note": "Task identity: Countdown = (target, sorted operand multiset); GSM8K = prompt text hash. Zero overlap and zero intra-split duplicates required for the coverage claims (a duplicated task would double-count pass@k evidence). Checked 2026-08-06."
+}

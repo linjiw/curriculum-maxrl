@@ -1,0 +1,8 @@
+            cell              AUC           d cov8
+        maxrl/un +0.5390±0.0135 +0.9385±0.0153
+         grpo/un +0.3844±0.0176 +0.8354±0.0204
+   grpo/grpomass +0.3187±0.0116 +0.6155±0.0285
+    grpo/uniform +0.2182±0.0250 +0.4976±0.0216
+grpomass-un (grpo) d_cov8: 0/5 positive, mean -0.21992
+maxrl_un-grpo_grpomass d_cov8: 5/5 positive, mean +0.32301
+wrote /home/ec2-user/work/curriculumrl/curriculum-maxrl/curriculum_maxrl/results_grpo_own_mass.json

@@ -1,5 +1,19 @@
 # The evidence, reorganized: where the strength actually comes from
 
+> **Currency note (updated 2026-08-06):** this synthesis predates the
+> balanced factorial. The "H6 estimator main effect, 9/9 runs,
+> p=0.0079" claim below **failed its pre-registered factorial at the
+> registered endpoint and is retracted** — see
+> `maze_gpu_factorial/FACTORIAL_VERDICT.md` and paper §6.3b for what
+> survives (exact-rung 10/10; covAUC then **confirmed as the wave-2
+> registered primary, 6/6 per sampler, p=.031 each, 24/24 across
+> waves**). Also superseded here: the "gate strength is a dial"
+> reading — the designed-strength sweep refuted it (P-R1, 3 seeds;
+> `countdown_reviewer_arms/PROVENANCE.md`); and the "+0.22 hindsight
+> gain" framing — at LLM scale a dose-matched replay control exceeds
+> recycling on both meters (ARM B, 2/3 seeds interim). Sections
+> quoting these as established are historical.
+
 *Synthesis pass over ~35 experiments, 7 propositions, 3 testbeds, and 2 external
 ports. Not a chronology — a decomposition. REPORT.md tells the story of the
 project; this document tells you how the method works, when to use which part,

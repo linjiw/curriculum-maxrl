@@ -1,0 +1,85 @@
+{
+ "date": "2026-08-04",
+ "purpose": "R3-Q1/Q2: run accounting + stratified/paired permutation reanalysis",
+ "runs": {
+  "maxrl": {
+   "uniform": [
+    "s1",
+    "s2"
+   ],
+   "teacher_recycling(frontier_hs)": [
+    "s0",
+    "s1",
+    "s2"
+   ],
+   "note": "uniform s0 predates pass@k logging (eval-only rows) \u2014 the reason the design is 5v4"
+  },
+  "grpo": {
+   "uniform": [
+    "s0",
+    "s1",
+    "s2"
+   ],
+   "teacher(frontier)": [
+    "s0"
+   ]
+  }
+ },
+ "convention_primary": "warmstart(step=-1) -> final mean pass@8 over levels 0-12",
+ "deltas": {
+  "maxrl": [
+   0.024,
+   0.0048,
+   0.024,
+   0.0529,
+   0.0625
+  ],
+  "grpo": [
+   -0.0192,
+   -0.0385,
+   -0.0337,
+   -0.0625
+  ]
+ },
+ "tests_one_sided": {
+  "unrestricted_permutation": {
+   "p": 0.0079,
+   "floor": "1/C(9,4)",
+   "at_floor": true
+  },
+  "stratified_by_arm": {
+   "p": 0.025,
+   "floor": "1/40",
+   "at_floor": true,
+   "strata": "uniform 2v3, teacher 3v1"
+  },
+  "shared_seed_pairs": {
+   "pairs": {
+    "unif_s1": 0.0625,
+    "unif_s2": 0.0385,
+    "teach_s0": 0.0865
+   },
+   "all_positive": true,
+   "sign_floor_p": 0.125
+  }
+ },
+ "sensitivity": {
+  "step0_to_final_convention": {
+   "maxrl": [
+    -0.0048,
+    -0.0144,
+    0.0048,
+    0.024,
+    0.0673
+   ],
+   "grpo": [
+    -0.0385,
+    -0.0673,
+    -0.0048,
+    -0.0625
+   ],
+   "unrestricted_p": 0.0238,
+   "note": "signs 3/5 + 4/4 under this convention; the first eval after warmup is itself noisy"
+  }
+ }
+}

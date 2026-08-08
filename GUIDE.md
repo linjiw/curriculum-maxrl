@@ -1,5 +1,14 @@
 # Design Guide: approaches, verification status, and roadmap
 
+> **Currency note (2026-08-06):** this document is a point-in-time
+> snapshot. Claims about the maze estimator effect (H6 family) predate
+> the balanced factorial, which retired the zero-exception form at its
+> registered endpoint; the oracle comparison predates the floor-handicap
+> correction (matched oracle TIES the full stack). The paper
+> (`paper/`, compiled at `docs/paper-draft.pdf`) and
+> `maze_gpu_factorial/FACTORIAL_VERDICT.md` are authoritative.
+
+
 This is the working map of the project: every approach we proposed, how far each
 has been verified, and what's queued next. Detailed derivations live in
 `curriculum_maxrl/THEORY.md`; per-experiment tables in `curriculum_maxrl/DESIGN.md`

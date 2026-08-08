@@ -1,0 +1,359 @@
+{
+ "cell": "grpo_curfalse_seed2 (H6 within-seed pair for the seed-2 replication)",
+ "session": "raysession_2026-07-31_16-29-58",
+ "val_trajectory": [
+  {
+   "step": 0,
+   "val_mean@4": 0.081,
+   "val_pass@4": 0.174
+  },
+  {
+   "step": 25,
+   "val_mean@4": 0.085,
+   "val_pass@4": 0.176
+  },
+  {
+   "step": 50,
+   "val_mean@4": 0.125,
+   "val_pass@4": 0.229
+  }
+ ],
+ "train_steps": [
+  {
+   "step": 1,
+   "train_score": 0.03,
+   "entropy": 1.313,
+   "resp_len": 382.607,
+   "frac_dead_sampled": 0.703
+  },
+  {
+   "step": 2,
+   "train_score": 0.021,
+   "entropy": 1.292,
+   "resp_len": 370.516,
+   "frac_dead_sampled": 0.703
+  },
+  {
+   "step": 3,
+   "train_score": 0.031,
+   "entropy": 1.402,
+   "resp_len": 397.544,
+   "frac_dead_sampled": 0.703
+  },
+  {
+   "step": 4,
+   "train_score": 0.035,
+   "entropy": 1.322,
+   "resp_len": 379.163,
+   "frac_dead_sampled": 0.688
+  },
+  {
+   "step": 5,
+   "train_score": 0.043,
+   "entropy": 1.294,
+   "resp_len": 374.771,
+   "frac_dead_sampled": 0.656
+  },
+  {
+   "step": 6,
+   "train_score": 0.025,
+   "entropy": 1.413,
+   "resp_len": 382.356,
+   "frac_dead_sampled": 0.734
+  },
+  {
+   "step": 7,
+   "train_score": 0.033,
+   "entropy": 1.283,
+   "resp_len": 381.036,
+   "frac_dead_sampled": 0.719
+  },
+  {
+   "step": 8,
+   "train_score": 0.021,
+   "entropy": 1.242,
+   "resp_len": 347.382,
+   "frac_dead_sampled": 0.719
+  },
+  {
+   "step": 9,
+   "train_score": 0.016,
+   "entropy": 1.257,
+   "resp_len": 353.4,
+   "frac_dead_sampled": 0.812
+  },
+  {
+   "step": 10,
+   "train_score": 0.04,
+   "entropy": 1.184,
+   "resp_len": 340.894,
+   "frac_dead_sampled": 0.688
+  },
+  {
+   "step": 11,
+   "train_score": 0.038,
+   "entropy": 1.233,
+   "resp_len": 342.159,
+   "frac_dead_sampled": 0.719
+  },
+  {
+   "step": 12,
+   "train_score": 0.037,
+   "entropy": 1.15,
+   "resp_len": 324.626,
+   "frac_dead_sampled": 0.641
+  },
+  {
+   "step": 13,
+   "train_score": 0.027,
+   "entropy": 1.226,
+   "resp_len": 365.756,
+   "frac_dead_sampled": 0.688
+  },
+  {
+   "step": 14,
+   "train_score": 0.039,
+   "entropy": 1.112,
+   "resp_len": 329.127,
+   "frac_dead_sampled": 0.719
+  },
+  {
+   "step": 15,
+   "train_score": 0.035,
+   "entropy": 1.193,
+   "resp_len": 336.678,
+   "frac_dead_sampled": 0.641
+  },
+  {
+   "step": 16,
+   "train_score": 0.033,
+   "entropy": 1.095,
+   "resp_len": 329.517,
+   "frac_dead_sampled": 0.656
+  },
+  {
+   "step": 17,
+   "train_score": 0.038,
+   "entropy": 1.133,
+   "resp_len": 333.353,
+   "frac_dead_sampled": 0.641
+  },
+  {
+   "step": 18,
+   "train_score": 0.022,
+   "entropy": 1.112,
+   "resp_len": 327.88,
+   "frac_dead_sampled": 0.734
+  },
+  {
+   "step": 19,
+   "train_score": 0.036,
+   "entropy": 1.068,
+   "resp_len": 310.268,
+   "frac_dead_sampled": 0.609
+  },
+  {
+   "step": 20,
+   "train_score": 0.055,
+   "entropy": 1.087,
+   "resp_len": 322.599,
+   "frac_dead_sampled": 0.609
+  },
+  {
+   "step": 21,
+   "train_score": 0.029,
+   "entropy": 1.054,
+   "resp_len": 317.652,
+   "frac_dead_sampled": 0.672
+  },
+  {
+   "step": 22,
+   "train_score": 0.041,
+   "entropy": 0.997,
+   "resp_len": 312.168,
+   "frac_dead_sampled": 0.625
+  },
+  {
+   "step": 23,
+   "train_score": 0.034,
+   "entropy": 0.992,
+   "resp_len": 302.258,
+   "frac_dead_sampled": 0.688
+  },
+  {
+   "step": 24,
+   "train_score": 0.041,
+   "entropy": 1.041,
+   "resp_len": 309.509,
+   "frac_dead_sampled": 0.594
+  },
+  {
+   "step": 26,
+   "train_score": 0.026,
+   "entropy": 1.0,
+   "resp_len": 303.308,
+   "frac_dead_sampled": 0.734
+  },
+  {
+   "step": 27,
+   "train_score": 0.034,
+   "entropy": 1.002,
+   "resp_len": 289.698,
+   "frac_dead_sampled": 0.75
+  },
+  {
+   "step": 28,
+   "train_score": 0.043,
+   "entropy": 0.958,
+   "resp_len": 299.809,
+   "frac_dead_sampled": 0.609
+  },
+  {
+   "step": 29,
+   "train_score": 0.049,
+   "entropy": 1.044,
+   "resp_len": 299.568,
+   "frac_dead_sampled": 0.562
+  },
+  {
+   "step": 30,
+   "train_score": 0.03,
+   "entropy": 0.991,
+   "resp_len": 290.19,
+   "frac_dead_sampled": 0.734
+  },
+  {
+   "step": 31,
+   "train_score": 0.048,
+   "entropy": 0.908,
+   "resp_len": 276.6,
+   "frac_dead_sampled": 0.703
+  },
+  {
+   "step": 32,
+   "train_score": 0.052,
+   "entropy": 0.866,
+   "resp_len": 268.028,
+   "frac_dead_sampled": 0.531
+  },
+  {
+   "step": 33,
+   "train_score": 0.038,
+   "entropy": 0.859,
+   "resp_len": 272.202,
+   "frac_dead_sampled": 0.594
+  },
+  {
+   "step": 34,
+   "train_score": 0.053,
+   "entropy": 0.927,
+   "resp_len": 273.688,
+   "frac_dead_sampled": 0.578
+  },
+  {
+   "step": 35,
+   "train_score": 0.044,
+   "entropy": 0.916,
+   "resp_len": 276.034,
+   "frac_dead_sampled": 0.609
+  },
+  {
+   "step": 36,
+   "train_score": 0.04,
+   "entropy": 0.851,
+   "resp_len": 263.822,
+   "frac_dead_sampled": 0.688
+  },
+  {
+   "step": 37,
+   "train_score": 0.055,
+   "entropy": 0.894,
+   "resp_len": 257.479,
+   "frac_dead_sampled": 0.625
+  },
+  {
+   "step": 38,
+   "train_score": 0.06,
+   "entropy": 0.901,
+   "resp_len": 271.751,
+   "frac_dead_sampled": 0.625
+  },
+  {
+   "step": 39,
+   "train_score": 0.043,
+   "entropy": 0.858,
+   "resp_len": 269.389,
+   "frac_dead_sampled": 0.672
+  },
+  {
+   "step": 40,
+   "train_score": 0.054,
+   "entropy": 0.859,
+   "resp_len": 254.016,
+   "frac_dead_sampled": 0.609
+  },
+  {
+   "step": 41,
+   "train_score": 0.023,
+   "entropy": 0.799,
+   "resp_len": 257.178,
+   "frac_dead_sampled": 0.734
+  },
+  {
+   "step": 42,
+   "train_score": 0.052,
+   "entropy": 0.835,
+   "resp_len": 251.271,
+   "frac_dead_sampled": 0.609
+  },
+  {
+   "step": 43,
+   "train_score": 0.032,
+   "entropy": 0.9,
+   "resp_len": 274.506,
+   "frac_dead_sampled": 0.703
+  },
+  {
+   "step": 44,
+   "train_score": 0.034,
+   "entropy": 0.827,
+   "resp_len": 254.925,
+   "frac_dead_sampled": 0.625
+  },
+  {
+   "step": 45,
+   "train_score": 0.055,
+   "entropy": 0.837,
+   "resp_len": 250.43,
+   "frac_dead_sampled": 0.594
+  },
+  {
+   "step": 46,
+   "train_score": 0.041,
+   "entropy": 0.81,
+   "resp_len": 253.591,
+   "frac_dead_sampled": 0.609
+  },
+  {
+   "step": 47,
+   "train_score": 0.036,
+   "entropy": 0.786,
+   "resp_len": 253.111,
+   "frac_dead_sampled": 0.672
+  },
+  {
+   "step": 48,
+   "train_score": 0.061,
+   "entropy": 0.757,
+   "resp_len": 243.163,
+   "frac_dead_sampled": 0.531
+  },
+  {
+   "step": 49,
+   "train_score": 0.069,
+   "entropy": 0.803,
+   "resp_len": 245.947,
+   "frac_dead_sampled": 0.562
+  }
+ ]
+}

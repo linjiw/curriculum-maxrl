@@ -5,15 +5,22 @@
     almost entirely on the easy/mid band L1-3 (all 4 runs) while its
     L1-3 pass@1 RISES — it funds reliability by liquidating easy-band
     coverage; MaxRL holds L1-3 flat and concentrates its gain on the
-    frontier band L4-6. Exact permutation p=0.0001 (L1-3 band).
+    frontier band L4-6.
+
+    NOTE (statistics): the MaxRL pool is a heterogeneous run INVENTORY
+    (teacher variants, hindsight doses, a wide model, repeated seeds),
+    not 18 independent replicates; the figure is descriptive and
+    intentionally carries no p-value (see the review of 2026-08-04).
 (b) Diversity premium G = mean_levels(pass@8 - pass@1) vs wall-clock:
     GRPO's erosion starts within the first ~25-50 steps, long before
     any level saturates; MaxRL's premium stabilizes after warmup.
 
-Data: curriculum_maxrl/maze_gpu/matched_*.jsonl (passk field:
-16 mazes x 8 samples per level; band values average 3 levels x runs).
+Data: the exact run manifest in data/fig8_run_manifest.json (passk
+field: 16 mazes x 8 samples per level; band values average 3 levels x
+runs).  The manifest freezes the cohort: adding a new matched_*.jsonl
+to maze_gpu/ does NOT silently change this figure; missing manifest
+entries are a hard error.
 """
-import glob
 import json
 import os
 
@@ -75,12 +82,30 @@ def gap_curve(rows, n_levels=13):
     return np.asarray(ts, float), np.asarray(gs, float)
 
 
-grpo_files = sorted(glob.glob(os.path.join(MAZE, "matched_*grpo*.jsonl")))
-maxrl_files = [p for p in sorted(glob.glob(os.path.join(MAZE, "matched_*.jsonl")))
-               if "grpo" not in p]
-grpo_runs = [series(p) for p in grpo_files]
-maxrl_runs = [series(p) for p in maxrl_files]
-maxrl_runs = [r for r in maxrl_runs if r]
+MANIFEST = os.path.join(HERE, "data", "fig8_run_manifest.json")
+with open(MANIFEST) as f:
+    manifest = json.load(f)
+
+
+def load_cohort(names):
+    runs = []
+    for name in names:
+        path = os.path.join(MAZE, name)
+        if not os.path.exists(path):
+            raise FileNotFoundError(
+                f"fig8 manifest names {name} but it is missing from "
+                f"{MAZE}; refusing to silently redefine the cohort")
+        rows = series(path)
+        if not rows:
+            raise ValueError(
+                f"{name} has no passk rows; if it should be excluded, "
+                f"move it to the manifest's 'excluded' list with a reason")
+        runs.append(rows)
+    return runs
+
+
+grpo_runs = load_cohort(manifest["grpo_runs"])
+maxrl_runs = load_cohort(manifest["maxrl_runs"])
 
 fig, (axa, axb) = plt.subplots(1, 2, figsize=(7.0, 2.7))
 
@@ -135,7 +160,7 @@ axb.annotate("erosion starts in the\nfirst ~25–50 steps,\nno level saturated",
                              connectionstyle="arc3,rad=0.2",
                              shrinkA=2, shrinkB=2))
 axb.set_xlabel("wall-clock (s), matched budget")
-axb.set_ylabel(r"diversity premium $\overline{p@8 - p@1}$")
+axb.set_ylabel(r"coverage--reliability gap $\overline{p@8 - p@1}$")
 axb.set_title("(b) When it goes", loc="left", fontsize=9)
 axb.set_xlim(0, None)
 axb.set_ylim(0, None)

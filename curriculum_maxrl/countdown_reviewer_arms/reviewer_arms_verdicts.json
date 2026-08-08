@@ -1,0 +1,48 @@
+{
+ "P_R1": {
+  "arm": "ARM A designed-gate B3, 3 seeds",
+  "t1_mean16": [
+   0.212,
+   0.322,
+   0.264
+  ],
+  "t1_pass16": [
+   0.513,
+   0.573,
+   0.488
+  ],
+  "mean_kept_fraction": -0.25,
+  "window": {
+   "mean_kept": [
+    0.0,
+    0.6
+   ],
+   "coverage": [
+    0.541,
+    0.571
+   ]
+  },
+  "verdict": "REFUTED"
+ },
+ "P_R2": {
+  "arm": "ARM B replay ppo_epochs=2, 3/3 seeds",
+  "t1_mean16": [
+   0.459,
+   0.475,
+   0.5
+  ],
+  "t1_pass16": [
+   0.585,
+   0.674,
+   0.646
+  ],
+  "mean_captured_fraction_of_B2_gain": 4.293,
+  "coverage_vs_B1": 0.094,
+  "verdict": "CONFIRMED-STRONG (captures >all of B2's gain, no coverage loss)",
+  "per_seed_meets_window": [
+   true,
+   true,
+   true
+  ]
+ }
+}

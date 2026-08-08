@@ -1,0 +1,15 @@
+{
+ "_comment": "Versioned result table for fig3_gsm8k.py. Values were previously hard-coded literals in the script; this file is now the single source. Registered-run (seed 1) trajectories from GSM8K_ANALYSIS.md (val mean@4 at steps 0/25/50). series_seed2 is the replication seed's within-seed GRPO pair (body.tex 6.7): grpo+teacher seed 2 climbs .073->.095->.118; grpo uniform seed 2 from gsm8k_partial/grpo_uniform_seed2.json (.081->.085->.125). maxrl cells have one seed. eval_noise_sd is repeated-evaluation SD of one fixed checkpoint (evaluation noise, NOT training-seed uncertainty). Frozen 2026-08-05.",
+ "steps": [0, 25, 50],
+ "series": {
+  "grpo":          [0.078, 0.105, 0.120],
+  "grpo+teacher":  [0.072, 0.096, 0.093],
+  "maxrl":         [0.091, 0.097, 0.108],
+  "maxrl+teacher": [0.066, 0.099, 0.102]
+ },
+ "series_seed2": {
+  "grpo":          [0.081, 0.085, 0.125],
+  "grpo+teacher":  [0.073, 0.095, 0.118]
+ },
+ "eval_noise_sd": 0.0094
+}

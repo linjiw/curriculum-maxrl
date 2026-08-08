@@ -40,14 +40,14 @@ safe at all (channel 3). Predictions are pre-registered (committed before any
 cell finishes) so results are readable as confirmations or refutations, not
 post-hoc stories.
 
-| experiment | the question | what we expected (pre-registered) | outcome |
+| experiment | the question | what we expected (pre-registered) | outcome — including our own retractions |
 |---|---|---|---|
-| **CPU skill-chain** (36 tasks, exact gradients) | do the channels work at all, and can theory predict their sizes? | teacher > uniform; hindsight breaks the oracle ceiling | ✓ both: 0.65→0.73→0.89, full stack **beats the true-p oracle** (0.890 > 0.851 — artifact: `frontier_rl/examples/v7_oracle_result.json`) |
-| **V5 frontier-heavy regime** (max pool p=1e-5) | what happens when NO task is samplable? | pure samplers get exactly 0; hindsight invents the curriculum below the pool | ✓ categorical: 0.93 AUC vs 0.00 for uniform/DAPO/teacher-alone |
-| **GPU maze** (1.26M transformer, 13 distance levels, ~30 matched-wall-clock runs) | do the CPU results survive real gradients + generation? | teacher gains AUC every seed; GRPO collapses coverage under a curriculum (H6) | ✓ 6/6 paired wins; H6 reversal confirmed; 11× samples-to-coverage vs GRPO at the hardest solved level |
-| **E-LLM-1: GSM8K 2×2** ({maxrl,grpo} × {teacher,uniform}, SmolLM2-360M, one A10G) | do channels 1+3 transfer to LLM RLVR? | P-G2: grpo+teacher does NOT beat grpo (safety); P-G1: modest teacher gain; P-G5: ordering, not magnitude | **✓ P-G2 confirmed** — grpo+teacher is the only cell that *regresses* after step 25 (analysis: `GSM8K_ANALYSIS.md`); P-G1 pending final cell |
-| **E-LLM-2: Countdown 2×2×2** (+{hindsight,none}) | channel 2 at LLM scale: relabel a failed equation's target to the value it actually reached — an exact-verifier relabel nobody has published | hindsight ignites the operand tiers that stay at 0 for every hindsight-off cell (the V5 pattern at LLM scale) | staged + two-agent review-hardened (`curriculum_maxrl/countdown/` in the maxrl fork) |
-| **E-LLM-3: reasoning-gym streaming** | can the kernel-posterior teacher walk a *continuous* difficulty dial and beat the library's threshold curriculum? | match/beat published +13–40-pt gains without the hand-set threshold | planned |
+| **CPU skill-chain** (36 tasks, exact gradients) | do the channels work at all? | teacher > uniform; recycling adds | ✓ 0.65→0.73→0.89 — **corrected**: a floor-and-γ-matched true-p oracle *ties* the full stack (0.8885 vs 0.8895; "beats the oracle" is retracted); recycling adds on top of even the oracle (0.8935) |
+| **V5 frontier-heavy regime** (max pool p=1e-5) | what happens when NO task is samplable? | pure samplers get exactly 0; recycling invents the curriculum below the pool | ✓ categorical: 0.93 AUC vs 0.00 for uniform/DAPO/teacher-alone |
+| **Balanced maze factorial** ({maxrl,grpo}×{uniform,teacher}×6 blocks, 250 fixed steps, pre-registered) | does the estimator coverage divergence survive a clean design? | ≥5/6 paired blocks MaxRL>GRPO under both samplers | **✗ FAILED (3/6, 4/6) — the cohort's zero-exception claim is retracted.** Survives: exact-rung ordering 10/10; exploratory time-integrated ordering 12/12 (now the registered primary of confirmation wave 2, running) |
+| **E-LLM-1: GSM8K 2×2** (SmolLM2-360M, one A10G) | do channels 1+3 transfer to LLM RLVR? | P-G2: grpo+teacher does NOT beat grpo | Registered run landed P-G2 (only regressing cell); **replication seed with weaker measured steering climbed instead — 1-of-2 seeds, dose-dependent, not established**; teacher-deficit *direction* is 2/2 seeds |
+| **E-LLM-2/2b: Countdown** (exact-verifier recycling, v2 pool) | channel 2 at LLM scale | recycling ignites unreachable tiers | v1 pool: both nulls (guesser-saturated). **New phenomenon instead: recycling-induced sharpening** (mean up, pass@16 down, 3 seeds) + a saturation gate with one validated operating point (ARM-A designed-point rerun in flight) |
+| **Jugs (water-measuring)** | does the whole family fail together where no band exists? | pre-registered all-null | ✓ all-null landed — the negative control |
 
 Full LLM-experiment roadmap with novelty checks and differentiation map:
 [`NEXT_EXPERIMENTS.md`](NEXT_EXPERIMENTS.md). Latest LLM results:
@@ -57,9 +57,7 @@ Full LLM-experiment roadmap with novelty checks and differentiation map:
 
 | path | contents |
 |---|---|
-| `PAPER.md` | **The story** — 30-second pitch, why this direction, the three insights, what problem it resolves, real + hidden benefits |
-| `EVIDENCE.md` | Audited claim ledger: exact results, corrected local evidence, historical-only observations, no-go boundaries, and open tests |
-| `FRAMEWORK.md` | Research contract: assumptions, reference algorithm, target-mixture choice, hindsight gates, ablation matrix, and claim ladder |
+| `paper/` | **The paper** — LaTeX source (`main.tex`/`body.tex`), figures with vendored data, compiled at `docs/paper-draft.pdf`. (`PAPER.md` is the superseded markdown outline) |
 | `GUIDE.md` | Design guide: approaches tried, verification status of each, and what's next |
 | `REPORT.md` | Full experiment report: math→algorithm→evidence chain, findings, goal assessment |
 | `SCHEDULE.md` | Live experiment tracking: executing queue, decision trees, next wave |

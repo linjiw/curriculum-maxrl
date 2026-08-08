@@ -35,7 +35,48 @@ pre-execution locks, not externally timestamped preregistrations. See the
 [V5B verification erratum](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md)
 and [forensic report](frontier_rl/examples/acrobot_hindsight_v5b_forensic_verification.json).
 
-## Currently executing (2026-07-23, standing loop)
+## Currently executing (2026-08-05: balanced factorial wave)
+
+**Title decision, committed in advance (fresh-eyes review finding 5):**
+the title "The Estimator Decides" is conditional on wave-2 P-F2. If
+P-F2 confirms (covAUC ordering >=5/6 both samplers on fresh blocks),
+the title stands on that registered result. If P-F2 fails, the title
+becomes the subtitle ("What Curricula and Failure Recycling Can and
+Cannot Do in RL with Verifiable Rewards") — the slogan may not outlive
+the claim it names.
+
+
+| # | run | status | purpose |
+|---|---|---|---|
+| FACT-W2 | confirmation factorial wave 2: {maxrl,grpo}×{uniform,frontier_un}× fresh blocks 6–11 | **RUNNING** (`maze_gpu/run_factorial_wave2.sh`, prereg d6aea90 committed pre-launch) | P-F2: the 12/12 exploratory covAUC ordering becomes the registered primary on new blocks; falsification branch: ≤4/6 either sampler → no cross-estimator coverage claim of any kind at neural scale. P-F3: easy-band majority sign test |
+
+
+| # | run | status | purpose |
+|---|---|---|---|
+| FACT | balanced maze factorial {maxrl,grpo}×{uniform,frontier_un}×6 blocks + grpo_mass + grpo_nostd (250 fixed steps) | **DONE — P-F1 FAILED, claim retracted in paper (e27b5d9); P-G0a confirmed; P-G0c failed. Verdict: `maze_gpu/FACTORIAL_VERDICT.md`. Repair pass folding in contention casualties.** | draft-review P0-3: P-F1 prereg, falsification branch committed — and executed |
+| ARM-A/B | designed-gate B3 ×3 + replay control ×3 (Countdown) | **RUNNING** — s1 done; s2 OOMed near end (marker withheld, no step-60 ckpt); s3 in flight; repair pass armed behind the driver lock (`smollm/run_reviewer_arms_repair.sh`) | fixed-code gate validation + dose-matched replay |
+| OTG | E-LLM-2c one_target_per_group ×3 (Countdown; prereg `bdca4aa` P-OTG1/2) | queued behind ARM-B + chained jobs | P0-2 LLM-side test: does the shared-K coupling penalty transfer through verl normalization? |
+| E-LLM-1b | steering-controlled GSM8K (m3s died at step-25 ckpt, node OOM) | chained behind ARM-B completion | decisive LLM-scale cell |
+
+Seed-0 block interim read (1/6 blocks — NO conclusions): uniform sampler
+maxrl +.024 vs grpo −.130 Δcov8 (easy band −.396, as predicted); teacher
+sampler REVERSES it this block (maxrl −.038 vs grpo −.019) — under the
+u_N teacher, GRPO's coverage loss shrank and MaxRL's went negative.
+If that pattern holds across blocks, P-F1's "both samplers" clause fails
+and the falsification branch executes (claim rescopes from "the
+estimator decides" toward sampler-conditioned). Exactly what the
+factorial exists to decide; wait for 6 blocks.
+
+## New CPU results (2026-08-05, all prereg'd in-script, all in paper)
+
+| experiment | verdict | artifact |
+|---|---|---|
+| gate-variants (Q1/Q8): freq heuristic vs true-p gate, 10 seeds | true-p gate keeps ~all recycling value (.879 vs ungated .881); freq gate pays (.798, 0/10); f_hat anti-correlates with true p(g') (−.27) | `results_gate_variants.json` |
+| row-vs-group relabel (Q2/P0-2), 10 seeds | per-row-uncoupled .952 > one-target .881 > shared-K coupled .749 (≈ no-recycling .705); coupling is the cost, both orderings 10/10 | `results_row_vs_group.json` |
+| schedule-matched + grpo_nostd (Q7), 5 seeds × 2 frozen schedules | no-SD GRPO collapses onto RLOO's coverage profile (.148 vs RLOO .161 vs GRPO .762) — variance normalization is the tail mechanism | `results_schedule_matched.json` |
+| grpo-own-mass teacher (Q6), 5 seeds | GRPO scheduled by its own mass functional does NOT close the gap (5/5) and serves GRPO worse than the u_N teacher (0/5) | `results_grpo_own_mass.json` |
+
+## Previous wave (2026-07-23, standing loop)
 
 | # | run | status | purpose |
 |---|---|---|---|

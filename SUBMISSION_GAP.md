@@ -34,24 +34,27 @@ still single-run-conditional, and formatting/anonymization work is undone.
 ## STRONG (reviewers will ding without)
 
 - **S1. Second seed for the Countdown corrected-gate operating point**
-  (the full-strength point in Fig 8a is 1 seed) and for the maze
-  GRPO+teacher arm (single-seed, labeled). GPU-cheap (~8h total), queue
-  after E-LLM-1b.
+  ~~(the full-strength point in Fig 8a is 1 seed)~~ **RESOLVED
+  2026-08-06 by ARM A (3 seeds): the 1-seed point did NOT replicate —
+  P-R1 refuted, Fig 7a redrawn as scatter.** Maze GRPO+teacher
+  single-seed arm: superseded by the balanced factorial (6 blocks both
+  samplers ×2 waves).
 - **S2. Reference hygiene**: 4 entries still cite arXiv IDs with "et al."
   reconstructed from abstracts — verify against the PDFs; LILO/SFL/DUMP
   entries lack arXiv IDs; dapo bibitem says NeurIPS 2025 (check venue).
 - **S3. Figure 4/5 (algorithm + partition map) refer to §ordering that
   changed; re-audit all \S references after B1 restructure.**
-- **S4. The Jugs pool-conditionality paragraph cites repo postmortem —
-  after B1, promote its mechanism (rollout-set diversity as a design
-  gate) into the appendix with the entropy trajectories figure.**
+- **S4. RESOLVED 2026-08-06:** Jugs entropy-collapse figure added to the
+  appendix (fig10_jugs_entropy, all 9 trajectories, manifest entry) with
+  the rollout-set-diversity design gate stated in the caption + limitations.
 
 ## NICE (improves odds, not required)
 
 - N1. A pass@k-vs-k sweep figure for the maze (the crossing-at-k≈4
   result is currently prose).
-- N2. Countdown gate_max_p dose sweep (pre-registered as standing
-  follow-up; would turn Fig 8a's 3-point frontier into a curve).
+- N2. Countdown gate_max_p dose sweep — **CLOSED 2026-08-06: the
+  fixed-decay designed-strength sweep (ARM A) refuted the dose-response
+  reading (P-R1); there is no curve to draw. Fig 7a is a scatter.**
 - N3. Whittle-index theory paragraph (parked; only if a theory reviewer
   is anticipated).
 
@@ -115,3 +118,62 @@ still single-run-conditional, and formatting/anonymization work is undone.
   5 corrected (GRESO title+venue, DisCO title, SC-SDPO author, 
   Reinforce-Ada retitle, LILO author list). N1 CLOSED: fig9_ksweep
   (maze crossing) added to App B. Site + both PDFs pushed for review.
+
+- 2026-08-04 expert-guidance pass (PR #2 merged; 54pp review under
+  research_guidance/2026-08-04/). Prose P0s resolved in the parallel
+  math-review pass (69b7704). New EXPERIMENTS closing the guidance's
+  evidence gaps, all committed with artifacts:
+  - verify_guidance_math.py — MC-confirms the three-estimator table
+    (raw/full-CV/practical masses), T=N-1 gradient identity, the
+    factorization E[g]=nu_N(p)(mu+−mu−), the nonzero full-CV all-fail
+    update ∇p/q, the exact peak, and the DEPLOYED sample-SD GRPO tail
+    ratios (√N hard, (N−1)/√N easy) that replace the population-SD
+    √(N−1) claims.
+  - run_fullcv_baseline.py (P0.5/P1.1) — the full control-variate
+    all-fail baseline the guidance demanded before saying "only
+    channel": full-CV scores 0.000 in every seed on the frontier-heavy
+    pool while recycling ignites either variant to 0.98; §6.2 now
+    reports it.
+  - run_schedule_matched.py (P1.2, exact rung) — frozen realized
+    schedules replayed under MaxRL/GRPO/RLOO from identical inits:
+    estimator coverage ordering survives schedule matching 10/10
+    paired contrasts; §6.3 now points to it as the schedule-matched
+    core of the confirmatory factorial.
+  - run_proposal_shift.py — hindsight proposal-law diagnostics
+    (cos 0.93 vs exact fresh-destination direction, p_Q−p_Π=+.003)
+    + cross-fitted destination selection (alignment 0.82, AUC
+    .883→.829: adaptive reuse is mildly helpful here); cited in the
+    hindsight remark's interpretation.
+  - run_transfer_matrix.py — exact activity-vs-transfer matrix;
+    Spearman(activity, one-step pool value)=1.0 on chains at 3
+    snapshots; rem:scope now scopes the tie to shared-prefix pools.
+  Remaining from guidance: GPU items unchanged (E-LLM-1b running,
+  corrected-gate 3-seed sweep, GRPO-own-teacher + no-std arms queued);
+  balanced maze factorial (≥6 seed blocks) still the big open design.
+
+- 2026-08-05: Review-round-4 resolution complete. All text-fixable items
+  from 5 reviews FIXED (see reviews_round4/RESOLUTION_MATRIX.md); part J
+  (flat-over-band control) run and folded into the Remark — the zeros
+  alone forfeit the gain (0/10), settling R5-Q3 with data; deployment-
+  limits paragraph (R2-W3/W4) + wiring contract (R2-Q4) shipped; site
+  aligned with rescoped claims. Runability audit passed on all queued
+  arms (syntax, estimator edge cases, g3p power path, data deps, disk).
+  REMAINING (all experiment-gated): E-LLM-1b verdicts -> 6.7 rewrite;
+  GRPO-own/no-std maze arms -> title-claim scope; ARM A/B/C ->
+  gate-dial + dose-baseline + harness paragraphs; then the section-6
+  restructure + claims table, final float pass, camera-ready hashes.
+
+- 2026-08-06: ARM A COMPLETE, **P-R1 REFUTED** at 3 seeds (mean-kept
+  −0.26, window [0,.60]; coverage .525 vs floor .541): falsification
+  branch executed — Fig 7a redrawn as operating-point scatter, §6.9 +
+  fig9 caption + conclusion + site de-dialed; artifacts vendored to
+  curriculum_maxrl/countdown_reviewer_arms/ (commit 0fd5f70). ARM B
+  interim (2/3 seeds): replay ppo_epochs=2 EXCEEDS recycling on both
+  axes (t1 mean .467 vs .324; pass16 .629 vs .492) — §6.8 carries the
+  dose-control paragraph with the dose caveat; final verdict on s3.
+  REMAINING (experiment-gated): ARM B s3 -> P-R2 final; g3p ->
+  E-LLM-1b verdict -> 6.7 rewrite; maze grpo_mass/nostd/fullcv sweeps
+  (queued); ARM C harness reconciliation; OTG ablation (P-OTG1/2).
+  Then: section-6 restructure + claims-vs-evidence table, page
+  compression toward 9pp, camera-ready hashes, anonymized artifact
+  mirror.

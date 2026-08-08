@@ -1,0 +1,149 @@
+{
+ "model": "HuggingFaceTB/SmolLM2-360M-Instruct",
+ "n": 16,
+ "repeats": 5,
+ "per_rep": [
+  {
+   "jugs_tier0": {
+    "mean16": 0.084375,
+    "pass16": 0.45
+   },
+   "jugs_tier1": {
+    "mean16": 0.0296875,
+    "pass16": 0.2
+   },
+   "jugs_tier2": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier3": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier4": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   }
+  },
+  {
+   "jugs_tier0": {
+    "mean16": 0.075,
+    "pass16": 0.375
+   },
+   "jugs_tier1": {
+    "mean16": 0.025,
+    "pass16": 0.225
+   },
+   "jugs_tier2": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier3": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier4": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   }
+  },
+  {
+   "jugs_tier0": {
+    "mean16": 0.0796875,
+    "pass16": 0.4
+   },
+   "jugs_tier1": {
+    "mean16": 0.01875,
+    "pass16": 0.2
+   },
+   "jugs_tier2": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier3": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier4": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   }
+  },
+  {
+   "jugs_tier0": {
+    "mean16": 0.0828125,
+    "pass16": 0.45
+   },
+   "jugs_tier1": {
+    "mean16": 0.025,
+    "pass16": 0.175
+   },
+   "jugs_tier2": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier3": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier4": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   }
+  },
+  {
+   "jugs_tier0": {
+    "mean16": 0.08125,
+    "pass16": 0.425
+   },
+   "jugs_tier1": {
+    "mean16": 0.0265625,
+    "pass16": 0.2
+   },
+   "jugs_tier2": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier3": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   },
+   "jugs_tier4": {
+    "mean16": 0.0,
+    "pass16": 0.0
+   }
+  }
+ ],
+ "floors": {
+  "jugs_tier0": {
+   "mean16_mean": 0.08062499999999999,
+   "mean16_sd": 0.003597145135381671,
+   "pass16_mean": 0.42000000000000004,
+   "pass16_sd": 0.03259601202601325
+  },
+  "jugs_tier1": {
+   "mean16_mean": 0.025,
+   "mean16_sd": 0.0039836089949943625,
+   "pass16_mean": 0.2,
+   "pass16_sd": 0.01767766952966369
+  },
+  "jugs_tier2": {
+   "mean16_mean": 0.0,
+   "mean16_sd": 0.0,
+   "pass16_mean": 0.0,
+   "pass16_sd": 0.0
+  },
+  "jugs_tier3": {
+   "mean16_mean": 0.0,
+   "mean16_sd": 0.0,
+   "pass16_mean": 0.0,
+   "pass16_sd": 0.0
+  },
+  "jugs_tier4": {
+   "mean16_mean": 0.0,
+   "mean16_sd": 0.0,
+   "pass16_mean": 0.0,
+   "pass16_sd": 0.0
+  }
+ }
+}

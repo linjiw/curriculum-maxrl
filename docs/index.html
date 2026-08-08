@@ -186,7 +186,7 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <body>
 
 <header class="hero">
-  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-04</p>
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-05</p>
   <h1>The estimator decides</h1>
   <p class="lede">
     RL with verifiable rewards leans on two data-level fixes — <em>difficulty curricula</em>
@@ -195,14 +195,15 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     add-ons. <strong>They are not.</strong> We derive the curriculum from the estimator's own
     algebra — a prompt's expected learning signal is exactly
     <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>, whose two zeros partition difficulty into a
-    dead zone, a learnable band, and a mastered tail — and use it to predict, pre-register, and
-    confirm two failure modes nobody was measuring: the <em>same</em> curriculum that trains
-    stably under MaxRL <strong>degrades GRPO</strong> (maze + LLM scale), and recycling buys
-    mean accuracy <strong>with pass@k coverage</strong> (recycling-induced sharpening — a new
-    finding). The same algebra supplies the fix: gate relabels by their destination's pass
-    rate, and coverage comes back with most of the gain kept. The claim's boundary is measured
-    too: a pre-registered fifth suite whose band collapses to one template stratum defeats
-    <em>every</em> estimator — the partition needs a graded band to act on.
+    dead zone, a learnable band, and a mastered tail — and use it to find, measure, and
+    stress-test the failure modes of both interventions, <em>including our own claims</em>:
+    the replicated finding is that recycling buys mean accuracy <strong>with pass@k
+    coverage</strong> (recycling-induced sharpening — first measurement of this cost in RLVR,
+    3 seeds), the algebra motivates a relabel-admission gate with one validated operating
+    point, and the estimator-coverage divergence our early runs showed was cut down by our
+    own pre-registered factorial to exactly what survives (details in the card below). The
+    claim's boundary is measured too: a pre-registered fifth suite whose learnable region
+    collapses to one template stratum defeats <em>every</em> estimator.
   </p>
   <div class="card" style="margin-top:18px">
     <p class="eyebrow" style="margin-bottom:8px">Three headline results</p>
@@ -211,14 +212,24 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     zero-update freeze (0.000 on the flag and survive-400) — the gated stack reaches
     <strong>1.000±0.000 on both</strong>; with dense native rewards plain REINFORCE solves
     CartPole, so the zero is a property of the sparse setting RLVR actually lives in.
-    &nbsp;·&nbsp; <strong>Safety, pre-registered:</strong> on the maze, every MaxRL run grows
-    coverage and every GRPO run loses it (9 runs, permutation p=0.0079, zero exceptions). On
-    GSM8K the teacher-deficit direction under GRPO now replicates 2/2 seeds on both meters
-    (magnitude tracks delivered steering — a dose effect, not a sign flip); the
-    steering-controlled decisive cells are training now.
+    &nbsp;·&nbsp; <strong>Safety — retracted, then confirmed in its measured form:</strong>
+    the earlier nine-run "zero sign exceptions" maze pattern <strong>failed its
+    pre-registered balanced factorial at the registered endpoint and is retracted</strong>
+    (3/6 and 4/6 paired blocks; the cohort had conflated recycling with the estimator
+    effect). The time-integrated coverage ordering that survived (12/12 wave-1 blocks)
+    was then <strong>registered as the primary of a second factorial on six fresh seed
+    blocks and confirmed 6/6 under each sampler</strong> (p=.031 per sampler; 24/24
+    paired blocks across both waves; easy-band concentration replicated 10/12,
+    registered) — prereg, both verdicts, and per-wave results vendored in the repo.
+    The exact-rung ordering stands alongside it (10/10 frozen-schedule replays +
+    controls).
+    On GSM8K the teacher-deficit direction under GRPO is 2/2 seeds; the registered
+    regression shape is 1-of-2 and receives no corroboration from the factorial's
+    interaction read.
     &nbsp;·&nbsp; <strong>Sharpening + the gate:</strong> recycling trades coverage for accuracy
-    (3 seeds, outside noise); the utility gate restores coverage keeping ~60% of the gain — and
-    the gate threshold traces a mean-vs-coverage dial.</p>
+    (3 seeds, outside noise); the saturation gate restores frontier-tier coverage keeping ~60% of the
+    gain at one validated operating point — the stronger "dial" reading was refuted in its
+    pre-registered 3-seed sweep (P-R1): designed-strength gating is recycling-off plus seed noise.</p>
   </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
@@ -784,7 +795,7 @@ cleanly and pre-registers its predictions before any cell finishes:</p>
   </tbody>
 </table>
 
-<h3>E-LLM-1 results — the safety claim lands at LLM scale</h3>
+<h3>E-LLM-1 results — the registered run landed; replication is dose-dependent</h3>
 
 <p>SmolLM2-360M on 7,473 GSM8K prompts, N=16 rollouts, 50 steps per cell, one A10G. At this
 scale ~65–75% of uniformly sampled groups are <em>dead</em> (all 16 rollouts fail — zero
@@ -805,8 +816,9 @@ trajectory; the story is the <em>divergence after step 25</em>:</p>
   landed the pre-registered sign (P-G2). <strong>Replication status, reported as measured:</strong>
   a second seed of the grpo+teacher cell climbed instead (.073→.095→.118), with measurably
   weaker steering (min dead-sampled fraction .53 vs seed 1's .48; mean ≈ population) — the
-  LLM-scale interaction is 1-of-2 seeds and treatment-intensity-dependent. The maze estimator
-  main effect (9 runs, p=0.0079) is unaffected. Data: <span class="mono">GSM8K_ANALYSIS.md</span>
+  LLM-scale interaction is 1-of-2 seeds and treatment-intensity-dependent, and the balanced
+  maze factorial's interaction read (teacher mildly protective under GRPO) does not corroborate
+  it. Data: <span class="mono">GSM8K_ANALYSIS.md</span>
   Findings 1 &amp; 6.</figcaption>
 </figure>
 
@@ -856,17 +868,20 @@ run; the pre-registered kill criterion did its job.)</p>
   <em>data-induced</em> rather than weight-induced. A ~30-paper review found no prior
   report of hindsight-induced pass@k loss in RLVR: the nearest works never measured
   coverage.</p></div>
-  <div class="card"><h3>The fix falls out of our own algebra — and it's a dial</h3>
+  <div class="card"><h3>The fix falls out of our own algebra — one operating point, not a dial</h3>
   <p>A relabel to a value the model just produced is a task at p≈1 — exactly where
   u(p) = pass@N − pass@1 says training signal is <em>zero</em>. So the estimator
-  provides the admission rule: <strong>gate the relabel destination by its estimated
-  pass rate</strong>. Measured across three seeds: at the frontier tier the gate
+  motivates the admission rule: <strong>gate relabels by a destination-saturation
+  statistic</strong>. Measured across three seeds: at the frontier tier the gate
   restores coverage to baseline (.279±.019 vs .274) while keeping ~60% of recycling's
-  mean gain; a full-strength rerun pushes tier-1 coverage <em>above</em> baseline at
-  the mean's full price. Gate strength traces a monotone mean-vs-coverage trade —
-  a dial, not a switch. In-run telemetry shows the mechanism: rejection rises
-  .12 → .85 as the model's reachable set saturates, and the gated arm ends with
-  <em>more</em> policy entropy than no recycling at all. Full synthesis:
+  mean gain. The stronger reading — that gate strength traces a monotone
+  mean-vs-coverage <em>dial</em> — was pre-registered and <strong>refuted</strong>
+  (P-R1, 3 seeds at the designed strength, rejection ~.94): those runs land on the
+  no-recycling point with seed spread covering most of the baseline↔recycling range,
+  and the earlier single-seed "coverage above baseline" endpoint sits inside that
+  spread. Strong gating ≈ recycling off. In-run telemetry still shows the mechanism:
+  rejection rises .12 → .85 as the model's reachable set saturates, and the gated arm
+  ends with <em>more</em> policy entropy than no recycling at all. Full synthesis:
   <span class="mono">SHARPENING_SYNTHESIS.md</span>.</p></div>
 </div>
 
@@ -1227,28 +1242,39 @@ curriculum can fix, until you recycle it.</em></p>
   a verified success for the goal it actually reached, and relabeling dead groups provably yields
   the maximum-likelihood gradient of the relabeled task. Across four testbeds a matched true-pass-rate <strong>oracle</strong> allocator ties the
   combined schedule (allocation saturates; recycling adds even on top of the oracle), which turns a
-  frontier-heavy regime from unlearnable to solved (0 → 0.98), grows pass@k on the maze where GRPO's
-  collapses (9/9 runs, permutation p=0.0079), and needs up to 11× fewer inference samples at the frontier. A
-  pre-registered LLM-scale 2×2 confirms the safety half: the identical curriculum that trains
-  stably under MaxRL <em>degrades</em> GRPO — the estimator underneath decides whether a
-  curriculum is safe at all.</p>
+  frontier-heavy regime from unlearnable to solved (0 → 0.98), and needs up to 11× fewer inference
+  samples at the frontier. The estimator-conditioned coverage story is reported at its tested level:
+  the exact-rung ordering survives frozen schedules (10/10); the neural-scale
+  zero-exception claim <strong>failed its pre-registered factorial and is retracted</strong>;
+  and the time-integrated ordering that survived was then registered on six fresh seed
+  blocks and <strong>confirmed 6/6 under each sampler</strong> (24/24 paired blocks across
+  both waves). On GSM8K the pre-registered 2×2's registered run
+  matched the prediction; its replication seed did not reproduce the shape.</p>
 </div>
 
 <div class="grid2">
   <div class="card">
     <h3>Draft status — what's solid</h3>
-    <p>✅ Abstract, intro with 5-item contribution list, theory sections with
+    <p>✅ Abstract, intro with 4-item contribution list, theory sections with
     interpretation lines after every proposition, the escalating experiment ladder
-    (7.1–7.5, one bolded takeaway each), related-work differentiation table,
-    limitations-with-diagnoses. All numbers audit-traced; the two-round adversarial
-    audit found the quantitative core clean and fixed the prose qualifiers.</p>
+    (§6.1–6.9, one bolded takeaway each), related work, limitations-with-diagnoses,
+    and a claims-and-evidence appendix table with per-claim registration status.
+    All numbers audit-traced; figures regenerate from checksummed data files
+    (<span class="mono">paper/results/manifest.json</span>); pre-registered
+    falsification branches demonstrably executed (factorial retraction,
+    ARM A dial refutation).</p>
   </div>
   <div class="card">
-    <h3>What's pending before v1.0</h3>
-    <p>⟳ GSM8K cell 2 final (P-G1 verdict) + the pass@{1,4,8,16} k-sweep on all four
-    final checkpoints; the Countdown 2×2×2 (channel 2 at LLM scale — the flagship);
-    multi-seed LLM replication; figures rebuilt from <span class="mono">curves.json</span>
-    artifacts; LaTeX conversion.</p>
+    <h3>What's pending before submission</h3>
+    <p>⟳ The steering-controlled GSM8K cell (E-LLM-1b's decisive g3p run —
+    the §6.7 interaction claim upgrades or gets scoped either way, pre-registered);
+    main-text compression to the 9-page ICLR budget (currently ~16pp, appendix
+    absorbing the overflow); anonymized artifact mirror + camera-ready commit
+    hashes. Executed since the last status: both factorial waves (retraction +
+    confirmation), ARM A's dial refutation, <strong>P-R2 final (3/3 seeds:
+    the dose-matched replay control exceeds recycling on both meters — recycling's
+    distinctive value is scoped to the all-fail regime)</strong>, the
+    claims-and-evidence appendix.</p>
   </div>
 </div>
 

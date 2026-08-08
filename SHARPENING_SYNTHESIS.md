@@ -3,6 +3,21 @@
 *2026-07-28. Companion to COUNTDOWN_ANALYSIS.md. Full ~30-paper review in
 the session log; this doc records what changes our design and our paper.*
 
+> **Currency note (2026-08-06):** the design below was run. What held:
+> sharpening replicated at 3 seeds; the moderate gate restored
+> frontier-tier coverage at ~60% mean kept (one validated operating
+> point). What did NOT hold: (i) the deployed gate statistic is a
+> decayed achieved-destination frequency, not the posterior-lookup
+> p̂-gate designed here — and where both are measurable the true-p gate
+> keeps ~all the value while the frequency heuristic pays a toll
+> (results_gate_variants.json); (ii) the "dial" extension was refuted
+> at 3 designed-strength seeds (P-R1 — strong gating ≈ recycling-off;
+> countdown_reviewer_arms/PROVENANCE.md); (iii) at LLM scale a
+> dose-matched replay control exceeds recycling on both meters (ARM B,
+> interim), so the mean gain is not relabel-specific. Entropy
+> prioritization, KL-on-relabels, and dose-anneal were never run —
+> still-open design space. Paper §6.8–6.9 is authoritative.
+
 ## 1. The finding is novel — and now precisely locatable in theory
 
 No published work documents hindsight-relabeling-induced pass@k loss in

@@ -1,0 +1,431 @@
+{
+ "generated": "2026-08-05",
+ "note": "one row per run/artifact; maze runs carry arm+seed parsed from filenames; the 9-run main-effect subset and its 5v4 composition are in permutation_reanalysis.json",
+ "n_rows": 53,
+ "rows": [
+  {
+   "file": "matched_falp_maxrl_hs_s0.jsonl",
+   "suite": "maze",
+   "arm": "falp_maxrl_hs",
+   "seed": 0,
+   "n_eval_rows": 29,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_falp_maxrl_hsdense_s0.jsonl",
+   "suite": "maze",
+   "arm": "falp_maxrl_hsdense",
+   "seed": 0,
+   "n_eval_rows": 29,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_falp_maxrl_hsdense_s1.jsonl",
+   "suite": "maze",
+   "arm": "falp_maxrl_hsdense",
+   "seed": 1,
+   "n_eval_rows": 28,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_falp_maxrl_hsdense_s2.jsonl",
+   "suite": "maze",
+   "arm": "falp_maxrl_hsdense",
+   "seed": 2,
+   "n_eval_rows": 25,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_falp_maxrl_hsdense_tt_s0.jsonl",
+   "suite": "maze",
+   "arm": "falp_maxrl_hsdense_tt",
+   "seed": 0,
+   "n_eval_rows": 26,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_falp_p4_hsdense_s0.jsonl",
+   "suite": "maze",
+   "arm": "falp_p4_hsdense",
+   "seed": 0,
+   "n_eval_rows": 24,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_alp_maxrl_s0.jsonl",
+   "suite": "maze",
+   "arm": "frontier_alp_maxrl",
+   "seed": 0,
+   "n_eval_rows": 33,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_alp_maxrl_s1.jsonl",
+   "suite": "maze",
+   "arm": "frontier_alp_maxrl",
+   "seed": 1,
+   "n_eval_rows": 37,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_alp_maxrl_s2.jsonl",
+   "suite": "maze",
+   "arm": "frontier_alp_maxrl",
+   "seed": 2,
+   "n_eval_rows": 30,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_grpo_s0.jsonl",
+   "suite": "maze",
+   "arm": "frontier_grpo",
+   "seed": 0,
+   "n_eval_rows": 33,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_maxrl_hs_s0.jsonl",
+   "suite": "maze",
+   "arm": "frontier_maxrl_hs",
+   "seed": 0,
+   "n_eval_rows": 30,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_maxrl_hs_s1.jsonl",
+   "suite": "maze",
+   "arm": "frontier_maxrl_hs",
+   "seed": 1,
+   "n_eval_rows": 33,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_maxrl_hs_s2.jsonl",
+   "suite": "maze",
+   "arm": "frontier_maxrl_hs",
+   "seed": 2,
+   "n_eval_rows": 30,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_maxrl_s0.jsonl",
+   "suite": "maze",
+   "arm": "frontier_maxrl",
+   "seed": 0,
+   "n_eval_rows": 31,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_maxrl_s1.jsonl",
+   "suite": "maze",
+   "arm": "frontier_maxrl",
+   "seed": 1,
+   "n_eval_rows": 30,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_maxrl_s2.jsonl",
+   "suite": "maze",
+   "arm": "frontier_maxrl",
+   "seed": 2,
+   "n_eval_rows": 23,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_un_maxrl_s0.jsonl",
+   "suite": "maze",
+   "arm": "frontier_un_maxrl",
+   "seed": 0,
+   "n_eval_rows": 28,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_un_maxrl_s1.jsonl",
+   "suite": "maze",
+   "arm": "frontier_un_maxrl",
+   "seed": 1,
+   "n_eval_rows": 33,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_un_maxrl_s2.jsonl",
+   "suite": "maze",
+   "arm": "frontier_un_maxrl",
+   "seed": 2,
+   "n_eval_rows": 25,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_un_tilt_maxrl_s0.jsonl",
+   "suite": "maze",
+   "arm": "frontier_un_tilt_maxrl",
+   "seed": 0,
+   "n_eval_rows": 25,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_un_tilt_maxrl_s1.jsonl",
+   "suite": "maze",
+   "arm": "frontier_un_tilt_maxrl",
+   "seed": 1,
+   "n_eval_rows": 31,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_frontier_un_tilt_maxrl_s2.jsonl",
+   "suite": "maze",
+   "arm": "frontier_un_tilt_maxrl",
+   "seed": 2,
+   "n_eval_rows": 20,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_learnability_maxrl_s0.jsonl",
+   "suite": "maze",
+   "arm": "learnability_maxrl",
+   "seed": 0,
+   "n_eval_rows": 34,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_uniform_grpo_s0.jsonl",
+   "suite": "maze",
+   "arm": "uniform_grpo",
+   "seed": 0,
+   "n_eval_rows": 24,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_uniform_grpo_s1.jsonl",
+   "suite": "maze",
+   "arm": "uniform_grpo",
+   "seed": 1,
+   "n_eval_rows": 36,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_uniform_grpo_s2.jsonl",
+   "suite": "maze",
+   "arm": "uniform_grpo",
+   "seed": 2,
+   "n_eval_rows": 32,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_uniform_maxrl_hs_s0.jsonl",
+   "suite": "maze",
+   "arm": "uniform_maxrl_hs",
+   "seed": 0,
+   "n_eval_rows": 29,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_uniform_maxrl_s0.jsonl",
+   "suite": "maze",
+   "arm": "uniform_maxrl",
+   "seed": 0,
+   "n_eval_rows": 26,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_uniform_maxrl_s1.jsonl",
+   "suite": "maze",
+   "arm": "uniform_maxrl",
+   "seed": 1,
+   "n_eval_rows": 32,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_uniform_maxrl_s2.jsonl",
+   "suite": "maze",
+   "arm": "uniform_maxrl",
+   "seed": 2,
+   "n_eval_rows": 22,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "matched_wide_falp_hsdense_s0.jsonl",
+   "suite": "maze",
+   "arm": "wide_falp_hsdense",
+   "seed": 0,
+   "n_eval_rows": 16,
+   "protocol": "matched wall-clock 2400s"
+  },
+  {
+   "file": "ck_falp_hsd_s1.jsonl",
+   "suite": "maze",
+   "arm": "falp_hsd",
+   "seed": 1,
+   "n_eval_rows": 7,
+   "protocol": "checkpoint"
+  },
+  {
+   "file": "ck_frontier_alp_maxrl_hsd.jsonl",
+   "suite": "maze",
+   "arm": "ck_frontier_alp_maxrl_hsd.jsonl",
+   "seed": -1,
+   "n_eval_rows": 14,
+   "protocol": "checkpoint"
+  },
+  {
+   "file": "ck_uniform_grpo.jsonl",
+   "suite": "maze",
+   "arm": "ck_uniform_grpo.jsonl",
+   "seed": -1,
+   "n_eval_rows": 16,
+   "protocol": "checkpoint"
+  },
+  {
+   "file": "ck_uniform_maxrl.jsonl",
+   "suite": "maze",
+   "arm": "ck_uniform_maxrl.jsonl",
+   "seed": -1,
+   "n_eval_rows": 14,
+   "protocol": "checkpoint"
+  },
+  {
+   "file": "b_cells_dynamics.json",
+   "suite": "countdown",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see COUNTDOWN_ANALYSIS.md"
+  },
+  {
+   "file": "b_scoreboard_3seed.json",
+   "suite": "countdown",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see COUNTDOWN_ANALYSIS.md"
+  },
+  {
+   "file": "cells_2x2_results.json",
+   "suite": "countdown",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see COUNTDOWN_ANALYSIS.md"
+  },
+  {
+   "file": "probe_result.json",
+   "suite": "countdown",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see COUNTDOWN_ANALYSIS.md"
+  },
+  {
+   "file": "probe_result_sft.json",
+   "suite": "countdown",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see COUNTDOWN_ANALYSIS.md"
+  },
+  {
+   "file": "seeds_2_3_finals.json",
+   "suite": "countdown",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see COUNTDOWN_ANALYSIS.md"
+  },
+  {
+   "file": "cell_trajectories.json",
+   "suite": "gsm8k",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see GSM8K_ANALYSIS.md"
+  },
+  {
+   "file": "e_llm1b_verdicts.json",
+   "suite": "gsm8k",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see GSM8K_ANALYSIS.md"
+  },
+  {
+   "file": "g3s_partial.json",
+   "suite": "gsm8k",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see GSM8K_ANALYSIS.md"
+  },
+  {
+   "file": "generation_timing.json",
+   "suite": "gsm8k",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see GSM8K_ANALYSIS.md"
+  },
+  {
+   "file": "grpo_uniform_seed2.json",
+   "suite": "gsm8k",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see GSM8K_ANALYSIS.md"
+  },
+  {
+   "file": "ksweep_results.json",
+   "suite": "gsm8k",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see GSM8K_ANALYSIS.md"
+  },
+  {
+   "file": "teacher_vs_difficulty.json",
+   "suite": "gsm8k",
+   "arm": "aggregate-artifact",
+   "seed": null,
+   "n_eval_rows": null,
+   "protocol": "see GSM8K_ANALYSIS.md"
+  },
+  {
+   "file": "armA_b3fix_s1.json",
+   "suite": "countdown",
+   "arm": "countdown-designed-gate-B3",
+   "seed": 1,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  },
+  {
+   "file": "armA_b3fix_s2.json",
+   "suite": "countdown",
+   "arm": "countdown-designed-gate-B3",
+   "seed": 2,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  },
+  {
+   "file": "armA_b3fix_s3.json",
+   "suite": "countdown",
+   "arm": "countdown-designed-gate-B3",
+   "seed": 3,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  },
+  {
+   "file": "armB_replay_s1.json",
+   "suite": "countdown",
+   "arm": "countdown-replay-ppo2",
+   "seed": 1,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  },
+  {
+   "file": "armB_replay_s2.json",
+   "suite": "countdown",
+   "arm": "countdown-replay-ppo2",
+   "seed": 2,
+   "n_eval_rows": 128,
+   "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  }
+ ]
+}

@@ -167,6 +167,16 @@ the steering-controlled multi-seed cell remains the decisive
 experiment — but the replication miss no longer reads as a sign flip,
 only as a dose effect.
 
+### Correction 2026-08-05: response-length "estimator signature" withdrawn
+
+Finding F-D (all GRPO runs compress harder than all MaxRL runs,
+209.6±1.8 vs 232.4±5.7) was advanced on five runs. The sixth run —
+grpo uniform seed 2, the within-seed control — final-10 response length
+is **251.9 tokens** (32.1% shrink from its 371-token warmstart), longer
+than every earlier run including both MaxRL cells. The perfect
+separation is falsified; length shrink at this scale is seed/run-level
+variation, not an estimator signature. Withdrawn from the paper.
+
 ## Finding 5 — k-sweep: the teacher's GRPO damage grows with k (P-G3, directional)
 
 Final checkpoints, vllm, n=16 samples on the 256-row slice, unbiased

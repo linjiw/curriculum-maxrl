@@ -4,15 +4,18 @@
 Three panels on the Countdown E-LLM-2b arms (B1 baseline, B2 hindsight
 ungated, B3 hindsight + utility gate):
 
-(a) "The trade" — 3-seed tier-1 endpoint scatter, x = pass@16
-    (coverage), y = mean@16.  B1 (gray) -> B2 (magenta): recycling lifts
-    the mean but costs coverage (sharpening).  The gate slides the arm
-    back down the dose axis: B3 under-gated (orange, operating point,
-    3-seed) restores the mean to baseline, and the post-fix full-strength
-    gate (hollow orange, single seed, t1 .220/.564) pushes coverage above
-    baseline while giving the mean gain back — a dose-response frontier.
-    Data: b_scoreboard_3seed.json + Post-fix B3 section of
-    COUNTDOWN_ANALYSIS.md.
+(a) "Operating points, not a dial" — tier-1 endpoint scatter,
+    x = pass@16 (coverage), y = mean@16.  B1 (gray) -> B2 (magenta):
+    recycling lifts the mean but costs coverage (sharpening).  B3
+    under-gated (orange triangle, 3 seeds) is the moderate operating
+    point.  The pre-registered designed-strength arm (dark diamonds,
+    3 seeds, corrected-decay code, reject frac .93-.94) REFUTED the
+    dial reading (P-R1): it lands on the no-recycling point with seed
+    spread spanning most of the B1-B2 range, and the superseded 1-seed
+    "coverage above baseline" point (b_strong_gate_1seed.json) sits
+    inside that spread — drawn per the committed falsification branch
+    as a scatter, not a frontier (Sec 6.9).  Data:
+    b_scoreboard_3seed.json + armA_designed_gate_3seed.json.
 
 (b) "The mechanism" — B3 seed-1 gate rejection rate over training
     (orange), the monotone rise .12 -> .85 that IS the saturation story;
@@ -87,8 +90,11 @@ fig, (axa, axb, axc) = plt.subplots(1, 3, figsize=(7.0, 2.8))
 b1 = sb["B1_t1"]
 b2 = sb["B2_t1"]
 b3 = sb["B3_t1"]
-# post-fix full-strength gate, single seed (t1 pass@16 .564, mean@16 .220)
-pf_pass, pf_mean = 0.564, 0.220
+# pre-registered designed-strength arm (ARM A), 3 seeds, corrected-decay
+# code — P-R1 refuted; per-seed endpoints drawn as a scatter
+arm = json.load(open(os.path.join(DATA, "armA_designed_gate_3seed.json")))
+arm_pass = arm["tier1"]["pass_at_16_per_seed"]
+arm_mean = arm["tier1"]["mean_at_16_per_seed"]
 
 B1x, B1y = b1[2], b1[0]
 B2x, B2y = b2[2], b2[0]
@@ -111,9 +117,16 @@ axa.errorbar(B2x, B2y, xerr=b2[3], yerr=b2[1], fmt="s", ms=6,
 axa.errorbar(B3x, B3y, xerr=b3[3], yerr=b3[1], fmt="^", ms=7,
              color=ORANGE, mfc=ORANGE, mec="white", mew=0.6,
              ecolor=ORANGE, **EB)
-# post-fix full-strength gate — hollow orange triangle, no error bars
-axa.plot(pf_pass, pf_mean, marker="^", ms=7, mfc="white",
-         mec=ORANGE, mew=1.4, ls="none", zorder=4)
+# designed-strength gate (ARM A) — per-seed dark diamonds (P-R1 refuted:
+# no frontier through these; drawn as a scatter per the committed branch)
+DARK = "#7a3b10"
+axa.plot(arm_pass, arm_mean, marker="D", ms=5, mfc="white",
+         mec=DARK, mew=1.2, ls="none", zorder=4)
+# superseded 1-seed full-strength point, kept faint for the record
+pf = json.load(open(os.path.join(DATA, "b_strong_gate_1seed.json")))
+axa.plot(pf["tier1"]["pass_at_16"], pf["tier1"]["mean_at_16"],
+         marker="^", ms=6, mfc="white", mec=ORANGE, mew=1.0, alpha=0.45,
+         ls="none", zorder=3)
 
 LBL_BG = dict(facecolor="white", edgecolor="none", alpha=0.85, pad=0.6)
 
@@ -126,29 +139,28 @@ axa.text(0.513, 0.362, "recycling:\nmean ↑, coverage ↓",
          fontsize=7, color=INK, ha="center", va="top", style="italic",
          linespacing=1.1, zorder=5)
 
-# dose arrow B2 -> B3 -> post-fix : the gate slides down the frontier and
-# restores coverage (fully at full strength)
+# dose arrow B2 -> B3 only: the moderate gate is a validated operating
+# point; NO arrow to the designed-strength arm — P-R1 refuted the dial,
+# those seeds scatter around the no-recycling point
 axa.annotate("", xy=(B3x, B3y), xytext=(B2x, B2y),
              arrowprops=dict(arrowstyle="-|>", lw=1.1, color=ORANGE,
                              shrinkA=7, shrinkB=8,
                              connectionstyle="arc3,rad=0.0"), zorder=3)
-axa.annotate("", xy=(pf_pass, pf_mean), xytext=(B3x, B3y),
-             arrowprops=dict(arrowstyle="-|>", lw=1.0, color=ORANGE,
-                             alpha=0.7, ls="--", shrinkA=7, shrinkB=7,
-                             connectionstyle="arc3,rad=-0.28"), zorder=3)
-axa.text(0.512, 0.301, "gate strength:\na dial along the\ntrade", fontsize=7,
-         color=ORANGE, ha="left", va="center", style="italic",
+axa.text(0.512, 0.301, "moderate gate:\none validated\noperating point",
+         fontsize=7, color=ORANGE, ha="left", va="center", style="italic",
          linespacing=1.1, bbox=LBL_BG, zorder=5)
 
-# point labels — left column (B2, B3) label left; B1/full-gate label right
+# point labels — left column (B2, B3) label left; B1/designed label right
 axa.text(0.478, 0.331, "B2\nhindsight", fontsize=7, color=MAGENTA,
          ha="right", va="center", linespacing=1.0, zorder=5)
 axa.text(0.479, 0.278, "B3 gated\n(op. pt)", fontsize=7,
          color=ORANGE, ha="right", va="center", linespacing=1.0, zorder=5)
 axa.text(0.550, 0.264, "B1 baseline", fontsize=7, color=GRAY,
          ha="left", va="center", zorder=5)
-axa.text(0.573, 0.219, "full-strength\ngate (1 seed)", fontsize=7,
-         color=ORANGE, ha="left", va="center", linespacing=1.0, zorder=5)
+axa.text(0.575, 0.212,
+         "designed gate\n(3 seeds): scatters\non no-recycling",
+         fontsize=7, color=DARK, ha="left", va="center",
+         linespacing=1.0, bbox=LBL_BG, zorder=5)
 
 axa.set_xlim(0.440, 0.625)
 axa.set_ylim(0.175, 0.365)
@@ -156,7 +168,7 @@ axa.set_xticks([0.48, 0.52, 0.56, 0.60])
 axa.set_yticks([0.20, 0.25, 0.30, 0.35])
 axa.set_xlabel("pass@16  (coverage)")
 axa.set_ylabel("mean@16")
-axa.set_title("(a) The trade", loc="left", fontsize=9)
+axa.set_title("(a) Operating points", loc="left", fontsize=9)
 
 # ===================================================== (b) the mechanism
 steps = np.array(dyn["B3"]["steps"], float)
@@ -251,7 +263,10 @@ print("\n(a) tier-1 endpoints [pass@16, mean@16]:")
 print(f"  B1 baseline  ({B1x:.3f}±{b1[3]:.3f}, {B1y:.3f}±{b1[1]:.3f})")
 print(f"  B2 hindsight ({B2x:.3f}±{b2[3]:.3f}, {B2y:.3f}±{b2[1]:.3f})")
 print(f"  B3 gated     ({B3x:.3f}±{b3[3]:.3f}, {B3y:.3f}±{b3[1]:.3f})")
-print(f"  full-gate    ({pf_pass:.3f}, {pf_mean:.3f})  [single seed]")
+for i, (px, py) in enumerate(zip(arm_pass, arm_mean), 1):
+    print(f"  designed s{i}  ({px:.3f}, {py:.3f})  [P-R1 refuted: scatter]")
+print(f"  superseded 1-seed ({pf['tier1']['pass_at_16']:.3f}, "
+      f"{pf['tier1']['mean_at_16']:.3f})  [faint, for the record]")
 print("\n(b) gate rejection rate (B3 seed-1):")
 print(f"  early (steps 1-12) mean {early:.3f}  ->  late (last 8) mean {late:.3f}")
 print(f"  raw final {gate[-1]:.3f}   B2 relabel cap {rel2.max():.0f} rollouts/step")

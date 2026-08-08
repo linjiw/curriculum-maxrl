@@ -1,25 +1,16 @@
 # Curriculum-MaxRL: Experiment Report and Research Assessment
 
-*Status: 2026-07-22. CPU numbers reproduce from this repo; historical GPU
-tables retain provenance in `curriculum_maxrl/maze_gpu/` and the audit caveat below.*
+> **Currency note (2026-08-06):** this document is a point-in-time
+> snapshot. Claims about the maze estimator effect (H6 family) predate
+> the balanced factorial, which retired the zero-exception form at its
+> registered endpoint; the oracle comparison predates the floor-handicap
+> correction (matched oracle TIES the full stack). The paper
+> (`paper/`, compiled at `docs/paper-draft.pdf`) and
+> `maze_gpu_factorial/FACTORIAL_VERDICT.md` are authoritative.
 
-**Registration terminology.** Source locks in this repository are local files
-created before the corresponding seed blocks; they are not externally
-timestamped preregistrations. The V3-and-later manifests matched at reviewed
-snapshot `2dbda4e`; later Cosmos integration evolved three shared core files,
-whose locked versions remain recoverable from that commit. The historical V2
-lock instead records an earlier `run_acrobot_neural.py` hash (`215f126e...`)
-whose exact bytes are not in the retained tree; that is a reproducibility
-limitation, not permission to reinterpret V2.
 
-**Audit note (2026-07-21):** exact binomial analysis found that the practical
-drop-both estimator targets order `N-1`, not `N`; hindsight cosine hid a scale
-bias; and historical GPU code counted all-pass groups as dead, used the
-legacy `u_{N+1}` frontier score, trained all levels with the deepest response
-budget, and scaled dense-hindsight loss with relabel count. Historical GPU AUC
-was step-indexed without the post-SFT anchor despite wall-clock-matched
-endpoints. CPU results remain reproducible. GPU tables
-below are historical exploratory evidence pending a corrected `advmass` rerun.
+*Status: 2026-07-21. All numbers reproduce from this repo; provenance for each
+table is the JSONL logs in `curriculum_maxrl/` and `curriculum_maxrl/maze_gpu/`.*
 
 ---
 
