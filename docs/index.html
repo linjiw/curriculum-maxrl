@@ -186,50 +186,51 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <body>
 
 <header class="hero">
-  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-05</p>
-  <h1>The estimator decides</h1>
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-09</p>
+  <h1>Estimator-conditioned data selection</h1>
   <p class="lede">
-    RL with verifiable rewards leans on two data-level fixes — <em>difficulty curricula</em>
-    (train where learning is possible) and <em>failure recycling</em> (relabel failed rollouts
-    as successes of what they actually achieved). Both are treated as objective-agnostic
-    add-ons. <strong>They are not.</strong> We derive the curriculum from the estimator's own
-    algebra — a prompt's expected learning signal is exactly
-    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>, whose two zeros partition difficulty into a
-    dead zone, a learnable band, and a mastered tail — and use it to find, measure, and
-    stress-test the failure modes of both interventions, <em>including our own claims</em>:
-    the replicated finding is that recycling buys mean accuracy <strong>with pass@k
-    coverage</strong> (recycling-induced sharpening — first measurement of this cost in RLVR,
-    3 seeds), the algebra motivates a relabel-admission gate with one validated operating
-    point, and the estimator-coverage divergence our early runs showed was cut down by our
-    own pre-registered factorial to exactly what survives (details in the card below). The
-    claim's boundary is measured too: a pre-registered fifth suite whose learnable region
-    collapses to one template stratum defeats <em>every</em> estimator.
+    RL with verifiable rewards spends rollout compute through a group estimator,
+    yet prompt curricula and failure recycling are often evaluated as portable data
+    interventions. We study what changes when data selection is conditioned on the
+    deployed estimator. For practical MaxRL, the expected absolute coefficient mass is
+    exactly <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>. This is an estimator-activity
+    proxy—not a gradient norm or a guarantee of learning—and it yields a rollout-aware
+    prompt utility with the practical truncation correction <strong>T=N−1</strong>.
+    Controlled maze and Countdown studies then measure where estimator choice and
+    recycling alter coverage. Failed hypotheses and unresolved controls remain explicit
+    rather than being promoted to contributions.
   </p>
   <div class="card" style="margin-top:18px">
-    <p class="eyebrow" style="margin-bottom:8px">Three headline results</p>
+    <p class="eyebrow" style="margin-bottom:8px">Four headline results + one cost diagnostic</p>
     <p style="margin:0">
-    <strong>Gym under verifier-style sparse reward:</strong> target-only training is a provable
-    zero-update freeze (0.000 on the flag and survive-400) — the gated stack reaches
-    <strong>1.000±0.000 on both</strong>; with dense native rewards plain REINFORCE solves
-    CartPole, so the zero is a property of the sparse setting RLVR actually lives in.
-    &nbsp;·&nbsp; <strong>Safety — retracted, then confirmed in its measured form:</strong>
-    the earlier nine-run "zero sign exceptions" maze pattern <strong>failed its
-    pre-registered balanced factorial at the registered endpoint and is retracted</strong>
-    (3/6 and 4/6 paired blocks; the cohort had conflated recycling with the estimator
-    effect). The time-integrated coverage ordering that survived (12/12 wave-1 blocks)
-    was then <strong>registered as the primary of a second factorial on six fresh seed
-    blocks and confirmed 6/6 under each sampler</strong> (p=.031 per sampler; 24/24
-    paired blocks across both waves; easy-band concentration replicated 10/12,
-    registered) — prereg, both verdicts, and per-wave results vendored in the repo.
-    The exact-rung ordering stands alongside it (10/10 frozen-schedule replays +
-    controls).
-    On GSM8K the teacher-deficit direction under GRPO is 2/2 seeds; the registered
-    regression shape is 1-of-2 and receives no corroboration from the factorial's
-    interaction read.
-    &nbsp;·&nbsp; <strong>Sharpening + the gate:</strong> recycling trades coverage for accuracy
-    (3 seeds, outside noise); the saturation gate restores frontier-tier coverage keeping ~60% of the
-    gain at one validated operating point — the stronger "dial" reading was refuted in its
-    pre-registered 3-seed sweep (P-R1): designed-strength gating is recycling-off plus seed noise.</p>
+    <strong>Exact theory:</strong> practical MaxRL emits coefficient mass
+    2(pass@N−pass@1), recovers p(1−p) at N=2, and drops all-fail groups at
+    truncation order N−1. &nbsp;·&nbsp;
+    <strong>Acrobot score-shape confirmation:</strong> in a fixed eight-threshold
+    pool with one shared H64 practical-MaxRL learner at N=16, u<sub>16</sub>
+    reached .6871056515 target-uniform transition-AUC versus .6390719632 for
+    p(1−p). The paired primary was +.0480336884 [95% bootstrap CI
+    .0209366676, .0738485654], exact sign-flip p=.0033607483, with 15/20
+    positive pairs, clearing both frozen decision filters. This is a local
+    score comparison, not a full named-method benchmark. &nbsp;·&nbsp;
+    <strong>Paid-probe diagnostic:</strong> all 320/320 confirmation runs
+    completed, but the registered u<sub>16</sub>−ProCuRL fixed-paid-AUC
+    contrast was only +.004894 (t(79)=1.9773, p=.05149), below its .02 SESOI.
+    Each probed arm spent about 93.2% of paid transitions on probes; ordinary
+    uniform reached .65149 AUC versus .33771/.33942/.34261 for the three
+    probed arms. This is a frozen-cadence probe-cost result, not a claim that
+    full PPO ProCuRL is inferior. &nbsp;·&nbsp;
+    <strong>Registered maze confirmation:</strong> after the original endpoint failed,
+    a time-integrated coverage outcome was registered on six fresh blocks and was
+    positive 6/6 under each sampler (two-sided sign p=.03125 per sampler). The
+    sampler-averaged wave-2 contrast is +.0195 with a post-hoc 95% interval
+    [+.0115,+.0275]; easy-band localization remains suggestive. &nbsp;·&nbsp;
+    <strong>Countdown tradeoff:</strong> across three-seed aggregates, recycling raises
+    mean@16 from .278 to .324 while VERL bootstrap best@16 falls from .541 to
+    .492. This is a with-replacement coverage proxy, not standard unbiased
+    pass@16; missing task outcomes prevent recomputation. A higher-dose live-group
+    control improves both logged metrics but cannot separate update dose from
+    relabel direction.</p>
   </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
@@ -237,6 +238,8 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     <a class="btn" href="paper-iclr.pdf">📄 ICLR-format PDF</a>
     <a class="btn" href="https://arxiv.org/abs/2602.02710">MaxRL paper ↗</a>
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/GUIDE.md">Design guide ↗</a>
+    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_RESULTS.md">Acrobot V2 result ↗</a>
+    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/RL_CURRICULUM_EXPERIMENT_PLAN.md">Curriculum comparison plan ↗</a>
     <button id="themeToggle" type="button">Toggle theme</button>
   </div>
 </header>
@@ -256,20 +259,49 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
   CartPole awaits the same corrected protocol.</p>
 </div>
 
+<div class="card">
+  <p><strong>Artifact and submission status (2026-08-09).</strong> After the
+  paid-probe integration, the registry generator emits and checks exactly
+  <strong>562 records, including 441 Acrobot records</strong>. The generated
+  registry owns the exact totals; rows backed only by summaries or external
+  execution logs remain marked as such. The Countdown identity audit finds
+  <strong>27/128 tier-0 evaluation tasks overlap the SFT warm start</strong>,
+  leaving a nominal 101-task subset, and zero measured overlap for tiers 1–2.
+  The missing source manifests prevent independent recomputation. Aggregate
+  endpoints cannot recover a clean 101-task numerical result, so that analysis
+  remains blocked until per-task 16-sample verifier outcomes or compatible
+  checkpoints and frozen manifests are recovered. The final paper rebuild and
+  public-PDF synchronization are complete. The ICLR wrapper has 13 total pages:
+  its conclusion ends and references begin on page 9, and its appendix begins
+  on page 10; the alternate working wrapper has 14 pages. All Mac experiments planned for this
+  submission are complete; PLR, PAIRED, ACCEL, and full SFL are deferred. The
+  paid-probe compact artifact ships receipts and a content boundary, while its
+  1,374,886,097-byte raw ledger remains external (SHA-256
+  <span class="mono">b1f8756c249effab8c77101c8bca73ddf708a5e143c18fe8742fd5712fdd7c12</span>).
+  Its source/runtime/gate/artifact chain is internally bound, but no immutable
+  public pre-execution commit establishes timing. This content-addressed
+  release is frozen and verified; the Git commit containing these files is the
+  authoritative repository publication record.</p>
+</div>
+
 <div class="card" aria-labelledby="claim-ladder-title">
-  <p class="eyebrow">Evidence status · 23 July 2026</p>
+  <p class="eyebrow">Evidence status · 9 August 2026</p>
   <h3 id="claim-ladder-title" style="margin:0 0 6px">Current claim ladder</h3>
   <table>
     <thead><tr><th>Level</th><th>What the repository currently supports</th></tr></thead>
     <tbody>
       <tr><td><span class="status ok">✓ Exact math</span></td><td>Finite-N coefficient-mass, peak-location, and fixed-p allocation identities, with their stated estimator conventions.</td></tr>
       <tr><td><span class="status ok">✓ Corrected local mechanisms</span></td><td>Retained CPU skill-chain, goal-rewrite gridworld, and tile-coded MountainCar studies; these are local task-family results, not a general benchmark claim.</td></tr>
-      <tr><td><span class="status ok">✓ Narrow neural result</span></td><td>Acrobot V3 only: with one shared H64 policy and hindsight off, the teacher improved normalized transition-AUC by +0.03635 over 20 paired seeds (exact sign-flip p=0.00264). No transfer or parameter-sharing cause was tested.</td></tr>
+      <tr><td><span class="status ok">✓ Registered Acrobot score-shape result</span></td><td>All 9 development and 60 confirmation runs were valid. Under one fixed H64 practical-MaxRL learner at N=16, u<sub>16</sub> beat p(1−p) by +.0480336884 transition-AUC [95% CI .0209366676, .0738485654], exact sign-flip p=.0033607483, 15/20 positive, clearing both frozen filters. The Holm-controlled u<sub>16</sub>−uniform secondary was supported; p(1−p)−uniform was not.</td></tr>
+      <tr><td><span class="status no">✗ Paid-probe primary unsupported</span></td><td>All 320/320 confirmation runs were valid. The registered u<sub>16</sub>−ProCuRL fixed-paid-AUC mean was +.004894, t(79)=1.9773, p=.05149, below the .02 SESOI. Probe fractions were about .932; ordinary-uniform AUC was .65149 versus .33771 ProCuRL-env, .33942 probe-sham, and .34261 u<sub>16</sub>. This diagnoses probe-cost domination only at the frozen actor-only cadence, not full-PPO ProCuRL inferiority.</td></tr>
+      <tr><td><span class="status ok">✓ Registered maze confirmation</span></td><td>On six fresh independent blocks, the coverage-AUC contrast is positive 6/6 under each sampler (exact sign p=.03125 each). Across both waves, all 12 sampler-averaged blocks are positive descriptively. Easy-band localization remains suggestive, not established.</td></tr>
+      <tr><td><span class="status run">◇ Metric-limited LLM tradeoff</span></td><td>Three-seed aggregates show recycling raising tier-1 mean@16 from 0.278 to 0.324 while VERL bootstrap best@16 falls from 0.541 to 0.492. This with-replacement proxy is not standard pass@16, and missing task outcomes block recomputation. The under-gated mitigation is suggestive only and fixed-code strong gating failed.</td></tr>
+      <tr><td><span class="status run">◇ Historical neural result</span></td><td>Acrobot V3 records a descriptive +0.03635 transition-AUC contrast with one shared H64 policy and hindsight off. A later audit found cross-seed RNG-domain overlap, so the original paired inference is not treated as clean confirmation. It remains design history separate from the clean fresh-seed V2 tournament above.</td></tr>
       <tr><td><span class="status run">◇ Robotics mechanisms, performance null</span></td><td>Native grouped D<sub>8</sub> training now runs on UniLab's Motrix Stewart simulator. On the broader ladder, u<sub>8</sub> sampling produced its predicted ≈14% raw-mass increase, while ρ/q correction exposed the variance cost. Gradient-moment sampling improved ESS to .949 and lowered observed second moment on average, but its paired AUC effect was −.0004. This validates a Mac-CPU pipeline and bounded mechanisms—not teacher superiority or robotics generality.</td></tr>
       <tr><td><span class="status no">✗ Registered no-go boundaries</span></td><td>Acrobot V4B was not run after V4A failed feasibility; completed V5B is a procedural NO-GO with no authorized contrasts; neural MountainCar failed its development gate and never reached confirmation.</td></tr>
-      <tr><td><span class="status run">⚠ Historical only</span></td><td>GPU maze observations remain provisional because the audited training and evaluation stack is confounded.</td></tr>
+      <tr><td><span class="status run">⚠ Older maze runs: historical only</span></td><td>The pre-audit GPU maze cohort remains provisional because its training and evaluation stack is confounded. This is separate from the later balanced factorial and fresh-wave result above.</td></tr>
       <tr><td><span class="status run">◇ Synthetic mock only</span></td><td>The Cosmos/LIBERO integration currently exercises a CPU synthetic mock; it is not evidence from a real robot or robotics benchmark.</td></tr>
-      <tr><td><span class="status run">○ Not completed</span></td><td>No real LLM-scale, confirmatory robotics, or broad benchmark study currently supports a generality claim.</td></tr>
+      <tr><td><span class="status run">○ Generality not established</span></td><td>Real LLM runs support only the narrow Countdown tradeoff. GSM8K's controlled cell missed its treatment-delivery gate by 0.00148 and is inconclusive; no confirmatory robotics or broad multi-domain study supports a generality claim.</td></tr>
     </tbody>
   </table>
 </div>
@@ -689,13 +721,11 @@ also matter.</p>
     <details><summary>Table view</summary><div id="table3"></div></details>
   </div>
   <figcaption>
-    <strong>Allocation saturates; creation still adds.</strong> The honest headline after our
-    own control battery: a floor-and-γ-matched true-pass-rate oracle <em>ties</em> the full
-    stack (0.8885 vs 0.8895) — perfect pass-rate information is worth almost nothing over the
-    cheap posterior. What survives every control is that recycling adds on top of even the
-    oracle (oracle+hindsight 0.8935): the advantage is not better allocation of the standard
-    signal; it is access to signal no allocator can reach. (An earlier "beats the oracle by
-    0.039" claim compared against a floor-handicapped oracle and is retracted.)
+    <strong>Historical CPU diagnostic.</strong> A floor-and-γ-matched true-pass-rate oracle and
+    the full stack were similar within the observed five-seed variation (0.8885 vs 0.8895);
+    no equivalence margin was registered. Oracle+hindsight reached 0.8935, but these nearby
+    point estimates do not isolate why. An earlier "beats the oracle by 0.039" claim used a
+    floor-handicapped oracle and is retracted.
   </figcaption>
 </figure>
 
@@ -732,16 +762,34 @@ unbiasedness or the archived ablation.</p>
 <table>
   <thead><tr><th>Study</th><th>Registered outcome</th><th class="num">Authorized claim</th></tr></thead>
   <tbody>
-    <tr><td>Acrobot V3, shared H64, hindsight off</td><td>teacher AUC 0.6850 vs 0.6487 uniform; paired Δ=+0.03635, bootstrap 95% CI [0.01645, 0.05539], exact p=0.00264</td><td class="num"><span class="status ok">✓ local efficacy</span></td></tr>
+    <tr><td><a href="https://github.com/linjiw/curriculum-maxrl/blob/main/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_RESULTS.md">Acrobot fixed-pool tournament V2</a>, shared H64, practical MaxRL N=16</td><td>target-uniform transition-AUC: uniform .6452319465, p(1−p) .6390719632, u<sub>16</sub> .6871056515. Primary u<sub>16</sub>−p(1−p)=+.0480336884 [95% CI .0209366676, .0738485654], exact p=.0033607483, 15/20 positive. Secondaries: p(1−p)−uniform=−.0061599834 [−.0226437219, .0121954971], raw/Holm p=.507843; u<sub>16</sub>−uniform=+.0418737050 [.0218239396, .0605859853], raw p=.000808716, Holm p=.001617432, 17/20 positive.</td><td class="num"><span class="status ok">✓ P+/U+ score shape; primary confirmed</span></td></tr>
+    <tr><td>Acrobot paid-probe selection attachment, 80 paired seeds</td><td>320/320 valid. Registered u<sub>16</sub>−ProCuRL fixed-paid-AUC mean +.004894, t(79)=1.9773, p=.05149, below .02 SESOI; unsupported. Probe fractions ≈.932. Ordinary uniform AUC .65149 versus ProCuRL-env .33771, probe-sham .33942, and u<sub>16</sub> .34261.</td><td class="num"><span class="status no">✗ primary unsupported; probe-cost diagnostic only</span></td></tr>
+    <tr><td>Acrobot V3, shared H64, hindsight off</td><td>teacher AUC 0.6850 vs 0.6487 uniform; descriptive paired Δ=+0.03635; neighboring seeds reuse a numeric root across parameter/action RNG domains</td><td class="num"><span class="status run">◇ historical, not clean confirmation</span></td></tr>
     <tr><td>Acrobot V4A/V4B</td><td>V4A feasibility gate failed in 3/9 runs; V4B was not authorized or run</td><td class="num"><span class="status no">✗ no effect estimate</span></td></tr>
     <tr><td>Acrobot V5B</td><td>180/180 runs completed, but the frozen analyzer failed its exact diagnostic-reconstruction rule</td><td class="num"><span class="status no">✗ procedural NO-GO</span></td></tr>
     <tr><td>MountainCar neural V1R2</td><td>all 15 development runs completed, hardest-goal AUC was zero in every cell, and the adequacy gate failed</td><td class="num"><span class="status no">✗ no confirmation</span></td></tr>
     <tr><td>UniLab Stewart native grouped V2, three development seeds per study</td><td>broader-ladder corrected u<sub>8</sub> raised raw mass ≈14% but gave +.0006 AUC / −.0059 final macro; gradient-moment sampling improved ESS .878→.949 but gave −.0004 AUC / −.0062 final macro versus uniform</td><td class="num"><span class="status run">◇ pipeline + mechanisms; performance null</span></td></tr>
   </tbody>
 </table>
-<p class="footnote">V3 tests only teacher versus uniform sampling on one fixed Acrobot threshold
-family. It does not test transfer causality, a parameter-sharing effect, hindsight, or Acrobot
-performance in general. V5B cell outcomes remain quarantined and are not interpreted here.
+<p class="footnote">V2 is score-shape evidence in one fixed eight-threshold
+Acrobot pool under one shared H64, 640-parameter practical-MaxRL learner at
+N=16. It is not full ProCuRL, SFL, PLR, PAIRED, ACCEL, or ALP-GMM; it has no
+held-out-task generalization test or prospective power calculation. Its exact
+test assumes paired-sign exchangeability, and clearing the +.01 point-estimate
+filter does not prove the population effect is at least +.01. The common
+nominal transition budget permits arm-specific, frozen-bounded complete-group
+overshoot. The V2 lock and digests bind source, runtime, gate, and artifacts
+internally, but no immutable public pre-execution commit in this checkout
+establishes their timing. The paid-probe attachment tests one actor-only,
+fixed-pool selection design at one expensive refresh cadence. Its result does
+not establish that full PPO ProCuRL is inferior or predict a cheaper cadence;
+its 1,374,886,097-byte raw ledger remains external under SHA-256
+<span class="mono">b1f8756c249effab8c77101c8bca73ddf708a5e143c18fe8742fd5712fdd7c12</span>,
+and there is no immutable public pre-execution commit. V3 tests only teacher versus uniform sampling on one
+fixed Acrobot threshold family, and its later RNG-domain audit prevents clean
+paired inference. It does not test transfer causality, a parameter-sharing
+effect, hindsight, or Acrobot performance in general. V5B cell outcomes remain
+quarantined and are not interpreted here.
 The current UniLab family uses a hash-locked final native owner checkpoint, but only three
 paired development seeds per study; every paired AUC interval crossed zero, so it cannot rank
 samplers. The older post-hoc V1 warm-start study remains historical development evidence.</p>
@@ -763,8 +811,8 @@ samplers. The older post-hoc V1 warm-start study remains historical development 
         <td>CPU V4 is slightly negative; the historical GPU run also shows p̂ inflation (0.81 vs eval 0.47). Keep teacher evidence requested-task-only pending a corrected rerun.</td>
         <td class="num"><span class="status no">✗ dropped</span></td></tr>
     <tr><td>SmolLM2-360M + GSM8K, curriculum × {maxrl, grpo}</td>
-        <td>2×2 complete + replication seed — <a href="#gsm8k">section 4b</a>: P-G2 landed on the registered run; seed 2 (weaker measured steering) did not reproduce it</td>
-        <td class="num"><span class="status run">◐ 1 of 2 seeds</span></td></tr>
+        <td>The initial 2×2 and replication motivated a steering-controlled follow-up. That completed cell missed its registered run-mean treatment-delivery gate by 0.00148, so the interaction is inconclusive by design.</td>
+        <td class="num"><span class="status run">⚠ treatment gate missed</span></td></tr>
   </tbody>
 </table>
 
@@ -783,11 +831,11 @@ cleanly and pre-registers its predictions before any cell finishes:</p>
     <tr><td><strong>E-LLM-1 · GSM8K 2×2</strong><br><span class="mono">{maxrl,grpo}×{teacher,uniform}</span></td>
         <td>Do channels 1 and 3 transfer to LLM RLVR? Is a curriculum SAFE under GRPO's normalized weights, and does waste-avoidance help MaxRL?</td>
         <td>P-G2: grpo+teacher does <em>not</em> beat grpo (the maze H6 reversal). P-G1: modest teacher gain for MaxRL. P-G5: small absolute deltas — the <em>ordering</em> is the outcome.</td>
-        <td><span class="status run">◐ P-G2 on registered run; replication seed did not reproduce (weaker steering)</span></td></tr>
+        <td><span class="status run">⚠ controlled follow-up missed delivery gate by 0.00148; interaction inconclusive</span></td></tr>
     <tr><td><strong>E-LLM-2 · Countdown 2×2</strong><br><span class="mono">+{hindsight,none}</span></td>
         <td>Channel 2 at LLM scale: a failed equation still <em>evaluates to some value v</em> — relabel target := v and the same verifier certifies a true success. Does exact-verifier recycling ignite tiers no sampler can reach?</td>
         <td>Hindsight-on ignites the hard tiers; relabels decay after ignition.</td>
-        <td><span class="status no">✗ both nulls (pool saturated to its guesser bound) — but found <a href="#sharpening">recycling-induced sharpening</a>, a new phenomenon</span></td></tr>
+        <td><span class="status no">✗ both nulls (pool saturated to its guesser bound) — a <a href="#sharpening">metric-limited concentration pattern</a> remains descriptive</span></td></tr>
     <tr><td><strong>E-LLM-3 · reasoning-gym</strong></td>
         <td>Does the <em>streaming</em> teacher (kernel posterior over a continuous difficulty dial) beat the library's own threshold curriculum on procedural tasks?</td>
         <td>Match-or-beat the published +13–40-point threshold-curriculum gains, without its hand-set threshold.</td>
@@ -795,12 +843,13 @@ cleanly and pre-registers its predictions before any cell finishes:</p>
   </tbody>
 </table>
 
-<h3>E-LLM-1 results — the registered run landed; replication is dose-dependent</h3>
+<h3>E-LLM-1 results — historical 2×2 signal; controlled follow-up inconclusive</h3>
 
 <p>SmolLM2-360M on 7,473 GSM8K prompts, N=16 rollouts, 50 steps per cell, one A10G. At this
 scale ~65–75% of uniformly sampled groups are <em>dead</em> (all 16 rollouts fail — zero
 gradient). Validation: 256 held-out problems, 4 samples each. The chart shows the mean@4
-trajectory; the story is the <em>divergence after step 25</em>:</p>
+trajectory from the initial 2×2; it is historical motivation for the controlled
+follow-up, not the current interaction claim:</p>
 
 <figure>
   <div style="display:flex; gap:6px; margin-bottom:8px" id="gsmChips">
@@ -816,23 +865,25 @@ trajectory; the story is the <em>divergence after step 25</em>:</p>
   landed the pre-registered sign (P-G2). <strong>Replication status, reported as measured:</strong>
   a second seed of the grpo+teacher cell climbed instead (.073→.095→.118), with measurably
   weaker steering (min dead-sampled fraction .53 vs seed 1's .48; mean ≈ population) — the
-  LLM-scale interaction is 1-of-2 seeds and treatment-intensity-dependent, and the balanced
-  maze factorial's interaction read (teacher mildly protective under GRPO) does not corroborate
-  it. Data: <span class="mono">GSM8K_ANALYSIS.md</span>
-  Findings 1 &amp; 6.</figcaption>
+  initial interaction was therefore mixed. The subsequent steering-controlled
+  <span class="mono">g3p</span> cell reached a minimum of .413 but its run mean
+  was .601480, missing the registered &lt;.60 treatment-delivery criterion by
+  .00148. Per the committed branch, its endpoints do not identify the
+  interaction. Data: <span class="mono">GSM8K_ANALYSIS.md</span>.</figcaption>
 </figure>
 
 <div class="grid2">
-  <div class="card"><h3>What the registered run showed — and the replication</h3>
+  <div class="card"><h3>What survives the controlled follow-up</h3>
   <p><strong>P-G2 on the registered run:</strong> grpo+teacher ended 2–4× the measured
   eval-noise floor below plain grpo (mean@4 −.027, z≈−2; pass@4 −.048) — the oft-quoted
   second-half dip .096→.093 is itself within noise and carries no weight alone. Steering
   honestly read: the teacher's dead-sampled fraction <em>minimum</em> hit .48 vs uniform's
   .52, but run means were indistinguishable (.66–.67 everywhere) — the delivered treatment
   was weak. <strong>Seed 2 did not reproduce the regression</strong> (.073→.095→.118), with
-  even weaker steering. Damage tracks steering intensity; the decisive experiment is a
-  steering-controlled multi-seed cell (with a uniform-with-replacement control for the
-  prompt-repetition confound).</p></div>
+  even weaker steering. The steering-controlled follow-up then missed its
+  pre-registered delivery gate by .00148 on the run mean. The defensible result
+  is therefore treatment-delivery failure and an inconclusive interaction—not
+  a causal damage claim.</p></div>
   <div class="card"><h3>What we learned beyond the predictions</h3>
   <p><strong>The teacher's two sub-channels separate.</strong> Its posterior learned real
   difficulty (p̂ vs external 7B-model annotations: ρ=−0.17, p≈10⁻¹⁷) but its allocation
@@ -858,30 +909,24 @@ simplified construction — the pool was too shallow for allocation or recycling
 run; the pre-registered kill criterion did its job.)</p>
 
 <div class="grid2">
-  <div class="card"><h3>The finding: recycling-induced sharpening (3 seeds)</h3>
+  <div class="card"><h3>The finding: recycling-package concentration (3-seed aggregates)</h3>
   <p>On the rebuilt real-structure pool, recycling lifts <strong>tier-1 mean@16 by
-  +.046</strong> (.278±.054 → .324±.012) while <strong>losing .049 of pass@16
-  coverage</strong> (.541±.020 → .492±.011) — both outside seed noise, replicated
-  across three seeds. Recycled off-target successes concentrate the policy on reachable
-  outputs at the expense of exploration breadth — the creation channel has its own
-  safety trade-off, mirroring the H6 weight-induced collapse one level up:
-  <em>data-induced</em> rather than weight-induced. A ~30-paper review found no prior
-  report of hindsight-induced pass@k loss in RLVR: the nearest works never measured
-  coverage.</p></div>
-  <div class="card"><h3>The fix falls out of our own algebra — one operating point, not a dial</h3>
-  <p>A relabel to a value the model just produced is a task at p≈1 — exactly where
-  u(p) = pass@N − pass@1 says training signal is <em>zero</em>. So the estimator
-  motivates the admission rule: <strong>gate relabels by a destination-saturation
-  statistic</strong>. Measured across three seeds: at the frontier tier the gate
-  restores coverage to baseline (.279±.019 vs .274) while keeping ~60% of recycling's
-  mean gain. The stronger reading — that gate strength traces a monotone
+  +.046</strong> (.278±.066 → .324±.014) while <strong>VERL bootstrap
+  best@16 falls by .049</strong> (.541±.024 → .492±.013), reported as
+  mean±sample SD across three seeds. The horizontal metric resamples the same
+  16 outcomes with replacement and is not standard unbiased pass@16. Complete
+  B1/B2 records and per-task outcomes are absent, so no paired-seed claim or
+  standard-pass@16 recomputation is possible. Concentration on reachable outputs
+  remains a mechanism hypothesis.</p></div>
+  <div class="card"><h3>The proposed gate did not validate</h3>
+  <p>The estimator motivated a destination-saturation admission statistic, but the
+  favorable moderate-gate point used faulty decay code and remains exploratory. The
+  stronger reading — that gate strength traces a monotone
   mean-vs-coverage <em>dial</em> — was pre-registered and <strong>refuted</strong>
   (P-R1, 3 seeds at the designed strength, rejection ~.94): those runs land on the
   no-recycling point with seed spread covering most of the baseline↔recycling range,
   and the earlier single-seed "coverage above baseline" endpoint sits inside that
-  spread. Strong gating ≈ recycling off. In-run telemetry still shows the mechanism:
-  rejection rises .12 → .85 as the model's reachable set saturates, and the gated arm
-  ends with <em>more</em> policy entropy than no recycling at all. Full synthesis:
+  spread. A successful mitigation remains open. Full synthesis:
   <span class="mono">SHARPENING_SYNTHESIS.md</span>.</p></div>
 </div>
 
@@ -1213,80 +1258,68 @@ fixed evaluation RNG, and one preregistered target are required before reporting
 <!-- ============================================================ -->
 <h2 id="paper">8 · The paper draft — abstract, status, and how we write</h2>
 
-<p><strong><a href="paper-draft.pdf">📄 Read the rendered PDF draft</a></strong> (LaTeX,
-recompiled on every update) — or the markdown source at
-<a href="https://github.com/linjiw/curriculum-maxrl/blob/main/PAPER.md"><span class="mono">PAPER.md</span></a>
-(v0.9). We studied the MaxRL paper's own craft — the "your method is our method at
-T=1" subsumption move, theorem boxes with plain-English interpretations, an escalating
-experimental ladder with one takeaway per rung — and hold this draft to that bar. Our
-one-line hook mirrors theirs one level up: <em>they showed RL is a first-order
-approximation of maximum likelihood; we show the curriculum is a closed-form property
-of their estimator — and that what the estimator throws away is the one thing no
-curriculum can fix, until you recycle it.</em></p>
+<p><strong><a href="paper-draft.pdf">📄 Read the compact rendered paper</a></strong>.
+The submission source is <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/paper/body_iclr.tex"><span class="mono">paper/body_iclr.tex</span></a>;
+the longer <span class="mono">paper/body.tex</span> remains the full research record.
+The compact paper uses one thesis, three contributions, and three main figures. It
+states coefficient mass as an estimator-activity proxy rather than a claim about
+gradient quality or inevitable downstream improvement.</p>
 
 <div class="card">
   <h3>Abstract (current draft)</h3>
-  <p style="font-size:0.93rem">Reinforcement learning with verifiable rewards spends most of its
-  budget generating rollouts, and on hard task pools most of that budget buys nothing: under
-  uniform prompt sampling, we measure that <strong>65–75% of rollout groups produce zero learning
-  signal</strong>. The emerging fix is a difficulty curriculum, but current curricula are
-  heuristics bolted on from outside: bandit scores, hand-set difficulty bands, filtering rules.
-  We show the curriculum is already inside the estimator. For MaxRL-style success-conditioned
-  advantages, the expected learning signal a prompt emits from a group of N rollouts has a closed
-  form, <strong>E[Σ|w|] = 2·(pass@N − pass@1)</strong> — a compute-indexed
-  zone-of-proximal-development functional, maximal on prompts solvable within N attempts but not
-  within one. Sampling prompts by this quantity turns the rollout budget N you already chose into
-  the curriculum knob, with no new difficulty hyperparameters; published learnability curricula
-  fall out as its N=2 slice. The same algebra draws a hard boundary: no sampling rule can rescue
-  an all-fail prompt. We therefore add <strong>failure recycling</strong>: a failed trajectory is
-  a verified success for the goal it actually reached, and relabeling dead groups provably yields
-  the maximum-likelihood gradient of the relabeled task. Across four testbeds a matched true-pass-rate <strong>oracle</strong> allocator ties the
-  combined schedule (allocation saturates; recycling adds even on top of the oracle), which turns a
-  frontier-heavy regime from unlearnable to solved (0 → 0.98), and needs up to 11× fewer inference
-  samples at the frontier. The estimator-conditioned coverage story is reported at its tested level:
-  the exact-rung ordering survives frozen schedules (10/10); the neural-scale
-  zero-exception claim <strong>failed its pre-registered factorial and is retracted</strong>;
-  and the time-integrated ordering that survived was then registered on six fresh seed
-  blocks and <strong>confirmed 6/6 under each sampler</strong> (24/24 paired blocks across
-  both waves). On GSM8K the pre-registered 2×2's registered run
-  matched the prediction; its replication seed did not reproduce the shape.</p>
+  <p style="font-size:0.93rem">RL with verifiable rewards often treats prompt
+  curricula and failure recycling as estimator-agnostic data interventions. For
+  practical MaxRL with N i.i.d. binary rollouts, we derive expected absolute
+  coefficient mass <strong>2[1−(1−p)<sup>N</sup>−p] =
+  2(pass@N−pass@1)</strong>. It recovers p(1−p) at N=2 and shows that dropping
+  all-fail groups targets truncation order N−1. A balanced maze factorial first
+  rejected its endpoint. The external execution record says a time-integrated
+  contrast was specified before a fresh wave, where it was positive for MaxRL in
+  6/6 blocks under each sampler; the locking commit is not vendored. A
+  separately frozen 320-run paid-probe attachment did not support its
+  registered u<sub>16</sub>−ProCuRL primary (+.004894, t(79)=1.9773,
+  p=.05149; .02 SESOI) and showed that probes consumed about 93.2% of paid
+  transitions at the frozen cadence. This is not a full-PPO ProCuRL comparison.
+  Finally, three-seed Countdown aggregates show recycling raising
+  mean@16 from .278 to .324 while VERL bootstrap best@16 falls from .541 to
+  .492. This metric is a coverage proxy rather than standard pass@16. A
+  higher-dose control improves both logged metrics but leaves dose and relabel
+  direction confounded. The resulting recommendation is to evaluate data
+  selection with the deployed estimator and retain task outcomes so standard
+  pass@k can be reported beside mean accuracy.</p>
 </div>
 
 <div class="grid2">
   <div class="card">
     <h3>Draft status — what's solid</h3>
-    <p>✅ Abstract, intro with 4-item contribution list, theory sections with
-    interpretation lines after every proposition, the escalating experiment ladder
-    (§6.1–6.9, one bolded takeaway each), related work, limitations-with-diagnoses,
-    and a claims-and-evidence appendix table with per-claim registration status.
-    All numbers audit-traced; figures regenerate from checksummed data files
-    (<span class="mono">paper/results/manifest.json</span>); pre-registered
-    falsification branches demonstrably executed (factorial retraction,
-    ARM A dial refutation).</p>
+    <p>✅ The scientific result integration, final rebuild, and public-PDF
+    synchronization are complete. The main text contains the exact identity, the
+    post-guidance fixed-completion check, the fresh-wave maze result, and the
+    metric-limited Countdown aggregate, with the paid-probe result retained as
+    a narrow cost diagnostic. Exploratory mechanisms and failed hypotheses are
+    restricted to the appendix or full research record. Figures regenerate from
+    checksummed inputs, and the reproduction command builds both PDF wrappers.</p>
   </div>
   <div class="card">
-    <h3>What's pending before submission</h3>
-    <p>⟳ The steering-controlled GSM8K cell (E-LLM-1b's decisive g3p run —
-    the §6.7 interaction claim upgrades or gets scoped either way, pre-registered);
-    main-text compression to the 9-page ICLR budget (currently ~16pp, appendix
-    absorbing the overflow); anonymized artifact mirror + camera-ready commit
-    hashes. Executed since the last status: both factorial waves (retraction +
-    confirmation), ARM A's dial refutation, <strong>P-R2 final (3/3 seeds:
-    the dose-matched replay control exceeds recycling on both meters — recycling's
-    distinctive value is scoped to the all-fail regime)</strong>, the
-    claims-and-evidence appendix.</p>
+    <h3>Post-freeze evidence gaps</h3>
+    <p>⟳ The frozen maze AUC robustness multiverse cannot yet run because the 24
+    checkpoint trajectories are external to this checkout. Countdown B1/B2 also lacks
+    complete seed records and task outcomes; these are needed both for paired-seed
+    analysis and standard pass@16. A clean 101-task tier-0 analysis needs missing task-level
+    outcomes. Artifact recovery remains the highest priority. All planned Mac
+    experiments for this submission are complete; PLR, PAIRED, ACCEL, full SFL,
+    and dose-matched neural controls are deferred to post-submission work. The
+    definitive anonymous receipt/archive and clean-release hashes are recorded
+    with the release materials.</p>
   </div>
 </div>
 
-<p><strong>Writing principles we borrowed from the base paper</strong> (and where we
-push further): <em>subsume, don't compete</em> — every rival method appears as a slice
-or shadow of one identity (their T=1 move, our N=2 move); <em>a theorem box is only as
-good as its interpretation line</em> — every proposition is followed by a plain-English
-sentence a skimmer can carry away; <em>escalate the experiments</em> — exact gradients →
-controlled regimes → real scale, each rung earning the next; and one place we hold
-ourselves to a higher bar: <em>pre-registration and retraction</em> — predictions
-committed before data, one early claim withdrawn when review found the mechanism
-inert, and the negative results carry diagnoses, not apologies.</p>
+<p><strong>Writing principle:</strong> make the narrow claim legible before adding
+scope. The compact paper keeps one exact quantity, one fresh-wave confirmation, and
+one metric-limited applied aggregate in the foreground. It distinguishes externally
+recorded timing from locally auditable provenance and registered from exploratory
+outcomes, analyzes correlated measurements at the block level, and treats failed
+controls as limitations rather than extra contributions.</p>
 
 <p class="footnote">
   Built on the official <a href="https://arxiv.org/abs/2602.02710">MaxRL</a> codebase
@@ -1605,12 +1638,12 @@ inert, and the negative results carry diagnoses, not apologies.</p>
       });
       svg.appendChild(hit);
     });
-    /* true-p proportional-priority reference line */
-    svg.appendChild(el("line", { x1: comparatorX, x2: comparatorX, y1: M3.top - 4, y2: M3.top + IH3,
+    /* floor- and gamma-matched oracle reference line */
+    svg.appendChild(el("line", { x1: oracleX, x2: oracleX, y1: M3.top - 4, y2: M3.top + IH3,
       stroke: cssVar("--series-4"), "stroke-width": 1.5, "stroke-dasharray": "none",
       opacity: 0.9 }));
-    svg.appendChild(el("text", { x: comparatorX, y: M3.top - 2, "text-anchor": "middle", class: "dl" },
-      "true-p comparator"));
+    svg.appendChild(el("text", { x: oracleX, y: M3.top - 2, "text-anchor": "middle", class: "dl" },
+      "matched oracle"));
     /* table view */
     var host = document.getElementById("table3");
     host.textContent = "";

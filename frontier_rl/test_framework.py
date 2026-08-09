@@ -19,6 +19,7 @@ from frontier_rl.adapters.cosmos_libero import (CosmosLiberoSpace,
                                                 MasteryFrontierTeacher,
                                                 PoisonRateMeter)
 from frontier_rl.adapters.isaaclab_curriculum import FrontierBinTeacher
+from frontier_rl.interfaces import GroupResult
 
 
 def test_estimators():
@@ -500,7 +501,55 @@ def test_baseline_estimator_arms():
         raise AssertionError("should have raised")
     except ValueError:
         pass
+    # Historical Gym controls can choose raw success-only weights for the
+    # auxiliary relabeled update without changing the live-group estimator.
+    hs = FrontierTrainer(
+        env, env,
+        TrainerConfig(estimator="grpo", hindsight_estimator="success_only"),
+    )
+    assert np.array_equal(
+        hs._hindsight_weights(np.array([1.0, 0.0, 0.0, 0.0])),
+        np.array([1.0, 0.0, 0.0, 0.0]),
+    )
     print("baseline estimator arms OK")
+
+
+def test_redraws_count_every_paid_transition():
+    class RedrawEnv:
+        n_tasks = 1
+
+        def __init__(self):
+            self.calls = 0
+
+        def rollout_group(self, task_id, n_rollouts):
+            self.calls += 1
+            # Two paid transitions per rollout. The first two groups are dead;
+            # the third is live, so one requested draw plus two redraws cost 12.
+            rewards = np.zeros(n_rollouts)
+            if self.calls == 3:
+                rewards[0] = 1.0
+            trajectories = [[0, 1] for _ in range(n_rollouts)]
+            return GroupResult(task_id, rewards, trajectories)
+
+        def relabel(self, group):
+            return None
+
+    class NoOpPolicy:
+        def update(self, task_id, trajectories, weights):
+            pass
+
+    env = RedrawEnv()
+    trainer = FrontierTrainer(
+        env,
+        NoOpPolicy(),
+        TrainerConfig(n_rollouts=2, tasks_per_step=1, hindsight=False,
+                      dapo_max_redraws=2, seed=0),
+    )
+    stats = trainer.step()
+    assert env.calls == 3
+    assert stats.env_steps == 12
+    assert stats.dead_groups == 2 and stats.live_groups == 1
+    print("redraw transition accounting OK")
 
 
 def test_dead_group_without_relabel_is_skipped():
@@ -636,6 +685,7 @@ if __name__ == "__main__":
     test_pilot0_instruments()
     test_cosmos_live_glue()
     test_baseline_estimator_arms()
+    test_redraws_count_every_paid_transition()
     test_dead_group_without_relabel_is_skipped()
     test_all_pass_group_is_not_relabelled()
     test_isaaclab_adapter()

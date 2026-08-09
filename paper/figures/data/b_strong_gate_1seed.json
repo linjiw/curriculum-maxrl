@@ -1,5 +1,10 @@
 {
  "_comment": "Post-decay-fix full-strength gate endpoint, Countdown v2, ONE seed, corrected-decay code (gate setting confounded with code version relative to the 3-seed B3 arm). Source: COUNTDOWN_ANALYSIS.md 'Post-fix B3' section. Previously hard-coded in fig7_sharpening.py. Frozen 2026-08-04.",
+ "_metric_provenance": {
+  "legacy_key_pattern": "pass_at_16",
+  "meaning": "VERL bootstrap best@16 coverage proxy; not standard unbiased pass@16",
+  "standard_pass16_recomputable_from_this_file": false
+ },
  "tier1": {"pass_at_16": 0.564, "mean_at_16": 0.220},
  "tier2": {"pass_at_16": 0.238, "mean_at_16": 0.083},
  "n_seeds": 1,

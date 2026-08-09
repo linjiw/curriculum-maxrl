@@ -1,0 +1,619 @@
+{
+  "schema": "curriculum-maxrl/anonymous-source-bundle-scope/v2",
+  "expected_selected_file_count": 244,
+  "archive_root": "curriculum-maxrl-anonymous",
+  "groups": [
+    {
+      "name": "evidence_projection",
+      "expected_file_count": 95,
+      "paths": [
+        "EVIDENCE.md",
+        "GPU_EXPERIMENT_HANDOFF.md",
+        "GSM8K_ANALYSIS.md",
+        "GUIDE.md",
+        "MAXRL_SOURCE_AUDIT.md",
+        "NEXT_EXPERIMENTS.md",
+        "PLR_GO_NO_GO.md",
+        "README.md",
+        "REPORT.md",
+        "REVIEW_NOTES.md",
+        "RL_CURRICULUM_EXPERIMENT_PLAN.md",
+        "SCHEDULE.md",
+        "SMALL_COMPUTE_RESEARCH_PLAN.md",
+        "anonymous_release_receipt.json",
+        "curriculum_maxrl/CAPPED_HORA_ROBUSTNESS_LOCK.json",
+        "curriculum_maxrl/CAPPED_HORA_ROBUSTNESS_PROTOCOL.md",
+        "curriculum_maxrl/CAPPED_HORA_ROBUSTNESS_RESULTS.md",
+        "curriculum_maxrl/CORRELATED_ROLLOUT_STRESS.md",
+        "curriculum_maxrl/COUNTDOWN_SFT_OVERLAP.md",
+        "curriculum_maxrl/FIXED_BUDGET_N_SWEEP.md",
+        "curriculum_maxrl/capped_hora_engineering_validation_receipt.json",
+        "curriculum_maxrl/countdown_reviewer_arms/METRIC_PROVENANCE.json",
+        "curriculum_maxrl/countdown_reviewer_arms/reviewer_arms_verdicts.json",
+        "curriculum_maxrl/data_integrity_check.json",
+        "curriculum_maxrl/digits_factorial/EXTERNAL_REPLAY_BUNDLE_MANIFEST.json",
+        "curriculum_maxrl/digits_factorial/PROTOCOL.md",
+        "curriculum_maxrl/digits_factorial/RESULTS.md",
+        "curriculum_maxrl/digits_factorial/SOURCE_LOCK.json",
+        "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/common_identity_robustness.json",
+        "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/confirmation_analysis.json",
+        "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/confirmation_bundle_receipt.json",
+        "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/independent_preconfirmation_review.json",
+        "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/lr_selection.json",
+        "curriculum_maxrl/digits_factorial/authorizations/confirmation_common_authorization.json",
+        "curriculum_maxrl/digits_factorial/authorizations/confirmation_tuned_authorization.json",
+        "curriculum_maxrl/digits_factorial/authorizations/development_authorization.json",
+        "curriculum_maxrl/digits_factorial/digits_split_manifest.json",
+        "curriculum_maxrl/digits_factorial/engineering/reseal_v3/engineering_audit.json",
+        "curriculum_maxrl/digits_factorial/engineering/reseal_v3/independent_preseal_review.json",
+        "curriculum_maxrl/maze_gpu/efficiency.json",
+        "curriculum_maxrl/maze_gpu_factorial/results_factorial_wave1.json",
+        "curriculum_maxrl/maze_gpu_factorial/results_factorial_wave2.json",
+        "curriculum_maxrl/results_capped_hora_robustness.json",
+        "curriculum_maxrl/results_capped_hora_robustness_analysis.json",
+        "curriculum_maxrl/results_correlated_rollout_stress.json",
+        "curriculum_maxrl/results_fixed_budget_n_sweep.json",
+        "docs/curves.json",
+        "docs/index.html",
+        "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json",
+        "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL.md",
+        "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_RESULTS.md",
+        "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_EXTERNAL_RAW_MANIFEST.json",
+        "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_LOCK.json",
+        "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_PROTOCOL.md",
+        "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_RESULTS.md",
+        "frontier_rl/examples/PROCURL_PRIMARY_SOURCE_PROVENANCE.md",
+        "frontier_rl/examples/acrobot_curriculum_tournament_analysis.json",
+        "frontier_rl/examples/acrobot_curriculum_tournament_confirmatory.json",
+        "frontier_rl/examples/acrobot_curriculum_tournament_development.json",
+        "frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json",
+        "frontier_rl/examples/acrobot_procurl_selection_analysis.json",
+        "frontier_rl/examples/acrobot_procurl_selection_development_gates.json",
+        "frontier_rl/examples/acrobot_procurl_selection_diagnostics.json",
+        "frontier_rl/examples/acrobot_procurl_selection_portable_verification.json",
+        "frontier_rl/examples/gym_convergence.json",
+        "frontier_rl/examples/gym_performance.json",
+        "frontier_rl/examples/gym_performance_3x.json",
+        "jugs_llm/results/entropy_trajectories.json",
+        "paper/body.tex",
+        "paper/body_iclr.tex",
+        "paper/figures/data/armA_designed_gate_3seed.json",
+        "paper/figures/data/b_cells_dynamics.json",
+        "paper/figures/data/b_scoreboard_3seed.json",
+        "paper/figures/data/b_strong_gate_1seed.json",
+        "paper/figures/data/fig2_ladder_data.json",
+        "paper/figures/data/fig3_gsm8k_data.json",
+        "paper/figures/data/fig8_run_manifest.json",
+        "paper/figures/data/fig9_bestk_proxy.json",
+        "paper/figures/data/generation_timing.json",
+        "paper/figures/fig10_jugs_entropy.py",
+        "paper/figures/fig1_utility.py",
+        "paper/figures/fig2_ladder.py",
+        "paper/figures/fig3_gsm8k.py",
+        "paper/figures/fig4_algorithm.py",
+        "paper/figures/fig5_channels.py",
+        "paper/figures/fig6_gym.py",
+        "paper/figures/fig7_sharpening.py",
+        "paper/figures/fig8_bands.py",
+        "paper/figures/fig9_ksweep.py",
+        "paper/figures/fig9_passk.py",
+        "paper/figures/fig_countdown_core.py",
+        "paper/figures/fig_maze_block_analysis.py",
+        "paper/main.tex",
+        "paper/main_iclr.tex",
+        "paper/results/manifest.json"
+      ]
+    },
+    {
+      "name": "root_control",
+      "expected_file_count": 6,
+      "paths": [
+        "ANONYMOUS_SOURCE_BUNDLE.md",
+        "COUNTDOWN_ANALYSIS.md",
+        "FINAL_ICLR_REVIEW_AND_COMPLETION_GUIDE_2026-08-07.md",
+        "FINAL_REVIEW_RESPONSE_AND_GUIDANCE_2026-08-07.md",
+        "FRAMEWORK.md",
+        "reproduce.sh"
+      ]
+    },
+    {
+      "name": "curriculum_reproduction",
+      "expected_file_count": 85,
+      "paths": [
+        "curriculum_maxrl/RUN_REGISTRY.md",
+        "curriculum_maxrl/__init__.py",
+        "curriculum_maxrl/analysis/__init__.py",
+        "curriculum_maxrl/analysis/anonymous_source_bundle.py",
+        "curriculum_maxrl/analysis/maze_wave2_auc_multiverse.py",
+        "curriculum_maxrl/analysis/test_anonymous_source_bundle.py",
+        "curriculum_maxrl/analysis/test_maze_wave2_auc_multiverse.py",
+        "curriculum_maxrl/analyze_capped_hora_robustness.py",
+        "curriculum_maxrl/audit_countdown_sft_overlap.py",
+        "curriculum_maxrl/build_digits_external_bundle_manifest.py",
+        "curriculum_maxrl/build_run_registry.py",
+        "curriculum_maxrl/countdown_reviewer_arms/armA_b3fix_s1.json",
+        "curriculum_maxrl/countdown_reviewer_arms/armA_b3fix_s2.json",
+        "curriculum_maxrl/countdown_reviewer_arms/armA_b3fix_s3.json",
+        "curriculum_maxrl/countdown_reviewer_arms/armB_replay_s1.json",
+        "curriculum_maxrl/countdown_reviewer_arms/armB_replay_s2.json",
+        "curriculum_maxrl/countdown_reviewer_arms/armB_replay_s3.json",
+        "curriculum_maxrl/countdown_reviewer_arms/extract_arm_results.py",
+        "curriculum_maxrl/digits_factorial/__init__.py",
+        "curriculum_maxrl/digits_factorial/analyze.py",
+        "curriculum_maxrl/digits_factorial/core.py",
+        "curriculum_maxrl/digits_factorial/freeze_lock.py",
+        "curriculum_maxrl/digits_factorial/locking.py",
+        "curriculum_maxrl/digits_factorial/prepare_data.py",
+        "curriculum_maxrl/digits_factorial/pyproject.toml",
+        "curriculum_maxrl/digits_factorial/runner.py",
+        "curriculum_maxrl/digits_factorial/tests/test_adversarial.py",
+        "curriculum_maxrl/digits_factorial/tests/test_analyze.py",
+        "curriculum_maxrl/digits_factorial/tests/test_core.py",
+        "curriculum_maxrl/digits_factorial/tests/test_runner.py",
+        "curriculum_maxrl/digits_factorial/tests/test_verifier.py",
+        "curriculum_maxrl/digits_factorial/uv.lock",
+        "curriculum_maxrl/digits_factorial/verify_portable.py",
+        "curriculum_maxrl/estimators.py",
+        "curriculum_maxrl/gsm8k_artifacts/grpo_uniform_seed2.json",
+        "curriculum_maxrl/maze_gpu/ck_frontier_alp_maxrl_hsd.jsonl",
+        "curriculum_maxrl/maze_gpu/ck_uniform_grpo.jsonl",
+        "curriculum_maxrl/maze_gpu/ck_uniform_maxrl.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_falp_maxrl_hs_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_falp_maxrl_hsdense_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_falp_maxrl_hsdense_s1.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_falp_maxrl_hsdense_s2.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_falp_maxrl_hsdense_tt_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_falp_p4_hsdense_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_frontier_alp_maxrl_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_frontier_alp_maxrl_s1.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_frontier_alp_maxrl_s2.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_frontier_grpo_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_frontier_maxrl_hs_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_frontier_maxrl_hs_s1.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_frontier_maxrl_hs_s2.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_frontier_maxrl_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_learnability_maxrl_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_uniform_grpo_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_uniform_grpo_s1.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_uniform_grpo_s2.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_uniform_maxrl_hs_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_uniform_maxrl_s0.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_uniform_maxrl_s1.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_uniform_maxrl_s2.jsonl",
+        "curriculum_maxrl/maze_gpu/matched_wide_falp_hsdense_s0.jsonl",
+        "curriculum_maxrl/maze_gpu_factorial/PROVENANCE.md",
+        "curriculum_maxrl/results_baselines_regimes.json",
+        "curriculum_maxrl/results_fixed_n.json",
+        "curriculum_maxrl/results_gate_probe_budget.json",
+        "curriculum_maxrl/results_gate_variants.json",
+        "curriculum_maxrl/results_lr_matched.json",
+        "curriculum_maxrl/results_postguidance_hora_factorial.json",
+        "curriculum_maxrl/results_row_vs_group.json",
+        "curriculum_maxrl/run_capped_hora_robustness.py",
+        "curriculum_maxrl/run_correlated_rollout_stress.py",
+        "curriculum_maxrl/run_fixed_budget_n_sweep.py",
+        "curriculum_maxrl/run_postguidance_hora_factorial.py",
+        "curriculum_maxrl/run_registry.json",
+        "curriculum_maxrl/teachers.py",
+        "curriculum_maxrl/test_audit_countdown_sft_overlap.py",
+        "curriculum_maxrl/test_capped_hora_robustness.py",
+        "curriculum_maxrl/test_correlated_rollout_stress.py",
+        "curriculum_maxrl/test_fixed_budget_n_sweep.py",
+        "curriculum_maxrl/test_mass_formulas.py",
+        "curriculum_maxrl/test_postguidance_hora_factorial.py",
+        "curriculum_maxrl/test_verl_curriculum.py",
+        "curriculum_maxrl/testbed.py",
+        "curriculum_maxrl/un_form_verdicts.json",
+        "curriculum_maxrl/verl_curriculum.py"
+      ]
+    },
+    {
+      "name": "frontier_rl_reproduction",
+      "expected_file_count": 49,
+      "paths": [
+        "frontier_rl/__init__.py",
+        "frontier_rl/adapters/__init__.py",
+        "frontier_rl/adapters/acrobot_neural.py",
+        "frontier_rl/adapters/cosmos_libero.py",
+        "frontier_rl/adapters/cosmos_live.py",
+        "frontier_rl/adapters/countdown_llm.py",
+        "frontier_rl/adapters/grid_reach.py",
+        "frontier_rl/adapters/gym_classic.py",
+        "frontier_rl/adapters/isaaclab_curriculum.py",
+        "frontier_rl/adapters/skill_chain.py",
+        "frontier_rl/estimators.py",
+        "frontier_rl/evaluation.py",
+        "frontier_rl/examples/ACROBOT_NEURAL_PROTOCOL_V2.md",
+        "frontier_rl/examples/ACROBOT_NEURAL_PROTOCOL_V3.md",
+        "frontier_rl/examples/ACROBOT_NEURAL_V3_LOCK.json",
+        "frontier_rl/examples/acrobot_neural_v3_shared_confirmatory.json",
+        "frontier_rl/examples/acrobot_v3_mechanism_audit.json",
+        "frontier_rl/examples/analyze_acrobot_curriculum_tournament.py",
+        "frontier_rl/examples/analyze_acrobot_procurl_selection.py",
+        "frontier_rl/examples/analyze_acrobot_v3_confirmatory.py",
+        "frontier_rl/examples/analyze_acrobot_v3_mechanism.py",
+        "frontier_rl/examples/build_acrobot_procurl_external_manifest.py",
+        "frontier_rl/examples/build_acrobot_procurl_selection_lock.py",
+        "frontier_rl/examples/extract_acrobot_procurl_selection_diagnostics.py",
+        "frontier_rl/examples/hindsight_controls.json",
+        "frontier_rl/examples/run_acrobot_curriculum_tournament.py",
+        "frontier_rl/examples/run_acrobot_neural.py",
+        "frontier_rl/examples/run_acrobot_procurl_selection.py",
+        "frontier_rl/examples/test_acrobot_neural.py",
+        "frontier_rl/examples/test_analyze_acrobot_curriculum_tournament.py",
+        "frontier_rl/examples/test_analyze_acrobot_procurl_selection.py",
+        "frontier_rl/examples/test_analyze_acrobot_v3_mechanism.py",
+        "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+        "frontier_rl/examples/test_build_acrobot_procurl_selection_lock.py",
+        "frontier_rl/examples/test_extract_acrobot_procurl_selection_diagnostics.py",
+        "frontier_rl/examples/test_run_acrobot_curriculum_tournament.py",
+        "frontier_rl/examples/test_run_acrobot_neural.py",
+        "frontier_rl/examples/test_run_acrobot_procurl_selection.py",
+        "frontier_rl/examples/test_verify_acrobot_curriculum_tournament_portable.py",
+        "frontier_rl/examples/test_verify_acrobot_procurl_selection_portable.py",
+        "frontier_rl/examples/v7_oracle_result.json",
+        "frontier_rl/examples/verify_acrobot_curriculum_tournament_portable.py",
+        "frontier_rl/examples/verify_acrobot_procurl_selection_portable.py",
+        "frontier_rl/interfaces.py",
+        "frontier_rl/pilot0.py",
+        "frontier_rl/teacher.py",
+        "frontier_rl/test_framework.py",
+        "frontier_rl/test_gymnasium.py",
+        "frontier_rl/trainer.py"
+      ]
+    },
+    {
+      "name": "paper_reproduction",
+      "expected_file_count": 4,
+      "paths": [
+        "paper/figures/verify_fig2a_from_artifacts.py",
+        "paper/figures/verify_fig2c_from_logs.py",
+        "paper/iclr2027_conference.sty",
+        "paper/results/maze_factorial_block_analysis.json"
+      ]
+    },
+    {
+      "name": "verl_reproduction",
+      "expected_file_count": 5,
+      "paths": [
+        "verl_integration/curriculum.py",
+        "verl_integration/hindsight.py",
+        "verl_integration/response_goal_rewrite.py",
+        "verl_integration/test_response_goal_rewrite.py",
+        "verl_integration/vendored/hindsight.py"
+      ]
+    }
+  ],
+  "unshipped_artifacts": [
+    {
+      "path": "frontier_rl/examples/acrobot_procurl_selection_confirmatory.json",
+      "original_bytes": 1374886097,
+      "original_sha256": "b1f8756c249effab8c77101c8bca73ddf708a5e143c18fe8742fd5712fdd7c12",
+      "availability": "external-content-addressed-no-public-uri",
+      "content_addressed_download_uri": null,
+      "reason": "The finalized confirmatory ledger is content-addressed but too large for the compact anonymous source bundle; full 320-run replay requires these exact external bytes."
+    },
+    {
+      "path": "frontier_rl/examples/acrobot_procurl_selection_development.json",
+      "original_bytes": 11453535,
+      "original_sha256": "6d9fa639295e35cd8a8da810ace82d330c863edace702db4e3f7d25a9ad82ba8",
+      "availability": "compact-release-omission-no-public-uri",
+      "content_addressed_download_uri": null,
+      "reason": "The development replay ledger is not needed for retained compact checks and is omitted from the anonymous source bundle; its passing gate retains the exact digest binding."
+    }
+  ],
+  "omissions": [
+    {
+      "path": "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK_V1_ABORTED_PRE_OUTCOME_AUDIT.json",
+      "original_bytes": 9700,
+      "original_sha256": "26be1b6abba05bfb47e8f37ac017daa2a1d35964137b129e66c7053fe9907723",
+      "reason": "Historical pre-outcome-audit lock is named by the live V2 lock but omitted under the no-aborted-branches release rule."
+    },
+    {
+      "path": "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL_V1_ABORTED_PRE_OUTCOME_AUDIT.md",
+      "original_bytes": 5776,
+      "original_sha256": "c40c15e54aaeba7b5042600ae887167fa3df52765b2db064c77d42cdca773725",
+      "reason": "Historical pre-outcome-audit protocol is named by the live V2 lock but omitted under the no-aborted-branches release rule."
+    },
+    {
+      "path": "frontier_rl/examples/INVALID_ABORTED_PRE_GATE_ENTROPY_SUM_MISMATCH/INCIDENT.json",
+      "original_bytes": 3455,
+      "original_sha256": "fcf7db50bb1113a58beb477279507b1d9ffc363bad813de7d5e19610d291683b",
+      "reason": "Outcome-blind incident metadata is named by the retained ProCuRL source lock but omitted with the invalid pre-gate branch under the no-invalid-or-aborted-payload rule."
+    }
+  ],
+  "forbidden_selection_globs": [
+    ".git/*",
+    "*.aux",
+    "*.fdb_latexmk",
+    "*.fls",
+    "*.log",
+    "*.out",
+    "*.pdf",
+    "*.png",
+    "*.pyc",
+    "*__pycache__*",
+    "*aborted*",
+    "*invalid*",
+    "curriculum_maxrl/digits_factorial/.venv/*",
+    "curriculum_maxrl/digits_factorial/confirmation/*",
+    "curriculum_maxrl/digits_factorial/development/*",
+    "curriculum_maxrl/digits_factorial/engineering/reseal_v3/parallel/*",
+    "curriculum_maxrl/digits_factorial/engineering/reseal_v3/serial/*",
+    "frontier_rl/examples/acrobot_procurl_selection_confirmatory.json",
+    "frontier_rl/examples/acrobot_procurl_selection_development.json",
+    "frontier_rl/examples/acrobot_procurl_selection_quick*.json",
+    "tmp/*"
+  ],
+  "content_policy": {
+    "forbidden_prefixes": [
+      "/Users/",
+      "/home/",
+      "/tmp/",
+      "/private/tmp/",
+      "/var/folders/",
+      "/root/",
+      "/Volumes/"
+    ],
+    "forbidden_literals": [
+      "file://"
+    ],
+    "forbidden_identity_sha256": [
+      "715e3d85f48fd4c1cf28e434f011c4d858138eb55242384cc3d90733f1c86366"
+    ]
+  },
+  "approved_json_transforms": [
+    {
+      "file": "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/independent_preconfirmation_review.json",
+      "json_pointer": "/reviewer_task",
+      "replacement": "<ANONYMOUS_REVIEWER_TASK>"
+    },
+    {
+      "file": "curriculum_maxrl/digits_factorial/engineering/reseal_v3/independent_preseal_review.json",
+      "json_pointer": "/reviewer_task",
+      "replacement": "<ANONYMOUS_REVIEWER_TASK>"
+    },
+    {
+      "file": "frontier_rl/examples/ACROBOT_NEURAL_V3_LOCK.json",
+      "json_pointer": "/registered_invocation",
+      "replacement": "<TMP_DIR>/curriculum-maxrl-gym/bin/python frontier_rl/examples/run_acrobot_neural.py core --base-lr 3e-4 --core-architectures shared --seeds 20 --seed-start 12000 --transition-budget 2000000 --eval-interval-transitions 100000 --eval-n 32 --protocol-document frontier_rl/examples/ACROBOT_NEURAL_PROTOCOL_V3.md --output frontier_rl/examples/acrobot_neural_v3_shared_confirmatory.json"
+    },
+    {
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_analysis.json",
+      "json_pointer": "/raw_artifact_path",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/acrobot_curriculum_tournament_confirmatory.json"
+    },
+    {
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_analysis.json",
+      "json_pointer": "/source_lock_path",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json"
+    },
+    {
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json",
+      "json_pointer": "/raw_artifact_path",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/acrobot_curriculum_tournament_development.json"
+    },
+    {
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json",
+      "json_pointer": "/source_lock_path",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json"
+    }
+  ],
+  "approved_text_transforms": [
+    {
+      "kind": "exact",
+      "file": "FINAL_ICLR_REVIEW_AND_COMPLETION_GUIDE_2026-08-07.md",
+      "match": "/home/",
+      "replacement": "<HOME_DIR>/",
+      "expected_occurrences": 1,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "FINAL_ICLR_REVIEW_AND_COMPLETION_GUIDE_2026-08-07.md",
+      "match": "/tmp/",
+      "replacement": "<TMP_DIR>/",
+      "expected_occurrences": 1,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "FINAL_REVIEW_RESPONSE_AND_GUIDANCE_2026-08-07.md",
+      "match": "/home/",
+      "replacement": "<HOME_DIR>/",
+      "expected_occurrences": 2,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "FINAL_REVIEW_RESPONSE_AND_GUIDANCE_2026-08-07.md",
+      "match": "/tmp/",
+      "replacement": "<TMP_DIR>/",
+      "expected_occurrences": 1,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "FRAMEWORK.md",
+      "match": "/tmp/curriculum-maxrl-gym",
+      "replacement": "<TMP_DIR>/curriculum-maxrl-gym",
+      "expected_occurrences": 1,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "REPORT.md",
+      "match": "/tmp/curriculum-maxrl-gym",
+      "replacement": "<TMP_DIR>/curriculum-maxrl-gym",
+      "expected_occurrences": 1,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "curriculum_maxrl/COUNTDOWN_SFT_OVERLAP.md",
+      "match": "/tmp/countdown_sft_overlap.json",
+      "replacement": "<TMP_DIR>/countdown_sft_overlap.json",
+      "expected_occurrences": 1,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "curriculum_maxrl/audit_countdown_sft_overlap.py",
+      "match": "/tmp/countdown_sft_overlap.json",
+      "replacement": "<TMP_DIR>/countdown_sft_overlap.json",
+      "expected_occurrences": 2,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "curriculum_maxrl/build_digits_external_bundle_manifest.py",
+      "match": "if \"/Users/\" in relative or \"/home/\" in relative or \"/tmp/\" in relative:",
+      "replacement": "if any(\"/\" + leaf in relative for leaf in (\"Users/\", \"home/\", \"tmp/\")):",
+      "expected_occurrences": 1,
+      "purpose": "semantic_preserving_detector_rewrite"
+    },
+    {
+      "kind": "exact",
+      "file": "curriculum_maxrl/build_run_registry.py",
+      "match": "machine_prefixes = (\"/home/\", \"/Users/\", \"/tmp/\", \"/var/folders/\")",
+      "replacement": "machine_prefixes = tuple(\"/\" + leaf for leaf in (\"home/\", \"Users/\", \"tmp/\", \"var/folders/\"))",
+      "expected_occurrences": 1,
+      "purpose": "semantic_preserving_detector_rewrite"
+    },
+    {
+      "kind": "exact",
+      "file": "curriculum_maxrl/countdown_reviewer_arms/extract_arm_results.py",
+      "match": "glob.glob(\"/tmp/ray/session_2026-*\")",
+      "replacement": "glob.glob(\"/\" + \"tmp/ray/session_2026-*\")",
+      "expected_occurrences": 1,
+      "purpose": "semantic_preserving_path_rewrite"
+    },
+    {
+      "kind": "exact",
+      "file": "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+      "match": "\"/Users/example/raw.json\"",
+      "replacement": "\"/\" + \"Users/example/raw.json\"",
+      "expected_occurrences": 1,
+      "purpose": "semantic_preserving_detector_fixture_rewrite"
+    },
+    {
+      "kind": "exact",
+      "file": "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+      "match": "\"C:/Users/example/raw.json\"",
+      "replacement": "\"C:/\" + \"Users/example/raw.json\"",
+      "expected_occurrences": 1,
+      "purpose": "semantic_preserving_detector_fixture_rewrite"
+    },
+    {
+      "kind": "exact",
+      "file": "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+      "match": "\"file://host/raw.json\"",
+      "replacement": "\"file\" + \"://host/raw.json\"",
+      "expected_occurrences": 1,
+      "purpose": "semantic_preserving_detector_fixture_rewrite"
+    },
+    {
+      "kind": "exact",
+      "file": "frontier_rl/examples/test_extract_acrobot_procurl_selection_diagnostics.py",
+      "match": "\"/Users/example/raw.json\"",
+      "replacement": "\"/\" + \"Users/example/raw.json\"",
+      "expected_occurrences": 1,
+      "purpose": "semantic_preserving_detector_fixture_rewrite"
+    },
+    {
+      "kind": "github_owner",
+      "file": "docs/index.html",
+      "github_owner_sha256": "715e3d85f48fd4c1cf28e434f011c4d858138eb55242384cc3d90733f1c86366",
+      "replacement": "https://github.com/anonymous",
+      "expected_occurrences": 16,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "docs/index.html",
+      "match": "file://",
+      "replacement": "local-file",
+      "expected_occurrences": 1,
+      "purpose": "anonymization"
+    },
+    {
+      "kind": "exact",
+      "file": "reproduce.sh",
+      "match": "PYTHON=${PYTHON:-python3}",
+      "replacement": "PYTHON=${PYTHON:-python3}\nPYTHONDONTWRITEBYTECODE=1 $PYTHON -m curriculum_maxrl.analysis.anonymous_source_bundle --verify-export --bundle-root .",
+      "expected_occurrences": 1,
+      "purpose": "clean_bundle_self_verification"
+    },
+    {
+      "kind": "exact",
+      "file": "reproduce.sh",
+      "match": "$PYTHON curriculum_maxrl/build_run_registry.py --check",
+      "replacement": "$PYTHON -m curriculum_maxrl.analysis.anonymous_source_bundle --check-run-registry --bundle-root .",
+      "expected_occurrences": 1,
+      "purpose": "receipt_aware_reproduction"
+    },
+    {
+      "kind": "exact",
+      "file": "reproduce.sh",
+      "match": "$PYTHON -m curriculum_maxrl.analysis.anonymous_release --audit \\\n  --check-compact-receipt anonymous_release_receipt.json",
+      "replacement": "$PYTHON -m unittest curriculum_maxrl.analysis.test_anonymous_source_bundle",
+      "expected_occurrences": 1,
+      "purpose": "bundle_self_verification"
+    },
+    {
+      "kind": "exact",
+      "file": "reproduce.sh",
+      "match": "  frontier_rl/examples/test_verify_acrobot_procurl_selection_portable.py",
+      "replacement": "  frontier_rl/examples/test_verify_acrobot_procurl_selection_portable.py \\\n  -k 'not real_invalid_wave_incident_verifies_hashes_sizes_and_blindness and not invalid_wave_archive_tamper_is_detected'",
+      "expected_occurrences": 1,
+      "purpose": "receipt_bound_invalid_witness_omission"
+    },
+    {
+      "kind": "exact",
+      "file": "reproduce.sh",
+      "match": "$PYTHON frontier_rl/examples/analyze_acrobot_v3_mechanism.py \\\n  --check frontier_rl/examples/acrobot_v3_mechanism_audit.json",
+      "replacement": "$PYTHON -m curriculum_maxrl.analysis.anonymous_source_bundle --check-v3-audit --bundle-root .",
+      "expected_occurrences": 1,
+      "purpose": "receipt_aware_reproduction"
+    },
+    {
+      "kind": "exact",
+      "file": "reproduce.sh",
+      "match": "  --artifact-root . --compact >/dev/null",
+      "replacement": "  --artifact-root . --compact >/dev/null\n\"${PROCURL_TEST_RUNTIME[@]}\" -m curriculum_maxrl.analysis.anonymous_source_bundle \\\n  --check-acrobot-procurl-compact --bundle-root .",
+      "expected_occurrences": 1,
+      "purpose": "receipt_aware_reproduction"
+    },
+    {
+      "kind": "region",
+      "file": "reproduce.sh",
+      "start_marker": "$PYTHON - <<'EOF'\nimport hashlib\nimport json\nfrom pathlib import Path\n\nroot = Path(\"curriculum_maxrl/digits_factorial\")",
+      "end_marker": "print(\"Digits locked tests/source and receipt chain pass without rerunning evidentiary training\")\nEOF",
+      "expected_original_sha256": "b1d32acc21774341738bd0db64131f7b251fe98155572b5c357792a5505b2706",
+      "replacement": "$PYTHON -m curriculum_maxrl.analysis.anonymous_source_bundle --check-digits-chain --bundle-root .",
+      "expected_occurrences": 1,
+      "purpose": "receipt_aware_reproduction"
+    },
+    {
+      "kind": "exact",
+      "file": "reproduce.sh",
+      "match": "uv run --python 3.12.13 \\\n  --with numpy==2.5.1 \\\n  --with 'gymnasium[classic-control]==1.3.0' \\\n  python -m frontier_rl.examples.verify_acrobot_curriculum_tournament_portable \\\n    frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json \\\n    frontier_rl/examples/acrobot_curriculum_tournament_confirmatory.json \\\n    frontier_rl/examples/acrobot_curriculum_tournament_analysis.json \\\n    --source-root . >/dev/null",
+      "replacement": "uv run --python 3.12.13 \\\n  --with numpy==2.5.1 \\\n  --with 'gymnasium[classic-control]==1.3.0' \\\n  python -m curriculum_maxrl.analysis.anonymous_source_bundle \\\n    --check-acrobot-tournament --bundle-root . >/dev/null",
+      "expected_occurrences": 1,
+      "purpose": "receipt_aware_reproduction"
+    },
+    {
+      "kind": "region",
+      "file": "reproduce.sh",
+      "start_marker": "$PYTHON - <<'EOF'\nimport hashlib, json, os, sys\nm = json.load(open('paper/results/manifest.json'))",
+      "end_marker": "sys.exit(1 if bad else 0)\nEOF",
+      "expected_original_sha256": "c202aa5ad6e364cba78de632786328835e3068cf66b4dc068a451d45dd7c5fcf",
+      "replacement": "$PYTHON -m curriculum_maxrl.analysis.anonymous_source_bundle --check-paper-manifest --bundle-root .",
+      "expected_occurrences": 1,
+      "purpose": "receipt_aware_reproduction"
+    }
+  ],
+  "executable_paths": [
+    "reproduce.sh"
+  ]
+}

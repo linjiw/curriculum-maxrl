@@ -1,0 +1,19 @@
+{
+  "authorization_digest": "62a83b356e3caf5a1f0752e6424bbf7895ab7ff8aafda8e1c62b15581def797b",
+  "authorized_phase": "confirmation_common",
+  "independent_preseal_review": {
+    "passed": true,
+    "review_sha256": "6ad8ede4ebdc6517e7d44395ae14dc26cc705029c1efab454eabb366d729803a"
+  },
+  "lr_selection": {
+    "all_development_gates_passed": true,
+    "relative_path": "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/lr_selection.json",
+    "sha256": "dfc9d69faec78cff95e63ed7cd99a0e23c883dad5eba1a2fe378366730e06795"
+  },
+  "root_execution_authorization": {
+    "authorized": true,
+    "authorized_utc": "2026-08-08T18:50:51Z"
+  },
+  "schema": "curriculum-maxrl/digits-factorial-execution-authorization/v2",
+  "source_lock_sha256": "d72b93a29a2e6a096a6acb0611f69fe6df9dcda80256000aed6de5208ef4eb36"
+}

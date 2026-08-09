@@ -1,0 +1,237 @@
+{
+  "schema": "curriculum-maxrl/anonymous-release-scope/v2",
+  "paper_manifest": "paper/results/manifest.json",
+  "entrypoints": [
+    "README.md",
+    "EVIDENCE.md",
+    "SCHEDULE.md",
+    "REVIEW_NOTES.md",
+    "GUIDE.md",
+    "REPORT.md",
+    "NEXT_EXPERIMENTS.md",
+    "GSM8K_ANALYSIS.md",
+    "SMALL_COMPUTE_RESEARCH_PLAN.md",
+    "RL_CURRICULUM_EXPERIMENT_PLAN.md",
+    "MAXRL_SOURCE_AUDIT.md",
+    "GPU_EXPERIMENT_HANDOFF.md",
+    "PLR_GO_NO_GO.md",
+    "docs/index.html",
+    "docs/curves.json",
+    "curriculum_maxrl/CAPPED_HORA_ROBUSTNESS_RESULTS.md",
+    "curriculum_maxrl/CORRELATED_ROLLOUT_STRESS.md",
+    "curriculum_maxrl/FIXED_BUDGET_N_SWEEP.md",
+    "curriculum_maxrl/COUNTDOWN_SFT_OVERLAP.md",
+    "curriculum_maxrl/digits_factorial/PROTOCOL.md",
+    "curriculum_maxrl/digits_factorial/RESULTS.md",
+    "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL.md",
+    "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_RESULTS.md"
+  ],
+  "manifest_expansion": {
+    "include_manuscript_sources": true,
+    "include_timing_artifact": true,
+    "include_result_inputs": true,
+    "include_figure_inputs": true,
+    "include_figure_scripts": true
+  },
+  "unshipped_artifacts": [
+    {
+      "path": "frontier_rl/examples/acrobot_procurl_selection_confirmatory.json",
+      "original_bytes": 1374886097,
+      "original_sha256": "b1f8756c249effab8c77101c8bca73ddf708a5e143c18fe8742fd5712fdd7c12",
+      "availability": "external-content-addressed-no-public-uri",
+      "content_addressed_download_uri": null,
+      "reason": "The finalized confirmatory ledger is content-addressed but too large for the compact anonymous evidence projection; no public download URI is currently declared."
+    },
+    {
+      "path": "frontier_rl/examples/acrobot_procurl_selection_development.json",
+      "original_bytes": 11453535,
+      "original_sha256": "6d9fa639295e35cd8a8da810ace82d330c863edace702db4e3f7d25a9ad82ba8",
+      "availability": "compact-release-omission-no-public-uri",
+      "content_addressed_download_uri": null,
+      "reason": "The development replay ledger is omitted from the compact anonymous evidence projection; the retained passing gate binds its exact digest."
+    }
+  ],
+  "manifest_input_exclusions": [
+    {
+      "path": "frontier_rl/examples/acrobot_procurl_selection_development.json",
+      "reason": "The paper manifest names this development replay ledger, but the compact projection retains only its digest-bound passing gate."
+    }
+  ],
+  "forbidden_prefixes": [
+    "/Users/",
+    "/home/",
+    "/tmp/",
+    "/private/tmp/",
+    "/var/folders/",
+    "/root/",
+    "/Volumes/"
+  ],
+  "forbidden_literals": [
+    "file://"
+  ],
+  "forbidden_identity_sha256": [
+    "715e3d85f48fd4c1cf28e434f011c4d858138eb55242384cc3d90733f1c86366"
+  ],
+  "approved_json_transforms": [
+    {
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_analysis.json",
+      "json_pointer": "/raw_artifact_path",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/acrobot_curriculum_tournament_confirmatory.json"
+    },
+    {
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_analysis.json",
+      "json_pointer": "/source_lock_path",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json"
+    },
+    {
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json",
+      "json_pointer": "/raw_artifact_path",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/acrobot_curriculum_tournament_development.json"
+    },
+    {
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json",
+      "json_pointer": "/source_lock_path",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json"
+    },
+    {
+      "file": "curriculum_maxrl/digits_factorial/engineering/reseal_v3/independent_preseal_review.json",
+      "json_pointer": "/reviewer_task",
+      "replacement": "<ANONYMOUS_REVIEWER_TASK>"
+    },
+    {
+      "file": "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/independent_preconfirmation_review.json",
+      "json_pointer": "/reviewer_task",
+      "replacement": "<ANONYMOUS_REVIEWER_TASK>"
+    }
+  ],
+  "approved_text_transforms": [
+    {
+      "file": "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+      "match": "\"/Users/example/raw.json\"",
+      "replacement": "\"/\" + \"Users/example/raw.json\"",
+      "expected_occurrences": 1
+    },
+    {
+      "file": "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+      "match": "\"C:/Users/example/raw.json\"",
+      "replacement": "\"C:/\" + \"Users/example/raw.json\"",
+      "expected_occurrences": 1
+    },
+    {
+      "file": "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+      "match": "\"file://host/raw.json\"",
+      "replacement": "\"file\" + \"://host/raw.json\"",
+      "expected_occurrences": 1
+    },
+    {
+      "file": "frontier_rl/examples/test_extract_acrobot_procurl_selection_diagnostics.py",
+      "match": "\"/Users/example/raw.json\"",
+      "replacement": "\"/\" + \"Users/example/raw.json\"",
+      "expected_occurrences": 1
+    },
+    {
+      "file": "docs/index.html",
+      "github_owner_sha256": "715e3d85f48fd4c1cf28e434f011c4d858138eb55242384cc3d90733f1c86366",
+      "replacement": "https://github.com/anonymous",
+      "expected_occurrences": 16
+    },
+    {
+      "file": "docs/index.html",
+      "match": "file://",
+      "replacement": "local-file",
+      "expected_occurrences": 1
+    },
+    {
+      "file": "REPORT.md",
+      "match": "/tmp/curriculum-maxrl-gym",
+      "replacement": "<TMP_DIR>/curriculum-maxrl-gym",
+      "expected_occurrences": 1
+    },
+    {
+      "file": "curriculum_maxrl/COUNTDOWN_SFT_OVERLAP.md",
+      "match": "/tmp/countdown_sft_overlap.json",
+      "replacement": "<TMP_DIR>/countdown_sft_overlap.json",
+      "expected_occurrences": 1
+    },
+    {
+      "file": "README.md",
+      "match": "## Quick start (CPU, numpy only; commands run from the repository root)",
+      "replacement": "## Anonymous source-bundle usage (source bundle not included here)",
+      "expected_occurrences": 1,
+      "purpose": "evidence_only_scope"
+    },
+    {
+      "file": "README.md",
+      "match": "### Artifact verification\n\nFrom a clone with Git LFS and `uv` installed:\n\n```bash\ngit lfs pull\nbash reproduce.sh          # tests, endpoint derivations, all declared compact inputs\nbash reproduce.sh --build  # additionally rebuild both LaTeX wrappers\n```\n\nThe build needs a TeX installation and a Python environment with NumPy and\nMatplotlib. The script provisions the pinned Gym/Digits environments through\n`uv`; capped-HORA uses CPython 3.9.6 with NumPy 1.26.4 (set `HORA_PYTHON` to an\nexisting matching interpreter, or let `uv` provision it). This verifies the\ncompact release. It does not download the unshipped 5.08 GB Digits replay\npayload, rerun evidentiary training, recover missing maze/Countdown data, or\nturn summary-backed records into raw artifacts.",
+      "replacement": "### Evidence-supplement boundary\n\nThis projected directory is an evidence-only double-blind supplement. It contains the paper-facing documents and declared evidence inputs, but intentionally omits the complete Python package, `reproduce.sh`, Git-LFS payloads, and rendered binaries. It is therefore not a standalone executable artifact. The command examples in this section apply only to a separately generated anonymous source bundle, which must carry its own inventory and zero-leak verification. Scientific checks continue to use the frozen originals before projection; changed projected files are bound to those originals by `ANONYMIZATION_RECEIPT.json`.",
+      "expected_occurrences": 1,
+      "purpose": "evidence_only_scope"
+    }
+  ],
+  "excluded_globs": [
+    {
+      "glob": "*INVALID*",
+      "reason": "invalid or superseded experimental branch"
+    },
+    {
+      "glob": "*ABORTED*",
+      "reason": "aborted experimental branch"
+    },
+    {
+      "glob": "*.log",
+      "reason": "generated build or execution log"
+    },
+    {
+      "glob": "*.aux",
+      "reason": "generated TeX state"
+    },
+    {
+      "glob": "*.out",
+      "reason": "generated TeX state"
+    },
+    {
+      "glob": "*.fls",
+      "reason": "generated TeX dependency log"
+    },
+    {
+      "glob": "*.fdb_latexmk",
+      "reason": "generated TeX build database"
+    },
+    {
+      "glob": "*.pdf",
+      "reason": "binary render; rebuilt separately from projected sources"
+    },
+    {
+      "glob": "*.png",
+      "reason": "binary render; rebuilt separately from projected sources"
+    },
+    {
+      "glob": "tmp/*",
+      "reason": "ignored scratch and generated export area"
+    },
+    {
+      "glob": "curriculum_maxrl/digits_factorial/development/*",
+      "reason": "unshipped full Digits replay payload"
+    },
+    {
+      "glob": "curriculum_maxrl/digits_factorial/confirmation/*",
+      "reason": "unshipped full Digits replay payload"
+    },
+    {
+      "glob": "curriculum_maxrl/digits_factorial/engineering/reseal_v3/serial/*",
+      "reason": "unshipped full Digits replay payload"
+    },
+    {
+      "glob": "curriculum_maxrl/digits_factorial/engineering/reseal_v3/parallel/*",
+      "reason": "unshipped full Digits replay payload"
+    },
+    {
+      "glob": "frontier_rl/examples/acrobot_procurl_selection_confirmatory.json",
+      "reason": "finalized external raw ledger is content-addressed but unshipped, with no public download URI"
+    },
+    {
+      "glob": "frontier_rl/examples/acrobot_procurl_selection_development.json",
+      "reason": "development replay ledger is omitted from the compact projection"
+    }
+  ]
+}

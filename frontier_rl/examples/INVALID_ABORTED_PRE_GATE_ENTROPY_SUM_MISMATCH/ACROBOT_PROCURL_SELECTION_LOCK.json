@@ -1,0 +1,1777 @@
+{
+  "schema": "curriculum-maxrl/acrobot-procurl-selection-lock/v1",
+  "status": "sealed_before_any_quick_development_or_confirmation",
+  "created_utc": "2026-08-08T19:00:32.704655+00:00",
+  "purpose": "Canonical pre-execution source/runtime lock for the Acrobot ProCuRL selection-semantic study.",
+  "runtime": {
+    "python_implementation": "CPython",
+    "python": "3.12.13",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "numpy": "2.5.1",
+    "gymnasium": "1.3.0"
+  },
+  "schedule": {
+    "arm_names": [
+      "procurl_env_b20_f5120",
+      "probe_sham_uniform_f5120",
+      "ordinary_uniform",
+      "u16_probe_range_matched_f5120"
+    ],
+    "confirmatory_seeds": [
+      21000,
+      21001,
+      21002,
+      21003,
+      21004,
+      21005,
+      21006,
+      21007,
+      21008,
+      21009,
+      21010,
+      21011,
+      21012,
+      21013,
+      21014,
+      21015,
+      21016,
+      21017,
+      21018,
+      21019,
+      21020,
+      21021,
+      21022,
+      21023,
+      21024,
+      21025,
+      21026,
+      21027,
+      21028,
+      21029,
+      21030,
+      21031,
+      21032,
+      21033,
+      21034,
+      21035,
+      21036,
+      21037,
+      21038,
+      21039,
+      21040,
+      21041,
+      21042,
+      21043,
+      21044,
+      21045,
+      21046,
+      21047,
+      21048,
+      21049,
+      21050,
+      21051,
+      21052,
+      21053,
+      21054,
+      21055,
+      21056,
+      21057,
+      21058,
+      21059,
+      21060,
+      21061,
+      21062,
+      21063,
+      21064,
+      21065,
+      21066,
+      21067,
+      21068,
+      21069,
+      21070,
+      21071,
+      21072,
+      21073,
+      21074,
+      21075,
+      21076,
+      21077,
+      21078,
+      21079
+    ],
+    "development_seeds": [
+      21100,
+      21101,
+      21102
+    ],
+    "quick_seeds": [
+      21200
+    ],
+    "confirmatory_paid_budget": 2000000,
+    "development_paid_budget": 400000,
+    "quick_paid_budget": 100000,
+    "regular_eval_interval_paid": 100000,
+    "confirmatory_eval_n": 32,
+    "development_eval_n": 32,
+    "quick_eval_n": 2,
+    "n_rollouts": 16,
+    "learning_rate": 0.0003,
+    "probes_per_task": 20,
+    "refresh_student_transitions": 5120,
+    "procurl_beta": 20.0,
+    "u16_beta_continuous_range_matched": 6.416133525771289,
+    "u16_lattice_max_logit": 4.97730861318145,
+    "engine_master_base": 50000000000,
+    "engine_master_stride": 10000000,
+    "rng_domain_offsets": {
+      "actor_parameter": 0,
+      "actor_action": 1,
+      "selection": 10000,
+      "environment_reset_rng": 11003,
+      "evaluation_episode": 1000000,
+      "evaluation_action": 1000001,
+      "probe_episode_reset": 2000000,
+      "probe_episode_action": 3000000
+    },
+    "environment_adapter_seed_offset": 1000,
+    "upstream_procurl_commit": "17904f1d7b9b29e089d4f70ae7aadf1da50ba6b2"
+  },
+  "seed_collision_audit": {
+    "passed": true,
+    "confirmatory_seeds": [
+      21000,
+      21001,
+      21002,
+      21003,
+      21004,
+      21005,
+      21006,
+      21007,
+      21008,
+      21009,
+      21010,
+      21011,
+      21012,
+      21013,
+      21014,
+      21015,
+      21016,
+      21017,
+      21018,
+      21019,
+      21020,
+      21021,
+      21022,
+      21023,
+      21024,
+      21025,
+      21026,
+      21027,
+      21028,
+      21029,
+      21030,
+      21031,
+      21032,
+      21033,
+      21034,
+      21035,
+      21036,
+      21037,
+      21038,
+      21039,
+      21040,
+      21041,
+      21042,
+      21043,
+      21044,
+      21045,
+      21046,
+      21047,
+      21048,
+      21049,
+      21050,
+      21051,
+      21052,
+      21053,
+      21054,
+      21055,
+      21056,
+      21057,
+      21058,
+      21059,
+      21060,
+      21061,
+      21062,
+      21063,
+      21064,
+      21065,
+      21066,
+      21067,
+      21068,
+      21069,
+      21070,
+      21071,
+      21072,
+      21073,
+      21074,
+      21075,
+      21076,
+      21077,
+      21078,
+      21079
+    ],
+    "development_seeds": [
+      21100,
+      21101,
+      21102
+    ],
+    "quick_seeds": [
+      21200
+    ],
+    "prior_logical_seed_blocks": {
+      "legacy_acrobot_core": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "legacy_acrobot_scale": [
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109
+      ],
+      "acrobot_v1_pilot": [
+        10000,
+        10001,
+        10002
+      ],
+      "acrobot_v2_development": [
+        11000,
+        11001,
+        11002
+      ],
+      "acrobot_v3_confirmation": [
+        12000,
+        12001,
+        12002,
+        12003,
+        12004,
+        12005,
+        12006,
+        12007,
+        12008,
+        12009,
+        12010,
+        12011,
+        12012,
+        12013,
+        12014,
+        12015,
+        12016,
+        12017,
+        12018,
+        12019
+      ],
+      "acrobot_hindsight_v4a": [
+        13000,
+        13001,
+        13002
+      ],
+      "acrobot_hindsight_v4b": [
+        14000,
+        14001,
+        14002,
+        14003,
+        14004,
+        14005,
+        14006,
+        14007,
+        14008,
+        14009
+      ],
+      "acrobot_hindsight_v5a": [
+        15000,
+        15001,
+        15002
+      ],
+      "acrobot_hindsight_v5b": [
+        16000,
+        16001,
+        16002,
+        16003,
+        16004,
+        16005,
+        16006,
+        16007,
+        16008,
+        16009,
+        16010,
+        16011,
+        16012,
+        16013,
+        16014,
+        16015,
+        16016,
+        16017,
+        16018,
+        16019
+      ],
+      "mountaincar_v1_development": [
+        17000,
+        17001,
+        17002
+      ],
+      "mountaincar_v1_reserved_confirmation": [
+        18000,
+        18001,
+        18002,
+        18003,
+        18004,
+        18005,
+        18006,
+        18007,
+        18008,
+        18009,
+        18010,
+        18011,
+        18012,
+        18013,
+        18014,
+        18015,
+        18016,
+        18017,
+        18018,
+        18019
+      ],
+      "aborted_tournament_confirmation": [
+        19000,
+        19001,
+        19002,
+        19003,
+        19004,
+        19005,
+        19006,
+        19007,
+        19008,
+        19009,
+        19010,
+        19011,
+        19012,
+        19013,
+        19014,
+        19015,
+        19016,
+        19017,
+        19018,
+        19019
+      ],
+      "aborted_tournament_development": [
+        19100,
+        19101,
+        19102
+      ],
+      "acrobot_tournament_confirmation": [
+        20000,
+        20001,
+        20002,
+        20003,
+        20004,
+        20005,
+        20006,
+        20007,
+        20008,
+        20009,
+        20010,
+        20011,
+        20012,
+        20013,
+        20014,
+        20015,
+        20016,
+        20017,
+        20018,
+        20019
+      ],
+      "acrobot_tournament_development": [
+        20100,
+        20101,
+        20102
+      ],
+      "acrobot_tournament_quick": [
+        20200
+      ]
+    },
+    "logical_collisions": {
+      "confirmatory_vs_prior": [],
+      "development_vs_prior": [],
+      "quick_vs_prior": [],
+      "confirmatory_vs_development": [],
+      "confirmatory_vs_quick": [],
+      "development_vs_quick": []
+    },
+    "derived_root_collisions": [],
+    "derived_roots_vs_logical_seeds": [],
+    "unique_derived_root_count": 672,
+    "expected_unique_derived_root_count": 672,
+    "per_logical_seed": {
+      "21000": {
+        "logical_seed": 21000,
+        "engine_master_seed": 260000000000,
+        "environment_adapter_seed_argument": 260000001000,
+        "rng_roots": {
+          "actor_parameter": 260000000000,
+          "actor_action": 260000000001,
+          "selection": 260000010000,
+          "environment_reset_rng": 260000011003,
+          "evaluation_episode": 260001000000,
+          "evaluation_action": 260001000001,
+          "probe_episode_reset": 260002000000,
+          "probe_episode_action": 260003000000
+        }
+      },
+      "21001": {
+        "logical_seed": 21001,
+        "engine_master_seed": 260010000000,
+        "environment_adapter_seed_argument": 260010001000,
+        "rng_roots": {
+          "actor_parameter": 260010000000,
+          "actor_action": 260010000001,
+          "selection": 260010010000,
+          "environment_reset_rng": 260010011003,
+          "evaluation_episode": 260011000000,
+          "evaluation_action": 260011000001,
+          "probe_episode_reset": 260012000000,
+          "probe_episode_action": 260013000000
+        }
+      },
+      "21002": {
+        "logical_seed": 21002,
+        "engine_master_seed": 260020000000,
+        "environment_adapter_seed_argument": 260020001000,
+        "rng_roots": {
+          "actor_parameter": 260020000000,
+          "actor_action": 260020000001,
+          "selection": 260020010000,
+          "environment_reset_rng": 260020011003,
+          "evaluation_episode": 260021000000,
+          "evaluation_action": 260021000001,
+          "probe_episode_reset": 260022000000,
+          "probe_episode_action": 260023000000
+        }
+      },
+      "21003": {
+        "logical_seed": 21003,
+        "engine_master_seed": 260030000000,
+        "environment_adapter_seed_argument": 260030001000,
+        "rng_roots": {
+          "actor_parameter": 260030000000,
+          "actor_action": 260030000001,
+          "selection": 260030010000,
+          "environment_reset_rng": 260030011003,
+          "evaluation_episode": 260031000000,
+          "evaluation_action": 260031000001,
+          "probe_episode_reset": 260032000000,
+          "probe_episode_action": 260033000000
+        }
+      },
+      "21004": {
+        "logical_seed": 21004,
+        "engine_master_seed": 260040000000,
+        "environment_adapter_seed_argument": 260040001000,
+        "rng_roots": {
+          "actor_parameter": 260040000000,
+          "actor_action": 260040000001,
+          "selection": 260040010000,
+          "environment_reset_rng": 260040011003,
+          "evaluation_episode": 260041000000,
+          "evaluation_action": 260041000001,
+          "probe_episode_reset": 260042000000,
+          "probe_episode_action": 260043000000
+        }
+      },
+      "21005": {
+        "logical_seed": 21005,
+        "engine_master_seed": 260050000000,
+        "environment_adapter_seed_argument": 260050001000,
+        "rng_roots": {
+          "actor_parameter": 260050000000,
+          "actor_action": 260050000001,
+          "selection": 260050010000,
+          "environment_reset_rng": 260050011003,
+          "evaluation_episode": 260051000000,
+          "evaluation_action": 260051000001,
+          "probe_episode_reset": 260052000000,
+          "probe_episode_action": 260053000000
+        }
+      },
+      "21006": {
+        "logical_seed": 21006,
+        "engine_master_seed": 260060000000,
+        "environment_adapter_seed_argument": 260060001000,
+        "rng_roots": {
+          "actor_parameter": 260060000000,
+          "actor_action": 260060000001,
+          "selection": 260060010000,
+          "environment_reset_rng": 260060011003,
+          "evaluation_episode": 260061000000,
+          "evaluation_action": 260061000001,
+          "probe_episode_reset": 260062000000,
+          "probe_episode_action": 260063000000
+        }
+      },
+      "21007": {
+        "logical_seed": 21007,
+        "engine_master_seed": 260070000000,
+        "environment_adapter_seed_argument": 260070001000,
+        "rng_roots": {
+          "actor_parameter": 260070000000,
+          "actor_action": 260070000001,
+          "selection": 260070010000,
+          "environment_reset_rng": 260070011003,
+          "evaluation_episode": 260071000000,
+          "evaluation_action": 260071000001,
+          "probe_episode_reset": 260072000000,
+          "probe_episode_action": 260073000000
+        }
+      },
+      "21008": {
+        "logical_seed": 21008,
+        "engine_master_seed": 260080000000,
+        "environment_adapter_seed_argument": 260080001000,
+        "rng_roots": {
+          "actor_parameter": 260080000000,
+          "actor_action": 260080000001,
+          "selection": 260080010000,
+          "environment_reset_rng": 260080011003,
+          "evaluation_episode": 260081000000,
+          "evaluation_action": 260081000001,
+          "probe_episode_reset": 260082000000,
+          "probe_episode_action": 260083000000
+        }
+      },
+      "21009": {
+        "logical_seed": 21009,
+        "engine_master_seed": 260090000000,
+        "environment_adapter_seed_argument": 260090001000,
+        "rng_roots": {
+          "actor_parameter": 260090000000,
+          "actor_action": 260090000001,
+          "selection": 260090010000,
+          "environment_reset_rng": 260090011003,
+          "evaluation_episode": 260091000000,
+          "evaluation_action": 260091000001,
+          "probe_episode_reset": 260092000000,
+          "probe_episode_action": 260093000000
+        }
+      },
+      "21010": {
+        "logical_seed": 21010,
+        "engine_master_seed": 260100000000,
+        "environment_adapter_seed_argument": 260100001000,
+        "rng_roots": {
+          "actor_parameter": 260100000000,
+          "actor_action": 260100000001,
+          "selection": 260100010000,
+          "environment_reset_rng": 260100011003,
+          "evaluation_episode": 260101000000,
+          "evaluation_action": 260101000001,
+          "probe_episode_reset": 260102000000,
+          "probe_episode_action": 260103000000
+        }
+      },
+      "21011": {
+        "logical_seed": 21011,
+        "engine_master_seed": 260110000000,
+        "environment_adapter_seed_argument": 260110001000,
+        "rng_roots": {
+          "actor_parameter": 260110000000,
+          "actor_action": 260110000001,
+          "selection": 260110010000,
+          "environment_reset_rng": 260110011003,
+          "evaluation_episode": 260111000000,
+          "evaluation_action": 260111000001,
+          "probe_episode_reset": 260112000000,
+          "probe_episode_action": 260113000000
+        }
+      },
+      "21012": {
+        "logical_seed": 21012,
+        "engine_master_seed": 260120000000,
+        "environment_adapter_seed_argument": 260120001000,
+        "rng_roots": {
+          "actor_parameter": 260120000000,
+          "actor_action": 260120000001,
+          "selection": 260120010000,
+          "environment_reset_rng": 260120011003,
+          "evaluation_episode": 260121000000,
+          "evaluation_action": 260121000001,
+          "probe_episode_reset": 260122000000,
+          "probe_episode_action": 260123000000
+        }
+      },
+      "21013": {
+        "logical_seed": 21013,
+        "engine_master_seed": 260130000000,
+        "environment_adapter_seed_argument": 260130001000,
+        "rng_roots": {
+          "actor_parameter": 260130000000,
+          "actor_action": 260130000001,
+          "selection": 260130010000,
+          "environment_reset_rng": 260130011003,
+          "evaluation_episode": 260131000000,
+          "evaluation_action": 260131000001,
+          "probe_episode_reset": 260132000000,
+          "probe_episode_action": 260133000000
+        }
+      },
+      "21014": {
+        "logical_seed": 21014,
+        "engine_master_seed": 260140000000,
+        "environment_adapter_seed_argument": 260140001000,
+        "rng_roots": {
+          "actor_parameter": 260140000000,
+          "actor_action": 260140000001,
+          "selection": 260140010000,
+          "environment_reset_rng": 260140011003,
+          "evaluation_episode": 260141000000,
+          "evaluation_action": 260141000001,
+          "probe_episode_reset": 260142000000,
+          "probe_episode_action": 260143000000
+        }
+      },
+      "21015": {
+        "logical_seed": 21015,
+        "engine_master_seed": 260150000000,
+        "environment_adapter_seed_argument": 260150001000,
+        "rng_roots": {
+          "actor_parameter": 260150000000,
+          "actor_action": 260150000001,
+          "selection": 260150010000,
+          "environment_reset_rng": 260150011003,
+          "evaluation_episode": 260151000000,
+          "evaluation_action": 260151000001,
+          "probe_episode_reset": 260152000000,
+          "probe_episode_action": 260153000000
+        }
+      },
+      "21016": {
+        "logical_seed": 21016,
+        "engine_master_seed": 260160000000,
+        "environment_adapter_seed_argument": 260160001000,
+        "rng_roots": {
+          "actor_parameter": 260160000000,
+          "actor_action": 260160000001,
+          "selection": 260160010000,
+          "environment_reset_rng": 260160011003,
+          "evaluation_episode": 260161000000,
+          "evaluation_action": 260161000001,
+          "probe_episode_reset": 260162000000,
+          "probe_episode_action": 260163000000
+        }
+      },
+      "21017": {
+        "logical_seed": 21017,
+        "engine_master_seed": 260170000000,
+        "environment_adapter_seed_argument": 260170001000,
+        "rng_roots": {
+          "actor_parameter": 260170000000,
+          "actor_action": 260170000001,
+          "selection": 260170010000,
+          "environment_reset_rng": 260170011003,
+          "evaluation_episode": 260171000000,
+          "evaluation_action": 260171000001,
+          "probe_episode_reset": 260172000000,
+          "probe_episode_action": 260173000000
+        }
+      },
+      "21018": {
+        "logical_seed": 21018,
+        "engine_master_seed": 260180000000,
+        "environment_adapter_seed_argument": 260180001000,
+        "rng_roots": {
+          "actor_parameter": 260180000000,
+          "actor_action": 260180000001,
+          "selection": 260180010000,
+          "environment_reset_rng": 260180011003,
+          "evaluation_episode": 260181000000,
+          "evaluation_action": 260181000001,
+          "probe_episode_reset": 260182000000,
+          "probe_episode_action": 260183000000
+        }
+      },
+      "21019": {
+        "logical_seed": 21019,
+        "engine_master_seed": 260190000000,
+        "environment_adapter_seed_argument": 260190001000,
+        "rng_roots": {
+          "actor_parameter": 260190000000,
+          "actor_action": 260190000001,
+          "selection": 260190010000,
+          "environment_reset_rng": 260190011003,
+          "evaluation_episode": 260191000000,
+          "evaluation_action": 260191000001,
+          "probe_episode_reset": 260192000000,
+          "probe_episode_action": 260193000000
+        }
+      },
+      "21020": {
+        "logical_seed": 21020,
+        "engine_master_seed": 260200000000,
+        "environment_adapter_seed_argument": 260200001000,
+        "rng_roots": {
+          "actor_parameter": 260200000000,
+          "actor_action": 260200000001,
+          "selection": 260200010000,
+          "environment_reset_rng": 260200011003,
+          "evaluation_episode": 260201000000,
+          "evaluation_action": 260201000001,
+          "probe_episode_reset": 260202000000,
+          "probe_episode_action": 260203000000
+        }
+      },
+      "21021": {
+        "logical_seed": 21021,
+        "engine_master_seed": 260210000000,
+        "environment_adapter_seed_argument": 260210001000,
+        "rng_roots": {
+          "actor_parameter": 260210000000,
+          "actor_action": 260210000001,
+          "selection": 260210010000,
+          "environment_reset_rng": 260210011003,
+          "evaluation_episode": 260211000000,
+          "evaluation_action": 260211000001,
+          "probe_episode_reset": 260212000000,
+          "probe_episode_action": 260213000000
+        }
+      },
+      "21022": {
+        "logical_seed": 21022,
+        "engine_master_seed": 260220000000,
+        "environment_adapter_seed_argument": 260220001000,
+        "rng_roots": {
+          "actor_parameter": 260220000000,
+          "actor_action": 260220000001,
+          "selection": 260220010000,
+          "environment_reset_rng": 260220011003,
+          "evaluation_episode": 260221000000,
+          "evaluation_action": 260221000001,
+          "probe_episode_reset": 260222000000,
+          "probe_episode_action": 260223000000
+        }
+      },
+      "21023": {
+        "logical_seed": 21023,
+        "engine_master_seed": 260230000000,
+        "environment_adapter_seed_argument": 260230001000,
+        "rng_roots": {
+          "actor_parameter": 260230000000,
+          "actor_action": 260230000001,
+          "selection": 260230010000,
+          "environment_reset_rng": 260230011003,
+          "evaluation_episode": 260231000000,
+          "evaluation_action": 260231000001,
+          "probe_episode_reset": 260232000000,
+          "probe_episode_action": 260233000000
+        }
+      },
+      "21024": {
+        "logical_seed": 21024,
+        "engine_master_seed": 260240000000,
+        "environment_adapter_seed_argument": 260240001000,
+        "rng_roots": {
+          "actor_parameter": 260240000000,
+          "actor_action": 260240000001,
+          "selection": 260240010000,
+          "environment_reset_rng": 260240011003,
+          "evaluation_episode": 260241000000,
+          "evaluation_action": 260241000001,
+          "probe_episode_reset": 260242000000,
+          "probe_episode_action": 260243000000
+        }
+      },
+      "21025": {
+        "logical_seed": 21025,
+        "engine_master_seed": 260250000000,
+        "environment_adapter_seed_argument": 260250001000,
+        "rng_roots": {
+          "actor_parameter": 260250000000,
+          "actor_action": 260250000001,
+          "selection": 260250010000,
+          "environment_reset_rng": 260250011003,
+          "evaluation_episode": 260251000000,
+          "evaluation_action": 260251000001,
+          "probe_episode_reset": 260252000000,
+          "probe_episode_action": 260253000000
+        }
+      },
+      "21026": {
+        "logical_seed": 21026,
+        "engine_master_seed": 260260000000,
+        "environment_adapter_seed_argument": 260260001000,
+        "rng_roots": {
+          "actor_parameter": 260260000000,
+          "actor_action": 260260000001,
+          "selection": 260260010000,
+          "environment_reset_rng": 260260011003,
+          "evaluation_episode": 260261000000,
+          "evaluation_action": 260261000001,
+          "probe_episode_reset": 260262000000,
+          "probe_episode_action": 260263000000
+        }
+      },
+      "21027": {
+        "logical_seed": 21027,
+        "engine_master_seed": 260270000000,
+        "environment_adapter_seed_argument": 260270001000,
+        "rng_roots": {
+          "actor_parameter": 260270000000,
+          "actor_action": 260270000001,
+          "selection": 260270010000,
+          "environment_reset_rng": 260270011003,
+          "evaluation_episode": 260271000000,
+          "evaluation_action": 260271000001,
+          "probe_episode_reset": 260272000000,
+          "probe_episode_action": 260273000000
+        }
+      },
+      "21028": {
+        "logical_seed": 21028,
+        "engine_master_seed": 260280000000,
+        "environment_adapter_seed_argument": 260280001000,
+        "rng_roots": {
+          "actor_parameter": 260280000000,
+          "actor_action": 260280000001,
+          "selection": 260280010000,
+          "environment_reset_rng": 260280011003,
+          "evaluation_episode": 260281000000,
+          "evaluation_action": 260281000001,
+          "probe_episode_reset": 260282000000,
+          "probe_episode_action": 260283000000
+        }
+      },
+      "21029": {
+        "logical_seed": 21029,
+        "engine_master_seed": 260290000000,
+        "environment_adapter_seed_argument": 260290001000,
+        "rng_roots": {
+          "actor_parameter": 260290000000,
+          "actor_action": 260290000001,
+          "selection": 260290010000,
+          "environment_reset_rng": 260290011003,
+          "evaluation_episode": 260291000000,
+          "evaluation_action": 260291000001,
+          "probe_episode_reset": 260292000000,
+          "probe_episode_action": 260293000000
+        }
+      },
+      "21030": {
+        "logical_seed": 21030,
+        "engine_master_seed": 260300000000,
+        "environment_adapter_seed_argument": 260300001000,
+        "rng_roots": {
+          "actor_parameter": 260300000000,
+          "actor_action": 260300000001,
+          "selection": 260300010000,
+          "environment_reset_rng": 260300011003,
+          "evaluation_episode": 260301000000,
+          "evaluation_action": 260301000001,
+          "probe_episode_reset": 260302000000,
+          "probe_episode_action": 260303000000
+        }
+      },
+      "21031": {
+        "logical_seed": 21031,
+        "engine_master_seed": 260310000000,
+        "environment_adapter_seed_argument": 260310001000,
+        "rng_roots": {
+          "actor_parameter": 260310000000,
+          "actor_action": 260310000001,
+          "selection": 260310010000,
+          "environment_reset_rng": 260310011003,
+          "evaluation_episode": 260311000000,
+          "evaluation_action": 260311000001,
+          "probe_episode_reset": 260312000000,
+          "probe_episode_action": 260313000000
+        }
+      },
+      "21032": {
+        "logical_seed": 21032,
+        "engine_master_seed": 260320000000,
+        "environment_adapter_seed_argument": 260320001000,
+        "rng_roots": {
+          "actor_parameter": 260320000000,
+          "actor_action": 260320000001,
+          "selection": 260320010000,
+          "environment_reset_rng": 260320011003,
+          "evaluation_episode": 260321000000,
+          "evaluation_action": 260321000001,
+          "probe_episode_reset": 260322000000,
+          "probe_episode_action": 260323000000
+        }
+      },
+      "21033": {
+        "logical_seed": 21033,
+        "engine_master_seed": 260330000000,
+        "environment_adapter_seed_argument": 260330001000,
+        "rng_roots": {
+          "actor_parameter": 260330000000,
+          "actor_action": 260330000001,
+          "selection": 260330010000,
+          "environment_reset_rng": 260330011003,
+          "evaluation_episode": 260331000000,
+          "evaluation_action": 260331000001,
+          "probe_episode_reset": 260332000000,
+          "probe_episode_action": 260333000000
+        }
+      },
+      "21034": {
+        "logical_seed": 21034,
+        "engine_master_seed": 260340000000,
+        "environment_adapter_seed_argument": 260340001000,
+        "rng_roots": {
+          "actor_parameter": 260340000000,
+          "actor_action": 260340000001,
+          "selection": 260340010000,
+          "environment_reset_rng": 260340011003,
+          "evaluation_episode": 260341000000,
+          "evaluation_action": 260341000001,
+          "probe_episode_reset": 260342000000,
+          "probe_episode_action": 260343000000
+        }
+      },
+      "21035": {
+        "logical_seed": 21035,
+        "engine_master_seed": 260350000000,
+        "environment_adapter_seed_argument": 260350001000,
+        "rng_roots": {
+          "actor_parameter": 260350000000,
+          "actor_action": 260350000001,
+          "selection": 260350010000,
+          "environment_reset_rng": 260350011003,
+          "evaluation_episode": 260351000000,
+          "evaluation_action": 260351000001,
+          "probe_episode_reset": 260352000000,
+          "probe_episode_action": 260353000000
+        }
+      },
+      "21036": {
+        "logical_seed": 21036,
+        "engine_master_seed": 260360000000,
+        "environment_adapter_seed_argument": 260360001000,
+        "rng_roots": {
+          "actor_parameter": 260360000000,
+          "actor_action": 260360000001,
+          "selection": 260360010000,
+          "environment_reset_rng": 260360011003,
+          "evaluation_episode": 260361000000,
+          "evaluation_action": 260361000001,
+          "probe_episode_reset": 260362000000,
+          "probe_episode_action": 260363000000
+        }
+      },
+      "21037": {
+        "logical_seed": 21037,
+        "engine_master_seed": 260370000000,
+        "environment_adapter_seed_argument": 260370001000,
+        "rng_roots": {
+          "actor_parameter": 260370000000,
+          "actor_action": 260370000001,
+          "selection": 260370010000,
+          "environment_reset_rng": 260370011003,
+          "evaluation_episode": 260371000000,
+          "evaluation_action": 260371000001,
+          "probe_episode_reset": 260372000000,
+          "probe_episode_action": 260373000000
+        }
+      },
+      "21038": {
+        "logical_seed": 21038,
+        "engine_master_seed": 260380000000,
+        "environment_adapter_seed_argument": 260380001000,
+        "rng_roots": {
+          "actor_parameter": 260380000000,
+          "actor_action": 260380000001,
+          "selection": 260380010000,
+          "environment_reset_rng": 260380011003,
+          "evaluation_episode": 260381000000,
+          "evaluation_action": 260381000001,
+          "probe_episode_reset": 260382000000,
+          "probe_episode_action": 260383000000
+        }
+      },
+      "21039": {
+        "logical_seed": 21039,
+        "engine_master_seed": 260390000000,
+        "environment_adapter_seed_argument": 260390001000,
+        "rng_roots": {
+          "actor_parameter": 260390000000,
+          "actor_action": 260390000001,
+          "selection": 260390010000,
+          "environment_reset_rng": 260390011003,
+          "evaluation_episode": 260391000000,
+          "evaluation_action": 260391000001,
+          "probe_episode_reset": 260392000000,
+          "probe_episode_action": 260393000000
+        }
+      },
+      "21040": {
+        "logical_seed": 21040,
+        "engine_master_seed": 260400000000,
+        "environment_adapter_seed_argument": 260400001000,
+        "rng_roots": {
+          "actor_parameter": 260400000000,
+          "actor_action": 260400000001,
+          "selection": 260400010000,
+          "environment_reset_rng": 260400011003,
+          "evaluation_episode": 260401000000,
+          "evaluation_action": 260401000001,
+          "probe_episode_reset": 260402000000,
+          "probe_episode_action": 260403000000
+        }
+      },
+      "21041": {
+        "logical_seed": 21041,
+        "engine_master_seed": 260410000000,
+        "environment_adapter_seed_argument": 260410001000,
+        "rng_roots": {
+          "actor_parameter": 260410000000,
+          "actor_action": 260410000001,
+          "selection": 260410010000,
+          "environment_reset_rng": 260410011003,
+          "evaluation_episode": 260411000000,
+          "evaluation_action": 260411000001,
+          "probe_episode_reset": 260412000000,
+          "probe_episode_action": 260413000000
+        }
+      },
+      "21042": {
+        "logical_seed": 21042,
+        "engine_master_seed": 260420000000,
+        "environment_adapter_seed_argument": 260420001000,
+        "rng_roots": {
+          "actor_parameter": 260420000000,
+          "actor_action": 260420000001,
+          "selection": 260420010000,
+          "environment_reset_rng": 260420011003,
+          "evaluation_episode": 260421000000,
+          "evaluation_action": 260421000001,
+          "probe_episode_reset": 260422000000,
+          "probe_episode_action": 260423000000
+        }
+      },
+      "21043": {
+        "logical_seed": 21043,
+        "engine_master_seed": 260430000000,
+        "environment_adapter_seed_argument": 260430001000,
+        "rng_roots": {
+          "actor_parameter": 260430000000,
+          "actor_action": 260430000001,
+          "selection": 260430010000,
+          "environment_reset_rng": 260430011003,
+          "evaluation_episode": 260431000000,
+          "evaluation_action": 260431000001,
+          "probe_episode_reset": 260432000000,
+          "probe_episode_action": 260433000000
+        }
+      },
+      "21044": {
+        "logical_seed": 21044,
+        "engine_master_seed": 260440000000,
+        "environment_adapter_seed_argument": 260440001000,
+        "rng_roots": {
+          "actor_parameter": 260440000000,
+          "actor_action": 260440000001,
+          "selection": 260440010000,
+          "environment_reset_rng": 260440011003,
+          "evaluation_episode": 260441000000,
+          "evaluation_action": 260441000001,
+          "probe_episode_reset": 260442000000,
+          "probe_episode_action": 260443000000
+        }
+      },
+      "21045": {
+        "logical_seed": 21045,
+        "engine_master_seed": 260450000000,
+        "environment_adapter_seed_argument": 260450001000,
+        "rng_roots": {
+          "actor_parameter": 260450000000,
+          "actor_action": 260450000001,
+          "selection": 260450010000,
+          "environment_reset_rng": 260450011003,
+          "evaluation_episode": 260451000000,
+          "evaluation_action": 260451000001,
+          "probe_episode_reset": 260452000000,
+          "probe_episode_action": 260453000000
+        }
+      },
+      "21046": {
+        "logical_seed": 21046,
+        "engine_master_seed": 260460000000,
+        "environment_adapter_seed_argument": 260460001000,
+        "rng_roots": {
+          "actor_parameter": 260460000000,
+          "actor_action": 260460000001,
+          "selection": 260460010000,
+          "environment_reset_rng": 260460011003,
+          "evaluation_episode": 260461000000,
+          "evaluation_action": 260461000001,
+          "probe_episode_reset": 260462000000,
+          "probe_episode_action": 260463000000
+        }
+      },
+      "21047": {
+        "logical_seed": 21047,
+        "engine_master_seed": 260470000000,
+        "environment_adapter_seed_argument": 260470001000,
+        "rng_roots": {
+          "actor_parameter": 260470000000,
+          "actor_action": 260470000001,
+          "selection": 260470010000,
+          "environment_reset_rng": 260470011003,
+          "evaluation_episode": 260471000000,
+          "evaluation_action": 260471000001,
+          "probe_episode_reset": 260472000000,
+          "probe_episode_action": 260473000000
+        }
+      },
+      "21048": {
+        "logical_seed": 21048,
+        "engine_master_seed": 260480000000,
+        "environment_adapter_seed_argument": 260480001000,
+        "rng_roots": {
+          "actor_parameter": 260480000000,
+          "actor_action": 260480000001,
+          "selection": 260480010000,
+          "environment_reset_rng": 260480011003,
+          "evaluation_episode": 260481000000,
+          "evaluation_action": 260481000001,
+          "probe_episode_reset": 260482000000,
+          "probe_episode_action": 260483000000
+        }
+      },
+      "21049": {
+        "logical_seed": 21049,
+        "engine_master_seed": 260490000000,
+        "environment_adapter_seed_argument": 260490001000,
+        "rng_roots": {
+          "actor_parameter": 260490000000,
+          "actor_action": 260490000001,
+          "selection": 260490010000,
+          "environment_reset_rng": 260490011003,
+          "evaluation_episode": 260491000000,
+          "evaluation_action": 260491000001,
+          "probe_episode_reset": 260492000000,
+          "probe_episode_action": 260493000000
+        }
+      },
+      "21050": {
+        "logical_seed": 21050,
+        "engine_master_seed": 260500000000,
+        "environment_adapter_seed_argument": 260500001000,
+        "rng_roots": {
+          "actor_parameter": 260500000000,
+          "actor_action": 260500000001,
+          "selection": 260500010000,
+          "environment_reset_rng": 260500011003,
+          "evaluation_episode": 260501000000,
+          "evaluation_action": 260501000001,
+          "probe_episode_reset": 260502000000,
+          "probe_episode_action": 260503000000
+        }
+      },
+      "21051": {
+        "logical_seed": 21051,
+        "engine_master_seed": 260510000000,
+        "environment_adapter_seed_argument": 260510001000,
+        "rng_roots": {
+          "actor_parameter": 260510000000,
+          "actor_action": 260510000001,
+          "selection": 260510010000,
+          "environment_reset_rng": 260510011003,
+          "evaluation_episode": 260511000000,
+          "evaluation_action": 260511000001,
+          "probe_episode_reset": 260512000000,
+          "probe_episode_action": 260513000000
+        }
+      },
+      "21052": {
+        "logical_seed": 21052,
+        "engine_master_seed": 260520000000,
+        "environment_adapter_seed_argument": 260520001000,
+        "rng_roots": {
+          "actor_parameter": 260520000000,
+          "actor_action": 260520000001,
+          "selection": 260520010000,
+          "environment_reset_rng": 260520011003,
+          "evaluation_episode": 260521000000,
+          "evaluation_action": 260521000001,
+          "probe_episode_reset": 260522000000,
+          "probe_episode_action": 260523000000
+        }
+      },
+      "21053": {
+        "logical_seed": 21053,
+        "engine_master_seed": 260530000000,
+        "environment_adapter_seed_argument": 260530001000,
+        "rng_roots": {
+          "actor_parameter": 260530000000,
+          "actor_action": 260530000001,
+          "selection": 260530010000,
+          "environment_reset_rng": 260530011003,
+          "evaluation_episode": 260531000000,
+          "evaluation_action": 260531000001,
+          "probe_episode_reset": 260532000000,
+          "probe_episode_action": 260533000000
+        }
+      },
+      "21054": {
+        "logical_seed": 21054,
+        "engine_master_seed": 260540000000,
+        "environment_adapter_seed_argument": 260540001000,
+        "rng_roots": {
+          "actor_parameter": 260540000000,
+          "actor_action": 260540000001,
+          "selection": 260540010000,
+          "environment_reset_rng": 260540011003,
+          "evaluation_episode": 260541000000,
+          "evaluation_action": 260541000001,
+          "probe_episode_reset": 260542000000,
+          "probe_episode_action": 260543000000
+        }
+      },
+      "21055": {
+        "logical_seed": 21055,
+        "engine_master_seed": 260550000000,
+        "environment_adapter_seed_argument": 260550001000,
+        "rng_roots": {
+          "actor_parameter": 260550000000,
+          "actor_action": 260550000001,
+          "selection": 260550010000,
+          "environment_reset_rng": 260550011003,
+          "evaluation_episode": 260551000000,
+          "evaluation_action": 260551000001,
+          "probe_episode_reset": 260552000000,
+          "probe_episode_action": 260553000000
+        }
+      },
+      "21056": {
+        "logical_seed": 21056,
+        "engine_master_seed": 260560000000,
+        "environment_adapter_seed_argument": 260560001000,
+        "rng_roots": {
+          "actor_parameter": 260560000000,
+          "actor_action": 260560000001,
+          "selection": 260560010000,
+          "environment_reset_rng": 260560011003,
+          "evaluation_episode": 260561000000,
+          "evaluation_action": 260561000001,
+          "probe_episode_reset": 260562000000,
+          "probe_episode_action": 260563000000
+        }
+      },
+      "21057": {
+        "logical_seed": 21057,
+        "engine_master_seed": 260570000000,
+        "environment_adapter_seed_argument": 260570001000,
+        "rng_roots": {
+          "actor_parameter": 260570000000,
+          "actor_action": 260570000001,
+          "selection": 260570010000,
+          "environment_reset_rng": 260570011003,
+          "evaluation_episode": 260571000000,
+          "evaluation_action": 260571000001,
+          "probe_episode_reset": 260572000000,
+          "probe_episode_action": 260573000000
+        }
+      },
+      "21058": {
+        "logical_seed": 21058,
+        "engine_master_seed": 260580000000,
+        "environment_adapter_seed_argument": 260580001000,
+        "rng_roots": {
+          "actor_parameter": 260580000000,
+          "actor_action": 260580000001,
+          "selection": 260580010000,
+          "environment_reset_rng": 260580011003,
+          "evaluation_episode": 260581000000,
+          "evaluation_action": 260581000001,
+          "probe_episode_reset": 260582000000,
+          "probe_episode_action": 260583000000
+        }
+      },
+      "21059": {
+        "logical_seed": 21059,
+        "engine_master_seed": 260590000000,
+        "environment_adapter_seed_argument": 260590001000,
+        "rng_roots": {
+          "actor_parameter": 260590000000,
+          "actor_action": 260590000001,
+          "selection": 260590010000,
+          "environment_reset_rng": 260590011003,
+          "evaluation_episode": 260591000000,
+          "evaluation_action": 260591000001,
+          "probe_episode_reset": 260592000000,
+          "probe_episode_action": 260593000000
+        }
+      },
+      "21060": {
+        "logical_seed": 21060,
+        "engine_master_seed": 260600000000,
+        "environment_adapter_seed_argument": 260600001000,
+        "rng_roots": {
+          "actor_parameter": 260600000000,
+          "actor_action": 260600000001,
+          "selection": 260600010000,
+          "environment_reset_rng": 260600011003,
+          "evaluation_episode": 260601000000,
+          "evaluation_action": 260601000001,
+          "probe_episode_reset": 260602000000,
+          "probe_episode_action": 260603000000
+        }
+      },
+      "21061": {
+        "logical_seed": 21061,
+        "engine_master_seed": 260610000000,
+        "environment_adapter_seed_argument": 260610001000,
+        "rng_roots": {
+          "actor_parameter": 260610000000,
+          "actor_action": 260610000001,
+          "selection": 260610010000,
+          "environment_reset_rng": 260610011003,
+          "evaluation_episode": 260611000000,
+          "evaluation_action": 260611000001,
+          "probe_episode_reset": 260612000000,
+          "probe_episode_action": 260613000000
+        }
+      },
+      "21062": {
+        "logical_seed": 21062,
+        "engine_master_seed": 260620000000,
+        "environment_adapter_seed_argument": 260620001000,
+        "rng_roots": {
+          "actor_parameter": 260620000000,
+          "actor_action": 260620000001,
+          "selection": 260620010000,
+          "environment_reset_rng": 260620011003,
+          "evaluation_episode": 260621000000,
+          "evaluation_action": 260621000001,
+          "probe_episode_reset": 260622000000,
+          "probe_episode_action": 260623000000
+        }
+      },
+      "21063": {
+        "logical_seed": 21063,
+        "engine_master_seed": 260630000000,
+        "environment_adapter_seed_argument": 260630001000,
+        "rng_roots": {
+          "actor_parameter": 260630000000,
+          "actor_action": 260630000001,
+          "selection": 260630010000,
+          "environment_reset_rng": 260630011003,
+          "evaluation_episode": 260631000000,
+          "evaluation_action": 260631000001,
+          "probe_episode_reset": 260632000000,
+          "probe_episode_action": 260633000000
+        }
+      },
+      "21064": {
+        "logical_seed": 21064,
+        "engine_master_seed": 260640000000,
+        "environment_adapter_seed_argument": 260640001000,
+        "rng_roots": {
+          "actor_parameter": 260640000000,
+          "actor_action": 260640000001,
+          "selection": 260640010000,
+          "environment_reset_rng": 260640011003,
+          "evaluation_episode": 260641000000,
+          "evaluation_action": 260641000001,
+          "probe_episode_reset": 260642000000,
+          "probe_episode_action": 260643000000
+        }
+      },
+      "21065": {
+        "logical_seed": 21065,
+        "engine_master_seed": 260650000000,
+        "environment_adapter_seed_argument": 260650001000,
+        "rng_roots": {
+          "actor_parameter": 260650000000,
+          "actor_action": 260650000001,
+          "selection": 260650010000,
+          "environment_reset_rng": 260650011003,
+          "evaluation_episode": 260651000000,
+          "evaluation_action": 260651000001,
+          "probe_episode_reset": 260652000000,
+          "probe_episode_action": 260653000000
+        }
+      },
+      "21066": {
+        "logical_seed": 21066,
+        "engine_master_seed": 260660000000,
+        "environment_adapter_seed_argument": 260660001000,
+        "rng_roots": {
+          "actor_parameter": 260660000000,
+          "actor_action": 260660000001,
+          "selection": 260660010000,
+          "environment_reset_rng": 260660011003,
+          "evaluation_episode": 260661000000,
+          "evaluation_action": 260661000001,
+          "probe_episode_reset": 260662000000,
+          "probe_episode_action": 260663000000
+        }
+      },
+      "21067": {
+        "logical_seed": 21067,
+        "engine_master_seed": 260670000000,
+        "environment_adapter_seed_argument": 260670001000,
+        "rng_roots": {
+          "actor_parameter": 260670000000,
+          "actor_action": 260670000001,
+          "selection": 260670010000,
+          "environment_reset_rng": 260670011003,
+          "evaluation_episode": 260671000000,
+          "evaluation_action": 260671000001,
+          "probe_episode_reset": 260672000000,
+          "probe_episode_action": 260673000000
+        }
+      },
+      "21068": {
+        "logical_seed": 21068,
+        "engine_master_seed": 260680000000,
+        "environment_adapter_seed_argument": 260680001000,
+        "rng_roots": {
+          "actor_parameter": 260680000000,
+          "actor_action": 260680000001,
+          "selection": 260680010000,
+          "environment_reset_rng": 260680011003,
+          "evaluation_episode": 260681000000,
+          "evaluation_action": 260681000001,
+          "probe_episode_reset": 260682000000,
+          "probe_episode_action": 260683000000
+        }
+      },
+      "21069": {
+        "logical_seed": 21069,
+        "engine_master_seed": 260690000000,
+        "environment_adapter_seed_argument": 260690001000,
+        "rng_roots": {
+          "actor_parameter": 260690000000,
+          "actor_action": 260690000001,
+          "selection": 260690010000,
+          "environment_reset_rng": 260690011003,
+          "evaluation_episode": 260691000000,
+          "evaluation_action": 260691000001,
+          "probe_episode_reset": 260692000000,
+          "probe_episode_action": 260693000000
+        }
+      },
+      "21070": {
+        "logical_seed": 21070,
+        "engine_master_seed": 260700000000,
+        "environment_adapter_seed_argument": 260700001000,
+        "rng_roots": {
+          "actor_parameter": 260700000000,
+          "actor_action": 260700000001,
+          "selection": 260700010000,
+          "environment_reset_rng": 260700011003,
+          "evaluation_episode": 260701000000,
+          "evaluation_action": 260701000001,
+          "probe_episode_reset": 260702000000,
+          "probe_episode_action": 260703000000
+        }
+      },
+      "21071": {
+        "logical_seed": 21071,
+        "engine_master_seed": 260710000000,
+        "environment_adapter_seed_argument": 260710001000,
+        "rng_roots": {
+          "actor_parameter": 260710000000,
+          "actor_action": 260710000001,
+          "selection": 260710010000,
+          "environment_reset_rng": 260710011003,
+          "evaluation_episode": 260711000000,
+          "evaluation_action": 260711000001,
+          "probe_episode_reset": 260712000000,
+          "probe_episode_action": 260713000000
+        }
+      },
+      "21072": {
+        "logical_seed": 21072,
+        "engine_master_seed": 260720000000,
+        "environment_adapter_seed_argument": 260720001000,
+        "rng_roots": {
+          "actor_parameter": 260720000000,
+          "actor_action": 260720000001,
+          "selection": 260720010000,
+          "environment_reset_rng": 260720011003,
+          "evaluation_episode": 260721000000,
+          "evaluation_action": 260721000001,
+          "probe_episode_reset": 260722000000,
+          "probe_episode_action": 260723000000
+        }
+      },
+      "21073": {
+        "logical_seed": 21073,
+        "engine_master_seed": 260730000000,
+        "environment_adapter_seed_argument": 260730001000,
+        "rng_roots": {
+          "actor_parameter": 260730000000,
+          "actor_action": 260730000001,
+          "selection": 260730010000,
+          "environment_reset_rng": 260730011003,
+          "evaluation_episode": 260731000000,
+          "evaluation_action": 260731000001,
+          "probe_episode_reset": 260732000000,
+          "probe_episode_action": 260733000000
+        }
+      },
+      "21074": {
+        "logical_seed": 21074,
+        "engine_master_seed": 260740000000,
+        "environment_adapter_seed_argument": 260740001000,
+        "rng_roots": {
+          "actor_parameter": 260740000000,
+          "actor_action": 260740000001,
+          "selection": 260740010000,
+          "environment_reset_rng": 260740011003,
+          "evaluation_episode": 260741000000,
+          "evaluation_action": 260741000001,
+          "probe_episode_reset": 260742000000,
+          "probe_episode_action": 260743000000
+        }
+      },
+      "21075": {
+        "logical_seed": 21075,
+        "engine_master_seed": 260750000000,
+        "environment_adapter_seed_argument": 260750001000,
+        "rng_roots": {
+          "actor_parameter": 260750000000,
+          "actor_action": 260750000001,
+          "selection": 260750010000,
+          "environment_reset_rng": 260750011003,
+          "evaluation_episode": 260751000000,
+          "evaluation_action": 260751000001,
+          "probe_episode_reset": 260752000000,
+          "probe_episode_action": 260753000000
+        }
+      },
+      "21076": {
+        "logical_seed": 21076,
+        "engine_master_seed": 260760000000,
+        "environment_adapter_seed_argument": 260760001000,
+        "rng_roots": {
+          "actor_parameter": 260760000000,
+          "actor_action": 260760000001,
+          "selection": 260760010000,
+          "environment_reset_rng": 260760011003,
+          "evaluation_episode": 260761000000,
+          "evaluation_action": 260761000001,
+          "probe_episode_reset": 260762000000,
+          "probe_episode_action": 260763000000
+        }
+      },
+      "21077": {
+        "logical_seed": 21077,
+        "engine_master_seed": 260770000000,
+        "environment_adapter_seed_argument": 260770001000,
+        "rng_roots": {
+          "actor_parameter": 260770000000,
+          "actor_action": 260770000001,
+          "selection": 260770010000,
+          "environment_reset_rng": 260770011003,
+          "evaluation_episode": 260771000000,
+          "evaluation_action": 260771000001,
+          "probe_episode_reset": 260772000000,
+          "probe_episode_action": 260773000000
+        }
+      },
+      "21078": {
+        "logical_seed": 21078,
+        "engine_master_seed": 260780000000,
+        "environment_adapter_seed_argument": 260780001000,
+        "rng_roots": {
+          "actor_parameter": 260780000000,
+          "actor_action": 260780000001,
+          "selection": 260780010000,
+          "environment_reset_rng": 260780011003,
+          "evaluation_episode": 260781000000,
+          "evaluation_action": 260781000001,
+          "probe_episode_reset": 260782000000,
+          "probe_episode_action": 260783000000
+        }
+      },
+      "21079": {
+        "logical_seed": 21079,
+        "engine_master_seed": 260790000000,
+        "environment_adapter_seed_argument": 260790001000,
+        "rng_roots": {
+          "actor_parameter": 260790000000,
+          "actor_action": 260790000001,
+          "selection": 260790010000,
+          "environment_reset_rng": 260790011003,
+          "evaluation_episode": 260791000000,
+          "evaluation_action": 260791000001,
+          "probe_episode_reset": 260792000000,
+          "probe_episode_action": 260793000000
+        }
+      },
+      "21100": {
+        "logical_seed": 21100,
+        "engine_master_seed": 261000000000,
+        "environment_adapter_seed_argument": 261000001000,
+        "rng_roots": {
+          "actor_parameter": 261000000000,
+          "actor_action": 261000000001,
+          "selection": 261000010000,
+          "environment_reset_rng": 261000011003,
+          "evaluation_episode": 261001000000,
+          "evaluation_action": 261001000001,
+          "probe_episode_reset": 261002000000,
+          "probe_episode_action": 261003000000
+        }
+      },
+      "21101": {
+        "logical_seed": 21101,
+        "engine_master_seed": 261010000000,
+        "environment_adapter_seed_argument": 261010001000,
+        "rng_roots": {
+          "actor_parameter": 261010000000,
+          "actor_action": 261010000001,
+          "selection": 261010010000,
+          "environment_reset_rng": 261010011003,
+          "evaluation_episode": 261011000000,
+          "evaluation_action": 261011000001,
+          "probe_episode_reset": 261012000000,
+          "probe_episode_action": 261013000000
+        }
+      },
+      "21102": {
+        "logical_seed": 21102,
+        "engine_master_seed": 261020000000,
+        "environment_adapter_seed_argument": 261020001000,
+        "rng_roots": {
+          "actor_parameter": 261020000000,
+          "actor_action": 261020000001,
+          "selection": 261020010000,
+          "environment_reset_rng": 261020011003,
+          "evaluation_episode": 261021000000,
+          "evaluation_action": 261021000001,
+          "probe_episode_reset": 261022000000,
+          "probe_episode_action": 261023000000
+        }
+      },
+      "21200": {
+        "logical_seed": 21200,
+        "engine_master_seed": 262000000000,
+        "environment_adapter_seed_argument": 262000001000,
+        "rng_roots": {
+          "actor_parameter": 262000000000,
+          "actor_action": 262000000001,
+          "selection": 262000010000,
+          "environment_reset_rng": 262000011003,
+          "evaluation_episode": 262001000000,
+          "evaluation_action": 262001000001,
+          "probe_episode_reset": 262002000000,
+          "probe_episode_action": 262003000000
+        }
+      }
+    },
+    "pairing": "all four arms deliberately reuse roots within logical seed",
+    "collision_free_episode_seed_encoding": {
+      "passed": true,
+      "probe_reset_formula": "((logical_seed*512+sweep_ordinal-1)*8+task_id)*20+episode",
+      "probe_sweep_slots_per_seed": 512,
+      "probe_coordinate_block_per_seed": 81920,
+      "maximum_registered_probe_reset_seed": 1736785919,
+      "evaluation_reset_namespace_base": 1800000000,
+      "probe_action_namespace_base": 3000000000000000000,
+      "evaluation_action_namespace_base": 4000000000000000000,
+      "coordinate_ranges_disjoint": true
+    }
+  },
+  "source_sha256": {
+    "frontier_rl/examples/run_acrobot_procurl_selection.py": "fee57b1a14bbf00efa4ac8920904cd015bed50f2e85ddb7ab933ef0df095da91",
+    "frontier_rl/examples/analyze_acrobot_procurl_selection.py": "91586dea14637cffec426e9dbf832bc66b36468a0af8e779eabe11e71d9f538e",
+    "frontier_rl/examples/build_acrobot_procurl_selection_lock.py": "1e4f07269ccfb1823d81d5921030498ddd0ba1daa4bc8f10c397b68f38c2e9a8",
+    "frontier_rl/examples/verify_acrobot_procurl_selection_portable.py": "208518a1acea52034cb7a39e7f32e654f1bc9260f01e225cd0142f1a6a954ef6",
+    "frontier_rl/examples/test_run_acrobot_procurl_selection.py": "18d3bf0e4336c77717c5803ad243348b6518cba1a42842210c1341d86bd3f50b",
+    "frontier_rl/examples/test_analyze_acrobot_procurl_selection.py": "9a814ed32a21d55b8e966a22d5da1e672558e2771059d14e5da8385ac345bca7",
+    "frontier_rl/examples/test_build_acrobot_procurl_selection_lock.py": "73a46d0cd6943419884b960e29c0b6274a223f7aa18fa4e83419a3da77e97b74",
+    "frontier_rl/examples/test_verify_acrobot_procurl_selection_portable.py": "9bd280c7b22dafee49e4b4778d2c3588257ba622b9610335a1c3781256866c7c",
+    "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_PROTOCOL.md": "fd67e9a78d55ab5076b7de4d67c03d82d69ebd2ab5e54bfd37b5d9c0756007db",
+    "frontier_rl/examples/PROCURL_PRIMARY_SOURCE_PROVENANCE.md": "13d3bffd65fb2dc5e30a88ba11630bb8f5062dee86044144b2959bf2b7c9aea5",
+    "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json": "0e6438d42ddc53b89d774233805c465dc562bb6be5f8ac93ecf8a4d09b5d9af3",
+    "frontier_rl/examples/run_acrobot_neural.py": "7bd8e4c7d2e85e98d0ca769ce6a65c997307cb4c6b65a8b90c00edb862c49cbf",
+    "frontier_rl/examples/test_run_acrobot_neural.py": "32321da9a9358d2dcae3f5c35e30c0f3521a919a8269c03af8c980a2270b5846",
+    "frontier_rl/__init__.py": "1ef143075407ee38e06dbcde7b5711c2c80e82062e1d326682d05be0460ca253",
+    "frontier_rl/adapters/__init__.py": "739f761b058bdd55c8b97a601dd7dfdd7e8b46a77ab091bec6a82158c88414cc",
+    "frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+    "frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+    "frontier_rl/estimators.py": "5d37fd1455dd0ce0466a46b7c0247f0172a066e6da12a86f0b40ad92ac03f6df",
+    "frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+    "frontier_rl/trainer.py": "e7120a3c0b056d3bb5f008b6654c5c52b3ab5930126576f9cc2260db3e05a976"
+  },
+  "v2_dependency_audit": {
+    "passed": true,
+    "v2_lock_relative_path": "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json",
+    "v2_lock_sha256": "0e6438d42ddc53b89d774233805c465dc562bb6be5f8ac93ecf8a4d09b5d9af3",
+    "v2_lock_schema": "curriculum-maxrl/acrobot-curriculum-tournament-lock/v2",
+    "dependency_paths": [
+      "frontier_rl/examples/run_acrobot_neural.py",
+      "frontier_rl/examples/test_run_acrobot_neural.py",
+      "frontier_rl/__init__.py",
+      "frontier_rl/adapters/__init__.py",
+      "frontier_rl/adapters/acrobot_neural.py",
+      "frontier_rl/teacher.py",
+      "frontier_rl/estimators.py",
+      "frontier_rl/interfaces.py",
+      "frontier_rl/trainer.py"
+    ],
+    "live_dependency_sha256": {
+      "frontier_rl/examples/run_acrobot_neural.py": "7bd8e4c7d2e85e98d0ca769ce6a65c997307cb4c6b65a8b90c00edb862c49cbf",
+      "frontier_rl/examples/test_run_acrobot_neural.py": "32321da9a9358d2dcae3f5c35e30c0f3521a919a8269c03af8c980a2270b5846",
+      "frontier_rl/__init__.py": "1ef143075407ee38e06dbcde7b5711c2c80e82062e1d326682d05be0460ca253",
+      "frontier_rl/adapters/__init__.py": "739f761b058bdd55c8b97a601dd7dfdd7e8b46a77ab091bec6a82158c88414cc",
+      "frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+      "frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+      "frontier_rl/estimators.py": "5d37fd1455dd0ce0466a46b7c0247f0172a066e6da12a86f0b40ad92ac03f6df",
+      "frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+      "frontier_rl/trainer.py": "e7120a3c0b056d3bb5f008b6654c5c52b3ab5930126576f9cc2260db3e05a976"
+    },
+    "v2_locked_dependency_sha256": {
+      "frontier_rl/examples/run_acrobot_neural.py": "7bd8e4c7d2e85e98d0ca769ce6a65c997307cb4c6b65a8b90c00edb862c49cbf",
+      "frontier_rl/examples/test_run_acrobot_neural.py": "32321da9a9358d2dcae3f5c35e30c0f3521a919a8269c03af8c980a2270b5846",
+      "frontier_rl/__init__.py": "1ef143075407ee38e06dbcde7b5711c2c80e82062e1d326682d05be0460ca253",
+      "frontier_rl/adapters/__init__.py": "739f761b058bdd55c8b97a601dd7dfdd7e8b46a77ab091bec6a82158c88414cc",
+      "frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+      "frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+      "frontier_rl/estimators.py": "5d37fd1455dd0ce0466a46b7c0247f0172a066e6da12a86f0b40ad92ac03f6df",
+      "frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+      "frontier_rl/trainer.py": "e7120a3c0b056d3bb5f008b6654c5c52b3ab5930126576f9cc2260db3e05a976"
+    },
+    "all_live_dependencies_match_v2": true
+  }
+}

@@ -1,0 +1,1857 @@
+{
+  "schema": "curriculum-maxrl/acrobot-curriculum-tournament-raw/v2",
+  "artifact_state": "complete",
+  "provenance": {
+    "created_utc": "2026-08-08T07:00:39.481313+00:00",
+    "runtime": {
+      "python_implementation": "CPython",
+      "python": "3.12.13",
+      "platform": "macOS-26.5.2-arm64-arm-64bit",
+      "machine": "arm64",
+      "numpy": "2.5.1",
+      "gymnasium": "1.3.0"
+    },
+    "source_lock_relative_path": "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json",
+    "source_lock_sha256": null,
+    "source_lock_enforced": false,
+    "source_sha256": {
+      "frontier_rl/examples/run_acrobot_curriculum_tournament.py": "5cb9ee44c5b73f9ee93c6d18d5d267cb13e3cf0b6f34495623aef7dd3a26e3a2",
+      "frontier_rl/examples/analyze_acrobot_curriculum_tournament.py": "55e41c345f443e15b7be80aa06f34993781982bc4353c3365be6e4a71ac97b0d",
+      "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL.md": "3d02e4c7610cb131bd5de695b530379d8ce5c572106c20c27beb0d03a4a406b8",
+      "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL_V1_ABORTED_PRE_OUTCOME_AUDIT.md": "c40c15e54aaeba7b5042600ae887167fa3df52765b2db064c77d42cdca773725",
+      "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK_V1_ABORTED_PRE_OUTCOME_AUDIT.json": "26be1b6abba05bfb47e8f37ac017daa2a1d35964137b129e66c7053fe9907723",
+      "frontier_rl/examples/test_run_acrobot_curriculum_tournament.py": "3246b6b15e7687eb7b9e5bc24548102e1df38549044cceb23d876ef04f45f2cc",
+      "frontier_rl/examples/test_analyze_acrobot_curriculum_tournament.py": "ff3927af298a5c3fa6cdc95f1a58ac43423be5094cc97ed391e7e427af8d24fd",
+      "frontier_rl/examples/run_acrobot_neural.py": "7bd8e4c7d2e85e98d0ca769ce6a65c997307cb4c6b65a8b90c00edb862c49cbf",
+      "frontier_rl/examples/test_run_acrobot_neural.py": "32321da9a9358d2dcae3f5c35e30c0f3521a919a8269c03af8c980a2270b5846",
+      "frontier_rl/__init__.py": "1ef143075407ee38e06dbcde7b5711c2c80e82062e1d326682d05be0460ca253",
+      "frontier_rl/adapters/__init__.py": "739f761b058bdd55c8b97a601dd7dfdd7e8b46a77ab091bec6a82158c88414cc",
+      "frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+      "frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+      "frontier_rl/estimators.py": "5d37fd1455dd0ce0466a46b7c0247f0172a066e6da12a86f0b40ad92ac03f6df",
+      "frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+      "frontier_rl/trainer.py": "e7120a3c0b056d3bb5f008b6654c5c52b3ab5930126576f9cc2260db3e05a976"
+    },
+    "git_commit": "fb83b0b650de69fe7004e5b22889fe858d721730",
+    "git_status_porcelain": [
+      "M EVIDENCE.md",
+      " M README.md",
+      " M SCHEDULE.md",
+      " M SHARPENING_SYNTHESIS.md",
+      " M curriculum_maxrl/countdown_reviewer_arms/PROVENANCE.md",
+      " M curriculum_maxrl/countdown_reviewer_arms/extract_arm_results.py",
+      " M curriculum_maxrl/countdown_reviewer_arms/reviewer_arms_verdicts.json",
+      " M curriculum_maxrl/data_integrity_check.json",
+      " M curriculum_maxrl/maze_gpu_factorial/PROVENANCE.md",
+      " M curriculum_maxrl/maze_gpu_factorial/WAVE2_VERDICT.md",
+      " M curriculum_maxrl/run_registry.json",
+      " M docs/index.html",
+      " M docs/paper-draft.pdf",
+      " M docs/paper-iclr.pdf",
+      " M frontier_rl/adapters/gym_classic.py",
+      " M frontier_rl/test_framework.py",
+      " M frontier_rl/trainer.py",
+      " M paper/body.tex",
+      " M paper/figures/data/armA_designed_gate_3seed.json",
+      " M paper/figures/data/b_scoreboard_3seed.json",
+      " M paper/figures/data/b_strong_gate_1seed.json",
+      " M paper/figures/data/cell_trajectories.json",
+      " M paper/figures/data/generation_timing.json",
+      " M paper/figures/fig1_utility.pdf",
+      " M paper/figures/fig1_utility.png",
+      " M paper/figures/fig1_utility.py",
+      " M paper/figures/fig7_sharpening.pdf",
+      " M paper/figures/fig7_sharpening.png",
+      " M paper/figures/fig7_sharpening.py",
+      " M paper/figures/fig9_passk.pdf",
+      " M paper/figures/fig9_passk.png",
+      " M paper/figures/fig9_passk.py",
+      " M paper/main.pdf",
+      " M paper/main.tex",
+      " M paper/main_iclr.aux",
+      " M paper/main_iclr.log",
+      " M paper/main_iclr.out",
+      " M paper/main_iclr.pdf",
+      " M paper/main_iclr.tex",
+      " M paper/results/manifest.json",
+      " M reproduce.sh",
+      " M verl_integration/README.md",
+      "?? RL_CURRICULUM_EXPERIMENT_PLAN.md",
+      "?? SMALL_COMPUTE_RESEARCH_PLAN.md",
+      "?? curriculum_maxrl/COUNTDOWN_SFT_OVERLAP.md",
+      "?? curriculum_maxrl/FIXED_BUDGET_N_SWEEP.md",
+      "?? curriculum_maxrl/POSTGUIDANCE_HORA_FACTORIAL.md",
+      "?? curriculum_maxrl/RUN_REGISTRY.md",
+      "?? curriculum_maxrl/analysis/",
+      "?? curriculum_maxrl/audit_countdown_sft_overlap.py",
+      "?? curriculum_maxrl/build_run_registry.py",
+      "?? curriculum_maxrl/countdown_reviewer_arms/METRIC_PROVENANCE.json",
+      "?? curriculum_maxrl/results_fixed_budget_n_sweep.json",
+      "?? curriculum_maxrl/results_postguidance_hora_factorial.json",
+      "?? curriculum_maxrl/run_fixed_budget_n_sweep.py",
+      "?? curriculum_maxrl/run_postguidance_hora_factorial.py",
+      "?? curriculum_maxrl/test_audit_countdown_sft_overlap.py",
+      "?? curriculum_maxrl/test_fixed_budget_n_sweep.py",
+      "?? curriculum_maxrl/test_postguidance_hora_factorial.py",
+      "?? frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json",
+      "?? frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK_V1_ABORTED_PRE_OUTCOME_AUDIT.json",
+      "?? frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL.md",
+      "?? frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL_V1_ABORTED_PRE_OUTCOME_AUDIT.md",
+      "?? frontier_rl/examples/ACROBOT_V3_MECHANISM_AUDIT.md",
+      "?? frontier_rl/examples/acrobot_curriculum_tournament_confirmatory_INVALID_ABORTED_rng_domain_overlap.json",
+      "?? frontier_rl/examples/acrobot_curriculum_tournament_development_INVALID_ABORTED_rng_domain_overlap.json",
+      "?? frontier_rl/examples/acrobot_curriculum_tournament_development_gates_INVALID_ABORTED_rng_domain_overlap.json",
+      "?? frontier_rl/examples/acrobot_v3_mechanism_audit.json",
+      "?? frontier_rl/examples/analyze_acrobot_curriculum_tournament.py",
+      "?? frontier_rl/examples/analyze_acrobot_v3_mechanism.py",
+      "?? frontier_rl/examples/run_acrobot_curriculum_tournament.py",
+      "?? frontier_rl/examples/test_analyze_acrobot_curriculum_tournament.py",
+      "?? frontier_rl/examples/test_analyze_acrobot_v3_mechanism.py",
+      "?? frontier_rl/examples/test_run_acrobot_curriculum_tournament.py",
+      "?? paper/body_iclr.tex",
+      "?? paper/figures/data/fig9_bestk_proxy.json",
+      "?? paper/figures/fig_countdown_core.pdf",
+      "?? paper/figures/fig_countdown_core.png",
+      "?? paper/figures/fig_countdown_core.py",
+      "?? paper/figures/fig_maze_block_analysis.py",
+      "?? paper/figures/fig_maze_block_contrasts.pdf",
+      "?? paper/figures/fig_maze_block_contrasts.png",
+      "?? paper/iclr2027_conference.sty",
+      "?? paper/results/maze_factorial_block_analysis.json",
+      "?? tmp/",
+      "?? verl_integration/hindsight.py",
+      "?? verl_integration/response_goal_rewrite.py",
+      "?? verl_integration/test_response_goal_rewrite.py"
+    ],
+    "seed_collision_audit": {
+      "passed": true,
+      "confirmatory_seeds": [
+        20000,
+        20001,
+        20002,
+        20003,
+        20004,
+        20005,
+        20006,
+        20007,
+        20008,
+        20009,
+        20010,
+        20011,
+        20012,
+        20013,
+        20014,
+        20015,
+        20016,
+        20017,
+        20018,
+        20019
+      ],
+      "development_seeds": [
+        20100,
+        20101,
+        20102
+      ],
+      "quick_seeds": [
+        20200
+      ],
+      "prior_training_seed_blocks": {
+        "legacy_acrobot_core": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "legacy_acrobot_scale": [
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109
+        ],
+        "acrobot_v1_pilot": [
+          10000,
+          10001,
+          10002
+        ],
+        "acrobot_v2_development": [
+          11000,
+          11001,
+          11002
+        ],
+        "acrobot_v3_confirmation": [
+          12000,
+          12001,
+          12002,
+          12003,
+          12004,
+          12005,
+          12006,
+          12007,
+          12008,
+          12009,
+          12010,
+          12011,
+          12012,
+          12013,
+          12014,
+          12015,
+          12016,
+          12017,
+          12018,
+          12019
+        ],
+        "acrobot_hindsight_v4a": [
+          13000,
+          13001,
+          13002
+        ],
+        "acrobot_hindsight_v4b": [
+          14000,
+          14001,
+          14002,
+          14003,
+          14004,
+          14005,
+          14006,
+          14007,
+          14008,
+          14009
+        ],
+        "acrobot_hindsight_v5a": [
+          15000,
+          15001,
+          15002
+        ],
+        "acrobot_hindsight_v5b": [
+          16000,
+          16001,
+          16002,
+          16003,
+          16004,
+          16005,
+          16006,
+          16007,
+          16008,
+          16009,
+          16010,
+          16011,
+          16012,
+          16013,
+          16014,
+          16015,
+          16016,
+          16017,
+          16018,
+          16019
+        ],
+        "mountaincar_v1_development": [
+          17000,
+          17001,
+          17002
+        ],
+        "mountaincar_v1_reserved_confirmation": [
+          18000,
+          18001,
+          18002,
+          18003,
+          18004,
+          18005,
+          18006,
+          18007,
+          18008,
+          18009,
+          18010,
+          18011,
+          18012,
+          18013,
+          18014,
+          18015,
+          18016,
+          18017,
+          18018,
+          18019
+        ],
+        "aborted_tournament_confirmation_rng_overlap": [
+          19000,
+          19001,
+          19002,
+          19003,
+          19004,
+          19005,
+          19006,
+          19007,
+          19008,
+          19009,
+          19010,
+          19011,
+          19012,
+          19013,
+          19014,
+          19015,
+          19016,
+          19017,
+          19018,
+          19019
+        ],
+        "aborted_tournament_development_rng_overlap": [
+          19100,
+          19101,
+          19102
+        ]
+      },
+      "logical_seed_collisions": {
+        "confirmatory_vs_prior": [],
+        "confirmatory_vs_development": [],
+        "confirmatory_vs_quick": [],
+        "development_vs_prior": [],
+        "development_vs_quick": [],
+        "quick_vs_prior": []
+      },
+      "derived_root_collisions": [],
+      "derived_roots_vs_all_logical_training_seeds": [],
+      "scope": "global uniqueness over every registered logical-seed/domain pair; the three arms intentionally reuse one pair's roots as paired CRNs",
+      "mapping": {
+        "engine_master_base": 50000000000,
+        "engine_master_stride": 10000000,
+        "environment_adapter_seed_offset": 1000,
+        "rng_domain_offsets": {
+          "actor_parameter": 0,
+          "actor_action": 1,
+          "teacher": 10000,
+          "environment_reset_rng": 11003,
+          "evaluation_episode": 1000000,
+          "evaluation_action": 1000001
+        },
+        "adapter_internal_reset_rng_rule": "engine master + 1000 adapter argument + 10003 internal offset = engine master + 11003"
+      },
+      "per_logical_seed": {
+        "20000": {
+          "logical_seed": 20000,
+          "engine_master_seed": 250000000000,
+          "environment_adapter_seed_argument": 250000001000,
+          "rng_roots": {
+            "actor_parameter": 250000000000,
+            "actor_action": 250000000001,
+            "teacher": 250000010000,
+            "environment_reset_rng": 250000011003,
+            "evaluation_episode": 250001000000,
+            "evaluation_action": 250001000001
+          }
+        },
+        "20001": {
+          "logical_seed": 20001,
+          "engine_master_seed": 250010000000,
+          "environment_adapter_seed_argument": 250010001000,
+          "rng_roots": {
+            "actor_parameter": 250010000000,
+            "actor_action": 250010000001,
+            "teacher": 250010010000,
+            "environment_reset_rng": 250010011003,
+            "evaluation_episode": 250011000000,
+            "evaluation_action": 250011000001
+          }
+        },
+        "20002": {
+          "logical_seed": 20002,
+          "engine_master_seed": 250020000000,
+          "environment_adapter_seed_argument": 250020001000,
+          "rng_roots": {
+            "actor_parameter": 250020000000,
+            "actor_action": 250020000001,
+            "teacher": 250020010000,
+            "environment_reset_rng": 250020011003,
+            "evaluation_episode": 250021000000,
+            "evaluation_action": 250021000001
+          }
+        },
+        "20003": {
+          "logical_seed": 20003,
+          "engine_master_seed": 250030000000,
+          "environment_adapter_seed_argument": 250030001000,
+          "rng_roots": {
+            "actor_parameter": 250030000000,
+            "actor_action": 250030000001,
+            "teacher": 250030010000,
+            "environment_reset_rng": 250030011003,
+            "evaluation_episode": 250031000000,
+            "evaluation_action": 250031000001
+          }
+        },
+        "20004": {
+          "logical_seed": 20004,
+          "engine_master_seed": 250040000000,
+          "environment_adapter_seed_argument": 250040001000,
+          "rng_roots": {
+            "actor_parameter": 250040000000,
+            "actor_action": 250040000001,
+            "teacher": 250040010000,
+            "environment_reset_rng": 250040011003,
+            "evaluation_episode": 250041000000,
+            "evaluation_action": 250041000001
+          }
+        },
+        "20005": {
+          "logical_seed": 20005,
+          "engine_master_seed": 250050000000,
+          "environment_adapter_seed_argument": 250050001000,
+          "rng_roots": {
+            "actor_parameter": 250050000000,
+            "actor_action": 250050000001,
+            "teacher": 250050010000,
+            "environment_reset_rng": 250050011003,
+            "evaluation_episode": 250051000000,
+            "evaluation_action": 250051000001
+          }
+        },
+        "20006": {
+          "logical_seed": 20006,
+          "engine_master_seed": 250060000000,
+          "environment_adapter_seed_argument": 250060001000,
+          "rng_roots": {
+            "actor_parameter": 250060000000,
+            "actor_action": 250060000001,
+            "teacher": 250060010000,
+            "environment_reset_rng": 250060011003,
+            "evaluation_episode": 250061000000,
+            "evaluation_action": 250061000001
+          }
+        },
+        "20007": {
+          "logical_seed": 20007,
+          "engine_master_seed": 250070000000,
+          "environment_adapter_seed_argument": 250070001000,
+          "rng_roots": {
+            "actor_parameter": 250070000000,
+            "actor_action": 250070000001,
+            "teacher": 250070010000,
+            "environment_reset_rng": 250070011003,
+            "evaluation_episode": 250071000000,
+            "evaluation_action": 250071000001
+          }
+        },
+        "20008": {
+          "logical_seed": 20008,
+          "engine_master_seed": 250080000000,
+          "environment_adapter_seed_argument": 250080001000,
+          "rng_roots": {
+            "actor_parameter": 250080000000,
+            "actor_action": 250080000001,
+            "teacher": 250080010000,
+            "environment_reset_rng": 250080011003,
+            "evaluation_episode": 250081000000,
+            "evaluation_action": 250081000001
+          }
+        },
+        "20009": {
+          "logical_seed": 20009,
+          "engine_master_seed": 250090000000,
+          "environment_adapter_seed_argument": 250090001000,
+          "rng_roots": {
+            "actor_parameter": 250090000000,
+            "actor_action": 250090000001,
+            "teacher": 250090010000,
+            "environment_reset_rng": 250090011003,
+            "evaluation_episode": 250091000000,
+            "evaluation_action": 250091000001
+          }
+        },
+        "20010": {
+          "logical_seed": 20010,
+          "engine_master_seed": 250100000000,
+          "environment_adapter_seed_argument": 250100001000,
+          "rng_roots": {
+            "actor_parameter": 250100000000,
+            "actor_action": 250100000001,
+            "teacher": 250100010000,
+            "environment_reset_rng": 250100011003,
+            "evaluation_episode": 250101000000,
+            "evaluation_action": 250101000001
+          }
+        },
+        "20011": {
+          "logical_seed": 20011,
+          "engine_master_seed": 250110000000,
+          "environment_adapter_seed_argument": 250110001000,
+          "rng_roots": {
+            "actor_parameter": 250110000000,
+            "actor_action": 250110000001,
+            "teacher": 250110010000,
+            "environment_reset_rng": 250110011003,
+            "evaluation_episode": 250111000000,
+            "evaluation_action": 250111000001
+          }
+        },
+        "20012": {
+          "logical_seed": 20012,
+          "engine_master_seed": 250120000000,
+          "environment_adapter_seed_argument": 250120001000,
+          "rng_roots": {
+            "actor_parameter": 250120000000,
+            "actor_action": 250120000001,
+            "teacher": 250120010000,
+            "environment_reset_rng": 250120011003,
+            "evaluation_episode": 250121000000,
+            "evaluation_action": 250121000001
+          }
+        },
+        "20013": {
+          "logical_seed": 20013,
+          "engine_master_seed": 250130000000,
+          "environment_adapter_seed_argument": 250130001000,
+          "rng_roots": {
+            "actor_parameter": 250130000000,
+            "actor_action": 250130000001,
+            "teacher": 250130010000,
+            "environment_reset_rng": 250130011003,
+            "evaluation_episode": 250131000000,
+            "evaluation_action": 250131000001
+          }
+        },
+        "20014": {
+          "logical_seed": 20014,
+          "engine_master_seed": 250140000000,
+          "environment_adapter_seed_argument": 250140001000,
+          "rng_roots": {
+            "actor_parameter": 250140000000,
+            "actor_action": 250140000001,
+            "teacher": 250140010000,
+            "environment_reset_rng": 250140011003,
+            "evaluation_episode": 250141000000,
+            "evaluation_action": 250141000001
+          }
+        },
+        "20015": {
+          "logical_seed": 20015,
+          "engine_master_seed": 250150000000,
+          "environment_adapter_seed_argument": 250150001000,
+          "rng_roots": {
+            "actor_parameter": 250150000000,
+            "actor_action": 250150000001,
+            "teacher": 250150010000,
+            "environment_reset_rng": 250150011003,
+            "evaluation_episode": 250151000000,
+            "evaluation_action": 250151000001
+          }
+        },
+        "20016": {
+          "logical_seed": 20016,
+          "engine_master_seed": 250160000000,
+          "environment_adapter_seed_argument": 250160001000,
+          "rng_roots": {
+            "actor_parameter": 250160000000,
+            "actor_action": 250160000001,
+            "teacher": 250160010000,
+            "environment_reset_rng": 250160011003,
+            "evaluation_episode": 250161000000,
+            "evaluation_action": 250161000001
+          }
+        },
+        "20017": {
+          "logical_seed": 20017,
+          "engine_master_seed": 250170000000,
+          "environment_adapter_seed_argument": 250170001000,
+          "rng_roots": {
+            "actor_parameter": 250170000000,
+            "actor_action": 250170000001,
+            "teacher": 250170010000,
+            "environment_reset_rng": 250170011003,
+            "evaluation_episode": 250171000000,
+            "evaluation_action": 250171000001
+          }
+        },
+        "20018": {
+          "logical_seed": 20018,
+          "engine_master_seed": 250180000000,
+          "environment_adapter_seed_argument": 250180001000,
+          "rng_roots": {
+            "actor_parameter": 250180000000,
+            "actor_action": 250180000001,
+            "teacher": 250180010000,
+            "environment_reset_rng": 250180011003,
+            "evaluation_episode": 250181000000,
+            "evaluation_action": 250181000001
+          }
+        },
+        "20019": {
+          "logical_seed": 20019,
+          "engine_master_seed": 250190000000,
+          "environment_adapter_seed_argument": 250190001000,
+          "rng_roots": {
+            "actor_parameter": 250190000000,
+            "actor_action": 250190000001,
+            "teacher": 250190010000,
+            "environment_reset_rng": 250190011003,
+            "evaluation_episode": 250191000000,
+            "evaluation_action": 250191000001
+          }
+        },
+        "20100": {
+          "logical_seed": 20100,
+          "engine_master_seed": 251000000000,
+          "environment_adapter_seed_argument": 251000001000,
+          "rng_roots": {
+            "actor_parameter": 251000000000,
+            "actor_action": 251000000001,
+            "teacher": 251000010000,
+            "environment_reset_rng": 251000011003,
+            "evaluation_episode": 251001000000,
+            "evaluation_action": 251001000001
+          }
+        },
+        "20101": {
+          "logical_seed": 20101,
+          "engine_master_seed": 251010000000,
+          "environment_adapter_seed_argument": 251010001000,
+          "rng_roots": {
+            "actor_parameter": 251010000000,
+            "actor_action": 251010000001,
+            "teacher": 251010010000,
+            "environment_reset_rng": 251010011003,
+            "evaluation_episode": 251011000000,
+            "evaluation_action": 251011000001
+          }
+        },
+        "20102": {
+          "logical_seed": 20102,
+          "engine_master_seed": 251020000000,
+          "environment_adapter_seed_argument": 251020001000,
+          "rng_roots": {
+            "actor_parameter": 251020000000,
+            "actor_action": 251020000001,
+            "teacher": 251020010000,
+            "environment_reset_rng": 251020011003,
+            "evaluation_episode": 251021000000,
+            "evaluation_action": 251021000001
+          }
+        },
+        "20200": {
+          "logical_seed": 20200,
+          "engine_master_seed": 252000000000,
+          "environment_adapter_seed_argument": 252000001000,
+          "rng_roots": {
+            "actor_parameter": 252000000000,
+            "actor_action": 252000000001,
+            "teacher": 252000010000,
+            "environment_reset_rng": 252000011003,
+            "evaluation_episode": 252001000000,
+            "evaluation_action": 252001000001
+          }
+        }
+      },
+      "unique_derived_root_count": 144,
+      "expected_unique_derived_root_count": 144
+    }
+  },
+  "protocol": {
+    "study": "acrobot_curriculum_tournament",
+    "mode": "quick",
+    "status": "development_only",
+    "protocol_document": "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL.md",
+    "condition_names": [
+      "uniform_shared_h64",
+      "p1mp_shared_h64",
+      "u16_shared_h64"
+    ],
+    "paired_seeds": [
+      20200
+    ],
+    "logical_to_engine_master_seed": {
+      "20200": 252000000000
+    },
+    "thresholds": [
+      -1.5,
+      -1.0,
+      -0.5,
+      0.0,
+      0.25,
+      0.5,
+      0.7,
+      1.0
+    ],
+    "n_rollouts": 16,
+    "transition_budget": 8000,
+    "complete_final_group": true,
+    "eval_interval_transitions": 4000,
+    "eval_n_shared_trajectories": 2,
+    "evaluation_threshold_scoring": "shared nested trajectories reused across all eight thresholds",
+    "evaluation_seed_base": 1000000,
+    "fixed_evaluation_common_random_numbers": true,
+    "rng_domain_contract": {
+      "engine_master_base": 50000000000,
+      "engine_master_stride": 10000000,
+      "environment_adapter_seed_offset": 1000,
+      "rng_domain_offsets": {
+        "actor_parameter": 0,
+        "actor_action": 1,
+        "teacher": 10000,
+        "environment_reset_rng": 11003,
+        "evaluation_episode": 1000000,
+        "evaluation_action": 1000001
+      },
+      "adapter_internal_environment_reset_rng": "master + 1000 adapter seed argument + 10003 internal offset",
+      "pairing": "all three arms intentionally share roots within logical seed; roots are globally unique across logical-seed/domain pairs"
+    },
+    "architecture": "shared_h64_task_blind",
+    "total_parameters": 640,
+    "learning_rate": 0.0003,
+    "optimizer": "plain SGD ascent",
+    "estimator": "practical dropped-group MaxRL",
+    "hindsight_scale": 0.0,
+    "teacher": {
+      "tracking": "discounted Beta Thompson sampling",
+      "decay": 0.7,
+      "floor": 0.1,
+      "gamma": 1.0,
+      "utilities": {
+        "uniform_shared_h64": "constant target-uniform 1/8",
+        "p1mp_shared_h64": "p(1-p)",
+        "u16_shared_h64": "1-(1-p)^16-p"
+      }
+    },
+    "primary": "u16 minus p(1-p) target-uniform transition AUC",
+    "primary_test": "exact two-sided 2^20 paired sign flip",
+    "primary_support": "20,000-resample paired-seed bootstrap interval",
+    "primary_sesoi": 0.01,
+    "primary_decision": "supported iff mean u16-p1mp AUC >= +0.01 and exact two-sided p <= 0.05",
+    "secondary_uniform_tests": "p(1-p)-uniform and u16-uniform; Holm family",
+    "development_gate": null,
+    "raw_only": true
+  },
+  "run_failures": [],
+  "cases": {
+    "uniform_shared_h64": {
+      "config": {
+        "name": "uniform_shared_h64",
+        "stage": "tournament",
+        "sampling": "uniform",
+        "architecture": "shared",
+        "hidden_size": 64,
+        "learning_rate": 0.0003,
+        "hindsight_scale": 0.0,
+        "hindsight_estimator": "maxrl",
+        "gamma": 1.0,
+        "lr_multiplier": null
+      },
+      "sampler": "constant target-uniform 1/8",
+      "summary": {
+        "n_attempted": 1,
+        "n_valid": 1,
+        "n_failed": 0,
+        "means_descriptive_only": {
+          "auc_mean_pass_by_transitions": 0.25,
+          "final_native_success_rate": 0.0,
+          "final_mean_native_return": -500.0,
+          "optimizer_updates": 1.0,
+          "transitions": 9520.0,
+          "realized_coefficient_mass_per_group": 0.5
+        }
+      },
+      "runs": [
+        {
+          "seed": 20200,
+          "numeric_valid": true,
+          "transitions": 9520,
+          "sampled_groups": 2,
+          "rollout_attempts": 32,
+          "optimizer_updates": 1,
+          "reached_optimizer_update_budget": true,
+          "transition_cap_censored": false,
+          "live_groups": 1,
+          "live_applied_updates": 1,
+          "dead_groups": 0,
+          "all_pass_groups": 1,
+          "relabeled_groups": 0,
+          "relabel_candidates": 0,
+          "unscaled_aux_gradient_previews": 0,
+          "zero_gradient_update_attempts": 0,
+          "task_groups": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "task_rollouts": [
+            16,
+            0,
+            16,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "task_successes": [
+            16,
+            0,
+            8,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "task_transitions": [
+            2750,
+            0,
+            6770,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "total_parameters": 640,
+          "active_parameters_per_task": 640,
+          "accounting_valid": true,
+          "verifier_relabel_checks_valid": true,
+          "evaluation_cadence_invariant": true,
+          "wall_seconds": 0.4457083329998568,
+          "training_transitions_per_wall_second": 21359.25962147775,
+          "x_transitions": [
+            0,
+            6770,
+            9520
+          ],
+          "x_optimizer_updates": [
+            0,
+            1,
+            1
+          ],
+          "pass_rate_curve": [
+            [
+              1.0,
+              0.5,
+              0.5,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.5,
+              0.5,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.5,
+              0.5,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "mean_pass_curve": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "hardest_pass_curve": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "evaluation_rng_preserved": [
+            true,
+            true,
+            true
+          ],
+          "native_success_rate_curve": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean_native_return_curve": [
+            -500.0,
+            -500.0,
+            -500.0
+          ],
+          "mean_censored_time_to_goal_curve": [
+            500.0,
+            500.0,
+            500.0
+          ],
+          "mean_policy_entropy_curve": [
+            1.0986122886681091,
+            1.0986086617816486,
+            1.0986086617816486
+          ],
+          "auc_mean_pass_by_transitions": 0.25,
+          "auc_mean_pass_by_optimizer_updates": 0.25,
+          "initial_mean_pass": 0.25,
+          "final_mean_pass": 0.25,
+          "final_hardest_pass": 0.0,
+          "final_native_success_rate": 0.0,
+          "final_mean_native_return": -500.0,
+          "final_mean_censored_time_to_goal": 500.0,
+          "update_diagnostics": [
+            {
+              "optimizer_update": 1,
+              "after_group": 1,
+              "transitions": 6770,
+              "source": "requested_live",
+              "requested_task": 2,
+              "credited_task": 2,
+              "gradient_norm": 8.062852782700354,
+              "update_norm": 0.0024188558348101057,
+              "mean_policy_entropy": 1.0986122886679954
+            }
+          ],
+          "zero_gradient_diagnostics": [],
+          "auxiliary_gradient_diagnostics": [],
+          "group_diagnostics": [
+            {
+              "group": 1,
+              "transition_start": 0,
+              "transition_end": 6770,
+              "n_transitions": 6770,
+              "task_id": 2,
+              "success_count": 8,
+              "regime": "mixed",
+              "teacher_tv_from_uniform": 0.0,
+              "sampled_task_probability": 0.125,
+              "optimizer_updates_after_group": 1,
+              "update_source": "requested_live",
+              "posterior_mean_pass_rates_before_group": [
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5
+              ],
+              "task_probabilities": [
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125
+              ],
+              "realized_practical_maxrl_abs_coefficient_mass": 1.0
+            },
+            {
+              "group": 2,
+              "transition_start": 6770,
+              "transition_end": 9520,
+              "n_transitions": 2750,
+              "task_id": 0,
+              "success_count": 16,
+              "regime": "all_pass",
+              "teacher_tv_from_uniform": 0.0,
+              "sampled_task_probability": 0.125,
+              "optimizer_updates_after_group": 1,
+              "update_source": null,
+              "posterior_mean_pass_rates_before_group": [
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5
+              ],
+              "task_probabilities": [
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125
+              ],
+              "realized_practical_maxrl_abs_coefficient_mass": 0.0
+            }
+          ],
+          "checkpoint_records": [
+            {
+              "checkpoint": 0,
+              "transitions": 0,
+              "sampled_groups": 0,
+              "optimizer_updates": 0,
+              "evaluation_shared_trajectories": 2,
+              "pass_rates": [
+                1.0,
+                0.5,
+                0.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "target_uniform_mean_pass_rate": 0.25,
+              "hardest_pass_rate": 0.0,
+              "native_success_rate": 0.0,
+              "mean_native_return": -500.0,
+              "mean_censored_time_to_goal": 500.0,
+              "mean_policy_entropy": 1.0986122886681091,
+              "training_rng_preserved": true,
+              "evaluation_seed": 252001000000
+            },
+            {
+              "checkpoint": 1,
+              "transitions": 6770,
+              "sampled_groups": 1,
+              "optimizer_updates": 1,
+              "evaluation_shared_trajectories": 2,
+              "pass_rates": [
+                1.0,
+                0.5,
+                0.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "target_uniform_mean_pass_rate": 0.25,
+              "hardest_pass_rate": 0.0,
+              "native_success_rate": 0.0,
+              "mean_native_return": -500.0,
+              "mean_censored_time_to_goal": 500.0,
+              "mean_policy_entropy": 1.0986086617816486,
+              "training_rng_preserved": true,
+              "evaluation_seed": 252001000000
+            },
+            {
+              "checkpoint": 2,
+              "transitions": 9520,
+              "sampled_groups": 2,
+              "optimizer_updates": 1,
+              "evaluation_shared_trajectories": 2,
+              "pass_rates": [
+                1.0,
+                0.5,
+                0.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "target_uniform_mean_pass_rate": 0.25,
+              "hardest_pass_rate": 0.0,
+              "native_success_rate": 0.0,
+              "mean_native_return": -500.0,
+              "mean_censored_time_to_goal": 500.0,
+              "mean_policy_entropy": 1.0986086617816486,
+              "training_rng_preserved": true,
+              "evaluation_seed": 252001000000
+            }
+          ],
+          "x_sampled_groups": [
+            0,
+            1,
+            2
+          ],
+          "realized_coefficient_mass_total": 1.0,
+          "realized_coefficient_mass_per_group": 0.5,
+          "realized_coefficient_mass_per_million_transitions": 105.04201680672269,
+          "nonzero_coefficient_mass_group_fraction": 0.5,
+          "auc_native_success_by_transitions": 0.0,
+          "auc_native_return_by_transitions": -500.0,
+          "auc_mean_pass_by_sampled_groups": 0.25,
+          "sampled_groups_per_million_transitions": 210.08403361344537,
+          "optimizer_updates_per_million_transitions": 105.04201680672269,
+          "logical_seed": 20200,
+          "engine_master_seed": 252000000000,
+          "environment_adapter_seed_argument": 252000001000,
+          "rng_roots": {
+            "actor_parameter": 252000000000,
+            "actor_action": 252000000001,
+            "teacher": 252000010000,
+            "environment_reset_rng": 252000011003,
+            "evaluation_episode": 252001000000,
+            "evaluation_action": 252001000001
+          }
+        }
+      ]
+    },
+    "p1mp_shared_h64": {
+      "config": {
+        "name": "p1mp_shared_h64",
+        "stage": "tournament",
+        "sampling": "p1mp",
+        "architecture": "shared",
+        "hidden_size": 64,
+        "learning_rate": 0.0003,
+        "hindsight_scale": 0.0,
+        "hindsight_estimator": "maxrl",
+        "gamma": 1.0,
+        "lr_multiplier": null
+      },
+      "sampler": "p(1-p)",
+      "summary": {
+        "n_attempted": 1,
+        "n_valid": 1,
+        "n_failed": 0,
+        "means_descriptive_only": {
+          "auc_mean_pass_by_transitions": 0.21043405192396847,
+          "final_native_success_rate": 0.0,
+          "final_mean_native_return": -500.0,
+          "optimizer_updates": 1.0,
+          "transitions": 10785.0,
+          "realized_coefficient_mass_per_group": 0.9375
+        }
+      },
+      "runs": [
+        {
+          "seed": 20200,
+          "numeric_valid": true,
+          "transitions": 10785,
+          "sampled_groups": 2,
+          "rollout_attempts": 32,
+          "optimizer_updates": 1,
+          "reached_optimizer_update_budget": true,
+          "transition_cap_censored": false,
+          "live_groups": 1,
+          "live_applied_updates": 1,
+          "dead_groups": 0,
+          "all_pass_groups": 1,
+          "relabeled_groups": 0,
+          "relabel_candidates": 0,
+          "unscaled_aux_gradient_previews": 0,
+          "zero_gradient_update_attempts": 0,
+          "task_groups": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "task_rollouts": [
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            16,
+            0
+          ],
+          "task_successes": [
+            16,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "task_transitions": [
+            2870,
+            0,
+            0,
+            0,
+            0,
+            0,
+            7915,
+            0
+          ],
+          "total_parameters": 640,
+          "active_parameters_per_task": 640,
+          "accounting_valid": true,
+          "verifier_relabel_checks_valid": true,
+          "evaluation_cadence_invariant": true,
+          "wall_seconds": 0.49697729099989374,
+          "training_transitions_per_wall_second": 21701.192781467165,
+          "x_transitions": [
+            0,
+            7915,
+            10785
+          ],
+          "x_optimizer_updates": [
+            0,
+            1,
+            1
+          ],
+          "pass_rate_curve": [
+            [
+              1.0,
+              0.5,
+              0.5,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.5,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.5,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "mean_pass_curve": [
+            0.25,
+            0.1875,
+            0.1875
+          ],
+          "hardest_pass_curve": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "evaluation_rng_preserved": [
+            true,
+            true,
+            true
+          ],
+          "native_success_rate_curve": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean_native_return_curve": [
+            -500.0,
+            -500.0,
+            -500.0
+          ],
+          "mean_censored_time_to_goal_curve": [
+            500.0,
+            500.0,
+            500.0
+          ],
+          "mean_policy_entropy_curve": [
+            1.0986122886681091,
+            1.0984753208122375,
+            1.0984753208122375
+          ],
+          "auc_mean_pass_by_transitions": 0.21043405192396847,
+          "auc_mean_pass_by_optimizer_updates": 0.21875,
+          "initial_mean_pass": 0.25,
+          "final_mean_pass": 0.1875,
+          "final_hardest_pass": 0.0,
+          "final_native_success_rate": 0.0,
+          "final_mean_native_return": -500.0,
+          "final_mean_censored_time_to_goal": 500.0,
+          "update_diagnostics": [
+            {
+              "optimizer_update": 1,
+              "after_group": 1,
+              "transitions": 7915,
+              "source": "requested_live",
+              "requested_task": 6,
+              "credited_task": 6,
+              "gradient_norm": 51.80014348365565,
+              "update_norm": 0.015540043045096694,
+              "mean_policy_entropy": 1.0986122886679872
+            }
+          ],
+          "zero_gradient_diagnostics": [],
+          "auxiliary_gradient_diagnostics": [],
+          "group_diagnostics": [
+            {
+              "group": 1,
+              "transition_start": 0,
+              "transition_end": 7915,
+              "n_transitions": 7915,
+              "task_id": 6,
+              "success_count": 1,
+              "regime": "mixed",
+              "teacher_tv_from_uniform": 0.22202019023307396,
+              "sampled_task_probability": 0.1796457240709076,
+              "optimizer_updates_after_group": 1,
+              "update_source": "requested_live",
+              "posterior_mean_pass_rates_before_group": [
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5
+              ],
+              "task_probabilities": [
+                0.06908681953222924,
+                0.1747551152393818,
+                0.03868975700467546,
+                0.04962423355783756,
+                0.20700618555007338,
+                0.12057899967218384,
+                0.1796457240709076,
+                0.16061316537271123
+              ],
+              "realized_practical_maxrl_abs_coefficient_mass": 1.875
+            },
+            {
+              "group": 2,
+              "transition_start": 7915,
+              "transition_end": 10785,
+              "n_transitions": 2870,
+              "task_id": 0,
+              "success_count": 16,
+              "regime": "all_pass",
+              "teacher_tv_from_uniform": 0.16961719959105423,
+              "sampled_task_probability": 0.16573483298533984,
+              "optimizer_updates_after_group": 1,
+              "update_source": null,
+              "posterior_mean_pass_rates_before_group": [
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.1111111111111111,
+                0.5
+              ],
+              "task_probabilities": [
+                0.16573483298533984,
+                0.16134307537013884,
+                0.12180948922684137,
+                0.15529734135063478,
+                0.1722300484433753,
+                0.04278898079927969,
+                0.14001190144156547,
+                0.04078433038282471
+              ],
+              "realized_practical_maxrl_abs_coefficient_mass": 0.0
+            }
+          ],
+          "checkpoint_records": [
+            {
+              "checkpoint": 0,
+              "transitions": 0,
+              "sampled_groups": 0,
+              "optimizer_updates": 0,
+              "evaluation_shared_trajectories": 2,
+              "pass_rates": [
+                1.0,
+                0.5,
+                0.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "target_uniform_mean_pass_rate": 0.25,
+              "hardest_pass_rate": 0.0,
+              "native_success_rate": 0.0,
+              "mean_native_return": -500.0,
+              "mean_censored_time_to_goal": 500.0,
+              "mean_policy_entropy": 1.0986122886681091,
+              "training_rng_preserved": true,
+              "evaluation_seed": 252001000000
+            },
+            {
+              "checkpoint": 1,
+              "transitions": 7915,
+              "sampled_groups": 1,
+              "optimizer_updates": 1,
+              "evaluation_shared_trajectories": 2,
+              "pass_rates": [
+                1.0,
+                0.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "target_uniform_mean_pass_rate": 0.1875,
+              "hardest_pass_rate": 0.0,
+              "native_success_rate": 0.0,
+              "mean_native_return": -500.0,
+              "mean_censored_time_to_goal": 500.0,
+              "mean_policy_entropy": 1.0984753208122375,
+              "training_rng_preserved": true,
+              "evaluation_seed": 252001000000
+            },
+            {
+              "checkpoint": 2,
+              "transitions": 10785,
+              "sampled_groups": 2,
+              "optimizer_updates": 1,
+              "evaluation_shared_trajectories": 2,
+              "pass_rates": [
+                1.0,
+                0.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "target_uniform_mean_pass_rate": 0.1875,
+              "hardest_pass_rate": 0.0,
+              "native_success_rate": 0.0,
+              "mean_native_return": -500.0,
+              "mean_censored_time_to_goal": 500.0,
+              "mean_policy_entropy": 1.0984753208122375,
+              "training_rng_preserved": true,
+              "evaluation_seed": 252001000000
+            }
+          ],
+          "x_sampled_groups": [
+            0,
+            1,
+            2
+          ],
+          "realized_coefficient_mass_total": 1.875,
+          "realized_coefficient_mass_per_group": 0.9375,
+          "realized_coefficient_mass_per_million_transitions": 173.85257301808068,
+          "nonzero_coefficient_mass_group_fraction": 0.5,
+          "auc_native_success_by_transitions": 0.0,
+          "auc_native_return_by_transitions": -500.0,
+          "auc_mean_pass_by_sampled_groups": 0.203125,
+          "sampled_groups_per_million_transitions": 185.4427445526194,
+          "optimizer_updates_per_million_transitions": 92.7213722763097,
+          "logical_seed": 20200,
+          "engine_master_seed": 252000000000,
+          "environment_adapter_seed_argument": 252000001000,
+          "rng_roots": {
+            "actor_parameter": 252000000000,
+            "actor_action": 252000000001,
+            "teacher": 252000010000,
+            "environment_reset_rng": 252000011003,
+            "evaluation_episode": 252001000000,
+            "evaluation_action": 252001000001
+          }
+        }
+      ]
+    },
+    "u16_shared_h64": {
+      "config": {
+        "name": "u16_shared_h64",
+        "stage": "tournament",
+        "sampling": "u16",
+        "architecture": "shared",
+        "hidden_size": 64,
+        "learning_rate": 0.0003,
+        "hindsight_scale": 0.0,
+        "hindsight_estimator": "maxrl",
+        "gamma": 1.0,
+        "lr_multiplier": null
+      },
+      "sampler": "1-(1-p)^16-p",
+      "summary": {
+        "n_attempted": 1,
+        "n_valid": 1,
+        "n_failed": 0,
+        "means_descriptive_only": {
+          "auc_mean_pass_by_transitions": 0.20700352862324556,
+          "final_native_success_rate": 0.0,
+          "final_mean_native_return": -500.0,
+          "optimizer_updates": 2.0,
+          "transitions": 12682.0,
+          "realized_coefficient_mass_per_group": 1.1875
+        }
+      },
+      "runs": [
+        {
+          "seed": 20200,
+          "numeric_valid": true,
+          "transitions": 12682,
+          "sampled_groups": 2,
+          "rollout_attempts": 32,
+          "optimizer_updates": 2,
+          "reached_optimizer_update_budget": true,
+          "transition_cap_censored": false,
+          "live_groups": 2,
+          "live_applied_updates": 2,
+          "dead_groups": 0,
+          "all_pass_groups": 0,
+          "relabeled_groups": 0,
+          "relabel_candidates": 0,
+          "unscaled_aux_gradient_previews": 0,
+          "zero_gradient_update_attempts": 0,
+          "task_groups": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "task_rollouts": [
+            0,
+            16,
+            0,
+            0,
+            0,
+            0,
+            16,
+            0
+          ],
+          "task_successes": [
+            0,
+            12,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "task_transitions": [
+            0,
+            4767,
+            0,
+            0,
+            0,
+            0,
+            7915,
+            0
+          ],
+          "total_parameters": 640,
+          "active_parameters_per_task": 640,
+          "accounting_valid": true,
+          "verifier_relabel_checks_valid": true,
+          "evaluation_cadence_invariant": true,
+          "wall_seconds": 0.6122810830001981,
+          "training_transitions_per_wall_second": 20712.709165956538,
+          "x_transitions": [
+            0,
+            7915,
+            12682
+          ],
+          "x_optimizer_updates": [
+            0,
+            1,
+            2
+          ],
+          "pass_rate_curve": [
+            [
+              1.0,
+              0.5,
+              0.5,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.5,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.5,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "mean_pass_curve": [
+            0.25,
+            0.1875,
+            0.1875
+          ],
+          "hardest_pass_curve": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "evaluation_rng_preserved": [
+            true,
+            true,
+            true
+          ],
+          "native_success_rate_curve": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean_native_return_curve": [
+            -500.0,
+            -500.0,
+            -500.0
+          ],
+          "mean_censored_time_to_goal_curve": [
+            500.0,
+            500.0,
+            500.0
+          ],
+          "mean_policy_entropy_curve": [
+            1.0986122886681091,
+            1.0984753208122375,
+            1.0984851215636253
+          ],
+          "auc_mean_pass_by_transitions": 0.20700352862324556,
+          "auc_mean_pass_by_optimizer_updates": 0.203125,
+          "initial_mean_pass": 0.25,
+          "final_mean_pass": 0.1875,
+          "final_hardest_pass": 0.0,
+          "final_native_success_rate": 0.0,
+          "final_mean_native_return": -500.0,
+          "final_mean_censored_time_to_goal": 500.0,
+          "update_diagnostics": [
+            {
+              "optimizer_update": 1,
+              "after_group": 1,
+              "transitions": 7915,
+              "source": "requested_live",
+              "requested_task": 6,
+              "credited_task": 6,
+              "gradient_norm": 51.80014348365565,
+              "update_norm": 0.015540043045096694,
+              "mean_policy_entropy": 1.0986122886679872
+            },
+            {
+              "optimizer_update": 2,
+              "after_group": 2,
+              "transitions": 12682,
+              "source": "requested_live",
+              "requested_task": 1,
+              "credited_task": 1,
+              "gradient_norm": 3.968590933253078,
+              "update_norm": 0.0011905772799759233,
+              "mean_policy_entropy": 1.0984779320498204
+            }
+          ],
+          "zero_gradient_diagnostics": [],
+          "auxiliary_gradient_diagnostics": [],
+          "group_diagnostics": [
+            {
+              "group": 1,
+              "transition_start": 0,
+              "transition_end": 7915,
+              "n_transitions": 7915,
+              "task_id": 6,
+              "success_count": 1,
+              "regime": "mixed",
+              "teacher_tv_from_uniform": 0.23359478504718836,
+              "sampled_task_probability": 0.08861823940824742,
+              "optimizer_updates_after_group": 1,
+              "update_source": "requested_live",
+              "posterior_mean_pass_rates_before_group": [
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5
+              ],
+              "task_probabilities": [
+                0.03177314202477943,
+                0.18412708505368566,
+                0.02101383351978477,
+                0.1374570848201574,
+                0.1411064574884247,
+                0.20322265778698023,
+                0.08861823940824742,
+                0.19268149989794037
+              ],
+              "realized_practical_maxrl_abs_coefficient_mass": 1.875
+            },
+            {
+              "group": 2,
+              "transition_start": 7915,
+              "transition_end": 12682,
+              "n_transitions": 4767,
+              "task_id": 1,
+              "success_count": 12,
+              "regime": "mixed",
+              "teacher_tv_from_uniform": 0.18605788983728444,
+              "sampled_task_probability": 0.17399907020225575,
+              "optimizer_updates_after_group": 2,
+              "update_source": "requested_live",
+              "posterior_mean_pass_rates_before_group": [
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.1111111111111111,
+                0.5
+              ],
+              "task_probabilities": [
+                0.10611579281896659,
+                0.17399907020225575,
+                0.06544309504037152,
+                0.18082424576057154,
+                0.11858152084090101,
+                0.13752827374614604,
+                0.19370630012831117,
+                0.02380170146247648
+              ],
+              "realized_practical_maxrl_abs_coefficient_mass": 0.5
+            }
+          ],
+          "checkpoint_records": [
+            {
+              "checkpoint": 0,
+              "transitions": 0,
+              "sampled_groups": 0,
+              "optimizer_updates": 0,
+              "evaluation_shared_trajectories": 2,
+              "pass_rates": [
+                1.0,
+                0.5,
+                0.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "target_uniform_mean_pass_rate": 0.25,
+              "hardest_pass_rate": 0.0,
+              "native_success_rate": 0.0,
+              "mean_native_return": -500.0,
+              "mean_censored_time_to_goal": 500.0,
+              "mean_policy_entropy": 1.0986122886681091,
+              "training_rng_preserved": true,
+              "evaluation_seed": 252001000000
+            },
+            {
+              "checkpoint": 1,
+              "transitions": 7915,
+              "sampled_groups": 1,
+              "optimizer_updates": 1,
+              "evaluation_shared_trajectories": 2,
+              "pass_rates": [
+                1.0,
+                0.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "target_uniform_mean_pass_rate": 0.1875,
+              "hardest_pass_rate": 0.0,
+              "native_success_rate": 0.0,
+              "mean_native_return": -500.0,
+              "mean_censored_time_to_goal": 500.0,
+              "mean_policy_entropy": 1.0984753208122375,
+              "training_rng_preserved": true,
+              "evaluation_seed": 252001000000
+            },
+            {
+              "checkpoint": 2,
+              "transitions": 12682,
+              "sampled_groups": 2,
+              "optimizer_updates": 2,
+              "evaluation_shared_trajectories": 2,
+              "pass_rates": [
+                1.0,
+                0.5,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "target_uniform_mean_pass_rate": 0.1875,
+              "hardest_pass_rate": 0.0,
+              "native_success_rate": 0.0,
+              "mean_native_return": -500.0,
+              "mean_censored_time_to_goal": 500.0,
+              "mean_policy_entropy": 1.0984851215636253,
+              "training_rng_preserved": true,
+              "evaluation_seed": 252001000000
+            }
+          ],
+          "x_sampled_groups": [
+            0,
+            1,
+            2
+          ],
+          "realized_coefficient_mass_total": 2.375,
+          "realized_coefficient_mass_per_group": 1.1875,
+          "realized_coefficient_mass_per_million_transitions": 187.273300741208,
+          "nonzero_coefficient_mass_group_fraction": 1.0,
+          "auc_native_success_by_transitions": 0.0,
+          "auc_native_return_by_transitions": -500.0,
+          "auc_mean_pass_by_sampled_groups": 0.203125,
+          "sampled_groups_per_million_transitions": 157.70383220312254,
+          "optimizer_updates_per_million_transitions": 157.70383220312254,
+          "logical_seed": 20200,
+          "engine_master_seed": 252000000000,
+          "environment_adapter_seed_argument": 252000001000,
+          "rng_roots": {
+            "actor_parameter": 252000000000,
+            "actor_action": 252000000001,
+            "teacher": 252000010000,
+            "environment_reset_rng": 252000011003,
+            "evaluation_episode": 252001000000,
+            "evaluation_action": 252001000001
+          }
+        }
+      ]
+    }
+  }
+}

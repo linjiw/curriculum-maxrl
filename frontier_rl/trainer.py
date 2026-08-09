@@ -18,7 +18,12 @@ from typing import Callable, Optional
 
 import numpy as np
 
-from frontier_rl.estimators import grpo_weights, maxrl_weights, rloo_weights
+from frontier_rl.estimators import (
+    grpo_weights,
+    maxrl_success_weights,
+    maxrl_weights,
+    rloo_weights,
+)
 from frontier_rl.interfaces import GroupResult, Policy, TaskSpace
 from frontier_rl.teacher import FrontierTeacher
 
@@ -30,6 +35,10 @@ class TrainerConfig:
     hindsight: bool = True          # dense relabeling of dead groups (F3)
     hindsight_scale: float = 1.0    # natural K=1 group weight; tune down if
                                     # self-imitation entrenches errors
+    hindsight_estimator: Optional[str] = None
+                                    # None matches the live-group estimator;
+                                    # historical controls may request
+                                    # "maxrl" or raw "success_only" weights
     hindsight_gate: bool = False    # utility-gate relabel DESTINATIONS: skip
                                     # relabels to tasks the posterior rates
                                     # p_hat > gate_max_p (u(p)->0 as p->1:
@@ -89,6 +98,32 @@ class FrontierTrainer:
             return rloo_weights(rewards)
         raise ValueError(f"unknown estimator {self.cfg.estimator!r}")
 
+    def _hindsight_weights(self, rewards: np.ndarray) -> np.ndarray:
+        estimator = self.cfg.hindsight_estimator
+        if estimator is None:
+            return self._weights(rewards)
+        if estimator == "maxrl":
+            return maxrl_weights(rewards)
+        if estimator == "success_only":
+            return maxrl_success_weights(rewards)
+        raise ValueError(
+            "hindsight_estimator must be None, 'maxrl', or 'success_only'"
+        )
+
+    @staticmethod
+    def _group_env_steps(group: GroupResult) -> int:
+        """Count paid environment transitions without treating mappings as traces."""
+        if all(not isinstance(traj, dict) for traj in group.trajectories):
+            try:
+                return int(sum(len(traj) for traj in group.trajectories))
+            except TypeError:
+                return 0
+        if group.infos and all(
+                isinstance(info, dict) and "n_steps" in info
+                for info in group.infos):
+            return int(sum(int(info["n_steps"]) for info in group.infos))
+        return 0
+
     def step(self) -> StepStats:
         stats = StepStats()
         rewards_seen = []
@@ -101,17 +136,7 @@ class FrontierTrainer:
             # Sequence trajectories naturally expose episode length.  Mapping
             # trajectories (for example the grid adapter's structured record)
             # do not: counting their keys would be a bogus transition count.
-            if all(not isinstance(traj, dict) for traj in group.trajectories):
-                try:
-                    stats.env_steps += sum(len(traj)
-                                           for traj in group.trajectories)
-                except TypeError:
-                    pass
-            elif group.infos and all(
-                    isinstance(info, dict) and "n_steps" in info
-                    for info in group.infos):
-                stats.env_steps += sum(int(info["n_steps"])
-                                       for info in group.infos)
+            stats.env_steps += self._group_env_steps(group)
 
             # DAPO baseline: redraw fresh tasks until the group is live
             # (0 < K < N), paying for every discarded draw — the trainer
@@ -123,6 +148,7 @@ class FrontierTrainer:
                 task_id = int(self.teacher.sample_tasks(1)[0])
                 group = self.env.rollout_group(task_id, self.cfg.n_rollouts)
                 r = np.asarray(group.rewards, dtype=float)
+                stats.env_steps += self._group_env_steps(group)
                 self.teacher.observe(task_id, r)
                 rewards_seen.append(r.mean())
 
@@ -135,6 +161,7 @@ class FrontierTrainer:
             # The practical centered estimator is zero for both extremes, but
             # only K=0 is a failed group eligible for hindsight.  Treating
             # K=N as dead silently relabels mastered-task successes.
+            k = float(r.sum())
             if k >= len(r):
                 stats.all_pass_groups += 1
                 continue
@@ -158,7 +185,7 @@ class FrontierTrainer:
                 new_task, new_rewards = relabel
                 new_trajs = group.trajectories
             r2 = np.asarray(new_rewards, dtype=float)
-            w2 = self._weights(r2) * self.cfg.hindsight_scale
+            w2 = self._hindsight_weights(r2) * self.cfg.hindsight_scale
             if np.any(w2 != 0):
                 stats.relabeled_groups += 1
                 self.policy.update(int(new_task), new_trajs, w2)

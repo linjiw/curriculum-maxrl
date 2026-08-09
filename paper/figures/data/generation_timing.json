@@ -159,5 +159,5 @@
  },
  "overall_weighted_mean": 0.3117,
  "total_steps": 1188,
- "provenance": "timing_s/gen / timing_s/step from verl in-run telemetry, /tmp/ray session worker logs, GSM8K 2x2 + Countdown runs"
+ "provenance": "timing_s/gen / timing_s/step from external verl session-worker logs, GSM8K 2x2 + Countdown runs"
 }

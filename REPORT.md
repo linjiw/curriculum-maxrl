@@ -1,12 +1,28 @@
 # Curriculum-MaxRL: Experiment Report and Research Assessment
 
-> **Currency note (2026-08-06):** this document is a point-in-time
+> **Currency note (2026-08-09):** this document is a point-in-time
 > snapshot. Claims about the maze estimator effect (H6 family) predate
 > the balanced factorial, which retired the zero-exception form at its
 > registered endpoint; the oracle comparison predates the floor-handicap
 > correction (matched oracle TIES the full stack). The paper
 > (`paper/`, compiled at `docs/paper-draft.pdf`) and
-> `maze_gpu_factorial/FACTORIAL_VERDICT.md` are authoritative.
+> `maze_gpu_factorial/FACTORIAL_VERDICT.md` are authoritative. Since this
+> snapshot, the separately frozen paid-probe attachment completed all 12
+> development and 320/320 confirmation runs. Its registered
+> `u_16-ProCuRL` fixed-paid-AUC contrast was `+.004894`,
+> `t(79)=1.9773`, `p=.05149`, below the `.02` SESOI and unsupported. The
+> probed arms spent about 93.2% of paid transitions on probes; ordinary
+> uniform reached `.65149` AUC versus `.33771`, `.33942`, and `.34261` for
+> the three probed arms. This supports only a cadence-specific probe-cost
+> diagnosis in the actor-only attachment, not inferiority of full PPO
+> ProCuRL. The 1,374,886,097-byte raw ledger remains external under SHA-256
+> `b1f8756c249effab8c77101c8bca73ddf708a5e143c18fe8742fd5712fdd7c12`;
+> the compact artifact contains receipts, and no immutable public
+> pre-execution commit establishes timing. The registry generator emits and
+> checks exactly 562 records, including 441 Acrobot records, and owns the exact
+> totals. All submission-planned Mac experiments are complete; PLR, PAIRED,
+> ACCEL, and full SFL are deferred. The final paper rebuild and public PDF
+> synchronization are complete.
 
 
 *Status: 2026-07-21. All numbers reproduce from this repo; provenance for each

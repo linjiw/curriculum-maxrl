@@ -1,6 +1,6 @@
 # Curriculum-MaxRL external review notes
 
-*Review snapshot: 2026-07-22. This is a routing document, not a result
+*Review snapshot updated 2026-08-09. This is a routing document, not a result
 artifact. When it conflicts with a hash-locked protocol, lock, artifact, or
 independent verification report, the locked evidence chain controls.*
 
@@ -19,14 +19,23 @@ This identity motivates an adaptive task-sampling score. It does **not** prove
 that the resulting teacher maximizes gradient norm, optimization progress, or
 performance in every environment.
 
-The strongest empirical claim is Acrobot V3's narrow result: on one fixed
-eight-threshold `Acrobot-v1` family, a task-agnostic shared H64 actor trained
-with frontier-`u_16` sampling had a paired transition-AUC improvement of
-`+0.0363524` over uniform across 20 seeds (95% paired bootstrap interval
-`[+0.0164536,+0.0553949]`; exact two-sided sign-flip `p=0.00263977`). This
-supports the locally locked decision rule. It does not establish transfer,
-capacity advantage, hindsight efficacy, standard Acrobot return, or general
-neural-control improvement.
+The strongest clean Acrobot result is the fresh fixed-pool V2 tournament. In
+one eight-threshold `Acrobot-v1` family with a shared H64 practical-MaxRL actor
+at `N=16`, `u_16` beat `p(1-p)` by `+.0480336884` target-uniform
+transition-AUC [95% bootstrap CI `.0209366676,.0738485654`], exact sign-flip
+`p=.0033607483`, 15/20 positive pairs; the Holm-controlled `u_16-uniform`
+secondary was also supported. This is a local score-shape result, not a full
+named-method, transfer, or general neural-control result. V3's older positive
+contrast is now historical/descriptive because a later audit found neighboring
+cross-domain RNG-root reuse.
+
+The separately frozen paid-probe attachment completed all 320/320 confirmation
+runs, but its registered `u_16-ProCuRL` fixed-paid-AUC mean was only `+.004894`
+(`t(79)=1.9773`, `p=.05149`), below the `.02` SESOI and unsupported. Probe
+fractions were about `.932`; ordinary-uniform AUC was `.65149`, versus
+`.33771` ProCuRL-env, `.33942` probe-sham, and `.34261` `u_16`. The defensible
+interpretation is probe-cost domination at this one frozen actor-only cadence,
+not inferiority of full PPO ProCuRL or a claim about cheaper probing.
 
 The older ten-seed MountainCar result is a tile-coded local-mechanism study.
 Its positive concentrated-teacher and hindsight contrasts should not be
@@ -36,6 +45,8 @@ conflated with the new neural MountainCar V1R2 study described below.
 
 | study | status | permitted interpretation |
 |---|---|---|
+| Acrobot fixed-pool tournament V2 | 9/9 development and 60/60 confirmation complete; registered primary supported | one-pool score-shape evidence under practical MaxRL; not a full ProCuRL/SFL/PLR/PAIRED/ACCEL comparison |
+| Acrobot paid-probe selection attachment | 12/12 development and 320/320 confirmation complete; registered primary unsupported | probe-cost domination at the frozen actor-only cadence; no full-PPO ProCuRL inferiority claim |
 | Acrobot V4A | stopped after one predeclared feasibility gate failed | valid failed calibration; no V4 hindsight effect |
 | Acrobot V5A | 27/27 complete; all technical/natural-relevance gates passed; fresh `U*=250` | optimizer-matched factorial is feasible and V5B was authorized; no efficacy result |
 | Acrobot V5B | 180/180 complete; raw integrity passed; frozen analyzer exact-reconstruction failure | procedural NO-GO: no outcome, sign, cell ranking, contrast, or hindsight-effect result may be claimed |
@@ -84,6 +95,16 @@ The locks are local source/runtime/configuration records written before their
 corresponding seed blocks. They are machine-checkable but **not externally
 timestamped preregistrations**. Review language such as “registered,”
 “predeclared,” and “sealed” with that boundary in mind.
+
+For the paid-probe attachment, the compact repository retains receipts and a
+content boundary; the 1,374,886,097-byte raw ledger remains external with
+SHA-256
+`b1f8756c249effab8c77101c8bca73ddf708a5e143c18fe8742fd5712fdd7c12`.
+There is no immutable public pre-execution commit. The registry generator emits
+and checks exactly 562 records, including 441 Acrobot records, and owns the exact
+totals. All Mac experiments required for this submission are complete; PLR,
+PAIRED, ACCEL, and full SFL are deferred. The final paper rebuild and public
+PDF synchronization are complete.
 
 At reviewed snapshot `2dbda4e`, the listed source hashes in the V3, V4A, V5A,
 V5B, and neural MountainCar V1R2 locks matched their files. The subsequent

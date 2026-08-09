@@ -192,6 +192,12 @@ class FrontierUNTiltTeacher(FrontierTeacher):
         return (1 - self.floor) * probs + self.floor * unif
 
 
+# Historical launch scripts use ``--teacher advmass`` for the exact
+# practical-MaxRL half-mass score now implemented by FrontierUNTeacher.
+# Preserve that public CLI name without maintaining a second implementation.
+AdvMassTeacher = FrontierUNTeacher
+
+
 TEACHERS = {
     "uniform": UniformTeacher,
     "frontier": FrontierTeacher,

@@ -5,6 +5,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{float}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
 % hypertexnames=false: sequential destination names, fixes the
@@ -22,6 +23,7 @@
 \newenvironment{interp}{\par\vspace{2pt}\noindent\small\textbf{Interpretation.}\itshape}{\par\vspace{4pt}}
 \newcommand{\takeaway}[1]{\par\vspace{3pt}\noindent\fcolorbox{black!20}{black!4}{\parbox{0.96\linewidth}{\small\textbf{Takeaway.} #1}}\vspace{4pt}}
 \newcommand{\passat}[1]{\text{pass@}#1}
+\providecommand{\paperbody}{body_iclr}
 
 % float packing: relax LaTeX's conservative float fractions so figure
 % pages fill and floats share pages with text
@@ -35,16 +37,15 @@
 % let the paragraph builder stretch instead of overflowing
 \emergencystretch=1.5em
 
-\title{\textbf{The Estimator Decides:}\\
-\large What Curricula and Failure Recycling Can and Cannot Do in
-RL with Verifiable Rewards}
+\title{\textbf{Coefficient Activity and Data Selection}\\
+\large in Verifiable-Reward RL}
 \author{Anonymous authors\\ \small Working draft v0.9 --- \today\\
-\small Code, logs, and proofs: \url{https://github.com/linjiw/curriculum-maxrl}}
+\small Code and logs are included in the anonymized supplementary archive.}
 \date{}
 
 \begin{document}
 \maketitle
-% The manuscript body is shared between main.tex (working draft) and
-% main_iclr.tex (submission format). Edit body.tex, never the wrappers.
-\input{body}
+% The compact submission body is shared with the anonymized ICLR wrapper.
+% Override with `\def\paperbody{body}` to compile the extended research record.
+\input{\paperbody}
 \end{document}

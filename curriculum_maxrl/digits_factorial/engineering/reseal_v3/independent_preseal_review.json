@@ -1,0 +1,19 @@
+{
+  "engineering_audit_sha256": "d448a22793dc5a52ae7809dfc7572e3d669bebc5f8ef8d00a9865a0bb16150d1",
+  "remaining_blockers": [],
+  "review_scope": [
+    "safe tensor-only checkpoint loading and exact checkpoint state",
+    "full deterministic learner and optimizer replay",
+    "exact artifact, path, dtype, finite-value, and result-tree validation",
+    "development and confirmation authorization binding",
+    "registered inference and treatment-delivery gates",
+    "thread and worker provenance plus serial-parallel equality",
+    "portable verification and adversarial tests",
+    "seed and cell directory identity replication defense"
+  ],
+  "reviewed_utc": "2026-08-08T18:42:49Z",
+  "reviewer_task": "/root/digits_factorial_impl/digits_final_reviewer",
+  "schema": "curriculum-maxrl/digits-factorial-independent-preseal-review/v1",
+  "source_lock_sha256": "d72b93a29a2e6a096a6acb0611f69fe6df9dcda80256000aed6de5208ef4eb36",
+  "status": "passed"
+}

@@ -55,7 +55,7 @@ Test sweep: 170 passed CPU-only (1 deselected, see fixup 2).
 4. **(Nit)** EVIDENCE.md "dead groups 5.8→3.4 of 8 (maze)" should carry the
    historical/mechanism-open qualifier its own EXPERIMENTS.md audit assigns.
 5. **(Nit)** `acrobot_hindsight_v5b_forensic_verification.json` embeds
-   absolute `/Users/linji/...` paths.
+   absolute machine-specific paths such as `$WORKSPACE/...`.
 
 ## Merge command (for the maintainer)
 

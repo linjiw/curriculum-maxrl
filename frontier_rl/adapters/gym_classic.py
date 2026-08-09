@@ -128,7 +128,7 @@ class MountainCarSpace:
         self.policy = TilePolicy(n_bins_per_dim=[12, 12],
                                  obs_low=[-1.2, -0.07], obs_high=[0.6, 0.07],
                                  n_tasks=n_tasks, n_actions=3, lr=lr, seed=seed,
-                                 share_across_tasks=share_policy_across_tasks)
+                                 shared=share_policy_across_tasks)
         self.rng = np.random.default_rng(seed + 1)
 
     @property
@@ -240,7 +240,7 @@ class CartPoleSurviveSpace:
                                  obs_high=[2.4, 3.0, 0.21, 3.0],
                                  n_tasks=self._n_tasks, n_actions=2,
                                  lr=lr, seed=seed,
-                                 share_across_tasks=share_policy_across_tasks)
+                                 shared=share_policy_across_tasks)
         self.rng = np.random.default_rng(seed + 1)
 
     @property

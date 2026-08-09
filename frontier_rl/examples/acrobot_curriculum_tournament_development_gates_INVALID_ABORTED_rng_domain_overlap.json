@@ -1,0 +1,47 @@
+{
+  "schema": "curriculum-maxrl/acrobot-curriculum-tournament-development-gates/v1",
+  "mode": "development",
+  "all_gates_passed": true,
+  "source_lock_sha256": "26be1b6abba05bfb47e8f37ac017daa2a1d35964137b129e66c7053fe9907723",
+  "gates": {
+    "all_runs_accounting_numeric_verifier_parameter_cadence_valid": true,
+    "all_tasks_visited_pooled_across_arms_and_seeds": true,
+    "p1mp_sampler_exhibits_nonuniform_distribution": true,
+    "u16_sampler_exhibits_nonuniform_distribution": true,
+    "pooled_dead_mixed_all_pass_regimes_observed": true,
+    "native_success_checkpoint_values_vary": true
+  },
+  "diagnostics": {
+    "pooled_task_groups": [
+      25,
+      44,
+      34,
+      36,
+      37,
+      27,
+      27,
+      35
+    ],
+    "observed_group_regimes": [
+      "all_pass",
+      "dead",
+      "mixed"
+    ],
+    "adaptive_max_tv_from_uniform": {
+      "p1mp_shared_h64": 0.36756724103177035,
+      "u16_shared_h64": 0.3457646146244109
+    },
+    "native_success_min": 0.0,
+    "native_success_max": 0.0625
+  },
+  "gate_policy": {
+    "outcome_blind": true,
+    "uses_arm_contrasts": false,
+    "uses_effect_direction": false,
+    "uses_p_values_or_intervals": false,
+    "uses_minimum_effect": false
+  },
+  "raw_artifact_path": "/private/tmp/acrobot_curriculum_tournament_development.json",
+  "raw_artifact_sha256": "3444157dd8ba0376f5c14dbcec0502cee91e4592842cc366f0760df3b93435ed",
+  "source_lock_path": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json"
+}

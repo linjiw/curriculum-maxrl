@@ -1,6 +1,6 @@
 # Experiment schedule & tracking
 
-*Living document — updated as runs complete. GPU times are A10G wall-clock;
+*Living document — current through 2026-08-09. GPU times are A10G wall-clock;
 local Gymnasium studies report serial Mac CPU wall-clock separately.*
 
 > **July 2026 audit.** The GPU E/F entries below are historical and
@@ -18,10 +18,49 @@ local Gymnasium studies report serial Mac CPU wall-clock separately.*
 
 | study | status | completed decision | next allowed action |
 |---|---|---|---|
+| Acrobot fixed-pool curriculum tournament | ✅ V2 complete; registered primary confirmed | all 9 development and 60 confirmation runs valid; target-uniform transition-AUC means: uniform `.6452319465`, `p(1-p)` `.6390719632`, `u_16` `.6871056515`; primary `u_16-p(1-p)=+.0480336884`, CI `[.0209366676,.0738485654]`, exact `p=.0033607483`, 15/20 positive, clearing both frozen filters; Holm secondary `u_16-uniform=+.0418737050` supported and `p(1-p)-uniform=-.0061599834` not supported | preserve the [V2 result](frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_RESULTS.md); do not expand its score-shape claim into a named-method claim |
+| Acrobot paid-probe ProCuRL selection attachment | ✅ 12/12 development and 320/320 confirmation runs complete | registered `u_16-ProCuRL` fixed-paid-AUC mean `+.004894`, `t(79)=1.9773`, `p=.05149`, below the `.02` SESOI: unsupported. Probed-arm paid-transition fractions were about `.932`; ordinary-uniform AUC was `.65149` versus `.33771` ProCuRL-env, `.33942` probe-sham, and `.34261` `u_16` | preserve the [result](frontier_rl/examples/ACROBOT_PROCURL_SELECTION_RESULTS.md); report only probe-cost domination at this frozen refresh cadence; do not claim that full PPO ProCuRL is inferior or extrapolate to a cheaper cadence |
+| Exact-probability Digits factorial | ✅ complete; internally frozen primary not supported | 24/24 fresh paired blocks; interaction `+.01589`, CI `[-.01686,+.04712]`, exact `p=.350`; RLOO reverses its predicted sampler preference and both matched samplers lose to uniform | keep as main-text negative evidence; compact release ships contrasts/receipts plus a 2,904-file manifest, while the 5.08 GB replay payload remains external |
+| Capped-HORA robustness matrix | ✅ 800/800 exploratory runs complete | all 32 deployable adaptive-minus-fixed AUC means are positive; cap 32 cuts mean maximum group size 58.07% for `-.00271` sampler-averaged AUC versus uncapped; coefficient mass does not mediate the gain | appendix/supporting evidence only; no named-method validation or multiplicity-controlled claim |
 | Acrobot V5A | ✅ complete and independently verified | 27/27 runs valid; all learning-outcome-field-blind gates passed; fresh `U*=250`; V5B authorized | preserve immutable V5A evidence |
 | Acrobot V5B | 🛑 180/180 complete; procedural NO-GO | zero run failures and raw integrity passed, but the frozen analyzer failed exact diagnostic reconstruction; no primary result | retain V5B without rescue analysis; review a tolerance-aware verifier and seal fresh V5C seeds |
 | Neural MountainCar V1R2 | 🛑 complete development NO-GO | all 15 runs/reconstruction checks passed, but feasibility failed: 1,932 dead, 474 mixed, 0 all-pass; hardest-goal AUC zero in every run | do not touch seeds `18000..18019`; design fresh V2 adequacy development |
 | UniLab Stewart native V2 | ✅ 33 arm runs across nine seed-level multi-arm replicates complete | raw-mass mechanism and target-correction cost verified; gradient-moment sampler improved ESS/second moment but not AUC (`-.0004` vs uniform) | calibrate/shrink moments on a common charged stream; compare frozen sampler vs online tracker before any confirmation |
+| Maze factorial wave 2 | ✅ fresh-wave result complete | fresh blocks are positive 6/6 under uniform and 6/6 under the frontier sampler (exact sign p=.03125 each); sampler-averaged independent blocks are positive in 12/12 descriptively across both waves; pre-specification is recorded externally but its lock object is absent | keep the cross-wave 12/12 statement descriptive; easy-band localization is suggestive only |
+| Countdown reviewer arms | ✅ all six ARM-A/B runs complete | fixed-code strong gate failed; the faulty-decay under-gated point remains suggestive; higher-dose live-group replay exceeded recycling on both logged meters but cannot separate update dose from update direction; the logged best@16 field is a bootstrap proxy, not standard pass@16 | do not call the gate a validated operating point, a causal bound, or a relabel-specific test; recover task outcomes |
+| GSM8K steering-controlled `g3p` | ⚠ complete but treatment not delivered | minimum dead-sampling criterion passed, but run mean 0.601480 missed the registered `<0.60` gate by 0.00148 | report the interaction as inconclusive by design; do not interpret endpoints causally |
+| Paper/artifact repair | ✅ result integration, final rebuild, public-PDF synchronization, and anonymous release verification complete | the registry generator emits and checks exactly 562 records, including 441 Acrobot records. The ICLR wrapper has 13 total pages; its conclusion ends and references begin on page 9, and the appendix begins on page 10. The content-addressed release is frozen and verified; its containing Git commit is the repository publication record. Tier-0 SFT overlap is 27/128 and the 101-task numeric reanalysis remains blocked | preserve the checked anonymous receipts and release hash; publish the current research branch; do not launch another Mac experiment for this submission |
+| Next GPU program | 🧭 handoff complete; no GPU job launched | [GPU handoff](GPU_EXPERIMENT_HANDOFF.md) ranks estimator-specific maze LR calibration first and makes the dose-matched Countdown control conditional on recovering/rebuilding its missing v2 execution assets; both lanes have disjoint seeds, power targets, closed schemas, outcome-blind gates, and release criteria | implement and independently seal Lane A before any engineering run; launch Lane B only after its asset and 10-GB feasibility gates pass |
+
+Acrobot V2 earned the frozen **P+/U+** interpretation only: score-shape
+evidence in one fixed eight-threshold Acrobot family under one shared H64,
+640-parameter practical-MaxRL learner at `N=16`. It is not a full ProCuRL,
+SFL, PLR, PAIRED, ACCEL, or ALP-GMM comparison; it has no held-out-task
+generalization test or prospective power calculation, and its exact sign-flip
+interpretation assumes paired-sign exchangeability. Source-lock, development
+raw, development-gate, confirmation-raw, and locked-analysis SHA-256 hashes are
+`0e6438d42ddc53b89d774233805c465dc562bb6be5f8ac93ecf8a4d09b5d9af3`,
+`c616912569f4d19e36ea4a8685616a35bef037934e5c8d366ee7bd51bb2c3311`,
+`6dc908e22e874550e0536f1fcd52f2b3a1768d1a89c510275bef7efc2e2baac6`,
+`f533d0b84cdb3f7d3ede4bc4c94aa11e3b0ffc58c8bc7ea1a26491476873b2c6`,
+and `463fa1a01d95922976f09f75b21f6d8f2c6a8d256081ebedfa4ba968a06f356b`.
+These digests bind source, runtime, gate, and artifacts internally, but no
+immutable public pre-execution commit in this checkout establishes their
+timing.
+
+The paid-probe selection attachment completed all 12 development runs and all
+320 confirmation runs. Its registered `u_16-ProCuRL` fixed-paid-AUC contrast
+was `+.004894` (`t(79)=1.9773`, `p=.05149`), below the `.02` SESOI and
+therefore unsupported. About 93.2% of paid transitions in each probed arm were
+probes. Ordinary uniform reached `.65149` fixed-paid AUC, whereas ProCuRL-env,
+probe-sham uniform, and `u_16` reached `.33771`, `.33942`, and `.34261`.
+This establishes probe-cost domination only for this frozen actor-only,
+fixed-pool attachment and refresh cadence; it does not establish that full PPO
+ProCuRL is inferior. The compact artifact includes the manifest and receipts,
+while the 1,374,886,097-byte raw ledger remains external with SHA-256
+`b1f8756c249effab8c77101c8bca73ddf708a5e143c18fe8742fd5712fdd7c12`.
+The source/runtime/gate/artifact hashes bind the execution internally, but no
+immutable public pre-execution commit establishes timing.
 
 V5A's projected 180-run serial runtime was `7.0557400375` hours. Passing V5A
 is authorization evidence only. V5B completed all 180 runs with zero run
@@ -35,37 +74,30 @@ pre-execution locks, not externally timestamped preregistrations. See the
 [V5B verification erratum](frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_VERIFICATION_ERRATUM.md)
 and [forensic report](frontier_rl/examples/acrobot_hindsight_v5b_forensic_verification.json).
 
-## Currently executing (2026-08-05: balanced factorial wave)
+## Completed paper-critical queue (outcomes current 2026-08-08)
 
-**Title decision, committed in advance (fresh-eyes review finding 5):**
-the title "The Estimator Decides" is conditional on wave-2 P-F2. If
-P-F2 confirms (covAUC ordering >=5/6 both samplers on fresh blocks),
-the title stands on that registered result. If P-F2 fails, the title
-becomes the subtitle ("What Curricula and Failure Recycling Can and
-Cannot Do in RL with Verifiable Rewards") — the slogan may not outlive
-the claim it names.
+**Historical title decision, now resolved:** the title "The Estimator
+Decides" was conditioned on wave-2 P-F2. P-F2 met its registered bar under
+both samplers (6/6 each), so that branch permits the title. This does not
+upgrade the easy-band localization, whose block-level interval crosses zero.
 
 
 | # | run | status | purpose |
 |---|---|---|---|
-| FACT-W2 | confirmation factorial wave 2: {maxrl,grpo}×{uniform,frontier_un}× fresh blocks 6–11 | **RUNNING** (`maze_gpu/run_factorial_wave2.sh`, prereg d6aea90 committed pre-launch) | P-F2: the 12/12 exploratory covAUC ordering becomes the registered primary on new blocks; falsification branch: ≤4/6 either sampler → no cross-estimator coverage claim of any kind at neural scale. P-F3: easy-band majority sign test |
+| FACT-W2 | confirmation factorial wave 2: {maxrl,grpo}×{uniform,frontier_un}× fresh blocks 6–11 | **DONE — P-F2 confirmed 6/6 under each sampler** (`maze_gpu/run_factorial_wave2.sh`, prereg d6aea90 committed pre-launch) | Exact sign p=.03125 per sampler. Across waves, all 12 sampler-averaged independent blocks are positive descriptively. P-F3 is only suggestive: 4 positive, 1 tie, 1 negative block average; interval crosses zero. |
 
 
 | # | run | status | purpose |
 |---|---|---|---|
 | FACT | balanced maze factorial {maxrl,grpo}×{uniform,frontier_un}×6 blocks + grpo_mass + grpo_nostd (250 fixed steps) | **DONE — P-F1 FAILED, claim retracted in paper (e27b5d9); P-G0a confirmed; P-G0c failed. Verdict: `maze_gpu/FACTORIAL_VERDICT.md`. Repair pass folding in contention casualties.** | draft-review P0-3: P-F1 prereg, falsification branch committed — and executed |
-| ARM-A/B | designed-gate B3 ×3 + replay control ×3 (Countdown) | **RUNNING** — s1 done; s2 OOMed near end (marker withheld, no step-60 ckpt); s3 in flight; repair pass armed behind the driver lock (`smollm/run_reviewer_arms_repair.sh`) | fixed-code gate validation + dose-matched replay |
-| OTG | E-LLM-2c one_target_per_group ×3 (Countdown; prereg `bdca4aa` P-OTG1/2) | queued behind ARM-B + chained jobs | P0-2 LLM-side test: does the shared-K coupling penalty transfer through verl normalization? |
-| E-LLM-1b | steering-controlled GSM8K (m3s died at step-25 ckpt, node OOM) | chained behind ARM-B completion | decisive LLM-scale cell |
+| ARM-A/B | designed-gate B3 ×3 + live-group replay ×3 (Countdown) | **DONE** | ARM A refuted the strong-gate dial claim; the earlier faulty-decay under-gated point remains descriptive. ARM B used `ppo_epochs=2`, a higher update dose on every live group: it provides a higher-dose alternative improving both logged metrics, but is not a dose-matched direction test or causal bound. |
+| OTG | E-LLM-2c one_target_per_group ×3 (Countdown; prereg `bdca4aa` P-OTG1/2) | **NO LOCALLY EVIDENCED COMPLETION** | Outside the current evidence registry and paper claims. |
+| E-LLM-1b | steering-controlled GSM8K `g3p` | **DONE — treatment-delivery gate missed by 0.00148** | Run mean 0.601480 did not satisfy `<0.60`; interaction inconclusive by the committed branch. |
 
-Seed-0 block interim read (1/6 blocks — NO conclusions): uniform sampler
-maxrl +.024 vs grpo −.130 Δcov8 (easy band −.396, as predicted); teacher
-sampler REVERSES it this block (maxrl −.038 vs grpo −.019) — under the
-u_N teacher, GRPO's coverage loss shrank and MaxRL's went negative.
-If that pattern holds across blocks, P-F1's "both samplers" clause fails
-and the falsification branch executes (claim rescopes from "the
-estimator decides" toward sampler-conditioned). Exactly what the
-factorial exists to decide; wait for 6 blocks.
+The earlier one-block interim read is superseded by the completed six-block
+analysis and is not evidence. The registered coverage-AUC contrast is positive
+in all six fresh blocks under each sampler; the easy-band localization did not
+earn the same claim.
 
 ## New CPU results (2026-08-05, all prereg'd in-script, all in paper)
 
@@ -76,7 +108,11 @@ factorial exists to decide; wait for 6 blocks.
 | schedule-matched + grpo_nostd (Q7), 5 seeds × 2 frozen schedules | no-SD GRPO collapses onto RLOO's coverage profile (.148 vs RLOO .161 vs GRPO .762) — variance normalization is the tail mechanism | `results_schedule_matched.json` |
 | grpo-own-mass teacher (Q6), 5 seeds | GRPO scheduled by its own mass functional does NOT close the gap (5/5) and serves GRPO worse than the u_N teacher (0/5) | `results_grpo_own_mass.json` |
 
-## Previous wave (2026-07-23, standing loop)
+## Historical queue snapshot (2026-07-23)
+
+*The status words in this table are retained as a dated execution record, not
+as current run state. Current GSM8K and paper-critical outcomes are in the
+tables above.*
 
 | # | run | status | purpose |
 |---|---|---|---|
@@ -163,18 +199,28 @@ F3–F4 historical seeds
 └─ margins overlap seed variation → make no ranking claim
 ```
 
-## Next-wave tracking
+## Next-step tracking
+
+**Submission stop rule:** every planned Mac experiment is complete. Work now
+stops at evidence recovery, registry generation, and the final paper/artifact
+rebuild. PLR, PAIRED, ACCEL, and full SFL comparisons are post-submission
+projects, not prerequisites for this draft.
 
 | priority | experiment | est. | prerequisite |
 |---|---|---|---|
-| P1 | **Efficiency eval of F1's long-horizon checkpoint** — does 4× training turn into inference-time speedup at deep levels? | 30 min | F1 |
+| P0 ✅ | **Compact ICLR main-paper rebuild** — coefficient activity as hypothesis generator, mixed positive/negative tests, qualified neural diagnostics | 13-page ICLR PDF; main text fits within 9 pages; exact 562-row registry; public PDF synchronized; anonymous clean-release check passed | preserve the final anonymous receipts and release hash |
+| P0a | **Recover central raw evidence** — 24 wave-2 checkpoint trajectories plus complete Countdown B1/B2 task-level outcomes and seed records | artifact retrieval, not new training | external execution storage; needed for AUC multiverse and standard pass@16 |
+| P0b | **Recover tier-0 clean-subset inputs if they still exist** — frozen SFT/eval manifests plus all 16 per-task outcomes per retained arm/seed, or compatible checkpoints | artifact retrieval, not new training | external execution storage |
+| P0c ✅ | **Fresh Acrobot fixed-pool tournament V2** — practical MaxRL with uniform vs `p(1-p)` vs `u_16`, 20 fresh paired seeds, common nominal transition budget with bounded complete-group overshoot | complete: 9/9 development and 60/60 confirmation runs valid; primary `u_16-p(1-p)=+.0480336884`, CI `[.0209366676,.0738485654]`, exact `p=.0033607483`; frozen +.01 point-estimate and `p≤.05` filters both passed | preserve [result and caveats](frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_RESULTS.md) |
+| P0d ✅ | **Paid-probe ProCuRL selection attachment** — ProCuRL-env, probe-sham uniform, ordinary uniform, and range-matched `u_16`; 80 paired seeds | 320/320 complete; registered primary `+.004894`, `t(79)=1.9773`, `p=.05149`, below `.02` SESOI and unsupported | preserve the narrow cadence-specific probe-cost interpretation; no full-PPO inferiority claim |
+| P1 | **Efficiency eval of F1's long-horizon checkpoint** — does 4× training turn into inference-time speedup at deep levels? | deferred historical branch | retained checkpoint required |
 | P2 ✅ | **Corrected tile-coded MountainCar benchmark** — 10 paired seeds, ≥500k transitions/condition, γ and hindsight ablations, shared/per-bin control | done; results and family-corrected tests above | none |
-| P3 | **Corrected maze factorial** — uniform vs exact `u_N` vs legacy `u_{N+1}` vs learnability at γ=1, followed by a hindsight ablation | GPU | audited training stack |
-| P4 | **Streaming-pool teacher prototype** (parametric density over a continuous difficulty axis, ALP-GMM-style) — unblocks procedural/generative task sources; CPU-validate on a continuous-difficulty variant of grid_reach | CPU | none |
-| P5 | SmolLM2-360M + GSM8K 2×2 via `verl_integration/` | 8-GPU node | **blocked on hardware** |
+| P3 ✅ | **Balanced maze factorial and fresh-wave confirmation** | complete: wave-1 endpoint claim failed; wave-2 coverage-AUC contrast landed 6/6 under each sampler; registration timing is externally recorded, not locally auditable | independent-block analysis checked in |
+| P4 ↪ | **Streaming-pool teacher prototype** (parametric density over a continuous difficulty axis, ALP-GMM-style) | deferred post-submission | requires a separately frozen study; not a submission blocker |
+| P5 | SmolLM2-360M + GSM8K 2×2 plus steering-controlled follow-up via `verl_integration/` | complete; follow-up missed delivery gate | no causal interaction claim; further GPU reruns are deferred |
 | P6 🛑 | **Neural MountainCar capacity-matched development** — 3 seeds × 5 cells, hardest-goal primary | complete NO-GO; no confirmation | fresh V2 adequacy design |
 | P7 🛑 | **Acrobot optimizer-matched hindsight V5B** — 20 seeds × 9 cells, update-matched `U*=250` | 180/180 complete; frozen verifier exact-equality failure makes the primary family a procedural NO-GO | fresh V5C with a prereviewed tolerance-aware verifier |
-| P8 | **UniLab calibrated gradient-moment allocation** — uniform sham calibration vs refreshed calibrated `rho/q`; 32 groups/task at 0 and 60, disjoint 16-group/task audits | 37,209,600 Mac-CPU transitions on development seeds 3–5 | implement the frozen post-V2 protocol and fail-closed mechanism analyzer |
+| P8 ↪ | **UniLab calibrated gradient-moment allocation** — uniform sham calibration vs refreshed calibrated `rho/q` | deferred post-submission | no further Mac execution for this submission |
 
 ## Standing cadence
 

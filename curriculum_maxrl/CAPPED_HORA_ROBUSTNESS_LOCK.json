@@ -1,0 +1,503 @@
+{
+  "claim_boundary": "Synthetic cap/information sensitivity only; does not validate HORA, establish neural RLVR performance, prove mass mediation, or add a confirmed paper contribution.",
+  "config": {
+    "average_n": 16,
+    "checkpoint_every": 2560,
+    "eval_k": 8,
+    "learning_rate": 0.5,
+    "prior_alpha": 1.0,
+    "prior_beta": 1.0,
+    "probe_g0": 4,
+    "reference_group_decay": 0.9,
+    "reference_n": 16,
+    "tasks_per_step": 8,
+    "total_completions": 51200,
+    "uniform_floor": 0.1
+  },
+  "engineering_audit_seeds": [
+    90,
+    91
+  ],
+  "experiment": "capped_hora_skillchain_robustness",
+  "frozen_on": "2026-08-08",
+  "matrix": {
+    "adaptive_allocators": [
+      "hora_hit",
+      "fresh_group_mass_proxy"
+    ],
+    "caps": [
+      24,
+      32,
+      48,
+      "uncapped"
+    ],
+    "cell_count": 50,
+    "cells": [
+      {
+        "allocator": "fixed",
+        "cap": 16,
+        "cell_id": "uniform/fixed_n16",
+        "information_source": null,
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 24,
+        "cell_id": "uniform/hora_hit/same_step/cap_24",
+        "information_source": "same_step",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 24,
+        "cell_id": "uniform/hora_hit/history_plus_probe/cap_24",
+        "information_source": "history_plus_probe",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 24,
+        "cell_id": "uniform/hora_hit/oracle_preupdate/cap_24",
+        "information_source": "oracle_preupdate",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 32,
+        "cell_id": "uniform/hora_hit/same_step/cap_32",
+        "information_source": "same_step",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 32,
+        "cell_id": "uniform/hora_hit/history_plus_probe/cap_32",
+        "information_source": "history_plus_probe",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 32,
+        "cell_id": "uniform/hora_hit/oracle_preupdate/cap_32",
+        "information_source": "oracle_preupdate",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 48,
+        "cell_id": "uniform/hora_hit/same_step/cap_48",
+        "information_source": "same_step",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 48,
+        "cell_id": "uniform/hora_hit/history_plus_probe/cap_48",
+        "information_source": "history_plus_probe",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 48,
+        "cell_id": "uniform/hora_hit/oracle_preupdate/cap_48",
+        "information_source": "oracle_preupdate",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": null,
+        "cell_id": "uniform/hora_hit/same_step/cap_uncapped",
+        "information_source": "same_step",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": null,
+        "cell_id": "uniform/hora_hit/history_plus_probe/cap_uncapped",
+        "information_source": "history_plus_probe",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": null,
+        "cell_id": "uniform/hora_hit/oracle_preupdate/cap_uncapped",
+        "information_source": "oracle_preupdate",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 24,
+        "cell_id": "uniform/fresh_group_mass_proxy/same_step/cap_24",
+        "information_source": "same_step",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 24,
+        "cell_id": "uniform/fresh_group_mass_proxy/history_plus_probe/cap_24",
+        "information_source": "history_plus_probe",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 24,
+        "cell_id": "uniform/fresh_group_mass_proxy/oracle_preupdate/cap_24",
+        "information_source": "oracle_preupdate",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 32,
+        "cell_id": "uniform/fresh_group_mass_proxy/same_step/cap_32",
+        "information_source": "same_step",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 32,
+        "cell_id": "uniform/fresh_group_mass_proxy/history_plus_probe/cap_32",
+        "information_source": "history_plus_probe",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 32,
+        "cell_id": "uniform/fresh_group_mass_proxy/oracle_preupdate/cap_32",
+        "information_source": "oracle_preupdate",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 48,
+        "cell_id": "uniform/fresh_group_mass_proxy/same_step/cap_48",
+        "information_source": "same_step",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 48,
+        "cell_id": "uniform/fresh_group_mass_proxy/history_plus_probe/cap_48",
+        "information_source": "history_plus_probe",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 48,
+        "cell_id": "uniform/fresh_group_mass_proxy/oracle_preupdate/cap_48",
+        "information_source": "oracle_preupdate",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": null,
+        "cell_id": "uniform/fresh_group_mass_proxy/same_step/cap_uncapped",
+        "information_source": "same_step",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": null,
+        "cell_id": "uniform/fresh_group_mass_proxy/history_plus_probe/cap_uncapped",
+        "information_source": "history_plus_probe",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": null,
+        "cell_id": "uniform/fresh_group_mass_proxy/oracle_preupdate/cap_uncapped",
+        "information_source": "oracle_preupdate",
+        "sampler": "uniform"
+      },
+      {
+        "allocator": "fixed",
+        "cap": 16,
+        "cell_id": "u_16/fixed_n16",
+        "information_source": null,
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 24,
+        "cell_id": "u_16/hora_hit/same_step/cap_24",
+        "information_source": "same_step",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 24,
+        "cell_id": "u_16/hora_hit/history_plus_probe/cap_24",
+        "information_source": "history_plus_probe",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 24,
+        "cell_id": "u_16/hora_hit/oracle_preupdate/cap_24",
+        "information_source": "oracle_preupdate",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 32,
+        "cell_id": "u_16/hora_hit/same_step/cap_32",
+        "information_source": "same_step",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 32,
+        "cell_id": "u_16/hora_hit/history_plus_probe/cap_32",
+        "information_source": "history_plus_probe",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 32,
+        "cell_id": "u_16/hora_hit/oracle_preupdate/cap_32",
+        "information_source": "oracle_preupdate",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 48,
+        "cell_id": "u_16/hora_hit/same_step/cap_48",
+        "information_source": "same_step",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 48,
+        "cell_id": "u_16/hora_hit/history_plus_probe/cap_48",
+        "information_source": "history_plus_probe",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": 48,
+        "cell_id": "u_16/hora_hit/oracle_preupdate/cap_48",
+        "information_source": "oracle_preupdate",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": null,
+        "cell_id": "u_16/hora_hit/same_step/cap_uncapped",
+        "information_source": "same_step",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": null,
+        "cell_id": "u_16/hora_hit/history_plus_probe/cap_uncapped",
+        "information_source": "history_plus_probe",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "hora_hit",
+        "cap": null,
+        "cell_id": "u_16/hora_hit/oracle_preupdate/cap_uncapped",
+        "information_source": "oracle_preupdate",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 24,
+        "cell_id": "u_16/fresh_group_mass_proxy/same_step/cap_24",
+        "information_source": "same_step",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 24,
+        "cell_id": "u_16/fresh_group_mass_proxy/history_plus_probe/cap_24",
+        "information_source": "history_plus_probe",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 24,
+        "cell_id": "u_16/fresh_group_mass_proxy/oracle_preupdate/cap_24",
+        "information_source": "oracle_preupdate",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 32,
+        "cell_id": "u_16/fresh_group_mass_proxy/same_step/cap_32",
+        "information_source": "same_step",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 32,
+        "cell_id": "u_16/fresh_group_mass_proxy/history_plus_probe/cap_32",
+        "information_source": "history_plus_probe",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 32,
+        "cell_id": "u_16/fresh_group_mass_proxy/oracle_preupdate/cap_32",
+        "information_source": "oracle_preupdate",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 48,
+        "cell_id": "u_16/fresh_group_mass_proxy/same_step/cap_48",
+        "information_source": "same_step",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 48,
+        "cell_id": "u_16/fresh_group_mass_proxy/history_plus_probe/cap_48",
+        "information_source": "history_plus_probe",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": 48,
+        "cell_id": "u_16/fresh_group_mass_proxy/oracle_preupdate/cap_48",
+        "information_source": "oracle_preupdate",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": null,
+        "cell_id": "u_16/fresh_group_mass_proxy/same_step/cap_uncapped",
+        "information_source": "same_step",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": null,
+        "cell_id": "u_16/fresh_group_mass_proxy/history_plus_probe/cap_uncapped",
+        "information_source": "history_plus_probe",
+        "sampler": "u_16"
+      },
+      {
+        "allocator": "fresh_group_mass_proxy",
+        "cap": null,
+        "cell_id": "u_16/fresh_group_mass_proxy/oracle_preupdate/cap_uncapped",
+        "information_source": "oracle_preupdate",
+        "sampler": "u_16"
+      }
+    ],
+    "fixed_anchor": {
+      "count": 2,
+      "final_group_size": 16
+    },
+    "information_sources": [
+      "same_step",
+      "history_plus_probe",
+      "oracle_preupdate"
+    ],
+    "samplers": [
+      "uniform",
+      "u_16"
+    ],
+    "uncapped_mathematical_maximum": 100
+  },
+  "overlap": {
+    "cells": [
+      "uniform/fixed_n16",
+      "uniform/hora_hit/same_step/cap_uncapped",
+      "uniform/fresh_group_mass_proxy/same_step/cap_uncapped",
+      "u_16/fixed_n16",
+      "u_16/hora_hit/same_step/cap_uncapped",
+      "u_16/fresh_group_mass_proxy/same_step/cap_uncapped"
+    ],
+    "fields": [
+      "steps",
+      "groups",
+      "completions",
+      "probe_completions",
+      "phase_b_completions",
+      "teacher_observed_completions",
+      "phase_a_successes",
+      "phase_b_successes",
+      "sampled_successes",
+      "dead_groups",
+      "mixed_groups",
+      "all_pass_groups",
+      "coefficient_l1_mass",
+      "coefficient_l1_mass_per_completion",
+      "mean_group_size",
+      "minimum_group_size",
+      "maximum_group_size",
+      "group_size_histogram",
+      "requested_task_counts",
+      "normalized_auc_mean_pass",
+      "normalized_auc_pass_at_8",
+      "final_mean_pass",
+      "final_pass_at_8",
+      "checkpoints"
+    ],
+    "logical_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "required_exact_comparisons": 96,
+    "source_result": "curriculum_maxrl/results_postguidance_hora_factorial.json",
+    "source_result_sha256": "302683a86db4a4c16dd3c227804fdaa890144874d3461ea560be5235d28a786d"
+  },
+  "rng_and_tie_rules": {
+    "adaptive_allocation_rng": "none",
+    "behavior_snapshot": "policy, exact pass probabilities, and teacher pseudo-count state are snapshotted before probes",
+    "environment_seed": "logical_seed",
+    "task_sampling": "with replacement",
+    "task_teacher_seed": "logical_seed+1000",
+    "tie_break": "lowest batch position via NumPy first-index argmax",
+    "update_order": "all probes and Phase-B completions use the snapshot; evidence update and one synchronous policy update follow collection",
+    "within_batch_history": "duplicates share the pre-batch task snapshot and add only their own probes"
+  },
+  "runtime": {
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "python_implementation": "CPython"
+  },
+  "schema": "curriculum-maxrl/capped-hora-robustness-lock/v1",
+  "scientific_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "source_sha256": {
+    "curriculum_maxrl/CAPPED_HORA_ROBUSTNESS_PROTOCOL.md": "f206a58ee3bfe81b4f4b34ba18635631c11e85bc4e6e4b722d01e5951204f718",
+    "curriculum_maxrl/analyze_capped_hora_robustness.py": "7d622bad7aca9d6d58e1af37e68952b37316c7c5108e77fa2deae64058c87f11",
+    "curriculum_maxrl/estimators.py": "f8f85a795b2b0c5163b165d86814bbc1ecb072d79a784f0bffe4937896a0b02a",
+    "curriculum_maxrl/run_capped_hora_robustness.py": "1d685b42aa1c90c5225c03e4f4b06fc4652d9400d743ca5605f0fa3e46431bbf",
+    "curriculum_maxrl/teachers.py": "4c56a67729e08aa05abc4bb812d54179fc4f111e59c3887a03e98a04237d8134",
+    "curriculum_maxrl/test_capped_hora_robustness.py": "f4c764abc3a02bc53a1f69b569b8bc22bbc924b43d3ef29cca60c3d059f5cec4",
+    "curriculum_maxrl/testbed.py": "32327841c74d41b236a599564c84c696ab764db30204d4a68ca5e4856efdb9da"
+  },
+  "status": "exploratory multiverse; not confirmatory"
+}

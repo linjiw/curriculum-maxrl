@@ -13,12 +13,28 @@ Files to integrate the curriculum teacher into the official MaxRL codebase
   teacher state persisted/restored with checkpoints. Both normal global-step
   and alternate dataloader-only resume require the matching teacher state and
   fail loudly rather than combining a resumed sampler cursor with reset counts.
+- `hindsight.py` — release-safe entry point for Countdown/Jugs hindsight. It
+  wraps the immutable reported-run snapshot and replaces its broad numeric
+  response substitution with explicit goal-statement rewriting.
+- `response_goal_rewrite.py` — dependency-free conservative goal rewriter;
+  decimals, signed values, intermediate arithmetic, and `<answer>` blocks are
+  protected.
 - `smollm_curriculum.sh` — SmolLM2-360M + GSM8K launch script (fill in paths).
 
 Apply from the MaxRL repo root:
 
     cp curriculum.py <maxrl>/verl/utils/curriculum.py
+    cp vendored/hindsight.py <maxrl>/verl/utils/hindsight_snapshot.py
+    cp response_goal_rewrite.py <maxrl>/verl/utils/response_goal_rewrite.py
+    cp hindsight.py <maxrl>/verl/utils/hindsight.py
     cd <maxrl> && git apply main_ppo.patch ray_trainer.patch
+
+The snapshot is copied under `hindsight_snapshot.py` intentionally: it keeps
+the exact reported-run code auditable while `hindsight.py` is the entry point
+for every new release or experiment. Do not deploy the vendored snapshot
+directly. The release wrapper changes only response-text rewriting; prompt
+rewriting, verifier admission, grouping, gating, tensor rebuilding, and reward
+placement remain inherited from the execution snapshot.
 
 The integration deliberately does **not** use source `extra_info.index` as a
 teacher-array slot: those IDs can become non-contiguous after filtering or
