@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Extract reviewer-arm results from ray worker logs + compute verdicts.
 
-Usage: python3 extract_arm_results.py [tag ...]
+Usage: python3 extract_arm_results.py [--check | tag ...]
   default tags: all ARM A/B cells. Writes arm{A,B}_*.json next to this
   file and recomputes reviewer_arms_verdicts.json whenever all inputs
   for a verdict are present.
 
-P-R1 / P-R2 preregistered in smollm/run_reviewer_arms.sh (79473b2).
+The external execution record labels P-R1 / P-R2 as preregistered in
+smollm/run_reviewer_arms.sh (79473b2), but that locking object is not vendored
+in this checkout.
 References: b_scoreboard_3seed.json (B1/B2, same pool/protocol/seeds).
 """
 import glob
@@ -15,6 +17,21 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
+SCOREBOARD = os.path.join(ROOT, "paper", "figures", "data", "b_scoreboard_3seed.json")
+VERDICTS_PATH = os.path.join(HERE, "reviewer_arms_verdicts.json")
+METRIC_PROVENANCE_PATH = os.path.join(HERE, "METRIC_PROVENANCE.json")
+
+METRIC_PROVENANCE = {
+    "legacy_keys": ["t1_pass16", "coverage", "coverage_vs_B1"],
+    "meaning": "VERL bootstrap best@16 coverage proxy; not standard unbiased pass@16",
+    "standard_pass16_recomputable_from_this_file": False,
+}
+PROVENANCE_CAVEAT = (
+    "Protocol labels and verdict rules are transcribed from the external execution "
+    "record; locking objects are absent, so this checkout does not independently "
+    "establish registration timing."
+)
 
 TAGS = {
     "cdb3fix_s1": "armA_b3fix_s1.json",
@@ -85,11 +102,14 @@ def final_t1(path):
     return last["t1_mean16"], last["t1_pass16"]
 
 
-def verdicts():
-    sb = json.load(open(os.path.join(HERE, "b_scoreboard_3seed.json")))
+def verdicts(write=True):
+    sb = json.load(open(SCOREBOARD))
     b1_mean, _, b1_pass, _ = sb["B1_t1"]
     b2_mean, _, b2_pass, _ = sb["B2_t1"]
-    out = {}
+    out = {
+        "_metric_provenance": METRIC_PROVENANCE,
+        "_provenance_caveat": PROVENANCE_CAVEAT,
+    }
 
     a_files = [os.path.join(HERE, f"armA_b3fix_s{s}.json") for s in (1, 2, 3)]
     if all(complete(f) for f in a_files):
@@ -119,11 +139,12 @@ def verdicts():
             "coverage_vs_B1": round(c - b1_pass, 3),
         }
         if len(have) == 3:
-            # P-R2: replay captures >= half of B2's mean gain with no pass@16 loss;
-            # "captures ~all" branch => 6.8 reduces recycling's case to the direction term
+            # Stored P-R2 rule: replay captures >= half of B2's mean gain with
+            # no logged-proxy loss. This higher-dose arm is not dose matched.
             per_seed_ok = [(p[0] - b1_mean) / (b2_mean - b1_mean) >= 0.5 and p[1] >= b1_pass
                            for p in pts]
-            rec["verdict"] = ("CONFIRMED-STRONG (captures >all of B2's gain, no coverage loss)"
+            rec["verdict"] = ("CONFIRMED-STRONG under stored rule (higher-dose replay "
+                              "improves both logged metrics; dose and direction are not decomposed)"
                               if kept >= 1.0 and c >= b1_pass and all(per_seed_ok)
                               else "CONFIRMED" if kept >= 0.5 and c >= b1_pass
                               else "REFUTED")
@@ -132,12 +153,33 @@ def verdicts():
             rec["verdict"] = "INTERIM"
         out["P_R2"] = rec
 
-    path = os.path.join(HERE, "reviewer_arms_verdicts.json")
-    json.dump(out, open(path, "w"), indent=1)
-    print(json.dumps(out, indent=1))
+    if write:
+        with open(VERDICTS_PATH, "w") as handle:
+            json.dump(out, handle, indent=1)
+        print(json.dumps(out, indent=1))
+    return out
+
+
+def check():
+    expected = verdicts(write=False)
+    with open(VERDICTS_PATH) as handle:
+        observed = json.load(handle)
+    if observed != expected:
+        print("reviewer_arms_verdicts.json does not match the six endpoint files")
+        return 1
+    with open(METRIC_PROVENANCE_PATH) as handle:
+        metric = json.load(handle)
+    required = {TAGS[tag] for tag in TAGS} | {"reviewer_arms_verdicts.json"}
+    if not required.issubset(set(metric.get("scope", []))):
+        print("METRIC_PROVENANCE.json does not cover every reviewer-arm artifact")
+        return 1
+    print("reviewer-arm endpoints, verdicts, and metric provenance are current")
+    return 0
 
 
 if __name__ == "__main__":
+    if sys.argv[1:] == ["--check"]:
+        raise SystemExit(check())
     tags = sys.argv[1:] or list(TAGS)
     for tag in tags:
         dest = os.path.join(HERE, TAGS[tag])

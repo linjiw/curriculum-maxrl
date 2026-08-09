@@ -1,0 +1,18 @@
+{
+  "checked_utc": "2026-08-08T18:57:34Z",
+  "confirmation_analysis_sha256": "346e46414d82155f2064ee2a448b89cf976bdc6897e0ff8ced06a389056799d6",
+  "identity_reason": "The selected practical-MaxRL, RLOO, and common learning rates are all exactly 0.1.",
+  "learning_rate_selection_sha256": "dfc9d69faec78cff95e63ed7cd99a0e23c883dad5eba1a2fe378366730e06795",
+  "paired_binary_file_count": 864,
+  "paired_binary_manifest_sha256": "9ce55599cabc167c4fe4dbb4156180b1583968e680b75d14a1ae5b307a7611d7",
+  "paired_run_count": 144,
+  "projected_scientific_summary_manifest_sha256": "62cae2080539cc215ef49fbb575787bd4d38f0d7fb476585cd50d2f081d6780a",
+  "result": {
+    "all_ledgers_and_five_recovery_checkpoints_byte_identical": true,
+    "all_scientific_summary_fields_identical_after_removing_registered_phase_and_authorization_provenance": true,
+    "common_schedule_label": "registered identity robustness check",
+    "optimizer_sensitivity_variation_present": false
+  },
+  "schema": "curriculum-maxrl/digits-factorial-common-identity-robustness/v1",
+  "source_lock_sha256": "d72b93a29a2e6a096a6acb0611f69fe6df9dcda80256000aed6de5208ef4eb36"
+}

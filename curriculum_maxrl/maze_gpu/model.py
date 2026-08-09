@@ -1,4 +1,4 @@
-"""Tiny decoder-only transformer (~3M params, matching the paper's maze model)."""
+"""Tiny decoder-only transformer (~1.26M parameters in this configuration)."""
 
 from __future__ import annotations
 

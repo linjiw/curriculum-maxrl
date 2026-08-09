@@ -1,0 +1,73 @@
+{
+  "schema": "curriculum-maxrl/acrobot-procurl-selection-invalid-abort/v1",
+  "status": "invalid_aborted_pre_gate_entropy_sum_mismatch",
+  "created_utc": "2026-08-08T19:15:07Z",
+  "outcome_blind": true,
+  "incident": {
+    "stage": "development_independent_validation_before_gate",
+    "reason": "The frozen runner aggregated episode policy-entropy sums with Python 3.12 built-in sum(list), while the frozen analyzer replayed them with iterative +=. The distinct floating-point summation algorithms differed beyond the registered 1e-12 absolute tolerance.",
+    "mismatched_evaluation_records": 73,
+    "maximum_absolute_difference": 7.275957614183426e-12,
+    "registered_absolute_tolerance": 1e-12,
+    "stored_aggregates_match_python312_builtin_sum_for_all_records": true,
+    "development_gate_created": false,
+    "confirmation_launched": false,
+    "arm_contrasts_inspected": false,
+    "effect_directions_inspected": false,
+    "confidence_intervals_inspected": false,
+    "p_values_inspected": false,
+    "minimum_effect_decisions_inspected": false
+  },
+  "execution_accounting": {
+    "quick_seed": 21200,
+    "quick_runner_valid_runs": 4,
+    "quick_expected_runs": 4,
+    "quick_strict_analysis_passed": true,
+    "development_seeds": [21100, 21101, 21102],
+    "development_runner_valid_runs": 12,
+    "development_expected_runs": 12,
+    "development_strict_analysis_passed": false,
+    "scientific_evidence_status": "invalid_not_usable"
+  },
+  "burned_seed_blocks": {
+    "invalid_quick": [21200],
+    "invalid_development": [21100, 21101, 21102]
+  },
+  "replacement_registration": {
+    "confirmation_seeds_unchanged": "21000-21079",
+    "fresh_development_seeds": [21300, 21301, 21302],
+    "fresh_quick_seed": [21400],
+    "replacement_lock_created": false,
+    "replacement_execution_started": false
+  },
+  "archived_artifacts": [
+    {
+      "role": "invalid_source_lock",
+      "original_relative_path": "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_LOCK.json",
+      "archive_relative_path": "frontier_rl/examples/INVALID_ABORTED_PRE_GATE_ENTROPY_SUM_MISMATCH/ACROBOT_PROCURL_SELECTION_LOCK.json",
+      "sha256": "67f46511e6d556a4379bfc9893fefdf98b56a78e0f76f1a63221ec126da77fa0",
+      "size_bytes": 59449
+    },
+    {
+      "role": "invalid_quick_raw",
+      "original_relative_path": "frontier_rl/examples/acrobot_procurl_selection_quick.json",
+      "archive_relative_path": "frontier_rl/examples/INVALID_ABORTED_PRE_GATE_ENTROPY_SUM_MISMATCH/acrobot_procurl_selection_quick.json",
+      "sha256": "1f4c035dc7a1bb37c3ca7c13ad20a389c9cae5633a6074b45c1a36d8a9b7e78a",
+      "size_bytes": 831860
+    },
+    {
+      "role": "invalid_quick_analysis",
+      "original_relative_path": "frontier_rl/examples/acrobot_procurl_selection_quick_analysis.json",
+      "archive_relative_path": "frontier_rl/examples/INVALID_ABORTED_PRE_GATE_ENTROPY_SUM_MISMATCH/acrobot_procurl_selection_quick_analysis.json",
+      "sha256": "2b55e6942fdc3f5808f97ffb1fda49a0a99bbfe92bc811b72fb61e55388bf76c",
+      "size_bytes": 3318
+    },
+    {
+      "role": "invalid_development_raw",
+      "original_relative_path": "frontier_rl/examples/acrobot_procurl_selection_development.json",
+      "archive_relative_path": "frontier_rl/examples/INVALID_ABORTED_PRE_GATE_ENTROPY_SUM_MISMATCH/acrobot_procurl_selection_development.json",
+      "sha256": "cb35959cf847f71a420bdd369be1094ce00ab55e7ffa161b4e48e7e7a70cfd2b",
+      "size_bytes": 11473108
+    }
+  ]
+}

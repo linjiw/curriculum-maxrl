@@ -18,13 +18,16 @@ Usage sketch:
 
     import gymnasium as gym
     env = gym.make("FetchReach-v3")             # any GoalEnv-like task
-    space = GymGoalSpace(env, n_bands=10, policy=my_policy)
+    space = GymGoalSpace(env, n_bands=10, policy=my_policy,
+                         relabeler=my_verified_relabeler)
     trainer = FrontierTrainer(space, my_policy,
                               TrainerConfig(n_rollouts=16, hindsight=True))
     trainer.train(steps=500)
 """
 
 from __future__ import annotations
+
+import copy
 
 import numpy as np
 
@@ -42,12 +45,14 @@ class GymGoalSpace:
     """
 
     def __init__(self, env, n_bands: int, policy, *, goal_sampler=None,
-                 band_of_goal=None, max_steps: int = 50, seed: int = 0):
+                 band_of_goal=None, relabeler=None, max_steps: int = 50,
+                 seed: int = 0):
         self.env = env
         self._n_bands = n_bands
         self.policy = policy
         self.goal_sampler = goal_sampler
         self.band_of_goal = band_of_goal
+        self.relabeler = relabeler
         self.max_steps = max_steps
         self.rng = np.random.default_rng(seed)
 
@@ -71,13 +76,17 @@ class GymGoalSpace:
         trajs, rewards, infos = [], [], []
         for _ in range(n_rollouts):
             goal = self._sample_goal(task_id)
-            obs, _ = self.env.reset(options={"goal": goal})
+            obs, _ = self.env.reset(
+                seed=int(self.rng.integers(1 << 30)),
+                options={"goal": goal},
+            )
             steps, success, achieved = [], False, None
             for _ in range(self.max_steps):
                 action = self.policy.act(obs)
-                steps.append((obs, action))
+                steps.append((copy.deepcopy(obs), copy.deepcopy(action)))
                 obs, _, terminated, truncated, info = self.env.step(action)
-                achieved = obs.get("achieved_goal") if isinstance(obs, dict) else None
+                achieved = (copy.deepcopy(obs.get("achieved_goal"))
+                            if isinstance(obs, dict) else None)
                 if info.get("is_success"):
                     success = True
                     break
@@ -85,20 +94,26 @@ class GymGoalSpace:
                     break
             trajs.append(steps)
             rewards.append(float(success))
-            infos.append({"achieved_goal": achieved, "goal": goal})
+            infos.append({"achieved_goal": achieved,
+                          "goal": copy.deepcopy(goal)})
         return GroupResult(task_id, np.array(rewards), trajs, infos)
 
     def relabel(self, group: GroupResult):
-        """HER: credit each rollout to the band of its achieved goal."""
-        bands = [self._band(i["achieved_goal"]) for i in group.infos
-                 if i["achieved_goal"] is not None]
-        if not bands:
+        """Run an environment-specific, verifier-backed HER transform.
+
+        A distance band is a distribution over goals, not one concrete goal.
+        Merely assigning success to every trajectory whose achieved goal lies
+        in the same band mixes different tasks and leaves goal-conditioned
+        observations stale.  A safe generic implementation therefore cannot
+        infer relabeled rewards or rewrite observations by itself.
+
+        ``relabeler`` must return ``(task_id, rewards, trajectories)`` and is
+        responsible for choosing one concrete achieved goal, recomputing every
+        reward with the environment verifier, and rewriting the desired goal
+        in every scored trajectory.  Returning ``None`` disables hindsight.
+        These semantic checks are necessary; Proposition 6 explains why they
+        still do not by themselves make the relabeled estimator unbiased.
+        """
+        if self.relabeler is None:
             return None
-        best = int(max(bands))
-        if best < 0:
-            return None
-        new_rewards = np.array([
-            1.0 if (i["achieved_goal"] is not None
-                    and self._band(i["achieved_goal"]) == best) else 0.0
-            for i in group.infos])
-        return best, new_rewards
+        return self.relabeler(group, self.env, self._band)

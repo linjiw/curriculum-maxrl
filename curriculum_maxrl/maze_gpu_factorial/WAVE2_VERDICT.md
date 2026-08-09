@@ -15,14 +15,24 @@ Paired (same block, same sampler) MaxRL − GRPO on cov_auc_delta
 
 Bar was ≥5/6 under BOTH samplers; 6/6 gives exact two-sided sign-test
 p = 0.031 per sampler. The ordering first found exploratorily in
-wave 1 (12/12) is now **registered and confirmed on fresh randomness**:
-24/24 paired blocks across both waves, both samplers.
+wave 1 is now **registered and confirmed on fresh randomness**. The
+two sampler contrasts share each seed/warm-start block and are not
+independent replicates. Averaging samplers within block gives 6/6
+positive wave-2 blocks (mean +.01950, post-hoc 95% t interval
+[+.01148,+.02752]); all 12 independent block averages across both
+waves are positive descriptively (mean +.02175, interval
+[+.01663,+.02688]), with no pooled confirmatory p-value.
 
-## P-F3 (registered secondary): CONFIRMED at 10/12
+## P-F3 (registered secondary): PAIR-LEVEL BAR MET; localization suggestive
 
 Easy-band (L1–3) endpoint delta, MaxRL − GRPO paired: 10/12 positive
-(bar ≥7/12; at ≥10/12 the prereg quotes p = 0.039). GRPO's easy-band
-loss again ~2× MaxRL's where negative.
+(registered bar ≥7/12). These are two correlated sampler observations
+inside each of six seed blocks. After sampler averaging, 4 blocks are
+positive, 1 is tied, and 1 is negative; the mean is +.08333 and the
+post-hoc 95% t interval [−.00330,+.16996] includes zero. We therefore
+record that the registered pair-level bar was met but treat easy-band
+localization as suggestive rather than established; no p-value is
+attached to the correlated pair count.
 
 ## Unregistered observations (stated for completeness, no claims)
 

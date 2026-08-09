@@ -1,0 +1,540 @@
+{
+  "analysis_id": "maze-factorial-independent-seed-blocks-v1",
+  "cross_wave_descriptive": {
+    "leave_one_block_out": {
+      "all_leave_one_out_t_intervals_exclude_zero": true,
+      "analyses": [
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave1-seed0",
+          "remaining_mean": 0.020359848484848,
+          "remaining_t_ci_95": [
+            0.015803553141906,
+            0.024916143827791
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave1-seed1",
+          "remaining_mean": 0.021780303030303,
+          "remaining_t_ci_95": [
+            0.016097675145192,
+            0.027462930915414
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave1-seed2",
+          "remaining_mean": 0.020942599067599,
+          "remaining_t_ci_95": [
+            0.015613492157712,
+            0.026271705977486
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave1-seed3",
+          "remaining_mean": 0.022363053613054,
+          "remaining_t_ci_95": [
+            0.016879543216862,
+            0.027846564009245
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave1-seed4",
+          "remaining_mean": 0.021579982517483,
+          "remaining_t_ci_95": [
+            0.015912353719744,
+            0.027247611315221
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave1-seed5",
+          "remaining_mean": 0.022253787878788,
+          "remaining_t_ci_95": [
+            0.016704555027534,
+            0.027803020730042
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed6",
+          "remaining_mean": 0.021671037296037,
+          "remaining_t_ci_95": [
+            0.015991365475428,
+            0.027350709116646
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed7",
+          "remaining_mean": 0.022017045454545,
+          "remaining_t_ci_95": [
+            0.016371071347213,
+            0.027663019561877
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed8",
+          "remaining_mean": 0.021944201631702,
+          "remaining_t_ci_95": [
+            0.016280641317124,
+            0.027607761946279
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed9",
+          "remaining_mean": 0.021998834498834,
+          "remaining_t_ci_95": [
+            0.016347934233012,
+            0.027649734764657
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed10",
+          "remaining_mean": 0.023127913752914,
+          "remaining_t_ci_95": [
+            0.018544237446957,
+            0.027711590058871
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed11",
+          "remaining_mean": 0.020979020979021,
+          "remaining_t_ci_95": [
+            0.015617817590876,
+            0.026340224367166
+          ]
+        }
+      ],
+      "ci_lower_bound_range": [
+        0.015613492157712,
+        0.018544237446957
+      ],
+      "mean_range": [
+        0.020359848484848,
+        0.023127913752914
+      ]
+    },
+    "sampler_averaged_block_summary": {
+      "mean": 0.021751469017094,
+      "n_independent_blocks": 12,
+      "n_negative": 0,
+      "n_positive": 12,
+      "n_zero": 0,
+      "sample_sd": 0.008065666685979,
+      "standard_error": 0.002328357416172,
+      "t_ci_95": [
+        0.016626788896731,
+        0.026876149137457
+      ],
+      "t_critical_0.975": 2.200985160082949
+    },
+    "scope": "exploratory wave 1 plus registered confirmation wave 2; no pooled confirmatory p-value"
+  },
+  "design": {
+    "contrast": "MaxRL minus GRPO",
+    "coverage_metric": "mean in-training pass@8 coverage minus post-SFT initial coverage, then contrasted between estimators",
+    "easy_band_metric": "mean endpoint pass@8 change over levels 1-3, then contrasted between estimators",
+    "independent_unit": "independently trained seed/warm-start block",
+    "interval_note": "All reported t intervals are post-hoc descriptive intervals over sampler-averaged independent seed blocks.",
+    "registered_confirmation": "wave 2 coverage-AUC direction under each sampler separately",
+    "within_block_repeated_factor": "sampler (uniform or frontier_un)"
+  },
+  "generated_by": "paper/figures/fig_maze_block_analysis.py",
+  "schema_version": 1,
+  "sources": [
+    {
+      "path": "curriculum_maxrl/maze_gpu_factorial/results_factorial_wave1.json",
+      "sha256": "12372a201890080fba935db477d4df74b919f5d752d02f2286b71fb028ddecb3",
+      "wave": 1
+    },
+    {
+      "path": "curriculum_maxrl/maze_gpu_factorial/results_factorial_wave2.json",
+      "sha256": "e47d3c57ff99e4f167e28fcbfe84a7175bb7f4a169cb8c499f490d93891e2ee9",
+      "wave": 2
+    }
+  ],
+  "wave2_easy_band_descriptive": {
+    "interpretation": "Four positive blocks, one exact tie, and one negative block; the block-level 95% t interval includes zero, so easy-band localization is descriptive rather than established.",
+    "sampler_averaged_block_summary": {
+      "mean": 0.083333333333333,
+      "n_independent_blocks": 6,
+      "n_negative": 1,
+      "n_positive": 4,
+      "n_zero": 1,
+      "sample_sd": 0.082548386483996,
+      "standard_error": 0.033700237662641,
+      "t_ci_95": [
+        -0.00329588545888,
+        0.169962552125546
+      ],
+      "t_critical_0.975": 2.570581835636314
+    },
+    "within_block_sampler_observations": {
+      "n_negative": 2,
+      "n_positive": 10,
+      "n_repeated_observations": 12,
+      "n_zero": 0,
+      "warning": "These 12 observations are correlated within six blocks and are not 12 independent replicates."
+    }
+  },
+  "wave2_registered_confirmation": {
+    "criterion_result": "positive in 6/6 independent seed blocks under uniform and 6/6 under frontier_un",
+    "leave_one_block_out": {
+      "all_leave_one_out_t_intervals_exclude_zero": true,
+      "analyses": [
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed6",
+          "remaining_mean": 0.018870192307692,
+          "remaining_t_ci_95": [
+            0.008474852927195,
+            0.02926553168819
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed7",
+          "remaining_mean": 0.01963141025641,
+          "remaining_t_ci_95": [
+            0.009028942118701,
+            0.03023387839412
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed8",
+          "remaining_mean": 0.019471153846154,
+          "remaining_t_ci_95": [
+            0.008859353574929,
+            0.030082954117379
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed9",
+          "remaining_mean": 0.019591346153846,
+          "remaining_t_ci_95": [
+            0.008983919297945,
+            0.030198773009748
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed10",
+          "remaining_mean": 0.022075320512821,
+          "remaining_t_ci_95": [
+            0.01609180731168,
+            0.028058833713961
+          ]
+        },
+        {
+          "all_remaining_block_contrasts_positive": true,
+          "omitted_block": "wave2-seed11",
+          "remaining_mean": 0.017347756410256,
+          "remaining_t_ci_95": [
+            0.009655981083007,
+            0.025039531737506
+          ]
+        }
+      ],
+      "ci_lower_bound_range": [
+        0.008474852927195,
+        0.01609180731168
+      ],
+      "mean_range": [
+        0.017347756410256,
+        0.022075320512821
+      ]
+    },
+    "per_sampler": {
+      "frontier_un": {
+        "exact_two_sided_sign_test_p": 0.03125,
+        "mean": 0.024038461538462,
+        "n_blocks": 6,
+        "n_positive": 6,
+        "per_block": [
+          0.027644230769231,
+          0.034054487179487,
+          0.033253205128205,
+          0.018830128205128,
+          0.006410256410256,
+          0.024038461538461
+        ]
+      },
+      "uniform": {
+        "exact_two_sided_sign_test_p": 0.03125,
+        "mean": 0.014957264957265,
+        "n_blocks": 6,
+        "n_positive": 6,
+        "per_block": [
+          0.017628205128205,
+          0.003605769230769,
+          0.006009615384615,
+          0.019230769230769,
+          0.006810897435898,
+          0.036458333333333
+        ]
+      }
+    },
+    "sampler_averaged_block_summary": {
+      "mean": 0.019497863247863,
+      "n_independent_blocks": 6,
+      "n_negative": 0,
+      "n_positive": 6,
+      "n_zero": 0,
+      "sample_sd": 0.00764444354557,
+      "standard_error": 0.003120831009027,
+      "t_ci_95": [
+        0.011475511743969,
+        0.027520214751758
+      ],
+      "t_critical_0.975": 2.570581835636314
+    }
+  },
+  "waves": {
+    "wave1": {
+      "blocks": [
+        {
+          "block_id": "wave1-seed0",
+          "sampler_average": {
+            "coverage_auc": 0.037059294871795,
+            "easy_band_endpoint": 0.177083333333333
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.026041666666667,
+              "easy_band_endpoint": -0.0625
+            },
+            "uniform": {
+              "coverage_auc": 0.048076923076923,
+              "easy_band_endpoint": 0.416666666666667
+            }
+          },
+          "seed": 0,
+          "wave": 1
+        },
+        {
+          "block_id": "wave1-seed1",
+          "sampler_average": {
+            "coverage_auc": 0.021434294871795,
+            "easy_band_endpoint": 0.041666666666667
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.024038461538462,
+              "easy_band_endpoint": -0.020833333333333
+            },
+            "uniform": {
+              "coverage_auc": 0.018830128205128,
+              "easy_band_endpoint": 0.104166666666667
+            }
+          },
+          "seed": 1,
+          "wave": 1
+        },
+        {
+          "block_id": "wave1-seed2",
+          "sampler_average": {
+            "coverage_auc": 0.030649038461538,
+            "easy_band_endpoint": 0.125
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.047676282051282,
+              "easy_band_endpoint": 0.208333333333333
+            },
+            "uniform": {
+              "coverage_auc": 0.013621794871795,
+              "easy_band_endpoint": 0.041666666666667
+            }
+          },
+          "seed": 2,
+          "wave": 1
+        },
+        {
+          "block_id": "wave1-seed3",
+          "sampler_average": {
+            "coverage_auc": 0.015024038461538,
+            "easy_band_endpoint": 0.03125
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.026842948717949,
+              "easy_band_endpoint": 0.104166666666667
+            },
+            "uniform": {
+              "coverage_auc": 0.003205128205128,
+              "easy_band_endpoint": -0.041666666666667
+            }
+          },
+          "seed": 3,
+          "wave": 1
+        },
+        {
+          "block_id": "wave1-seed4",
+          "sampler_average": {
+            "coverage_auc": 0.023637820512821,
+            "easy_band_endpoint": 0.104166666666667
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.03525641025641,
+              "easy_band_endpoint": 0.145833333333333
+            },
+            "uniform": {
+              "coverage_auc": 0.012019230769231,
+              "easy_band_endpoint": 0.0625
+            }
+          },
+          "seed": 4,
+          "wave": 1
+        },
+        {
+          "block_id": "wave1-seed5",
+          "sampler_average": {
+            "coverage_auc": 0.016225961538462,
+            "easy_band_endpoint": 0.1875
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.021634615384615,
+              "easy_band_endpoint": 0.3125
+            },
+            "uniform": {
+              "coverage_auc": 0.010817307692308,
+              "easy_band_endpoint": 0.0625
+            }
+          },
+          "seed": 5,
+          "wave": 1
+        }
+      ]
+    },
+    "wave2": {
+      "blocks": [
+        {
+          "block_id": "wave2-seed6",
+          "sampler_average": {
+            "coverage_auc": 0.022636217948718,
+            "easy_band_endpoint": 0.1875
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.027644230769231,
+              "easy_band_endpoint": 0.145833333333333
+            },
+            "uniform": {
+              "coverage_auc": 0.017628205128205,
+              "easy_band_endpoint": 0.229166666666667
+            }
+          },
+          "seed": 6,
+          "wave": 2
+        },
+        {
+          "block_id": "wave2-seed7",
+          "sampler_average": {
+            "coverage_auc": 0.018830128205128,
+            "easy_band_endpoint": 0.0
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.034054487179487,
+              "easy_band_endpoint": -0.041666666666667
+            },
+            "uniform": {
+              "coverage_auc": 0.003605769230769,
+              "easy_band_endpoint": 0.041666666666667
+            }
+          },
+          "seed": 7,
+          "wave": 2
+        },
+        {
+          "block_id": "wave2-seed8",
+          "sampler_average": {
+            "coverage_auc": 0.01963141025641,
+            "easy_band_endpoint": 0.083333333333333
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.033253205128205,
+              "easy_band_endpoint": 0.125
+            },
+            "uniform": {
+              "coverage_auc": 0.006009615384615,
+              "easy_band_endpoint": 0.041666666666667
+            }
+          },
+          "seed": 8,
+          "wave": 2
+        },
+        {
+          "block_id": "wave2-seed9",
+          "sampler_average": {
+            "coverage_auc": 0.019030448717949,
+            "easy_band_endpoint": 0.09375
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.018830128205128,
+              "easy_band_endpoint": 0.166666666666667
+            },
+            "uniform": {
+              "coverage_auc": 0.019230769230769,
+              "easy_band_endpoint": 0.020833333333333
+            }
+          },
+          "seed": 9,
+          "wave": 2
+        },
+        {
+          "block_id": "wave2-seed10",
+          "sampler_average": {
+            "coverage_auc": 0.006610576923077,
+            "easy_band_endpoint": -0.020833333333333
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.006410256410256,
+              "easy_band_endpoint": 0.020833333333333
+            },
+            "uniform": {
+              "coverage_auc": 0.006810897435898,
+              "easy_band_endpoint": -0.0625
+            }
+          },
+          "seed": 10,
+          "wave": 2
+        },
+        {
+          "block_id": "wave2-seed11",
+          "sampler_average": {
+            "coverage_auc": 0.030248397435897,
+            "easy_band_endpoint": 0.15625
+          },
+          "sampler_contrasts": {
+            "frontier_un": {
+              "coverage_auc": 0.024038461538461,
+              "easy_band_endpoint": 0.166666666666667
+            },
+            "uniform": {
+              "coverage_auc": 0.036458333333333,
+              "easy_band_endpoint": 0.145833333333333
+            }
+          },
+          "seed": 11,
+          "wave": 2
+        }
+      ]
+    }
+  }
+}

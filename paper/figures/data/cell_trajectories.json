@@ -43,7 +43,7 @@
    }
   ],
   "vals": [],
-  "src": "/tmp/claude-1000/-home-ec2-user-work-curriculumrl-maxrl/557e3a36-ef2b-4433-bb93-83a58ebce8f2/tasks/b29n5slv5.output"
+  "src": "external_execution_log:b29n5slv5.output"
  },
  "maxrl_curtrue": {
   "started": "Wed Jul 22 23:32:44 UTC 2026",
@@ -882,7 +882,7 @@
    }
   ],
   "vals": [],
-  "src": "/tmp/claude-1000/-home-ec2-user-work-curriculumrl-maxrl/557e3a36-ef2b-4433-bb93-83a58ebce8f2/tasks/b6b9c401u.output"
+  "src": "external_execution_log:b6b9c401u.output"
  },
  "grpo_curtrue": {
   "started": "Fri Jul 24 07:12:40 UTC 2026",
@@ -1539,7 +1539,7 @@
    }
   ],
   "vals": [],
-  "src": "/tmp/claude-1000/-home-ec2-user-work-curriculumrl-maxrl/557e3a36-ef2b-4433-bb93-83a58ebce8f2/tasks/bzvb14jze.output"
+  "src": "external_execution_log:bzvb14jze.output"
  },
  "grpo_curfalse": {
   "started": "Sat Jul 25 01:19:58 UTC 2026",
@@ -1996,7 +1996,7 @@
    }
   ],
   "vals": [],
-  "src": "/tmp/claude-1000/-home-ec2-user-work-curriculumrl-maxrl/557e3a36-ef2b-4433-bb93-83a58ebce8f2/tasks/bzvb14jze.output"
+  "src": "external_execution_log:bzvb14jze.output"
  },
  "raysession_2026-07-22_23-32-48": {
   "started": "2026-07-22_23-32-48_050122_213441",
@@ -2185,7 +2185,7 @@
    }
   ],
   "vals": [],
-  "src": "/tmp/ray/session_2026-07-22_23-32-48_050122_213441/logs/worker-d2b43dc4aa1774df912007370ebdd0a2b1e89d0efdf43d06bcccbf11-01000000-214303.out"
+  "src": "external_execution_log:worker-d2b43dc4-214303.out"
  },
  "raysession_2026-07-23_06-14-27": {
   "started": "2026-07-23_06-14-27_098159_444653",
@@ -2462,7 +2462,7 @@
    }
   ],
   "vals": [],
-  "src": "/tmp/ray/session_2026-07-23_06-14-27_098159_444653/logs/worker-1512b9ad9b386af77e868f3fe144c087e7ac0d2b754194d353e5422f-01000000-445961.out"
+  "src": "external_execution_log:worker-1512b9ad-445961.out"
  },
  "raysession_2026-07-24_07-12-44": {
   "started": "2026-07-24_07-12-44_583853_2331884",
@@ -3119,7 +3119,7 @@
    }
   ],
   "vals": [],
-  "src": "/tmp/ray/session_2026-07-24_07-12-44_583853_2331884/logs/worker-a336be7bb6437cedeb7620c531b95f03c0e9b927f31fb59c7eedacf7-01000000-2332796.out"
+  "src": "external_execution_log:worker-a336be7b-2332796.out"
  },
  "raysession_2026-07-25_01-20-02": {
   "started": "2026-07-25_01-20-02_711832_2480383",
@@ -3576,7 +3576,7 @@
    }
   ],
   "vals": [],
-  "src": "/tmp/ray/session_2026-07-25_01-20-02_711832_2480383/logs/worker-a2474b3fadd774c9a8ba145f330cecacc1297fa08a564919e21764f0-01000000-2481259.out"
+  "src": "external_execution_log:worker-a2474b3f-2481259.out"
  },
  "raysession_2026-07-25_19-24-55": {
   "started": "2026-07-25_19-24-55_658447_2541009",
@@ -4233,6 +4233,6 @@
    }
   ],
   "vals": [],
-  "src": "/tmp/ray/session_2026-07-25_19-24-55_658447_2541009/logs/worker-7c94094199cccee8d4b857d0b0899ec9e20f760ed1554aeeafc1deec-01000000-2541884.out"
+  "src": "external_execution_log:worker-7c940941-2541884.out"
  }
 }

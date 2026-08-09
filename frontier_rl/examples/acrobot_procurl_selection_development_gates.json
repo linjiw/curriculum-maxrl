@@ -1,0 +1,81 @@
+{
+  "schema": "curriculum-maxrl/acrobot-procurl-selection-development-gates/v1",
+  "mode": "development",
+  "all_gates_passed": true,
+  "source_lock_sha256": "b7c7f76f6aaffa1fe65557717bfe545f2ec850495d370cd97fe72a8871fc8d0f",
+  "source_lock_verification": {
+    "passed": true,
+    "runtime": {
+      "python_implementation": "CPython",
+      "python": "3.12.13",
+      "platform": "macOS-26.5.2-arm64-arm-64bit",
+      "machine": "arm64",
+      "numpy": "2.5.1",
+      "gymnasium": "1.3.0"
+    },
+    "source_lock_sha256": "b7c7f76f6aaffa1fe65557717bfe545f2ec850495d370cd97fe72a8871fc8d0f",
+    "checked_source_files": [
+      "frontier_rl/__init__.py",
+      "frontier_rl/adapters/__init__.py",
+      "frontier_rl/adapters/acrobot_neural.py",
+      "frontier_rl/estimators.py",
+      "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json",
+      "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_PROTOCOL.md",
+      "frontier_rl/examples/INVALID_ABORTED_PRE_GATE_ENTROPY_SUM_MISMATCH/INCIDENT.json",
+      "frontier_rl/examples/PROCURL_PRIMARY_SOURCE_PROVENANCE.md",
+      "frontier_rl/examples/analyze_acrobot_procurl_selection.py",
+      "frontier_rl/examples/build_acrobot_procurl_selection_lock.py",
+      "frontier_rl/examples/run_acrobot_neural.py",
+      "frontier_rl/examples/run_acrobot_procurl_selection.py",
+      "frontier_rl/examples/test_analyze_acrobot_procurl_selection.py",
+      "frontier_rl/examples/test_build_acrobot_procurl_selection_lock.py",
+      "frontier_rl/examples/test_run_acrobot_neural.py",
+      "frontier_rl/examples/test_run_acrobot_procurl_selection.py",
+      "frontier_rl/examples/test_verify_acrobot_procurl_selection_portable.py",
+      "frontier_rl/examples/verify_acrobot_procurl_selection_portable.py",
+      "frontier_rl/interfaces.py",
+      "frontier_rl/teacher.py",
+      "frontier_rl/trainer.py"
+    ]
+  },
+  "gates": {
+    "all_runs_source_numeric_parameter_rng_ledger_valid": true,
+    "all_sweeps_exact_probe_count_and_bounded_transitions": true,
+    "all_p_hat_values_are_multiples_of_0p05": true,
+    "initial_and_crossed_boundary_sweep_schedule_exact": true,
+    "probes_preserve_actor_optimizer_and_training_rng": true,
+    "paid_equals_student_plus_probe": true,
+    "uniform_arms_exact_and_ordinary_has_no_probes": true,
+    "adaptive_probabilities_recompute_and_nonuniform_once": true,
+    "each_probed_run_has_20k_student_transitions_and_update": true,
+    "pooled_dead_mixed_all_pass_regimes_observed": true,
+    "pooled_native_evaluation_values_vary": true
+  },
+  "diagnostics": {
+    "n_runs": 12,
+    "n_probe_sweeps": 58,
+    "minimum_probed_student_transitions": 26479,
+    "minimum_probed_optimizer_updates": 2,
+    "pooled_regime_counts": {
+      "dead": 26,
+      "mixed": 175,
+      "all_pass": 14
+    },
+    "adaptive_nonuniform_seen": {
+      "procurl_env_b20_f5120": true,
+      "u16_probe_range_matched_f5120": true
+    },
+    "n_distinct_native_evaluation_values": 6,
+    "arm_contrasts_computed": false
+  },
+  "gate_policy": {
+    "outcome_blind": true,
+    "uses_arm_contrasts": false,
+    "uses_effect_direction": false,
+    "uses_confidence_intervals": false,
+    "uses_p_values": false,
+    "uses_minimum_effect": false
+  },
+  "raw_artifact_relative_path": "frontier_rl/examples/acrobot_procurl_selection_development.json",
+  "raw_artifact_sha256": "6d9fa639295e35cd8a8da810ace82d330c863edace702db4e3f7d25a9ad82ba8"
+}

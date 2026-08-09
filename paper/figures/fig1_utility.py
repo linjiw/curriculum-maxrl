@@ -7,9 +7,9 @@ Panel B: at N=16, all three curves are EXACT finite-N expected coefficient
          mass for the DEPLOYED estimators (same convention, mass/2):
          MaxRL u_N = A_N/2 (Prop. 1), RLOO p(1-p) (exact), GRPO with
          sample-SD normalization (ddof=1, matching estimators.py and
-         verl core_algos.py): sqrt((N-1)/N) * (1/N) E[sqrt(K(N-K))],
-         K~Bin(N,p) (MC-verified against the code) — not the population
-         w(p) curves, which diverge at the tails.
+         verl core_algos.py), including the deployed 1e-6 denominator
+         stabilizer — not the population w(p) curves, which diverge at the
+         tails.
 
 Numbers/forms from paper/main.tex Section 3 (Prop. 1-3, Remark scope).
 """
@@ -109,19 +109,21 @@ axA.set_title(r"A   $u_N(p) = \mathrm{pass@}N - \mathrm{pass@}1$",
 # All three curves are exact expected coefficient mass / 2, same
 # convention: sum of |per-rollout coefficients| in each estimator's
 # gradient (MaxRL w_i sums; RLOO/GRPO carry the 1/N prefactor).
-# GRPO exact for the deployed sample-SD (ddof=1) normalization:
-# sqrt((N-1)/N) * (1/N) E[ sqrt(K(N-K)) ], K ~ Bin(N, p), because
-# s_K = sqrt(K(N-K)/(N(N-1))).  MC-verified against estimators.py.
+# GRPO exact for the deployed sample-SD (ddof=1) normalization, including
+# the EPS=1e-6 stabilizer. For a group with K successes, half of the L1 mass
+# is K(N-K) / [N^2 (s_K + EPS)], where
+# s_K = sqrt(K(N-K)/(N(N-1))).
 from math import comb
 
 N = 16
 u16 = u(p, N)                            # MaxRL mass / 2 (Prop. 1)
 rloo = p * (1 - p)                       # RLOO mass / 2 (exact)
 grpo = np.zeros_like(p)                  # GRPO mass / 2 (exact, sample SD)
+eps = 1e-6
 for k in range(1, N):
-    grpo += (comb(N, k) * p**k * (1 - p)**(N - k)
-             * np.sqrt(k * (N - k)) / N)
-grpo *= np.sqrt((N - 1) / N)
+    std_k = np.sqrt(k * (N - k) / (N * (N - 1)))
+    half_mass_k = k * (N - k) / (N * N * (std_k + eps))
+    grpo += comb(N, k) * p**k * (1 - p)**(N - k) * half_mass_k
 
 axB.plot(p, u16, color=BLUE, lw=1.8, ls="-")
 axB.plot(p, rloo, color=GREEN, lw=1.6, ls="--")
@@ -146,7 +148,7 @@ axB.text(0.078, 0.205, "$\\to (N{-}1)\\times$ RLOO\nas $p \\to 0$",
 # (N-1)/sqrt(N); the symmetric sqrt(N-1) holds only for population SD)
 p1 = 0.93
 g1 = float(np.interp(p1, p, grpo))
-axB.annotate("$\\frac{N-1}{\\sqrt{N}}\\times$ MaxRL's mass\non mastered prompts",
+axB.annotate("$\\approx\\frac{N-1}{\\sqrt{N}}\\times$ MaxRL's mass\non mastered prompts",
              xy=(p1, g1), xytext=(0.80, 0.68), fontsize=7.5,
              color=GRAY, ha="center", va="center", style="italic",
              linespacing=1.15,
@@ -158,7 +160,7 @@ axB.set_xlim(0, 1)
 axB.set_ylim(0, 1.0)
 axB.set_xlabel("pass rate $p$")
 axB.set_ylabel(r"expected coefficient mass $/\,2$")
-axB.set_title("B   what each estimator rewards ($N$=16)", loc="left")
+axB.set_title("B   expected coefficient activity ($N$=16)", loc="left")
 
 fig.tight_layout(pad=0.4, w_pad=1.2)
 fig.savefig(os.path.join(HERE, "fig1_utility.pdf"))

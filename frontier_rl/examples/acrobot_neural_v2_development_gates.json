@@ -1,0 +1,444 @@
+{
+  "analysis_contract": "effect-blind V2 launch gates only; treatment contrasts are not read",
+  "development_artifact_sha256": "915c2e476560b02f8f8017e1d97984c39c27f3ad1b7743e52651f8f14acb95bd",
+  "source_lock": {
+    "schema": "curriculum-maxrl/acrobot-neural-source-lock/v1",
+    "frozen_utc_date": "2026-07-22",
+    "purpose": "Exact pre-development source lock for the Acrobot V2 development, core-confirmatory, and scale-confirmatory stages.",
+    "v1_pilot_artifact_sha256": "746bce1711291cd6b6f0e2c5e2e2e0d890b19d1c5c86b9a3f2e57cdfd8f3d308",
+    "runtime": {
+      "python": "3.12.13",
+      "numpy": "2.5.1",
+      "gymnasium": "1.3.0"
+    },
+    "source_sha256": {
+      "frontier_rl/examples/run_acrobot_neural.py": "215f126eb560bf330d44f2fb7b38792c78488e14693fa57fb493ac49820017eb",
+      "frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+      "frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+      "frontier_rl/estimators.py": "6db395ce10b961b731062ac3ad087bf5425434d3210bfed80c84af3836a535fd",
+      "frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+      "frontier_rl/examples/ACROBOT_NEURAL_PROTOCOL_V2.md": "a66a5dd57a71e759242cc3012d25d41965f6e632d2b0b9a91238bbf647e2e084"
+    },
+    "equality_rule": "Every recorded source_sha256 entry in a V2 development or confirmatory artifact must equal this object before that artifact may pass its source-lock gate. Any source change requires a versioned amendment and a new lock."
+  },
+  "source_hash_checks": {
+    "frontier_rl/examples/run_acrobot_neural.py": {
+      "expected": "215f126eb560bf330d44f2fb7b38792c78488e14693fa57fb493ac49820017eb",
+      "recorded": "215f126eb560bf330d44f2fb7b38792c78488e14693fa57fb493ac49820017eb",
+      "matches": true
+    },
+    "frontier_rl/adapters/acrobot_neural.py": {
+      "expected": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+      "recorded": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+      "matches": true
+    },
+    "frontier_rl/teacher.py": {
+      "expected": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+      "recorded": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+      "matches": true
+    },
+    "frontier_rl/estimators.py": {
+      "expected": "6db395ce10b961b731062ac3ad087bf5425434d3210bfed80c84af3836a535fd",
+      "recorded": "6db395ce10b961b731062ac3ad087bf5425434d3210bfed80c84af3836a535fd",
+      "matches": true
+    },
+    "frontier_rl/interfaces.py": {
+      "expected": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+      "recorded": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+      "matches": true
+    },
+    "frontier_rl/examples/ACROBOT_NEURAL_PROTOCOL_V2.md": {
+      "expected": "a66a5dd57a71e759242cc3012d25d41965f6e632d2b0b9a91238bbf647e2e084",
+      "recorded": "a66a5dd57a71e759242cc3012d25d41965f6e632d2b0b9a91238bbf647e2e084",
+      "matches": true
+    }
+  },
+  "runtime_version_checks": {
+    "python": {
+      "expected": "3.12.13",
+      "recorded": "3.12.13",
+      "matches": true
+    },
+    "numpy": {
+      "expected": "2.5.1",
+      "recorded": "2.5.1",
+      "matches": true
+    },
+    "gymnasium": {
+      "expected": "1.3.0",
+      "recorded": "1.3.0",
+      "matches": true
+    }
+  },
+  "per_cell": {
+    "uniform_shared_h64": {
+      "config": {
+        "name": "uniform_shared_h64",
+        "stage": "core",
+        "sampling": "uniform",
+        "architecture": "shared",
+        "hidden_size": 64,
+        "learning_rate": 0.0003,
+        "hindsight_scale": 0.0,
+        "hindsight_estimator": "maxrl",
+        "gamma": 1.0,
+        "lr_multiplier": null
+      },
+      "seeds_match": true,
+      "invariants_pass": true,
+      "progress_at_first_checkpoint_at_or_after_1m": [
+        {
+          "seed": 11000,
+          "checkpoint_transitions": 1003979,
+          "mean_pass": 0.734375,
+          "initial_mean_pass": 0.31640625,
+          "improvement": 0.41796875,
+          "below_0p95": true,
+          "qualifies": true
+        },
+        {
+          "seed": 11001,
+          "checkpoint_transitions": 1002207,
+          "mean_pass": 0.73828125,
+          "initial_mean_pass": 0.39453125,
+          "improvement": 0.34375,
+          "below_0p95": true,
+          "qualifies": true
+        },
+        {
+          "seed": 11002,
+          "checkpoint_transitions": 1002771,
+          "mean_pass": 0.57421875,
+          "initial_mean_pass": 0.3046875,
+          "improvement": 0.26953125,
+          "below_0p95": true,
+          "qualifies": true
+        }
+      ],
+      "qualifying_seed_count": 3,
+      "learning_and_headroom_pass": true,
+      "post_warmup_group_count": 936,
+      "post_warmup_mixed_count": 711,
+      "post_warmup_mixed_fraction": 0.7596153846153846,
+      "mixed_exposure_pass": true,
+      "complete_run_regimes": [
+        "all_pass",
+        "dead",
+        "mixed"
+      ],
+      "all_three_regimes_pass": true,
+      "post_warmup_mean_teacher_tv_from_uniform": 0.0,
+      "teacher_movement_pass": true
+    },
+    "teacher_shared_h64": {
+      "config": {
+        "name": "teacher_shared_h64",
+        "stage": "core",
+        "sampling": "teacher",
+        "architecture": "shared",
+        "hidden_size": 64,
+        "learning_rate": 0.0003,
+        "hindsight_scale": 0.0,
+        "hindsight_estimator": "maxrl",
+        "gamma": 1.0,
+        "lr_multiplier": null
+      },
+      "seeds_match": true,
+      "invariants_pass": true,
+      "progress_at_first_checkpoint_at_or_after_1m": [
+        {
+          "seed": 11000,
+          "checkpoint_transitions": 1002469,
+          "mean_pass": 0.72265625,
+          "initial_mean_pass": 0.31640625,
+          "improvement": 0.40625,
+          "below_0p95": true,
+          "qualifies": true
+        },
+        {
+          "seed": 11001,
+          "checkpoint_transitions": 1003144,
+          "mean_pass": 0.78125,
+          "initial_mean_pass": 0.39453125,
+          "improvement": 0.38671875,
+          "below_0p95": true,
+          "qualifies": true
+        },
+        {
+          "seed": 11002,
+          "checkpoint_transitions": 1003127,
+          "mean_pass": 0.703125,
+          "initial_mean_pass": 0.3046875,
+          "improvement": 0.3984375,
+          "below_0p95": true,
+          "qualifies": true
+        }
+      ],
+      "qualifying_seed_count": 3,
+      "learning_and_headroom_pass": true,
+      "post_warmup_group_count": 848,
+      "post_warmup_mixed_count": 744,
+      "post_warmup_mixed_fraction": 0.8773584905660378,
+      "mixed_exposure_pass": true,
+      "complete_run_regimes": [
+        "all_pass",
+        "dead",
+        "mixed"
+      ],
+      "all_three_regimes_pass": true,
+      "post_warmup_mean_teacher_tv_from_uniform": 0.2594190936624769,
+      "teacher_movement_pass": true
+    },
+    "uniform_disjoint_total_h8": {
+      "config": {
+        "name": "uniform_disjoint_total_h8",
+        "stage": "core",
+        "sampling": "uniform",
+        "architecture": "disjoint_total_budget",
+        "hidden_size": 8,
+        "learning_rate": 0.0003,
+        "hindsight_scale": 0.0,
+        "hindsight_estimator": "maxrl",
+        "gamma": 1.0,
+        "lr_multiplier": null
+      },
+      "seeds_match": true,
+      "invariants_pass": true,
+      "progress_at_first_checkpoint_at_or_after_1m": [
+        {
+          "seed": 11000,
+          "checkpoint_transitions": 1007884,
+          "mean_pass": 0.30859375,
+          "initial_mean_pass": 0.31640625,
+          "improvement": -0.0078125,
+          "below_0p95": true,
+          "qualifies": false
+        },
+        {
+          "seed": 11001,
+          "checkpoint_transitions": 1000842,
+          "mean_pass": 0.3984375,
+          "initial_mean_pass": 0.39453125,
+          "improvement": 0.00390625,
+          "below_0p95": true,
+          "qualifies": false
+        },
+        {
+          "seed": 11002,
+          "checkpoint_transitions": 1002236,
+          "mean_pass": 0.3046875,
+          "initial_mean_pass": 0.3046875,
+          "improvement": 0.0,
+          "below_0p95": true,
+          "qualifies": false
+        }
+      ],
+      "qualifying_seed_count": 0,
+      "learning_and_headroom_pass": false,
+      "post_warmup_group_count": 775,
+      "post_warmup_mixed_count": 555,
+      "post_warmup_mixed_fraction": 0.7161290322580646,
+      "mixed_exposure_pass": true,
+      "complete_run_regimes": [
+        "all_pass",
+        "dead",
+        "mixed"
+      ],
+      "all_three_regimes_pass": true,
+      "post_warmup_mean_teacher_tv_from_uniform": 0.0,
+      "teacher_movement_pass": true
+    },
+    "teacher_disjoint_total_h8": {
+      "config": {
+        "name": "teacher_disjoint_total_h8",
+        "stage": "core",
+        "sampling": "teacher",
+        "architecture": "disjoint_total_budget",
+        "hidden_size": 8,
+        "learning_rate": 0.0003,
+        "hindsight_scale": 0.0,
+        "hindsight_estimator": "maxrl",
+        "gamma": 1.0,
+        "lr_multiplier": null
+      },
+      "seeds_match": true,
+      "invariants_pass": true,
+      "progress_at_first_checkpoint_at_or_after_1m": [
+        {
+          "seed": 11000,
+          "checkpoint_transitions": 1000937,
+          "mean_pass": 0.3125,
+          "initial_mean_pass": 0.31640625,
+          "improvement": -0.00390625,
+          "below_0p95": true,
+          "qualifies": false
+        },
+        {
+          "seed": 11001,
+          "checkpoint_transitions": 1000666,
+          "mean_pass": 0.41796875,
+          "initial_mean_pass": 0.39453125,
+          "improvement": 0.0234375,
+          "below_0p95": true,
+          "qualifies": false
+        },
+        {
+          "seed": 11002,
+          "checkpoint_transitions": 1006117,
+          "mean_pass": 0.30859375,
+          "initial_mean_pass": 0.3046875,
+          "improvement": 0.00390625,
+          "below_0p95": true,
+          "qualifies": false
+        }
+      ],
+      "qualifying_seed_count": 0,
+      "learning_and_headroom_pass": false,
+      "post_warmup_group_count": 735,
+      "post_warmup_mixed_count": 583,
+      "post_warmup_mixed_fraction": 0.7931972789115647,
+      "mixed_exposure_pass": true,
+      "complete_run_regimes": [
+        "all_pass",
+        "dead",
+        "mixed"
+      ],
+      "all_three_regimes_pass": true,
+      "post_warmup_mean_teacher_tv_from_uniform": 0.20702582255677587,
+      "teacher_movement_pass": true
+    },
+    "uniform_disjoint_active_h64": {
+      "config": {
+        "name": "uniform_disjoint_active_h64",
+        "stage": "core",
+        "sampling": "uniform",
+        "architecture": "disjoint_active_capacity",
+        "hidden_size": 64,
+        "learning_rate": 0.0003,
+        "hindsight_scale": 0.0,
+        "hindsight_estimator": "maxrl",
+        "gamma": 1.0,
+        "lr_multiplier": null
+      },
+      "seeds_match": true,
+      "invariants_pass": true,
+      "progress_at_first_checkpoint_at_or_after_1m": [
+        {
+          "seed": 11000,
+          "checkpoint_transitions": 1005623,
+          "mean_pass": 0.33984375,
+          "initial_mean_pass": 0.31640625,
+          "improvement": 0.0234375,
+          "below_0p95": true,
+          "qualifies": false
+        },
+        {
+          "seed": 11001,
+          "checkpoint_transitions": 1006601,
+          "mean_pass": 0.390625,
+          "initial_mean_pass": 0.39453125,
+          "improvement": -0.00390625,
+          "below_0p95": true,
+          "qualifies": false
+        },
+        {
+          "seed": 11002,
+          "checkpoint_transitions": 1000913,
+          "mean_pass": 0.33203125,
+          "initial_mean_pass": 0.3046875,
+          "improvement": 0.02734375,
+          "below_0p95": true,
+          "qualifies": false
+        }
+      ],
+      "qualifying_seed_count": 0,
+      "learning_and_headroom_pass": false,
+      "post_warmup_group_count": 786,
+      "post_warmup_mixed_count": 615,
+      "post_warmup_mixed_fraction": 0.7824427480916031,
+      "mixed_exposure_pass": true,
+      "complete_run_regimes": [
+        "all_pass",
+        "dead",
+        "mixed"
+      ],
+      "all_three_regimes_pass": true,
+      "post_warmup_mean_teacher_tv_from_uniform": 0.0,
+      "teacher_movement_pass": true
+    },
+    "teacher_disjoint_active_h64": {
+      "config": {
+        "name": "teacher_disjoint_active_h64",
+        "stage": "core",
+        "sampling": "teacher",
+        "architecture": "disjoint_active_capacity",
+        "hidden_size": 64,
+        "learning_rate": 0.0003,
+        "hindsight_scale": 0.0,
+        "hindsight_estimator": "maxrl",
+        "gamma": 1.0,
+        "lr_multiplier": null
+      },
+      "seeds_match": true,
+      "invariants_pass": true,
+      "progress_at_first_checkpoint_at_or_after_1m": [
+        {
+          "seed": 11000,
+          "checkpoint_transitions": 1004643,
+          "mean_pass": 0.3671875,
+          "initial_mean_pass": 0.31640625,
+          "improvement": 0.05078125,
+          "below_0p95": true,
+          "qualifies": true
+        },
+        {
+          "seed": 11001,
+          "checkpoint_transitions": 1000337,
+          "mean_pass": 0.421875,
+          "initial_mean_pass": 0.39453125,
+          "improvement": 0.02734375,
+          "below_0p95": true,
+          "qualifies": false
+        },
+        {
+          "seed": 11002,
+          "checkpoint_transitions": 1002571,
+          "mean_pass": 0.34375,
+          "initial_mean_pass": 0.3046875,
+          "improvement": 0.0390625,
+          "below_0p95": true,
+          "qualifies": true
+        }
+      ],
+      "qualifying_seed_count": 2,
+      "learning_and_headroom_pass": true,
+      "post_warmup_group_count": 735,
+      "post_warmup_mixed_count": 622,
+      "post_warmup_mixed_fraction": 0.8462585034013606,
+      "mixed_exposure_pass": true,
+      "complete_run_regimes": [
+        "all_pass",
+        "dead",
+        "mixed"
+      ],
+      "all_three_regimes_pass": true,
+      "post_warmup_mean_teacher_tv_from_uniform": 0.2105809420124903,
+      "teacher_movement_pass": true
+    }
+  },
+  "runtime": {
+    "observed_development_serial_wall_seconds": 2686.245452627074,
+    "projected_20_seed_six_cell_serial_hours": 4.974528615976063,
+    "limit_hours": 24.0
+  },
+  "gates": {
+    "source_runtime_and_run_invariants": true,
+    "every_cell_two_of_three_learn_with_headroom": false,
+    "every_cell_post_warmup_mixed_fraction_at_least_0p10": true,
+    "every_teacher_cell_mean_tv_above_0p05": true,
+    "every_cell_observes_all_three_k_regimes": true,
+    "projected_20_seed_serial_runtime_at_most_24h": true,
+    "all_pass": false
+  },
+  "confirmatory_core_authorized": false
+}

@@ -1,25 +1,27 @@
 # frontier_rl — the curriculum-MaxRL schedule as a reusable framework
 
-The validated training algorithm (see `../REPORT.md`), packaged so it can be
-applied to gym environments, robotics simulators, or LLM prompt sets without
-touching the core. numpy-only; no torch/gym dependency in the core.
+The corrected grouped reference implementation (see `../REPORT.md`), packaged
+behind an interface for Gym environments and prospective robotics/LLM
+integrations. The core is NumPy-only; evidence boundaries still depend on the
+adapter and learner, and no broad robotics or LLM performance claim is made.
 
 ## The algorithm (one screen)
 
 ```
-teacher:   Beta(α,β) posterior per task (decay 0.7) → Thompson sample p̃
+teacher:   discounted Beta pseudo-counts per task → Thompson-style draw p̃
            → utility u(p̃) = (1−(1−p̃)^N) − p̃    [= MaxRL's expected advantage
-             mass, proved exact; peak at p* ≈ ln N/N]
-           → sample tasks ∝ u^γ  (γ≈4 if tasks share skills, 1 if independent)
+             mass divided by two; peak at p* ≈ ln N/N]
+           → sample tasks ∝ u^γ  (γ=1 conservative; γ=4 is a tested
+             shared-skill hypothesis, not a theorem)
            → mixed with a 10% uniform floor
 
 estimator: MaxRL success-conditioned advantages  w_i = r_i/K − 1/N
-           (K=0 groups dropped — this is what makes the teacher necessary)
+           (K=0 groups dropped; effective objective order N−1)
 
 hindsight: dead groups are relabeled by the ENV to the sub-goal actually
            achieved and trained as successes of that easier task
-           (exact ML gradient where the env's relabel is exact — proved +
-           measured; breaks the information ceiling of any pure sampler)
+           (verifier-valid auxiliary update; exact gradient equality needs
+           the trajectory-law condition in Proposition 6)
 ```
 
 ## Plugging in your environment
@@ -41,38 +43,44 @@ trainer = FrontierTrainer(MyEnv(), MyPolicy(),
 trainer.train(steps=500)
 ```
 
-**The two hindsight contracts** (from Proposition 6; violating either turns
-the exact relabeled gradient into noise):
+**Two necessary semantic contracts** (from Proposition 6; they are not
+sufficient for unbiasedness):
 
-1. **Exactness** — a relabeled success must be a *true* success of the
+1. **Verifier validity** — a relabeled success must be a *true* success of the
    relabeled task under the env's own verifier.
 2. **Conditioning** — if trajectories embed the goal (goal-relative features,
    `desired_goal` obs, goal tokens in a prompt), return rewritten
-   trajectories with the achieved goal substituted. We measured the cost of
-   skipping this on the gridworld: hindsight *hurts* without the rewrite
-   (AUC 0.600 < teacher-only 0.658) and gives the best result with it
-   (0.703). This is HER's observation-rewrite, surfaced as an interface
-   contract.
+   trajectories with the achieved goal substituted. The corrected ten-seed
+   gridworld study exercises this valid-rewrite path (teacher AUC 0.652,
+   teacher+hindsight 0.702); it does not include a corrected no-rewrite arm.
+   The rewrite requirement follows from the estimator's conditioning, not
+   from an archived smoke-test number.
+
+For centered practical weights, equality to a fresh order-(N−1) update follows
+from equality of the full relabeled/fresh joint laws. For success-only
+hindsight, the corresponding success-conditional marginal-law match guarantees
+exact ML. More generally, equality of the relevant update moment is necessary
+and sufficient. Verifier correctness and goal rewriting alone establish none
+of these distributional conditions.
 
 ## Adapters included
 
-| adapter | what it shows | result (AUC, uniform → teacher → +hindsight) |
+| adapter | what it shows | result (uniform → teacher → +hindsight) |
 |---|---|---|
-| `skill_chain` | regression anchor vs the validated testbed | 0.650 → 0.728 → **0.890** (matches REPORT.md) |
-| `grid_reach` | goal-conditioned robotics pattern (goal bins = distance rings, relabel = reached cell, REINFORCE tabular policy) | 0.592 → 0.658 → **0.703** |
-| `gym_classic` | **real gymnasium envs**: MountainCar positional curriculum (hard exploration) + CartPole survival curriculum | MC: 0.216 → 0.228 → **0.246**; CP: 0.190 → 0.225 → **0.246** (3 seeds) |
-| `gym_goal` | gymnasium GoalEnv skeleton: where reset/step/is_success go, how to bin continuous goals, HER-style relabel via `achieved_goal` | (skeleton — bring your env) |
+| `skill_chain` | 12-seed component ablation; checkpoint mean includes step zero | 0.660 uniform/no-HS → 0.781 γ=4/no-HS → **0.886** γ=4+centered, scale 1 |
+| `grid_reach` | goal-conditioned pattern; concrete-goal verifier relabel | 0.583 → 0.652 → **0.702** (10-seed corrected study) |
+| `gym_classic` | Gymnasium MountainCar/CartPole dynamics with custom nested binary tasks | corrected transition-matched MountainCar study below; historical CartPole result pending rerun |
+| `gym_goal` | Gymnasium GoalEnv skeleton; requires an environment-specific verifier-backed relabel callback | (skeleton — bring your env) |
 | `cosmos_libero` | **flow-policy VLA pattern** (Cosmos3/LIBERO): predicate-conjunction goals, positive-part weights, template conditioning rewrites, relabel-only sub-goal arms, mastery splits, per-class poison gating | frontier-heavy mock: uniform/teacher **0.000** → oracle-relabel **0.862**, self-verified 0.756, +gate 0.842 (3 seeds; `examples/run_cosmos_pilot.py`) |
+| UniLab external integration | native exact grouped Stewart manipulation on Motrix/Mac CPU | 33 arm runs across nine seed-level multi-arm replicates: `u_8` created the predicted raw mass, `rho/q` exposed its variance cost, and gradient-moment sampling improved ESS/second moment without a stable learning gain; no teacher-ranking claim |
 
-The gymnasium results reproduce the validated ordering
-(uniform < teacher < teacher+hindsight) on real environments with a
-deliberately weak tile-coded REINFORCE policy — MountainCar's sparse flag
-success is the real-world twin of our frontier-heavy regime, and its
-positional curriculum ("reach x ≥ x*, walking x* from valley to flag") is
-exactly the pattern to copy for robotics reach tasks. Budgets in the demo
-are small (~10 min CPU); scale `steps` for stronger separations.
+The adapter uses official Gymnasium dynamics and modern reset/step semantics,
+but evaluates custom binary task predicates rather than standard episodic
+return. MountainCar's sparse flag success is the external-dynamics twin of
+the frontier-heavy regime; its positional curriculum ("reach x ≥ x*, walking
+x* from valley to flag") is the pattern being tested.
 
-### MountainCar case study: the flag, solved — and a transfer lesson
+### MountainCar case study: opening the sparse flag through transfer
 
 Scaled runs (600 steps) with **per-bin policy parameters** never reach the
 flag (hardest bin stays 0.000 for every method): each bin's tile table
@@ -112,15 +120,44 @@ Run them:
 
 ```bash
 python3 frontier_rl/test_framework.py                 # unit tests
-python3 frontier_rl/examples/run_skill_chain.py       # regression anchor (~2 min)
+python3 frontier_rl/examples/run_skill_chain.py       # five-seed regression anchor
+python3 -m frontier_rl.examples.run_skill_chain_ablation # retained 12-seed factorial
 python3 frontier_rl/examples/run_grid_reach.py        # robotics-style demo (~3 min)
 python3 frontier_rl/examples/run_gym_benchmark.py     # gymnasium benchmark (~10 min, pip install gymnasium)
+python3 frontier_rl/examples/run_mountaincar_shared.py # corrected matched-transition study
+# From the sibling UniLab checkout (Motrix CPU):
+uv run --extra motrix python ../curriculum-maxrl/frontier_rl/examples/unilab_stewart_base_rate.py
+uv run train --algo ppo --task stewart_balance_grouped --sim motrix training.device=cpu training.no_play=true
+# Current native exact grouped training requires the registered owner checkpoint:
+uv run --extra motrix python scripts/train_grouped_maxrl.py \
+  --config-name second_moment training.checkpoint=/path/to/model_99.pt
 ```
+
+### UniLab Stewart native development result: mechanisms work; ranking is open
+
+The current native study uses a hash-locked final owner checkpoint, a repaired
+16-observation fixed-radius task, complete first episodes from all eight vector
+slots, and episodewise fixed-seed evaluation.  On the broader eleven-task
+ladder, corrected `u_8` sampling increased raw coefficient mass by about 14%,
+close to its 15.1% fixed-policy prediction, but exact `rho/q` correction
+cancelled weighted mass back toward uniform and reduced importance ESS to
+0.768.  Its paired performance effect was `+.0006` AUC and `-.0059` final
+macro.
+
+A follow-up sampled from online raw gradient-second moments, the quantity that
+actually minimizes the corrected estimator's second moment.  It improved ESS
+to 0.949 and lowered the observed corrected gradient second moment by about
+10% on average, but still produced `-.0004` AUC and `-.0062` final macro versus
+uniform.  Same-policy probes show why: the online tracker captured only 0.45%
+second-moment reduction at the end while the same-floor probe plug-in retained
+19.06% opportunity.  The next gate is calibrated/shrunk moment estimation, not
+another sampling score.  See `examples/UNILAB_STEWART_NATIVE_RESULTS_V2.md`;
+this is development evidence, not confirmatory robotics efficacy.
 
 ## Mapping to robotics / gym in practice
 
 - **Task bins**: pick the axis your curriculum should walk (goal distance,
-  obstacle count, object mass...). ~8–30 bins is plenty; the posterior needs
+  obstacle count, object mass...). ~8–30 bins is plenty; the pseudo-count model needs
   a few groups per bin to localize the frontier.
 - **Binary success**: use the env's own success predicate. Shaped rewards
   can coexist in your policy update; the *teacher* should only see binary
@@ -128,12 +165,13 @@ python3 frontier_rl/examples/run_gym_benchmark.py     # gymnasium benchmark (~10
 - **relabel**: gymnasium GoalEnvs give you `achieved_goal` for free — map it
   to its bin and rewrite `desired_goal` in the stored observations
   (contract 2). For non-goal envs with no meaningful relabel, return `None`;
-  you keep the teacher benefits and lose only the hindsight term.
+  you retain the teacher component but make no hindsight claim.
 - **Group size N**: the teacher's band targets p ≈ ln N/N. N=16 targets
   ~17% success tasks; raise N to push the curriculum toward harder bins.
 - **On/off-policy**: the schedule is estimator-agnostic at the interface
-  level, but its guarantees are for the MaxRL weights; if you swap in a PPO
-  update keep the weights as advantages and stay near-on-policy.
+  level, but the exact gradient results require true on-policy trajectory
+  scores. A PPO-clipped or replayed update is a surrogate and needs a measured
+  direction-fidelity check.
 
 ## Design: one schedule, five execution shapes
 
@@ -141,11 +179,11 @@ The algorithm is deliberately factored so each piece can be swapped to match
 the training regime without touching the others — the flexibility is the
 design, not an accident:
 
-| training regime | teacher variant | evidence stream | hindsight | validated on |
+| training regime | teacher variant | evidence stream | hindsight | current evidence boundary |
 |---|---|---|---|---|
-| episodic groups, fixed task pool (RLVR/LLM prompts) | `FrontierTeacher` (Beta rows, Thompson) | group (task, K of N) | dense relabel via `TaskSpace.relabel` | skill chain, maze GPU, verl integration |
+| episodic groups, fixed task pool (RLVR/LLM prompts) | `FrontierTeacher` (Beta rows, Thompson) | group (task, K of N) | dense relabel via `TaskSpace.relabel` | corrected skill chain; GPU maze historical/confounded; verl plumbing only |
 | episodic groups, procedural tasks | `StreamingFrontierTeacher` (kernel posterior) | (difficulty, K of N) | same | continuous-goal reach |
-| goal-conditioned control (gym/robotics) | `FrontierTeacher` over goal bins | group | relabel + conditioning rewrite | gridworld, MountainCar, CartPole |
+| goal-conditioned control (gym/robotics) | `FrontierTeacher` over goal bins | group | relabel + conditioning rewrite | corrected gridworld/MountainCar; CartPole retired pending rerun |
 | massively parallel sim (IsaacLab, 4096 envs) | `FrontierBinTeacher` (vectorized, evidence-scaled decay, deterministic optimism) | per-reset Bernoulli stream | statistics-half only (occupancy credit) | adapter + unit tests; SONIC design doc |
 | dense-reward PPO | any of the above with `utility="learnability"` | termination flag as verifier | usually skip (dense reward is the partial credit) | SONIC_RESPONSE.md analysis |
 | flow/diffusion action heads, no per-sample log-prob (VLA weighted SFT) | `MasteryFrontierTeacher` (samplable mask, mastery splits) | group (task, K of N) | dense relabel + **template** conditioning rewrite, per-class poison gate | cosmos_libero adapter + mock pilot; COSMOS3_RESPONSE.md |
@@ -160,16 +198,19 @@ The swap points and what fixes each choice:
   equivalents decay when throughput varies by orders of magnitude (Q4).
 - **optimism** — Thompson when stochasticity is fine; `mean + k·std` under
   determinism guardrails (Q3). Both validated equivalent when a floor exists.
-- **γ** — 4 on tight chains (compounding), 1 everywhere else (measured,
-  including the negative transfer on broad pools).
-- **hindsight** — full trajectory relabel where the env verifies exactly and
-  conditioning can be rewritten; statistics-only credit where it can't
-  (on-policy PPO); off where dense reward already carries partial credit.
+- **γ** — always treat concentration as empirical. `γ=4` helped the retained
+  skill chain and tile-coded MountainCar, while `γ=1` was not separated from
+  uniform or learnability in MountainCar; neither is a universal default.
+- **hindsight** — full trajectory relabel only where the env verifies exactly,
+  conditioning can be rewritten, and the required update-moment/law comparison
+  is audited. Reset-stream PPO should initially use requested-task statistics
+  only; dense reward is not a proof that hindsight is valid.
 - **weights** — full MaxRL (`r/K − 1/N`) when per-sample log-probs exist;
   `positive_part=True` (successes only, `TrainerConfig.positive_weights`) for
-  weighted-SFT on flow/diffusion heads — the dropped failure term is a
-  zero-mean baseline, `E[Σw⁺]` still equals the teacher utility exactly, and
-  all-pass groups self-retire (COSMOS3_RESPONSE.md Q1).
+  weighted-SFT on flow/diffusion heads. `E[Σw⁺]` equals the teacher utility
+  exactly and all-pass groups self-retire. The pass@k-tail update identity is
+  exact for true trajectory scores; a flow/SFT surrogate needs a separate
+  direction-fidelity probe (COSMOS3_RESPONSE.md Q1).
 
 ## IsaacLab / massively-parallel sim adapter
 
@@ -203,13 +244,15 @@ the closed-loop threshold-curriculum stability rules.
 for RLVR on flow-matching VLA policies (no tractable per-sample log-prob):
 
 - **positive-part weights** (`TrainerConfig(positive_weights=True)`) — the
-  weighted-RFT estimator; sampling algebra unchanged (P1 exact). Measured
-  cost of dropping the failure term (skill-chain anchor, matched budgets,
-  3 seeds): AUC 0.887→0.828, final 0.986→0.941 — the dropped term is a
-  zero-mean baseline, so the price is variance, not bias; the full stack
-  still clears plain-teacher (0.73) and uniform (0.65) by a wide margin
-  (`curriculum_maxrl/positive_part_training_cost.json`). Use it only when
-  per-sample log-probs are genuinely unavailable.
+  weighted-RFT rule; its scalar sampling algebra is unchanged (P1 exact),
+  while surrogate update-direction fidelity remains an empirical gate. A
+  stored three-seed skill-chain summary reports AUC `0.887→0.828` and final
+  score `0.986→0.941` relative to full MaxRL
+  (`curriculum_maxrl/positive_part_training_cost.json`), but the summary does
+  not include raw per-seed records or a generation manifest. Treat it as
+  local development evidence, not as closure of the surrogate-fidelity gate;
+  use positive-part weights only when per-sample log-probabilities are not
+  available.
 - **`CosmosLiberoSpace`** — arms are predicate-conjunction goals; `rollout_fn`
   is a hook for the policy-server + vector-env wave (no cosmos import here);
   live groups are verified ONLY by the sim's binary success; dead groups are
@@ -289,5 +332,6 @@ prompt set.
 ## What this does NOT do
 - Replace your RL optimizer: `Policy.update` is yours; this package decides
   *what to train on and with what advantage weights*, not how to descend.
-- GRPO-style std-normalized advantages under a curriculum — measured to
-  amplify coverage collapse (REPORT.md F2). Use the MaxRL weights.
+- A general safety claim for GRPO-style std-normalized advantages. Historical
+  audited maze logs raise an objective-by-curriculum interaction hypothesis,
+  but a corrected factorial is still required (REPORT.md F2).

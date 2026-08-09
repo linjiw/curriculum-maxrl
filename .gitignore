@@ -1,4 +1,32 @@
 __pycache__/
 *.pyc
 *.pt
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
 .DS_Store
+tmp/
+
+# Excluded local Acrobot smoke/quick artifacts (not publication evidence)
+frontier_rl/examples/acrobot_neural_core_quick.json
+frontier_rl/examples/acrobot_neural_pilot_quick.json
+frontier_rl/examples/acrobot_neural_scale_quick.json
+
+# Large paid-probe ProCuRL confirmation ledger. The finalized compact analysis
+# and content-addressed external-payload receipt belong in the release; the
+# multi-hundred-MB raw JSON remains an external replay artifact.
+frontier_rl/examples/acrobot_procurl_selection_confirmatory.json
+
+# Local full-replay payloads for the Digits factorial. These multi-GB run
+# trees remain on the experiment machine; the compact analyses, receipts,
+# source lock, protocol, and tests are the release artifacts.
+curriculum_maxrl/digits_factorial/.venv/
+curriculum_maxrl/digits_factorial/.pytest_cache/
+curriculum_maxrl/digits_factorial/development/
+curriculum_maxrl/digits_factorial/confirmation/
+curriculum_maxrl/digits_factorial/engineering/reseal_v2/
+curriculum_maxrl/digits_factorial/engineering/zero_lr_steps32_seed33000/
+curriculum_maxrl/digits_factorial/engineering/reseal_v3/serial/
+curriculum_maxrl/digits_factorial/engineering/reseal_v3/parallel/

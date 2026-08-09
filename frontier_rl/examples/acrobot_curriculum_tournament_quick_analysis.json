@@ -1,0 +1,10 @@
+{
+  "schema": "curriculum-maxrl/acrobot-curriculum-tournament-analysis/v2",
+  "mode": "quick",
+  "all_checks_passed": true,
+  "inference_performed": false,
+  "reason": "quick smoke is development-only; raw ledgers were validated without requiring or consulting a source lock",
+  "raw_artifact_path": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_curriculum_tournament_quick.json",
+  "raw_artifact_sha256": "783eec09d9f290e651daed8c88d2d92eee90077466e1db8ddbd2c24816775f4d",
+  "raw_artifact_relative_path": "frontier_rl/examples/acrobot_curriculum_tournament_quick.json"
+}

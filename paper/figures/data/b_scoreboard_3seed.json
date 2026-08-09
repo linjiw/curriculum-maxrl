@@ -1,4 +1,14 @@
 {
+ "_schema": {
+  "array_order": [
+   "mean_at_16_mean",
+   "mean_at_16_population_sd_ddof0",
+   "verl_bootstrap_best_at_16_proxy_mean",
+   "verl_bootstrap_best_at_16_proxy_population_sd_ddof0"
+  ],
+  "coverage_metric": "VERL bootstrap best@16 from 1,000 with-replacement resamples of the same 16 binary outcomes; not standard unbiased pass@16",
+  "standard_pass16_recomputable_from_this_file": false
+ },
  "B1_t1": [
   0.2776666666666667,
   0.05369254034676408,

@@ -1,0 +1,19 @@
+{
+  "authorization_digest": "1435b45c3e49afd7312be494ac4bd1255ccccf28aeb1eae4462f0cc7023e47d9",
+  "authorized_phase": "development",
+  "independent_preseal_review": {
+    "passed": true,
+    "review_sha256": "0c387ddd1b2bb49d2be6e1eacff96c9281cfa17eea85f01b425733c9aabe24ff"
+  },
+  "root_execution_authorization": {
+    "authorized": true,
+    "authorized_utc": "2026-08-08T18:42:49Z"
+  },
+  "schema": "curriculum-maxrl/digits-factorial-execution-authorization/v2",
+  "source_lock_sha256": "d72b93a29a2e6a096a6acb0611f69fe6df9dcda80256000aed6de5208ef4eb36",
+  "zero_lr_engineering_audit": {
+    "passed": true,
+    "relative_path": "curriculum_maxrl/digits_factorial/engineering/reseal_v3/engineering_audit.json",
+    "sha256": "d448a22793dc5a52ae7809dfc7572e3d669bebc5f8ef8d00a9865a0bb16150d1"
+  }
+}

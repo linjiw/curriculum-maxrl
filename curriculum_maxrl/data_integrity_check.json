@@ -1,4 +1,5 @@
 {
+ "schema_version": 2,
  "countdown_v2": {
   "train_rows": 10000,
   "train_unique_tasks": 10000,
@@ -14,6 +15,45 @@
    "countdown_tier0": 128,
    "countdown_tier1": 128,
    "countdown_tier2": 128
+  },
+  "sft_evaluation_overlap": {
+   "task_identity": "(integer target, sorted integer operand multiset)",
+   "verification_status": "verified_in_original_source_audit_inputs_not_vendored_here",
+   "source_evidence": {
+    "original": "../maxrl/curriculum_maxrl/VERL_AUDIT.md F12 (not present in this checkout)",
+    "local_record": "FINAL_REVIEW_RESPONSE_AND_GUIDANCE_2026-08-07.md, Part I.1"
+   },
+   "tiers": {
+    "countdown_tier0": {
+     "eval_unique_tasks": 128,
+     "sft_overlap_unique_tasks": 27,
+     "clean_unique_tasks": 101,
+     "overlap_fraction": 0.2109375,
+     "absolute_metrics_on_full_128": "contaminated_do_not_use"
+    },
+    "countdown_tier1": {
+     "eval_unique_tasks": 128,
+     "sft_overlap_unique_tasks": 0,
+     "clean_unique_tasks": 128,
+     "overlap_fraction": 0.0,
+     "central_sharpening_claim": "unaffected_by_sft_task_overlap"
+    },
+    "countdown_tier2": {
+     "eval_unique_tasks": 128,
+     "sft_overlap_unique_tasks": 0,
+     "clean_unique_tasks": 128,
+     "overlap_fraction": 0.0,
+     "central_sharpening_claim": "unaffected_by_sft_task_overlap"
+    }
+   },
+   "recompute_script": "curriculum_maxrl/audit_countdown_sft_overlap.py",
+   "source_inputs_available_in_this_checkout": false
+  },
+  "clean_tier0_reanalysis": {
+   "status": "blocked_missing_per_task_outcomes",
+   "required_input": "For every retained arm/seed at step 60, the frozen task identity and all 16 binary verifier outcomes.",
+   "why_aggregate_metrics_are_insufficient": "Tier-level mean@16/pass@16 cannot be restricted to the 101 clean tasks without per-task outcomes.",
+   "fallback": "Run checkpoint inference on the frozen 101-task manifest with the original decoding configuration if raw outcomes are unavailable."
   }
  },
  "gsm8k": {
@@ -23,5 +63,5 @@
   "val256_unique": 256,
   "train_val_overlap": 0
  },
- "_note": "Task identity: Countdown = (target, sorted operand multiset); GSM8K = prompt text hash. Zero overlap and zero intra-split duplicates required for the coverage claims (a duplicated task would double-count pass@k evidence). Checked 2026-08-06."
+ "_note": "Task identity: Countdown = (target, sorted operand multiset); GSM8K = prompt text hash. The Countdown RL train/test split has zero overlap, but the separate SFT warmstart overlaps 27 tier-0 evaluation tasks. Tiers 1-2 have zero SFT overlap. Checked 2026-08-06; SFT scope added 2026-08-07."
 }

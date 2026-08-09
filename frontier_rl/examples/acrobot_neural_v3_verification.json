@@ -1,0 +1,74 @@
+{
+  "schema": "curriculum-maxrl/acrobot-neural-v3-verification/v1",
+  "all_checks_passed": true,
+  "source_lock": {
+    "passed": true,
+    "runtime": {
+      "python": "3.12.13",
+      "numpy": "2.5.1",
+      "gymnasium": "1.3.0"
+    },
+    "checked_source_files": [
+      "frontier_rl/adapters/acrobot_neural.py",
+      "frontier_rl/estimators.py",
+      "frontier_rl/examples/ACROBOT_NEURAL_PROTOCOL_V3.md",
+      "frontier_rl/examples/analyze_acrobot_v3_confirmatory.py",
+      "frontier_rl/examples/run_acrobot_neural.py",
+      "frontier_rl/interfaces.py",
+      "frontier_rl/teacher.py"
+    ]
+  },
+  "protocol_checks_passed": true,
+  "per_case": {
+    "uniform_shared_h64": {
+      "n_runs": 20,
+      "all_valid": true,
+      "mean_recomputed_auc": 0.6486691197783041
+    },
+    "teacher_shared_h64": {
+      "n_runs": 20,
+      "all_valid": true,
+      "mean_recomputed_auc": 0.6850214952360877
+    }
+  },
+  "primary": {
+    "metric": "auc_mean_pass_by_transitions",
+    "estimand": "teacher_shared_h64 minus uniform_shared_h64",
+    "n_pairs": 20,
+    "per_seed_contrast": [
+      0.09017350365658472,
+      0.025762365153721656,
+      0.063196867573588,
+      -0.01896650871030492,
+      -0.020761026505363378,
+      0.05258121154403872,
+      0.02906497255617202,
+      0.09275162077986543,
+      0.008636004764069671,
+      0.08343277848947916,
+      -0.00507850269594512,
+      0.04550171152688376,
+      0.03801331064858082,
+      0.06606676234944331,
+      0.08232707484270896,
+      -0.04381973347846635,
+      -0.00854432533572147,
+      0.08144991517461042,
+      -0.02584997956297852,
+      0.09110948638470528
+    ],
+    "mean_contrast": 0.03635237545778361,
+    "bootstrap_ci95": [
+      0.016453573623036587,
+      0.055394886930143536
+    ],
+    "exact_two_sided_sign_flip_p": 0.0026397705078125,
+    "minimum_effect_threshold": 0.03,
+    "efficacy_supported": true,
+    "transfer_claim_evaluated": false
+  },
+  "artifact": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_neural_v3_shared_confirmatory.json",
+  "artifact_sha256": "30da4b9759828acb9357f5518a48196a6be98d314dffb7830b0ba4f89a31e423",
+  "lock": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_NEURAL_V3_LOCK.json",
+  "lock_sha256": "b6fdab92dabb970a985e10d5cd0a68c400c97ddd23b893c40028bbf5a9938634"
+}

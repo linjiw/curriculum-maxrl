@@ -1,0 +1,22 @@
+{
+  "scope": [
+    "armA_b3fix_s1.json",
+    "armA_b3fix_s2.json",
+    "armA_b3fix_s3.json",
+    "armB_replay_s1.json",
+    "armB_replay_s2.json",
+    "armB_replay_s3.json",
+    "reviewer_arms_verdicts.json"
+  ],
+  "legacy_key_pattern": "t{tier}_pass16",
+  "source_log_key_pattern": "pass@16_accuracies/countdown_tier{tier}/reward/best@16/mean",
+  "meaning": "VERL bootstrap best@16 coverage proxy computed from 1,000 with-replacement resamples of the same 16 logged binary outcomes",
+  "not_equivalent_to": [
+    "standard unbiased pass@16",
+    "indicator that the 16 observed samples contain any success"
+  ],
+  "conditional_expectation_given_c_successes": "approximately 1 - (1 - c/16)^16",
+  "standard_pass16_recomputable_from_these_files": false,
+  "missing_input": "the 16 per-task binary outcomes for every evaluated task",
+  "immutability_note": "Legacy run-level files retain their original field names and bytes; this sidecar governs their interpretation."
+}

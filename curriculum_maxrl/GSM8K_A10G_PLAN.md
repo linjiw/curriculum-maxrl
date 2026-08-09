@@ -133,7 +133,8 @@ materialize fp32-vocab tensors) and keep `enable_gradient_checkpointing: true` (
 **Scaling logic.** Paper: 256 prompts x 128 rollouts = 32,768 seqs/step over 8 GPUs
 (4,096/GPU). Ours: 64 prompts x 16 rollouts = 1,024 seqs/step on 1 GPU — a 4x/GPU reduction
 that offsets hf-generate being ~4-10x slower than vllm. N=16 keeps enough group resolution
-for MaxRL (truncate order T=N=16) and for the teacher's `pass@N - pass@1` utility.
+for practical dropped-group MaxRL (truncate order T=N-1=15) and for the teacher's
+`pass@N - pass@1` coefficient-mass utility.
 `max_response_length=1024` instead of 2048: SmolLM2 GSM8K solutions are ~150-400 tokens;
 2048 doubles KV + straggler cost for negligible pass-rate gain, and truncated responses are
 already zeroed by `zero_reward_on_max_response_length`.

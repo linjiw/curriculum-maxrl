@@ -1,0 +1,107 @@
+{
+  "schema": "curriculum-maxrl/acrobot-procurl-selection-analysis/v1",
+  "mode": "quick",
+  "status": "engineering_only_no_scientific_inference",
+  "strict_validation_passed": true,
+  "source_lock_verification": null,
+  "per_arm": {
+    "procurl_env_b20_f5120": {
+      "seeds": [
+        21400
+      ],
+      "derived_metrics": [
+        {
+          "auc_target_uniform_mean_success_fixed_paid_budget": 0.125,
+          "auc_target_uniform_mean_success_full_atomic_paid": 0.125,
+          "auc_target_uniform_mean_success_by_student_transitions": 0.125,
+          "fixed_minus_full_atomic_auc": 0.0,
+          "final_target_uniform_mean_success": 0.125,
+          "final_native_success_rate": 0.0
+        }
+      ],
+      "ledger": [
+        {
+          "paid_transitions": 145129,
+          "student_transitions": 7876,
+          "probe_transitions": 137253,
+          "probe_sweeps": 2,
+          "optimizer_updates": 1
+        }
+      ]
+    },
+    "probe_sham_uniform_f5120": {
+      "seeds": [
+        21400
+      ],
+      "derived_metrics": [
+        {
+          "auc_target_uniform_mean_success_fixed_paid_budget": 0.125,
+          "auc_target_uniform_mean_success_full_atomic_paid": 0.125,
+          "auc_target_uniform_mean_success_by_student_transitions": 0.125,
+          "fixed_minus_full_atomic_auc": 0.0,
+          "final_target_uniform_mean_success": 0.125,
+          "final_native_success_rate": 0.0
+        }
+      ],
+      "ledger": [
+        {
+          "paid_transitions": 145253,
+          "student_transitions": 8000,
+          "probe_transitions": 137253,
+          "probe_sweeps": 2,
+          "optimizer_updates": 0
+        }
+      ]
+    },
+    "ordinary_uniform": {
+      "seeds": [
+        21400
+      ],
+      "derived_metrics": [
+        {
+          "auc_target_uniform_mean_success_fixed_paid_budget": 0.15601367579047656,
+          "auc_target_uniform_mean_success_full_atomic_paid": 0.15625,
+          "auc_target_uniform_mean_success_by_student_transitions": 0.15625,
+          "fixed_minus_full_atomic_auc": -0.00023632420952343636,
+          "final_target_uniform_mean_success": 0.1875,
+          "final_native_success_rate": 0.0
+        }
+      ],
+      "ledger": [
+        {
+          "paid_transitions": 100762,
+          "student_transitions": 100762,
+          "probe_transitions": 0,
+          "probe_sweeps": 0,
+          "optimizer_updates": 9
+        }
+      ]
+    },
+    "u16_probe_range_matched_f5120": {
+      "seeds": [
+        21400
+      ],
+      "derived_metrics": [
+        {
+          "auc_target_uniform_mean_success_fixed_paid_budget": 0.125,
+          "auc_target_uniform_mean_success_full_atomic_paid": 0.125,
+          "auc_target_uniform_mean_success_by_student_transitions": 0.125,
+          "fixed_minus_full_atomic_auc": 0.0,
+          "final_target_uniform_mean_success": 0.125,
+          "final_native_success_rate": 0.0
+        }
+      ],
+      "ledger": [
+        {
+          "paid_transitions": 145253,
+          "student_transitions": 8000,
+          "probe_transitions": 137253,
+          "probe_sweeps": 2,
+          "optimizer_updates": 0
+        }
+      ]
+    }
+  },
+  "raw_artifact_relative_path": "frontier_rl/examples/acrobot_procurl_selection_quick.json",
+  "raw_artifact_sha256": "806351c53f6c448fdf80bae5a59c80c97e363ffa3fae939cda4feae3ad012957"
+}

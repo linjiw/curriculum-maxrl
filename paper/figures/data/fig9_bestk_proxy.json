@@ -1,0 +1,22 @@
+{
+  "metric": "VERL bootstrap best@k coverage proxy; 1000 with-replacement resamples, not standard unbiased pass@k",
+  "scope": "Countdown tier 1, step 60, seed 1; exploratory single-seed telemetry",
+  "k": [1, 2, 4, 8, 16],
+  "series": {
+    "no_recycling": [0.310, 0.384, 0.451, 0.509, 0.559],
+    "recycling": [0.334, 0.388, 0.428, 0.459, 0.485],
+    "recycling_faulty_decay_gate": [0.309, 0.374, 0.425, 0.459, 0.475],
+    "full_strength_refuted": [0.220, 0.316, 0.412, 0.499, 0.564]
+  },
+  "provenance": {
+    "no_recycling": "Ray session 07-29_05 B1",
+    "recycling": "Ray session 07-28_22 B2",
+    "recycling_faulty_decay_gate": "Ray session 07-29_02 B3",
+    "full_strength_refuted": "Ray session 07-30_06; single-seed point superseded by P-R1"
+  },
+  "limitations": [
+    "The underlying per-task verifier outcomes are not vendored.",
+    "The curves cannot be converted to standard unbiased pass@k from these aggregates.",
+    "Only seed 1 has the full logged best@k curve; this is not population evidence."
+  ]
+}

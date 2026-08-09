@@ -1,17 +1,19 @@
 """FrontierTeacher: the validated curriculum sampler.
 
-Utility (PROOFS.md P1): u(p) = (1-(1-p)^N) - p — the exact expected
-advantage mass of the MaxRL estimator per group, peaking at p* ≈ ln(N)/N.
-Posterior: decayed Beta per task (decay 0.7, VALIDATION.md V2b).
+Utility (PROOFS.md P2): u(p) = (1-(1-p)^N) - p — half the exact expected
+scalar coefficient mass of the practical MaxRL estimator, peaking at
+p* ≈ ln(N)/N. Evidence model: discounted Beta pseudo-counts per task.
 Sampling: Thompson draw → u^gamma (V6: gamma tracks task-graph
 connectivity — 4 for chained/shared-skill pools, 1 for flat pools) →
-mix with uniform floor (P7: the floor bounds posterior staleness).
+mix with uniform floor (P7: the floor guarantees bounded revisit time).
 
 Validated defaults are the constructor defaults; every knob's provenance
 is in its docstring line.
 """
 
 from __future__ import annotations
+
+import copy
 
 import numpy as np
 
@@ -34,10 +36,10 @@ class FrontierTeacher:
 
     # -- evidence ---------------------------------------------------------
     def observe(self, task_id: int, rewards: np.ndarray) -> None:
-        """Update the task's posterior from one group's binary rewards.
+        """Update the task's discounted pseudo-counts from binary rewards.
 
         Only requested-task evidence belongs here — feeding relabeled
-        successes back inflates the posterior (V4 + GPU A/B/C config C).
+        successes back inflates the pseudo-count estimate (V4 + GPU config C).
         """
         k = float(np.sum(rewards))
         n = float(len(rewards))
@@ -76,9 +78,12 @@ class FrontierTeacher:
 
     def state_dict(self) -> dict:
         return {"alpha": self.alpha.copy(), "beta": self.beta.copy(),
-                "visits": self.visits.copy()}
+                "visits": self.visits.copy(),
+                "rng_state": copy.deepcopy(self.rng.bit_generator.state)}
 
     def load_state_dict(self, state: dict) -> None:
         self.alpha = np.asarray(state["alpha"], dtype=float)
         self.beta = np.asarray(state["beta"], dtype=float)
         self.visits = np.asarray(state["visits"], dtype=np.int64)
+        if "rng_state" in state:
+            self.rng.bit_generator.state = copy.deepcopy(state["rng_state"])

@@ -1,0 +1,20 @@
+{
+  "schema": "curriculum-maxrl/acrobot-neural-source-lock/v1",
+  "frozen_utc_date": "2026-07-22",
+  "purpose": "Exact pre-development source lock for the Acrobot V2 development, core-confirmatory, and scale-confirmatory stages.",
+  "v1_pilot_artifact_sha256": "746bce1711291cd6b6f0e2c5e2e2e0d890b19d1c5c86b9a3f2e57cdfd8f3d308",
+  "runtime": {
+    "python": "3.12.13",
+    "numpy": "2.5.1",
+    "gymnasium": "1.3.0"
+  },
+  "source_sha256": {
+    "frontier_rl/examples/run_acrobot_neural.py": "215f126eb560bf330d44f2fb7b38792c78488e14693fa57fb493ac49820017eb",
+    "frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+    "frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+    "frontier_rl/estimators.py": "6db395ce10b961b731062ac3ad087bf5425434d3210bfed80c84af3836a535fd",
+    "frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+    "frontier_rl/examples/ACROBOT_NEURAL_PROTOCOL_V2.md": "a66a5dd57a71e759242cc3012d25d41965f6e632d2b0b9a91238bbf647e2e084"
+  },
+  "equality_rule": "Every recorded source_sha256 entry in a V2 development or confirmatory artifact must equal this object before that artifact may pass its source-lock gate. Any source change requires a versioned amendment and a new lock."
+}

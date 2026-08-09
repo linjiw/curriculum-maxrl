@@ -1,4 +1,14 @@
 {
+ "_metric_provenance": {
+  "legacy_keys": [
+   "t1_pass16",
+   "coverage",
+   "coverage_vs_B1"
+  ],
+  "meaning": "VERL bootstrap best@16 coverage proxy; not standard unbiased pass@16",
+  "standard_pass16_recomputable_from_this_file": false
+ },
+ "_provenance_caveat": "Protocol labels and verdict rules are transcribed from the external execution record; locking objects are absent, so this checkout does not independently establish registration timing.",
  "P_R1": {
   "arm": "ARM A designed-gate B3, 3 seeds",
   "t1_mean16": [
@@ -38,7 +48,7 @@
   ],
   "mean_captured_fraction_of_B2_gain": 4.293,
   "coverage_vs_B1": 0.094,
-  "verdict": "CONFIRMED-STRONG (captures >all of B2's gain, no coverage loss)",
+  "verdict": "CONFIRMED-STRONG under stored rule (higher-dose replay improves both logged metrics; dose and direction are not decomposed)",
   "per_seed_meets_window": [
    true,
    true,

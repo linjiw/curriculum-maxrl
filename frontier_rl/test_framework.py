@@ -2,18 +2,24 @@
 
 from __future__ import annotations
 
-import sys, os
+import os
+import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+from math import comb
 
 import numpy as np
 
 from frontier_rl import (FrontierTeacher, FrontierTrainer, TrainerConfig,
-                         maxrl_weights, grpo_weights, rloo_weights)
+                         grpo_weights, maxrl_success_weights,
+                         maxrl_unbiased_cv_weights, maxrl_weights, rloo_weights)
 from frontier_rl.adapters.skill_chain import SkillChainSpace
-from frontier_rl.adapters.grid_reach import GridReachSpace
+from frontier_rl.adapters.grid_reach import GridReachSpace, MOVES
 from frontier_rl.adapters.cosmos_libero import (CosmosLiberoSpace,
                                                 MasteryFrontierTeacher,
                                                 PoisonRateMeter)
+from frontier_rl.adapters.isaaclab_curriculum import FrontierBinTeacher
+from frontier_rl.interfaces import GroupResult
 
 
 def test_estimators():
@@ -26,6 +32,42 @@ def test_estimators():
     print("estimators OK")
 
 
+def test_maxrl_population_orders():
+    """Exact binomial enumeration catches the practical estimator's N-1 shift."""
+    for n in (2, 3, 8):
+        for p in (0.03, 0.2, 0.7):
+            got = {
+                "drop": 0.0,
+                "raw": 0.0,
+                "cv": 0.0,
+                "positive": 0.0,
+                "mass": 0.0,
+            }
+            for k in range(n + 1):
+                prob = comb(n, k) * p ** k * (1 - p) ** (n - k)
+                r = np.array([1.0] * k + [0.0] * (n - k))
+                score = r - p  # Bernoulli-logit score; grad p = p(1-p)
+                wd = maxrl_weights(r)
+                got["drop"] += prob * float(wd @ score)
+                got["raw"] += prob * float(maxrl_success_weights(r) @ score)
+                got["cv"] += prob * float(maxrl_unbiased_cv_weights(r) @ score)
+                got["positive"] += prob * float(
+                    maxrl_weights(r, positive_part=True) @ score
+                )
+                got["mass"] += prob * float(np.abs(wd).sum())
+            grad_p = p * (1 - p)
+            w_n = (1 - (1 - p) ** n) / p
+            w_nm1 = (1 - (1 - p) ** (n - 1)) / p
+            assert np.isclose(got["raw"], w_n * grad_p)
+            assert np.isclose(got["cv"], w_n * grad_p)
+            assert np.isclose(got["drop"], w_nm1 * grad_p)
+            assert np.isclose(got["positive"], (w_n - 1.0) * grad_p)
+            assert np.isclose(
+                got["mass"], 2 * ((1 - (1 - p) ** n) - p)
+            )
+    print("MaxRL population-order identities OK")
+
+
 def test_positive_part_estimator():
     # success weights kept, failure weights zeroed
     r = np.array([1., 0., 0., 1.])
@@ -35,8 +77,9 @@ def test_positive_part_estimator():
     assert not maxrl_weights(np.ones(8), positive_part=True).any()
     # dead groups still dead
     assert not maxrl_weights(np.zeros(8), positive_part=True).any()
-    # exact identity (COSMOS3 Q1): E[sum w+] = pass@N - pass@1 = u(p),
-    # so the teacher utility governs the weighted-RFT update exactly
+    # Exact scalar-mass identity (COSMOS3 Q1): E[sum w+] =
+    # pass@N - pass@1 = u(p).  This governs sampling exactly; a surrogate
+    # weighted-SFT/flow update still needs a direction-fidelity check.
     rng = np.random.default_rng(0)
     N = 8
     for p in (0.05, 0.2, 0.5):
@@ -48,7 +91,7 @@ def test_positive_part_estimator():
     print("positive-part estimator OK")
 
 
-def test_teacher_posterior_and_utility():
+def test_teacher_pseudocounts_and_utility():
     t = FrontierTeacher(n_tasks=20, n_rollouts=16, seed=0)
     for _ in range(6):
         t.observe(3, np.array([1.]*4 + [0.]*12))   # frontier p~0.25
@@ -73,7 +116,38 @@ def test_teacher_state_roundtrip():
     t2 = FrontierTeacher(5, 8, seed=0)
     t2.load_state_dict(t.state_dict())
     assert np.allclose(t.alpha, t2.alpha) and np.allclose(t.beta, t2.beta)
+    assert np.allclose(t.distribution(), t2.distribution())
     print("state roundtrip OK")
+
+
+def test_reset_stream_teacher_state_roundtrip():
+    """Resume preserves evidence, cached probabilities, and Thompson RNG."""
+    teacher = FrontierBinTeacher(
+        4, utility="advmass", advmass_n=8, thompson=True, seed=17
+    )
+    teacher.observe_resets(
+        np.array([0, 0, 1, 2, 2, 2]),
+        np.array([False, True, False, True, True, False]),
+    )
+    teacher.sampling_probs()  # materialize the stochastic cached distribution
+    state = teacher.state_dict()
+    expected = teacher.sample_bins(64)
+
+    restored = FrontierBinTeacher(
+        4, utility="advmass", advmass_n=8, thompson=True, seed=999
+    )
+    restored.load_state_dict(state)
+    assert np.array_equal(restored.sample_bins(64), expected)
+    assert np.array_equal(restored.succ, teacher.succ)
+    assert np.array_equal(restored.fail, teacher.fail)
+
+    # A dirty checkpoint must also reproduce the next posterior draw.
+    teacher.observe_resets(np.array([3]), np.array([False]))
+    dirty_state = teacher.state_dict()
+    dirty_expected = teacher.sample_bins(64)
+    restored.load_state_dict(dirty_state)
+    assert np.array_equal(restored.sample_bins(64), dirty_expected)
+    print("reset-stream teacher state roundtrip OK")
 
 
 def test_trainer_on_skill_chain():
@@ -98,13 +172,15 @@ def test_hindsight_contract_gridworld():
         assert 0 <= new_task < env.n_tasks
         assert new_r.sum() >= 1, "relabel must create at least one success"
         ring = new_task + 1
-        for r, info, nt in zip(new_r, g.infos, new_trajs):
-            end_ring = max(abs(info["final_pos"][0]), abs(info["final_pos"][1]))
+        relabeled_goal = new_trajs[0]["goal"]
+        for r, nt in zip(new_r, new_trajs):
+            assert np.array_equal(nt["goal"], relabeled_goal)
             if r == 1.0:
-                # exactness (P6 contract 1): success truly ended on that ring
-                assert end_ring == ring
-                # conditioning (contract 2): goal rewritten to achieved cell
-                assert np.array_equal(nt["goal"], info["final_pos"])
+                # Semantic validity and fresh-task stopping: the final credited
+                # transition is the first hit of the concrete relabeled goal.
+                reached = nt["positions"][-1] + MOVES[nt["actions"][-1]]
+                assert np.array_equal(reached, nt["goal"])
+                assert max(abs(reached[0]), abs(reached[1])) == ring
     print("hindsight contract OK")
 
 
@@ -425,7 +501,55 @@ def test_baseline_estimator_arms():
         raise AssertionError("should have raised")
     except ValueError:
         pass
+    # Historical Gym controls can choose raw success-only weights for the
+    # auxiliary relabeled update without changing the live-group estimator.
+    hs = FrontierTrainer(
+        env, env,
+        TrainerConfig(estimator="grpo", hindsight_estimator="success_only"),
+    )
+    assert np.array_equal(
+        hs._hindsight_weights(np.array([1.0, 0.0, 0.0, 0.0])),
+        np.array([1.0, 0.0, 0.0, 0.0]),
+    )
     print("baseline estimator arms OK")
+
+
+def test_redraws_count_every_paid_transition():
+    class RedrawEnv:
+        n_tasks = 1
+
+        def __init__(self):
+            self.calls = 0
+
+        def rollout_group(self, task_id, n_rollouts):
+            self.calls += 1
+            # Two paid transitions per rollout. The first two groups are dead;
+            # the third is live, so one requested draw plus two redraws cost 12.
+            rewards = np.zeros(n_rollouts)
+            if self.calls == 3:
+                rewards[0] = 1.0
+            trajectories = [[0, 1] for _ in range(n_rollouts)]
+            return GroupResult(task_id, rewards, trajectories)
+
+        def relabel(self, group):
+            return None
+
+    class NoOpPolicy:
+        def update(self, task_id, trajectories, weights):
+            pass
+
+    env = RedrawEnv()
+    trainer = FrontierTrainer(
+        env,
+        NoOpPolicy(),
+        TrainerConfig(n_rollouts=2, tasks_per_step=1, hindsight=False,
+                      dapo_max_redraws=2, seed=0),
+    )
+    stats = trainer.step()
+    assert env.calls == 3
+    assert stats.env_steps == 12
+    assert stats.dead_groups == 2 and stats.live_groups == 1
+    print("redraw transition accounting OK")
 
 
 def test_dead_group_without_relabel_is_skipped():
@@ -437,6 +561,32 @@ def test_dead_group_without_relabel_is_skipped():
     stats = trainer.train(steps=10)
     assert all(s.relabeled_groups == 0 for s in stats)
     print("no-relabel fallback OK")
+
+
+def test_all_pass_group_is_not_relabelled():
+    class AllPassEnv(SkillChainSpace):
+        def __init__(self):
+            super().__init__(n_chains=1, n_levels=1, n_actions=2, seed=0)
+            self.relabel_calls = 0
+
+        def rollout_group(self, task_id, n_rollouts):
+            group = super().rollout_group(task_id, n_rollouts)
+            group.rewards[:] = 1.0
+            return group
+
+        def relabel(self, group):
+            self.relabel_calls += 1
+            return super().relabel(group)
+
+    env = AllPassEnv()
+    trainer = FrontierTrainer(
+        env, env, TrainerConfig(n_rollouts=4, tasks_per_step=1, hindsight=True)
+    )
+    stats = trainer.step()
+    assert stats.all_pass_groups == 1
+    assert stats.dead_groups == 0 and stats.relabeled_groups == 0
+    assert env.relabel_calls == 0
+    print("all-pass gate OK")
 
 
 def test_isaaclab_adapter():
@@ -520,9 +670,11 @@ def test_countdown_llm_adapter():
 
 if __name__ == "__main__":
     test_estimators()
+    test_maxrl_population_orders()
     test_positive_part_estimator()
-    test_teacher_posterior_and_utility()
+    test_teacher_pseudocounts_and_utility()
     test_teacher_state_roundtrip()
+    test_reset_stream_teacher_state_roundtrip()
     test_trainer_on_skill_chain()
     test_hindsight_contract_gridworld()
     test_evaluation_harness()
@@ -533,7 +685,9 @@ if __name__ == "__main__":
     test_pilot0_instruments()
     test_cosmos_live_glue()
     test_baseline_estimator_arms()
+    test_redraws_count_every_paid_transition()
     test_dead_group_without_relabel_is_skipped()
+    test_all_pass_group_is_not_relabelled()
     test_isaaclab_adapter()
     test_countdown_llm_adapter()
     print("\nALL TESTS PASSED")

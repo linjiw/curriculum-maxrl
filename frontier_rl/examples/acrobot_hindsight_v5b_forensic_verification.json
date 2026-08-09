@@ -1,0 +1,62 @@
+{
+  "schema": "curriculum-maxrl/acrobot-hindsight-v5b-forensic-verification/v1",
+  "status": "post_hoc_non_authorizing_forensic_diagnostic",
+  "artifact": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v5b_factorial.json",
+  "artifact_sha256": "c633886a121906ee2bceb03f3117e4bea5dc20ab314e43f9b702ef8d88f495ac",
+  "artifact_size_bytes": 46394400,
+  "lock": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_HINDSIGHT_V5B_LOCK.json",
+  "lock_sha256": "dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2",
+  "registered_primary_family_authorized": false,
+  "original_locked_analyzer_passed": false,
+  "mechanical_integrity": {
+    "passed": true,
+    "complete_cases": 9,
+    "runs_per_case": 20,
+    "registered_runs_validated": 180,
+    "raw_group_records_validated": 53510,
+    "raw_update_records_validated": 45000,
+    "evaluation_checkpoints_validated": 1080,
+    "run_failures_empty": true,
+    "selected_optimizer_update_budget": 250,
+    "frozen_protocol_validation_passed": true,
+    "frozen_source_runtime_lock_validation_passed": true,
+    "frozen_linked_authorization_validation_passed": true
+  },
+  "canonical_locked_analyzer_failure": {
+    "reproduced": true,
+    "exception_type": "ValueError",
+    "message": "runner V5B case diagnostic summary mismatch: lr_mult_0p5_hs_0"
+  },
+  "reduction_forensics": {
+    "passed": true,
+    "reduction_fields_checked": 720,
+    "saved_runner_numpy_exact_matches": 720,
+    "saved_runner_numpy_exact_mismatches": 0,
+    "analyzer_sequential_python_exact_matches": 343,
+    "analyzer_sequential_python_exact_mismatches": 377,
+    "maximum_absolute_difference": 1.9984014443252818e-15,
+    "maximum_ulp_distance": 11,
+    "frozen_numeric_absolute_tolerance": 1e-12,
+    "all_sequential_python_differences_within_frozen_numeric_tolerance": true,
+    "diagnosis": "The runner saved NumPy sum/dot reductions exactly. The frozen analyzer reduced the same positive norms by sequential Python addition and then required exact dictionary equality for these diagnostic fields."
+  },
+  "compatibility_diagnostic": {
+    "performed_in_memory_only": true,
+    "diagnostic_fields_normalized": 720,
+    "diagnostic_values_changed": 377,
+    "all_remaining_frozen_checks_passed": true,
+    "primary_outcome_subtrees_retained_or_emitted": false,
+    "changes_original_artifact": false,
+    "repairs_or_supersedes_registered_analyzer": false
+  },
+  "frozen_chain": {
+    "source_runtime_lock_sha256": "dfc930bbaf8e51c96fd1dab5851179457fce4f151def8c138ddf0cf17402bcf2",
+    "source_files_checked": 17,
+    "linked_amendment_sha256": "11975381874842bc3019074ea9d8168006c0517982ac11e00ad0b488e7671f36",
+    "linked_stage_a_artifact_sha256": "9cf741c91dcb82218cada9b451b76e0811c67aa4cbf1786ac0ba926806479b0a",
+    "linked_stage_a_verification_sha256": "a46b5e9f732b7f9e1796e2d4a2ff344c9ff738574c464b28631e884faaa6ba19",
+    "linked_stage_a_gates_sha256": "5a63992e3dba4be61536859451d41e98b70b3868b4d9012385837d11b7eb36bb",
+    "passed": true
+  },
+  "scope_boundary": "This report diagnoses a post-hoc floating-point reduction-order mismatch. It neither authorizes the registered primary family nor reports, interprets, or rescues any primary contrast, cell outcome, or predeclared decision."
+}

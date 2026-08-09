@@ -22,6 +22,11 @@ from __future__ import annotations
 
 import numpy as np
 
+
+def _trapezoid(y, x):
+    integrate = getattr(np, "trapezoid", None)
+    return (np.trapz if integrate is None else integrate)(y, x)
+
 from testbed import SkillChainEnv
 from estimators import weights_maxrl
 from teachers import AdvMassTeacher, UniformTeacher
@@ -46,7 +51,18 @@ def run(method: str, seed: int, total_groups: int = 3200, n_rollouts: int = 16,
     rng = np.random.default_rng(seed + 5)
     chain_len = env.n_levels
 
-    hist, used = [], 0
+    hist = [float(env.true_pass_rates()[pool].mean())]
+    xs = [0]
+    used = 0
+    next_eval = eval_every
+
+    def record_due():
+        nonlocal next_eval
+        while used >= next_eval:
+            xs.append(used)
+            hist.append(float(env.true_pass_rates()[pool].mean()))
+            next_eval += eval_every
+
     while used < total_groups:
         if method.startswith("dapo"):
             # dynamic sampling: draw until a live group appears (paying for
@@ -58,7 +74,9 @@ def run(method: str, seed: int, total_groups: int = 3200, n_rollouts: int = 16,
                 k = rewards.sum()
                 if 0 < k < n_rollouts:
                     env.apply_gradient(t, actions, weights_maxrl(rewards), lr)
+                    record_due()
                     break
+                record_due()
                 if used >= total_groups:
                     break
         elif method.startswith("uniform"):
@@ -86,7 +104,7 @@ def run(method: str, seed: int, total_groups: int = 3200, n_rollouts: int = 16,
             w = weights_maxrl(rewards)
             if np.any(w != 0):
                 env.apply_gradient(t, actions, w, lr)
-            elif method.endswith("hindsight"):
+            elif rewards.sum() == 0 and method.endswith("hindsight"):
                 prefixes = np.array([correct_prefix_len(a) for a in actions])
                 j = int(prefixes.max())
                 if j >= 1:

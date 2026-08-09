@@ -1,16 +1,19 @@
 {
- "_comment": "Frozen input manifest for every paper figure. Regenerate any figure with its command from repo root; checksums are sha256[:16] of the exact inputs used. Values marked raw come from run artifacts; fig2/fig3 tables are transcribed endpoints with per-panel provenance inside the data files.",
+ "_comment": "Frozen input manifest for every paper figure and quoted structured result. Regenerate any figure with its command from repo root; checksums are sha256[:16] of the exact inputs used. Values marked raw come from run artifacts; fig2/fig3 tables are transcribed endpoints with per-panel provenance inside the data files.",
  "manuscript": {
-  "body": "paper/body.tex",
+  "body": "paper/body_iclr.tex",
+  "extended_record": "paper/body.tex",
   "wrappers": [
    "paper/main.tex",
    "paper/main_iclr.tex"
   ],
-  "commit_at_freeze": "d1b460539a7388f48b0d46c31d9d9fe591182b6a"
+  "historical_extended_record_freeze_commit": "d1b460539a7388f48b0d46c31d9d9fe591182b6a",
+  "submission_freeze_commit": null,
+  "submission_freeze_status": "release artifacts frozen and verified; the containing Git commit is the publication record (field intentionally null to avoid self-reference)"
  },
  "timing": {
   "artifact": "paper/figures/data/generation_timing.json",
-  "checksum": "f823e116eb7e5d67",
+  "checksum": "fee56498b9cd551d",
   "facts": {
    "total_steps": 1188,
    "overall_weighted_mean": 0.3117,
@@ -19,13 +22,164 @@
    "gen_dominated_weighted_mean": 0.8337
   }
  },
+ "results": {
+  "capped_hora_robustness": {
+   "inputs": [
+    "curriculum_maxrl/CAPPED_HORA_ROBUSTNESS_LOCK.json",
+    "curriculum_maxrl/CAPPED_HORA_ROBUSTNESS_PROTOCOL.md",
+    "curriculum_maxrl/capped_hora_engineering_validation_receipt.json",
+    "curriculum_maxrl/results_capped_hora_robustness.json",
+    "curriculum_maxrl/results_capped_hora_robustness_analysis.json"
+   ],
+   "checksums": {
+    "curriculum_maxrl/CAPPED_HORA_ROBUSTNESS_LOCK.json": "14418bb71e92b5ee",
+    "curriculum_maxrl/CAPPED_HORA_ROBUSTNESS_PROTOCOL.md": "f206a58ee3bfe81b",
+    "curriculum_maxrl/capped_hora_engineering_validation_receipt.json": "8e1ddda1bd18590d",
+    "curriculum_maxrl/results_capped_hora_robustness.json": "b2df9946c699b4d9",
+    "curriculum_maxrl/results_capped_hora_robustness_analysis.json": "2141bf38c399eddf"
+   },
+   "verification": "HORA_PYTHON=/usr/bin/python3 bash reproduce.sh",
+   "notes": "Post-guidance exploratory 50-cell by 16-seed SkillChain robustness matrix; all 800 runs retained. The frozen engineering filter selects cap 32, but the study is not confirmatory HORA validation or evidence of coefficient-mass mediation."
+  },
+  "correlated_rollout_stress": {
+   "inputs": [
+    "curriculum_maxrl/results_correlated_rollout_stress.json"
+   ],
+   "checksums": {
+    "curriculum_maxrl/results_correlated_rollout_stress.json": "224c438d6655790c"
+   },
+   "verification": "python -m unittest curriculum_maxrl.test_correlated_rollout_stress",
+   "notes": "Exact beta-binomial count-distribution stress test of the distribution-free coefficient-mass identity; this is a scope diagnostic, not a learning result."
+  },
+  "fixed_budget_n_sweep": {
+   "inputs": [
+    "curriculum_maxrl/results_fixed_budget_n_sweep.json"
+   ],
+   "checksums": {
+    "curriculum_maxrl/results_fixed_budget_n_sweep.json": "937591457212d1d5"
+   },
+   "verification": "python -m unittest curriculum_maxrl.test_fixed_budget_n_sweep",
+   "notes": "Post-guidance eight-seed CPU mechanism check at an exact 51,200-completion budget per cell. The test reads the stored artifact and verifies every value and sign count quoted in the main-text table; this is not a preregistered algorithm benchmark."
+  },
+  "countdown_sft_overlap_summary": {
+   "inputs": [
+    "curriculum_maxrl/data_integrity_check.json"
+   ],
+   "checksums": {
+    "curriculum_maxrl/data_integrity_check.json": "6c7896f6b23cc468"
+   },
+   "verification": "python -m unittest curriculum_maxrl.test_audit_countdown_sft_overlap",
+   "notes": "Summary-backed identity audit: 27/128 tier-0 tasks overlap the SFT warm start, tier 1 and tier 2 report zero overlap, and a numerical 101-task tier-0 reanalysis is blocked. Source SFT/evaluation manifests and per-task outcomes are absent, so the release verifies the stored summary and audit implementation rather than recomputing the historical counts."
+  },
+  "digits_exact_probability_factorial": {
+   "inputs": [
+    "curriculum_maxrl/digits_factorial/SOURCE_LOCK.json",
+    "curriculum_maxrl/digits_factorial/digits_split_manifest.json",
+    "curriculum_maxrl/digits_factorial/engineering/reseal_v3/engineering_audit.json",
+    "curriculum_maxrl/digits_factorial/engineering/reseal_v3/independent_preseal_review.json",
+    "curriculum_maxrl/digits_factorial/authorizations/development_authorization.json",
+    "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/lr_selection.json",
+    "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/independent_preconfirmation_review.json",
+    "curriculum_maxrl/digits_factorial/authorizations/confirmation_tuned_authorization.json",
+    "curriculum_maxrl/digits_factorial/authorizations/confirmation_common_authorization.json",
+    "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/confirmation_analysis.json",
+    "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/common_identity_robustness.json",
+    "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/confirmation_bundle_receipt.json",
+    "curriculum_maxrl/digits_factorial/EXTERNAL_REPLAY_BUNDLE_MANIFEST.json"
+   ],
+   "checksums": {
+    "curriculum_maxrl/digits_factorial/SOURCE_LOCK.json": "d72b93a29a2e6a09",
+    "curriculum_maxrl/digits_factorial/digits_split_manifest.json": "13dbc30cc5143edb",
+    "curriculum_maxrl/digits_factorial/engineering/reseal_v3/engineering_audit.json": "d448a22793dc5a52",
+    "curriculum_maxrl/digits_factorial/engineering/reseal_v3/independent_preseal_review.json": "0c387ddd1b2bb49d",
+    "curriculum_maxrl/digits_factorial/authorizations/development_authorization.json": "91ec2c5dbea8e4d4",
+    "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/lr_selection.json": "dfc9d69faec78cff",
+    "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/independent_preconfirmation_review.json": "6ad8ede4ebdc6517",
+    "curriculum_maxrl/digits_factorial/authorizations/confirmation_tuned_authorization.json": "4d8967d9cb9a499c",
+    "curriculum_maxrl/digits_factorial/authorizations/confirmation_common_authorization.json": "8e09bf3f43f5f6ed",
+    "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/confirmation_analysis.json": "346e46414d82155f",
+    "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/common_identity_robustness.json": "01b2e07de7eaef8e",
+    "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/confirmation_bundle_receipt.json": "002eba15698ddc91",
+    "curriculum_maxrl/digits_factorial/EXTERNAL_REPLAY_BUNDLE_MANIFEST.json": "33333c166a604740"
+   },
+   "verification": "uv run --project curriculum_maxrl/digits_factorial --locked python -m pytest curriculum_maxrl/digits_factorial/tests -q; python -m curriculum_maxrl.build_digits_external_bundle_manifest --check; source and receipt chain checked by bash reproduce.sh without rerunning evidentiary development or confirmation",
+   "notes": "Registered 24-block contextual-bandit negative result. The primary estimator-by-sampler interaction was not supported; MaxRL favored u8 over p(1-p), RLOO reversed its predicted preference, and both matched samplers were below uniform. Selected and common rates are all 0.1, so paired ledgers/checkpoints are byte-identical and scientific summary content matches after removing phase/authorization labels; this is an identity check rather than an independent replication. The compact release ships per-block contrasts and a 2,904-file content manifest; the 5,079,086,996-byte full replay payload remains local and has no download URI yet."
+  },
+  "acrobot_curriculum_tournament_v2": {
+   "inputs": [
+    "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json",
+    "frontier_rl/examples/acrobot_curriculum_tournament_development.json",
+    "frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json",
+    "frontier_rl/examples/acrobot_curriculum_tournament_confirmatory.json",
+    "frontier_rl/examples/acrobot_curriculum_tournament_analysis.json"
+   ],
+   "checksums": {
+    "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json": "0e6438d42ddc53b8",
+    "frontier_rl/examples/acrobot_curriculum_tournament_development.json": "c616912569f4d19e",
+    "frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json": "6dc908e22e874550",
+    "frontier_rl/examples/acrobot_curriculum_tournament_confirmatory.json": "f533d0b84cdb3f7d",
+    "frontier_rl/examples/acrobot_curriculum_tournament_analysis.json": "463fa1a01d959229"
+   },
+   "verification": "python -m frontier_rl.examples.verify_acrobot_curriculum_tournament_portable ... --source-root .",
+   "notes": "Twenty fresh paired seeds per arm; primary u16-p(1-p) target-uniform transition-AUC. Portable verification reanalyzes retained ledgers and locked sources but does not reproduce training."
+  },
+  "acrobot_procurl_selection_semantics": {
+   "inputs": [
+    "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_LOCK.json",
+    "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_PROTOCOL.md",
+    "frontier_rl/examples/PROCURL_PRIMARY_SOURCE_PROVENANCE.md",
+    "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_RESULTS.md",
+    "frontier_rl/examples/acrobot_procurl_selection_development.json",
+    "frontier_rl/examples/acrobot_procurl_selection_development_gates.json",
+    "frontier_rl/examples/acrobot_procurl_selection_analysis.json",
+    "frontier_rl/examples/acrobot_procurl_selection_portable_verification.json",
+    "frontier_rl/examples/acrobot_procurl_selection_diagnostics.json",
+    "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_EXTERNAL_RAW_MANIFEST.json",
+    "frontier_rl/examples/build_acrobot_procurl_external_manifest.py",
+    "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+    "frontier_rl/examples/extract_acrobot_procurl_selection_diagnostics.py",
+    "frontier_rl/examples/test_extract_acrobot_procurl_selection_diagnostics.py"
+   ],
+   "checksums": {
+    "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_LOCK.json": "b7c7f76f6aaffa1f",
+    "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_PROTOCOL.md": "11bda8a8fdd3d309",
+    "frontier_rl/examples/PROCURL_PRIMARY_SOURCE_PROVENANCE.md": "c6bf71fe24454643",
+    "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_RESULTS.md": "0063e929ba762679",
+    "frontier_rl/examples/acrobot_procurl_selection_development.json": "6d9fa639295e35cd",
+    "frontier_rl/examples/acrobot_procurl_selection_development_gates.json": "1edf50dc0b86744b",
+    "frontier_rl/examples/acrobot_procurl_selection_analysis.json": "2010e30b5b15a212",
+    "frontier_rl/examples/acrobot_procurl_selection_portable_verification.json": "c6b754655cbe6fa0",
+    "frontier_rl/examples/acrobot_procurl_selection_diagnostics.json": "583d950b8e85e6ea",
+    "frontier_rl/examples/ACROBOT_PROCURL_SELECTION_EXTERNAL_RAW_MANIFEST.json": "e197c1d581bcda86",
+    "frontier_rl/examples/build_acrobot_procurl_external_manifest.py": "4538b60e05e9c3dc",
+    "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py": "bf9db34b606537e7",
+    "frontier_rl/examples/extract_acrobot_procurl_selection_diagnostics.py": "c5de9d64c40ec924",
+    "frontier_rl/examples/test_extract_acrobot_procurl_selection_diagnostics.py": "a3ed37f77a6ee129"
+   },
+   "verification": "bash reproduce.sh always runs the compact external-manifest check and the pinned 130 post-run plus 58 lock-bound tests; when the ignored raw is present it additionally reconciles all 320 raw-run hashes and recomputes descriptive diagnostics under the exact pinned runtime",
+   "notes": "Registered 80-pair selection-semantics result on the fixed small MaxRL Acrobot learner, not a full PPO ProCuRL reproduction. The u16-minus-ProCuRL primary was not supported (mean +0.004894, paired t p=0.05149, registered SESOI +0.02). All probed arms spent about 93.2% of paid transitions on probes and did not separate from the paid sham; this supports a setting-specific native-cadence probe-cost result, not a general claim that ProCuRL is worse. The 1,374,886,097-byte confirmation raw remains external with SHA-256 b1f8756c249effab8c77101c8bca73ddf708a5e143c18fe8742fd5712fdd7c12 and download URI null."
+  }
+ },
  "figures": {
   "fig1_utility": {
    "script": "paper/figures/fig1_utility.py",
    "inputs": [],
-   "notes": "analytic curves only; GRPO uses sample-SD convention matching curriculum_maxrl/estimators.py (ddof=1)",
+   "notes": "analytic curves only; GRPO uses the deployed sample-SD convention matching curriculum_maxrl/estimators.py (ddof=1, denominator EPS=1e-6)",
    "command": "python paper/figures/fig1_utility.py",
    "checksums": {}
+  },
+  "fig_maze_block_contrasts": {
+   "script": "paper/figures/fig_maze_block_analysis.py",
+   "inputs": [
+    "curriculum_maxrl/maze_gpu_factorial/results_factorial_wave1.json",
+    "curriculum_maxrl/maze_gpu_factorial/results_factorial_wave2.json"
+   ],
+   "command": "python paper/figures/fig_maze_block_analysis.py",
+   "checksums": {
+    "curriculum_maxrl/maze_gpu_factorial/results_factorial_wave1.json": "12372a201890080f",
+    "curriculum_maxrl/maze_gpu_factorial/results_factorial_wave2.json": "e47d3c57ff99e4f1"
+   },
+   "notes": "Independent unit is the seed/warm-start block; sampler contrasts are within-block repeated observations. Script also writes paper/results/maze_factorial_block_analysis.json."
   },
   "fig2_ladder": {
    "script": "paper/figures/fig2_ladder.py",
@@ -81,16 +235,33 @@
     "paper/figures/data/b_scoreboard_3seed.json",
     "paper/figures/data/b_cells_dynamics.json",
     "paper/figures/data/b_strong_gate_1seed.json",
-    "paper/figures/data/armA_designed_gate_3seed.json"
+    "paper/figures/data/armA_designed_gate_3seed.json",
+    "curriculum_maxrl/countdown_reviewer_arms/METRIC_PROVENANCE.json"
    ],
    "command": "python paper/figures/fig7_sharpening.py",
    "checksums": {
-    "paper/figures/data/b_scoreboard_3seed.json": "f5c41f561f120d02",
+    "paper/figures/data/b_scoreboard_3seed.json": "23d623b1300ada0e",
     "paper/figures/data/b_cells_dynamics.json": "e131d9c29e7296fa",
-    "paper/figures/data/b_strong_gate_1seed.json": "fec7993338cadb25",
-    "paper/figures/data/armA_designed_gate_3seed.json": "48b738edd4e527e9"
+    "paper/figures/data/b_strong_gate_1seed.json": "ce41b4b2a0d36a0c",
+    "paper/figures/data/armA_designed_gate_3seed.json": "9551ca6d778c297b",
+    "curriculum_maxrl/countdown_reviewer_arms/METRIC_PROVENANCE.json": "251b137d70fa6bb5"
    },
-   "notes": "armA_designed_gate_3seed.json added 2026-08-06: P-R1 refuted, panel (a) redrawn as operating-point scatter per committed branch"
+   "notes": "P-R1 refuted; the faulty-decay B3 point is labeled suggestive and the corrected designed-strength arm is shown as a non-frontier scatter."
+  },
+  "fig_countdown_core": {
+   "script": "paper/figures/fig_countdown_core.py",
+   "inputs": [
+    "paper/figures/data/b_scoreboard_3seed.json",
+    "curriculum_maxrl/countdown_reviewer_arms/reviewer_arms_verdicts.json",
+    "curriculum_maxrl/countdown_reviewer_arms/METRIC_PROVENANCE.json"
+   ],
+   "command": "python paper/figures/fig_countdown_core.py",
+   "checksums": {
+    "paper/figures/data/b_scoreboard_3seed.json": "23d623b1300ada0e",
+    "curriculum_maxrl/countdown_reviewer_arms/reviewer_arms_verdicts.json": "faf7846483eaa595",
+    "curriculum_maxrl/countdown_reviewer_arms/METRIC_PROVENANCE.json": "251b137d70fa6bb5"
+   },
+   "notes": "Compact submission figure: B1/B2 three-seed aggregates plus all three higher-dose replay endpoints; dose and direction are explicitly not decomposed."
   },
   "fig8_bands": {
    "script": "paper/figures/fig8_bands.py",
@@ -106,18 +277,23 @@
   "fig9_ksweep": {
    "script": "paper/figures/fig9_ksweep.py",
    "inputs": [
-    "paper/figures/data/ksweep_results.json"
+    "curriculum_maxrl/maze_gpu/efficiency.json"
    ],
    "command": "python paper/figures/fig9_ksweep.py",
    "checksums": {
-    "paper/figures/data/ksweep_results.json": "3e0bd4accd4c1b6e"
+    "curriculum_maxrl/maze_gpu/efficiency.json": "b2309f3d3910de1e"
    }
   },
   "fig9_passk": {
    "script": "paper/figures/fig9_passk.py",
-   "inputs": [],
+   "inputs": [
+    "paper/figures/data/fig9_bestk_proxy.json"
+   ],
    "command": "python paper/figures/fig9_passk.py",
-   "notes": "per-k points transcribed in-script from ray worker logs (sessions 07-29_05 B1, 07-28_22 B2, 07-29_02 B3, 07-30_06 full-strength), seed 1, step-60 unbiased best@k, n=128; endpoints cross-check b_scoreboard_3seed.json; full-strength curve retained faded with the P-R1 refutation note in the caption (2026-08-06)"
+   "checksums": {
+    "paper/figures/data/fig9_bestk_proxy.json": "fd32d790031648ab"
+   },
+   "notes": "single-seed, step-60 VERL bootstrap best@k proxy; with-replacement resampling, not standard unbiased pass@k. Points and Ray-session provenance moved from hard-coded script arrays into the declared input. Full-strength curve remains faded with the P-R1 refutation note."
   },
   "fig10_jugs_entropy": {
    "script": "paper/figures/fig10_jugs_entropy.py",

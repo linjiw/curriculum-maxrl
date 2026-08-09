@@ -1,0 +1,84 @@
+{
+  "action_score": "detached pre-clip Gaussian latent action",
+  "adaptive_sampling_changes_task_mixture": true,
+  "backend": "motrix CPU",
+  "config": {
+    "arms": [
+      "uniform"
+    ],
+    "eval_episodes_per_task": 128,
+    "eval_every": 20,
+    "eval_seed": 91000,
+    "group_size": 8,
+    "groups": 0,
+    "horizon_seconds": 6.0,
+    "learning_rate": 0.005,
+    "optimizer": "SGD",
+    "ratios": [
+      0.175,
+      0.275,
+      0.375,
+      0.475
+    ],
+    "reset_mode": "fixed_radius",
+    "seed": 0,
+    "still_steps_needed": 10,
+    "success_delay_seconds": 0.5
+  },
+  "dense_reward_actor_term": false,
+  "estimator": "practical D_N; exact order N-1 true trajectory score",
+  "hindsight": false,
+  "runs": [
+    {
+      "arm": "uniform",
+      "checkpoints": [
+        {
+          "active_episode_steps": 0,
+          "backend_env_steps": 0,
+          "group": 0,
+          "mean_based_sampling_distribution": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "mean_pass_rate": 0.037109375,
+          "task_pass_rates": [
+            0.1484375,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tracker_pass_rates": [
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "groups": [],
+      "summary": {
+        "active_episode_steps": 0,
+        "all_fail_groups": 0,
+        "all_pass_groups": 0,
+        "backend_env_steps": 0,
+        "final_mean_pass_rate": 0.037109375,
+        "mixed_groups": 0,
+        "normalized_transition_auc": 0.037109375,
+        "parameter_l2_displacement": 0.0,
+        "policy_updates": 0,
+        "realized_coefficient_mass": 0.0,
+        "wall_seconds": 7.59086100012064
+      }
+    }
+  ],
+  "score_function_regression_net_gradient_norm": 12.488382180969147,
+  "status": "development exact-grouped mechanism pilot; not confirmatory",
+  "task": "UniLab StewartBalance",
+  "warm_start": {
+    "checkpoint_file": "model_0.pt",
+    "iteration": 0,
+    "sha256": "82fcbbba065d5b3c22d4fc843935f9aee6f88b3c399af07dd23b8cf7ac1a3e4c"
+  }
+}

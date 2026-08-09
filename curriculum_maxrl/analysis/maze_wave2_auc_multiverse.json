@@ -1,0 +1,147 @@
+{
+  "analysis_id": "maze-wave2-frozen-auc-multiverse-v1",
+  "frozen_specification": {
+    "checkpoint_grid": [
+      0,
+      25,
+      50,
+      75,
+      100,
+      125,
+      150,
+      175,
+      200,
+      225,
+      250
+    ],
+    "contrast": "MaxRL minus GRPO",
+    "duplicate_checkpoint_policy": "last record wins",
+    "horizons": {
+      "early": 75,
+      "full": 250,
+      "mid": 150
+    },
+    "independent_unit": "seed/warm-start block (six blocks, seeds 6-11)",
+    "integration_conventions": [
+      "simple_mean",
+      "trapezoid"
+    ],
+    "leave_one_checkpoint_out": "omit each eligible in-training checkpoint in turn; never omit the warmup point",
+    "metric": "mean pass@8 over maze levels 0-12, relative to post-SFT init",
+    "warmup_coordinate_for_trapezoid": -25,
+    "warmup_options": [
+      "exclude",
+      "include"
+    ],
+    "within_block_repeated_factor": "sampler (uniform, frontier_un)"
+  },
+  "generated_by": "curriculum_maxrl/analysis/maze_wave2_auc_multiverse.py",
+  "legacy_summary_anchor": {
+    "definition": "Frozen summary cov_auc_delta: arithmetic mean over every in-training pass@8 record selected by fact_analyze.py minus post-SFT initialization; MaxRL minus GRPO within block.",
+    "per_sampler": {
+      "frontier_un": {
+        "maximum": 0.034054487179487,
+        "mean": 0.024038461538462,
+        "minimum": 0.006410256410256,
+        "n_independent_blocks": 6,
+        "n_negative": 0,
+        "n_positive": 6,
+        "n_zero": 0,
+        "per_block": [
+          0.027644230769231,
+          0.034054487179487,
+          0.033253205128205,
+          0.018830128205128,
+          0.006410256410256,
+          0.024038461538461
+        ]
+      },
+      "uniform": {
+        "maximum": 0.036458333333333,
+        "mean": 0.014957264957265,
+        "minimum": 0.003605769230769,
+        "n_independent_blocks": 6,
+        "n_negative": 0,
+        "n_positive": 6,
+        "n_zero": 0,
+        "per_block": [
+          0.017628205128205,
+          0.003605769230769,
+          0.006009615384615,
+          0.019230769230769,
+          0.006810897435898,
+          0.036458333333333
+        ]
+      }
+    },
+    "sampler_average_within_block": {
+      "maximum": 0.030248397435897,
+      "mean": 0.019497863247863,
+      "minimum": 0.006610576923077,
+      "n_independent_blocks": 6,
+      "n_negative": 0,
+      "n_positive": 6,
+      "n_zero": 0,
+      "per_block": [
+        0.022636217948718,
+        0.018830128205128,
+        0.01963141025641,
+        0.019030448717949,
+        0.006610576923077,
+        0.030248397435897
+      ]
+    }
+  },
+  "multiverse": null,
+  "raw_data_audit": {
+    "missing_files": [
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_maxrl_s6.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_maxrl_s7.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_maxrl_s8.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_maxrl_s9.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_maxrl_s10.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_maxrl_s11.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_grpo_s6.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_grpo_s7.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_grpo_s8.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_grpo_s9.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_grpo_s10.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_uniform_grpo_s11.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_maxrl_s6.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_maxrl_s7.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_maxrl_s8.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_maxrl_s9.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_maxrl_s10.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_maxrl_s11.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_grpo_s6.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_grpo_s7.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_grpo_s8.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_grpo_s9.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_grpo_s10.jsonl",
+      "curriculum_maxrl/maze_gpu_factorial/fact250_frontier_un_grpo_s11.jsonl"
+    ],
+    "n_expected_files": 24,
+    "n_found_files": 0,
+    "n_missing_files": 24,
+    "raw_directory": "curriculum_maxrl/maze_gpu_factorial",
+    "required_record_schema": "one JSON object per line with integer step and passk levels 0-12 containing key '8'; exactly one step -1 warmup and checkpoints 0,25,...,250",
+    "why_summaries_are_insufficient": [
+      "cov_auc_delta is one scalar mean and cannot identify checkpoint values",
+      "early and mid horizons cannot be reconstructed from init/final endpoints",
+      "trapezoid integration needs checkpoint time-value pairs",
+      "leave-one-checkpoint-out needs every checkpoint contribution"
+    ]
+  },
+  "robustness_summary": {
+    "mean_effect_range": null,
+    "minimum_positive_blocks": null,
+    "reason": "not identifiable from aggregate cell summaries"
+  },
+  "schema_version": 1,
+  "status": "insufficient_raw_trajectories",
+  "summary_source": {
+    "n_required_cells": 24,
+    "path": "curriculum_maxrl/maze_gpu_factorial/results_factorial_wave2.json",
+    "sha256": "e47d3c57ff99e4f167e28fcbfe84a7175bb7f4a169cb8c499f490d93891e2ee9"
+  }
+}

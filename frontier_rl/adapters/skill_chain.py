@@ -2,8 +2,8 @@
 
 Identical math to curriculum_maxrl/testbed.py: chains of skills, task
 (chain c, level l) requires skills c_1..c_l, exact softmax policy gradients.
-Running examples/run_skill_chain.py must reproduce the REPORT.md numbers
-(uniform+maxrl AUC ~0.65, full stack ~0.89 at 400 steps).
+Running examples/run_skill_chain.py must reproduce the REPORT.md equally
+spaced checkpoint means (uniform+maxrl ~0.65, full stack ~0.89 at 400 steps).
 """
 
 from __future__ import annotations

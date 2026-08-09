@@ -1,0 +1,205 @@
+{
+  "manifest_input_exclusions": [
+    {
+      "path": "frontier_rl/examples/acrobot_procurl_selection_development.json",
+      "reason": "The paper manifest names this development replay ledger, but the compact projection retains only its digest-bound passing gate."
+    }
+  ],
+  "paper_manifest": "paper/results/manifest.json",
+  "paper_manifest_sha256": "34f8f3f1e4175a9f75885b6c7f87a04e0e151f6dd58c3e5fec5d32ce602b9d08",
+  "projection_index_sha256": "2a5382601c66568b444de9f915877fbeef5111739b6117b5f09c8641ada3594d",
+  "schema": "curriculum-maxrl/anonymous-release-compact-receipt/v2",
+  "scope_config": "anonymous_release_scope.json",
+  "scope_config_sha256": "286d202041064ec53d8a586f1a2daf0db749dfb369086b502c565e8302dac2f3",
+  "summary": {
+    "file_count": 98,
+    "manifest_input_exclusion_count": 1,
+    "transformation_occurrence_count": 31,
+    "transformation_rule_count": 16,
+    "transformed_file_count": 10,
+    "unapproved_leak_count": 0,
+    "unshipped_artifact_bytes": 1386339632,
+    "unshipped_artifact_count": 2,
+    "unshipped_artifact_uri_count": 0
+  },
+  "transformations": [
+    {
+      "export_file_sha256": "f71f0a6756266aec5c5c8aa0e8baaf81e08ca045da961a8a9850ae8be1f1defa",
+      "file": "README.md",
+      "kind": "text_exact",
+      "occurrence_count": 1,
+      "original_file_sha256": "eaafe812b7ad7f9ef1100bc6df64660eea727f718fa2dcd0ae1b1ca26e4221cd",
+      "original_value_sha256": "053aeba9639e754cde4e7ebd13ecd959d22f187717b36be6edd895203786c3e9",
+      "purpose": "evidence_only_scope",
+      "replacement": "## Anonymous source-bundle usage (source bundle not included here)"
+    },
+    {
+      "export_file_sha256": "f71f0a6756266aec5c5c8aa0e8baaf81e08ca045da961a8a9850ae8be1f1defa",
+      "file": "README.md",
+      "kind": "text_exact",
+      "occurrence_count": 1,
+      "original_file_sha256": "eaafe812b7ad7f9ef1100bc6df64660eea727f718fa2dcd0ae1b1ca26e4221cd",
+      "original_value_sha256": "69d4bd6cc77361e9cedf08eaaf3b6c54c9f16e1b0bb831d013f45f17f8e17429",
+      "purpose": "evidence_only_scope",
+      "replacement": "### Evidence-supplement boundary\n\nThis projected directory is an evidence-only double-blind supplement. It contains the paper-facing documents and declared evidence inputs, but intentionally omits the complete Python package, `reproduce.sh`, Git-LFS payloads, and rendered binaries. It is therefore not a standalone executable artifact. The command examples in this section apply only to a separately generated anonymous source bundle, which must carry its own inventory and zero-leak verification. Scientific checks continue to use the frozen originals before projection; changed projected files are bound to those originals by `ANONYMIZATION_RECEIPT.json`."
+    },
+    {
+      "export_file_sha256": "fb93f02f7252f6c64e31994d1cb7e58f2382fb795cf6fcdd09d2634997a3a544",
+      "file": "REPORT.md",
+      "kind": "text_exact",
+      "occurrence_count": 1,
+      "original_file_sha256": "f91213005064c818a888f18104da6cf61b68b2edec28a8611864f1af829e8206",
+      "original_value_sha256": "1e32b18d856816096368f0d3642ce5486c28e5808100c302fb53f944fac62396",
+      "purpose": "anonymization",
+      "replacement": "<TMP_DIR>/curriculum-maxrl-gym"
+    },
+    {
+      "export_file_sha256": "a9a1e937b2ea5d885a8904fc4633c98ed4a855fd8ed2061c8fe8f455ec9b7ad9",
+      "file": "curriculum_maxrl/COUNTDOWN_SFT_OVERLAP.md",
+      "kind": "text_exact",
+      "occurrence_count": 1,
+      "original_file_sha256": "6ebeda731c4db58f1101f3cc7048280db8258b7e16252cb23438c4975dd6a172",
+      "original_value_sha256": "696f2ca9060c6978e752def6854d43ef595c82b380a0231b19ac4adb8efb4c43",
+      "purpose": "anonymization",
+      "replacement": "<TMP_DIR>/countdown_sft_overlap.json"
+    },
+    {
+      "export_file_sha256": "9349228d974a77bbb0d912ac16e1de900a9fba6e7bc5e3444726b7ae1f781ade",
+      "file": "curriculum_maxrl/digits_factorial/analyses/development_registered_v1/independent_preconfirmation_review.json",
+      "json_pointer": "/reviewer_task",
+      "kind": "json_pointer",
+      "occurrence_count": 1,
+      "original_file_sha256": "6ad8ede4ebdc6517e7d44395ae14dc26cc705029c1efab454eabb366d729803a",
+      "original_value_sha256": "bd584af6890164040671782ad06533d9cc4a5e9cd8ca86fcad3b561b55791805",
+      "replacement": "<ANONYMOUS_REVIEWER_TASK>"
+    },
+    {
+      "export_file_sha256": "cea215c0f84d807c78fe02842b7a4de0c62a888fa698eee787ce4703bb98a9e0",
+      "file": "curriculum_maxrl/digits_factorial/engineering/reseal_v3/independent_preseal_review.json",
+      "json_pointer": "/reviewer_task",
+      "kind": "json_pointer",
+      "occurrence_count": 1,
+      "original_file_sha256": "0c387ddd1b2bb49d2be6e1eacff96c9281cfa17eea85f01b425733c9aabe24ff",
+      "original_value_sha256": "bd584af6890164040671782ad06533d9cc4a5e9cd8ca86fcad3b561b55791805",
+      "replacement": "<ANONYMOUS_REVIEWER_TASK>"
+    },
+    {
+      "export_file_sha256": "aec98d7fd521df9d4e0963ac0916d6da8e9f0b5a4745a65de2987a63ef97e98d",
+      "file": "docs/index.html",
+      "kind": "text_exact",
+      "occurrence_count": 16,
+      "original_file_sha256": "06c5262f3fda108984cccf2ddca4ac078216c3d10a52d54e7c91e3d3ff4a92c9",
+      "original_value_sha256": "06b0bf9f18027b678845262168f7e19f39c291d01a3dafb471c7481eedb48b14",
+      "purpose": "anonymization",
+      "replacement": "https://github.com/anonymous"
+    },
+    {
+      "export_file_sha256": "aec98d7fd521df9d4e0963ac0916d6da8e9f0b5a4745a65de2987a63ef97e98d",
+      "file": "docs/index.html",
+      "kind": "text_exact",
+      "occurrence_count": 1,
+      "original_file_sha256": "06c5262f3fda108984cccf2ddca4ac078216c3d10a52d54e7c91e3d3ff4a92c9",
+      "original_value_sha256": "71205e4480342d973ab4611d557e812dc8f38731d6f407a7d43eda7a5af5b562",
+      "purpose": "anonymization",
+      "replacement": "local-file"
+    },
+    {
+      "export_file_sha256": "ef217b4d2af1101a79145ac3ba8eeeca2f3d942ba3433f6e2deaecf92d460986",
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_analysis.json",
+      "json_pointer": "/raw_artifact_path",
+      "kind": "json_pointer",
+      "occurrence_count": 1,
+      "original_file_sha256": "463fa1a01d95922976f09f75b21f6d8f2c6a8d256081ebedfa4ba968a06f356b",
+      "original_value_sha256": "c96fcdfc1dc8aa60bd509ded23b93569689598a6df2c821bf517c3baf2ff53fb",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/acrobot_curriculum_tournament_confirmatory.json"
+    },
+    {
+      "export_file_sha256": "ef217b4d2af1101a79145ac3ba8eeeca2f3d942ba3433f6e2deaecf92d460986",
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_analysis.json",
+      "json_pointer": "/source_lock_path",
+      "kind": "json_pointer",
+      "occurrence_count": 1,
+      "original_file_sha256": "463fa1a01d95922976f09f75b21f6d8f2c6a8d256081ebedfa4ba968a06f356b",
+      "original_value_sha256": "7339942f36e42a0c2abae364998f50744dd182e51016b4c6561d42cf4a6cad75",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json"
+    },
+    {
+      "export_file_sha256": "8f78053b52f3f3f945dbf7567bae2810e982de8f33675c14b0e69cae013bc2e3",
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json",
+      "json_pointer": "/raw_artifact_path",
+      "kind": "json_pointer",
+      "occurrence_count": 1,
+      "original_file_sha256": "6dc908e22e874550e0536f1fcd52f2b3a1768d1a89c510275bef7efc2e2baac6",
+      "original_value_sha256": "d4f7415587b33e66a5d784f8fe7030f443fd77ee7028c9842ed8a802ecb1abac",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/acrobot_curriculum_tournament_development.json"
+    },
+    {
+      "export_file_sha256": "8f78053b52f3f3f945dbf7567bae2810e982de8f33675c14b0e69cae013bc2e3",
+      "file": "frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json",
+      "json_pointer": "/source_lock_path",
+      "kind": "json_pointer",
+      "occurrence_count": 1,
+      "original_file_sha256": "6dc908e22e874550e0536f1fcd52f2b3a1768d1a89c510275bef7efc2e2baac6",
+      "original_value_sha256": "7339942f36e42a0c2abae364998f50744dd182e51016b4c6561d42cf4a6cad75",
+      "replacement": "<REPO_ROOT>/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json"
+    },
+    {
+      "export_file_sha256": "ff330c92952895312e96e1c7f5534a4ca7ed38027df08dd00b4c25fcb5555642",
+      "file": "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+      "kind": "text_exact",
+      "occurrence_count": 1,
+      "original_file_sha256": "bf9db34b606537e7085151d21d856203c59492872ff0a07e572d5640f70c4011",
+      "original_value_sha256": "f3f8110525b37141d795dd8cf5df0fbecb68f54f60952b969e26b17b926f9799",
+      "purpose": "anonymization",
+      "replacement": "\"/\" + \"Users/example/raw.json\""
+    },
+    {
+      "export_file_sha256": "ff330c92952895312e96e1c7f5534a4ca7ed38027df08dd00b4c25fcb5555642",
+      "file": "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+      "kind": "text_exact",
+      "occurrence_count": 1,
+      "original_file_sha256": "bf9db34b606537e7085151d21d856203c59492872ff0a07e572d5640f70c4011",
+      "original_value_sha256": "5cfc63f3300217707d7f2da96153f8d9b3cda24dac491986b645944ef4f92f03",
+      "purpose": "anonymization",
+      "replacement": "\"C:/\" + \"Users/example/raw.json\""
+    },
+    {
+      "export_file_sha256": "ff330c92952895312e96e1c7f5534a4ca7ed38027df08dd00b4c25fcb5555642",
+      "file": "frontier_rl/examples/test_build_acrobot_procurl_external_manifest.py",
+      "kind": "text_exact",
+      "occurrence_count": 1,
+      "original_file_sha256": "bf9db34b606537e7085151d21d856203c59492872ff0a07e572d5640f70c4011",
+      "original_value_sha256": "bec01937b5899812d17719daf3e5f8f505277f70e5abb92d2316c60feae64908",
+      "purpose": "anonymization",
+      "replacement": "\"file\" + \"://host/raw.json\""
+    },
+    {
+      "export_file_sha256": "39391c93194df376cce99b7f8019f9e2382c231307a8ff1f37efc343e03f4a8f",
+      "file": "frontier_rl/examples/test_extract_acrobot_procurl_selection_diagnostics.py",
+      "kind": "text_exact",
+      "occurrence_count": 1,
+      "original_file_sha256": "a3ed37f77a6ee129e24a83bd72bac5d1d198588e6df53217e244a1845b49e34c",
+      "original_value_sha256": "f3f8110525b37141d795dd8cf5df0fbecb68f54f60952b969e26b17b926f9799",
+      "purpose": "anonymization",
+      "replacement": "\"/\" + \"Users/example/raw.json\""
+    }
+  ],
+  "unshipped_artifacts": [
+    {
+      "availability": "external-content-addressed-no-public-uri",
+      "content_addressed_download_uri": null,
+      "original_bytes": 1374886097,
+      "original_sha256": "b1f8756c249effab8c77101c8bca73ddf708a5e143c18fe8742fd5712fdd7c12",
+      "path": "frontier_rl/examples/acrobot_procurl_selection_confirmatory.json",
+      "reason": "The finalized confirmatory ledger is content-addressed but too large for the compact anonymous evidence projection; no public download URI is currently declared."
+    },
+    {
+      "availability": "compact-release-omission-no-public-uri",
+      "content_addressed_download_uri": null,
+      "original_bytes": 11453535,
+      "original_sha256": "6d9fa639295e35cd8a8da810ace82d330c863edace702db4e3f7d25a9ad82ba8",
+      "path": "frontier_rl/examples/acrobot_procurl_selection_development.json",
+      "reason": "The development replay ledger is omitted from the compact anonymous evidence projection; the retained passing gate binds its exact digest."
+    }
+  ]
+}

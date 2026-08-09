@@ -53,10 +53,11 @@ class TaskSpace(Protocol):
         None if the env has no meaningful relabeling (the trainer then just
         skips the group, plain-MaxRL style).
 
-        Two contracts (both from P6 — the relabeled update is the ML gradient
-        of the relabeled task only if the conditional laws match):
+        Two semantic contracts (both from P6). Exact equality to a fresh-task
+        gradient requires equality of update moments; full joint-law equality
+        is a convenient sufficient condition:
 
-        1. EXACTNESS: a relabeled success must be a TRUE success of the
+        1. VERIFIER VALIDITY: a relabeled success must be a TRUE success of the
            relabeled task under the env's own verifier.  Never return
            "almost reached" as success.
         2. CONDITIONING: if trajectories embed the goal (goal-relative

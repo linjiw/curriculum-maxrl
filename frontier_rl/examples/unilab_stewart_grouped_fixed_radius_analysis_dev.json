@@ -1,0 +1,279 @@
+{
+  "arms": {
+    "advmass": {
+      "aggregate": {
+        "all_fail_groups": {
+          "mean": 13.0,
+          "sample_sd": 3.0
+        },
+        "final_mean_pass_rate": {
+          "mean": 0.3763020833333333,
+          "sample_sd": 0.05056796153419632
+        },
+        "mixed_groups": {
+          "mean": 107.0,
+          "sample_sd": 3.0
+        },
+        "policy_updates": {
+          "mean": 107.0,
+          "sample_sd": 3.0
+        },
+        "realized_coefficient_mass": {
+          "mean": 151.25,
+          "sample_sd": 5.267826876426369
+        },
+        "transition_auc": {
+          "mean": 0.23177083333333334,
+          "sample_sd": 0.004127188259474599
+        }
+      },
+      "per_seed": [
+        {
+          "all_fail_groups": 13,
+          "all_pass_groups": 0,
+          "backend_env_steps": 288000,
+          "final_mean_pass_rate": 0.43359375,
+          "mixed_groups": 107,
+          "policy_updates": 107,
+          "realized_coefficient_mass": 150.75,
+          "seed": 0,
+          "transition_auc": 0.23470052083333334
+        },
+        {
+          "all_fail_groups": 16,
+          "all_pass_groups": 0,
+          "backend_env_steps": 288000,
+          "final_mean_pass_rate": 0.357421875,
+          "mixed_groups": 104,
+          "policy_updates": 104,
+          "realized_coefficient_mass": 146.25,
+          "seed": 1,
+          "transition_auc": 0.22705078125
+        },
+        {
+          "all_fail_groups": 10,
+          "all_pass_groups": 0,
+          "backend_env_steps": 288000,
+          "final_mean_pass_rate": 0.337890625,
+          "mixed_groups": 110,
+          "policy_updates": 110,
+          "realized_coefficient_mass": 156.75,
+          "seed": 2,
+          "transition_auc": 0.23356119791666666
+        }
+      ]
+    },
+    "learnability": {
+      "aggregate": {
+        "all_fail_groups": {
+          "mean": 15.666666666666666,
+          "sample_sd": 1.5275252316519468
+        },
+        "final_mean_pass_rate": {
+          "mean": 0.384765625,
+          "sample_sd": 0.0067658234670659265
+        },
+        "mixed_groups": {
+          "mean": 104.33333333333333,
+          "sample_sd": 1.5275252316519468
+        },
+        "policy_updates": {
+          "mean": 104.33333333333333,
+          "sample_sd": 1.5275252316519468
+        },
+        "realized_coefficient_mass": {
+          "mean": 145.5,
+          "sample_sd": 1.9525624189766635
+        },
+        "transition_auc": {
+          "mean": 0.24267578125,
+          "sample_sd": 0.02034700511459233
+        }
+      },
+      "per_seed": [
+        {
+          "all_fail_groups": 14,
+          "all_pass_groups": 0,
+          "backend_env_steps": 288000,
+          "final_mean_pass_rate": 0.392578125,
+          "mixed_groups": 106,
+          "policy_updates": 106,
+          "realized_coefficient_mass": 144.5,
+          "seed": 0,
+          "transition_auc": 0.26318359375
+        },
+        {
+          "all_fail_groups": 16,
+          "all_pass_groups": 0,
+          "backend_env_steps": 288000,
+          "final_mean_pass_rate": 0.380859375,
+          "mixed_groups": 104,
+          "policy_updates": 104,
+          "realized_coefficient_mass": 147.75,
+          "seed": 1,
+          "transition_auc": 0.24235026041666666
+        },
+        {
+          "all_fail_groups": 17,
+          "all_pass_groups": 0,
+          "backend_env_steps": 288000,
+          "final_mean_pass_rate": 0.380859375,
+          "mixed_groups": 103,
+          "policy_updates": 103,
+          "realized_coefficient_mass": 144.25,
+          "seed": 2,
+          "transition_auc": 0.22249348958333334
+        }
+      ]
+    },
+    "uniform": {
+      "aggregate": {
+        "all_fail_groups": {
+          "mean": 21.333333333333332,
+          "sample_sd": 0.5773502691896258
+        },
+        "final_mean_pass_rate": {
+          "mean": 0.353515625,
+          "sample_sd": 0.07042092334890604
+        },
+        "mixed_groups": {
+          "mean": 98.66666666666667,
+          "sample_sd": 0.5773502691896257
+        },
+        "policy_updates": {
+          "mean": 98.66666666666667,
+          "sample_sd": 0.5773502691896257
+        },
+        "realized_coefficient_mass": {
+          "mean": 140.25,
+          "sample_sd": 4.175823272122517
+        },
+        "transition_auc": {
+          "mean": 0.22488064236111108,
+          "sample_sd": 0.031369017966400535
+        }
+      },
+      "per_seed": [
+        {
+          "all_fail_groups": 21,
+          "all_pass_groups": 0,
+          "backend_env_steps": 288000,
+          "final_mean_pass_rate": 0.412109375,
+          "mixed_groups": 99,
+          "policy_updates": 99,
+          "realized_coefficient_mass": 135.75,
+          "seed": 0,
+          "transition_auc": 0.2527669270833333
+        },
+        {
+          "all_fail_groups": 21,
+          "all_pass_groups": 0,
+          "backend_env_steps": 288000,
+          "final_mean_pass_rate": 0.275390625,
+          "mixed_groups": 99,
+          "policy_updates": 99,
+          "realized_coefficient_mass": 144.0,
+          "seed": 1,
+          "transition_auc": 0.19091796875
+        },
+        {
+          "all_fail_groups": 22,
+          "all_pass_groups": 0,
+          "backend_env_steps": 288000,
+          "final_mean_pass_rate": 0.373046875,
+          "mixed_groups": 98,
+          "policy_updates": 98,
+          "realized_coefficient_mass": 141.0,
+          "seed": 2,
+          "transition_auc": 0.23095703125
+        }
+      ]
+    }
+  },
+  "auc_contrasts": {
+    "advmass_minus_learnability": {
+      "exact_two_sided_sign_flip_p": 0.5,
+      "mean_auc_difference": -0.010904947916666666,
+      "paired_bootstrap_95_interval_descriptive": [
+        -0.028483072916666657,
+        0.011067708333333315
+      ],
+      "per_seed_auc_difference": [
+        -0.028483072916666657,
+        -0.015299479166666657,
+        0.011067708333333315
+      ],
+      "sample_sd": 0.020138272096973893
+    },
+    "advmass_minus_uniform": {
+      "exact_two_sided_sign_flip_p": 0.75,
+      "mean_auc_difference": 0.006890190972222228,
+      "paired_bootstrap_95_interval_descriptive": [
+        -0.018066406249999972,
+        0.0361328125
+      ],
+      "per_seed_auc_difference": [
+        -0.018066406249999972,
+        0.0361328125,
+        0.0026041666666666574
+      ],
+      "sample_sd": 0.02735262933500995
+    },
+    "learnability_minus_uniform": {
+      "exact_two_sided_sign_flip_p": 0.5,
+      "mean_auc_difference": 0.017795138888888895,
+      "paired_bootstrap_95_interval_descriptive": [
+        -0.008463541666666657,
+        0.05143229166666666
+      ],
+      "per_seed_auc_difference": [
+        0.010416666666666685,
+        0.05143229166666666,
+        -0.008463541666666657
+      ],
+      "sample_sd": 0.030622036214533303
+    }
+  },
+  "claim_boundary": "pipeline learning and estimator-mechanics diagnostic only; seed count is insufficient to rank teachers",
+  "input_artifacts": [
+    "frontier_rl/examples/unilab_stewart_grouped_fixed_radius_seed0_dev.json",
+    "frontier_rl/examples/unilab_stewart_grouped_fixed_radius_seed1_dev.json",
+    "frontier_rl/examples/unilab_stewart_grouped_fixed_radius_seed2_dev.json"
+  ],
+  "interpretation": {
+    "mechanism": "advmass produced more mixed/update-bearing groups, fewer all-fail groups, and more realized scalar coefficient mass than uniform",
+    "performance": "learnability had the highest mean transition AUC; teacher ordering varied by seed, so no performance superiority claim is supported",
+    "pipeline": "all arms improved substantially from the common warm start"
+  },
+  "paired_seeds": [
+    0,
+    1,
+    2
+  ],
+  "shared_config_excluding_seed": {
+    "arms": [
+      "uniform",
+      "learnability",
+      "advmass"
+    ],
+    "eval_episodes_per_task": 128,
+    "eval_every": 20,
+    "eval_seed": 91000,
+    "group_size": 8,
+    "groups": 120,
+    "horizon_seconds": 6.0,
+    "learning_rate": 1e-05,
+    "optimizer": "SGD",
+    "ratios": [
+      0.175,
+      0.275,
+      0.375,
+      0.475
+    ],
+    "reset_mode": "fixed_radius",
+    "still_steps_needed": 10,
+    "success_delay_seconds": 0.5
+  },
+  "status": "three-paired-seed development analysis; not confirmatory",
+  "warm_start_sha256": "ada83c1be1411700375c8f12e49f98e8af26edd82a35beb198692bbd6b6b6e15"
+}

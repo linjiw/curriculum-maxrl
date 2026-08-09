@@ -1,0 +1,67 @@
+{
+  "schema": "curriculum-maxrl/acrobot-hindsight-v4a-source-lock/v1",
+  "v4_stage": "stage_a_feasibility",
+  "sealed_utc": "2026-07-22T20:33:26.922002+00:00",
+  "purpose": "Pre-execution source/runtime lock for hindsight-effect-blind V4A feasibility; creating this file does not touch V4 seeds.",
+  "runtime": {
+    "python": "3.12.13",
+    "python_implementation": "CPython",
+    "numpy": "2.5.1",
+    "gymnasium": "1.3.0"
+  },
+  "source_sha256": {
+    "frontier_rl/examples/run_acrobot_hindsight_v4.py": "df3accd50d3a29e3c4fe1a5af405bd76ccda36c2631a4693d9a1671ff7095da4",
+    "frontier_rl/examples/analyze_acrobot_hindsight_v4.py": "253d679b8c9647bb57d58909d2f5b879b0196ed586c63dfbe5cee47eaa30999c",
+    "frontier_rl/examples/test_analyze_acrobot_hindsight_v4.py": "b5b23888b0148f3a8d7c007632ab22f86c27a007e89c421180964f5c6be8556d",
+    "frontier_rl/examples/test_run_acrobot_hindsight_v4.py": "130d05561d0ef6901273ff8568f37bfc856d23b5c4238879fbf2a443db77a1ea",
+    "frontier_rl/examples/ACROBOT_HINDSIGHT_PROTOCOL_V4.md": "cd62d8952718992450b8f31760adda403625c777ea5b03ee5c079c69727e85e1",
+    "frontier_rl/examples/run_acrobot_neural.py": "7bd8e4c7d2e85e98d0ca769ce6a65c997307cb4c6b65a8b90c00edb862c49cbf",
+    "frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+    "frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+    "frontier_rl/estimators.py": "6db395ce10b961b731062ac3ad087bf5425434d3210bfed80c84af3836a535fd",
+    "frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+    "frontier_rl/examples/test_acrobot_neural.py": "46f4535d3f3fc42e2c5ccd50bf3ae6605c7cec1bd27532bd97a86bcdaa96f3c7",
+    "frontier_rl/examples/test_run_acrobot_neural.py": "32321da9a9358d2dcae3f5c35e30c0f3521a919a8269c03af8c980a2270b5846"
+  },
+  "registered_schedule": {
+    "v4_stage": "stage_a_feasibility",
+    "paired_seeds": [
+      13000,
+      13001,
+      13002
+    ],
+    "base_learning_rate": 0.0003,
+    "learning_rate_multipliers": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "hindsight_scales": [
+      0.0
+    ],
+    "condition_names": [
+      "lr_mult_0p5_hs_0",
+      "lr_mult_1_hs_0",
+      "lr_mult_2_hs_0"
+    ],
+    "optimizer_update_target": 400,
+    "single_allowed_fallback_update_target": 250,
+    "transition_group_start_cap": 4000000,
+    "maximum_complete_group_overshoot": 8000,
+    "eval_interval_optimizer_updates": 50,
+    "eval_episodes_per_task": 32,
+    "shadow_test": {
+      "seed": 100,
+      "learning_rate_multiplier": 1.0,
+      "optimizer_update_budget": 3,
+      "transition_group_start_cap": 80000,
+      "eval_episodes_per_task": 4
+    }
+  },
+  "exact_commands": {
+    "runner": "/tmp/curriculum-maxrl-gym/bin/python /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/run_acrobot_hindsight_v4.py stage-a --lock /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_HINDSIGHT_V4A_LOCK.json --output /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v4a_feasibility.json",
+    "independent_verifier": "/tmp/curriculum-maxrl-gym/bin/python /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/analyze_acrobot_hindsight_v4.py /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v4a_feasibility.json --lock /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/ACROBOT_HINDSIGHT_V4A_LOCK.json --output /Users/linji/projects/curriculum-maxrl/frontier_rl/examples/acrobot_hindsight_v4a_verification.json",
+    "preflight_tests": "/tmp/curriculum-maxrl-gym/bin/python -m pytest frontier_rl/examples/test_acrobot_neural.py frontier_rl/examples/test_run_acrobot_neural.py frontier_rl/examples/test_run_acrobot_hindsight_v4.py frontier_rl/examples/test_analyze_acrobot_hindsight_v4.py"
+  },
+  "equality_rule": "Stage A must refuse to start or resume unless runtime, schedule, source list, and every source hash match exactly."
+}

@@ -1,14 +1,15 @@
 #!/usr/bin/env python
-"""Figure 7 — recycling-induced sharpening and the utility gate.
+"""Figure 7 — recycling-package concentration and the exploratory utility gate.
 
 Three panels on the Countdown E-LLM-2b arms (B1 baseline, B2 hindsight
 ungated, B3 hindsight + utility gate):
 
 (a) "Operating points, not a dial" — tier-1 endpoint scatter,
-    x = pass@16 (coverage), y = mean@16.  B1 (gray) -> B2 (magenta):
-    recycling lifts the mean but costs coverage (sharpening).  B3
-    under-gated (orange triangle, 3 seeds) is the moderate operating
-    point.  The pre-registered designed-strength arm (dark diamonds,
+    x = VERL bootstrap best@16 (coverage proxy), y = mean@16.  B1
+    (gray) -> B2 (magenta): recycling lifts the mean while the proxy falls.
+    This is not standard unbiased pass@16.  B3
+    under-gated (orange triangle, 3 seeds) used faulty decay and is a
+    suggestive observation only.  The externally specified designed-strength arm (dark diamonds,
     3 seeds, corrected-decay code, reject frac .93-.94) REFUTED the
     dial reading (P-R1): it lands on the no-recycling point with seed
     spread spanning most of the B1-B2 range, and the superseded 1-seed
@@ -17,15 +18,16 @@ ungated, B3 hindsight + utility gate):
     as a scatter, not a frontier (Sec 6.9).  Data:
     b_scoreboard_3seed.json + armA_designed_gate_3seed.json.
 
-(b) "The mechanism" — B3 seed-1 gate rejection rate over training
-    (orange), the monotone rise .12 -> .85 that IS the saturation story;
+(b) "Gate telemetry" — B3 seed-1 gate rejection rate over training
+    (orange), a descriptive monotone rise from .12 to .85;
     B2's relabeled rollouts/step normalized to its own cap (magenta,
-    dashed) shows the ungated dose riding the cap the whole run.
+    dashed) shows the ungated dose riding the cap. These traces do not
+    identify a causal saturation mechanism.
 
 (c) "The cost signature" — entropy trajectories (seed 1) with final-
     window means as horizontal references.  B2 collapses below baseline;
-    B3 sits ABOVE baseline: gated recycling preserves more exploration
-    than running with no recycling at all.
+    the faulty-decay B3 seed ends above baseline. This is descriptive and
+    does not validate the gate or identify a mechanism.
 
 Data: curriculum_maxrl/countdown/b_cells_dynamics.json (seed-1 dynamics)
 and b_scoreboard_3seed.json (3-seed endpoint aggregates).
@@ -86,11 +88,13 @@ def roll(a, w=5):
 fig, (axa, axb, axc) = plt.subplots(1, 3, figsize=(7.0, 2.8))
 
 # ===================================================== (a) the trade
-# scoreboard rows: [mean@16_mean, mean@16_sd, pass@16_mean, pass@16_sd]
+# scoreboard rows: [mean@16_mean, population_sd, bootstrap_best@16_mean,
+# population_sd]. Convert the three-seed aggregate spreads to sample SD.
 b1 = sb["B1_t1"]
 b2 = sb["B2_t1"]
 b3 = sb["B3_t1"]
-# pre-registered designed-strength arm (ARM A), 3 seeds, corrected-decay
+sample_sd_factor = np.sqrt(3.0 / 2.0)
+# externally specified designed-strength arm (ARM A), 3 seeds, corrected-decay
 # code — P-R1 refuted; per-seed endpoints drawn as a scatter
 arm = json.load(open(os.path.join(DATA, "armA_designed_gate_3seed.json")))
 arm_pass = arm["tier1"]["pass_at_16_per_seed"]
@@ -106,15 +110,18 @@ axa.axvline(B1x, color=GRAY, lw=0.7, ls=":", alpha=0.55, zorder=1)
 
 EB = dict(capsize=2.5, elinewidth=0.9, capthick=0.9, zorder=4)
 # B1 baseline — gray circle
-axa.errorbar(B1x, B1y, xerr=b1[3], yerr=b1[1], fmt="o", ms=6,
+axa.errorbar(B1x, B1y, xerr=b1[3] * sample_sd_factor,
+             yerr=b1[1] * sample_sd_factor, fmt="o", ms=6,
              color=GRAY, mfc=GRAY, mec="white", mew=0.6,
              ecolor=GRAY, **EB)
 # B2 hindsight — magenta square
-axa.errorbar(B2x, B2y, xerr=b2[3], yerr=b2[1], fmt="s", ms=6,
+axa.errorbar(B2x, B2y, xerr=b2[3] * sample_sd_factor,
+             yerr=b2[1] * sample_sd_factor, fmt="s", ms=6,
              color=MAGENTA, mfc=MAGENTA, mec="white", mew=0.6,
              ecolor=MAGENTA, **EB)
-# B3 gated (operating point) — orange triangle
-axa.errorbar(B3x, B3y, xerr=b3[3], yerr=b3[1], fmt="^", ms=7,
+# B3 under-gated with faulty decay — orange triangle, descriptive only
+axa.errorbar(B3x, B3y, xerr=b3[3] * sample_sd_factor,
+             yerr=b3[1] * sample_sd_factor, fmt="^", ms=7,
              color=ORANGE, mfc=ORANGE, mec="white", mew=0.6,
              ecolor=ORANGE, **EB)
 # designed-strength gate (ARM A) — per-seed dark diamonds (P-R1 refuted:
@@ -130,30 +137,30 @@ axa.plot(pf["tier1"]["pass_at_16"], pf["tier1"]["mean_at_16"],
 
 LBL_BG = dict(facecolor="white", edgecolor="none", alpha=0.85, pad=0.6)
 
-# arrow B1 -> B2 : sharpening (mean up, coverage down)
+# arrow B1 -> B2 : mean up, bootstrap coverage proxy down
 axa.annotate("", xy=(B2x, B2y), xytext=(B1x, B1y),
              arrowprops=dict(arrowstyle="-|>", lw=1.1, color=INK,
                              shrinkA=7, shrinkB=7,
                              connectionstyle="arc3,rad=0.20"), zorder=3)
-axa.text(0.513, 0.362, "recycling:\nmean ↑, coverage ↓",
+axa.text(0.513, 0.362, "recycling:\nmean ↑, proxy ↓",
          fontsize=7, color=INK, ha="center", va="top", style="italic",
          linespacing=1.1, zorder=5)
 
-# dose arrow B2 -> B3 only: the moderate gate is a validated operating
-# point; NO arrow to the designed-strength arm — P-R1 refuted the dial,
+# Descriptive arrow B2 -> B3 only: B3 used faulty decay and is not a
+# validated operating point. NO arrow to the designed-strength arm — P-R1 refuted the dial,
 # those seeds scatter around the no-recycling point
 axa.annotate("", xy=(B3x, B3y), xytext=(B2x, B2y),
              arrowprops=dict(arrowstyle="-|>", lw=1.1, color=ORANGE,
                              shrinkA=7, shrinkB=8,
                              connectionstyle="arc3,rad=0.0"), zorder=3)
-axa.text(0.512, 0.301, "moderate gate:\none validated\noperating point",
+axa.text(0.512, 0.301, "faulty-decay gate:\nsuggestive only",
          fontsize=7, color=ORANGE, ha="left", va="center", style="italic",
          linespacing=1.1, bbox=LBL_BG, zorder=5)
 
 # point labels — left column (B2, B3) label left; B1/designed label right
 axa.text(0.478, 0.331, "B2\nhindsight", fontsize=7, color=MAGENTA,
          ha="right", va="center", linespacing=1.0, zorder=5)
-axa.text(0.479, 0.278, "B3 gated\n(op. pt)", fontsize=7,
+axa.text(0.479, 0.278, "B3 gate\n(faulty decay)", fontsize=7,
          color=ORANGE, ha="right", va="center", linespacing=1.0, zorder=5)
 axa.text(0.550, 0.264, "B1 baseline", fontsize=7, color=GRAY,
          ha="left", va="center", zorder=5)
@@ -166,11 +173,11 @@ axa.set_xlim(0.440, 0.625)
 axa.set_ylim(0.175, 0.365)
 axa.set_xticks([0.48, 0.52, 0.56, 0.60])
 axa.set_yticks([0.20, 0.25, 0.30, 0.35])
-axa.set_xlabel("pass@16  (coverage)")
+axa.set_xlabel("VERL bootstrap best@16\n(coverage proxy)")
 axa.set_ylabel("mean@16")
 axa.set_title("(a) Operating points", loc="left", fontsize=9)
 
-# ===================================================== (b) the mechanism
+# ===================================================== (b) descriptive gate telemetry
 steps = np.array(dyn["B3"]["steps"], float)
 gate = clean(dyn["B3"]["gate_rejection_rate"])
 gate_s = roll(gate, 5)
@@ -203,7 +210,7 @@ axb.text(59, 0.905, f"{late:.2f}", fontsize=7.5, color=ORANGE,
 axb.text(6, 1.02, "ungated dose\nrides its cap", fontsize=7,
          color=MAGENTA, ha="left", va="top", style="italic",
          linespacing=1.1, zorder=5)
-axb.text(58, 0.44, "fraction of relabels\nrejected as saturated",
+axb.text(58, 0.44, "fraction of relabels\nrejected by gate",
          fontsize=7, color=ORANGE, ha="right", va="center",
          linespacing=1.1, zorder=5)
 
@@ -212,7 +219,7 @@ axb.set_ylim(0, 1.06)
 axb.set_yticks([0, 0.25, 0.5, 0.75, 1.0])
 axb.set_xlabel("training step")
 axb.set_ylabel("gate rejection rate")
-axb.set_title("(b) The mechanism", loc="left", fontsize=9)
+axb.set_title("(b) Gate telemetry", loc="left", fontsize=9)
 
 # ===================================================== (c) cost signature
 W = 15  # final-window length for the reference means
@@ -242,7 +249,7 @@ axc.text(60.5, finals["B2"] - 0.004, f"B2 hind  {finals['B2']:.2f}",
          fontsize=7, color=MAGENTA, ha="left", va="center", zorder=5)
 
 axc.text(31, 0.55,
-         "gated recycling preserves\nMORE entropy than\nno recycling",
+         "faulty-decay seed 1\nends with higher entropy\n(descriptive)",
          fontsize=7, color=INK, ha="left", va="top", style="italic",
          linespacing=1.2, zorder=5)
 
@@ -259,10 +266,13 @@ fig.savefig(os.path.join(HERE, "fig7_sharpening.png"), dpi=150)
 
 # ---------------------------------------------------------- report
 print("wrote fig7_sharpening.pdf / .png")
-print("\n(a) tier-1 endpoints [pass@16, mean@16]:")
-print(f"  B1 baseline  ({B1x:.3f}±{b1[3]:.3f}, {B1y:.3f}±{b1[1]:.3f})")
-print(f"  B2 hindsight ({B2x:.3f}±{b2[3]:.3f}, {B2y:.3f}±{b2[1]:.3f})")
-print(f"  B3 gated     ({B3x:.3f}±{b3[3]:.3f}, {B3y:.3f}±{b3[1]:.3f})")
+print("\n(a) tier-1 endpoints [VERL bootstrap best@16 proxy, mean@16]:")
+print(f"  B1 baseline  ({B1x:.3f}±{b1[3]*sample_sd_factor:.3f}, "
+      f"{B1y:.3f}±{b1[1]*sample_sd_factor:.3f})")
+print(f"  B2 hindsight ({B2x:.3f}±{b2[3]*sample_sd_factor:.3f}, "
+      f"{B2y:.3f}±{b2[1]*sample_sd_factor:.3f})")
+print(f"  B3 gated     ({B3x:.3f}±{b3[3]*sample_sd_factor:.3f}, "
+      f"{B3y:.3f}±{b3[1]*sample_sd_factor:.3f})")
 for i, (px, py) in enumerate(zip(arm_pass, arm_mean), 1):
     print(f"  designed s{i}  ({px:.3f}, {py:.3f})  [P-R1 refuted: scatter]")
 print(f"  superseded 1-seed ({pf['tier1']['pass_at_16']:.3f}, "

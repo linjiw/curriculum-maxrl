@@ -1,0 +1,130 @@
+{
+  "schema": "mountaincar-neural-transfer-v1r2-development-verification",
+  "verified_utc": "2026-07-23T02:58:54.742155+00:00",
+  "artifact": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/mountaincar_neural_transfer_v1_development.json",
+  "artifact_sha256": "2e4803805009a3323307f6bdcfae17fb625008adb5361dc2310e414a19129180",
+  "development_lock": "/Users/linji/projects/curriculum-maxrl/frontier_rl/examples/MOUNTAINCAR_NEURAL_TRANSFER_V1_LOCK.json",
+  "development_lock_sha256": "b5edbc33048a8d3a8d7dbb992a23178ddf8424dd3c5be3165c87e6dc42a50a5c",
+  "development_lock_canonical_sha256": "94d5039858c3664c05b8711512eff62fed49319668ac07eea3fafe2f211a2d10",
+  "checked_source_files": [
+    "frontier_rl/examples/mountaincar_neural_transfer_v1_core.py",
+    "frontier_rl/examples/run_mountaincar_neural_transfer_v1.py",
+    "frontier_rl/examples/analyze_mountaincar_neural_transfer_v1.py",
+    "frontier_rl/examples/MOUNTAINCAR_NEURAL_TRANSFER_PROTOCOL_V1.md",
+    "frontier_rl/examples/test_mountaincar_neural_transfer_v1.py",
+    "frontier_rl/examples/test_analyze_mountaincar_neural_transfer_v1.py",
+    "frontier_rl/__init__.py",
+    "frontier_rl/interfaces.py",
+    "frontier_rl/teacher.py",
+    "frontier_rl/estimators.py",
+    "frontier_rl/trainer.py"
+  ],
+  "all_checks_passed": true,
+  "sealed_development_protocol_verified": true,
+  "source_hashes_verified": true,
+  "sampler_traces_independently_replayed": true,
+  "uniform_schedules_independently_regenerated": true,
+  "training_rollout_audits_independently_recomputed": true,
+  "evaluation_samples_and_crns_independently_recomputed": true,
+  "transition_auc_independently_recomputed": true,
+  "capacity_contract_independently_verified": true,
+  "no_hindsight_verified": true,
+  "primary_metric": "auc_hardest_pass_fixed_transitions",
+  "supporting_metric": "auc_mean_pass_fixed_transitions",
+  "development_gates": {
+    "complete_exact_matrix": true,
+    "technical_validity": true,
+    "exact_capacity_controls": true,
+    "task_coverage": true,
+    "nonzero_update_signal": true,
+    "natural_dead_mixed_all_pass_regimes": false,
+    "initial_common_random_numbers": true,
+    "exact_paired_uniform_schedule_and_realized_common_prefix": true,
+    "projected_confirmatory_runtime_at_most_18h": true,
+    "projected_confirmatory_hours": 0.8854912923554096,
+    "pooled_regime_counts": {
+      "dead_groups": 1932,
+      "mixed_groups": 474,
+      "all_pass_groups": 0
+    },
+    "learning_outcomes_authorize_claims": false,
+    "development_feasible": false
+  },
+  "development_contrasts": {
+    "frontier_minus_uniform_shared": {
+      "primary_metric": "auc_hardest_pass_fixed_transitions",
+      "supporting_metric": "auc_mean_pass_fixed_transitions",
+      "estimand": "frontier_shared_h64 - uniform_shared_h64",
+      "primary_per_seed_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "primary_mean_delta": 0.0,
+      "supporting_per_seed_delta": [
+        0.002734375000000004,
+        0.0015625000000000014,
+        0.015234374999999994
+      ],
+      "supporting_mean_delta": 0.006510416666666667,
+      "inference": "descriptive development result; not confirmatory"
+    },
+    "frontier_minus_hardest_shared": {
+      "primary_metric": "auc_hardest_pass_fixed_transitions",
+      "supporting_metric": "auc_mean_pass_fixed_transitions",
+      "estimand": "frontier_shared_h64 - hardest_shared_h64",
+      "primary_per_seed_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "primary_mean_delta": 0.0,
+      "supporting_per_seed_delta": [
+        0.014062500000000006,
+        0.005468750000000001,
+        0.016406249999999997
+      ],
+      "supporting_mean_delta": 0.011979166666666667,
+      "inference": "descriptive development result; not confirmatory"
+    },
+    "shared_minus_disjoint_total_under_uniform": {
+      "primary_metric": "auc_hardest_pass_fixed_transitions",
+      "supporting_metric": "auc_mean_pass_fixed_transitions",
+      "estimand": "uniform_shared_h64 - uniform_disjoint_total_h8x8",
+      "primary_per_seed_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "primary_mean_delta": 0.0,
+      "supporting_per_seed_delta": [
+        0.011328125000000001,
+        0.00390625,
+        0.0011718750000000028
+      ],
+      "supporting_mean_delta": 0.005468750000000001,
+      "inference": "descriptive development result; not confirmatory"
+    },
+    "shared_minus_disjoint_active_under_uniform": {
+      "primary_metric": "auc_hardest_pass_fixed_transitions",
+      "supporting_metric": "auc_mean_pass_fixed_transitions",
+      "estimand": "uniform_shared_h64 - uniform_disjoint_active_h64x8",
+      "primary_per_seed_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "primary_mean_delta": 0.0,
+      "supporting_per_seed_delta": [
+        0.0078125,
+        0.00390625,
+        0.0011718750000000028
+      ],
+      "supporting_mean_delta": 0.004296875000000001,
+      "inference": "descriptive development result; not confirmatory"
+    }
+  },
+  "confirmatory_claim_authorized": false,
+  "confirmatory_seeds_verified_untouched_by_artifact": true,
+  "interpretation": "sealed development feasibility only; three-seed effects are descriptive and cannot support a confirmatory performance claim"
+}

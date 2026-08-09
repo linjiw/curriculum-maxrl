@@ -1,6 +1,7 @@
-"""Inference-efficiency comparison of final checkpoints — the paper's
-headline metric (their Fig. 5): how many samples does each trained policy
-need to reach a target coverage on held-out tasks, with a perfect verifier?
+"""Archived inference-efficiency evaluator for compatible maze checkpoints.
+
+How many samples does each trained policy need to reach a single, user-chosen
+target coverage on held-out tasks, with a verifier?
 
 For each level and checkpoint we estimate pass@k curves from n=64 samples
 (Chen et al. 2021 unbiased estimator) and report:
@@ -8,10 +9,12 @@ For each level and checkpoint we estimate pass@k curves from n=64 samples
   - speedup vs the uniform+maxrl baseline
 
 Usage: python3 eval_efficiency.py ckptA.pt ckptB.pt ... (labels from names)
-Note: checkpoints are not saved by train.py runs by default; this script
-re-trains quick reference checkpoints when invoked with --retrain, using the
-same matched 2400s protocol.  For the paper-style comparison we retrain the
-three headline configs.
+
+The historical checkpoints are not included and ``train.py`` does not save
+them by default, so the published historical table cannot be regenerated from
+this repository as shipped. There is no ``--retrain`` mode; callers must
+provide explicit compatible ``.pt`` files. New evaluations use a fixed Torch
+sampling seed and one global ``--target`` across all levels.
 """
 
 from __future__ import annotations
@@ -32,23 +35,33 @@ from train import pad_batch, DEVICE, pass_at_k_unbiased
 
 
 @torch.no_grad()
-def coverage_curves(model, n_samples=64, n_tasks=16, ks=(1, 2, 4, 8, 16, 32, 64)):
+def coverage_curves(model, n_samples=64, n_tasks=16,
+                    ks=(1, 2, 4, 8, 16, 32, 64), seed=999):
     """Per-level pass@k estimates from n_samples rollouts per held-out task."""
     model.eval()
-    eval_rng = random.Random(999)
-    out = {}
-    for level in LEVELS:
-        tasks = [sample_task(level, eval_rng) for _ in range(n_tasks)]
-        cs = []
-        for t in tasks:
-            prompts, plens = pad_batch([t.prompt] * n_samples, DEVICE)
-            resp = model.generate(prompts, plens, MOVE_BUDGET[level] + 1, EOS)
-            c = sum(verify(t.grid, t.goal, [int(x) for x in resp[j] if int(x) != PAD])
-                    for j in range(n_samples))
-            cs.append(c)
-        out[level] = {k: float(np.mean([pass_at_k_unbiased(n_samples, c, k) for c in cs]))
-                      for k in ks}
-    return out
+    eval_rng = random.Random(seed)
+    cuda_devices = list(range(torch.cuda.device_count())) if torch.cuda.is_available() else []
+    with torch.random.fork_rng(devices=cuda_devices):
+        torch.manual_seed(seed)
+        if cuda_devices:
+            torch.cuda.manual_seed_all(seed)
+        out = {}
+        for level in LEVELS:
+            tasks = [sample_task(level, eval_rng) for _ in range(n_tasks)]
+            cs = []
+            for t in tasks:
+                prompts, plens = pad_batch([t.prompt] * n_samples, DEVICE)
+                resp = model.generate(prompts, plens, MOVE_BUDGET[level] + 1, EOS)
+                c = sum(verify(t.grid, t.goal,
+                               [int(x) for x in resp[j] if int(x) != PAD],
+                               max_moves=MOVE_BUDGET[level])
+                        for j in range(n_samples))
+                cs.append(c)
+            out[level] = {
+                k: float(np.mean([pass_at_k_unbiased(n_samples, c, k) for c in cs]))
+                for k in ks
+            }
+        return out
 
 
 def k_to_target(curve: dict, target: float = 0.9):

@@ -8,9 +8,8 @@ direction × distance bucket) — deliberately simple so the framework, not
 the function approximator, is what's under test.
 
 Hindsight: a failed episode's final cell IS a reached goal; relabel the
-group to the ring of the farthest final cell, marking rollouts that ended
-in that ring as successes (exact under the env's own verifier — P6's
-contract).
+whole group to one farthest achieved cell, rewrite that goal for every
+trajectory, and mark only rollouts ending at that exact cell as successes.
 
 This mirrors Fetch-style sparse-reward reach tasks: replace `step()` with a
 mujoco/bullet sim and `ring of final cell` with `distance-band of achieved
@@ -18,6 +17,8 @@ end-effector pose` and the adapter carries over unchanged.
 """
 
 from __future__ import annotations
+
+import copy
 
 import numpy as np
 
@@ -87,32 +88,51 @@ class GridReachSpace:
             positions, actions, final_pos, goal, ok = self._episode(ring)
             trajs.append({"positions": positions, "actions": actions, "goal": goal})
             rewards.append(float(ok))
-            infos.append({"final_pos": final_pos, "goal": goal})
+            infos.append({"final_pos": final_pos, "goal": goal,
+                          "n_steps": len(actions)})
         return GroupResult(task_id, np.array(rewards), trajs, infos)
 
     def relabel(self, group: GroupResult):
-        """Relabel to the farthest reached ring, REWRITING the goal in each
-        successful trajectory to its own final cell (interfaces.py contract 2:
-        goal-relative features must be recomputed against the achieved goal,
-        else goal-A-conditioned actions get credited to goal B)."""
+        """Relabel the group to one farthest achieved cell.
+
+        Centered weights score both positive and negative trajectories, so the
+        new goal must be written into *every* trajectory.  Grouping different
+        achieved cells merely because they share a distance ring would mix
+        distinct goal-conditioned tasks.
+        """
         rings = [max(abs(i["final_pos"][0]), abs(i["final_pos"][1]))
                  for i in group.infos]
         best = max((r for r in rings if 1 <= r <= self.R), default=0)
         if best < 1:
             return None
-        new_rewards = np.array([1.0 if r == best else 0.0 for r in rings])
+        source = next(i for i, r in enumerate(rings) if r == best)
+        new_goal = np.asarray(group.infos[source]["final_pos"]).copy()
+        first_hits = []
+        for traj in group.trajectories:
+            hit = None
+            for step, (pos, action) in enumerate(
+                    zip(traj["positions"], traj["actions"]), start=1):
+                if np.array_equal(np.asarray(pos) + MOVES[action], new_goal):
+                    hit = step
+                    break
+            first_hits.append(hit)
+        new_rewards = np.array([float(hit is not None) for hit in first_hits])
         new_trajs = []
-        for traj, info, r in zip(group.trajectories, group.infos, rings):
-            if r == best:
-                nt = dict(traj)
-                nt["goal"] = info["final_pos"]   # achieved goal
-                new_trajs.append(nt)
-            else:
-                new_trajs.append(traj)
+        for traj, hit in zip(group.trajectories, first_hits):
+            nt = dict(traj)
+            nt["goal"] = new_goal.copy()
+            if hit is not None:
+                # A fresh reach-task rollout terminates on its first goal hit.
+                nt["positions"] = traj["positions"][:hit]
+                nt["actions"] = traj["actions"][:hit]
+            new_trajs.append(nt)
         return best - 1, new_rewards, new_trajs
 
     # ---- Policy ----
     def update(self, task_id: int, trajectories, weights) -> None:
+        # Freeze the policy over the whole rollout group; apply the accumulated
+        # Monte Carlo gradient once so trajectory ordering cannot change it.
+        grad = np.zeros_like(self.theta)
         for traj, w in zip(trajectories, np.asarray(weights)):
             if w == 0.0:
                 continue
@@ -122,12 +142,21 @@ class GridReachSpace:
                 p = self._policy_probs(feat)
                 g = -p
                 g[a] += 1.0
-                self.theta[feat] += self.lr * w * g
+                grad[feat] += w * g
+        self.theta += self.lr * grad
 
     # ---- eval ----
-    def eval_pass_rates(self, n: int = 64) -> np.ndarray:
-        out = []
-        for task in range(self.n_tasks):
-            g = self.rollout_group(task, n)
-            out.append(float(np.mean(g.rewards)))
-        return np.array(out)
+    def eval_pass_rates(self, n: int = 64, seed=None) -> np.ndarray:
+        rng_state = copy.deepcopy(self.rng.bit_generator.state)
+        try:
+            if seed is not None:
+                self.rng.bit_generator.state = copy.deepcopy(
+                    np.random.default_rng(seed).bit_generator.state
+                )
+            out = []
+            for task in range(self.n_tasks):
+                g = self.rollout_group(task, n)
+                out.append(float(np.mean(g.rewards)))
+            return np.array(out)
+        finally:
+            self.rng.bit_generator.state = rng_state

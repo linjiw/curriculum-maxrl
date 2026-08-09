@@ -1,0 +1,22 @@
+{
+  "development_authorization_sha256": "91ec2c5dbea8e4d424abcbb8176df9bfc8e809f46248b8345d41ea530fbbff61",
+  "development_run_count": 120,
+  "learning_rate_selection_sha256": "dfc9d69faec78cff95e63ed7cd99a0e23c883dad5eba1a2fe378366730e06795",
+  "remaining_blockers": [],
+  "review_findings": {
+    "all_development_gates_passed": true,
+    "artifact_identity_and_hash_mismatches": 0,
+    "full_locked_portable_replay_passed": true,
+    "sealed_test_outcomes_absent": true,
+    "selected_common_learning_rate": 0.1,
+    "selected_learning_rates_by_estimator": {
+      "practical_maxrl": 0.1,
+      "rloo": 0.1
+    }
+  },
+  "reviewed_utc": "2026-08-08T18:50:51Z",
+  "reviewer_task": "/root/digits_factorial_impl/digits_final_reviewer",
+  "schema": "curriculum-maxrl/digits-factorial-independent-preconfirmation-review/v1",
+  "source_lock_sha256": "d72b93a29a2e6a096a6acb0611f69fe6df9dcda80256000aed6de5208ef4eb36",
+  "status": "passed"
+}

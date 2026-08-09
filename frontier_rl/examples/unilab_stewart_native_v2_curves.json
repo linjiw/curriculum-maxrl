@@ -1,0 +1,49 @@
+{
+  "schema": "curriculum-maxrl/unilab-stewart-native-v2-curves/v1",
+  "source_artifacts": [
+    {
+      "seed": 0,
+      "sha256": "281fb0b444a5e02042914da3a36b08b828771fa2896ce542faa679e4c8ab0a69"
+    },
+    {
+      "seed": 1,
+      "sha256": "46693714c18297225a0bde832537931b2c3dd2149193c8cf57da95ab9e209a9e"
+    },
+    {
+      "seed": 2,
+      "sha256": "a050cb60d55ffbcfe56830e52e61e7ed5c58c3ae843f32ce656159c4f235cf5c"
+    }
+  ],
+  "artifact": "sibling UniLab benchmark/outputs/stewart_grouped_maxrl/second_moment_seed_{0,1,2}.json",
+  "status": "three-paired-seed native development artifact; not confirmatory",
+  "metric": "eleven-radius target-uniform mean terminal pass rate",
+  "x_label": "Motrix backend training transitions (0–288k)",
+  "note": "Native complete-episode D_8 StewartBalanceGrouped development study. Chart slots are uniform, target-preserving u_8 coefficient-mass sampling, and target-preserving gradient-second-moment sampling; there is no hindsight arm and no supported sampler ranking.",
+  "sampling_trace": "retained in source artifacts; not embedded in website export",
+  "methods": {
+    "uniform": {
+      "label": "uniform",
+      "n_seeds": 3,
+      "x": [0, 72000, 144000, 216000, 288000],
+      "mean": [0.312263, 0.314394, 0.328598, 0.329309, 0.340436],
+      "lo": [0.301847, 0.305398, 0.319602, 0.318892, 0.335938],
+      "hi": [0.324574, 0.326705, 0.338778, 0.335938, 0.34375]
+    },
+    "teacher": {
+      "label": "u_8 + exact rho/q",
+      "n_seeds": 3,
+      "x": [0, 72000, 144000, 216000, 288000],
+      "mean": [0.312263, 0.319129, 0.330492, 0.333807, 0.334517],
+      "lo": [0.301847, 0.308949, 0.318182, 0.324574, 0.325284],
+      "hi": [0.324574, 0.333807, 0.352983, 0.34517, 0.347301]
+    },
+    "hindsight": {
+      "label": "gradient moment + exact rho/q",
+      "n_seeds": 3,
+      "x": [0, 72000, 144000, 216000, 288000],
+      "mean": [0.312263, 0.316288, 0.328362, 0.329072, 0.33428],
+      "lo": [0.301847, 0.314631, 0.316761, 0.3125, 0.321733],
+      "hi": [0.324574, 0.318182, 0.34517, 0.34375, 0.346591]
+    }
+  }
+}

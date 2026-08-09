@@ -1,0 +1,67 @@
+{
+  "schema": "curriculum-maxrl/capped-hora-engineering-validation-receipt/v1",
+  "date": "2026-08-08",
+  "scientific_evidence": false,
+  "claim_boundary": "Compact receipt for outcome-independent engineering and legacy-overlap gates; the underlying audit artifacts were generated in /private/tmp and are not themselves vendored.",
+  "source_lock_sha256": "14418bb71e92b5eedf2b4220995edcaacf0a8b75337976dbfe5917ae6a7d60e7",
+  "protocol_sha256": "f206a58ee3bfe81b4f4b34ba18635631c11e85bc4e6e4b722d01e5951204f718",
+  "serial_parallel_engineering_audit": {
+    "logical_seeds": [
+      90,
+      91
+    ],
+    "cells_per_seed": 50,
+    "run_count": 100,
+    "serial_raw_sha256": "3d6d7e10c2e43967bd644e291178443b5f4629cec9752a9aac37a4faa093e3f7",
+    "workers4_raw_sha256": "3d6d7e10c2e43967bd644e291178443b5f4629cec9752a9aac37a4faa093e3f7",
+    "raw_bytes_identical": true,
+    "serial_analysis_sha256": "2451a5ffacebba4ad8c2191722943b722bbdd5ec1e946d6addc603c1a366acbe",
+    "workers4_analysis_sha256": "86d3a0139515dd23983da122e1d137b78a4de8a78d501369301830a25c2253be",
+    "analysis_hash_note": "Analysis hashes differ only because each embeds its distinct absolute raw-artifact path; both were independently accepted.",
+    "all_registered_accounting_checks_passed": true
+  },
+  "legacy_overlap_audit": {
+    "logical_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "shared_cells_per_seed": 6,
+    "run_count": 96,
+    "fields_compared_per_run": 24,
+    "exact_field_comparisons": 2304,
+    "mismatches": 0,
+    "old_result_sha256": "302683a86db4a4c16dd3c227804fdaa890144874d3461ea560be5235d28a786d",
+    "overlap_raw_sha256": "517fe25f253f3f42d4e4c5c7bd5cfd1154caf3cb88ef0ab0d5a1e0a01b61356d",
+    "overlap_analysis_sha256": "7f6294ff134846b9774378ed64b8aa294c378a135434d0a310aac4276abfec1c",
+    "all_exact_comparisons_passed": true
+  },
+  "authorization_guard_audit": {
+    "unauthorized_full_matrix_refused": true,
+    "refusal_transcript_sha256": "b51b9fd9b93b03ebcd67cdca727672f77f0554d80605c33386b999c84009eca6"
+  },
+  "test_suite": {
+    "tests": 15,
+    "passed": 15,
+    "failed": 0,
+    "runtime": {
+      "python_implementation": "CPython",
+      "python": "3.9.6",
+      "numpy": "1.26.4"
+    }
+  },
+  "public_timing_provenance": "No immutable public pre-execution commit is available; this receipt records the local audited gate outputs and their hashes."
+}
