@@ -1,5 +1,36 @@
 # Next research steps (post review-3, 2026-07-31)
 
+> **Status 2026-08-10:** The active critical path has moved to E2c; see
+> `autoresearch/iterate-260810-2240/GOAL.md`. E2 current-batch replay and E2b
+> recent-buffer replay both stopped at prospectively frozen treatment-delivery
+> gates, so neither supports an endpoint direction claim. E2c uses a
+> checksummed, train-only frozen-SFT source reservoir and forbids held-out
+> evaluation until all three replay arms pass delivery. Its preregistration,
+> collector/replay implementation, static preflight, delivery validator, paired
+> endpoint analyzer, and GPU-safe driver are implemented and CPU-tested. The
+> endpoint analyzer now recomputes standard observed-set pass@16 from retained
+> binary outcomes, avoiding the historical VERL bootstrap-best@k proxy. The
+> scientific launcher values and source-asset fingerprints are now executable
+> locks rather than ambient defaults. The outcome-blind launch receipt passes
+> all integrity checks, reports no held-out E2c artifact, and identifies B1
+> seed 3 as the next stage; refresh it with
+> `bash verl_integration/run_e2c_rtx5090.sh --readiness-only`.
+> Reused B1/B2 seeds 1--2 now also pass 59/59 logged configuration checks per
+> run with full checkpoint and B2 schedule fingerprints; see
+> `autoresearch/iterate-260810-2240/E2C_COMPARATOR_REUSE.md`.
+> E3's
+> historical multi-seed curve and E4's 101-task clean-tier endpoint are
+> irrecoverable from surviving aggregates; the seed-1 curve is now structured
+> and descriptive, and the overlap blocker is machine-readable. A later remote
+> research release (`9277141`) already contains a nine-page candidate and must
+> be reconciled deliberately with this E2c worktree. The
+> shared RTX 5090 was occupied at the 2026-08-10 launch check. In parallel, the
+> mandatory factorial independent-unit repair is complete: wave 2 remains 6/6
+> per sampler and +.01950 [+.01148,+.02752] at n=6 independent blocks; the
+> easy-band registered pair-level bar was met but its block-level interval
+> includes zero. The ranked list below is historical context where superseded
+> by this update.
+
 > **Status 2026-08-02:** #4 (bridge) DONE through part I + GPU verdicts
 > — `curriculum_maxrl/BRIDGE_ANALYSIS.md`. Final: u_N ties the exact
 > first-order objective as predictor; "best within-band utility" is

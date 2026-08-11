@@ -89,7 +89,15 @@ def verdicts():
     sb = json.load(open(os.path.join(HERE, "b_scoreboard_3seed.json")))
     b1_mean, _, b1_pass, _ = sb["B1_t1"]
     b2_mean, _, b2_pass, _ = sb["B2_t1"]
-    out = {}
+    out = {
+        "_metric_provenance": {
+            "legacy_keys": ["t1_pass16", "coverage", "coverage_vs_B1"],
+            "meaning": (
+                "VERL bootstrap best@16 coverage proxy; not standard unbiased pass@16"
+            ),
+            "standard_pass16_recomputable_from_this_file": False,
+        }
+    }
 
     a_files = [os.path.join(HERE, f"armA_b3fix_s{s}.json") for s in (1, 2, 3)]
     if all(complete(f) for f in a_files):
@@ -123,7 +131,8 @@ def verdicts():
             # "captures ~all" branch => 6.8 reduces recycling's case to the direction term
             per_seed_ok = [(p[0] - b1_mean) / (b2_mean - b1_mean) >= 0.5 and p[1] >= b1_pass
                            for p in pts]
-            rec["verdict"] = ("CONFIRMED-STRONG (captures >all of B2's gain, no coverage loss)"
+            rec["verdict"] = ("CONFIRMED-STRONG under stored rule (higher-dose replay "
+                              "improves both logged metrics; dose and direction are not decomposed)"
                               if kept >= 1.0 and c >= b1_pass and all(per_seed_ok)
                               else "CONFIRMED" if kept >= 0.5 and c >= b1_pass
                               else "REFUTED")

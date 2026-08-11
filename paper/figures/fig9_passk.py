@@ -1,20 +1,20 @@
 #!/usr/bin/env python
-"""Figure 9 — pass@k vs k for Countdown B1/B2/B3 (tier 1, seed 1).
+"""Figure 9 — VERL bootstrap best@k proxy for Countdown (tier 1, seed 1).
 
-The reviewer-requested one-panel version of the sharpening claim: it
-quantifies over k, so show it over k. Ungated recycling (B2) is ABOVE
-baseline at k=1 (mean up) and crosses BELOW by k=8-16 (coverage down);
-the moderate gate (B3) tracks baseline's low-k gain with a smaller
-high-k deficit. Curves cross — that crossing IS recycling-induced
-sharpening.
+The exploratory seed-1 telemetry shows ungated recycling (B2) above baseline
+at k=1, crossing below by k=4 and remaining below through k=16. The crossing
+is consistent with recycling-package concentration, but it is not replicated
+over seeds. This metric uses with-replacement resampling and is not standard
+unbiased pass@k.
 
-Data: step-60 val, unbiased best@k estimates (verl), n=128 tier-1
+Data: step-60 val, VERL bootstrap best@k proxy, n=128 tier-1
 problems x 16 samples, seed 1 (the seed with full per-k telemetry in
 the ray logs; endpoints cross-check b_scoreboard_3seed.json).
 Palette: intervention accents on the shared MaxRL-blue base is
 overkill at 3 arms; use gray=baseline, magenta=ungated, orange=gated
 (matching fig 7/8's arm colors).
 """
+import json
 import os
 
 import matplotlib
@@ -23,6 +23,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+DATA = os.path.join(HERE, "data", "fig9_bestk_proxy.json")
 
 GRAY = "#555555"      # B1 no recycling
 MAGENTA = "#e87ba4"   # B2 ungated recycling
@@ -42,14 +43,13 @@ plt.rcParams.update({
     "ps.fonttype": 42,
 })
 
-K = [1, 2, 4, 8, 16]
-# step-60 tier-1 unbiased best@k, seed 1 (ray sessions 07-29_05 B1,
-# 07-28_22 B2, 07-29_02 B3, 07-30_06 full-strength gate;
-# mean@16 as the k=1 point)
-B1 = [0.310, 0.384, 0.451, 0.509, 0.559]
-B2 = [0.334, 0.388, 0.428, 0.459, 0.485]
-B3 = [0.309, 0.374, 0.425, 0.459, 0.475]
-FG = [0.220, 0.316, 0.412, 0.499, 0.564]
+with open(DATA, encoding="utf-8") as handle:
+    logged = json.load(handle)
+K = logged["k"]
+B1 = logged["series"]["no_recycling"]
+B2 = logged["series"]["recycling"]
+B3 = logged["series"]["recycling_faulty_decay_gate"]
+FG = logged["series"]["full_strength_refuted"]
 
 fig, ax = plt.subplots(figsize=(3.6, 2.8))
 
@@ -67,7 +67,7 @@ ax.plot(K, FG, color=ORANGE, marker="^", ms=4.5, lw=1.1, ls=":",
 ax.set_xscale("log", base=2)
 ax.set_xticks(K, [str(k) for k in K])
 ax.set_xlabel("$k$ (samples)")
-ax.set_ylabel(r"pass@$k$ ($\uparrow$)")
+ax.set_ylabel(r"VERL bootstrap best@$k$ proxy ($\uparrow$)")
 ax.legend(frameon=False, loc="upper left", handlelength=1.6)
 
 # annotate the crossing
@@ -75,7 +75,7 @@ ax.annotate("mean up", xy=(1.05, 0.336), xytext=(1.55, 0.305),
             fontsize=7.5, color=MAGENTA, style="italic",
             arrowprops=dict(arrowstyle="->", lw=0.7, color=MAGENTA,
                             shrinkA=2, shrinkB=2))
-ax.annotate("coverage down:\nthe curves cross", xy=(14.2, 0.492),
+ax.annotate("proxy down:\nthe curves cross", xy=(14.2, 0.492),
             xytext=(9.5, 0.415), fontsize=7.5, color=MAGENTA,
             ha="center", style="italic", linespacing=1.1,
             arrowprops=dict(arrowstyle="->", lw=0.7, color=MAGENTA,

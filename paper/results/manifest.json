@@ -19,6 +19,18 @@
    "gen_dominated_weighted_mean": 0.8337
   }
  },
+ "audits": {
+  "countdown_sft_overlap_summary": {
+   "inputs": [
+    "curriculum_maxrl/data_integrity_check.json"
+   ],
+   "checksums": {
+    "curriculum_maxrl/data_integrity_check.json": "be4e80ac892e9618"
+   },
+   "verification": "python -m unittest curriculum_maxrl.test_audit_countdown_sft_overlap",
+   "notes": "The stored source audit reports 27/128 tier-0 SFT/evaluation overlap and zero in tiers 1-2. Historical source manifests and per-task outcomes are not vendored, so the 101-task numerical reanalysis remains blocked."
+  }
+ },
  "figures": {
   "fig1_utility": {
    "script": "paper/figures/fig1_utility.py",
@@ -115,9 +127,14 @@
   },
   "fig9_passk": {
    "script": "paper/figures/fig9_passk.py",
-   "inputs": [],
+   "inputs": [
+    "paper/figures/data/fig9_bestk_proxy.json"
+   ],
    "command": "python paper/figures/fig9_passk.py",
-   "notes": "per-k points transcribed in-script from ray worker logs (sessions 07-29_05 B1, 07-28_22 B2, 07-29_02 B3, 07-30_06 full-strength), seed 1, step-60 unbiased best@k, n=128; endpoints cross-check b_scoreboard_3seed.json; full-strength curve retained faded with the P-R1 refutation note in the caption (2026-08-06)"
+   "checksums": {
+    "paper/figures/data/fig9_bestk_proxy.json": "fd32d790031648ab"
+   },
+   "notes": "Single-seed, step-60 VERL bootstrap best@k proxy; with-replacement resampling, not standard unbiased pass@k. Points and session provenance moved from hard-coded script arrays into the declared input."
   },
   "fig10_jugs_entropy": {
    "script": "paper/figures/fig10_jugs_entropy.py",
@@ -129,6 +146,17 @@
     "jugs_llm/results/entropy_trajectories.json": "aaa5736f96ec4dbd"
    },
    "notes": "appendix Jugs pool-conditionality figure, added 2026-08-06 (gap-tracker S4)"
+  },
+  "fig11_factorial_blocks": {
+   "script": "paper/figures/fig11_factorial_blocks.py",
+   "inputs": [
+    "curriculum_maxrl/maze_gpu_factorial/block_reanalysis.json"
+   ],
+   "command": "python paper/figures/fig11_factorial_blocks.py",
+   "checksums": {
+    "curriculum_maxrl/maze_gpu_factorial/block_reanalysis.json": "42b8fcb886b140dc"
+   },
+   "notes": "independent-unit repair: sampler contrasts are repeated observations within each seed/warmstart block; intervals and cross-wave counts use one sampler-averaged value per block"
   }
  }
 }

@@ -20,27 +20,31 @@ step "1/5 proposition + integration tests"
 $PYTHON -m curriculum_maxrl.test_mass_formulas
 $PYTHON curriculum_maxrl/test_verl_curriculum.py
 $PYTHON frontier_rl/test_framework.py
+$PYTHON -m unittest curriculum_maxrl.test_audit_countdown_sft_overlap
 
 step "2/5 figure-endpoint derivations (fail on mismatch)"
 (cd paper/figures && $PYTHON verify_fig2a_from_artifacts.py)
 (cd paper/figures && $PYTHON verify_fig2c_from_logs.py) || {
   echo "  (fig2c needs the execution fork's raw maze logs; skipping is a"
   echo "   MISS only if ../maxrl is present)"; [ -d ../maxrl ] && FAIL=1; }
+$PYTHON curriculum_maxrl/maze_gpu_factorial/block_reanalysis.py >/dev/null
 
 step "3/5 manifest checksums"
 $PYTHON - <<'EOF'
 import hashlib, json, os, sys
 m = json.load(open('paper/results/manifest.json'))
 bad = []
-for fig, e in m['figures'].items():
+sections = [m['figures'], m.get('audits', {})]
+for section in sections:
+  for name, e in section.items():
     for path, want in e.get('checksums', {}).items():
         if not os.path.exists(path):
-            bad.append(f"{fig}: missing input {path}"); continue
+            bad.append(f"{name}: missing input {path}"); continue
         got = hashlib.sha256(open(path, 'rb').read()).hexdigest()[:16]
         if got != want:
-            bad.append(f"{fig}: {path} checksum {got} != {want}")
+            bad.append(f"{name}: {path} checksum {got} != {want}")
 for b in bad: print("  MISMATCH:", b)
-print(f"  {sum(len(e.get('checksums',{})) for e in m['figures'].values())} inputs checked,"
+print(f"  {sum(len(e.get('checksums',{})) for section in sections for e in section.values())} inputs checked,"
       f" {len(bad)} mismatches")
 sys.exit(1 if bad else 0)
 EOF

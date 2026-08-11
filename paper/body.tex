@@ -1,42 +1,37 @@
 
 \begin{abstract}
-Difficulty curricula and failure recycling (hindsight relabeling) are
-designed today as estimator-agnostic add-ons to RL with verifiable
-rewards. We show they are not. \emph{Exact result:} for
-success-conditioned (MaxRL-style) advantages, the expected absolute
-coefficient mass a prompt emits from $N$ rollouts is exactly
-$2(\passat{N}-\passat{1})$ --- a compute-indexed learnability
-functional vanishing exactly at pass rates $0$ and $1$, partitioning
-difficulty into a dead zone, a learnable region, and a mastered tail,
-with the region's peak and $N$-scaling derived rather than tuned.
-\emph{Replicated experiment:}
-on Countdown, exact-verifier recycling improves mean accuracy while
-\emph{losing} $\passat{k}$ coverage --- \textbf{recycling-induced
-sharpening}, three seeds --- a pre-registered dose control shows the
-mean gain is not relabel-specific (extra epochs on live groups buy
-more of it, with coverage \emph{gain}, 3/3 seeds), and a saturation
-heuristic on relabel destinations returns frontier-tier coverage to
-baseline while keeping most of the mean gain at one validated
-operating point.
-\emph{Practical consequence:} report $\passat{k}$ coverage beside mean
-accuracy whenever a curriculum or recycler ships, conditioned on the
-estimator it ships on. \emph{Tested against ourselves:} the sharpest
-coverage claim our earlier runs suggested failed its pre-registered
-balanced factorial at the registered endpoint and is retracted here;
-the time-integrated ordering that survived it was then registered on
-six fresh seed blocks and \emph{confirmed} --- MaxRL retains more
-coverage than GRPO in 6/6 paired blocks under each sampler
-($p{=}.031$ per sampler; 24/24 across both waves), concentrated in
-the easy band the mass curves indict. A second registered sweep
-refuted our own gate-strength dial reading the same way. We also note a refinement to
-MaxRL: its practical drop-all-fail estimator is unbiased for
-truncation order $T{=}N{-}1$, not $N$.
+RL with verifiable rewards often treats task curricula and failure
+recycling as estimator-agnostic data interventions. We ask a narrower
+question: what task-level activity does the deployed group estimator
+make available to either intervention? For the zero-stabilizer form of
+practical MaxRL with $N$ i.i.d.\ binary rollouts, the expected absolute
+coefficient mass is exactly
+$2(\passat{N}-\passat{1})$. This rollout-aware activity score vanishes
+at pass rates $0$ and $1$ and has a unique, compute-dependent interior
+peak. It is an estimator-side diagnostic, not a theorem of learning
+progress. In a balanced neural maze factorial, an external execution
+record reports that the time-integrated MaxRL--GRPO coverage contrast
+was fixed before a six-block fresh wave; it was positive in 6/6 blocks
+under each sampler ($p{=}.031$ per sampler). Averaging the correlated
+sampler contrasts within seed gives a wave-2 mean of $+.0195$ with a
+post-hoc 95\% interval $[+.0115,+.0275]$. On Countdown, a reported
+three-seed recycling-package aggregate raises mean@16 from $.278$ to
+$.324$ while the logged VERL bootstrap best@16 proxy falls from $.541$
+to $.492$; this proxy is not standard unbiased pass@16, and missing raw
+task outcomes prevent recomputation. A higher-dose replay arm improves
+both logged metrics but does not isolate relabel direction; two matched
+controls failed treatment delivery, and the proposed saturation gate
+did not validate under corrected code. Together, these results support
+a calibrated conclusion: curricula and recyclers must be evaluated
+jointly with the estimator beneath them, and mean accuracy alone can
+hide a loss of coverage. We also show that dropping all-fail groups
+targets truncation order $T{=}N{-}1$, not $N$.
 \end{abstract}
 
 \section{Introduction}
 
 Post-training language models and control policies with verifiable
-rewards has a cost structure unlike supervised learning: the data is
+rewards have a cost structure unlike supervised learning: the data are
 free, but \emph{rollouts} are not. Every optimization step is preceded
 by sampling $N$ completions per task, and generation can dominate
 wall-clock --- in our committed telemetry, generation-dominated LLM
@@ -65,16 +60,16 @@ whose benefit is assumed to transfer across the advantage estimator they
 sit on, and whose cost is assumed visible in the mean-accuracy metrics
 they are tuned against.
 
-This paper shows that neither assumption survives contact with the
-estimator's own algebra. The organizing fact is the shape of one
-function. \textbf{The estimator's derived utility $u_N(p)$ --- half
-its expected coefficient mass --- vanishes exactly at pass rates $0$
-and $1$ and peaks once in between, tracing three regimes of
-difficulty: a dead zone, a learnable region, and a mastered tail. Curricula reallocate compute within the learnable
-region; verified relabeling is a way to create a positive update for
-an all-fail requested task; and relabels that land in the mastered
-tail buy sharpening, not signal. The estimator shapes all three.}
-Three questions unpack this:
+Neither assumption is safe without inspecting the estimator. Our
+organizing quantity is $u_N(p)$, half the estimator's expected absolute
+coefficient mass. It vanishes at pass rates $0$ and $1$ and peaks once
+in between, separating a dead zone, a learnable region, and a mastered
+tail. Curricula reallocate compute within the learnable region;
+verified relabeling can create an auxiliary update for an all-fail
+request; and relabeling can concentrate updates on goals the policy
+already reaches. The estimator shapes the activity available in all
+three cases, while score geometry and parameter sharing determine what
+that activity ultimately does. Three questions organize the paper:
 
 \emph{Q1: What can a curriculum contribute, at most?} For
 success-conditioned advantages, the expected coefficient mass a task
@@ -87,13 +82,14 @@ it is the part a sampler can act on before spending a rollout, and it
 makes the allocation \emph{derivable} rather than heuristic: the
 learnable region's location, peak, and $N$-scaling come from the
 budget you already
-chose, and published learnability curricula are the $N{=}2$ slice. It
-also bounds the channel. Allocation can only redistribute signal that
-exists: a perfect-information allocator ties the full
-posterior-plus-recycling stack in end performance (\S 6.1) --- so
-recycling compensates for allocation error rather than beating perfect
-allocation --- and at LLM scale a prompt-level teacher starves before
-it pays (\S\ref{sec:experiments}).
+chose, and the common $p(1-p)$ learnability score is the $N{=}2$ slice.
+It also bounds the allocation channel. A sampler can redistribute only
+activity that already exists. On the exact testbed, a matched
+perfect-information allocator and the posterior-plus-recycling stack
+finish within noise, while recycling adds only a small increment on top
+of that oracle (\S 6.1). At LLM scale, a prompt-level posterior can also
+be too data-starved to deliver meaningful steering
+(\S\ref{sec:experiments}).
 
 \emph{Q2: When is either intervention safe?} The same algebra says the
 answer depends on the estimator. MaxRL concentrates $(N{-}1)\times$
@@ -106,35 +102,26 @@ strong form} --- an earlier cohort's zero-exception divergence had
 conflated recycling's contribution with the estimator effect --- and
 a second factorial on fresh seed blocks then \emph{confirmed} the
 time-integrated ordering that survived, 6/6 paired blocks under each
-sampler, concentrated where the mass curves say GRPO overspends
-(\S 6.3b tells that story once, in full). Recycling has its own failure mode, and the algebra flags it:
-relabels that land in the mastered tail sharpen. On Countdown
-arithmetic this is \textbf{recycling-induced sharpening} ---
-exact-verifier relabeling improves mean accuracy while \emph{losing}
-$\passat{k}$ coverage --- the data-induced sibling of GRPO's
-weight-induced collapse, formally hindsight's marginal-distribution
-shift \citep{gcsl} composed with curation-driven self-consumption
-\citep{ferbach}. A pre-registered dose control sharpens the charge:
-extra optimizer epochs on live groups buy \emph{more} than
-recycling's mean gain with no coverage bill (3/3 seeds, \S 6.8) ---
-so recycling earns its keep only where live groups don't exist to
-replay (\S 6.2).
+sampler (\S 6.3b). Recycling has a separate risk: the achieved-goal
+distribution is tilted toward outputs the policy already reaches. On
+Countdown, the reported aggregate has higher mean accuracy and a lower
+logged bootstrap coverage proxy. This is consistent with
+concentration, but the missing raw outcomes and failed matched controls
+prevent a causal attribution. A higher-dose live-group replay arm
+improves both logged metrics, showing that generic extra optimization
+can explain at least part of the mean gain without identifying the
+effect of relabel direction (\S 6.8).
 
-\emph{Q3: Does the algebra also supply the fix?} It motivates one. A
-relabel to a destination the model reliably reaches sits in the
-mastered tail, where mass vanishes, so we gate relabel admission by a
-saturation statistic on the destination --- a decayed frequency over
-the recycler's own recent relabel stream. The mastered-tail zero
-motivates \emph{that such a threshold should exist}; the statistic
-itself is a tuned heuristic, not a destination pass-rate estimate
-(\S 6.9 states exactly what it is and is not). Across three seeds the
-moderate gate returns frontier-tier coverage to the no-recycling
-baseline while keeping most of recycling's mean gain (\S 6.9); where
-recycling is healthy the gate is transparent (hard-destination
-relabels pass untouched). It is one mechanism across domains, but not
-switch-free: each domain supplies a relabel map and a destination
-key, and Jugs showed the key choice is load-bearing
-(\S\ref{sec:limits}).
+\emph{Q3: Does the algebra identify a reliable remedy?} It suggests a
+testable heuristic, not a solved mechanism. We gate relabel admission
+using a recent-frequency statistic for achieved destinations, motivated
+by the mastered-tail zero of $u_N$. The favorable moderate setting ran
+under faulty decay; a corrected strong setting failed to reproduce a
+useful trade-off, so no gate operating point is validated. Jugs further
+shows that both the relabel map and destination key are domain-specific
+and load-bearing (\S 6.9 and \S\ref{sec:limits}). The failed remedy is
+part of the result: estimator algebra can locate a risk without by
+itself specifying a deployable controller.
 
 Our contributions:
 \begin{enumerate}
@@ -143,8 +130,8 @@ Our contributions:
   under success-conditioned RL is exactly $2(\passat{N}-\passat{1})$,
   compute-indexed, with peak location and $N$-scaling derived rather
   than tuned, and exact zeros at $p\in\{0,1\}$ anchoring the dead
-  zone, the learnable region, and the mastered tail; published
-  learnability curricula are its $N{=}2$ slice. (The functional is
+  zone, the learnable region, and the mastered tail; the common
+  $p(1-p)$ learnability score is its $N{=}2$ slice. (The functional is
   closed-form; the sampler built on it still estimates $p$ and keeps
   standard knobs.)
 \item \textbf{A derived teacher and a characterized recycler}
@@ -161,17 +148,17 @@ Our contributions:
   endpoint; the time-integrated ordering that survived it was then
   registered as the primary of a second factorial on fresh seed
   blocks and confirmed 6/6 under both samplers ($p{=}.031$ each;
-  24/24 paired blocks across both waves), with controls closing the
+  positive in 12/12 independent blocks across both waves after
+  within-block sampler averaging), with controls closing the
   scheduler-mismatch and variance-normalization readings (\S 6.3b).
-\item \textbf{A new failure mode, its dose accounting, and a
-  motivated mitigation} (\S 6.8--6.9): exact-verifier recycling
-  improves mean accuracy while losing coverage --- recycling-induced
-  sharpening, replicated at three seeds; a pre-registered replay
-  control shows the mean gain is not relabel-specific (3/3 seeds),
-  scoping recycling's distinctive value to the all-fail regime; and
-  gating relabels by an achieved-destination saturation statistic
-  yields an operating point that restores frontier-tier coverage
-  while keeping most of the mean gain.
+\item \textbf{An applied metric warning and an unresolved causal gap}
+  (\S 6.8--6.9): the reported three-seed Countdown aggregate combines
+  higher mean accuracy with a lower logged bootstrap coverage proxy.
+  A higher-dose replay control shows what generic extra optimization can
+  buy but does not isolate relabel direction; two matched controls failed
+  delivery. The proposed saturation gate also failed corrected-code
+  validation. We therefore retain the metric trade-off and state the
+  causal mechanism and mitigation as open.
 \end{enumerate}
 Along the way we state a refinement to the MaxRL paper --- the practical
 drop-$K{=}0$ estimator is unbiased for the $T{=}N{-}1$ objective, not
@@ -459,9 +446,9 @@ lines (Alg.~\ref{alg:frontiermax}). A decayed Beta posterior tracks
 each prompt's pass rate from observed group outcomes only --- never
 from relabeled successes, which inflate it ($\hat p$ 0.81 vs.\ eval
 0.47). Thompson sampling draws $\tilde p$ and samples prompts
-$\propto u(\tilde p)^\gamma$ with a uniform floor. The knobs (decay
-0.7, floor 0.1, $\gamma \in \{1, 4\}$) carry validated defaults
-(Table~\ref{tab:knobs}); what is \emph{derived} rather than tuned is
+$\propto u(\tilde p)^\gamma$ with a uniform floor. The knobs (decay,
+floor, concentration, and relabel admission) remain empirical and
+task-dependent (Table~\ref{tab:knobs}); what is \emph{derived} is
 the difficulty band itself --- location, width, and $N$-scaling ---
 which is exactly where competing curricula spend their
 hyperparameters.
@@ -601,12 +588,14 @@ from one trained model are repeated measurements of it;
 repeated-evaluation spread measures evaluation noise, not
 training-seed uncertainty, and every $\pm$ names its source at point
 of use ($\pm$ with no qualifier is standard deviation across training
-seeds). ``Coverage'' is $\passat{k}$ with exactly $k$ samples drawn
-per prompt and averaged over the eval pool, at the $k$ named per suite
-(8 on the maze, 16 on Countdown, 4 on GSM8K); mean@$k$ is the mean
-success fraction of the same $k$ samples; AUC is the mean of the eval
-curve over training at matched wall-clock or episode budget, and
-final is the last checkpoint. Where run pools are heterogeneous we
+seeds). Except where explicitly labeled otherwise, ``coverage'' is
+standard $\passat{k}$ with exactly $k$ samples drawn per prompt and
+averaged over the evaluation pool. The historical Countdown quantity
+is instead VERL's with-replacement bootstrap best@$k$ proxy and is
+never relabeled as pass@$k$. Mean@$k$ is the mean success fraction of
+the same $k$ samples; AUC is the mean of the evaluation curve over
+training at matched wall-clock or episode budget, and final is the
+last checkpoint. Where run pools are heterogeneous we
 say so and report signs descriptively rather than attaching $p$-values
 (\S 6.3--6.4). Pre-registered predictions were committed before the
 deciding runs; negative results appear in place, one sentence each,
@@ -629,19 +618,19 @@ no: only creation scores \\
 6.3a & does the curriculum pay? & maze cohort, 1.26M & 3 &
 throughput + recycling signal \\
 6.3b & estimator effect, real grads? & maze factorial & 6 blocks &
-endpoint failed; expl.\ AUC 12/12 \\
+endpoint failed; fresh AUC 6/6/sampler \\
 6.4 & where/when does coverage go? & maze, level-resolved & 22 runs &
-easy band, immediately \\
+descriptive early erosion \\
 6.5$^{*}$ & when does allocation not pay? & IsaacLab Anymal-C & 1 &
 learnable-everywhere: null \\
 6.6$^{*}$ & beyond task spread? & MountainCar/CartPole & 3 &
 spread$=$existence; tea.$=$speed \\
 6.7 & LLM scale? & GSM8K 2$\times$2, 360M & 1--2 &
-sign landed; replication open \\
+delivery gate failed; inconclusive \\
 6.8 & what does recycling cost? & Countdown v2 & 3 &
-mean up, coverage down \\
+mean up, bootstrap proxy down \\
 6.9 & does the gate recover it? & Countdown v2 & 3 &
-one useful trade point \\
+corrected-code gate failed \\
 \bottomrule
 \end{tabular}
 
@@ -788,21 +777,24 @@ premium separates the estimators; the neural-scale claim (below) is
 the one tested at matched budgets \emph{and} identical optimizer
 settings --- and its premium version also holds there (exploratory,
 computed after the lr sweep identified the premium as the invariant
-currency: time-integrated premium delta positive in 24/24 paired
-factorial blocks across both waves; artifact
-\texttt{premium\_reanalysis.json}). \emph{Found exploratorily, then registered
+currency: time-integrated premium delta positive in 12/12 independent
+seed blocks after averaging repeated sampler contrasts; artifact
+\texttt{block\_reanalysis.json}). \emph{Found exploratorily, then registered
 and confirmed on fresh randomness}: on time-integrated coverage (mean
 in-training $\passat{8}$ minus warmstart), MaxRL retains more coverage
-than GRPO in \textbf{12/12} wave-1 paired blocks --- a
+than GRPO in \textbf{6/6} wave-1 seed blocks after within-block
+sampler averaging (and 6/6 under each sampler separately) --- a
 noise-integrating secondary we had not registered, so we
 pre-registered it as the primary of a confirmation wave on six fresh
 seed blocks (P-F2, $\ge$5/6 under both samplers, committed
 falsification branch) and it \textbf{confirmed at 6/6 under each
 sampler} (exact two-sided sign $p{=}0.031$ per sampler; means
-$+.015$/$+.024$), with the easy-band concentration replicating at
-10/12 pairs (P-F3; GRPO's easy-band loss ${\sim}2\times$ MaxRL's) ---
-where the mass curves say GRPO overspends. Across both waves the
-ordering stands 24/24 paired blocks. The retired \emph{endpoint}
+$+.015$/$+.024$). The easy-band localization met P-F3's registered
+pair-level bar (10/12 repeated sampler contrasts), but those observations
+share six seed blocks: the block-level read is four positive, one tie,
+one negative, with a 95\% interval crossing zero, so localization is
+suggestive rather than established. Across both waves the covAUC
+ordering is positive in 12/12 independent seed blocks. The retired \emph{endpoint}
 contrast, unregistered on the fresh blocks, landed 5/6 there ---
 consistent with the power analysis (\S\ref{sec:limits}) and left
 retired; the claim this paper makes is the time-integrated one.
@@ -812,7 +804,8 @@ retired; the claim this paper makes is the time-integrated one.
 functional ($\frac1N\mathbb{E}\sqrt{K(N{-}K)}$, Thompson-sampled) does
 not close the gap on chains (5/5) and loses coverage like every other
 GRPO arm in the factorial (5/6 cells negative, mean $-.042$, equal to
-uniform-GRPO) --- no scheduler choice rescues the estimator.
+uniform-GRPO). Thus this tested sampler does not explain away the
+estimator-conditioned ordering.
 \emph{Variance normalization}: on chains, removing GRPO's SD
 normalization drops it to RLOO's coverage profile exactly as the mass
 account predicts ($.148$ vs.\ RLOO $.161$; sample-SD $.762$) --- but
@@ -836,8 +829,9 @@ samples you will draw at inference.
 cohort data --- read with \S 6.3b's retraction).}
 This section decomposes the \emph{original heterogeneous cohort} by
 difficulty band; after the factorials, its value is the location and
-timing of GRPO's loss (corroborated by wave-1's exploratory easy-band
-read, 9/12 pairs, and wave-2's \emph{registered} P-F3, 10/12), not
+timing of GRPO's loss (corroborated by the pair-level easy-band reads,
+with wave-2's \emph{registered} P-F3 meeting its 10/12 bar but remaining
+suggestive under block-level aggregation), not
 the retired zero-exception contrast (Fig.~\ref{fig:bands}). \emph{Where:} GRPO's $\passat{8}$
 loss is concentrated almost entirely on the easy/mid band L1--3
 ($-.224$ mean over its four runs, every run negative) while its L1--3
@@ -892,7 +886,8 @@ steps, before any level saturates; MaxRL stabilizes after warmup.}
 \takeaway{The easy band is where the estimators differ --- GRPO
 liquidates it for reliability from the first updates, and both
 factorial waves keep that asymmetry (wave-2's registered P-F3:
-10/12 pairs; GRPO's easy-band loss ${\sim}2\times$ MaxRL's) --- but
+10/12 repeated sampler contrasts, but only four positive blocks, one tie,
+and one negative after within-block averaging) --- but
 the mechanism attribution to variance normalization holds only at
 the exact rung. Coverage is the currency that sees all of it.}
 
@@ -968,23 +963,26 @@ $k{=}1$ to $-.024$ at $k{=}16$) --- curriculum damage lives in
 coverage, as the maze predicted, though each delta is within
 single-seed noise. One design confound is disclosed rather than
 dismissed: teacher cells sample with replacement and so revisit
-prompts more; a uniform-with-replacement control cell separates the
-repetition reading and runs with the steering-controlled replication.
-Small model; the pre-registered outcomes were orderings and signs on
-the registered run.
-\takeaway{The LLM-scale
-interaction is 1-of-2-seeds, tracks steering intensity, and is not
-corroborated by the maze factorial's interaction read --- the
-decisive experiment is a steering-controlled multi-seed cell.}
+prompts more. A steering-strengthened follow-up committed an automatic
+treatment-delivery gate before its endpoint: minimum dead-sampled
+fraction $<.50$ and run mean $<.60$. It completed with minimum $.413$
+but run mean $.60148$, failing the conjunctive gate by $.00148$;
+under the committed branch its endpoint is inconclusive by design and
+the dependent repetition/safety contrasts cannot establish the
+interaction. Small model; the registered outcomes remain orderings and
+signs on one run, not a replicated LLM effect.
+\takeaway{Prompt-level posterior steering was not reliably delivered
+at this scale and budget; the LLM interaction is not established and
+the maze factorial does not corroborate it.}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig7_sharpening}
-\caption{\textbf{Recycling-induced sharpening and its
-saturation-gate mitigation (Countdown, tier 1).} \emph{(a)} Three
-seeds, both axes: recycling (B2) buys mean@16 and pays in
-$\passat{16}$ coverage; the moderate gate (B3) gives most of the mean
-back on this early-saturating tier. The pre-registered designed-strength arm
+\caption{\textbf{Recycling-package sharpening and the unvalidated
+saturation gate (Countdown, tier 1).} \emph{(a)} Reported three-seed
+aggregates: recycling (B2) raises mean@16 while the logged VERL
+bootstrap best@16 proxy falls; the moderate gate (B3) gives most of the mean
+back on this early-saturating tier but used faulty decay. The pre-registered designed-strength arm
 (diamonds; 3 seeds, corrected decay, rejection ${\sim}.94$) refuted
 the strength-dial reading: its seeds scatter around the no-recycling
 point rather than extending a frontier (P-R1, \S 6.9), so it is drawn
@@ -998,48 +996,23 @@ Gated recycling preserves \emph{more} policy entropy than no recycling
 \label{fig:sharpening}
 \end{figure}
 
-\paragraph{6.8 What does recycling cost? (Countdown $2{\times}2$, pre-registered): two nulls
-and a new phenomenon.} Our first exact-verifier hindsight experiment in
-an RLVR loop ran in production (12 relabeled groups/step, 72--89\%
-yield; exact-verifier relabeling itself has precedent outside RLVR ---
-CodeIt, proof-tree relabeling --- see Related work). Both
-positive predictions returned null, with an exact diagnosis: the uniform
-baseline reached 94/76/94\% of the random-guesser bound implied by the
-pool's simplified construction --- no headroom for allocation or creation
-to matter. What the run found instead is new: \textbf{recycling-induced
-sharpening} --- hindsight arms improved mean@16 while \emph{losing}
-$\passat{16}$ coverage (tier-1: .571 vs.\ .645 for the no-relabel
-baseline). Recycled off-target successes concentrate the policy on
-reachable outputs at the expense of exploration breadth: the creation
-channel has its own safety trade-off, mirroring \S 6.3b's weight-induced
-collapse --- data-induced rather than weight-induced. The underlying
-concentration pathology is known in goal-conditioned RL (Skew-Fit's
-motivating failure mode; GCSL's marginal shift); what is unreported, to
-our knowledge, is its measurement in RLVR --- no prior work quantifies
-the $\passat{k}$ cost of hindsight relabeling in a verifier loop.
-Our algebra flags the mechanism: the achieved-goal marginal
-overweights destinations the policy already reaches, so relabel
-updates concentrate toward the mastered tail, where $u(p)$ says fresh
-training signal vanishes --- the softmax pays for those updates out of
-the exploration tail. A pre-registered dose control at this scale
-(P-R2: extra optimizer epochs on live groups,
-\texttt{ppo\_epochs=2}, hindsight off --- the CPU battery's replay
-placebo transplanted) sharpens the accounting; its strongest
-registered branch confirmed at 3/3 seeds: replay \emph{exceeds} recycling's tier-1 mean gain (mean@16
-$.478{\pm}.021$ vs.\ B2's $.324$) while \emph{gaining} coverage
-($\passat{16}$ $.635{\pm}.045$ vs.\ baseline $.541$) where recycling
-paid it ($.492$) --- every seed inside the registered window
-(artifact \texttt{countdown\_reviewer\_arms/}). Its update dose is
-larger than recycling's ($2\times$ all live groups vs.\ ${\sim}19\%$
-added relabel groups), so it bounds what extra updates buy rather
-than isolating the direction term --- but the practical conclusion
-stands: on this pool, recycling's mean gain was never specifically
-about relabels; generic extra updates on live groups buy more of it,
-without the coverage bill. Recycling's distinctive value therefore
-lives where extra live-group updates are impossible --- the all-fail
-regime of \S 6.2 --- not where live groups already carry signal.
-\takeaway{Recycling needs an admission rule, and the utility's
-mastered-tail zero motivates one --- designed and tested next.}
+\paragraph{6.8 Historical Countdown development result (superseded).}
+The original $2{\times}2$ exact-verifier experiment returned two null
+predictions because its pool had little headroom. Its single-run concentration
+pattern motivated the rebuilt three-seed study below, but it is not the applied
+claim. The metric originally labeled pass@16 is VERL bootstrap best@16 and must
+be read as a coverage proxy under the erratum above.
+
+An externally specified higher-dose arm later applied two optimizer epochs to
+every live group with hindsight disabled. It reached mean@16
+$.478{\pm}.021$ and bootstrap best@16 $.635{\pm}.046$. Recycling permits at
+most 12 auxiliary groups per 64 requested groups, whereas this replay arm
+doubles epochs on every live group. It is therefore a higher-dose alternative
+that improves both logged metrics, not a dose-matched control, relabel-specific
+effect, or causal bound. Complete relabel-arm seed records and per-task outcomes
+remain missing.
+\takeaway{The original pool is a development null. The higher-dose replay arm
+does not identify the effect of relabel direction.}
 
 \paragraph{6.9 Does the gate recover it? (Countdown v2 pool, 3
 seeds, pre-registered).}
@@ -1080,80 +1053,46 @@ recycling (B3). One setup note kept for its theory reading: recycling
 has a \emph{syntactic prerequisite} --- the pre-SFT base model
 produces zero verifier-valid failures, so there is nothing to recycle
 until SFT installs the output format (pool construction and baseline
-calibration in App.~\ref{app:rungs}). \textbf{Sharpening
-replicates:} at tier 1, recycling
-buys mean@16 $+.046$ ($.278{\pm}.054 \to .324{\pm}.012$) and pays
-$-.049$ of $\passat{16}$ ($.541{\pm}.020 \to .492{\pm}.011$). The
-claim quantifies over $k$, so Fig.~\ref{fig:passk} shows it over $k$:
-the ungated arm starts \emph{above} baseline at $k{=}1$ and crosses
-below between $k{=}2$ and $k{=}4$, with the deficit widening to
-$k{=}16$ --- the crossing is the phenomenon.
+calibration in App.~\ref{app:rungs}). \textbf{Aggregate concentration
+pattern:} at tier 1, recycling raises mean@16 by $+.046$
+($.278{\pm}.066 \to .324{\pm}.014$) while the logged VERL bootstrap
+best@16 proxy falls by $-.049$ ($.541{\pm}.024 \to .492{\pm}.013$),
+reported as mean $\pm$ sample SD across three seeds. Complete B1/B2
+seed records are not vendored (seed 3 is aggregate-only), so we do not
+claim paired seed signs. Figure~\ref{fig:passk} shows seed 1's
+exploratory logged proxy over $k$; per-task outcomes are unavailable
+and standard unbiased pass@$k$ cannot be reconstructed.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.52\linewidth]{figures/fig9_passk}
-\caption{\textbf{Sharpening is a crossing in $k$ (Countdown tier 1,
-step-60 val, seed 1; unbiased pass@$k$ from 16 samples, $n{=}128$).}
-Ungated recycling sits above baseline at $k{=}1$ (mean up) and below
-by $k{=}4$ (coverage down), the deficit widening with $k$. The
+\caption{\textbf{Exploratory single-seed VERL bootstrap best@$k$ proxy
+(Countdown tier 1, step-60 val, $n{=}128$ tasks).}
+This with-replacement metric is not standard unbiased pass@$k$. Ungated
+recycling sits above baseline at $k{=}1$ and below by $k{=}4$ in the
+logged proxy, with the deficit widening with $k$. The
 moderate gate tracks baseline at low $k$ with a smaller high-$k$
 deficit; the full-strength curve (hollow; one seed, corrected decay)
 pays at $k{=}1$ and finishes above baseline at $k{=}16$, but the
 strength-dial reading this suggests was refuted in the 3-seed
-designed-strength sweep (P-R1, \S 6.9). Endpoints cross-check
-the 3-seed scoreboard; per-$k$ telemetry from the seed-1 logs.}
+designed-strength sweep (P-R1, \S 6.9). The single-seed points and
+session provenance are stored in the declared figure input; they are
+exploratory and cannot be converted without the underlying task outcomes.}
 \label{fig:passk}
-\end{figure} The
-coverage loss clears both arms' seed spreads ($>2\times$); the mean
-gain clears the treated arm's tight spread but sits within the noisier
-baseline's --- we report it as directionally consistent across seeds
-rather than individually significant. The frontier tier moves the same
-direction.
-\textbf{The timing is dose-then-damage:} recycling's frontier-tier mean
-gain is installed by step 30 --- $+.014{\pm}.008$ paired, all seeds
-positive, at only ${\sim}28\%$ of the eventual relabel dose --- while
-the coverage cost only materializes by step 45 ($-.048{\pm}.019$
-paired, \emph{all seeds negative}, after ${\sim}65\%$ of dose): the
-benefit precedes the damage, so early-stopping on mean-accuracy
-validation would bank the gain and never see the bill. The damage is
-also visible on the training side: the ungated arm ends with more
-unsolvable-at-16 frontier training prompts than baseline in every seed;
-the gate's entropy retention replicates across seeds while ungated
-recycling makes entropy seed-unstable (details in
-App.~\ref{app:rungs}).
-\textbf{The gate works where the algebra says it should:} at the
-frontier tier (destinations not yet saturated) the gated arm returns
-coverage to baseline ($.279{\pm}.019$ vs.\ $.274{\pm}.015$) while
-keeping $\sim$60\% of the mean gain; at tier 1 (destinations saturate
-early, so the gate blocks nearly all relabels) it neutralizes recycling
-almost entirely. Implementation disclosure: a decay-math bug made all
-three-seed gated runs gate \emph{weaker} than designed (effective
-destination threshold $\hat p \approx 0.64$ where the design implies
-$0.92$), so the reported operating point is an under-gated one. An
-early corrected-decay run (1 seed) suggested gate strength might
-trace a monotone mean-vs-coverage \emph{dial}; the dial claim went to
-a pre-registered fixed-code sweep at the designed strength (rejection
-fraction $.93$--$.94$, 3 seeds; artifacts
-\texttt{armA\_b3fix\_s\{1,2,3\}.json}) and \textbf{was refuted there}
-(P-R1): tier-1 mean $.266{\pm}.045$ is indistinguishable from the
-no-recycling baseline ($.278{\pm}.054$; mean-kept fraction $-0.26$,
-below the registered $[0,.60]$ window), coverage $.525{\pm}.036$ is
-\emph{not} restored above baseline ($.541$), and the single-seed
-coverage-above-baseline reading sits inside this arm's seed spread
-($.488$--$.573$) --- it did not replicate. Strong gating is
-recycling-off plus seed noise, not a third rung: the gate's usable
-range is the moderate setting, and Fig.~\ref{fig:sharpening}a draws
-the designed arm as a scatter per the committed falsification branch.
-In-run
-telemetry shows the mechanism (Fig.~\ref{fig:sharpening}b--c):
-rejection rises $.12 \to .85$ as the reachable set saturates, and the
-gated arm ends with \emph{more} policy entropy than the no-recycling
-baseline.
-\takeaway{Sharpening is a reproducible property of exact-verifier
-recycling, and the saturation gate buys back frontier-tier coverage at
-a measured mean price --- one validated operating point. The
-pre-registered fixed-code sweep refuted the monotone dial: strong
-gating is recycling-off, not a settable trade.}
+\end{figure}
+Available aggregate dynamics suggest that the mean increase precedes the
+proxy decrease, but complete seed-level records are absent. We therefore do
+not make paired timing, per-seed direction, or early-stopping claims.
+
+\textbf{The gate did not validate.} The favorable moderate-gate setting used
+faulty decay code and remains descriptive. A corrected, externally specified
+strong-gate sweep landed near the no-recycling aggregate and refuted the
+claimed monotone gate dial; it does not establish equivalence. Rejection and
+entropy telemetry are consistent with saturation filtering but do not identify
+the cause of the aggregate pattern. A successful, fixed-code mitigation
+remains open.
+\takeaway{The retained result is mean-up with a bootstrap coverage proxy down.
+The gate and the causal concentration mechanism are not validated.}
 
 \section{Related work}
 \textbf{The coverage tension.} RLVR itself trades coverage for precision:
@@ -1163,15 +1102,15 @@ model \citep{yue}, with entropy collapse as the mechanistic signature
 \citep{yuan}. Our contribution to this line is the \emph{interaction}:
 whether external curricula and recyclers compound or cancel the
 estimator's implicit weighting, and what that costs in coverage. Notably,
-recent work frames curricula as the \emph{cure} for coverage loss
-\citep{cai}; our GRPO arms show the cure is estimator-conditional ---
-those studies never varied the estimator. The estimator--difficulty
+recent work frames curricula as a potential cure for coverage loss
+\citep{cai}; our controlled comparison instead varies the estimator
+under a common sampler. The estimator--difficulty
 interaction itself is a heating 2026 theme --- SC-SDPO \citep{scsdpo}
 shows GRPO's normalization implicitly encodes a difficulty weighting,
 and A-GRAE \citep{agrae} redesigns the advantage around difficulty
-focus --- but to our knowledge no prior work runs \emph{identical}
-curricula under two estimators or measures the resulting
-$\passat{k}$ coverage ordering.
+focus. Our experiments isolate the estimator-conditioned coverage
+ordering under identical sampling interventions, a comparison not
+isolated in the cited studies.
 
 \textbf{Curricula for RLVR.} Difficulty-adaptive sampling is bucket- or
 scalar-level and heuristic-scored: DUMP (UCB over buckets), AdaRFT
@@ -1196,13 +1135,13 @@ relabeling literature: intermediate-difficulty goal generation
 of relabel goals \citep{cher}, and Skew-Fit's $\alpha$ as a
 concentration-vs-coverage dial \citep{skewfit}. Our gate belongs to
 this mechanism class; what is new is not admission-by-difficulty but
-its \emph{motivation} --- the same estimator functional $u_N$ that
-schedules sampling says mastered-tail updates carry no fresh signal,
-so the teacher and the gate answer to one object --- and the coverage
-accounting it is validated against. The gate statistic itself is a
-tuned heuristic (a decayed achieved-destination frequency with a
-tuned threshold, \S 6.8--6.9), so we claim a shared motivation, not a
-switch-free derivation.
+its \emph{motivation} --- the same estimator functional $u_N$ used for
+task sampling vanishes in the mastered tail. The gate statistic itself
+is a tuned heuristic (a decayed achieved-destination frequency with a
+tuned threshold, \S 6.8--6.9), and its corrected-code test did not
+validate a useful operating point. We therefore claim a shared
+motivation and report a failed intervention, not a switch-free
+derivation or a working mitigation.
 
 \textbf{Hindsight and self-training for LLMs.} Exact-verifier
 relabeling has precedent outside RLVR loops --- CodeIt \citep{codeit}
@@ -1213,25 +1152,27 @@ relabeling-adjacent mechanisms into RLVR-style training: LfH \citep{lfh}
 (a VLM proposes one shared hindsight instruction per failed group for
 VLA post-training; the relabeler is a judge, their stated limitation)
 and ZipRL's hindsight response replay \citep{ziprl} (densifying GRPO
-signal for multi-turn agents). None of these measures $\passat{k}$
-under relabeling --- precisely the currency where we find recycling's
-hidden cost. The nearest phenomenon report is in same-problem rejection
+signal for multi-turn agents). We did not identify a cited study that
+reports a pass@$k$-style coverage metric under relabeling. Our surviving
+Countdown evidence is a logged bootstrap coverage proxy rather than
+standard unbiased pass@$k$, so it motivates that measurement without
+yet completing it. The nearest phenomenon report is in same-problem rejection
 finetuning: \citet{starcross} document a STaR-trained model winning
 $\passat{8}$ while the base model overtakes at $\passat{64}$ ---
 concentration over reach --- for SFT on a model's own verified outputs.
-Recycling-induced sharpening is the cross-task, on-policy-RL sibling,
-and our gate is its estimator-motivated admission rule; gating
+The reported recycling-package trade-off is a cross-task,
+selected-auxiliary-update analogue, and our gate is a tested but
+unvalidated admission heuristic; gating
 \emph{vanilla} RLVR updates by saturation signals has independent
 precedent (\citealp{yuan}'s Bayesian boundary gating), not applied to
 relabel destinations.
-So the precise claims we retain, at the level our evidence and
-literature search support (we have not exhaustively searched
-concurrent 2026 work): to our knowledge no prior work (i) derives the
-sampling utility from the estimator's own expected coefficient mass,
-(ii) couples it with success-conditioned weights it provably matches,
-or (iii) \emph{measures the $\passat{k}$ coverage cost of hindsight
-relabeling in an RLVR loop} and tests a saturation-based relabel
-admission heuristic against that cost.
+The precise claims we retain are narrower: (i) the sampling score is
+derived from the deployed estimator's expected coefficient mass; (ii)
+the same estimator convention is used for the theory and implementation;
+and (iii) the Countdown record exposes a mean--coverage-proxy trade-off
+that requires a prospective raw-outcome pass@$k$ test. The current
+evidence does not establish a relabel-specific causal mechanism or a
+successful gate.
 
 \section{Limitations and negative results}\label{sec:limits}
 
@@ -1247,16 +1188,32 @@ $+.02$), which is why it became the registered primary of the
 confirmation wave on six fresh seed blocks --- where it confirmed
 (P-F2, 6/6 per sampler; \S 6.3b). The
 LLM-scale teacher$\times$estimator interaction
-is 1-of-2 seeds and tracks steering intensity: the replication seed of
+was 1-of-2 seeds and tracked measured steering intensity: the replication seed of
 the GRPO+teacher cell did not reproduce the registered regression, and
 its telemetry shows the treatment was barely delivered (\S 6.7); the
 maze factorial's interaction read (teacher mildly protective under
 GRPO) does not corroborate it. The
 GSM8K teacher is also coverage-neutral-to-negative under \emph{both}
 estimators at this budget, so the contrast there concerns the sign of
-the mean-accuracy effect, not a coverage rescue. A
-steering-controlled multi-seed LLM cell remains the decisive open
-experiment.
+the mean-accuracy effect, not a coverage rescue. A strengthened follow-up
+then failed its preregistered run-mean delivery gate; its endpoint is
+inconclusive, so we make no LLM interaction claim.
+
+\paragraph{What the prospective Countdown control can identify.}
+The frozen E2c design repairs the historical result's most important
+measurement defects: it retains binary task outcomes, recomputes
+standard pass@16, pairs evaluation seeds and task manifests, and gates
+fixed-slot and response-token dose before exposing endpoints. It is
+still not a pure relabel-direction experiment. B2 uses current-policy
+failures rewritten to achieved goals, whereas E2c replays informative
+groups from a frozen-SFT reservoir. Source age, behavior distribution,
+task selection, and on/off-policy character therefore differ even when
+delivered group and token counts match. A valid B2--E2c contrast
+identifies the achieved-target relabel \emph{package} relative to the
+frozen informative-replay package at matched delivered dose. With three
+training seeds, the resulting treatment contrast remains descriptive;
+tasks and rollouts improve endpoint precision, not treatment
+replication.
 
 \paragraph{Where the teacher cannot work as specified.} Two structural
 limits at production scale, stated as design constraints rather than
@@ -1283,10 +1240,11 @@ them together because they bound the same deployment.
 norm, SNR, or expected improvement (Remark~\ref{rem:scope}) --- it
 omits score-vector geometry, sequence length, token masking, optimizer
 state, and clipping --- and \S 6.5
-exhibits the regime where reallocating it buys nothing
+exhibits a regime where reallocating it buys nothing
 (learnable-everywhere pools). Recycled-gradient exactness is a property
-of the environment's relabel map; noisier verifiers will land between
-our fixed-pool and one-shot endpoints ($+0.22$ vs.\ $+0.01$ AUC).
+of the environment's relabel map. The fixed-pool and one-shot results
+($+0.22$ vs.\ $+0.01$ AUC) show strong regime dependence; they do not
+define an interpolation law for noisier verifiers.
 
 \paragraph{The coverage main effect is pool-conditional.} A
 pre-registered fifth suite (Jugs water-measuring puzzles;
@@ -1328,30 +1286,31 @@ postmortems live in the repository's audit trail.
 
 \section{Conclusion}
 
-For the practical success-conditioned estimator under i.i.d.\ binary
+For the zero-stabilizer practical MaxRL estimator under i.i.d.\ binary
 rewards, the expected absolute coefficient mass of a prompt is exactly
-$2(\passat{N} - \passat{1})$, and the drop-all-fail implementation
-targets truncation order $N{-}1$. The identity supplies a
-compute-aware sampling heuristic and motivates a saturation-based
-relabel admission rule; where each stronger reading fails, we say so
---- including against ourselves: our first pre-registered factorial
-retired our strongest neural claim at its registered endpoint, and the
-ordering that survived was then registered on fresh seed blocks and
-confirmed (\S 6.3b). What the record supports: the exact-rung
-coverage ordering with its controls; its time-integrated neural form,
-confirmed in wave 2 (6/6 per sampler, 24/24 across waves);
-recycling-induced sharpening at three seeds with one gated operating
-point --- whose strength-dial extension the fixed-code sweep then
-refuted per its committed branch, and whose mean gain the
-dose-matched replay control showed is not relabel-specific (3/3
-seeds, \S 6.8--6.9); and a pre-registered
-negative (Jugs) marking where the whole intervention family fails
-together. The remaining experiment (the steering-controlled LLM
-cell) is pre-registered with committed falsification branches ---
-which this paper demonstrably executes. The portable practice is
-independent of our method: measure coverage next to mean accuracy
-whenever a curriculum or recycler ships, conditioned on the estimator
-it ships on.
+$2(\passat{N}-\passat{1})$, and dropping all-fail groups targets
+truncation order $N{-}1$. This identity provides a rollout-aware
+activity diagnostic and a principled curriculum hypothesis. It does
+not make coefficient mass a universal learning objective: score
+geometry, parameter sharing, optimizer calibration, and task transfer
+remain outside the scalar calculation.
+
+The empirical record supports that narrower interpretation. An
+externally recorded fresh maze wave finds a positive time-integrated
+MaxRL--GRPO coverage contrast in 6/6 blocks under each sampler, while
+the stronger endpoint claim and easy-band mechanism do not survive
+their cleaner tests. The Countdown aggregate raises mean accuracy while
+lowering a logged bootstrap coverage proxy, but missing task outcomes
+and failed matched controls leave its causal mechanism unresolved. The
+corrected saturation gate does not validate, GSM8K misses its treatment
+delivery criterion, and Jugs supplies a preregistered domain boundary.
+
+The resulting practical recommendation is simple: evaluate a
+curriculum or recycler together with the estimator it modifies, and
+report coverage beside mean accuracy. The remaining decisive experiment
+is prospective rather than interpretive: retain raw task outcomes,
+verify matched treatment delivery, and compute standard pass@$k$ before
+making a recycling-specific causal claim.
 
 \begin{thebibliography}{9}\small
 \bibitem[Tajwar et al.(2026)]{maxrl} Tajwar, F., Zeng, G., et al.
@@ -1724,10 +1683,10 @@ factorial at registered endpoint (3/6, 4/6 vs.\ $\ge$5/6 both) &
 $\downarrow$ retracted & \S 6.3b \\
 time-integrated coverage ordering (MaxRL $>$ GRPO) & wave-2
 registered primary on fresh blocks: 6/6 per sampler, $p{=}.031$
-each; 24/24 both waves & $\uparrow$ & \S 6.3b \\
+each; 12/12 independent blocks across waves & $\uparrow$ & \S 6.3b \\
 easy-band concentration of GRPO's loss & wave-2 registered P-F3:
-10/12 pairs; GRPO ${\sim}2\times$ MaxRL's easy-band loss &
-$\uparrow$ & \S 6.4 \\
+pair-level bar met at 10/12; block-level 4 positive, 1 tie, 1 negative,
+CI includes zero & suggestive & \S 6.4 \\
 variance normalization is the tail mechanism & exact rung: no-SD
 GRPO collapses onto RLOO ($.148$ vs.\ $.161$); neural rung: P-G0c
 \emph{failed} (loses easy band 6/6) & split & \S 6.3b--6.4 \\
@@ -1737,23 +1696,24 @@ exact-rung ordering survives lr recalibration & P-LR1 falsified as
 registered: $2$--$4\times$ lr closes raw $\Delta$cov but premium
 collapses ($.007$--$.013$ vs.\ $.050$) --- restated at-matched-lr &
 $\downarrow$ & \S 6.3b \\
-recycling-induced sharpening (mean up, $\passat{k}$ down) & 3 seeds,
-loss clears $2\times$ seed spread; crossing in $k$; dose-then-damage
-timing & $\uparrow$ & \S 6.8 \\
-extra-updates dose control at LLM scale & replay (2 epochs) beats
-recycling's mean gain \emph{with} coverage gain, P-R2 3/3 seeds &
-$\uparrow$ & \S 6.8 \\
-moderate gate = one useful operating point & frontier-tier coverage
-to baseline at ${\sim}60\%$ mean kept, 3 seeds & $\uparrow$ & \S 6.9 \\
+recycling-package sharpening (mean up, bootstrap proxy down) & reported
+3-seed aggregate; full $k$ curve is exploratory seed 1; per-task outcomes
+absent & aggregate & \S 6.8 \\
+higher-dose extra-updates bound at LLM scale & replay (2 epochs) beats
+recycling's mean gain \emph{with} coverage gain, P-R2 3/3 seeds; does
+not isolate direction & bounded & \S 6.8 \\
+moderate under-gated point & frontier-tier coverage to baseline at
+${\sim}60\%$ mean kept under buggy decay; corrected validation open &
+provisional & \S 6.9 \\
 gate strength is a monotone dial & designed-strength sweep P-R1:
 mean-kept $-0.26 \notin [0,.60]$, coverage $.525 < .541$, 3 seeds &
 $\downarrow$ & \S 6.9 \\
 estimated-$p$ gate is affordable & P-PB1 confirmed: one probe
 rollout/step recovers 98\% of the oracle-vs-frequency gap at matched
 total rollouts (10/10) & $\uparrow$ & \S 6.9 \\
-LLM teacher$\times$estimator interaction (GSM8K) & 1-of-2 seeds;
-tracks steering dose; controlled cell registered &
-$\rightarrow$ & \S 6.7 \\
+LLM teacher$\times$estimator interaction (GSM8K) & original shape
+1-of-2 seeds; strengthened arm failed preregistered delivery gate &
+inconclusive & \S 6.7 \\
 pool-conditionality: Jugs defeats every arm & pre-registered
 all-null with entropy-collapse mechanism & $\uparrow$ &
 \S\ref{sec:limits} \\
@@ -1814,8 +1774,8 @@ peak location/$N$-scaling & --- & \textbf{derived} (Prop.~1) & the theory claim 
 posterior decay & 0.7 & tuned (V2b) & closes ${\sim}19\%$ of oracle gap \\
 uniform floor & 0.1 & tuned & 0.15 on maze; robust 0.05--0.2 \\
 $\gamma$ (concentration) & 1 & tuned (V6) & 4 on chains; no transfer to maze \\
-\texttt{gate\_max\_p} & 0.5 & tuned ($p{=}1$ zero vacuous) & one trade point validated (\S6.9) \\
-relabel dose cap & 12 groups/step & tuned & sets \emph{where} coverage is spent (\S6.4) \\
+\texttt{gate\_max\_p} & 0.5 & tuned ($p{=}1$ zero vacuous) & corrected strong setting failed (\S6.9) \\
+relabel dose cap & 12 groups/step & tuned & dose effect remains descriptive (\S6.4) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1834,8 +1794,9 @@ checks the MaxRL, RLOO, and both GRPO-SD mass formulas against exact
 enumeration and the deployed code). Every figure regenerates from committed inputs listed,
 with checksums and commands, in the frozen manifest
 \texttt{paper/results/} \texttt{manifest.json}:
-result values live in versioned JSON tables under
-\texttt{paper/figures/data/} (none are hard-coded in figure scripts),
+empirical result values are declared as versioned structured inputs under
+\texttt{paper/figures/data/}; the former hard-coded seed-1 Countdown curve now
+loads its checksummed bootstrap-proxy table,
 and the maze cohort of Fig.~\ref{fig:bands} is frozen in an explicit
 run manifest --- adding a run file cannot silently change the figure,
 and missing inputs are a hard error. The Jugs preregistration, raw
@@ -1865,13 +1826,15 @@ maze, Countdown, and GSM8K artifacts, with arm/seed/protocol per row)
 indexes every run this paper draws on; the maze main-effect subset and
 its 5v4 composition are tabulated in
 \texttt{permutation\_reanalysis.json}, committed alongside. Data
-hygiene is checked, not assumed: both LLM pools carry zero
-train/eval task overlap and zero intra-split duplicate tasks
-(Countdown identity = target plus sorted operand multiset; GSM8K =
-prompt text; artifact \texttt{data\_integrity\_check.json}). The
+hygiene is checked, not assumed: both RL pools carry zero train/eval
+task overlap and zero intra-split duplicate tasks, but the historical
+Countdown SFT warmstart overlaps 27/128 tier-0 evaluation tasks; tiers
+1--2, which carry the central sharpening claim, have zero SFT overlap.
+Tier-0 absolute values are therefore contaminated and excluded from
+clean absolute claims. The rebuilt matched-control split has zero
+SFT/test overlap in every tier (Countdown identity = target plus sorted
+operand multiset; GSM8K = prompt text; integrity artifacts accompany
+each split). The
 framework is a dependency-light package (\texttt{frontier\_rl},
 numpy-only core) with adapters for LLM pools (verl), gym control,
 IsaacLab parallel sim, and flow-policy VLAs.
-
-
-

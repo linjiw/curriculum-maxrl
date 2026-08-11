@@ -3,28 +3,34 @@
 *2026-07-28. Companion to COUNTDOWN_ANALYSIS.md. Full ~30-paper review in
 the session log; this doc records what changes our design and our paper.*
 
-> **Currency note (2026-08-06):** the design below was run. What held:
-> sharpening replicated at 3 seeds; the moderate gate restored
-> frontier-tier coverage at ~60% mean kept (one validated operating
-> point). What did NOT hold: (i) the deployed gate statistic is a
+> **Currency note (updated 2026-08-10):** the surviving historical evidence
+> is a reported three-seed aggregate with mean@16 up and VERL bootstrap
+> best@16 down. That with-replacement scalar is a coverage proxy, not standard
+> unbiased pass@16; complete seed records and per-task outcomes are missing, so
+> paired seed signs, timing, and the seed-1 k-curve are not replicated claims.
+> A buggy-decay moderate gate produced a favorable descriptive aggregate but
+> did not validate a corrected implementation. What did NOT hold: (i) the deployed gate statistic is a
 > decayed achieved-destination frequency, not the posterior-lookup
 > p̂-gate designed here — and where both are measurable the true-p gate
 > keeps ~all the value while the frequency heuristic pays a toll
 > (results_gate_variants.json); (ii) the "dial" extension was refuted
 > at 3 designed-strength seeds (P-R1 — strong gating ≈ recycling-off;
 > countdown_reviewer_arms/PROVENANCE.md); (iii) at LLM scale a
-> dose-matched replay control exceeds recycling on both meters (ARM B,
-> interim), so the mean gain is not relabel-specific. Entropy
+> higher-dose replay control exceeds recycling on both meters (ARM B,
+> 3/3 seeds), which bounds what generic updates can buy but does not
+> isolate the relabel direction. Prospective matched E2/E2b controls
+> failed treatment delivery. Entropy
 > prioritization, KL-on-relabels, and dose-anneal were never run —
 > still-open design space. Paper §6.8–6.9 is authoritative.
 
 ## 1. The finding is novel — and now precisely locatable in theory
 
-No published work documents hindsight-relabeling-induced pass@k loss in
+The historical artifact suggests, but does not establish with standard pass@k,
+a hindsight-relabeling-associated coverage loss in
 RLVR. The nearest neighbors (RLEP, ExGRPO, H2SD, CodeIt, HIR) all report
-mean-accuracy gains and never measure coverage. Our mean@16-up /
-pass@16-down result with a clean no-relabel baseline is a new, publishable
-connection — and it sits at the junction of three formal results:
+mean-accuracy gains and rarely retain task-level coverage outcomes. Our
+mean@16-up/bootstrap-proxy-down aggregate motivates a prospective raw-outcome
+test and sits at the junction of three formal results:
 
 - **GCSL bound (1912.06088):** relabel-and-imitate gives exact
   conditionals under the ACHIEVED-goal marginal — optimizing a lower bound

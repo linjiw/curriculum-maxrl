@@ -6,12 +6,20 @@
 > registered endpoint and is retracted** — see
 > `maze_gpu_factorial/FACTORIAL_VERDICT.md` and paper §6.3b for what
 > survives (exact-rung 10/10; covAUC then **confirmed as the wave-2
-> registered primary, 6/6 per sampler, p=.031 each, 24/24 across
-> waves**). Also superseded here: the "gate strength is a dial"
+> registered primary, 6/6 per sampler, p=.031 each; positive in 12/12
+> independent seed blocks across waves after within-block sampler averaging**).
+> The registered easy-band pair-level bar was met, but its block-level interval
+> includes zero, so localization is suggestive. Also superseded here: the "gate strength is a dial"
 > reading — the designed-strength sweep refuted it (P-R1, 3 seeds;
 > `countdown_reviewer_arms/PROVENANCE.md`); and the "+0.22 hindsight
-> gain" framing — at LLM scale a dose-matched replay control exceeds
-> recycling on both meters (ARM B, 2/3 seeds interim). Sections
+> gain" framing — at LLM scale a higher-dose replay control exceeds
+> recycling on both meters (ARM B, 3/3 seeds) but does not isolate the
+> relabel direction; prospective matched E2/E2b controls failed treatment
+> delivery. The historical Countdown `pass@k` labels are also superseded:
+> the available scalar is VERL's with-replacement bootstrap `best@k` proxy,
+> not standard unbiased pass@k. The three-seed table is aggregate-only and
+> does not support paired seed signs or timing; the seed-1 k-curve is
+> descriptive. E2c is the prospective raw-outcome replacement. Sections
 > quoting these as established are historical.
 
 *Synthesis pass over ~35 experiments, 7 propositions, 3 testbeds, and 2 external
@@ -31,7 +39,7 @@ what lets you predict where the method will and won't help.
 *"Don't roll out where the estimator will emit nothing."*
 
 - Mechanism: sample ∝ u(p) = pass@N − pass@1 (P1: the estimator's exact
-  expected signal). Zero at mastered (p→1) and unreachable (p→0) tasks.
+  expected coefficient mass). Zero at mastered (p→1) and unreachable (p→0) tasks.
 - What it buys, measured: dead groups 5.8→3.4 of 8 (maze — historical
   zero-weight-group counter, mechanism-open per the EXPERIMENTS.md audit:
   it pools K=0 with K=N and cannot isolate dead-group waste); 22–35% more
@@ -157,7 +165,7 @@ Decision procedure distilled from every ablation:
 
 | claim | strongest single piece of evidence | grade |
 |---|---|---|
-| u(p) = estimator's exact expected signal | P1 proof + 200k-trial MC | proved |
+| u(p) = estimator's exact expected coefficient mass | P1 proof + 200k-trial MC | proved |
 | teacher beats uniform (matched clock) | 6/6 paired seeds; step-matched, teacher-only is n.s. (+0.006, p≈0.36) — the clock gain is largely throughput | multi-seed, decomposed |
 | hindsight direction carries information | control battery: +0.037 beyond dose-matched replay, tightest arm (±.0025); random-target loses to replay 5/5 — cosine table RETIRED as evidence (no discriminating power, Opus5 B5) | controlled |
 | full stack ties matched oracle; creation adds +0.005 on top | `hindsight_controls.json`: no-floor γ-matched oracle 0.8885 ≈ full stack 0.8895; oracle+HS 0.8935. ("beats the oracle 0.890 vs 0.851" RETRACTED — floor handicap) | multi-seed CPU |

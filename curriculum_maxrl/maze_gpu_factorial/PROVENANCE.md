@@ -27,8 +27,13 @@ Wave 2 (2026-08-06, vendored alongside): the wave-1 exploratory
 covAUC ordering was pre-registered as the primary
 (`run_factorial_wave2.sh`, P-F2, with both post-verdict texts written
 in advance in `WAVE2_BRANCHES.md`) on six fresh seed blocks (6–11)
-and **confirmed 6/6 under each sampler** (p=.031 per sampler; 24/24
-paired blocks across both waves; easy-band P-F3 10/12). Power
+and **confirmed 6/6 under each sampler** (p=.031 per sampler). The sampler
+contrasts are repeated observations within seed: their within-block average is
+positive in 6/6 wave-2 blocks and 12/12 independent blocks across both waves.
+Easy-band P-F3 met its registered pair-level bar at 10/12, but the block-level
+read is 4 positive, 1 tie, and 1 negative with an interval including zero, so
+localization is suggestive. The generated independent-unit artifact is
+`block_reanalysis.json` (`block_reanalysis.py`). Power
 analysis motivating the endpoint change: `power_note.json`. Verdict:
 `WAVE2_VERDICT.md`. Raw wave-2 cells (`fact250_*_s{6..11}.jsonl`)
 live in the fork alongside wave 1's.

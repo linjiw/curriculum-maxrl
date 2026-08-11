@@ -1,5 +1,14 @@
 # E-LLM-2 Countdown 2×2 (maxrl cells) — analysis against P-C1..P-C4
 
+> **Metric and artifact erratum (2026-08-10):** historical fields and tables
+> below labeled `pass@k` contain VERL's 1,000-resample, with-replacement
+> `best@k` coverage proxy, not standard unbiased pass@k. The three-seed B table
+> retains aggregate means and dispersions but not complete seed records or
+> per-task outcomes. Consequently, later language about paired seed signs,
+> timing, replication of the crossing, or a validated gate is historical and
+> superseded by paper §6.8--6.9 and
+> `autoresearch/iterate-260810-2240/E3_E4_AUDIT.md`.
+
 *2026-07-28. All four maxrl cells complete (60 steps each, fresh from the
 shared SFT warmstart, cap=12 per amendment A2). Artifacts:
 `maxrl/curriculum_maxrl/countdown/cells_2x2_results.json`. Predictions
@@ -243,7 +252,8 @@ drop the dial language, and the dose-response table above is historical.
 The post-fix 1-seed "coverage above baseline" endpoint (.564) sits inside
 ARM-A's seed spread (.488–.573) — it did not replicate. Designed-strength
 gating ≈ recycling-off plus seed noise; the moderate (under-gated)
-setting remains the one validated operating point.
+setting remains a promising under-gated operating point; corrected-code
+validation of a useful setting is open.
 
 Verdict artifacts: `curriculum_maxrl/countdown_reviewer_arms/` (paper
 repo) — prereg script, per-seed JSONs, PROVENANCE.md, machine-readable
