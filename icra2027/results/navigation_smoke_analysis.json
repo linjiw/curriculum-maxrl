@@ -1,0 +1,180 @@
+{
+  "analysis_schema_version": 1,
+  "input_evidence_status": "engineering_smoke_not_paper_evidence",
+  "primary_metric": "target-uniform mean-success AUC at paired common training wall time",
+  "co_primary_accounting_metric": "target-uniform mean-success AUC at paired common simulator steps",
+  "arms": {
+    "ours_uN": {
+      "n": 1,
+      "episode_auc_mean": 0.34375,
+      "episode_auc_sd": null,
+      "own_horizon_wall_auc_mean": 0.36800758122034805,
+      "final_mean_success": 0.61328125,
+      "final_dead_group_rate": 0.14583333333333334
+    },
+    "uniform": {
+      "n": 1,
+      "episode_auc_mean": 0.3411458333333333,
+      "episode_auc_sd": null,
+      "own_horizon_wall_auc_mean": 0.35208535946690367,
+      "final_mean_success": 0.60546875,
+      "final_dead_group_rate": 0.1875
+    },
+    "learnability": {
+      "n": 1,
+      "episode_auc_mean": 0.2841796875,
+      "episode_auc_sd": null,
+      "own_horizon_wall_auc_mean": 0.2755491065685553,
+      "final_mean_success": 0.5078125,
+      "final_dead_group_rate": 0.16666666666666666
+    },
+    "staged": {
+      "n": 1,
+      "episode_auc_mean": 0.24967447916666666,
+      "episode_auc_sd": null,
+      "own_horizon_wall_auc_mean": 0.24750960861952667,
+      "final_mean_success": 0.3671875,
+      "final_dead_group_rate": 0.08333333333333333
+    }
+  },
+  "paired_contrasts": {
+    "ours_uN_minus_uniform": {
+      "primary_matched_wall": {
+        "currency": "training_wall_seconds",
+        "paired_seeds": [
+          0
+        ],
+        "common_budget_per_seed": [
+          1.497761547099799
+        ],
+        "n": 1,
+        "mean_delta": 0.01003955830648423,
+        "positive": 1,
+        "ties": 0,
+        "paired_bootstrap_95_ci": [
+          null,
+          null
+        ],
+        "exact_two_sided_sign_flip_p": null,
+        "per_seed_delta": [
+          0.01003955830648423
+        ]
+      },
+      "co_primary_matched_sim_steps": {
+        "currency": "sim_steps",
+        "paired_seeds": [
+          0
+        ],
+        "common_budget_per_seed": [
+          38940.0
+        ],
+        "n": 1,
+        "mean_delta": 0.013895397126862885,
+        "positive": 1,
+        "ties": 0,
+        "paired_bootstrap_95_ci": [
+          null,
+          null
+        ],
+        "exact_two_sided_sign_flip_p": null,
+        "per_seed_delta": [
+          0.013895397126862885
+        ]
+      }
+    },
+    "ours_uN_minus_learnability": {
+      "primary_matched_wall": {
+        "currency": "training_wall_seconds",
+        "paired_seeds": [
+          0
+        ],
+        "common_budget_per_seed": [
+          1.1796765704639256
+        ],
+        "n": 1,
+        "mean_delta": 0.03003659018000049,
+        "positive": 1,
+        "ties": 0,
+        "paired_bootstrap_95_ci": [
+          null,
+          null
+        ],
+        "exact_two_sided_sign_flip_p": null,
+        "per_seed_delta": [
+          0.03003659018000049
+        ]
+      },
+      "co_primary_matched_sim_steps": {
+        "currency": "sim_steps",
+        "paired_seeds": [
+          0
+        ],
+        "common_budget_per_seed": [
+          29754.0
+        ],
+        "n": 1,
+        "mean_delta": 0.007173015601934618,
+        "positive": 1,
+        "ties": 0,
+        "paired_bootstrap_95_ci": [
+          null,
+          null
+        ],
+        "exact_two_sided_sign_flip_p": null,
+        "per_seed_delta": [
+          0.007173015601934618
+        ]
+      }
+    },
+    "ours_uN_minus_staged": {
+      "primary_matched_wall": {
+        "currency": "training_wall_seconds",
+        "paired_seeds": [
+          0
+        ],
+        "common_budget_per_seed": [
+          0.5652768700383604
+        ],
+        "n": 1,
+        "mean_delta": -0.055900030591157,
+        "positive": 0,
+        "ties": 0,
+        "paired_bootstrap_95_ci": [
+          null,
+          null
+        ],
+        "exact_two_sided_sign_flip_p": null,
+        "per_seed_delta": [
+          -0.055900030591157
+        ]
+      },
+      "co_primary_matched_sim_steps": {
+        "currency": "sim_steps",
+        "paired_seeds": [
+          0
+        ],
+        "common_budget_per_seed": [
+          16740.0
+        ],
+        "n": 1,
+        "mean_delta": -0.06284304946866129,
+        "positive": 0,
+        "ties": 0,
+        "paired_bootstrap_95_ci": [
+          null,
+          null
+        ],
+        "exact_two_sided_sign_flip_p": null,
+        "per_seed_delta": [
+          -0.06284304946866129
+        ]
+      }
+    }
+  },
+  "aug24_checkpoint": {
+    "minimum_seed_requirement_met": false,
+    "directional_bar_met": false,
+    "decision_ready": false,
+    "note": "Smoke runs validate plumbing only. A go/no-go decision requires at least five full BARN seeds per arm."
+  }
+}

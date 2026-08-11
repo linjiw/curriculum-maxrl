@@ -82,3 +82,136 @@ class FrontierTeacher:
         self.alpha = np.asarray(state["alpha"], dtype=float)
         self.beta = np.asarray(state["beta"], dtype=float)
         self.visits = np.asarray(state["visits"], dtype=np.int64)
+
+
+class UniformTeacher(FrontierTeacher):
+    """No-curriculum control with the same posterior bookkeeping.
+
+    Keeping the observations and posterior identical to the adaptive teachers
+    makes calibration and dead/mastered diagnostics comparable across arms.
+    """
+
+    def distribution(self) -> np.ndarray:
+        return np.full(self.n_tasks, 1.0 / self.n_tasks)
+
+
+class LearnabilityTeacher(FrontierTeacher):
+    """Compute-blind learnability baseline, ``u(p) = p(1-p)``.
+
+    This is the N=2 slice of the estimator-derived utility.  It intentionally
+    shares the posterior, Thompson sampling, concentration, and uniform floor
+    with :class:`FrontierTeacher`, isolating the score shape in an N-ablation.
+    It is a learnability baseline, not an ALP-GMM implementation: ALP-GMM
+    estimates temporal learning progress and fits a mixture model.
+    """
+
+    def utility(self, p: np.ndarray) -> np.ndarray:
+        p = np.asarray(p, dtype=float)
+        return p * (1.0 - p)
+
+
+class StagedDifficultyTeacher(FrontierTeacher):
+    """Hand-ordered promotion curriculum for a known difficulty ranking.
+
+    The teacher samples uniformly from the unlocked prefix.  It unlocks the
+    next task once the current frontier's posterior mean reaches
+    ``promotion_threshold`` after ``min_frontier_groups`` observations.  A
+    uniform floor keeps locked tasks observable and matches the coverage
+    safeguard used by the adaptive arms.
+
+    This deliberately simple baseline represents the common hand-designed
+    easy-to-hard schedule; its ordering must come from environment metadata,
+    never from evaluation outcomes.
+    """
+
+    def __init__(self, n_tasks: int, n_rollouts: int = 16, *,
+                 difficulty_order=None, initial_tasks: int = 1,
+                 promotion_threshold: float = 0.7,
+                 min_frontier_groups: int = 5, floor: float = 0.1,
+                 decay: float = 0.7, seed: int = 0):
+        super().__init__(n_tasks, n_rollouts, decay=decay, floor=floor,
+                         gamma=1.0, seed=seed)
+        if difficulty_order is None:
+            difficulty_order = np.arange(n_tasks)
+        order = np.asarray(difficulty_order, dtype=np.int64)
+        if order.shape != (n_tasks,) or set(order.tolist()) != set(range(n_tasks)):
+            raise ValueError("difficulty_order must be a permutation of task ids")
+        if not 1 <= initial_tasks <= n_tasks:
+            raise ValueError("initial_tasks must lie in [1, n_tasks]")
+        if not 0.0 <= promotion_threshold <= 1.0:
+            raise ValueError("promotion_threshold must lie in [0, 1]")
+        if min_frontier_groups < 1:
+            raise ValueError("min_frontier_groups must be positive")
+        self.difficulty_order = order
+        self.active_count = int(initial_tasks)
+        self.promotion_threshold = float(promotion_threshold)
+        self.min_frontier_groups = int(min_frontier_groups)
+
+    def observe(self, task_id: int, rewards: np.ndarray) -> None:
+        super().observe(task_id, rewards)
+        while self.active_count < self.n_tasks:
+            frontier = int(self.difficulty_order[self.active_count - 1])
+            if self.visits[frontier] < self.min_frontier_groups:
+                break
+            p_hat = self.alpha[frontier] / (self.alpha[frontier] + self.beta[frontier])
+            if p_hat < self.promotion_threshold:
+                break
+            self.active_count += 1
+
+    def distribution(self) -> np.ndarray:
+        active = self.difficulty_order[:self.active_count]
+        staged = np.zeros(self.n_tasks, dtype=float)
+        staged[active] = 1.0 / len(active)
+        uniform = np.full(self.n_tasks, 1.0 / self.n_tasks)
+        return (1.0 - self.floor) * staged + self.floor * uniform
+
+    def metrics(self) -> dict:
+        out = super().metrics()
+        out["teacher/active_frac"] = self.active_count / self.n_tasks
+        out["teacher/frontier_task"] = int(
+            self.difficulty_order[self.active_count - 1])
+        return out
+
+    def state_dict(self) -> dict:
+        state = super().state_dict()
+        state["active_count"] = self.active_count
+        return state
+
+    def load_state_dict(self, state: dict) -> None:
+        super().load_state_dict(state)
+        self.active_count = int(state["active_count"])
+
+
+def allocate_rollouts_greedy(p_hat: np.ndarray, total_budget: int, *,
+                             n_min: int = 1, n_max: int = 64) -> np.ndarray:
+    """Allocate a fixed rollout budget by exact discrete water-filling.
+
+    For task ``i`` with pass probability ``p_i``, increasing its group size
+    from ``N`` to ``N+1`` changes ``pass@N`` by
+    ``p_i (1-p_i)^N``.  These marginal gains decrease with N, so repeatedly
+    assigning the next rollout to the largest marginal is optimal for the
+    separable concave objective ``sum_i pass@N_i`` (and equivalently for
+    ``sum_i [pass@N_i - pass@1_i]``).
+
+    The returned integer counts always sum exactly to ``total_budget``.
+    Infeasible bounds are rejected instead of silently violating the budget.
+    """
+    p = np.asarray(p_hat, dtype=float)
+    if p.ndim != 1 or len(p) == 0:
+        raise ValueError("p_hat must be a non-empty one-dimensional array")
+    if not np.all(np.isfinite(p)) or np.any((p < 0.0) | (p > 1.0)):
+        raise ValueError("p_hat entries must be finite probabilities")
+    if n_min < 0 or n_max < n_min:
+        raise ValueError("require 0 <= n_min <= n_max")
+    minimum = n_min * len(p)
+    maximum = n_max * len(p)
+    if not minimum <= total_budget <= maximum:
+        raise ValueError(
+            f"budget {total_budget} is infeasible for [{minimum}, {maximum}]")
+
+    allocation = np.full(len(p), n_min, dtype=np.int64)
+    for _ in range(total_budget - minimum):
+        marginal = p * (1.0 - p) ** allocation
+        marginal[allocation >= n_max] = -1.0
+        allocation[int(np.argmax(marginal))] += 1
+    return allocation

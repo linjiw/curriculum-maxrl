@@ -19,12 +19,16 @@ gym-style continuous-control task.
 """
 
 from frontier_rl.interfaces import TaskSpace, GroupResult, Policy
-from frontier_rl.teacher import FrontierTeacher
+from frontier_rl.teacher import (FrontierTeacher, LearnabilityTeacher,
+                                 StagedDifficultyTeacher, UniformTeacher,
+                                 allocate_rollouts_greedy)
 from frontier_rl.estimators import maxrl_weights, grpo_weights, rloo_weights
 from frontier_rl.trainer import FrontierTrainer, TrainerConfig
 
 __all__ = [
     "TaskSpace", "GroupResult", "Policy",
-    "FrontierTeacher", "FrontierTrainer", "TrainerConfig",
+    "FrontierTeacher", "LearnabilityTeacher", "StagedDifficultyTeacher",
+    "UniformTeacher", "allocate_rollouts_greedy",
+    "FrontierTrainer", "TrainerConfig",
     "maxrl_weights", "grpo_weights", "rloo_weights",
 ]

@@ -33,6 +33,8 @@ class GridReachSpace:
         self.step_budget_factor = step_budget_factor
         self.lr = lr
         self.rng = np.random.default_rng(seed)
+        self.training_episodes = 0
+        self.training_sim_steps = 0
         # features: (goal direction octant x distance bucket) -> move logits
         self.n_buckets = radius
         self.theta = np.zeros((8, self.n_buckets, 4))
@@ -57,21 +59,23 @@ class GridReachSpace:
         e = np.exp(z)
         return e / e.sum()
 
-    def _sample_goal(self, ring: int):
+    def _sample_goal(self, ring: int, rng=None):
+        rng = self.rng if rng is None else rng
         while True:
-            g = self.rng.integers(-ring, ring + 1, size=2)
+            g = rng.integers(-ring, ring + 1, size=2)
             if max(abs(g[0]), abs(g[1])) == ring:
                 return g
 
-    def _episode(self, ring: int):
-        goal = self._sample_goal(ring)
+    def _episode(self, ring: int, rng=None):
+        rng = self.rng if rng is None else rng
+        goal = self._sample_goal(ring, rng)
         pos = np.zeros(2, dtype=int)
         budget = int(self.step_budget_factor * ring) + 2
         positions, actions = [], []  # raw trajectory; features recomputed in update
         for _ in range(budget):
             feat = self._feat(pos, goal)
             p = self._policy_probs(feat)
-            a = int(self.rng.choice(4, p=p))
+            a = int(rng.choice(4, p=p))
             positions.append(pos.copy())
             actions.append(a)
             pos = pos + MOVES[a]
@@ -87,7 +91,10 @@ class GridReachSpace:
             positions, actions, final_pos, goal, ok = self._episode(ring)
             trajs.append({"positions": positions, "actions": actions, "goal": goal})
             rewards.append(float(ok))
-            infos.append({"final_pos": final_pos, "goal": goal})
+            infos.append({"final_pos": final_pos, "goal": goal,
+                          "steps": len(actions)})
+            self.training_episodes += 1
+            self.training_sim_steps += len(actions)
         return GroupResult(task_id, np.array(rewards), trajs, infos)
 
     def relabel(self, group: GroupResult):
@@ -125,9 +132,33 @@ class GridReachSpace:
                 self.theta[feat] += self.lr * w * g
 
     # ---- eval ----
-    def eval_pass_rates(self, n: int = 64) -> np.ndarray:
+    def evaluate_task(self, task_id: int, n: int = 64, *,
+                      seed: int = 0) -> tuple[int, int]:
+        """Evaluate on a fixed, held-out random stream without state drift.
+
+        Each episode receives a seed derived only from ``seed``, task id, and
+        episode index.  All arms therefore see the same goal instances and
+        common action-randomness stream, while evaluation leaves the training
+        RNG and budget counters untouched.
+        """
+        successes = 0
+        sim_steps = 0
+        ring = int(task_id) + 1
+        for episode in range(n):
+            rng = np.random.default_rng(np.random.SeedSequence(
+                [int(seed), int(task_id), int(episode)]))
+            _, actions, _, _, ok = self._episode(ring, rng=rng)
+            successes += int(ok)
+            sim_steps += len(actions)
+        return successes, sim_steps
+
+    def eval_pass_rates(self, n: int = 64, *, seed: int = None) -> np.ndarray:
         out = []
         for task in range(self.n_tasks):
-            g = self.rollout_group(task, n)
-            out.append(float(np.mean(g.rewards)))
+            if seed is None:
+                g = self.rollout_group(task, n)
+                out.append(float(np.mean(g.rewards)))
+            else:
+                successes, _ = self.evaluate_task(task, n, seed=seed)
+                out.append(successes / n)
         return np.array(out)
