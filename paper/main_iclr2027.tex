@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{iclr2027_conference,times}
+% \iclrfinalcopy  % uncomment for camera-ready
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{microtype}
+% hypertexnames=false: sequential destination names, fixes the
+% duplicate figure/table destination warnings (review 4.5)
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black,hypertexnames=false]{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{algorithm,algorithmic}
+\setlist{topsep=2pt,itemsep=1pt,leftmargin=1.4em}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newenvironment{interp}{\par\vspace{2pt}\noindent\small\textbf{Interpretation.}\itshape}{\par\vspace{4pt}}
+\newcommand{\takeaway}[1]{\par\vspace{3pt}\noindent\fcolorbox{black!20}{black!4}{\parbox{0.96\linewidth}{\small\textbf{Takeaway.} #1}}\vspace{4pt}}
+\newcommand{\passat}[1]{\text{pass@}#1}
+
+% float packing: relax LaTeX's conservative float fractions so figure
+% pages fill and floats share pages with text
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.8}
+\setcounter{topnumber}{3}
+\setcounter{totalnumber}{5}
+
+\title{Coefficient Activity and Data Selection in Verifiable-Reward RL}
+\author{Anonymous authors\\
+Paper under double-blind review}
+
+\begin{document}
+\maketitle
+% The compact submission body is intentionally separate from body.tex,
+% which remains the full research record and extended draft.
+\input{body_iclr}  % wrapper extracted from release branch 9277141; local name avoids clobbering legacy main_iclr.tex
+\end{document}

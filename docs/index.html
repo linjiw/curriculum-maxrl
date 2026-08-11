@@ -186,24 +186,23 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <body>
 
 <header class="hero">
-  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-05</p>
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-11</p>
   <h1>The estimator decides</h1>
   <p class="lede">
     RL with verifiable rewards leans on two data-level fixes — <em>difficulty curricula</em>
     (train where learning is possible) and <em>failure recycling</em> (relabel failed rollouts
-    as successes of what they actually achieved). Both are treated as objective-agnostic
-    add-ons. <strong>They are not.</strong> We derive the curriculum from the estimator's own
-    algebra — a prompt's expected learning signal is exactly
-    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>, whose two zeros partition difficulty into a
-    dead zone, a learnable band, and a mastered tail — and use it to find, measure, and
-    stress-test the failure modes of both interventions, <em>including our own claims</em>:
-    the replicated finding is that recycling buys mean accuracy <strong>with pass@k
-    coverage</strong> (recycling-induced sharpening — first measurement of this cost in RLVR,
-    3 seeds), the algebra motivates a relabel-admission gate with one validated operating
-    point, and the estimator-coverage divergence our early runs showed was cut down by our
-    own pre-registered factorial to exactly what survives (details in the card below). The
-    claim's boundary is measured too: a pre-registered fifth suite whose learnable region
-    collapses to one template stratum defeats <em>every</em> estimator.
+    as successes of what they actually achieved). Both are usually treated as
+    estimator-agnostic add-ons. <strong>They are not.</strong> Under the practical MaxRL
+    convention, a prompt's expected absolute coefficient mass is exactly
+    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>: a rollout-budget-aware learnability
+    score, derived from the deployed estimator rather than imported as a heuristic,
+    whose two zeros partition difficulty into a dead zone, a learnable band, and a
+    mastered tail — and whose peak moves as the rollout budget N grows. The common
+    p(1−p) learnability score is its N=2 slice. We use the identity to find, measure,
+    and stress-test the failure modes of both interventions, <em>including our own
+    claims</em>: the scoreboard below reports confirmations, refutations, and
+    retractions with equal prominence, because each defines where the score can be
+    trusted.
   </p>
   <div class="card" style="margin-top:18px">
     <p class="eyebrow" style="margin-bottom:8px">Three headline results</p>
@@ -216,20 +215,24 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     the earlier nine-run "zero sign exceptions" maze pattern <strong>failed its
     pre-registered balanced factorial at the registered endpoint and is retracted</strong>
     (3/6 and 4/6 paired blocks; the cohort had conflated recycling with the estimator
-    effect). The time-integrated coverage ordering that survived (12/12 wave-1 blocks)
+    effect). The time-integrated coverage ordering that survived (6/6 independent
+    wave-1 seed blocks after within-block sampler averaging)
     was then <strong>registered as the primary of a second factorial on six fresh seed
-    blocks and confirmed 6/6 under each sampler</strong> (p=.031 per sampler; 24/24
-    paired blocks across both waves; easy-band concentration replicated 10/12,
-    registered) — prereg, both verdicts, and per-wave results vendored in the repo.
+    blocks and confirmed 6/6 under each sampler</strong> (p=.031 per sampler; the
+    sampler-averaged contrast is positive in 12/12 independent blocks across both
+    waves). The registered easy-band bar was met at 10/12 repeated contrasts, but
+    the block-level interval includes zero, so localization is suggestive — prereg,
+    both verdicts, and per-wave results are vendored in the repo.
     The exact-rung ordering stands alongside it (10/10 frozen-schedule replays +
     controls).
     On GSM8K the teacher-deficit direction under GRPO is 2/2 seeds; the registered
     regression shape is 1-of-2 and receives no corroboration from the factorial's
     interaction read.
-    &nbsp;·&nbsp; <strong>Sharpening + the gate:</strong> recycling trades coverage for accuracy
-    (3 seeds, outside noise); the saturation gate restores frontier-tier coverage keeping ~60% of the
-    gain at one validated operating point — the stronger "dial" reading was refuted in its
-    pre-registered 3-seed sweep (P-R1): designed-strength gating is recycling-off plus seed noise.</p>
+    &nbsp;·&nbsp; <strong>Countdown aggregate + gate:</strong> the reported recycling
+    aggregate is mean-up/bootstrap-proxy-down; it is not a paired per-seed or
+    standard-pass@k result. A buggy-decay saturation point looked favorable,
+    but the pre-registered corrected 3-seed sweep refuted the stronger dial
+    reading. The gate did not validate.</p>
   </div>
   <div class="links">
     <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
@@ -380,7 +383,7 @@ teacher can close:</p>
 </div>
 
 <p>A striking finite-sample fact we verified: at p&nbsp;=&nbsp;0.01, N&nbsp;=&nbsp;32, GRPO's population
-curve promises weight ≈ 0.199, but the <em>realized</em> expected signal is 0.100 — half —
+curve promises weight ≈ 0.199, but the <em>realized</em> expected coefficient mass is 0.100 — half —
 because 72% of groups are all-fail and contribute nothing. Population weight curves describe a
 limit no finite-group trainer lives in.</p>
 
@@ -399,7 +402,7 @@ the algebra collapses to something exact and interpretable:</p>
   <span class="rm">=</span> 2·( (1−(1−p)<sup>N</sup>) − p )
 </div>
 
-<p><strong>The expected learning signal on a prompt is twice the probability that it is solvable
+<p><strong>The expected absolute coefficient mass on a prompt is twice the probability that it is solvable
 within N attempts but not within one.</strong> That is a compute-indexed formalization of the
 zone of proximal development, produced by the estimator itself. It vanishes at both ends —
 beyond-frontier prompts (group dies) and mastered prompts (no headroom) — and peaks at</p>
@@ -702,7 +705,7 @@ cleanly and pre-registers its predictions before any cell finishes:</p>
     <tr><td><strong>E-LLM-2 · Countdown 2×2</strong><br><span class="mono">+{hindsight,none}</span></td>
         <td>Channel 2 at LLM scale: a failed equation still <em>evaluates to some value v</em> — relabel target := v and the same verifier certifies a true success. Does exact-verifier recycling ignite tiers no sampler can reach?</td>
         <td>Hindsight-on ignites the hard tiers; relabels decay after ignition.</td>
-        <td><span class="status no">✗ both nulls (pool saturated to its guesser bound) — but found <a href="#sharpening">recycling-induced sharpening</a>, a new phenomenon</span></td></tr>
+        <td><span class="status no">✗ both nulls (pool saturated to its guesser bound); the rebuilt study reports a <a href="#sharpening">mean-up/bootstrap-proxy-down aggregate</a> requiring a raw-outcome replacement</span></td></tr>
     <tr><td><strong>E-LLM-3 · reasoning-gym</strong></td>
         <td>Does the <em>streaming</em> teacher (kernel posterior over a continuous difficulty dial) beat the library's own threshold curriculum on procedural tasks?</td>
         <td>Match-or-beat the published +13–40-point threshold-curriculum gains, without its hand-set threshold.</td>
@@ -745,9 +748,9 @@ trajectory; the story is the <em>divergence after step 25</em>:</p>
   honestly read: the teacher's dead-sampled fraction <em>minimum</em> hit .48 vs uniform's
   .52, but run means were indistinguishable (.66–.67 everywhere) — the delivered treatment
   was weak. <strong>Seed 2 did not reproduce the regression</strong> (.073→.095→.118), with
-  even weaker steering. Damage tracks steering intensity; the decisive experiment is a
-  steering-controlled multi-seed cell (with a uniform-with-replacement control for the
-  prompt-repetition confound).</p></div>
+  even weaker steering. A steering-strengthened follow-up then failed its preregistered
+  run-mean treatment-delivery gate, so its endpoint and dependent controls are
+  inconclusive by design.</p></div>
   <div class="card"><h3>What we learned beyond the predictions</h3>
   <p><strong>The teacher's two sub-channels separate.</strong> Its posterior learned real
   difficulty (p̂ vs external 7B-model annotations: ρ=−0.17, p≈10⁻¹⁷) but its allocation
@@ -773,30 +776,27 @@ simplified construction — the pool was too shallow for allocation or recycling
 run; the pre-registered kill criterion did its job.)</p>
 
 <div class="grid2">
-  <div class="card"><h3>The finding: recycling-induced sharpening (3 seeds)</h3>
-  <p>On the rebuilt real-structure pool, recycling lifts <strong>tier-1 mean@16 by
-  +.046</strong> (.278±.054 → .324±.012) while <strong>losing .049 of pass@16
-  coverage</strong> (.541±.020 → .492±.011) — both outside seed noise, replicated
-  across three seeds. Recycled off-target successes concentrate the policy on reachable
-  outputs at the expense of exploration breadth — the creation channel has its own
-  safety trade-off, mirroring the H6 weight-induced collapse one level up:
-  <em>data-induced</em> rather than weight-induced. A ~30-paper review found no prior
-  report of hindsight-induced pass@k loss in RLVR: the nearest works never measured
-  coverage.</p></div>
-  <div class="card"><h3>The fix falls out of our own algebra — one operating point, not a dial</h3>
+  <div class="card"><h3>The retained result: a three-seed aggregate</h3>
+  <p>On the rebuilt real-structure pool, recycling raises tier-1 mean@16 by
+  <strong>+.046</strong> (.278 → .324) while the logged VERL bootstrap best@16
+  proxy falls by <strong>−.049</strong> (.541 → .492). These are aggregate
+  summaries across three seeds; complete seed records and task outcomes are
+  absent. The scalar uses with-replacement resampling and is not standard
+  unbiased pass@16. The concentration interpretation is a hypothesis for E2c,
+  whose evaluator retains raw binary outcomes.</p></div>
+  <div class="card"><h3>The algebra motivates a gate; the tested gate did not validate</h3>
   <p>A relabel to a value the model just produced is a task at p≈1 — exactly where
   u(p) = pass@N − pass@1 says training signal is <em>zero</em>. So the estimator
   motivates the admission rule: <strong>gate relabels by a destination-saturation
-  statistic</strong>. Measured across three seeds: at the frontier tier the gate
-  restores coverage to baseline (.279±.019 vs .274) while keeping ~60% of recycling's
-  mean gain. The stronger reading — that gate strength traces a monotone
+  statistic</strong>. The favorable moderate aggregate used faulty decay and is
+  descriptive only. The stronger reading — that gate strength traces a monotone
   mean-vs-coverage <em>dial</em> — was pre-registered and <strong>refuted</strong>
   (P-R1, 3 seeds at the designed strength, rejection ~.94): those runs land on the
   no-recycling point with seed spread covering most of the baseline↔recycling range,
   and the earlier single-seed "coverage above baseline" endpoint sits inside that
-  spread. Strong gating ≈ recycling off. In-run telemetry still shows the mechanism:
-  rejection rises .12 → .85 as the model's reachable set saturates, and the gated arm
-  ends with <em>more</em> policy entropy than no recycling at all. Full synthesis:
+  spread. Strong gating landed near recycling off, without establishing
+  equivalence. Rejection and entropy telemetry are consistent with saturation
+  filtering but do not identify the mechanism. Full synthesis:
   <span class="mono">SHARPENING_SYNTHESIS.md</span>.</p></div>
 </div>
 
@@ -1129,9 +1129,9 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
 <h2 id="paper">8 · The paper draft — abstract, status, and how we write</h2>
 
 <p><strong><a href="paper-draft.pdf">📄 Read the rendered PDF draft</a></strong> (LaTeX,
-recompiled on every update) — or the markdown source at
-<a href="https://github.com/linjiw/curriculum-maxrl/blob/main/PAPER.md"><span class="mono">PAPER.md</span></a>
-(v0.9). We studied the MaxRL paper's own craft — the "your method is our method at
+recompiled on every update). The compact 9-page submission body lives at
+<span class="mono">paper/body_iclr.tex</span>; <span class="mono">paper/body.tex</span>
+remains the extended research record. We studied the MaxRL paper's own craft — the "your method is our method at
 T=1" subsumption move, theorem boxes with plain-English interpretations, an escalating
 experimental ladder with one takeaway per rung — and hold this draft to that bar. Our
 one-line hook mirrors theirs one level up: <em>they showed RL is a first-order
@@ -1140,31 +1140,29 @@ of their estimator — and that what the estimator throws away is the one thing 
 curriculum can fix, until you recycle it.</em></p>
 
 <div class="card">
-  <h3>Abstract (current draft)</h3>
-  <p style="font-size:0.93rem">Reinforcement learning with verifiable rewards spends most of its
-  budget generating rollouts, and on hard task pools most of that budget buys nothing: under
-  uniform prompt sampling, we measure that <strong>65–75% of rollout groups produce zero learning
-  signal</strong>. The emerging fix is a difficulty curriculum, but current curricula are
-  heuristics bolted on from outside: bandit scores, hand-set difficulty bands, filtering rules.
-  We show the curriculum is already inside the estimator. For MaxRL-style success-conditioned
-  advantages, the expected learning signal a prompt emits from a group of N rollouts has a closed
-  form, <strong>E[Σ|w|] = 2·(pass@N − pass@1)</strong> — a compute-indexed
-  zone-of-proximal-development functional, maximal on prompts solvable within N attempts but not
-  within one. Sampling prompts by this quantity turns the rollout budget N you already chose into
-  the curriculum knob, with no new difficulty hyperparameters; published learnability curricula
-  fall out as its N=2 slice. The same algebra draws a hard boundary: no sampling rule can rescue
-  an all-fail prompt. We therefore add <strong>failure recycling</strong>: a failed trajectory is
-  a verified success for the goal it actually reached, and relabeling dead groups provably yields
-  the maximum-likelihood gradient of the relabeled task. Across four testbeds a matched true-pass-rate <strong>oracle</strong> allocator ties the
-  combined schedule (allocation saturates; recycling adds even on top of the oracle), which turns a
-  frontier-heavy regime from unlearnable to solved (0 → 0.98), and needs up to 11× fewer inference
-  samples at the frontier. The estimator-conditioned coverage story is reported at its tested level:
-  the exact-rung ordering survives frozen schedules (10/10); the neural-scale
-  zero-exception claim <strong>failed its pre-registered factorial and is retracted</strong>;
-  and the time-integrated ordering that survived was then registered on six fresh seed
-  blocks and <strong>confirmed 6/6 under each sampler</strong> (24/24 paired blocks across
-  both waves). On GSM8K the pre-registered 2×2's registered run
-  matched the prediction; its replication seed did not reproduce the shape.</p>
+  <h3>Abstract (compact ICLR submission draft)</h3>
+  <p style="font-size:0.93rem">RL with verifiable rewards (RLVR) often treats task curricula and
+  failure recycling as estimator-agnostic data interventions. We ask what task-level activity the
+  deployed group estimator makes available to either intervention. For the zero-stabilizer
+  practical MaxRL convention with N i.i.d. binary rollouts, the expected absolute coefficient
+  mass is exactly <strong>2·(pass@N − pass@1)</strong>. The resulting activity score has a unique
+  compute-dependent peak, recovers the common learnability score p(1−p) at N=2, and shows that
+  dropping all-fail groups targets truncation order N−1, not N. It is an estimator-side
+  diagnostic, not a theorem of learning progress. The score's deployed-N shape carries empirical
+  content: in a fresh 20-seed Acrobot tournament at N=16, the rollout-aware score improves
+  target-uniform AUC over p(1−p) by <strong>+.0480</strong> (95% paired-bootstrap CI
+  [+.0209,&nbsp;+.0738]) and over uniform sampling as well. Its scope is bounded by design rather
+  than by accident: a fresh 24-block exact-probability Digits counter-test rejects the stronger
+  universal estimator-to-sampler mapping, and a qualified, externally recorded six-block maze
+  factorial reports higher time-integrated MaxRL than GRPO coverage in <strong>6/6 blocks under
+  each sampler</strong> at common optimizer settings — an estimator-conditioned ordering, not
+  universal superiority. A reported three-seed Countdown aggregate couples higher mean@16 with a
+  lower logged VERL bootstrap best@16 coverage proxy under a deployed recycling package,
+  motivating pass@k recomputed from retained raw outcomes. Together, the positive and negative
+  results support a calibrated conclusion: coefficient activity is a productive source of
+  curriculum hypotheses, not a universal curriculum objective, and data-selection interventions
+  should be evaluated with the estimator beneath them, with raw mean@k and pass@k outcomes
+  retained.</p>
 </div>
 
 <div class="grid2">
@@ -1181,14 +1179,15 @@ curriculum can fix, until you recycle it.</em></p>
   </div>
   <div class="card">
     <h3>What's pending before submission</h3>
-    <p>⟳ The steering-controlled GSM8K cell (E-LLM-1b's decisive g3p run —
-    the §6.7 interaction claim upgrades or gets scoped either way, pre-registered);
-    main-text compression to the 9-page ICLR budget (currently ~16pp, appendix
-    absorbing the overflow); anonymized artifact mirror + camera-ready commit
-    hashes. Executed since the last status: both factorial waves (retraction +
+    <p>⟳ E2c, the delivery-guaranteed matched Countdown control, is implemented
+    and awaits a free GPU; E2/E2b stopped at frozen delivery gates. The
+    steering-strengthened GSM8K cell also failed its committed delivery gate and
+    is now a boundary result. A later research branch already contains a
+    nine-page ICLR candidate; it must be reconciled with the active E2c worktree,
+    followed by anonymous artifact and camera-ready hashes. Executed since the last status: both factorial waves (retraction +
     confirmation), ARM A's dial refutation, <strong>P-R2 final (3/3 seeds:
-    the dose-matched replay control exceeds recycling on both meters — recycling's
-    distinctive value is scoped to the all-fail regime)</strong>, the
+    the higher-dose replay control exceeds recycling on both meters, bounding
+    what generic extra updates can buy without isolating direction)</strong>, the
     claims-and-evidence appendix.</p>
   </div>
 </div>
