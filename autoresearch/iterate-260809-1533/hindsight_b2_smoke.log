@@ -1,0 +1,417 @@
+2026-08-09 16:36:07,613	INFO worker.py:1951 -- Started a local Ray instance.
+[36m(TaskRunner pid=2657765)[0m TaskRunner hostname: robotixx-g1, PID: 2657765
+[36m(TaskRunner pid=2657765)[0m {'actor_rollout_ref': {'actor': {'checkpoint': {'load_contents': ['model',
+[36m(TaskRunner pid=2657765)[0m                                                                   'optimizer',
+[36m(TaskRunner pid=2657765)[0m                                                                   'extra'],
+[36m(TaskRunner pid=2657765)[0m                                                 'save_contents': ['model',
+[36m(TaskRunner pid=2657765)[0m                                                                   'optimizer',
+[36m(TaskRunner pid=2657765)[0m                                                                   'extra']},
+[36m(TaskRunner pid=2657765)[0m                                  'clip_ratio': 0.2,
+[36m(TaskRunner pid=2657765)[0m                                  'clip_ratio_c': 3.0,
+[36m(TaskRunner pid=2657765)[0m                                  'clip_ratio_high': 0.2,
+[36m(TaskRunner pid=2657765)[0m                                  'clip_ratio_low': 0.2,
+[36m(TaskRunner pid=2657765)[0m                                  'dtype': 'bfloat16',
+[36m(TaskRunner pid=2657765)[0m                                  'entropy_checkpointing': False,
+[36m(TaskRunner pid=2657765)[0m                                  'entropy_coeff': 0,
+[36m(TaskRunner pid=2657765)[0m                                  'entropy_from_logits_with_chunking': True,
+[36m(TaskRunner pid=2657765)[0m                                  'fsdp_config': {'forward_prefetch': False,
+[36m(TaskRunner pid=2657765)[0m                                                  'fsdp_size': -1,
+[36m(TaskRunner pid=2657765)[0m                                                  'offload_policy': False,
+[36m(TaskRunner pid=2657765)[0m                                                  'optimizer_offload': False,
+[36m(TaskRunner pid=2657765)[0m                                                  'param_offload': False,
+[36m(TaskRunner pid=2657765)[0m                                                  'reshard_after_forward': True,
+[36m(TaskRunner pid=2657765)[0m                                                  'wrap_policy': {'min_num_params': 0}},
+[36m(TaskRunner pid=2657765)[0m                                  'grad_clip': 1.0,
+[36m(TaskRunner pid=2657765)[0m                                  'kl_loss_coef': 0.001,
+[36m(TaskRunner pid=2657765)[0m                                  'kl_loss_type': 'low_var_kl',
+[36m(TaskRunner pid=2657765)[0m                                  'loss_agg_mode': 'token-mean',
+[36m(TaskRunner pid=2657765)[0m                                  'optim': {'lr': 1e-05,
+[36m(TaskRunner pid=2657765)[0m                                            'lr_warmup_steps': -1,
+[36m(TaskRunner pid=2657765)[0m                                            'lr_warmup_steps_ratio': 0.0,
+[36m(TaskRunner pid=2657765)[0m                                            'min_lr_ratio': 0.0,
+[36m(TaskRunner pid=2657765)[0m                                            'num_cycles': 0.5,
+[36m(TaskRunner pid=2657765)[0m                                            'total_training_steps': -1,
+[36m(TaskRunner pid=2657765)[0m                                            'warmup_style': 'constant',
+[36m(TaskRunner pid=2657765)[0m                                            'weight_decay': 0.01},
+[36m(TaskRunner pid=2657765)[0m                                  'policy_loss': {'clip_cov_lb': 1.0,
+[36m(TaskRunner pid=2657765)[0m                                                  'clip_cov_ratio': 0.0002,
+[36m(TaskRunner pid=2657765)[0m                                                  'clip_cov_ub': 5.0,
+[36m(TaskRunner pid=2657765)[0m                                                  'kl_cov_ratio': 0.0002,
+[36m(TaskRunner pid=2657765)[0m                                                  'loss_mode': 'vanilla',
+[36m(TaskRunner pid=2657765)[0m                                                  'ppo_kl_coef': 0.1},
+[36m(TaskRunner pid=2657765)[0m                                  'ppo_epochs': 1,
+[36m(TaskRunner pid=2657765)[0m                                  'ppo_max_token_len_per_gpu': 16384,
+[36m(TaskRunner pid=2657765)[0m                                  'ppo_micro_batch_size': None,
+[36m(TaskRunner pid=2657765)[0m                                  'ppo_micro_batch_size_per_gpu': 4,
+[36m(TaskRunner pid=2657765)[0m                                  'ppo_mini_batch_size': 8,
+[36m(TaskRunner pid=2657765)[0m                                  'profiler': {'all_ranks': False,
+[36m(TaskRunner pid=2657765)[0m                                               'discrete': False,
+[36m(TaskRunner pid=2657765)[0m                                               'ranks': None},
+[36m(TaskRunner pid=2657765)[0m                                  'shuffle': False,
+[36m(TaskRunner pid=2657765)[0m                                  'strategy': 'fsdp',
+[36m(TaskRunner pid=2657765)[0m                                  'ulysses_sequence_parallel_size': 1,
+[36m(TaskRunner pid=2657765)[0m                                  'use_dynamic_bsz': False,
+[36m(TaskRunner pid=2657765)[0m                                  'use_kl_loss': False,
+[36m(TaskRunner pid=2657765)[0m                                  'use_torch_compile': False},
+[36m(TaskRunner pid=2657765)[0m                        'hybrid_engine': True,
+[36m(TaskRunner pid=2657765)[0m                        'model': {'attn_implementation': 'flash_attention_2',
+[36m(TaskRunner pid=2657765)[0m                                  'enable_activation_offload': False,
+[36m(TaskRunner pid=2657765)[0m                                  'enable_gradient_checkpointing': False,
+[36m(TaskRunner pid=2657765)[0m                                  'external_lib': None,
+[36m(TaskRunner pid=2657765)[0m                                  'fused_kernel_options': {'impl_backend': 'torch'},
+[36m(TaskRunner pid=2657765)[0m                                  'lora_alpha': 16,
+[36m(TaskRunner pid=2657765)[0m                                  'lora_rank': 0,
+[36m(TaskRunner pid=2657765)[0m                                  'override_config': {},
+[36m(TaskRunner pid=2657765)[0m                                  'path': '/data/robotixx/curriculum-maxrl-runtime/models/countdown_sft_clean_v1',
+[36m(TaskRunner pid=2657765)[0m                                  'target_modules': 'all-linear',
+[36m(TaskRunner pid=2657765)[0m                                  'trust_remote_code': False,
+[36m(TaskRunner pid=2657765)[0m                                  'use_fused_kernels': False,
+[36m(TaskRunner pid=2657765)[0m                                  'use_liger': False,
+[36m(TaskRunner pid=2657765)[0m                                  'use_remove_padding': False,
+[36m(TaskRunner pid=2657765)[0m                                  'use_shm': False},
+[36m(TaskRunner pid=2657765)[0m                        'ref': {'entropy_checkpointing': False,
+[36m(TaskRunner pid=2657765)[0m                                'entropy_from_logits_with_chunking': False,
+[36m(TaskRunner pid=2657765)[0m                                'fsdp_config': {'forward_prefetch': False,
+[36m(TaskRunner pid=2657765)[0m                                                'param_offload': False,
+[36m(TaskRunner pid=2657765)[0m                                                'reshard_after_forward': True,
+[36m(TaskRunner pid=2657765)[0m                                                'wrap_policy': {'min_num_params': 0}},
+[36m(TaskRunner pid=2657765)[0m                                'log_prob_max_token_len_per_gpu': 16384,
+[36m(TaskRunner pid=2657765)[0m                                'log_prob_micro_batch_size': None,
+[36m(TaskRunner pid=2657765)[0m                                'log_prob_micro_batch_size_per_gpu': None,
+[36m(TaskRunner pid=2657765)[0m                                'log_prob_use_dynamic_bsz': False,
+[36m(TaskRunner pid=2657765)[0m                                'profiler': {'all_ranks': False,
+[36m(TaskRunner pid=2657765)[0m                                             'discrete': False,
+[36m(TaskRunner pid=2657765)[0m                                             'ranks': None},
+[36m(TaskRunner pid=2657765)[0m                                'strategy': 'fsdp',
+[36m(TaskRunner pid=2657765)[0m                                'ulysses_sequence_parallel_size': 1,
+[36m(TaskRunner pid=2657765)[0m                                'use_torch_compile': False},
+[36m(TaskRunner pid=2657765)[0m                        'rollout': {'calculate_log_probs': False,
+[36m(TaskRunner pid=2657765)[0m                                    'disable_log_stats': True,
+[36m(TaskRunner pid=2657765)[0m                                    'do_sample': True,
+[36m(TaskRunner pid=2657765)[0m                                    'dtype': 'bfloat16',
+[36m(TaskRunner pid=2657765)[0m                                    'enable_chunked_prefill': True,
+[36m(TaskRunner pid=2657765)[0m                                    'enforce_eager': False,
+[36m(TaskRunner pid=2657765)[0m                                    'engine_kwargs': {'sglang': {'attention_backend': None},
+[36m(TaskRunner pid=2657765)[0m                                                      'vllm': {'disable_mm_preprocessor_cache': False,
+[36m(TaskRunner pid=2657765)[0m                                                               'swap_space': None}},
+[36m(TaskRunner pid=2657765)[0m                                    'free_cache_engine': False,
+[36m(TaskRunner pid=2657765)[0m                                    'gpu_memory_utilization': 0.5,
+[36m(TaskRunner pid=2657765)[0m                                    'ignore_eos': False,
+[36m(TaskRunner pid=2657765)[0m                                    'layered_summon': False,
+[36m(TaskRunner pid=2657765)[0m                                    'load_format': 'dummy_dtensor',
+[36m(TaskRunner pid=2657765)[0m                                    'log_prob_max_token_len_per_gpu': 16384,
+[36m(TaskRunner pid=2657765)[0m                                    'log_prob_micro_batch_size': None,
+[36m(TaskRunner pid=2657765)[0m                                    'log_prob_micro_batch_size_per_gpu': 8,
+[36m(TaskRunner pid=2657765)[0m                                    'log_prob_use_dynamic_bsz': False,
+[36m(TaskRunner pid=2657765)[0m                                    'max_model_len': None,
+[36m(TaskRunner pid=2657765)[0m                                    'max_num_batched_tokens': 8192,
+[36m(TaskRunner pid=2657765)[0m                                    'max_num_seqs': 1024,
+[36m(TaskRunner pid=2657765)[0m                                    'micro_batch_size': 128,
+[36m(TaskRunner pid=2657765)[0m                                    'mode': 'sync',
+[36m(TaskRunner pid=2657765)[0m                                    'multi_turn': {'completion_callback': None,
+[36m(TaskRunner pid=2657765)[0m                                                   'enable': False,
+[36m(TaskRunner pid=2657765)[0m                                                   'enable_tokenization_sanity_check': True,
+[36m(TaskRunner pid=2657765)[0m                                                   'max_turns': None,
+[36m(TaskRunner pid=2657765)[0m                                                   'tool_config_path': None,
+[36m(TaskRunner pid=2657765)[0m                                                   'use_inference_chat_template': False},
+[36m(TaskRunner pid=2657765)[0m                                    'n': 16,
+[36m(TaskRunner pid=2657765)[0m                                    'name': 'hf',
+[36m(TaskRunner pid=2657765)[0m                                    'profiler': {'all_ranks': False,
+[36m(TaskRunner pid=2657765)[0m                                                 'discrete': False,
+[36m(TaskRunner pid=2657765)[0m                                                 'ranks': None},
+[36m(TaskRunner pid=2657765)[0m                                    'prompt_length': 256,
+[36m(TaskRunner pid=2657765)[0m                                    'response_length': 128,
+[36m(TaskRunner pid=2657765)[0m                                    'temperature': 1.0,
+[36m(TaskRunner pid=2657765)[0m                                    'tensor_model_parallel_size': 1,
+[36m(TaskRunner pid=2657765)[0m                                    'top_k': 0,
+[36m(TaskRunner pid=2657765)[0m                                    'top_p': 1.0,
+[36m(TaskRunner pid=2657765)[0m                                    'use_fire_sampling': False,
+[36m(TaskRunner pid=2657765)[0m                                    'val_kwargs': {'do_sample': True,
+[36m(TaskRunner pid=2657765)[0m                                                   'gen_batch_size': None,
+[36m(TaskRunner pid=2657765)[0m                                                   'n': 1,
+[36m(TaskRunner pid=2657765)[0m                                                   'temperature': 1.0,
+[36m(TaskRunner pid=2657765)[0m                                                   'top_k': 0,
+[36m(TaskRunner pid=2657765)[0m                                                   'top_p': 1.0}}},
+[36m(TaskRunner pid=2657765)[0m  'algorithm': {'adv_estimator': 'maxrl',
+[36m(TaskRunner pid=2657765)[0m                'advantage_type': 'grpo',
+[36m(TaskRunner pid=2657765)[0m                'gamma': 1.0,
+[36m(TaskRunner pid=2657765)[0m                'hindsight': {'audit_path': '/data/robotixx/curriculum-maxrl-runtime/checkpoints/hindsight_b2_smoke_260809/dose_accounting.jsonl',
+[36m(TaskRunner pid=2657765)[0m                              'enable': True,
+[36m(TaskRunner pid=2657765)[0m                              'max_groups_per_step': 8,
+[36m(TaskRunner pid=2657765)[0m                              'one_target_per_group': False,
+[36m(TaskRunner pid=2657765)[0m                              'scale': 1.0,
+[36m(TaskRunner pid=2657765)[0m                              'utility_gate': False},
+[36m(TaskRunner pid=2657765)[0m                'kl_ctrl': {'horizon': 10000,
+[36m(TaskRunner pid=2657765)[0m                            'kl_coef': 0.0,
+[36m(TaskRunner pid=2657765)[0m                            'target_kl': 0.1,
+[36m(TaskRunner pid=2657765)[0m                            'type': 'fixed'},
+[36m(TaskRunner pid=2657765)[0m                'kl_penalty': 'kl',
+[36m(TaskRunner pid=2657765)[0m                'lam': 1.0,
+[36m(TaskRunner pid=2657765)[0m                'norm_adv_by_std_in_grpo': True,
+[36m(TaskRunner pid=2657765)[0m                'pass_k': 16,
+[36m(TaskRunner pid=2657765)[0m                'pf_ppo': {'reweight_method': 'pow', 'weight_pow': 2.0},
+[36m(TaskRunner pid=2657765)[0m                'truncate_order': 16,
+[36m(TaskRunner pid=2657765)[0m                'use_kl_in_reward': False,
+[36m(TaskRunner pid=2657765)[0m                'use_pf_ppo': False},
+[36m(TaskRunner pid=2657765)[0m  'critic': {'checkpoint': {'load_contents': ['model', 'optimizer', 'extra'],
+[36m(TaskRunner pid=2657765)[0m                            'save_contents': ['model', 'optimizer', 'extra']},
+[36m(TaskRunner pid=2657765)[0m             'cliprange_value': 0.5,
+[36m(TaskRunner pid=2657765)[0m             'forward_max_token_len_per_gpu': 32768,
+[36m(TaskRunner pid=2657765)[0m             'forward_micro_batch_size': None,
+[36m(TaskRunner pid=2657765)[0m             'forward_micro_batch_size_per_gpu': None,
+[36m(TaskRunner pid=2657765)[0m             'grad_clip': 1.0,
+[36m(TaskRunner pid=2657765)[0m             'loss_agg_mode': 'token-mean',
+[36m(TaskRunner pid=2657765)[0m             'model': {'enable_activation_offload': False,
+[36m(TaskRunner pid=2657765)[0m                       'enable_gradient_checkpointing': True,
+[36m(TaskRunner pid=2657765)[0m                       'external_lib': None,
+[36m(TaskRunner pid=2657765)[0m                       'fsdp_config': {'forward_prefetch': False,
+[36m(TaskRunner pid=2657765)[0m                                       'fsdp_size': -1,
+[36m(TaskRunner pid=2657765)[0m                                       'offload_policy': False,
+[36m(TaskRunner pid=2657765)[0m                                       'optimizer_offload': False,
+[36m(TaskRunner pid=2657765)[0m                                       'param_offload': False,
+[36m(TaskRunner pid=2657765)[0m                                       'reshard_after_forward': True,
+[36m(TaskRunner pid=2657765)[0m                                       'wrap_policy': {'min_num_params': 0}},
+[36m(TaskRunner pid=2657765)[0m                       'lora_alpha': 16,
+[36m(TaskRunner pid=2657765)[0m                       'lora_rank': 0,
+[36m(TaskRunner pid=2657765)[0m                       'override_config': {},
+[36m(TaskRunner pid=2657765)[0m                       'path': '~/models/deepseek-llm-7b-chat',
+[36m(TaskRunner pid=2657765)[0m                       'target_modules': 'all-linear',
+[36m(TaskRunner pid=2657765)[0m                       'tokenizer_path': '/data/robotixx/curriculum-maxrl-runtime/models/countdown_sft_clean_v1',
+[36m(TaskRunner pid=2657765)[0m                       'trust_remote_code': False,
+[36m(TaskRunner pid=2657765)[0m                       'use_remove_padding': False,
+[36m(TaskRunner pid=2657765)[0m                       'use_shm': False},
+[36m(TaskRunner pid=2657765)[0m             'optim': {'lr': 1e-05,
+[36m(TaskRunner pid=2657765)[0m                       'lr_warmup_steps_ratio': 0.0,
+[36m(TaskRunner pid=2657765)[0m                       'min_lr_ratio': None,
+[36m(TaskRunner pid=2657765)[0m                       'total_training_steps': -1,
+[36m(TaskRunner pid=2657765)[0m                       'warmup_style': 'constant',
+[36m(TaskRunner pid=2657765)[0m                       'weight_decay': 0.01},
+[36m(TaskRunner pid=2657765)[0m             'ppo_epochs': 1,
+[36m(TaskRunner pid=2657765)[0m             'ppo_max_token_len_per_gpu': 32768,
+[36m(TaskRunner pid=2657765)[0m             'ppo_micro_batch_size': None,
+[36m(TaskRunner pid=2657765)[0m             'ppo_micro_batch_size_per_gpu': None,
+[36m(TaskRunner pid=2657765)[0m             'ppo_mini_batch_size': 8,
+[36m(TaskRunner pid=2657765)[0m             'profiler': {'all_ranks': False, 'discrete': False, 'ranks': None},
+[36m(TaskRunner pid=2657765)[0m             'rollout_n': 16,
+[36m(TaskRunner pid=2657765)[0m             'shuffle': False,
+[36m(TaskRunner pid=2657765)[0m             'strategy': 'fsdp',
+[36m(TaskRunner pid=2657765)[0m             'ulysses_sequence_parallel_size': 1,
+[36m(TaskRunner pid=2657765)[0m             'use_dynamic_bsz': False},
+[36m(TaskRunner pid=2657765)[0m  'custom_reward_function': {'name': 'compute_score',
+[36m(TaskRunner pid=2657765)[0m                             'path': '/home/robotixx/curriculum-maxrl/curriculum_maxrl/countdown/countdown_reward.py'},
+[36m(TaskRunner pid=2657765)[0m  'data': {'apply_chat_template': True,
+[36m(TaskRunner pid=2657765)[0m           'custom_cls': {'name': None, 'path': None},
+[36m(TaskRunner pid=2657765)[0m           'dataloader_num_workers': 0,
+[36m(TaskRunner pid=2657765)[0m           'filter_overlong_prompts': False,
+[36m(TaskRunner pid=2657765)[0m           'filter_overlong_prompts_workers': 1,
+[36m(TaskRunner pid=2657765)[0m           'image_key': 'images',
+[36m(TaskRunner pid=2657765)[0m           'max_prompt_length': 256,
+[36m(TaskRunner pid=2657765)[0m           'max_response_length': 128,
+[36m(TaskRunner pid=2657765)[0m           'prompt_key': 'prompt',
+[36m(TaskRunner pid=2657765)[0m           'return_full_prompt': False,
+[36m(TaskRunner pid=2657765)[0m           'return_raw_chat': False,
+[36m(TaskRunner pid=2657765)[0m           'return_raw_input_ids': False,
+[36m(TaskRunner pid=2657765)[0m           'reward_fn_key': 'data_source',
+[36m(TaskRunner pid=2657765)[0m           'seed': 1,
+[36m(TaskRunner pid=2657765)[0m           'shuffle': True,
+[36m(TaskRunner pid=2657765)[0m           'tokenizer': None,
+[36m(TaskRunner pid=2657765)[0m           'train_batch_size': 8,
+[36m(TaskRunner pid=2657765)[0m           'train_files': '/data/robotixx/curriculum-maxrl-runtime/data/countdown_v2_rebuilt/train.parquet',
+[36m(TaskRunner pid=2657765)[0m           'truncation': 'error',
+[36m(TaskRunner pid=2657765)[0m           'trust_remote_code': False,
+[36m(TaskRunner pid=2657765)[0m           'use_shm': False,
+[36m(TaskRunner pid=2657765)[0m           'val_batch_size': None,
+[36m(TaskRunner pid=2657765)[0m           'val_files': '/data/robotixx/curriculum-maxrl-runtime/data/countdown_v2_rebuilt/test.parquet',
+[36m(TaskRunner pid=2657765)[0m           'validation_shuffle': False,
+[36m(TaskRunner pid=2657765)[0m           'video_key': 'videos'},
+[36m(TaskRunner pid=2657765)[0m  'diagnostics': {'checkpoint_dir': None,
+[36m(TaskRunner pid=2657765)[0m                  'grad_norm_threshold_for_saving_checkpoint': None},
+[36m(TaskRunner pid=2657765)[0m  'ray_init': {'num_cpus': 32,
+[36m(TaskRunner pid=2657765)[0m               'num_gpus': 1,
+[36m(TaskRunner pid=2657765)[0m               'ray_dir': '/data/robotixx/cmrl-ray/hindsight_b2_smo',
+[36m(TaskRunner pid=2657765)[0m               'timeline_json_file': None},
+[36m(TaskRunner pid=2657765)[0m  'resume_training_parameters': {'dataloader_local_path': None,
+[36m(TaskRunner pid=2657765)[0m                                 'resume_global_steps': None,
+[36m(TaskRunner pid=2657765)[0m                                 'wandb_id_to_resume': None},
+[36m(TaskRunner pid=2657765)[0m  'reward_model': {'enable': False,
+[36m(TaskRunner pid=2657765)[0m                   'forward_max_token_len_per_gpu': 32768,
+[36m(TaskRunner pid=2657765)[0m                   'launch_reward_fn_async': False,
+[36m(TaskRunner pid=2657765)[0m                   'max_length': None,
+[36m(TaskRunner pid=2657765)[0m                   'micro_batch_size': None,
+[36m(TaskRunner pid=2657765)[0m                   'micro_batch_size_per_gpu': None,
+[36m(TaskRunner pid=2657765)[0m                   'model': {'external_lib': None,
+[36m(TaskRunner pid=2657765)[0m                             'fsdp_config': {'forward_prefetch': False,
+[36m(TaskRunner pid=2657765)[0m                                             'fsdp_size': -1,
+[36m(TaskRunner pid=2657765)[0m                                             'param_offload': False,
+[36m(TaskRunner pid=2657765)[0m                                             'reshard_after_forward': True,
+[36m(TaskRunner pid=2657765)[0m                                             'wrap_policy': {'min_num_params': 0}},
+[36m(TaskRunner pid=2657765)[0m                             'input_tokenizer': '/data/robotixx/curriculum-maxrl-runtime/models/countdown_sft_clean_v1',
+[36m(TaskRunner pid=2657765)[0m                             'path': '~/models/FsfairX-LLaMA3-RM-v0.1',
+[36m(TaskRunner pid=2657765)[0m                             'trust_remote_code': False,
+[36m(TaskRunner pid=2657765)[0m                             'use_fused_kernels': False,
+[36m(TaskRunner pid=2657765)[0m                             'use_remove_padding': False,
+[36m(TaskRunner pid=2657765)[0m                             'use_shm': False},
+[36m(TaskRunner pid=2657765)[0m                   'profiler': {'all_ranks': False,
+[36m(TaskRunner pid=2657765)[0m                                'discrete': False,
+[36m(TaskRunner pid=2657765)[0m                                'ranks': None},
+[36m(TaskRunner pid=2657765)[0m                   'reward_manager': 'dapo',
+[36m(TaskRunner pid=2657765)[0m                   'sandbox_fusion': {'max_concurrent': 64, 'url': None},
+[36m(TaskRunner pid=2657765)[0m                   'strategy': 'fsdp',
+[36m(TaskRunner pid=2657765)[0m                   'ulysses_sequence_parallel_size': 1,
+[36m(TaskRunner pid=2657765)[0m                   'use_dynamic_bsz': False},
+[36m(TaskRunner pid=2657765)[0m  'trainer': {'balance_batch': False,
+[36m(TaskRunner pid=2657765)[0m              'controller_nsight_options': {'cuda-graph-trace': 'graph',
+[36m(TaskRunner pid=2657765)[0m                                            'cuda-memory-usage': 'true',
+[36m(TaskRunner pid=2657765)[0m                                            'trace': 'cuda,nvtx,cublas,ucx'},
+[36m(TaskRunner pid=2657765)[0m              'critic_warmup': 0,
+[36m(TaskRunner pid=2657765)[0m              'default_hdfs_dir': None,
+[36m(TaskRunner pid=2657765)[0m              'default_local_dir': '/data/robotixx/curriculum-maxrl-runtime/checkpoints/hindsight_b2_smoke_260809',[36m(TaskRunner pid=2657765)[0m DeprecationWarning: `ray.state.available_resources_per_node` is a private attribute and access will be removed in a future Ray version.
+[36m(TaskRunner pid=2657765)[0m WARNING:2026-08-09 16:36:18,376:Waiting for register center actor nb9Qn4_register_center to be ready. Elapsed time: 0 seconds out of 300 seconds.
+[36m(WorkerDict pid=2661625)[0m `torch_dtype` is deprecated! Use `dtype` instead!
+[36m(WorkerDict pid=2661625)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in LlamaForCausalLM is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(WorkerDict pid=2661625)[0m Flash Attention 2 only supports torch.float16 and torch.bfloat16 dtypes, but the current dype in LlamaModel is torch.float32. You should run training or inference using Automatic Mixed-Precision via the `with torch.autocast(device_type='torch_device'):` decorator, or load the model with the `dtype` argument. Example: `model = AutoModel.from_pretrained("openai/whisper-tiny", attn_implementation="flash_attention_2", dtype=torch.float16)`
+[36m(TaskRunner pid=2657765)[0m Training Progress:   0%|          | 0/1 [00:00<?, ?it/s]
+[36m(WorkerDict pid=2661625)[0m `generation_config` default values have been modified to match model-specific defaults: {'pad_token_id': 2, 'bos_token_id': 1, 'eos_token_id': 2}. If this is not desired, please set these values explicitly.
+[36m(WorkerDict pid=2661625)[0m Casting fp32 inputs back to torch.bfloat16 for flash-attn compatibility.
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:   0%|          | 0/16 [00:00<?, ?round/s]Actor compute_log_prob: 128 batches, 16 rounds:   0%|          | 0/16 [00:00<?, ?round/s, round=1/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:   6%|▋         | 1/16 [00:01<00:23,  1.55s/round, round=1/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:   6%|▋         | 1/16 [00:01<00:23,  1.55s/round, round=2/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  12%|█▎        | 2/16 [00:01<00:09,  1.42round/s, round=2/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  12%|█▎        | 2/16 [00:01<00:09,  1.42round/s, round=3/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  19%|█▉        | 3/16 [00:01<00:05,  2.26round/s, round=3/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  19%|█▉        | 3/16 [00:01<00:05,  2.26round/s, round=4/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  25%|██▌       | 4/16 [00:02<00:04,  2.66round/s, round=4/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  25%|██▌       | 4/16 [00:02<00:04,  2.66round/s, round=5/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  31%|███▏      | 5/16 [00:02<00:03,  2.81round/s, round=5/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  31%|███▏      | 5/16 [00:02<00:03,  2.81round/s, round=6/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  38%|███▊      | 6/16 [00:02<00:03,  2.57round/s, round=6/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  38%|███▊      | 6/16 [00:02<00:03,  2.57round/s, round=7/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  44%|████▍     | 7/16 [00:03<00:03,  2.94round/s, round=7/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  44%|████▍     | 7/16 [00:03<00:03,  2.94round/s, round=8/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  50%|█████     | 8/16 [00:03<00:02,  3.75round/s, round=8/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  50%|█████     | 8/16 [00:03<00:02,  3.75round/s, round=9/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  56%|█████▋    | 9/16 [00:03<00:02,  3.41round/s, round=9/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  56%|█████▋    | 9/16 [00:03<00:02,  3.41round/s, round=10/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  62%|██████▎   | 10/16 [00:03<00:01,  3.41round/s, round=11/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  69%|██████▉   | 11/16 [00:03<00:00,  5.35round/s, round=11/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  69%|██████▉   | 11/16 [00:03<00:00,  5.35round/s, round=12/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  75%|███████▌  | 12/16 [00:03<00:00,  5.35round/s, round=13/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  81%|████████▏ | 13/16 [00:03<00:00,  6.67round/s, round=13/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  81%|████████▏ | 13/16 [00:03<00:00,  6.67round/s, round=14/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds:  88%|████████▊ | 14/16 [00:03<00:00,  6.67round/s, round=15/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds:  94%|█████████▍| 15/16 [00:03<00:00,  6.67round/s, round=16/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]Actor compute_log_prob: 128 batches, 16 rounds: 100%|██████████| 16/16 [00:04<00:00,  9.87round/s, round=16/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor compute_log_prob: 128 batches, 16 rounds: 100%|██████████| 16/16 [00:04<00:00,  4.00round/s, round=16/16, batches_per_gpu=128, micro_batch_size=8, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:   0%|          | 0/32 [00:00<?, ?round/s]Actor update_policy: 128 batches, 32 rounds:   0%|          | 0/32 [00:00<?, ?round/s, round=1/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:   3%|▎         | 1/32 [00:01<00:36,  1.17s/round, round=1/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:   3%|▎         | 1/32 [00:01<00:36,  1.17s/round, round=2/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:   6%|▋         | 2/32 [00:01<00:27,  1.08round/s, round=2/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:   6%|▋         | 2/32 [00:01<00:27,  1.08round/s, round=3/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:   9%|▉         | 3/32 [00:02<00:27,  1.04round/s, round=3/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:   9%|▉         | 3/32 [00:02<00:27,  1.04round/s, round=4/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  12%|█▎        | 4/32 [00:03<00:25,  1.10round/s, round=4/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  12%|█▎        | 4/32 [00:03<00:25,  1.10round/s, round=5/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  16%|█▌        | 5/32 [00:04<00:22,  1.23round/s, round=5/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  16%|█▌        | 5/32 [00:04<00:22,  1.23round/s, round=6/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  19%|█▉        | 6/32 [00:04<00:17,  1.48round/s, round=6/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  19%|█▉        | 6/32 [00:04<00:17,  1.48round/s, round=7/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  22%|██▏       | 7/32 [00:05<00:20,  1.25round/s, round=7/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  22%|██▏       | 7/32 [00:05<00:20,  1.25round/s, round=8/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  25%|██▌       | 8/32 [00:06<00:21,  1.14round/s, round=8/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  25%|██▌       | 8/32 [00:06<00:21,  1.14round/s, round=9/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  28%|██▊       | 9/32 [00:07<00:19,  1.19round/s, round=9/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  28%|██▊       | 9/32 [00:07<00:19,  1.19round/s, round=10/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  31%|███▏      | 10/32 [00:08<00:15,  1.46round/s, round=10/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  31%|███▏      | 10/32 [00:08<00:15,  1.46round/s, round=11/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  34%|███▍      | 11/32 [00:08<00:15,  1.33round/s, round=11/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  34%|███▍      | 11/32 [00:08<00:15,  1.33round/s, round=12/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  38%|███▊      | 12/32 [00:09<00:16,  1.20round/s, round=12/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  38%|███▊      | 12/32 [00:09<00:16,  1.20round/s, round=13/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  41%|████      | 13/32 [00:10<00:16,  1.18round/s, round=13/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  41%|████      | 13/32 [00:10<00:16,  1.18round/s, round=14/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  44%|████▍     | 14/32 [00:11<00:13,  1.36round/s, round=14/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  44%|████▍     | 14/32 [00:11<00:13,  1.36round/s, round=15/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  47%|████▋     | 15/32 [00:11<00:10,  1.61round/s, round=15/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  47%|████▋     | 15/32 [00:11<00:10,  1.61round/s, round=16/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  50%|█████     | 16/32 [00:12<00:10,  1.59round/s, round=16/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  50%|█████     | 16/32 [00:12<00:10,  1.59round/s, round=17/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  53%|█████▎    | 17/32 [00:12<00:09,  1.62round/s, round=17/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  53%|█████▎    | 17/32 [00:12<00:09,  1.62round/s, round=18/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  56%|█████▋    | 18/32 [00:13<00:09,  1.55round/s, round=18/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  56%|█████▋    | 18/32 [00:13<00:09,  1.55round/s, round=19/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  59%|█████▉    | 19/32 [00:13<00:06,  2.07round/s, round=19/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  59%|█████▉    | 19/32 [00:13<00:06,  2.07round/s, round=20/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  62%|██████▎   | 20/32 [00:14<00:06,  1.75round/s, round=20/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  62%|██████▎   | 20/32 [00:14<00:06,  1.75round/s, round=21/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  66%|██████▌   | 21/32 [00:15<00:07,  1.45round/s, round=21/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  66%|██████▌   | 21/32 [00:15<00:07,  1.45round/s, round=22/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  69%|██████▉   | 22/32 [00:15<00:06,  1.59round/s, round=22/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  69%|██████▉   | 22/32 [00:15<00:06,  1.59round/s, round=23/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  72%|███████▏  | 23/32 [00:16<00:05,  1.66round/s, round=23/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  72%|███████▏  | 23/32 [00:16<00:05,  1.66round/s, round=24/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  75%|███████▌  | 24/32 [00:16<00:04,  1.77round/s, round=24/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  75%|███████▌  | 24/32 [00:16<00:04,  1.77round/s, round=25/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  78%|███████▊  | 25/32 [00:17<00:03,  1.98round/s, round=25/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  78%|███████▊  | 25/32 [00:17<00:03,  1.98round/s, round=26/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  81%|████████▏ | 26/32 [00:17<00:02,  2.13round/s, round=26/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  81%|████████▏ | 26/32 [00:17<00:02,  2.13round/s, round=27/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  84%|████████▍ | 27/32 [00:18<00:02,  2.18round/s, round=27/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  84%|████████▍ | 27/32 [00:18<00:02,  2.18round/s, round=28/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  88%|████████▊ | 28/32 [00:18<00:01,  2.30round/s, round=28/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  88%|████████▊ | 28/32 [00:18<00:01,  2.30round/s, round=29/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  91%|█████████ | 29/32 [00:18<00:01,  2.40round/s, round=29/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  91%|█████████ | 29/32 [00:18<00:01,  2.40round/s, round=30/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  94%|█████████▍| 30/32 [00:19<00:00,  2.40round/s, round=30/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  94%|█████████▍| 30/32 [00:19<00:00,  2.40round/s, round=31/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds:  97%|█████████▋| 31/32 [00:19<00:00,  2.96round/s, round=31/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds:  97%|█████████▋| 31/32 [00:19<00:00,  2.96round/s, round=32/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+[36m(WorkerDict pid=2661625)[0m Actor update_policy: 128 batches, 32 rounds: 100%|██████████| 32/32 [00:20<00:00,  2.31round/s, round=32/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]Actor update_policy: 128 batches, 32 rounds: 100%|██████████| 32/32 [00:20<00:00,  1.59round/s, round=32/32, batches_per_gpu=128, micro_batch_size=4, world_size=None]
+
+[36m(TaskRunner pid=2657765)[0m              'del_local_ckpt_after_load': False,
+[36m(TaskRunner pid=2657765)[0m              'device': 'cuda',
+[36m(TaskRunner pid=2657765)[0m              'eval_on_last_step': True,
+[36m(TaskRunner pid=2657765)[0m              'experiment_name': 'hindsight_b2_smoke_260809',
+[36m(TaskRunner pid=2657765)[0m              'log_val_generations': 0,
+[36m(TaskRunner pid=2657765)[0m              'logger': ['console'],
+[36m(TaskRunner pid=2657765)[0m              'max_actor_ckpt_to_keep': None,
+[36m(TaskRunner pid=2657765)[0m              'max_critic_ckpt_to_keep': None,
+[36m(TaskRunner pid=2657765)[0m              'n_gpus_per_node': 1,
+[36m(TaskRunner pid=2657765)[0m              'nnodes': 1,
+[36m(TaskRunner pid=2657765)[0m              'profile_steps': None,
+[36m(TaskRunner pid=2657765)[0m              'project_name': 'CurriculumMaxRL_Countdown_RTX5090',
+[36m(TaskRunner pid=2657765)[0m              'ray_wait_register_center_timeout': 300,
+[36m(TaskRunner pid=2657765)[0m              'resume_from_path': None,
+[36m(TaskRunner pid=2657765)[0m              'resume_mode': 'auto',
+[36m(TaskRunner pid=2657765)[0m              'rollout_data_dir': None,
+[36m(TaskRunner pid=2657765)[0m              'save_freq': -1,
+[36m(TaskRunner pid=2657765)[0m              'test_freq': -1,
+[36m(TaskRunner pid=2657765)[0m              'total_epochs': 200,
+[36m(TaskRunner pid=2657765)[0m              'total_training_steps': 1,
+[36m(TaskRunner pid=2657765)[0m              'val_before_train': False,
+[36m(TaskRunner pid=2657765)[0m              'val_on_last_step': True,
+[36m(TaskRunner pid=2657765)[0m              'val_only': False,
+[36m(TaskRunner pid=2657765)[0m              'validation_data_dir': None,
+[36m(TaskRunner pid=2657765)[0m              'worker_nsight_options': {'capture-range': 'cudaProfilerApi',
+[36m(TaskRunner pid=2657765)[0m                                        'capture-range-end': None,
+[36m(TaskRunner pid=2657765)[0m                                        'cuda-graph-trace': 'graph',
+[36m(TaskRunner pid=2657765)[0m                                        'cuda-memory-usage': 'true',
+[36m(TaskRunner pid=2657765)[0m                                        'kill': 'none',
+[36m(TaskRunner pid=2657765)[0m                                        'trace': 'cuda,nvtx,cublas,ucx'}}}
+[36m(TaskRunner pid=2657765)[0m using customized reward function 'compute_score' from '/home/robotixx/curriculum-maxrl/curriculum_maxrl/countdown/countdown_reward.py'
+[36m(TaskRunner pid=2657765)[0m using customized reward function 'compute_score' from '/home/robotixx/curriculum-maxrl/curriculum_maxrl/countdown/countdown_reward.py'
+[36m(TaskRunner pid=2657765)[0m Using dataset class: RLHFDataset
+[36m(TaskRunner pid=2657765)[0m Using dataset class: RLHFDataset
+[36m(TaskRunner pid=2657765)[0m [validate_config] All configuration checks passed successfully!
+[36m(TaskRunner pid=2657765)[0m Size of train dataloader: 1250, Size of val dataloader: 1
+[36m(TaskRunner pid=2657765)[0m Total training steps: 1
+[36m(TaskRunner pid=2657765)[0m colocated worker base class <class 'verl.single_controller.base.worker.Worker'>
+[36m(WorkerDict pid=2661625)[0m Model config after override: LlamaConfig {
+[36m(WorkerDict pid=2661625)[0m   "architectures": [
+[36m(WorkerDict pid=2661625)[0m     "LlamaForCausalLM"
+[36m(WorkerDict pid=2661625)[0m   ],
+[36m(WorkerDict pid=2661625)[0m   "attention_bias": false,
+[36m(WorkerDict pid=2661625)[0m   "attention_dropout": 0.0,
+[36m(WorkerDict pid=2661625)[0m   "bos_token_id": 1,
+[36m(WorkerDict pid=2661625)[0m   "dtype": "bfloat16",
+[36m(WorkerDict pid=2661625)[0m   "eos_token_id": 2,
+[36m(WorkerDict pid=2661625)[0m   "head_dim": 64,
+[36m(WorkerDict pid=2661625)[0m   "hidden_act": "silu",
+[36m(WorkerDict pid=2661625)[0m   "hidden_size": 960,
+[36m(WorkerDict pid=2661625)[0m   "initializer_range": 0.02,
+[36m(WorkerDict pid=2661625)[0m   "intermediate_size": 2560,
+[36m(WorkerDict pid=2661625)[0m   "is_llama_config": true,
+[36m(WorkerDict pid=2661625)[0m   "max_position_embeddings": 8192,
+[36m(WorkerDict pid=2661625)[0m   "mlp_bias": false,
+[36m(WorkerDict pid=2661625)[0m   "model_type": "llama",
+[36m(WorkerDict pid=2661625)[0m   "num_attention_heads": 15,
+[36m(WorkerDict pid=2661625)[0m   "num_hidden_layers": 32,
+[36m(WorkerDict pid=2661625)[0m   "num_key_value_heads": 5,
+[36m(WorkerDict pid=2661625)[0m   "pad_token_id": 2,
+[36m(WorkerDict pid=2661625)[0m   "pretraining_tp": 1,
+[36m(WorkerDict pid=2661625)[0m   "rms_norm_eps": 1e-05,
+[36m(WorkerDict pid=2661625)[0m   "rope_interleaved": false,
+[36m(WorkerDict pid=2661625)[0m   "rope_scaling": null,
+[36m(WorkerDict pid=2661625)[0m   "rope_theta": 100000,
+[36m(WorkerDict pid=2661625)[0m   "tie_word_embeddings": true,
+[36m(WorkerDict pid=2661625)[0m   "transformers.js_config": {
+[36m(WorkerDict pid=2661625)[0m     "kv_cache_dtype": {
+[36m(WorkerDict pid=2661625)[0m       "fp16": "float16",
+[36m(WorkerDict pid=2661625)[0m       "q4f16": "float16"
+[36m(WorkerDict pid=2661625)[0m     }
+[36m(WorkerDict pid=2661625)[0m   },
+[36m(WorkerDict pid=2661625)[0m   "transformers_version": "4.56.2",
+[36m(WorkerDict pid=2661625)[0m   "use_cache": false,
+[36m(WorkerDict pid=2661625)[0m   "vocab_size": 49152
+[36m(WorkerDict pid=2661625)[0m }
+[36m(WorkerDict pid=2661625)[0m 
+[36m(WorkerDict pid=2661625)[0m Monkey patch state_dict in AutoModelForCausalLMWithValueHead. 
+[36m(WorkerDict pid=2661625)[0m Skipping monkey patch for LlamaForCausalLM as use_fused_kernels is False or fused_kernels_backend is torch
+[36m(WorkerDict pid=2661625)[0m LlamaForCausalLM contains 361.82M parameters
+[36m(WorkerDict pid=2661625)[0m wrap_policy: None
+[36m(TaskRunner pid=2657765)[0m Checkpoint tracker file does not exist: /data/robotixx/curriculum-maxrl-runtime/checkpoints/hindsight_b2_smoke_260809/latest_checkpointed_iteration.txt
+[36m(TaskRunner pid=2657765)[0m Training from scratch
+[36m(TaskRunner pid=2657765)[0m Using LocalLogger is deprecated. The constructor API will change 
+[36m(TaskRunner pid=2657765)[0m Wandb new run initialized since we are training from scratch.
+[36m(TaskRunner pid=2657765)[0m Wandb ID:  None
+[36m(WorkerDict pid=2661625)[0m Total steps: 1, num_warmup_steps: 0
+[36m(WorkerDict pid=2661625)[0m Actor use_remove_padding=False
+[36m(WorkerDict pid=2661625)[0m Actor use_fused_kernels=False
+[36m(TaskRunner pid=2657765)[0m Training Progress: 100%|██████████| 1/1 [00:39<00:00, 39.45s/it]Training Progress: 100%|██████████| 1/1 [00:39<00:00, 39.45s/it]
+[36m(TaskRunner pid=2657765)[0m step:1 - hindsight/dead_groups:3.000 - hindsight/relabeled_groups:3.000 - hindsight/relabeled_rollouts:11.000 - hindsight/skipped_rewrite:0.000 - hindsight/aux_group_response_tokens:1783.000 - hindsight/optimizer_rows_total:128.000 - hindsight/optimizer_response_tokens_total:4544.000 - hindsight/relabel_yield:0.229 - hindsight/pre_success_rollouts:13.000 - hindsight/post_success_rollouts:24.000 - actor/entropy:0.158 - actor/entropy_coeff:0.000 - actor/pg_loss:0.005 - actor/pg_clipfrac:0.000 - actor/ppo_kl:-0.001 - actor/pg_clipfrac_lower:0.000 - actor/grad_norm:1.282 - perf/mfu/actor:0.000 - perf/max_memory_allocated_gb:6.755 - perf/max_memory_reserved_gb:6.877 - perf/cpu_memory_used_gb:50.131 - actor/lr:0.000 - timing_distributed_ms/data_to_cpu:0.099 - timing_distributed_ms/load_model_to_gpu:0.001 - timing_distributed_ms/load_optimizer_to_gpu:0.002 - timing_distributed_ms/sharding_preprocess:0.001 - timing_distributed_ms/forward:9735.753 - timing_distributed_ms/backward:10343.554 - timing_distributed_ms/optimizer_step:833.920 - timing_distributed_ms/sharding_postprocess:0.003 - timing_distributed_ms/output_to_cpu:0.003 - timing_distributed_ms/offload_model_to_cpu:0.001 - timing_distributed_ms/offload_optimizer_to_cpu:0.001 - timing_distributed_ms/rpc_coordination:104.937 - training/global_step:1.000 - training/epoch:0.000 - critic/score/mean:0.188 - critic/score/max:1.000 - critic/score/min:0.000 - critic/rewards/mean:0.188 - critic/rewards/max:1.000 - critic/rewards/min:0.000 - critic/advantages/mean:-0.006 - critic/advantages/max:15.000 - critic/advantages/min:-1.000 - critic/returns/mean:-0.006 - critic/returns/max:15.000 - critic/returns/min:-1.000 - response_length/mean:35.500 - response_length/max:44.000 - response_length/min:30.000 - response_length/clip_ratio:0.000 - prompt_length/mean:119.945 - prompt_length/max:124.000 - prompt_length/min:115.000 - prompt_length/clip_ratio:0.000 - timing_s/generate_sequences:14.143 - timing_s/gen:14.246 - timing_s/reward:0.068 - timing_s/old_log_prob:4.099 - timing_s/adv:0.002 - timing_s/update_actor:21.018 - timing_s/step:39.434 - timing_per_token_ms/update_actor:1.056 - timing_per_token_ms/gen:3.135 - timing_per_token_ms/adv:0.000 - perf/total_num_tokens:19888.000 - perf/time_per_step:39.434 - perf/throughput:504.335
+[36m(TaskRunner pid=2657765)[0m 'Final validation metrics: None'

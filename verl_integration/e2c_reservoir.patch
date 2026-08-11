@@ -1,0 +1,55 @@
+diff --git a/verl/trainer/ppo/ray_trainer.py b/verl/trainer/ppo/ray_trainer.py
+--- a/verl/trainer/ppo/ray_trainer.py
++++ b/verl/trainer/ppo/ray_trainer.py
+@@ -412,6 +412,7 @@ class RayPPOTrainer:
+         self.hindsight_audit_path = None
+         self.live_replay = None
+         self.live_replay_audit_path = None
++        self.replay_reservoir_collector = None
+         hindsight_cfg = config.algorithm.get("hindsight", None)
+         if hindsight_cfg is not None and hindsight_cfg.get("enable", False):
+             if config.reward_model.launch_reward_fn_async:
+@@ -454,6 +455,8 @@ class RayPPOTrainer:
+                     "buffer_capacity_groups", 0),
+                 max_buffer_age_steps=replay_cfg.get(
+                     "max_buffer_age_steps", 8),
++                reservoir_path=replay_cfg.get("reservoir_path", None),
++                reservoir_sha256=replay_cfg.get("reservoir_sha256", None),
+             )
+             self.live_replay_audit_path = replay_cfg.get("audit_path", None)
+             if self.live_replay_audit_path:
+@@ -461,6 +464,22 @@ class RayPPOTrainer:
+                 audit_dir = os.path.dirname(self.live_replay_audit_path)
+                 if audit_dir:
+                     os.makedirs(audit_dir, exist_ok=True)
++        collector_cfg = config.algorithm.get("replay_reservoir", None)
++        if collector_cfg is not None and collector_cfg.get("enable", False):
++            if self.hindsight is not None or self.live_replay is not None:
++                raise ValueError(
++                    "reservoir collection, hindsight, and replay are mutually exclusive")
++            if config.reward_model.launch_reward_fn_async:
++                raise ValueError(
++                    "reservoir collection requires synchronous reward computation")
++            from verl.utils.hindsight import ReplayReservoirCollector
++
++            self.replay_reservoir_collector = ReplayReservoirCollector(
++                output_path=collector_cfg.output_path,
++                seed=collector_cfg.get("seed", 424242),
++                max_groups=collector_cfg.get("max_groups", 256),
++                expected_group_size=collector_cfg.get("expected_group_size", 16),
++            )
+ 
+         self.hybrid_engine = config.actor_rollout_ref.hybrid_engine
+         assert self.hybrid_engine, "Currently, only support hybrid engine"
+@@ -1802,6 +1821,11 @@ class RayPPOTrainer:
+                                 }
+                                 with open(self.live_replay_audit_path, "a", encoding="utf-8") as audit_file:
+                                     audit_file.write(json.dumps(audit_record, sort_keys=True) + "\n")
++                        elif self.replay_reservoir_collector is not None:
++                            reservoir_stats = (
++                                self.replay_reservoir_collector.collect_batch(
++                                    batch, reward_tensor, self.global_steps))
++                            metrics.update(reservoir_stats)
+ 
+                     # recompute old_log_probs
+                     with marked_timer("old_log_prob", timing_raw, color="blue"):

@@ -1,0 +1,14 @@
+diff --git a/verl/trainer/main_ppo.py b/verl/trainer/main_ppo.py
+--- a/verl/trainer/main_ppo.py
++++ b/verl/trainer/main_ppo.py
+@@ -50,6 +50,10 @@ def run_ppo(config) -> None:
+             "num_cpus": config.ray_init.num_cpus,
+             # "local_mode": True,
+         }
++        # Mixed accelerator environments can make Ray advertise only TPU even
++        # while CUDA is usable. Permit a configured local GPU resource count.
++        if config.ray_init.get("num_gpus", None) is not None:
++            ray_init_kwargs["num_gpus"] = config.ray_init.num_gpus
+ 
+         if config.trainer.nnodes > 1:
+             ray_init_kwargs["address"] = os.environ.get("ip_head", None)

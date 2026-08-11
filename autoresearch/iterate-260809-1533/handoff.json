@@ -1,0 +1,59 @@
+{
+  "objective": "Execute the handoff's highest-value Countdown study: a genuinely dose-matched live-group replay control for MaxRL hindsight relabeling.",
+  "status": "e2b_treatment_delivery_inconclusive_ready_for_e2c_design",
+  "iteration": "iterate-260809-1533",
+  "research_conclusion": "The runtime, frozen model, leakage-free data, exact dose accounting, fixed-slot replay, checkpoints, and held-out evaluator are operational. Prospective current-batch E2 stopped before seed-1 step 12 because no live source existed. Separately preregistered recent-buffer E2b passed seed 1 but stopped before seed-2 step 1 because the best available replay sources missed the frozen 5% auxiliary-token gate (5.9716%). Both three-seed direction tests are treatment-delivery inconclusive; neither supports an endpoint claim.",
+  "runtime": {
+    "root": "/data/robotixx/curriculum-maxrl-runtime",
+    "maxrl_commit": "7197bbb46a2ecd866da52f6b401ff20a34fe9390",
+    "python": "/data/robotixx/curriculum-maxrl-runtime/venv/bin/python",
+    "base_model_revision": "a10cc1512eabd3dde888204e902eca88bddb4951",
+    "sft_checkpoint": "/data/robotixx/curriculum-maxrl-runtime/models/countdown_sft_clean_v1",
+    "dataset": "/data/robotixx/curriculum-maxrl-runtime/data/countdown_v2_rebuilt",
+    "test_sha256": "95b1456fc3f49bc6f463614fef92900d748a07e4b429fd9383bbcf5edcb4e489"
+  },
+  "experiments": {
+    "e2_current_batch": {
+      "status": "inconclusive_treatment_delivery",
+      "failure": "seed 1 stopped before step 12: no informative current-batch source while B2 requested replay",
+      "valid_replay_steps": 11,
+      "protocol": "autoresearch/iterate-260809-1533/E2_PREREG.md",
+      "failure_record": "autoresearch/iterate-260809-1533/E2_FIXED_SLOT_FAILURE.md"
+    },
+    "e2b_recent_buffer": {
+      "status": "inconclusive_treatment_delivery",
+      "seed_1": "all arms completed; replay delivery valid; endpoints descriptive only",
+      "seed_2": "B1/B2 completed; replay stopped before optimizer step 1 at 5.9716% auxiliary-token mismatch",
+      "seed_3": "not launched after the frozen inconclusive condition",
+      "protocol": "autoresearch/iterate-260809-1533/E2B_PREREG.md",
+      "failure_record": "autoresearch/iterate-260809-1533/E2B_TREATMENT_DELIVERY_FAILURE.md"
+    }
+  },
+  "seed_1_descriptive_tier_1": {
+    "b1": {"mean_at_16": 0.19873046875, "pass_at_16": 0.6171875},
+    "b2": {"mean_at_16": 0.12646484375, "pass_at_16": 0.234375},
+    "rb": {"mean_at_16": 0.08642578125, "pass_at_16": 0.09375}
+  },
+  "evidence": {
+    "results": "autoresearch/iterate-260809-1533/RESULTS.md",
+    "e2b_seed_2_driver": "autoresearch/iterate-260809-1533/e2b_seed23_driver.log",
+    "e2b_seed_2_failure_log": "autoresearch/iterate-260809-1533/e2_logs/e2b_buffer_replay_s2_260809.log",
+    "e2b_seed_2_diagnostic_log": "autoresearch/iterate-260809-1533/e2b_s2_step1_token_diagnostic.log",
+    "e2b_seed_2_diagnostic_audit": "/data/robotixx/curriculum-maxrl-runtime/checkpoints/e2b_s2_step1_token_diagnostic_260809/replay_accounting.jsonl",
+    "seed_1_replay_audit": "/data/robotixx/curriculum-maxrl-runtime/checkpoints/e2b_buffer_replay_s1_260809/replay_accounting.jsonl",
+    "raw_probe": "/data/robotixx/curriculum-maxrl-runtime/results/raw_model_pass16.json",
+    "sft_probe": "/data/robotixx/curriculum-maxrl-runtime/results/sft_model_pass16.json"
+  },
+  "next_actions": [
+    "Design and separately preregister E2c with an immutable train-only replay source reservoir generated from the frozen SFT checkpoint, including its generation budget and source-age semantics.",
+    "Before endpoint evaluation, statically verify that the frozen reservoir and all B2 schedules can meet the exact slot/group rules plus both 5% cumulative token gates for every seed.",
+    "Order execution as all training and delivery validation first, then evaluate fixed step-60 checkpoints only if every seed passes; this prevents partial endpoint disclosure before a later delivery failure."
+  ],
+  "guardrails": [
+    "Do not describe the old ppo_epochs=2 replay as dose matched.",
+    "Do not treat E2 or E2b as an endpoint comparison; both hit their preregistered inconclusive branches.",
+    "Do not aggregate or interpret seed-1 descriptive endpoints as a three-seed direction test.",
+    "Do not retry seed 2, loosen E2b's 5% gate, seed its buffer post hoc, or continue seed 3 under the E2b label.",
+    "Do not mix historical checkpoints or datasets with the rebuilt runtime artifacts."
+  ]
+}

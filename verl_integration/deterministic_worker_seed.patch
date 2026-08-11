@@ -1,0 +1,31 @@
+diff --git a/verl/workers/fsdp_workers.py b/verl/workers/fsdp_workers.py
+--- a/verl/workers/fsdp_workers.py
++++ b/verl/workers/fsdp_workers.py
+@@ -18,9 +18,11 @@ import json
+ import logging
+ import os
++import random
+ import warnings
+ from dataclasses import asdict
+ from typing import Union
+ 
++import numpy as np
+ import psutil
+ import torch
+ import torch.distributed
+@@ -532,6 +534,15 @@ class ActorRolloutRefWorker(Worker, WorkerProfilerExtension):
+     def init_model(self):
+         from verl.workers.actor import DataParallelPPOActor
+ 
++        # Keep HF rollout sampling and optimizer-side randomness paired across
++        # treatment arms.  The upstream worker otherwise inherits a fresh Ray
++        # process RNG, so a nominal data seed does not reproduce generations.
++        worker_seed = int(self.config.get("seed", 1)) + int(self.rank)
++        random.seed(worker_seed)
++        np.random.seed(worker_seed)
++        torch.manual_seed(worker_seed)
++        torch.cuda.manual_seed_all(worker_seed)
++
+         # This is used to import external_lib into the huggingface systems
+         import_external_libs(self.config.model.get("external_lib", None))
+ 

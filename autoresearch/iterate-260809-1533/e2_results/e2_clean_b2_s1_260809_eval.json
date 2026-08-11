@@ -1,0 +1,45 @@
+{
+  "data": "/data/robotixx/curriculum-maxrl-runtime/data/countdown_v2_rebuilt/test.parquet",
+  "data_sha256": "95b1456fc3f49bc6f463614fef92900d748a07e4b429fd9383bbcf5edcb4e489",
+  "elapsed_seconds": 38.48701357841492,
+  "k": 16,
+  "max_new_tokens": 128,
+  "model": "/data/robotixx/curriculum-maxrl-runtime/checkpoints/e2_clean_b2_s1_260809/global_step_60/actor/huggingface",
+  "peak_gpu_mb": 1687.00537109375,
+  "raw_outcomes": "/home/robotixx/curriculum-maxrl/autoresearch/iterate-260809-1533/e2_results/e2_clean_b2_s1_260809_eval.jsonl",
+  "seed": 10001,
+  "temperature": 1.0,
+  "tiers": {
+    "countdown_tier0": {
+      "failures": 941,
+      "mean@16": 0.54052734375,
+      "mean_new_tokens": 29.8076171875,
+      "pass@16": 0.640625,
+      "relabel_yield_on_failure": 0.895855472901169,
+      "relabelable_failures": 843,
+      "samples": 2048,
+      "tasks": 128
+    },
+    "countdown_tier1": {
+      "failures": 1789,
+      "mean@16": 0.12646484375,
+      "mean_new_tokens": 33.58544921875,
+      "pass@16": 0.234375,
+      "relabel_yield_on_failure": 0.7629960871995528,
+      "relabelable_failures": 1365,
+      "samples": 2048,
+      "tasks": 128
+    },
+    "countdown_tier2": {
+      "failures": 2001,
+      "mean@16": 0.02294921875,
+      "mean_new_tokens": 37.37646484375,
+      "pass@16": 0.0546875,
+      "relabel_yield_on_failure": 0.8920539730134932,
+      "relabelable_failures": 1785,
+      "samples": 2048,
+      "tasks": 128
+    }
+  },
+  "top_p": 1.0
+}

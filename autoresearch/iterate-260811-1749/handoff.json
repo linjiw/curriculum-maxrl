@@ -1,0 +1,33 @@
+{
+  "objective": "Build and verify the first outcome-blind ICRA 2027 navigation campaign slice without consuming the shared RTX 5090.",
+  "status": "complete_local_scaffold_external_barn_backend_pending",
+  "iteration": "iterate-260811-1749",
+  "report": "ICRA2027_PROGRESS_REPORT_2026-08-11.md",
+  "domain_decision": "BARN-style mobile navigation with Jackal validation; Isaac Lab fallback",
+  "completed": [
+    "four primary teacher arms",
+    "exact greedy rollout water-filling",
+    "state-isolated fixed held-out evaluation",
+    "difficulty-stratified pool split generator",
+    "paired wall-clock and simulator-step analysis",
+    "outcome-blind preregistration draft",
+    "one-seed four-arm CPU smoke artifact"
+  ],
+  "tests": {
+    "new_campaign": "5/5 passed",
+    "existing_relevant": "21/21 passed",
+    "randomized_allocation_invariants": "100/100 passed"
+  },
+  "analysis_sha256": "4017958334fad6db74d594d2442ba18bffadd72adfd0412502875b5f467efdf3",
+  "smoke_artifact_sha256": "82bdf11f01d30fc5363c6ff42d955efcb91433709a3cc2f4f4bfb2e209367650",
+  "smoke_analysis_sha256": "1b9a5500843bb2747e5cb66818dcd023101de35f2f8c92141d283d4b599c87fb",
+  "next_required_input": "BARN course manifest/assets plus lab simulator rollout and success-verifier entry point",
+  "e2c": {
+    "integrity_status": "pass",
+    "launch_authorized_now": false,
+    "gpu_memory_used_mib": 10263,
+    "gpu_ceiling_mib": 4096,
+    "next_stage": "train_e2_clean_b1_s3_260809"
+  }
+}
+

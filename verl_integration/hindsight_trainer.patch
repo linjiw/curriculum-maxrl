@@ -1,0 +1,82 @@
+diff --git a/verl/trainer/ppo/ray_trainer.py b/verl/trainer/ppo/ray_trainer.py
+--- a/verl/trainer/ppo/ray_trainer.py
++++ b/verl/trainer/ppo/ray_trainer.py
+@@ -407,6 +407,30 @@ class RayPPOTrainer:
+         self.config = config
+         self.reward_fn = reward_fn
+         self.val_reward_fn = val_reward_fn
++        self.hindsight = None
++        self.hindsight_audit_path = None
++        hindsight_cfg = config.algorithm.get("hindsight", None)
++        if hindsight_cfg is not None and hindsight_cfg.get("enable", False):
++            if config.reward_model.launch_reward_fn_async:
++                raise ValueError("hindsight relabeling requires synchronous reward computation")
++            from verl.utils.hindsight import CountdownHindsight
++
++            self.hindsight = CountdownHindsight(
++                tokenizer=tokenizer,
++                max_prompt_length=config.data.max_prompt_length,
++                max_response_length=config.data.max_response_length,
++                scale=hindsight_cfg.get("scale", 1.0),
++                max_groups_per_step=hindsight_cfg.get("max_groups_per_step", 8),
++                utility_gate=hindsight_cfg.get("utility_gate", False),
++                gate_max_p=hindsight_cfg.get("gate_max_p", 0.5),
++                gate_decay=hindsight_cfg.get("gate_decay", 0.9),
++                one_target_per_group=hindsight_cfg.get("one_target_per_group", False),
++            )
++            self.hindsight_audit_path = hindsight_cfg.get("audit_path", None)
++            if self.hindsight_audit_path:
++                audit_dir = os.path.dirname(self.hindsight_audit_path)
++                if audit_dir:
++                    os.makedirs(audit_dir, exist_ok=True)
+ 
+         self.hybrid_engine = config.actor_rollout_ref.hybrid_engine
+         assert self.hybrid_engine, "Currently, only support hybrid engine"
+@@ -1713,6 +1737,34 @@ class RayPPOTrainer:
+                         else:
+                             reward_tensor, reward_extra_infos_dict = compute_reward(batch, self.reward_fn)
+ 
++                        # Hindsight is an auxiliary weighted-SFT update: mutate
++                        # dead groups only after their original outcomes have
++                        # been scored, but before old log-probabilities are
++                        # recomputed under the rewritten conditioning.
++                        teacher_reward_tensor = None
++                        if self.hindsight is not None:
++                            teacher_reward_tensor = reward_tensor.clone()
++                            pre_scores = teacher_reward_tensor.sum(dim=-1)
++                            hindsight_stats = self.hindsight.relabel_batch(batch, reward_tensor)
++                            accepted_group_token_counts = hindsight_stats.pop(
++                                "_accepted_group_token_counts", []
++                            )
++                            metrics.update(hindsight_stats)
++                            metrics["hindsight/pre_success_rollouts"] = int((pre_scores > 0).sum().item())
++                            metrics["hindsight/post_success_rollouts"] = int(
++                                (reward_tensor.sum(dim=-1) > 0).sum().item()
++                            )
++                            if self.hindsight_audit_path:
++                                audit_record = {
++                                    "global_step": self.global_steps,
++                                    "accepted_group_token_counts": accepted_group_token_counts,
++                                    **hindsight_stats,
++                                    "hindsight/pre_success_rollouts": metrics["hindsight/pre_success_rollouts"],
++                                    "hindsight/post_success_rollouts": metrics["hindsight/post_success_rollouts"],
++                                }
++                                with open(self.hindsight_audit_path, "a", encoding="utf-8") as audit_file:
++                                    audit_file.write(json.dumps(audit_record, sort_keys=True) + "\n")
++
+                     # recompute old_log_probs
+                     with marked_timer("old_log_prob", timing_raw, color="blue"):
+                         old_log_prob = self.actor_rollout_wg.compute_log_prob(batch)
+@@ -1772,10 +1824,11 @@ class RayPPOTrainer:
+ 
+                         # feed per-prompt outcomes back to the curriculum teacher
+                         if getattr(self, "curriculum_teacher", None) is not None and "index" in batch.non_tensor_batch:
++                            observed_reward_tensor = teacher_reward_tensor if teacher_reward_tensor is not None else reward_tensor
+                             self.curriculum_teacher.observe_batch(
+                                 dataset_indices=batch.non_tensor_batch["index"],
+                                 uids=batch.non_tensor_batch["uid"],
+-                                scores=reward_tensor.sum(dim=-1).cpu().numpy(),
++                                scores=observed_reward_tensor.sum(dim=-1).cpu().numpy(),
+                             )
+                             metrics.update(self.curriculum_teacher.metrics())
+ 

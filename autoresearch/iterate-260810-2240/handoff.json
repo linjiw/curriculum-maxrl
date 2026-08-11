@@ -1,0 +1,61 @@
+{
+  "objective": "Close the Countdown LLM-scale direction-accounting gap with a prospectively frozen, delivery-valid E2c comparison while completing mandatory submission repairs.",
+  "status": "blocked_external_gpu_e2c_frozen_and_cpu_complete",
+  "iteration": "iterate-260810-2240",
+  "project_thesis": "The estimator conditions where curricula and recycling emit and preserve update mass; the historical Countdown aggregate is mean-up/bootstrap-proxy-down, and E2c prospectively tests standard raw-outcome pass@16.",
+  "repository_state": {
+    "checked_out": "main@81d4bd4 plus the documented dirty E2c/evidence worktree",
+    "later_remote_release": "origin/codex/curriculum-maxrl-research@9277141",
+    "integration_rule": "Do not blindly merge the large release branch into the E2c worktree; reconcile intentionally after preserving both scopes."
+  },
+  "completed": {
+    "goal_and_preregistration": "autoresearch/iterate-260810-2240/GOAL.md and E2C_PREREG.md",
+    "factorial_block_reanalysis": "curriculum_maxrl/maze_gpu_factorial/block_reanalysis.json",
+    "factorial_plot": "paper/figures/fig11_factorial_blocks.pdf",
+    "e2c_driver": "verl_integration/run_e2c_rtx5090.sh",
+    "e2c_raw_endpoint_gate": "curriculum_maxrl/countdown/analyze_e2c_endpoints.py",
+    "e2c_endpoint_provenance": "post-load paired RNG reset plus evaluator/verifier/model fingerprints anchored to the outcome-blind post-delivery readiness receipt",
+    "e2c_frozen_protocol": "curriculum_maxrl/countdown/e2c_protocol.py",
+    "e2c_code_manifest": "autoresearch/iterate-260810-2240/E2C_CODE_MANIFEST.json; 31 files plus exact environment, SHA-256 0e46b89fcc01300b52bc6fc4e0c8a0ee5f2aa72d357b233e85c357972e8d3828; driver SHA-256 729447c426944f060b88cae272d537fe78a89e61bc0db3c1b6467daebc2cd4b9",
+    "e2c_launch_readiness": "autoresearch/iterate-260810-2240/E2C_LAUNCH_READINESS.json; integrity pass, next stage B1 seed 3, GPU gate fail",
+    "e2c_comparator_reuse": "autoresearch/iterate-260810-2240/E2C_COMPARATOR_REUSE.md; B1/B2 seeds 1-2 pass 59/59 config checks with exact step/scheduler and model/log/schedule fingerprints",
+    "historical_artifact_audit": "autoresearch/iterate-260810-2240/E3_E4_AUDIT.md",
+    "branch_reconciliation": "autoresearch/iterate-260810-2240/BRANCH_RECONCILIATION.md",
+    "sft_overlap_audit": "curriculum_maxrl/audit_countdown_sft_overlap.py and data_integrity_check.json",
+    "structured_seed1_curve": "paper/figures/data/fig9_bestk_proxy.json",
+    "tests": "17 Countdown protocol tests and the 25-test full curriculum suite passed after executable-lock, delivery-recomputation, interpretation, and endpoint-pairing hardening",
+    "artifact_check": "bash reproduce.sh passed"
+  },
+  "e2c_runtime": {
+    "root": "/data/robotixx/curriculum-maxrl-runtime",
+    "maxrl_commit": "7197bbb46a2ecd866da52f6b401ff20a34fe9390",
+    "sft_checkpoint": "/data/robotixx/curriculum-maxrl-runtime/models/countdown_sft_clean_v1",
+    "dataset": "/data/robotixx/curriculum-maxrl-runtime/data/countdown_v2_rebuilt",
+    "complete_comparators": ["b1_seed1", "b2_seed1", "b1_seed2", "b2_seed2"],
+    "missing_before_preflight": ["b1_seed3", "b2_seed3", "frozen_reservoir"],
+    "latest_readiness": "2026-08-11T00:20:49-04:00; integrity pass; 0 held-out artifacts; 14743 MiB used > 4096 MiB ceiling",
+    "external_gpu_occupants": [
+      "Cosmos critic daemon: 7350 MiB",
+      "OpenPI evaluation: 4545 MiB"
+    ]
+  },
+  "readiness_command": "bash verl_integration/run_e2c_rtx5090.sh --readiness-only",
+  "next_command_when_gpu_is_free": "bash verl_integration/run_e2c_rtx5090.sh",
+  "execution_order": [
+    "Complete B1/B2 seed 3 without held-out evaluation.",
+    "Generate the frozen LR=0 train-only reservoir.",
+    "Pass static preflight against all three B2 schedules.",
+    "Train E2c seeds 1-3 and validate all delivery audits.",
+    "Only after delivery passes, evaluate paired step-60 endpoints and analyze seed-level contrasts."
+  ],
+  "guardrails": [
+    "Do not launch while shared GPU memory exceeds 4096 MiB.",
+    "Do not inspect partial held-out E2c endpoints.",
+    "Do not loosen E2/E2b gates or resume those protocols.",
+    "Do not describe historical ppo_epochs=2 replay as dose matched.",
+    "Do not call the historical VERL bootstrap best@k scalar standard pass@k.",
+    "Do not infer historical seed signs or timing from aggregate-only records.",
+    "Do not call repeated sampler contrasts independent blocks.",
+    "Do not present the under-gated Countdown point as corrected-code validation."
+  ]
+}

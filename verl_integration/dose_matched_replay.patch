@@ -1,0 +1,81 @@
+diff --git a/verl/trainer/ppo/ray_trainer.py b/verl/trainer/ppo/ray_trainer.py
+--- a/verl/trainer/ppo/ray_trainer.py
++++ b/verl/trainer/ppo/ray_trainer.py
+@@ -409,6 +409,8 @@ class RayPPOTrainer:
+         self.val_reward_fn = val_reward_fn
+         self.hindsight = None
+         self.hindsight_audit_path = None
++        self.live_replay = None
++        self.live_replay_audit_path = None
+         hindsight_cfg = config.algorithm.get("hindsight", None)
+         if hindsight_cfg is not None and hindsight_cfg.get("enable", False):
+             if config.reward_model.launch_reward_fn_async:
+@@ -431,6 +433,30 @@ class RayPPOTrainer:
+                 audit_dir = os.path.dirname(self.hindsight_audit_path)
+                 if audit_dir:
+                     os.makedirs(audit_dir, exist_ok=True)
++        replay_cfg = config.algorithm.get("live_replay", None)
++        if replay_cfg is not None and replay_cfg.get("enable", False):
++            if self.hindsight is not None:
++                raise ValueError("hindsight and live replay are mutually exclusive")
++            if config.reward_model.launch_reward_fn_async:
++                raise ValueError("live replay requires synchronous reward computation")
++            from verl.utils.hindsight import DoseMatchedLiveReplay
++
++            self.live_replay = DoseMatchedLiveReplay(
++                schedule_path=replay_cfg.schedule_path,
++                seed=replay_cfg.get("seed", 1),
++                max_cumulative_token_mismatch_fraction=replay_cfg.get(
++                    "max_cumulative_token_mismatch_fraction", 0.05),
++                strict=replay_cfg.get("strict", True),
++                buffer_capacity_groups=replay_cfg.get(
++                    "buffer_capacity_groups", 0),
++                max_buffer_age_steps=replay_cfg.get(
++                    "max_buffer_age_steps", 8),
++            )
++            self.live_replay_audit_path = replay_cfg.get("audit_path", None)
++            if self.live_replay_audit_path:
++                audit_dir = os.path.dirname(self.live_replay_audit_path)
++                if audit_dir:
++                    os.makedirs(audit_dir, exist_ok=True)
+ 
+         self.hybrid_engine = config.actor_rollout_ref.hybrid_engine
+         assert self.hybrid_engine, "Currently, only support hybrid engine"
+@@ -1749,6 +1775,9 @@ class RayPPOTrainer:
+                             accepted_group_token_counts = hindsight_stats.pop(
+                                 "_accepted_group_token_counts", []
+                             )
++                            accepted_groups = hindsight_stats.pop(
++                                "_accepted_groups", []
++                            )
+                             metrics.update(hindsight_stats)
+                             metrics["hindsight/pre_success_rollouts"] = int((pre_scores > 0).sum().item())
+                             metrics["hindsight/post_success_rollouts"] = int(
+@@ -1758,12 +1787,27 @@ class RayPPOTrainer:
+                                 audit_record = {
+                                     "global_step": self.global_steps,
+                                     "accepted_group_token_counts": accepted_group_token_counts,
++                                    "accepted_groups": accepted_groups,
+                                     **hindsight_stats,
+                                     "hindsight/pre_success_rollouts": metrics["hindsight/pre_success_rollouts"],
+                                     "hindsight/post_success_rollouts": metrics["hindsight/post_success_rollouts"],
+                                 }
+                                 with open(self.hindsight_audit_path, "a", encoding="utf-8") as audit_file:
+                                     audit_file.write(json.dumps(audit_record, sort_keys=True) + "\n")
++                        elif self.live_replay is not None:
++                            teacher_reward_tensor = reward_tensor.clone()
++                            replay_stats = self.live_replay.replay_batch(
++                                batch, reward_tensor, self.global_steps)
++                            replay_groups = replay_stats.pop("_replay_groups", [])
++                            metrics.update(replay_stats)
++                            if self.live_replay_audit_path:
++                                audit_record = {
++                                    "global_step": self.global_steps,
++                                    "replay_groups": replay_groups,
++                                    **replay_stats,
++                                }
++                                with open(self.live_replay_audit_path, "a", encoding="utf-8") as audit_file:
++                                    audit_file.write(json.dumps(audit_record, sort_keys=True) + "\n")
+ 
+                     # recompute old_log_probs
+                     with marked_timer("old_log_prob", timing_raw, color="blue"):
