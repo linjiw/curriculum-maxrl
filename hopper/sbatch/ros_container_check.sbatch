@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 #SBATCH --job-name=ros-sif-check
 #SBATCH --partition=normal
 #SBATCH --nodes=1
@@ -12,8 +12,9 @@
 # Apptainer image boots headless on a Hopper compute node: gzserver version,
 # a 10 s empty-world simulation, and ros2 CLI availability. Green-lights the
 # BARN CPU matrix path (which itself waits for the frozen prereg + runner CLI).
+module load hosts/hopper apptainer/1.4.1 2>/dev/null || module load apptainer 2>/dev/null || true
+command -v apptainer >/dev/null || { echo "apptainer unavailable"; exit 1; }
 set -euo pipefail
-module load hosts/hopper apptainer/1.4.1 2>/dev/null || module load apptainer
 SIF="/scratch/$USER/ros2-gazebo.sif"
 mkdir -p "/scratch/$USER/icra2027/logs"
 
