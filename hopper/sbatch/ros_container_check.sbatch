@@ -12,10 +12,11 @@
 # Apptainer image boots headless on a Hopper compute node: gzserver version,
 # a 10 s empty-world simulation, and ros2 CLI availability. Green-lights the
 # BARN CPU matrix path (which itself waits for the frozen prereg + runner CLI).
-module load hosts/hopper apptainer/1.4.1 2>/dev/null || module load apptainer 2>/dev/null || true
-command -v apptainer >/dev/null || { echo "apptainer unavailable"; exit 1; }
+# lmod is unreliable in batch shells here; use the shared install directly.
+export PATH="/opt/sw/other/apps/apptainer/1.4.1/bin:$PATH"
+command -v apptainer >/dev/null || { echo "apptainer unavailable on $(hostname)"; exit 1; }
 set -euo pipefail
-SIF="/scratch/$USER/ros2-gazebo.sif"
+SIF="/scratch/$USER/ros2-gazebo-classic.sif"
 mkdir -p "/scratch/$USER/icra2027/logs"
 
 apptainer exec --bind "/scratch/$USER:/scratch/$USER" "$SIF" bash -c '

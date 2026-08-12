@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: osrf/ros:humble-desktop
+
+%post
+    # apt's privilege drop breaks under fakeroot user namespaces
+    echo 'APT::Sandbox::User "root";' > /etc/apt/apt.conf.d/99-no-sandbox
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        gazebo libgazebo-dev \
+        ros-humble-gazebo-ros-pkgs \
+        python3-numpy python3-pip
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export LANG=C.UTF-8
+
+%runscript
+    exec "$@"
+
+%labels
+    Purpose ICRA2027 BARN campaign runtime (ROS 2 Humble + Gazebo Classic 11)
