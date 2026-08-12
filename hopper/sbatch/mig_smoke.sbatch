@@ -10,21 +10,23 @@
 #SBATCH --time=0-00:30:00
 #SBATCH --output=/scratch/%u/curriculum-maxrl-runtime/logs/mig_smoke_%j.out
 
-# Cheapest end-to-end validation of the Hopper GPU stack. Submit this FIRST.
+# Cheapest end-to-end validation of the Hopper GPU stack. Submit FIRST.
 # Pass criteria: CUDA device visible, model loads, 5 greedy generations emitted.
+# Uses the scratch-prefixed conda env directly (home quota is nearly full).
 set -euo pipefail
-module load gnu10 2>/dev/null || true
-module load miniconda3 2>/dev/null || module load miniconda 2>/dev/null || true
-source activate maxrl
 
-python - <<'EOF'
+ENVPY="/scratch/$USER/envs/maxrl/bin/python"
+export HF_HOME="/scratch/$USER/.hf"
+mkdir -p "$HF_HOME"
+
+"$ENVPY" - <<'EOF'
 import torch
 assert torch.cuda.is_available(), "CUDA not visible"
 print("device:", torch.cuda.get_device_name(0),
       "| mem:", round(torch.cuda.get_device_properties(0).total_memory/2**30, 1), "GiB")
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
-name = "HuggingFaceTB/SmolLM2-360M"  # public base; runtime uses the lab SFT checkpoint
+name = "HuggingFaceTB/SmolLM2-360M"  # public base; real runs use the lab SFT checkpoint
 tok = AutoTokenizer.from_pretrained(name)
 model = AutoModelForCausalLM.from_pretrained(name, torch_dtype=torch.bfloat16).cuda()
 x = tok("Countdown: reach 24 using 3, 8, 8:", return_tensors="pt").to("cuda")

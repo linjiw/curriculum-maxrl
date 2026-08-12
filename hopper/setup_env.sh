@@ -1,43 +1,34 @@
 #!/bin/bash
 # One-time environment setup on hopper.orc.gmu.edu (run on the login node).
-# Creates the conda env for the Countdown/MaxRL GPU stack and scratch layout.
-# Safe to re-run; every step is idempotent.
+# Matches the deployment performed 2026-08-12 for user lwang44.
+# Key facts discovered at deploy time:
+#   - personal miniconda exists at ~/miniconda3 (no module needed)
+#   - home quota is ~95% full -> env, package caches, and HF cache all live
+#     under /scratch/$USER (scratch: no quota, purged >90-day files monthly,
+#     NOT backed up — treat it as rebuildable)
+#   - partitions (live sinfo): gpuq 5-00:00, normal/contrib 7-00:00,
+#     contrib-H100 and contrib-B200 are separate dedicated partitions
 set -euo pipefail
 
-echo "== Hopper env setup for curriculum-maxrl =="
-
 SCRATCH="/scratch/$USER"
-mkdir -p "$SCRATCH/curriculum-maxrl-runtime"/{models,data,checkpoints,logs}
+export CONDA_PKGS_DIRS="$SCRATCH/.conda_pkgs"
+export PIP_CACHE_DIR="$SCRATCH/.pipcache"
 
-module load gnu10 2>/dev/null || true
-if ! command -v conda >/dev/null 2>&1; then
-  # ORC provides miniconda via modules on Hopper
-  ml spider miniconda 2>/dev/null | head -5 || true
-  module load miniconda3 2>/dev/null || module load miniconda 2>/dev/null || {
-    echo "No conda module found — install miniforge to scratch:"
-    echo "  wget -O $SCRATCH/miniforge.sh https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
-    echo "  bash $SCRATCH/miniforge.sh -b -p $SCRATCH/miniforge && $SCRATCH/miniforge/bin/conda init bash"
-    exit 1
-  }
-fi
+mkdir -p "$SCRATCH"/{envs,sbatch,.conda_pkgs,.pipcache,.hf} \
+         "$SCRATCH/curriculum-maxrl-runtime"/{models,data,checkpoints,logs}
 
-ENV_NAME=maxrl
-if ! conda env list | grep -q "^$ENV_NAME "; then
-  conda create -y -n $ENV_NAME python=3.10
-fi
-# shellcheck disable=SC1091
-source activate $ENV_NAME 2>/dev/null || conda activate $ENV_NAME
+CONDA="$HOME/miniconda3/bin/conda"
+ENVP="$SCRATCH/envs/maxrl"
 
-# Torch first (CUDA 12.x wheels), then the inference/training stack.
-# Versions chosen to match the lab runtime; adjust only with a matching
-# fingerprint note in whatever prereg governs the run.
-pip install --no-cache-dir "torch==2.6.*" --index-url https://download.pytorch.org/whl/cu124
-pip install --no-cache-dir "vllm>=0.8,<0.9" ray transformers accelerate datasets safetensors
+[ -x "$ENVP/bin/python" ] || "$CONDA" create -y -p "$ENVP" python=3.10
 
-echo
-echo "== Done. Next steps =="
-echo "1. rsync the MaxRL runtime + verl_integration patches from the lab machine:"
-echo "   rsync -av /data/robotixx/curriculum-maxrl-runtime/maxrl $USER@hopper.orc.gmu.edu:$SCRATCH/curriculum-maxrl-runtime/"
-echo "   rsync -av /data/robotixx/curriculum-maxrl-runtime/models $USER@hopper.orc.gmu.edu:$SCRATCH/curriculum-maxrl-runtime/"
-echo "2. Submit hopper/sbatch/mig_smoke.sbatch and check the log before any real job."
-echo "NOTE: E2c itself never runs here — frozen local protocol. See HOPPER_SETUP.md."
+"$ENVP/bin/pip" install --no-cache-dir "torch==2.6.*" \
+  --index-url https://download.pytorch.org/whl/cu124
+"$ENVP/bin/pip" install --no-cache-dir transformers accelerate safetensors
+
+# vLLM + ray are only needed for the gate-replication study; install lazily:
+#   "$ENVP/bin/pip" install --no-cache-dir "vllm>=0.8,<0.9" ray
+
+echo "Env ready: $ENVP"
+echo "Submit the validation job:  sbatch $SCRATCH/sbatch/mig_smoke.sbatch"
+echo "NOTE: E2c itself never runs on Hopper — frozen local protocol."
