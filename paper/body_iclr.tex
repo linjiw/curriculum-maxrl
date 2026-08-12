@@ -1,31 +1,30 @@
 \begin{abstract}
-RL with verifiable rewards (RLVR) often treats task curricula and failure
-recycling as estimator-agnostic data interventions. We ask what task-level
-activity the deployed group estimator makes available to either
-intervention. For the zero-stabilizer practical MaxRL convention with $N$
-i.i.d.\ binary rollouts, the expected absolute coefficient mass is exactly
-$2(\passat{N}-\passat{1})$. The resulting activity score has a unique
-compute-dependent peak, recovers the common learnability score $p(1-p)$ at
-$N=2$, and shows that dropping all-fail groups targets truncation order
-$N-1$, not $N$. It is an estimator-side diagnostic, not a theorem of
-learning progress. The score's deployed-$N$ shape carries empirical
-content: in a fresh 20-seed Acrobot tournament at $N=16$, the rollout-aware
-score improves target-uniform AUC over $p(1-p)$ by $+.0480$ (95\%
-paired-bootstrap CI $[+.0209,+.0738]$) and over uniform sampling as well.
-Its scope is bounded by design rather than by accident: a fresh 24-block
-exact-probability Digits counter-test rejects the stronger universal
-estimator-to-sampler mapping, and a qualified, externally recorded
-six-block maze factorial reports higher time-integrated MaxRL than GRPO
-coverage in 6/6 blocks under each sampler at common optimizer settings ---
-an estimator-conditioned ordering, not universal superiority. A reported
+RL with verifiable rewards often treats task curricula and failure
+recycling as estimator-agnostic. We ask what task-level activity the
+deployed group estimator makes available to either intervention. For the
+practical MaxRL convention that drops all-fail groups, the expected
+absolute coefficient mass over $N$ i.i.d.\ binary rollouts is exactly
+$2(\passat{N}-\passat{1})$ --- the estimator's own pass@$N$ gap. The
+score's peak moves toward harder tasks as $N$ grows, it recovers the
+common learnability score $p(1-p)$ at $N=2$, and dropping all-fail groups
+shifts the truncation order to $N-1$. It is an estimator-side diagnostic,
+not a theorem of learning progress. Rollout-aware selection carries
+empirical content: in a fresh 20-seed Acrobot tournament at $N=16$,
+sampling by the deployed-$N$ score improves target-uniform AUC over
+$p(1-p)$ by $+.0480$ (95\% paired-bootstrap CI $[+.0209,+.0738]$) and
+over uniform sampling as well. Its scope is bounded by design: in an
+exact-probability Digits counter-test the mismatched RLOO estimator
+prefers the same sampler, rejecting a universal estimator-to-sampler
+mapping, and an externally recorded six-block maze factorial reports
+higher time-integrated coverage under MaxRL than under GRPO in 6/6 blocks
+under each sampler at common optimizer settings --- an
+estimator-conditioned ordering, not universal superiority. A reported
 three-seed Countdown aggregate couples higher mean@16 with a lower logged
 VERL bootstrap best@16 coverage proxy under a deployed recycling package,
-motivating $\passat{k}$ recomputed from retained raw outcomes. Together,
-the positive and negative results support a calibrated conclusion:
-coefficient activity is a productive source of curriculum hypotheses, not a
-universal curriculum objective, and data-selection interventions should be
-evaluated with the estimator beneath them, with raw mean@$k$ and
-$\passat{k}$ outcomes retained.
+motivating $\passat{k}$ recomputed from retained raw outcomes.
+Data-selection interventions should be evaluated with the estimator
+beneath them, and coefficient activity treated as a source of curriculum
+hypotheses, not a universal curriculum objective.
 \end{abstract}
 
 \section{Introduction}
@@ -62,19 +61,22 @@ This view yields three contributions:
 \begin{enumerate}
 \item \textbf{Exact rollout-aware coefficient activity.}
 We derive $A_N$, its peak and asymptotics, and show that the practical
-drop-all-fail estimator targets truncation order $T=N-1$, not $N$. A
-fixed-completion sweep checks its nontrivial $N$ dependence. The identity is
-an estimator-side diagnostic, not a learning theorem.
+drop-all-fail estimator targets truncation order $T=N-1$, not $N$; a
+fixed-completion sweep checks its nontrivial $N$ dependence. The identity
+is an estimator-side diagnostic, not a learning theorem.
 \item \textbf{A positive--negative pair that maps the score's scope.}
-In fixed-pool Acrobot, $u_{16}$ beats both $p(1-p)=u_2$ and uniform sampling.
+In fixed-pool Acrobot, $u_{16}$ is supported over both $p(1-p)=u_2$ and
+uniform sampling by the frozen rule.
 In a separate paid-probe Acrobot family, registered $u_{16}$ superiority over
 ProCuRL selection is unsupported and probe cost dominates all three probed arms.
-In an exact-probability Digits counter-test, the internally frozen interaction fails,
-RLOO reverses the predicted ordering, and neither matched sampler beats
-uniform. The pair is itself the contribution: it locates the boundary
-inside which the activity score is informative, rather than reporting a
-uniformly positive story.
-\item \textbf{Coverage accounting at neural scale.}
+In an exact-probability Digits counter-test, the internally frozen
+interaction fails, mismatched RLOO prefers the same sampler, and neither
+matched sampler beats uniform --- so the supported content is rollout-aware
+difficulty targeting, not estimator matching. The pair is itself the
+contribution: it locates the
+boundary inside which the activity score is informative, rather than
+reporting a uniformly positive story.
+\item \textbf{Coverage accounting on neural gradients.}
 At common optimizer settings, the externally recorded fresh maze wave has
 higher MaxRL than GRPO coverage in all six blocks under each sampler. A
 reported three-seed Countdown aggregate shows higher average correctness but
@@ -85,11 +87,9 @@ $\passat{k}$ computed from retained task outcomes whenever a data-selection
 intervention ships.
 \end{enumerate}
 
-The paper is deliberately narrower than the full project record. The main
-text contains the exact identity and a compact evidence chain.
-Exploratory mechanisms, failed hypotheses, robotics pilots, gate studies, and
-implementation detail remain in the appendix and artifact rather than
-becoming additional contributions.
+The paper is deliberately narrower than the full project record:
+exploratory mechanisms, failed hypotheses, robotics pilots, gate studies,
+and implementation detail remain in the appendix and artifact.
 
 \section{Coefficient activity under practical MaxRL}
 \label{sec:theory}
@@ -161,7 +161,7 @@ the conditional score geometry remains outside the mass calculation.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=.88\linewidth]{figures/fig1_utility}
+\includegraphics[width=.84\linewidth]{figures/fig1_utility}
 \caption{\textbf{Estimator-conditioned activity.}
 \emph{Left:} $u_N=A_N/2=\passat{N}-\passat{1}$ for several rollout
 counts; its peak is derived rather than tuned and moves toward harder tasks
@@ -245,9 +245,9 @@ q(x)=\frac{\epsilon}{M}
  +(1-\epsilon)\frac{[u_N(\tilde p_x)]^\gamma}
  {\sum_{j=1}^{M}[u_N(\tilde p_j)]^\gamma}.
 \]
-The floor $\epsilon$, concentration $\gamma$, decay, and posterior estimator
-remain empirical choices. The theory contribution is the utility and its
-$N$-dependence, not a parameter-free scheduler.
+The floor $\epsilon$, concentration $\gamma$, decay, and posterior
+estimator remain empirical choices; the theory contribution is the utility
+and its $N$-dependence, not a parameter-free scheduler.
 
 \paragraph{Failure recycling.}
 For an all-fail request, a verified achieved goal can create an auxiliary
@@ -275,7 +275,9 @@ estimator-conditioned coverage ordering on real neural gradients; the
 Acrobot tournament isolates the deployed-$N$ score shape under a fixed
 scaffold; the paid-probe comparison prices probe-based selection under a
 shared budget; and the Countdown record supplies the applied
-mean-versus-coverage observation that motivates raw-outcome reporting.
+mean-versus-coverage observation that motivates raw-outcome reporting. The
+score's positive support is deliberately small-scale and fully controlled;
+the neural families test estimator-side predictions, not the score.
 
 \subsection{Externally recorded fresh-wave maze result}
 
@@ -286,26 +288,24 @@ and evaluation schedule across
 $\{\text{MaxRL},\text{GRPO}\}\times
 \{\text{uniform},\text{FrontierMax}\}$. The outcome is time-integrated
 $\passat{8}$ coverage relative to the warm-start checkpoint, not final
-reward. Both estimators use identical deployed optimizer settings; we did not
-separately tune learning rate per estimator.
+reward, at identical deployed optimizer settings with no per-estimator
+learning-rate tuning.
 
 Each run uses $N=32$, eight prompt groups per training step, and 250 steps.
-Evaluation occurs every 25 steps on 16 held-out mazes per level. We define the
-coverage AUC as the mean $\passat{8}$ over steps 25 through 250 minus the
-warm-start $\passat{8}$ value.
+Evaluation occurs every 25 steps on 16 held-out mazes per level; coverage
+AUC is the mean $\passat{8}$ over steps 25--250 minus the warm-start value.
 
-The first factorial rejected its stronger externally recorded endpoint claim:
-only 3/6 uniform blocks and 4/6 FrontierMax blocks had the predicted sign.
-We retracted the earlier zero-exception cohort claim. Time-integrated coverage
-was positive in all six blocks under each sampler in that wave, but this
-outcome had been discovered exploratorily. The external execution record says
-it was specified as the primary of a second wave before running new seeds,
-including its falsification rule. The corresponding locking commit object is
-not vendored in this checkout.
+The first factorial rejected its stronger externally recorded endpoint claim
+(3/6 uniform and 4/6 FrontierMax blocks with the predicted sign), and we
+retracted the earlier zero-exception cohort claim. Wave-1 time-integrated
+coverage was positive in all blocks under each sampler, but that outcome was
+discovered exploratorily; the external record specifies it as wave 2's
+primary, with a falsification rule, before new seeds ran, though the locking
+commit object is not vendored in this checkout.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\linewidth]{figures/fig_maze_block_contrasts}
+\includegraphics[width=.94\linewidth]{figures/fig_maze_block_contrasts}
 \caption{\textbf{Maze factorial at the independent seed-block unit.}
 \emph{(a)} The externally recorded fresh-wave result is positive in 6/6 blocks under each
 sampler (exact sign $p=.03125$ each). Connected observations share a block.
@@ -319,9 +319,11 @@ tie, one negative, and an interval containing zero.}
 \paragraph{Result.}
 The wave-2 primary is positive in all six fresh blocks under uniform
 sampling and all six under FrontierMax (exact two-sided sign $p=.03125$ per
-sampler). Averaging the correlated sampler observations within each
-independent block yields mean $+.0195$ with a post-hoc 95\% $t$ interval
-$[+.0115,+.0275]$; every leave-one-block-out interval remains above zero.
+sampler). Six blocks put this sign test at its granularity floor (6/6 is
+the only outcome clearing $.05$; the frozen 5/6 bar could not), so the
+inferential anchor is the block-averaged mean: averaging the correlated
+sampler observations within each block yields $+.0195$, post-hoc 95\% $t$
+interval $[+.0115,+.0275]$, with every leave-one-block-out interval above zero.
 Across both waves, all 12 block averages are positive, but that statement is
 descriptive because wave 1 selected the outcome.
 
@@ -345,7 +347,9 @@ rate $3\times10^{-4}$, and a nominal two million paid environment
 transitions. Twenty fresh paired seeds compare uniform sampling, the
 common-scaffold $p(1-p)=u_2$ score, and $u_{16}$ under identical discounted
 Beta tracking. The internally frozen primary is target-uniform normalized
-transition-AUC for $u_{16}-p(1-p)$, with support requiring a positive exact
+transition-AUC --- evaluation success averaged uniformly over the eight
+predicates, integrated over the paid-transition axis, and normalized by the
+budget --- for $u_{16}-p(1-p)$, with support requiring a positive exact
 two-sided sign-flip test at $.05$ and a point estimate of at least $+.01$.
 
 \begin{table}[ht]
@@ -379,11 +383,9 @@ also receives 2.40 fewer groups and 3.42 fewer updates per million
 transitions, so it did not win by receiving more updates; these
 non-confirmatory axes do not identify a causal mechanism. Native-success
 transition-AUC is $.31085$, $.30521$, and $.37615$ across the three arms.
-Observed mass means are close between adaptive arms ($.7344$ versus $.7490$
-per group; $115.57$ versus $115.90$ per million transitions), and both
-descriptive paired intervals include zero; no equivalence test was
-frozen. App.~\ref{app:protocols} records the audited but RNG-confounded
-precursor separately.
+App.~\ref{app:protocols} reports the near-equal observed mass means between
+adaptive arms and records the audited but RNG-confounded precursor
+separately.
 
 \subsection{Paid-probe ProCuRL confirmatory comparison}
 
@@ -395,18 +397,22 @@ sham, and ordinary uniform. The three probed arms refresh 20-episode-per-task
 estimates every 5,120 student transitions and charge every probe transition to
 the common two-million paid budget. The internally frozen fixed-paid-AUC contrast
 $u_{16}-$ProCuRL is $+.00489$ (paired $t_{79}=1.977$, $p=.0515$;
-percentile-bootstrap 95\% CI $[+.00011,+.00973]$). Because $p>.05$ and the
-point estimate is below the $.02$ SESOI, the frozen rule is unsupported.
+percentile-bootstrap 95\% CI $[+.00011,+.00973]$). The bootstrap interval
+excludes zero while the frozen $t$ criterion fails, but the verdict does
+not hinge on that: the point estimate misses the frozen $.02$ SESOI
+fourfold, so the rule is unsupported either way.
 Neither adaptive-versus-sham secondary
 rejects after Holm correction (adjusted $p=.4568$ and $.4547$); this
 non-rejection is not an equivalence claim. Probes consume about 93.2\% of paid transitions; the
 three probed arms trail ordinary uniform by $-.314$, $-.309$, and $-.312$
 AUC, respectively (all Holm-rejected). Thus this cadence diagnoses probe-cost
 domination, not general ProCuRL inferiority or a reproduction of its complete
-PPO system. This 80-pair family and multiplicity plan are separate from
+PPO system; in RLVR loops whose pass-rate posteriors update free of charge
+from training rollouts, probe accounting is a property of probing semantics
+rather than of posterior-based selection. This 80-pair family and multiplicity plan are separate from
 Table~\ref{tab:acrobot}; full accounting is in App.~\ref{app:protocols}.
 
-\subsection{Recycling-package sharpening}
+\subsection{Countdown recycling: accuracy up, coverage proxy down}
 
 \paragraph{Design.}
 We fine-tune SmolLM2-360M on exact-verifier Countdown tasks with $N=16$.
@@ -428,7 +434,7 @@ under its actual provenance rather than relabeling it.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=.56\linewidth]{figures/fig_countdown_core}
+\includegraphics[width=.52\linewidth]{figures/fig_countdown_core}
 \caption{\textbf{Countdown accuracy--bootstrap-coverage-proxy tradeoff.}
 Error bars are sample standard deviations across three seeds; complete
 three-seed B1/B2 records are not vendored (seed 3 is aggregate-only). The
@@ -445,10 +451,11 @@ The reported recycling-package aggregate moves tier-1 mean@16 from
 $.278\pm.066$ to $.324\pm.014$ while bootstrap best@16 moves from
 $.541\pm.024$ to $.492\pm.013$ (mean $\pm$
 sample SD across three seeds). The checkout lacks the complete three-seed
-B1/B2 records, so we do not claim a paired seed test or
-per-seed sign result. We call the aggregate pattern
-\emph{recycling-package sharpening}: the reported aggregate is more accurate
-on average while the logged coverage proxy is lower.
+B1/B2 records, so we do not claim a paired seed test or per-seed sign
+result, and we attach no name or effect claim to the aggregate. What it
+demonstrates is the ambiguity itself: mean accuracy alone cannot reveal
+whether coverage was spent to buy it, which is exactly why raw-outcome
+$\passat{k}$ reporting matters.
 
 An externally specified control applies two optimizer epochs to every live group
 with hindsight disabled. It reaches mean@16 $.478\pm.021$ and
@@ -468,10 +475,11 @@ generality is a contribution here.
 
 \section{Related work}
 
-Our position occupies a currently empty cell in a crowded neighborhood: a
-selection score \emph{derived from the deployed estimator's own algebra},
-genuinely \emph{rollout-budget dependent}, and used for \emph{task
-selection rather than objective redesign}.
+Our score is a distinct, testable functional form in a crowded
+neighborhood: \emph{derived from the deployed estimator's own algebra},
+with a peak that \emph{migrates with the rollout budget}, and used for
+\emph{task selection rather than objective redesign}. Superiority over the
+methods below is untested and not claimed.
 
 \paragraph{Concurrent exact analyses of group estimators.}
 A concurrent cluster derives closed-form expected update magnitudes for
@@ -480,14 +488,15 @@ group-SD identity with DAPO's silent-group mass $p^G+(1-p)^G$
 \citep{groupstd}, and an expected absolute GRPO advantage of
 $2\sqrt{p(1-p)}$ motivating 50\%-success targets inside a learned-curator
 bandit \citep{actorcurator}; energy- and variance-based selection scores
-make the same alignment claim empirically \citep{lze}. Those quantities
-are flat in $N$. The practical-MaxRL coefficient mass is instead exactly
-$2(\passat{N}-\passat{1})$: unnormalized, genuinely $N$-dependent, and
-interpretable as the estimator's own pass@$N$ gap --- the property the
+make the same alignment claim empirically \citep{lze}. On that branch the
+per-rollout magnitude peaks at $p=.5$ independent of $N$, with $N$ entering
+through the silent-group factor; the practical-MaxRL mass is instead the
+estimator's own pass@$N$ gap, unnormalized, with a peak that migrates
+toward harder tasks as $\ln N/N$ --- the functional form the
 fixed-completion sweep and the Acrobot tournament test. MoPPS \citep{mopps}
-anticipates our posterior machinery (streaming Beta posteriors with
-Thompson-sampled pass rates, targeting proximity to $p=.5$); we claim
-novelty only in the utility sampled toward, not the bandit mechanism.
+anticipates the posterior machinery (streaming Beta posteriors,
+Thompson-sampled pass rates, targeting $p\approx.5$); our novelty claim is
+only the utility sampled toward.
 
 \paragraph{Curricula and rollout allocation.}
 Intermediate-difficulty sampling predates this work. Under ProCuRL's
@@ -495,23 +504,22 @@ experimental assumption that the unknown optimal-policy success is one,
 its proximal score reduces to $p(1-p)$ \citep{procurl}, while SFL \citep{sfl} and
 LILO \citep{lilo} prioritize binary reward variance. Our distinction is
 convention-specific: $u_N=A_N/2$ is the arbitrary-$N$ expected half-mass of
-the deployed centered MaxRL rule; centering only when $K>0$ and zeroing the
-whole $K=0$ group induces truncation order $T=N-1$.
+the deployed centered MaxRL rule.
 Our paid-probe comparison instantiates ProCuRL's published
 environment-selection semantics on a common learner (\S\ref{sec:evidence}).
-VCRL \citep{vcrl} thresholds realized group variance with memory; classical
-PLR \citep{plr} and ALP-GMM \citep{alpgmm} use TD error, staleness, or
-temporal learning progress. Those scores can react to forgetting;
-coefficient mass is an instantaneous estimator-activity proxy.
+VCRL \citep{vcrl} thresholds realized group variance; PLR \citep{plr} and
+ALP-GMM \citep{alpgmm} use TD error, staleness, or temporal learning
+progress, and can therefore react to forgetting where instantaneous
+coefficient mass cannot.
 Generator-based UED --- PAIRED's adversary \citep{paired}, ACCEL's level
 editing \citep{accel} --- creates tasks rather than pricing a fixed pool and
 has no native analogue in our Acrobot threshold family.
 
-GRESO \citep{greso} and DPS \citep{dps} select prompts before rollout using
-historical or predicted reward dynamics. VIP \citep{vip} instead varies
-per-prompt rollout counts to reduce predicted gradient variance. These are
-especially close operational baselines, but none uses the fixed-$N$
-half-mass of the deployed practical MaxRL convention.
+GRESO \citep{greso} and DPS \citep{dps} select prompts before rollout from
+historical or predicted reward dynamics, and VIP \citep{vip} varies
+per-prompt rollout counts to cut predicted gradient variance --- close
+operational baselines, but none uses the fixed-$N$ half-mass of the
+deployed practical MaxRL convention.
 
 Adaptive allocators vary per-prompt group size or stage extra rollouts
 toward high-value prompts (HORA \citep{hora}, VIGOR \citep{vigor}, DARS
@@ -521,26 +529,24 @@ selects the task distribution before generation at fixed $N$. BBG
 and boundary-aware Curriculum RL \citep{cai} adds external guidance near an
 estimated reasoning boundary. These criteria target hit probability,
 variance, exploration, boundary metrics, or signal creation---not
-practical-MaxRL coefficient mass. RL2ML
-\citep{rl2ml} further separates finite-rollout objectives, update scale,
-variance, and metric gain. Its $T=N$ alignment uses the direct estimator or a
-score-baseline control variate retained on $K=0$; our $T=N-1$ statement is for
-the deployed hybrid convention that centers only for $K>0$ and zeros $K=0$.
+practical-MaxRL coefficient mass. RL2ML \citep{rl2ml} separates
+finite-rollout objectives, update scale, variance, and metric gain; its
+$T=N$ alignment retains $K=0$ via the direct estimator or a score-baseline
+control variate, while our $T=N-1$ statement is for the deployed hybrid
+that centers only when $K>0$ and zeros $K=0$.
 
 \paragraph{Coverage and hindsight.}
 RLVR can improve pass@1 while reducing high-$k$ coverage
 \citep{yue,yuan,passkinv}. Entropy collapse supplies complementary evidence of reduced
 exploration \citep{cui}; Pass@$k$ objectives address the metric directly
 \citep{passk}. We study whether an external curriculum changes that coverage
-under two estimators. Hindsight experience replay \citep{her},
-goal-conditioned supervised learning \citep{gcsl}, instruction relabeling
-for language models \citep{hir}, and curriculum-guided
-relabeling establish that achieved-goal selection changes the training
-distribution. Relabeling also appears with executable verification in program
+under two estimators. Hindsight relabeling --- experience replay
+\citep{her}, goal-conditioned supervised learning \citep{gcsl}, instruction
+relabeling \citep{hir} --- changes the training distribution by selecting
+achieved goals, and appears with executable verification in program
 synthesis \citep{codeit} and learned-judge rewards in VLA post-training
-\citep{lfh}. We report a mean-up, bootstrap-coverage-proxy-down aggregate from
-cross-task relabeling in one RLVR model and task family, not a priority claim
-or a general theorem about hindsight.
+\citep{lfh}. Our cross-task relabeling aggregate covers one RLVR model and
+task family --- not a priority claim or a theorem about hindsight.
 
 \section{Limitations}
 \label{sec:limits}
@@ -548,8 +554,9 @@ or a general theorem about hindsight.
 Coefficient mass ignores score-gradient direction, parameter sharing,
 optimizer state, task transfer, and non-i.i.d.\ rollouts. It is a
 sampler-facing surrogate, not a guarantee of loss reduction or metric
-improvement. The fixed-completion $N$-sweep is post-guidance and uses one
-co-designed synthetic chain. The exact-probability Digits counter-test is a
+improvement. The fixed-completion $N$-sweep is post-guidance (designed
+after the theoretical guidance existed, hence not preregistered) and uses
+one co-designed synthetic chain. The exact-probability Digits counter-test is a
 contextual bandit rather than trajectory RL, and its internally hashed local
 lock lacks an immutable public pre-execution commit establishing timing. The
 fresh V2 Acrobot score test uses one fixed
@@ -557,7 +564,11 @@ eight-threshold family, one 640-parameter learner, and no held-out task
 distribution or native named-method implementation. Its 20-seed choice was
 inherited from a historical precursor rather than set by prospective power
 analysis; its exact paired test also requires sign exchangeability under the
-sharp null. The separate 80-pair comparison implements ProCuRL's
+sharp null. No arm pairs a mismatched-$N$ score with a fixed deployed $N$,
+so the tournament supports rollout-aware difficulty targeting rather than
+peak-location specificity of the deployed-$N$ shape. The four evidence
+families froze their primaries independently at $\alpha=.05$; we claim no
+paper-level error rate. The separate 80-pair comparison implements ProCuRL's
 environment-selection semantics on that common learner, not its full PPO
 system. Its frozen 5,120-transition refresh cadence spends about 93.2\% of
 paid transitions on probes, so the result cannot establish general ProCuRL
@@ -594,23 +605,18 @@ broad neural claim.
 
 \section{Conclusion}
 
-The estimator belongs in the evaluation of data-selection design. Its
+The estimator belongs in the evaluation of data-selection design: its
 coefficient algebra characterizes which tasks can emit activity at a chosen
-rollout count, and its weighting can change what coverage a sampler removes or
-preserves. The exact MaxRL mass identity supplies a rollout-aware activity
-proxy; the fresh Acrobot tournament shows that its deployed-$N$ score can
-outperform both the $N=2$ score and uniform sampling in a fixed classical-control
-family. The separate paid-probe comparison does not support $u_{16}$ over
-ProCuRL selection and exposes probe-cost domination at its frozen cadence,
-while the fresh Digits counter-test refutes a universal
-estimator-to-sampler mapping. The externally recorded maze wave shows a
-coverage ordering at common optimizer settings, while the reported Countdown
-aggregate has higher mean accuracy but a lower logged bootstrap coverage proxy
-under a deployed verified-recycling package. Curricula and recyclers should
-therefore be evaluated with the estimator they ship on, with $\passat{k}$
-computed from retained task outcomes and reported beside mean accuracy, and
-coefficient mass treated as a testable
-allocation hypothesis rather than a universal learning law.
+rollout count, and the estimator-conditioned coverage ordering it predicted
+persisted under both tested samplers. In a fixed classical-control family
+the deployed-$N$ score outperformed both its $N=2$ slice and uniform
+sampling; the paid-probe, Digits, and Countdown families bound the scope
+--- probe cost can dominate, the estimator-to-sampler mapping is not
+universal, and mean accuracy can rise while a logged coverage proxy falls.
+Curricula and recyclers should therefore be evaluated with the estimator
+they ship on, with $\passat{k}$ computed from retained task outcomes beside
+mean accuracy, and coefficient mass treated as a testable allocation
+hypothesis rather than a universal learning law.
 
 \section*{Reproducibility statement}
 The repository includes exact-enumeration tests, a one-command artifact
@@ -876,7 +882,10 @@ group-diagnostic and aggregate-checkpoint ledgers were retained. The primary
 $u_{16}-p(1-p)$ transition-AUC difference is $+.04803$ (paired bootstrap 95\%
 CI $[+.02094,+.07385]$, exact sign-flip $p=.003361$), clearing the
 predeclared $+.01$ estimate filter; Table~\ref{tab:acrobot} gives the
-Holm-controlled uniform comparisons. The $p$-value tests zero rather than the
+Holm-controlled uniform comparisons. Observed mass means are close between
+adaptive arms ($.7344$ versus $.7490$ per group; $115.57$ versus $115.90$
+per million transitions), both descriptive paired intervals include zero,
+and no equivalence test was frozen. The $p$-value tests zero rather than the
 SESOI, and pairing does not guarantee sign exchangeability. The $p(1-p)$ arm
 isolates only the score on our scaffold, not full ProCuRL or SFL.
 

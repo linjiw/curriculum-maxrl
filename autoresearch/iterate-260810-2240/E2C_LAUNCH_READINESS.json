@@ -650,18 +650,28 @@
     ],
     "steps": 60
   },
-  "generated_at": "2026-08-11T17:57:09-04:00",
+  "generated_at": "2026-08-12T00:40:57-04:00",
   "gpu": {
     "ceiling_mib": 4096,
     "compute_processes": [
       {
-        "pid": 2137265,
+        "pid": 2786996,
         "process_name": "/home/robotixx/cosmos-framework/.venv/bin/python",
         "used_memory_mib": 7350
+      },
+      {
+        "pid": 2786727,
+        "process_name": "/home/robotixx/snmr/../holosoma/.venv/hsmujoco/bin/python",
+        "used_memory_mib": 3392
+      },
+      {
+        "pid": 2856400,
+        "process_name": "/home/robotixx/miniconda3/envs/env_isaaclab/bin/python",
+        "used_memory_mib": 3958
       }
     ],
     "gate_pass": false,
-    "memory_used_mib": 10263
+    "memory_used_mib": 17132
   },
   "heldout_artifact_count": 0,
   "heldout_artifacts_inspected": false,
