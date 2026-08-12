@@ -54,3 +54,32 @@ After each milestone, append a dated section to `ICRA2027_PROGRESS_REPORT_2026-0
 - Anything touching the ICLR compact draft, `paper/body_iclr.tex`, or the release branch (reconciliation is a separate task with its own rules in `autoresearch/iterate-260810-2240/BRANCH_RECONCILIATION.md`).
 - Launching E2c training (its driver self-authorizes via `E2C_LAUNCH_READINESS.json`; keep polling read-only if idle, never force).
 - Website updates, arXiv posting, or any external publication.
+
+---
+
+# Addendum 2026-08-12 — milestone review and next-step directives
+
+## Review verdict on work completed since issue
+
+The **Aug 12–13 "BARN backend adapter" milestone is substantially achieved a day early** and is accepted: a 300-course manifest (`icra2027/barn_manifest.jsonl`) with per-asset SHA-256, published optimal-traversal-time difficulty, grid and path checksums; a CPU-only seeded `gzserver` runtime with ROS 2 pause/unpause, bumper collision detection, and sim-clock accounting (`frontier_rl/adapters/barn_gazebo.py`); a diff-drive robot SDF; and the correct rejection of Isaac Lab under the GPU embargo. This is exactly the unblock the original report said was impossible — good.
+
+## Directives before the prereg freeze (do these NOW, in order)
+
+The prereg is still an outcome-blind draft, so these are ordinary edits, not amendments. After step 4 it becomes immutable.
+
+1. **Pin the teacher unit.** The adapter makes the teacher's task unit a frozen difficulty *stratum* (one course sampled uniformly within it per group), not an individual course. This is an acceptable design (denser posteriors at a 5-seed budget) but it changes what all four arms sample over, so it must be written into `prereg_icra.md` explicitly: state that all arms share the same frozen stratum set, give the stratum count, state that the staged arm's "published difficulty order" means stratum order, and record the rejected alternative (course-level teacher) with the posterior-density rationale. Do not leave this implicit in code.
+2. **Pin the difficulty semantics.** Difficulty = published optimal traversal time in seconds (longer = harder). Say so in the prereg, and confirm the staged arm unlocks from short-time strata upward and the "easy decile" secondary uses the same metadata.
+3. **Invoke the budget escape hatch now.** This is a shared CPU box; exclusive like-for-like hardware cannot be guaranteed. The prereg's own clause requires the switch be made before unblinding: transition-matched AUC becomes primary, wall-clock descriptive. Write it in.
+4. **Freeze and commit the package together:** (a) manifest fingerprint = SHA-256 of `barn_manifest.jsonl` plus the acquisition receipt (source URL and archive SHA-256) for the 300-world dataset root, recorded in the repo even if the worlds themselves are not committed; (b) environment fingerprint — there is no container, so record and hash the exact Gazebo/ROS/dpkg versions and a `pip freeze`, and state in the prereg that this fingerprint stands in for the container digest; (c) `barn_split.json` from `freeze_pool_split.py --seed 20270811 --n-strata 10`, inspected; (d) prereg + split + analyzer + adapter, one commit. Also commit the currently untracked backend files — uncommitted evidence infrastructure is a provenance hole.
+
+## Directives for the first full seed (target unchanged: Aug 17)
+
+5. **Determinism check first:** one test that two runs of the same course, seed, and policy state produce identical outcome bits and step counts end-to-end through gzserver+ROS. If message-timing nondeterminism is found, document it in the prereg and rely on the seed-paired design and fixed evaluation streams — do not silently accept it.
+6. **Throughput budget before committing to the matrix:** measure single-episode wall time headless, then compute whether 4 arms × 5 seeds fits by Aug 23 with parallel isolated `gzserver` instances (separate `ROS_DOMAIN_ID`/partition/ports, one seed-arm per process group). Physics step size stays frozen and identical across arms — never tune it per arm. If the arithmetic does not close, report it immediately rather than shrinking the protocol silently.
+7. Run the full four-arm seed with the real adapter; artifacts are evidence-grade only if the freeze (step 4) landed first.
+
+## Standing constraints (unchanged, restated because they bind harder now)
+
+- The RTX 5090 remains embargoed for E2c — note an automatic E2c launch watcher now polls it from the ICLR side, so the GPU may spin up a Countdown training job at any moment without warning. Plan CPU capacity assuming that.
+- Aug 24 gate exactly as frozen; ≥5 paired seeds; no peeking; RA-L is the honest exit.
+- Milestone-boundary commits with dated progress sections; never commit `.codex/`.
