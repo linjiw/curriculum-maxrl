@@ -275,10 +275,7 @@ estimator-conditioned coverage ordering on real neural gradients; the
 Acrobot tournament isolates the deployed-$N$ score shape under a fixed
 scaffold; the paid-probe comparison prices probe-based selection under a
 shared budget; and the Countdown record supplies the applied
-mean-versus-coverage observation that motivates raw-outcome reporting. The
-classical-control and exact-probability families are deliberately small and
-fully controlled; the neural families are larger and carry the provenance
-qualifications stated inline.
+mean-versus-coverage observation that motivates raw-outcome reporting.
 
 \subsection{Externally recorded fresh-wave maze result}
 
@@ -474,8 +471,7 @@ generality is a contribution here.
 Our position occupies a currently empty cell in a crowded neighborhood: a
 selection score \emph{derived from the deployed estimator's own algebra},
 genuinely \emph{rollout-budget dependent}, and used for \emph{task
-selection rather than objective redesign}. Each line below occupies at
-least one adjacent cell.
+selection rather than objective redesign}.
 
 \paragraph{Concurrent exact analyses of group estimators.}
 A concurrent cluster derives closed-form expected update magnitudes for
@@ -501,18 +497,15 @@ LILO \citep{lilo} prioritize binary reward variance. Our distinction is
 convention-specific: $u_N=A_N/2$ is the arbitrary-$N$ expected half-mass of
 the deployed centered MaxRL rule; centering only when $K>0$ and zeroing the
 whole $K=0$ group induces truncation order $T=N-1$.
-Our paid-probe comparison instantiates the published environment-selection
-semantics on a common learner and shows that, at the frozen refresh cadence,
-probe accounting overwhelms differences among the adaptive scores.
+Our paid-probe comparison instantiates ProCuRL's published
+environment-selection semantics on a common learner (\S\ref{sec:evidence}).
 VCRL \citep{vcrl} thresholds realized group variance with memory; classical
 PLR \citep{plr} and ALP-GMM \citep{alpgmm} use TD error, staleness, or
 temporal learning progress. Those scores can react to forgetting;
 coefficient mass is an instantaneous estimator-activity proxy.
-PAIRED \citep{paired} instead trains an environment adversary and antagonist
-to generate solvable high-regret tasks, while ACCEL \citep{accel} edits
-previously useful levels. Neither has a native fixed-pool analogue in our
-Acrobot threshold family, so we do not present a threshold sampler as a
-reproduction of either method.
+Generator-based UED --- PAIRED's adversary \citep{paired}, ACCEL's level
+editing \citep{accel} --- creates tasks rather than pricing a fixed pool and
+has no native analogue in our Acrobot threshold family.
 
 GRESO \citep{greso} and DPS \citep{dps} select prompts before rollout using
 historical or predicted reward dynamics. VIP \citep{vip} instead varies
@@ -520,17 +513,15 @@ per-prompt rollout counts to reduce predicted gradient variance. These are
 especially close operational baselines, but none uses the fixed-$N$
 half-mass of the deployed practical MaxRL convention.
 
-HORA \citep{hora} reallocates a rollout budget across prompts by varying
-per-prompt group size to maximize posterior hit utility; VIGOR \citep{vigor}
-progressively assigns extra rollouts to high-variance prompts. DARS
-\citep{dars} and Reinforce-Ada \citep{reinforceada} use multi-stage or
-successive allocation. FrontierMax instead selects the task distribution
-before generation while holding $N$ fixed. BBG
+Adaptive allocators vary per-prompt group size or stage extra rollouts
+toward high-value prompts (HORA \citep{hora}, VIGOR \citep{vigor}, DARS
+\citep{dars}, Reinforce-Ada \citep{reinforceada}); FrontierMax instead
+selects the task distribution before generation at fixed $N$. BBG
 \citep{yuan} gates updates by posterior marginal $\passat{k}$ contribution,
-and boundary-aware Curriculum RL \citep{cai} adds external guidance near or
-beyond an estimated $\passat{k}$ reasoning boundary. These criteria target
-hit probability, reward or gradient variance, adaptive exploration, boundary
-metrics, or signal creation---not practical-MaxRL coefficient mass. RL2ML
+and boundary-aware Curriculum RL \citep{cai} adds external guidance near an
+estimated reasoning boundary. These criteria target hit probability,
+variance, exploration, boundary metrics, or signal creation---not
+practical-MaxRL coefficient mass. RL2ML
 \citep{rl2ml} further separates finite-rollout objectives, update scale,
 variance, and metric gain. Its $T=N$ alignment uses the direct estimator or a
 score-baseline control variate retained on $K=0$; our $T=N-1$ statement is for
