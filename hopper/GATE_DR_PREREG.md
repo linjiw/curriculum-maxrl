@@ -109,3 +109,19 @@ the manipulation check are complete.
   symlinks resolve to); import verified; tasks 3–11 resubmitted unchanged as array
   9357948. No endpoint of any arm was observed before or during this repair; the
   `b1h` logs remain unopened.
+- **2026-08-13b (endpoint instrument change, declared before any endpoint was
+  observed):** the planned in-run step-60 validation never executed in ANY run —
+  this verl version only honors `val_on_last_step` when `test_freq > 0`, and the
+  frozen B-stage settings set `test_freq=-1`. Every run log ends with "Final
+  validation metrics: None"; no arm endpoint exists in the training logs and none
+  was seen. Endpoint measurement is therefore moved to a sealed standalone
+  evaluation of the 12 saved step-60 hf_model checkpoints
+  (`hopper/gate_dr_eval.py`): vLLM engine seed 20260813, n=16, temperature 1.0,
+  top_p 1.0, max 128 new tokens, frozen 384-task test set, exact `compute_score`
+  verifier, full 16-bit outcome vectors retained. This yields mean@16, the legacy
+  bootstrap best@16 proxy (rule 2b is applied to the proxy exactly as frozen),
+  and — an upgrade the historical record lacks — STANDARD observed-set pass@16
+  from retained raw outcomes, reported beside the proxy. Decision rules are
+  otherwise unchanged. Deviation from in-run HF-sampling measurement: the
+  evaluation engine is vLLM, uniform across all 12 arms, so paired contrasts are
+  unaffected.
