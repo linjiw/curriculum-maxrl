@@ -468,11 +468,13 @@ improves both metrics, without decomposing relabel direction from update dose
 or justifying a dose-monotonic causal bound.
 
 Two negative results constrain the story. A favorable earlier gate setting
-used faulty decay code; a corrected, externally specified strong-gate sweep behaved
-like recycling-off and refuted the claimed monotone gate dial. A separate
-Jugs suite collapsed under every arm because its learnable region was
-effectively one template stratum. Neither the gate nor cross-domain
-generality is a contribution here.
+used faulty decay code; under corrected code, the externally specified
+strong gate behaved like recycling-off, and a preregistered three-seed
+dose--response on an independent A100 environment found graded gate dosage
+(72--93\% rejection across settings) but no operating point retaining the
+frozen fraction of the ungated mean gain. A separate Jugs suite collapsed
+under every arm (one effective template stratum). Neither the gate nor
+cross-domain generality is a contribution here.
 
 \section{Related work}
 
@@ -999,6 +1001,15 @@ counts are absent. Tier 0 is excluded from absolute claims.
 The artifact retains the failed maze endpoint, gate, Jugs, and robotics
 branches. GSM8K missed its delivery threshold ($.601480$ versus $<.60$) and
 is inconclusive; the single-seed Countdown per-$k$ curve is exploratory.
+The corrected-code gate dose--response (frozen protocol, three paired seeds,
+independent A100 environment, retained 16-bit raw outcomes per task) passed
+its transfer gate --- ungated recycling beat no-recycling on mean@16 in 3/3
+seeds --- and its manipulation check (rejection graded 0/.72--.80/.88--.90/.93
+across gate strengths), but neither tested setting met the frozen usefulness
+criterion; per-seed signs were mixed at $n=3$. Its raw outcomes also record,
+descriptively, one seed in which mean@16 rose while standard observed-set
+$\passat{16}$ fell $.656\to.414$ --- a non-proxy instance of the ambiguity
+the operational recommendation targets.
 
 \section{Artifact and data accounting}
 \label{app:artifact}

@@ -1,0 +1,269 @@
+{
+ "engine_seed": 20260813,
+ "results": {
+  "gatedr_b1h_s1": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.62841796875,
+     "pass16_standard": 0.9609375,
+     "proxy16_bootstrap": 0.9330390625,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.16943359375,
+     "pass16_standard": 0.65625,
+     "proxy16_bootstrap": 0.5950390625,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.01708984375,
+     "pass16_standard": 0.1640625,
+     "proxy16_bootstrap": 0.12475,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_b1h_s2": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.62841796875,
+     "pass16_standard": 0.875,
+     "proxy16_bootstrap": 0.848484375,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.19091796875,
+     "pass16_standard": 0.6171875,
+     "proxy16_bootstrap": 0.56178125,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.0205078125,
+     "pass16_standard": 0.15625,
+     "proxy16_bootstrap": 0.1214140625,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_b1h_s3": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.650390625,
+     "pass16_standard": 0.8515625,
+     "proxy16_bootstrap": 0.8326484375,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.22705078125,
+     "pass16_standard": 0.6796875,
+     "proxy16_bootstrap": 0.6435859375,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.02392578125,
+     "pass16_standard": 0.1640625,
+     "proxy16_bootstrap": 0.134421875,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_g0_s1": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.54443359375,
+     "pass16_standard": 0.640625,
+     "proxy16_bootstrap": 0.640625,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.1767578125,
+     "pass16_standard": 0.4140625,
+     "proxy16_bootstrap": 0.3909140625,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.02587890625,
+     "pass16_standard": 0.1015625,
+     "proxy16_bootstrap": 0.094125,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_g0_s2": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.6591796875,
+     "pass16_standard": 0.8359375,
+     "proxy16_bootstrap": 0.833875,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.25048828125,
+     "pass16_standard": 0.6640625,
+     "proxy16_bootstrap": 0.6108671875,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.0244140625,
+     "pass16_standard": 0.171875,
+     "proxy16_bootstrap": 0.1378046875,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_g0_s3": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.6455078125,
+     "pass16_standard": 0.8828125,
+     "proxy16_bootstrap": 0.861296875,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.2607421875,
+     "pass16_standard": 0.6328125,
+     "proxy16_bootstrap": 0.598671875,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.03662109375,
+     "pass16_standard": 0.171875,
+     "proxy16_bootstrap": 0.14659375,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_g085_s1": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.5556640625,
+     "pass16_standard": 0.8359375,
+     "proxy16_bootstrap": 0.8321484375,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.15771484375,
+     "pass16_standard": 0.5078125,
+     "proxy16_bootstrap": 0.4631875,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.0205078125,
+     "pass16_standard": 0.1171875,
+     "proxy16_bootstrap": 0.1023515625,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_g085_s2": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.59228515625,
+     "pass16_standard": 0.875,
+     "proxy16_bootstrap": 0.8543203125,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.22900390625,
+     "pass16_standard": 0.71875,
+     "proxy16_bootstrap": 0.67275,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.0244140625,
+     "pass16_standard": 0.171875,
+     "proxy16_bootstrap": 0.1427109375,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_g085_s3": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.54052734375,
+     "pass16_standard": 0.859375,
+     "proxy16_bootstrap": 0.851703125,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.21435546875,
+     "pass16_standard": 0.7265625,
+     "proxy16_bootstrap": 0.6796328125,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.02978515625,
+     "pass16_standard": 0.2109375,
+     "proxy16_bootstrap": 0.1718515625,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_g070_s1": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.54443359375,
+     "pass16_standard": 0.8515625,
+     "proxy16_bootstrap": 0.8456328125,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.1533203125,
+     "pass16_standard": 0.671875,
+     "proxy16_bootstrap": 0.5948359375,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.0234375,
+     "pass16_standard": 0.171875,
+     "proxy16_bootstrap": 0.137453125,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_g070_s2": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.52001953125,
+     "pass16_standard": 0.8828125,
+     "proxy16_bootstrap": 0.864203125,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.22509765625,
+     "pass16_standard": 0.7109375,
+     "proxy16_bootstrap": 0.66725,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.03076171875,
+     "pass16_standard": 0.2109375,
+     "proxy16_bootstrap": 0.1634765625,
+     "n_tasks": 128
+    }
+   }
+  },
+  "gatedr_g070_s3": {
+   "tiers": {
+    "t0": {
+     "mean16": 0.58056640625,
+     "pass16_standard": 0.890625,
+     "proxy16_bootstrap": 0.8825234375,
+     "n_tasks": 128
+    },
+    "t1": {
+     "mean16": 0.17578125,
+     "pass16_standard": 0.6640625,
+     "proxy16_bootstrap": 0.6083359375,
+     "n_tasks": 128
+    },
+    "t2": {
+     "mean16": 0.0244140625,
+     "pass16_standard": 0.171875,
+     "proxy16_bootstrap": 0.141421875,
+     "n_tasks": 128
+    }
+   }
+  }
+ }
+}

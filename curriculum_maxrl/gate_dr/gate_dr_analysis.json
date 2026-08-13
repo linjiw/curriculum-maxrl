@@ -1,0 +1,203 @@
+{
+ "_prereg": "hopper/GATE_DR_PREREG.md (frozen 2026-08-13, commit 16b95b7)",
+ "_metric_provenance": "t*_proxy16 = VERL bootstrap best@16 coverage proxy, not standard unbiased pass@16",
+ "runs": {
+  "b1h_s1": {
+   "t1_mean16": 0.16943359375,
+   "t1_proxy16": 0.5950390625,
+   "t1_pass16_standard": 0.65625,
+   "t2_mean16": 0.01708984375,
+   "t2_proxy16": 0.12475,
+   "t2_pass16_standard": 0.1640625
+  },
+  "b1h_s2": {
+   "t1_mean16": 0.19091796875,
+   "t1_proxy16": 0.56178125,
+   "t1_pass16_standard": 0.6171875,
+   "t2_mean16": 0.0205078125,
+   "t2_proxy16": 0.1214140625,
+   "t2_pass16_standard": 0.15625
+  },
+  "b1h_s3": {
+   "t1_mean16": 0.22705078125,
+   "t1_proxy16": 0.6435859375,
+   "t1_pass16_standard": 0.6796875,
+   "t2_mean16": 0.02392578125,
+   "t2_proxy16": 0.134421875,
+   "t2_pass16_standard": 0.1640625
+  },
+  "g0_s1": {
+   "t1_mean16": 0.1767578125,
+   "t1_proxy16": 0.3909140625,
+   "t1_pass16_standard": 0.4140625,
+   "t2_mean16": 0.02587890625,
+   "t2_proxy16": 0.094125,
+   "t2_pass16_standard": 0.1015625
+  },
+  "g0_s2": {
+   "t1_mean16": 0.25048828125,
+   "t1_proxy16": 0.6108671875,
+   "t1_pass16_standard": 0.6640625,
+   "t2_mean16": 0.0244140625,
+   "t2_proxy16": 0.1378046875,
+   "t2_pass16_standard": 0.171875
+  },
+  "g0_s3": {
+   "t1_mean16": 0.2607421875,
+   "t1_proxy16": 0.598671875,
+   "t1_pass16_standard": 0.6328125,
+   "t2_mean16": 0.03662109375,
+   "t2_proxy16": 0.14659375,
+   "t2_pass16_standard": 0.171875
+  },
+  "g085_s1": {
+   "t1_mean16": 0.15771484375,
+   "t1_proxy16": 0.4631875,
+   "t1_pass16_standard": 0.5078125,
+   "t2_mean16": 0.0205078125,
+   "t2_proxy16": 0.1023515625,
+   "t2_pass16_standard": 0.1171875
+  },
+  "g085_s2": {
+   "t1_mean16": 0.22900390625,
+   "t1_proxy16": 0.67275,
+   "t1_pass16_standard": 0.71875,
+   "t2_mean16": 0.0244140625,
+   "t2_proxy16": 0.1427109375,
+   "t2_pass16_standard": 0.171875
+  },
+  "g085_s3": {
+   "t1_mean16": 0.21435546875,
+   "t1_proxy16": 0.6796328125,
+   "t1_pass16_standard": 0.7265625,
+   "t2_mean16": 0.02978515625,
+   "t2_proxy16": 0.1718515625,
+   "t2_pass16_standard": 0.2109375
+  },
+  "g070_s1": {
+   "t1_mean16": 0.1533203125,
+   "t1_proxy16": 0.5948359375,
+   "t1_pass16_standard": 0.671875,
+   "t2_mean16": 0.0234375,
+   "t2_proxy16": 0.137453125,
+   "t2_pass16_standard": 0.171875
+  },
+  "g070_s2": {
+   "t1_mean16": 0.22509765625,
+   "t1_proxy16": 0.66725,
+   "t1_pass16_standard": 0.7109375,
+   "t2_mean16": 0.03076171875,
+   "t2_proxy16": 0.1634765625,
+   "t2_pass16_standard": 0.2109375
+  },
+  "g070_s3": {
+   "t1_mean16": 0.17578125,
+   "t1_proxy16": 0.6083359375,
+   "t1_pass16_standard": 0.6640625,
+   "t2_mean16": 0.0244140625,
+   "t2_proxy16": 0.141421875,
+   "t2_pass16_standard": 0.171875
+  }
+ },
+ "dose_manipulation_check": {
+  "g0_s1": {
+   "gated": 0.0,
+   "relabeled_groups": 314.0,
+   "reject_frac": 0.0
+  },
+  "g0_s2": {
+   "gated": 0.0,
+   "relabeled_groups": 269.0,
+   "reject_frac": 0.0
+  },
+  "g0_s3": {
+   "gated": 0.0,
+   "relabeled_groups": 229.0,
+   "reject_frac": 0.0
+  },
+  "g085_s1": {
+   "gated": 1117.0,
+   "relabeled_groups": 273.0,
+   "reject_frac": 0.8035971223021583
+  },
+  "g085_s2": {
+   "gated": 682.0,
+   "relabeled_groups": 259.0,
+   "reject_frac": 0.7247608926673751
+  },
+  "g085_s3": {
+   "gated": 584.0,
+   "relabeled_groups": 226.0,
+   "reject_frac": 0.7209876543209877
+  },
+  "g070_s1": {
+   "gated": 2008.0,
+   "relabeled_groups": 232.0,
+   "reject_frac": 0.8964285714285715
+  },
+  "g070_s2": {
+   "gated": 1792.0,
+   "relabeled_groups": 230.0,
+   "reject_frac": 0.8862512363996043
+  },
+  "g070_s3": {
+   "gated": 1603.0,
+   "relabeled_groups": 213.0,
+   "reject_frac": 0.8827092511013216
+  }
+ },
+ "transfer_gate": {
+  "delta_mean_g0_per_seed": [
+   0.00732421875,
+   0.0595703125,
+   0.03369140625
+  ],
+  "positive_pairs": 3,
+  "passes": true
+ },
+ "settings": {
+  "g085": {
+   "delta_mean_per_seed": [
+    -0.01171875,
+    0.0380859375,
+    -0.0126953125
+   ],
+   "delta_proxy_per_seed": [
+    -0.13185156250000007,
+    0.11096874999999995,
+    0.03604687499999992
+   ],
+   "mean_kept_fraction": 0.13592233009708737,
+   "kept_per_seed": [
+    -0.3495145631067961,
+    1.1359223300970873,
+    -0.3786407766990291
+   ],
+   "rule2a_mean": false,
+   "rule2b_coverage": true,
+   "reproduces_useful_point": false
+  },
+  "g070": {
+   "delta_mean_per_seed": [
+    -0.01611328125,
+    0.0341796875,
+    -0.05126953125
+   ],
+   "delta_proxy_per_seed": [
+    -0.0002031250000000817,
+    0.10546875,
+    -0.035250000000000004
+   ],
+   "mean_kept_fraction": -0.3300970873786408,
+   "kept_per_seed": [
+    -0.4805825242718446,
+    1.0194174757281553,
+    -1.529126213592233
+   ],
+   "rule2a_mean": false,
+   "rule2b_coverage": false,
+   "reproduces_useful_point": false
+  }
+ },
+ "verdict": "GRADED DOSE WITHOUT USEFUL OPERATING POINT: rejection is graded but no setting meets rule 2 (prereg rule 4)."
+}
