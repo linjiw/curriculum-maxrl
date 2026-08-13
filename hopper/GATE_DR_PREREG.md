@@ -3,8 +3,12 @@
 **Status:** DRAFT until the commit that includes this file and the Hopper training
 smoke receipt; FROZEN thereafter (changes only via dated amendment section).
 **Environment:** GMU Hopper, one `A100.80gb` per run, env `/scratch/lwang44/envs/maxrl-train`
-(python 3.11, torch 2.7.0+cu128, transformers 4.56.2, ray 2.49.2, flash-attn 2.8.3.post1,
-setuptools<81, torchdata 0.11.0), HF rollout — mirroring the lab runtime's pins.
+(python 3.11, torch 2.7.0+cu128, transformers 4.56.2, ray 2.49.2, setuptools<81,
+torchdata 0.11.0, math-verify 0.8.0), HF rollout — mirroring the lab runtime's pins.
+flash-attn is an inert import shim (the real wheel needs GLIBC ≥2.32, unavailable on
+Hopper nodes); attention runs via SDPA, `use_remove_padding` stays false, and the shim
+raises loudly if any flash/rmpad kernel path is ever invoked, so it cannot silently
+alter computation.
 **Launcher:** `hopper/countdown_hopper_gate.sh`, a byte-faithful derivative of the frozen
 `verl_integration/countdown_rtx5090.sh` adding exactly one additive parameter
 (`HINDSIGHT_GATE_MAX_P` → `+algorithm.hindsight.gate_max_p`); the frozen original and
