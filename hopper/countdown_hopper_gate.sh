@@ -41,6 +41,7 @@ HINDSIGHT_MAX_GROUPS=${HINDSIGHT_MAX_GROUPS:-8}
 HINDSIGHT_ONE_TARGET=${HINDSIGHT_ONE_TARGET:-false}
 HINDSIGHT_UTILITY_GATE=${HINDSIGHT_UTILITY_GATE:-false}
 HINDSIGHT_GATE_MAX_P=${HINDSIGHT_GATE_MAX_P:-0.5}
+ATTN_IMPLEMENTATION=${ATTN_IMPLEMENTATION:-flash_attention_2}
 HINDSIGHT_AUDIT_PATH=${HINDSIGHT_AUDIT_PATH:-$OUTPUT_DIR/dose_accounting.jsonl}
 LIVE_REPLAY_ENABLE=${LIVE_REPLAY_ENABLE:-false}
 LIVE_REPLAY_SCHEDULE=${LIVE_REPLAY_SCHEDULE:-}
@@ -108,7 +109,7 @@ exec "$PYTHON_BIN" -m verl.trainer.main_ppo \
   +data.dataloader_num_workers=0 \
   actor_rollout_ref.model.path="$MODEL_PATH" \
   +actor_rollout_ref.seed="$SEED" \
-  actor_rollout_ref.model.attn_implementation=flash_attention_2 \
+  actor_rollout_ref.model.attn_implementation="$ATTN_IMPLEMENTATION" \
   actor_rollout_ref.model.enable_gradient_checkpointing="$GRADIENT_CHECKPOINTING" \
   actor_rollout_ref.actor.optim.lr="$LR" \
   actor_rollout_ref.actor.use_kl_loss=false \

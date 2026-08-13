@@ -15,6 +15,7 @@
 # 12 tasks: arm index = ID/3 in {b1h,g0,g085,g070}, seed = ID%3 + 1.
 # Do NOT submit before the prereg-freeze commit exists.
 set -euo pipefail
+unset ROCR_VISIBLE_DEVICES HIP_VISIBLE_DEVICES  # Slurm exports these alongside CUDA_VISIBLE_DEVICES; verl rejects the combo
 
 ARMS=(b1h g0 g085 g070)
 ARM="${ARMS[$((SLURM_ARRAY_TASK_ID / 3))]}"
@@ -46,6 +47,7 @@ export HINDSIGHT_ENABLE="$HS" HINDSIGHT_MAX_GROUPS=8 HINDSIGHT_ONE_TARGET=false
 export HINDSIGHT_UTILITY_GATE="$UG" HINDSIGHT_GATE_MAX_P="$GMP"
 export HINDSIGHT_AUDIT_PATH="$OUTPUT_DIR/dose_accounting.jsonl"
 export LIVE_REPLAY_ENABLE=false REPLAY_RESERVOIR_COLLECT=false
+export ATTN_IMPLEMENTATION=sdpa  # flash-attn wheel needs GLIBC>=2.32; Hopper nodes are older
 
 echo "GATE-DR task $SLURM_ARRAY_TASK_ID: arm=$ARM seed=$SEED gate_max_p=$GMP on $(hostname)"
 bash "/scratch/$USER/curriculum-maxrl/hopper/countdown_hopper_gate.sh"

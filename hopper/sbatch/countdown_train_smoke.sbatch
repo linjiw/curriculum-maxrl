@@ -15,6 +15,7 @@
 # on a Hopper A100, via the unchanged lab launcher with environment overrides.
 # Pass criteria: step completes, validation runs, no NaN, checkpoint logic OK.
 set -euo pipefail
+unset ROCR_VISIBLE_DEVICES HIP_VISIBLE_DEVICES  # Slurm exports these alongside CUDA_VISIBLE_DEVICES; verl rejects the combo
 
 export RUNTIME_ROOT="/scratch/$USER/curriculum-maxrl-runtime"
 export PYTHON_BIN="/scratch/$USER/envs/maxrl-train/bin/python"
@@ -23,6 +24,7 @@ export HF_HOME="/scratch/$USER/.hf"
 export RUN_ID="hopper_train_smoke"
 export STEPS=1 TRAIN_BATCH=8 VAL_N=4 SEED=1
 export HINDSIGHT_ENABLE=false LIVE_REPLAY_ENABLE=false
+export ATTN_IMPLEMENTATION=sdpa  # flash-attn wheel needs GLIBC>=2.32; Hopper nodes are older
 
-bash "/scratch/$USER/curriculum-maxrl/verl_integration/countdown_rtx5090.sh"
+bash "/scratch/$USER/curriculum-maxrl/hopper/countdown_hopper_gate.sh"
 echo "TRAIN SMOKE PASS"

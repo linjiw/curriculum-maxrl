@@ -42,7 +42,11 @@ FILTER_OVERLONG=false, GRADIENT_CHECKPOINTING=false, model =
 `countdown_sft_clean_v1` (sha-verified copy), data = `countdown_v2_rebuilt`.
 Deviations from the B-stage: VAL_ON_LAST_STEP=true with VAL_N=16 (step-60
 validation in-run, the ARM-A endpoint path), SAVE_FREQ=60 with hf_model retained
-for later raw-outcome re-evaluation.
+for later raw-outcome re-evaluation, and attn_implementation=sdpa in place of
+flash_attention_2 (the prebuilt flash-attn wheel requires GLIBC ≥2.32; Hopper
+compute nodes are older). SDPA is uniform across all 12 runs, so within-study
+paired contrasts are unaffected; absolute levels may differ slightly from the
+local B-series, which is one more reason all references are on-Hopper.
 
 ## Endpoints
 
