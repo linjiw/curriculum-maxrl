@@ -109,3 +109,11 @@ Two caveats deserve attention even though no claim is untraced:
    the printed number verbatim.
 
 **Final count: 58/58 traced** (34 TRACED, 24 TRACED-ROUNDED; 0 UNTRACED).
+
+## Addendum 2026-08-13: GATE-DR statistics (added to draft after the dose-response study)
+
+| Claim (location) | Artifact | Status |
+|---|---|---|
+| "72--93\% rejection across settings" (main text, gate paragraph) | `curriculum_maxrl/gate_dr/gate_dr_analysis.json` `dose_manipulation_check` (.721–.804 at .85; .883–.896 at .70; ARM A .934–.944 from `countdown_reviewer_arms/PROVENANCE.md`) | TRACED |
+| "no operating point retaining the frozen fraction of the ungated mean gain" | same file, `settings.*.reproduces_useful_point` = false; verdict rule 4 | TRACED |
+| Appendix: transfer 3/3 seeds; rejection grades 0/.72–.80/.88–.90/.93; mean@16 up while standard pass@16 falls .656→.414 (seed 1) | same file `transfer_gate` + `runs` (b1h_s1 `t1_pass16_standard` .6562, g0_s1 .4141) | TRACED |
