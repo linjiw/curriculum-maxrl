@@ -1,7 +1,12 @@
 # GATE-DR: corrected-code utility-gate dose–response — preregistration
 
-**Status:** DRAFT until the commit that includes this file and the Hopper training
-smoke receipt; FROZEN thereafter (changes only via dated amendment section).
+**Status:** FROZEN 2026-08-13 by the commit containing this line, which includes the
+Hopper training-smoke receipt below; changes only via dated amendment section.
+**Smoke receipt (outcome-blind engineering check, not evidence):** Slurm job 9357902
+completed one full MaxRL training step + 3-tier validation on one A100.80gb:
+pg_loss .010, grad_norm .754, entropy .151, advantages in [−1, 7], step-1 val
+mean@4 tier0/1/2 = .412/.119/.006 (512 examples per tier), timing ≈ 6.0 s/train
+step + 37.5 s/validation. No endpoint of any GATE-DR arm was observed.
 **Environment:** GMU Hopper, one `A100.80gb` per run, env `/scratch/lwang44/envs/maxrl-train`
 (python 3.11, torch 2.7.0+cu128, transformers 4.56.2, ray 2.49.2, setuptools<81,
 torchdata 0.11.0, math-verify 0.8.0), HF rollout — mirroring the lab runtime's pins.
