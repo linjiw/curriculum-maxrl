@@ -101,4 +101,11 @@ the manipulation check are complete.
 
 ## Amendments
 
-(none)
+- **2026-08-13 (infrastructure retry, outcome-blind):** array 9357906 tasks 0–2
+  (`b1h` seeds 1–3) completed; tasks 3–11 (all hindsight-enabled arms) failed at
+  import time — `verl/utils/hindsight.py` and `curriculum.py` were rsync-copied as
+  dangling symlinks into the Hopper runtime. Both replaced with the identical
+  vendored file contents (source: repo `verl_integration/`, same bytes the local
+  symlinks resolve to); import verified; tasks 3–11 resubmitted unchanged as array
+  9357948. No endpoint of any arm was observed before or during this repair; the
+  `b1h` logs remain unopened.
