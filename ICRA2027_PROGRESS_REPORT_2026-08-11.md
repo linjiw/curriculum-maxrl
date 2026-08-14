@@ -90,6 +90,27 @@ dated outcome-blind operational amendment; its SHA-256 is now
 Scientific settings and the machine protocol are unchanged. Evidence will
 restart under a new campaign ID and freshly staged source SHA.
 
+### Frozen evidence launch — 2026-08-14
+
+The amended source closure was committed at
+`55d46ccb04ceef2707c382293248ad50087cbb58` and staged in evidence mode at
+SHA-256
+`043d73a64cd63c2bc94e7f3c8fac4a97a3ff3e6b7671775a6402d0066db27760`.
+Campaign `barn-icra2027-20260814-002` was submitted through the source-bound
+held-array transaction as the exact declared four cells:
+
+- primary: array 9366868, attempt `primary-attempt-001`;
+- N=2: array 9366873, attempt `n2-attempt-001`;
+- N=4: array 9366878, attempt `n4-attempt-001`;
+- N=16: array 9366883, attempt `n16-attempt-001`.
+
+The normalized launch ledger has exactly 20 rows and SHA-256
+`54fb6e79a833758227a30cd944ae654994d66e768c83aeace63725f83fa2364d`.
+At 04:09 EDT all 20 tasks were `RUNNING`, each with the frozen 36-hour time
+limit. Only scheduler job identity, state, reason, elapsed time, limit, and node
+metadata were inspected. Raw logs, per-seed artifacts, endpoints, selectors,
+mergers, and analyses remain unopened until exact all-cell terminal closure.
+
 ## Historical 2026-08-11 bounded implementation snapshot
 
 The sections below preserve the original 2026-08-11 snapshot; superseded

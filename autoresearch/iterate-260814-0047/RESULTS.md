@@ -60,6 +60,14 @@
     canceled. No endpoint was opened. The source-bound submitter now reuses an
     exact staged-ledger upload on resume, with a network-free interruption
     regression. Evidence will restart under a new campaign ID and source SHA.
+13. **Keep as the evidence launch milestone:** amended source commit
+    `55d46ccb04ceef2707c382293248ad50087cbb58` staged at SHA-256
+    `043d73a64cd63c2bc94e7f3c8fac4a97a3ff3e6b7671775a6402d0066db27760`.
+    Campaign `barn-icra2027-20260814-002` contains exact five-seed arrays
+    9366868 (primary), 9366873 (N=2), 9366878 (N=4), and 9366883 (N=16).
+    Its 20-row launch ledger SHA-256 is
+    `54fb6e79a833758227a30cd944ae654994d66e768c83aeace63725f83fa2364d`.
+    All 20 tasks reached `RUNNING`; only scheduler metadata was inspected.
 
 ## Outcome-blind design decisions
 
@@ -85,4 +93,6 @@
 No scientific comparison, gate result, or paper claim is available yet. The
 outcome-blind package was frozen in milestone commit
 `23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33` and now carries the dated
-pre-execution operational amendment above. No BARN seed task has run.
+pre-execution operational amendment above. The exact evidence campaign is now
+running, but no scientific endpoint, comparison, gate result, or paper claim
+has been inspected.

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "snapshot_utc": "2026-08-14T08:05:00Z",
-  "state": "active_pre_evidence_frozen_operational_amendment_pending_restage",
-  "evidence_launch_authorized": false,
+  "snapshot_utc": "2026-08-14T08:09:00Z",
+  "state": "active_frozen_barn_evidence_running",
+  "evidence_launch_authorized": true,
   "scientific_endpoints_inspected": false,
-  "next_action": "restage evidence from the commit containing this operational amendment, then restart the exact four cells under a new campaign ID without inspecting endpoints",
+  "next_action": "monitor only scheduler metadata for the four running arrays; retry any failed cell as a complete five-seed attempt, then finalize and seal only after exact all-cell terminal closure",
   "gates": {
     "manifest": "PASS",
     "split": "PASS_COMMITTED_23DACB8",
@@ -12,14 +12,14 @@
     "machine_protocol": "FROZEN_COMMITTED_23DACB8",
     "analyzer": "PASS_HASH_BOUND_COMMITTED_23DACB8",
     "merger_and_retry_selector": "PASS_COMMITTED_23DACB8",
-    "source_bound_workflow": "PASS_OPERATIONAL_AMENDMENT_COMMIT_CONTAINING_THIS_SNAPSHOT",
+    "source_bound_workflow": "PASS_COMMITTED_55D46CC_SOURCE_043D73A6",
     "environment_receipt": "PASS_JOB_9366688",
     "dataset_prepare": "PASS_JOB_9366817",
     "training_smoke": "PASS_RESOURCE_ONLY_JOB_9366831",
     "timing_projection": "PASS_RECOMMEND_36H_REQUEST",
     "preregistration": "FROZEN_COMMITTED_23DACB8",
     "milestone_commit": "PASS_23DACB88CF7B1F46DDDF9D2453DBD7E0BCBBBF33",
-    "barn_evidence": "NO_SEED_TASK_RAN_JOB_9366866_CANCELLED_HELD"
+    "barn_evidence": "RUNNING_EXACT_FOUR_CELLS_20_TASKS"
   },
   "stable_hashes": {
     "barn_archive_sha256": "5ad443412f6f2f38b6d0e1d330c9a820ab48e566553197459005e751711fe320",
@@ -44,6 +44,20 @@
   },
   "prelaunch_jobs": {
     "9366866": "CANCELLED_WHILE_USER_HELD_NO_COMPUTE_ALLOCATION"
+  },
+  "evidence_campaign": {
+    "campaign_id": "barn-icra2027-20260814-002",
+    "source_sha256": "043d73a64cd63c2bc94e7f3c8fac4a97a3ff3e6b7671775a6402d0066db27760",
+    "launch_ledger_sha256": "54fb6e79a833758227a30cd944ae654994d66e768c83aeace63725f83fa2364d",
+    "arrays": {
+      "primary": 9366868,
+      "ablation_n2": 9366873,
+      "ablation_n4": 9366878,
+      "ablation_n16": 9366883
+    },
+    "tasks": 20,
+    "snapshot_scheduler_state": "RUNNING_ALL_20",
+    "endpoints_inspected": false
   },
   "timing_projection": {
     "source_job_id": 9366831,

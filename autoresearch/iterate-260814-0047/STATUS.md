@@ -1,7 +1,7 @@
 # Status
 
-**State:** active, pre-evidence, frozen with outcome-blind operational amendment
-**Last updated:** 2026-08-14 04:05 America/New_York
+**State:** active, frozen BARN evidence running
+**Last updated:** 2026-08-14 04:09 America/New_York
 
 ## Bottom line
 
@@ -10,7 +10,11 @@ MAZE/Hopper loop was classified out of scope and left scheduler-only. Work is
 now aligned to the governing ICRA goal. The CPU-only Hopper dataset preparation
 and outcome-blind timing smoke passed, and the complete protocol package was
 frozen and committed at `23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33`.
-No BARN seed task has run or received a compute allocation.
+The amended source closure was committed at
+`55d46ccb04ceef2707c382293248ad50087cbb58` and staged at SHA-256
+`043d73a64cd63c2bc94e7f3c8fac4a97a3ff3e6b7671775a6402d0066db27760`.
+The exact four-cell, 20-task campaign is now running. No endpoint or raw BARN
+job log has been opened.
 
 ## Passed gates
 
@@ -82,20 +86,19 @@ No BARN seed task has run or received a compute allocation.
   replaces only a partial transaction-owned upload. Its new regression
   interrupts the install after upload and proves same-job recovery. All four
   workflow mocks and all 93 BARN tests pass after the amendment.
+- Campaign `barn-icra2027-20260814-002` has one five-seed attempt in each exact
+  cell: primary array 9366868, N=2 array 9366873, N=4 array 9366878, and N=16
+  array 9366883. The normalized 20-row ledger SHA-256 is
+  `54fb6e79a833758227a30cd944ae654994d66e768c83aeace63725f83fa2364d`.
+  At 04:09 EDT all 20 tasks were `RUNNING` under the frozen 36-hour limit.
 
 ## Next BARN actions
 
-1. Treat the commit containing this status as the source-bound ledger-resume
-   amendment, then rerun `stage_barn_campaign.sh evidence` to obtain a new
-   source path and SHA. Do not reuse the abandoned campaign ID or source SHA
-   `4fee1bb8...0a5b`.
-2. With one `CAMPAIGN_ID` and that evidence source pair, call
-   `submit_barn_campaign.sh` once each for `primary`, `ablation_n2`,
-   `ablation_n4`, and `ablation_n16`, using unique attempt IDs. A retry is a
-   new complete five-seed attempt for the affected cell.
-3. Monitor scheduler metadata only. Do not open raw logs or endpoints, fetch
+1. Monitor scheduler metadata only. Do not open raw logs or endpoints, fetch
    seed artifacts, select partial results, or analyze locally.
-4. After every recorded task is terminal and any scheduler-visible failure has
+2. If any array task fails, retain the attempt and resubmit its entire
+   five-seed cell under a new attempt ID with the identical frozen source.
+3. After every recorded task is terminal and any scheduler-visible failure has
    been retried as a whole cell, run
    `finalize_barn_ledger.sh CAMPAIGN_ID SOURCE_BUNDLE SOURCE_SHA256`. Pass the
    printed `sha256=` value to
@@ -105,6 +108,6 @@ No BARN seed task has run or received a compute allocation.
 ## Scheduler state
 
 All six BARN engineering jobs listed above are terminal. Held prelaunch job
-9366866 was canceled before allocation; no BARN seed task has run. The
-unrelated MAZE scheduler work remains out of scope and was neither expanded
-nor inspected for scientific endpoints.
+9366866 was canceled before allocation. Evidence arrays 9366868, 9366873,
+9366878, and 9366883 are running. The unrelated MAZE scheduler work remains
+out of scope and was neither expanded nor inspected for scientific endpoints.
