@@ -1,0 +1,21 @@
+{
+  "archive_extracted_on_compute": true,
+  "archive_path": "/scratch/lwang44/maxrl/bundles/barn_dataset/5ad443412f6f2f38b6d0/BARN_dataset.zip",
+  "archive_sha256": "5ad443412f6f2f38b6d0e1d330c9a820ab48e566553197459005e751711fe320",
+  "artifact_type": "barn_hopper_dataset_prepare_receipt",
+  "atomic_finalize": "mkdir_claim_plus_complete_last_hardlink",
+  "barn_manifest_sha256": "1015a6a48ef44add7224200da2ace1cd6c8d7780275b30d7266a44dc88e9ec61",
+  "barn_split_sha256": "c0ed1d7024ebc240d96a023efb6a124e879fdb06d0342a5e5de7b6d6ed07d7d7",
+  "canonical_package": "/scratch/lwang44/maxrl/barn/datasets/5ad443412f6f2f38b6d0e1d330c9a820ab48e566553197459005e751711fe320",
+  "completed_utc": "2026-08-14T07:22:07.245466+00:00",
+  "container_path": "/scratch/lwang44/ros2-gazebo-classic.sif",
+  "container_sha256": "cd6620e33c0822f7d6a03c6de6ea9dd4304f0927e8d7997c003560f5b4781be0",
+  "cpu_only": true,
+  "dataset_subdirectory": "BARN_dataset",
+  "evidence_status": "immutable_dataset_preparation_not_paper_evidence",
+  "job_id": 9366817,
+  "node": "hop072.orc.gmu.edu",
+  "paper_endpoint_emitted": false,
+  "source_bundle": "/scratch/lwang44/maxrl/bundles/barn_source/a64cf4e4e2edf6701077",
+  "source_manifest_sha256": "a64cf4e4e2edf6701077ee8bb92ed1898de3aa41036e431a51a5c093a534729f"
+}

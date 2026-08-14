@@ -1,0 +1,52 @@
+{
+  "artifact_type": "barn_hopper_environment_receipt",
+  "checked_utc": "2026-08-14T04:59:24.545764Z",
+  "execution_site": "GMU Hopper",
+  "execution_mode": "CPU-only Apptainer on normal partition",
+  "container_path": "/scratch/lwang44/ros2-gazebo-classic.sif",
+  "container_size_bytes": 1192398848,
+  "container_sha256": "cd6620e33c0822f7d6a03c6de6ea9dd4304f0927e8d7997c003560f5b4781be0",
+  "slurm": {
+    "job_id": 9366688,
+    "job_name": "ros-sif-check",
+    "partition": "normal",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:00:27",
+    "allocated_cpus": 8,
+    "requested_memory": "16G",
+    "node": "hop072.orc.gmu.edu",
+    "submit_local": "2026-08-14T00:58:38-04:00",
+    "start_local": "2026-08-14T00:58:57-04:00",
+    "end_local": "2026-08-14T00:59:24-04:00"
+  },
+  "fingerprint": {
+    "ros_distro": "humble",
+    "ros_version": "2",
+    "ros_python_version": "3",
+    "gazebo_classic_version": "11.10.2",
+    "python_version": "3.10.12",
+    "dpkg_package_count": 1542,
+    "python_distribution_count": 227,
+    "dpkg_tsv_sha256": "fdabbd9e5a8c35bc638b387982e966f1249aed306df0c7ae0e049010a1842cf3",
+    "pip_freeze_sha256": "5c7098ace8e4aa382f913a5d64facdac27dc80ca2fda9450347d9bb9b909dddd",
+    "ros_environment_sha256": "cd3cb614fbc0f42a881dc0b54566e7e2eff9e0c31ee36b88a9f995dcb5342afb",
+    "gazebo_version_sha256": "601a1e24ab93cb51d348136da9d460544e9efc42be8400d98c2d7869f91ac1b3",
+    "python_version_sha256": "f6b75e07f1488db28a89724a522725e3e01af3dc78f6fd365f17eb4059e41056",
+    "os_release_sha256": "594d5ddd35aedb47f00d9c34d140017907a5b9f93c975aba125fc924daac5c07",
+    "uname_sha256": "e49fea64d86414b4506c09d8e234263731df3e2d199a3530236517e056e9484b",
+    "headless_boot_sha256": "0745e7d8837a95e6d09467895636c6341e199965a3edd59543e0db252c63c88a"
+  },
+  "validation_script": {
+    "path": "hopper/sbatch/ros_container_check.sbatch",
+    "sha256": "43f9a4db82f16cba8d0321dd360927d60ffb8fa7b2514522f72b0a3c8e60a320"
+  },
+  "retrieved_artifacts": {
+    "path": "autoresearch/iterate-260814-0047/hopper_environment/job-9366688",
+    "verified_tree_sha256": "9bd48b64c90196257c85373cd8939149883794b9fc0298010741a748d3b4c4ee",
+    "stdout_path": "autoresearch/iterate-260814-0047/hopper_environment/job-9366688.stdout.log",
+    "stdout_sha256": "dd100c5a320bf50c72c4b9eb0207ad42796331979653aa7998d17e2a895469b0"
+  },
+  "evidence_status": "engineering_environment_check_not_paper_evidence",
+  "gpu_used": false
+}

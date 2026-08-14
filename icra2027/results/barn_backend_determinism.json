@@ -1,0 +1,32 @@
+{
+  "artifact_type": "barn_backend_determinism_receipt",
+  "course_asset_sha256": "1ccf05d28c1f5641a99b19534247a4e991281cb79c7c648abe436349cb21be6e",
+  "course_id": "barn-299",
+  "cpu_only": true,
+  "fixed_seed_exact_match": false,
+  "runs": [
+    {
+      "commands_count": 339,
+      "commands_sha256": "d4550aa55fd2f5094e5aaf0f17ad0c8a9ddfb317f0c93204289d3ffbe185dbf5",
+      "planned_clearance_m": 0.42,
+      "positions_count": 340,
+      "positions_sha256": "6f36897e568c8753fad942540f134a8e0ed5b864d14944389ed1ff6fcd93b2db",
+      "sim_seconds": 16.95,
+      "sim_steps": 3400,
+      "status": "succeeded",
+      "successes": 1
+    },
+    {
+      "commands_count": 345,
+      "commands_sha256": "8640bf06b068bf884abfb57c481910fd0c6ef8194b1d71428dbc3c30d528622e",
+      "planned_clearance_m": 0.42,
+      "positions_count": 346,
+      "positions_sha256": "f6ae8e885cca8fd3046bf8c66d123cf6740629dbedcd33cdc41eeca2ef6f7fa4",
+      "sim_seconds": 17.25,
+      "sim_steps": 3460,
+      "status": "succeeded",
+      "successes": 1
+    }
+  ],
+  "seed": 20270811
+}

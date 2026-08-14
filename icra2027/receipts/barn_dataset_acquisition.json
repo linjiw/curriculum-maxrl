@@ -1,0 +1,29 @@
+{
+  "artifact_type": "barn_dataset_acquisition_receipt",
+  "checked_utc": "2026-08-14T04:50:00Z",
+  "official_landing_page": "https://www.cs.utexas.edu/~xiao/BARN/BARN.html",
+  "source_url": "https://www.cs.utexas.edu/~xiao/BARN/BARN_dataset.zip",
+  "provenance_note": "The official landing page currently links this archive URL. The original transfer log was not retained, so this receipt binds the locally acquired archive to the official URL without claiming an independently supplied upstream checksum.",
+  "archive_filename": "BARN_dataset.zip",
+  "archive_size_bytes": 4048923,
+  "archive_sha256": "5ad443412f6f2f38b6d0e1d330c9a820ab48e566553197459005e751711fe320",
+  "dataset_readme_sha256": "0cfd299d5a591a0975d36ed3f9425d1dbb49f59fbb343fa0a5e5c38a9011f5d0",
+  "manifest_path": "icra2027/barn_manifest.jsonl",
+  "manifest_sha256": "1015a6a48ef44add7224200da2ace1cd6c8d7780275b30d7266a44dc88e9ec61",
+  "manifest_builder_path": "icra2027/build_barn_manifest.py",
+  "manifest_builder_sha256": "e8e4bdfbf5fbd361838056dda67f31ab9e0319e10d3bcd7ccc0cc981be0c868f",
+  "manifest_generation_command": "python3 icra2027/build_barn_manifest.py /path/to/BARN_dataset --output icra2027/barn_manifest.jsonl",
+  "course_count": 300,
+  "unique_course_count": 300,
+  "difficulty_definition": "published_optimal_traversal_time_seconds",
+  "difficulty_min_seconds": 5.026613657482018,
+  "difficulty_max_seconds": 6.867653471636538,
+  "referenced_assets_verified": {
+    "world_files": 300,
+    "path_files": 300,
+    "grid_files": 300,
+    "sha256_matches": 900,
+    "sha256_mismatches": 0
+  },
+  "dataset_files_committed": false
+}

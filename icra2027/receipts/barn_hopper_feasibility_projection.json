@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "artifact_type": "barn_hopper_feasibility_projection_receipt",
+  "status": "complete",
+  "purpose": "Outcome-blind resource projection used only to select a safe Hopper scheduler wall-time limit before protocol freeze.",
+  "evidence_status": "engineering_feasibility_projection_not_paper_evidence",
+  "input_receipt": {
+    "path": "icra2027/receipts/barn_hopper_training_smoke.json",
+    "sha256": "d9d251c819bbf602dae6c829e3c6755b514639f2fa1c3c9f83cd5b13d21c8738",
+    "job_id": 9366831,
+    "source_manifest_sha256": "a2e24572a8261d9c0d98bebbb3c5d894a68efcd7131b8f0f84476baadb2d5ede"
+  },
+  "no_peek": {
+    "resource_counters_only": true,
+    "heldout_courses_read": false,
+    "paper_endpoint_emitted": false,
+    "internal_metric_artifact_retained": false,
+    "scientific_outcomes_read_or_used": false,
+    "paper_evidence_run": false
+  },
+  "raw_resource_counters": {
+    "training_sim_steps": 50570,
+    "training_episodes": 16,
+    "training_wall_seconds": 330.4966247198172,
+    "evaluation_wall_seconds": 62.23256712174043,
+    "evaluation_episodes_observed": 2,
+    "job_elapsed_seconds": 422
+  },
+  "scientific_budgets_unchanged": {
+    "training_sim_steps_per_arm": 1000000,
+    "evaluation_checkpoints_per_arm": 6,
+    "heldout_courses_per_checkpoint": 60,
+    "evaluation_episodes_per_course": 1,
+    "primary_arms_per_seed_job": 4,
+    "ablation_arms_per_seed_job": 2,
+    "episode_timeout_sim_seconds": 25.0,
+    "max_training_updates": 200,
+    "budget_or_cadence_reduced_for_scheduler_fit": false
+  },
+  "derivation": {
+    "training_sim_steps_per_wall_second_formula": "50570 / 330.4966247198172",
+    "training_sim_steps_per_wall_second": 153.01215267439228,
+    "training_wall_seconds_per_arm_formula": "1000000 / (50570 / 330.4966247198172)",
+    "training_wall_seconds_per_arm": 6535.428608262155,
+    "training_wall_hours_per_arm": 1.8153968356283765,
+    "evaluation_wall_seconds_per_episode_formula": "62.23256712174043 / 2",
+    "evaluation_wall_seconds_per_episode": 31.116283560870215,
+    "projected_evaluation_episodes_per_arm_formula": "6 * 60 * 1",
+    "projected_evaluation_episodes_per_arm": 360,
+    "evaluation_wall_seconds_per_arm_formula": "(62.23256712174043 / 2) * 360",
+    "evaluation_wall_seconds_per_arm": 11201.862081913277,
+    "evaluation_wall_hours_per_arm": 3.1116283560870215,
+    "projected_total_wall_seconds_per_arm": 17737.290690175433,
+    "projected_total_wall_hours_per_arm": 4.927025191715398,
+    "projected_primary_four_arm_wall_seconds_per_seed_job": 70949.16276070173,
+    "projected_primary_four_arm_wall_hours_per_seed_job": 19.708100766861592,
+    "projected_ablation_two_arm_wall_seconds_per_seed_job": 35474.58138035087,
+    "projected_ablation_two_arm_wall_hours_per_seed_job": 9.854050383430796
+  },
+  "scheduler_decision": {
+    "padding_fraction": 0.2,
+    "padded_primary_four_arm_wall_seconds": 85138.99531284208,
+    "padded_primary_four_arm_wall_hours": 23.64972092023391,
+    "current_limit_seconds": 86400,
+    "current_limit_hours": 24,
+    "current_limit_padded_margin_seconds": 1261.0046871579224,
+    "current_limit_padded_margin_minutes": 21.016744785965375,
+    "current_24h_risk": "too_tight_for_evidence_use",
+    "chosen_limit_seconds": 129600,
+    "chosen_limit_hours": 36,
+    "chosen_limit_padded_margin_seconds": 44461.004687157925,
+    "chosen_limit_padded_margin_hours": 12.35027907976609,
+    "hopper_partition": "normal",
+    "hopper_normal_max_time_seconds": 604800,
+    "chosen_limit_within_partition_max": true,
+    "decision": "Request 36 scheduler hours for each seed job; retain every frozen scientific budget and cadence unchanged."
+  },
+  "assumptions": [
+    "The successful CPU-only job 9366831 training throughput is representative of evidence jobs using the same Hopper container, source, dataset, and exact-step backend.",
+    "The smoke evaluation counter covers two training-course evaluation episodes, so evaluation time is projected linearly to six checkpoints times 60 held-out courses times one episode.",
+    "The four primary arms run sequentially inside one seed job; the two ablation arms use the same per-arm projection.",
+    "The 20 percent padding is a scheduler allowance for run-to-run variation and fixed overhead, not a scientific budget increase and not an analysis endpoint."
+  ],
+  "caveat": "This is a single-job engineering extrapolation, not a runtime guarantee. Queue delay is excluded, startup and teardown are not separately modeled, and simulator timing may vary by node; the 20 percent padding and 36-hour limit supply operational headroom without authorizing outcome inspection or budget changes."
+}

@@ -1,0 +1,62 @@
+{
+  "artifact_type": "barn_backend_determinism_and_throughput_receipt",
+  "created_local": "2026-08-14T01:00:00-04:00",
+  "evidence_status": "engineering_smoke_not_paper_evidence",
+  "heldout_data_used": false,
+  "course_partition": "train",
+  "course_id": "barn-299",
+  "course_asset_sha256": "1ccf05d28c1f5641a99b19534247a4e991281cb79c7c648abe436349cb21be6e",
+  "seed": 20270811,
+  "cpu_only": true,
+  "host_cpu": "Intel(R) Core(TM) Ultra 7 265K",
+  "online_cpu_count": 20,
+  "command": "python3 icra2027/verify_barn_backend.py --course-id barn-299 --seed 20270811 --domain-id 91 --master-port 11491 --runtime-root /tmp/icra_barn_throughput_9366688 --output /tmp/barn_backend_throughput_9366688.json",
+  "command_exit_code": 1,
+  "exit_note": "The verifier intentionally exits nonzero when the two complete fixed-seed receipts are not exactly equal.",
+  "resource_measurement": {
+    "wall_seconds": 42.87,
+    "user_seconds": 4.81,
+    "system_seconds": 1.56,
+    "max_rss_kb": 816580,
+    "episodes": 2,
+    "wall_seconds_per_episode": 21.435,
+    "episodes_per_wall_hour": 167.94961511546538
+  },
+  "fixed_seed_exact_match": false,
+  "outcome_bits_match": true,
+  "sim_step_counts_match": false,
+  "runs": [
+    {
+      "successes": 1,
+      "status": "succeeded",
+      "sim_steps": 3670,
+      "sim_seconds": 18.3,
+      "planned_clearance_m": 0.42,
+      "positions_count": 367,
+      "commands_count": 366,
+      "positions_sha256": "c4ac376502ba8f6679605d6a14fc72c0214a09741e95204fad687a3cef1a5a4d",
+      "commands_sha256": "ddbacffe80072f27d92771eb39fea27b159a1bbbf0bd8d94ba926b3c5d178b54"
+    },
+    {
+      "successes": 1,
+      "status": "succeeded",
+      "sim_steps": 3260,
+      "sim_seconds": 16.25,
+      "planned_clearance_m": 0.42,
+      "positions_count": 326,
+      "commands_count": 325,
+      "positions_sha256": "3ec2ff3387d03e083af58e9a0a210c61ad0c307a5bb26ae506dde55c350082ad",
+      "commands_sha256": "b9a481216e3568524af807894872b6132e34139c71a25f0dcdda6b6eaba91614"
+    }
+  ],
+  "mean_sim_steps_per_episode": 3465.0,
+  "mean_sim_seconds_per_episode": 17.275,
+  "current_runner_default_projection": {
+    "training_episodes_per_seed_all_arms": 15360,
+    "evaluation_episodes_per_seed_all_arms": 13440,
+    "total_episodes_per_seed": 28800,
+    "projected_local_wall_hours_per_seed": 171.48,
+    "verdict": "infeasible for the one-day seed-job target; freeze a smaller outcome-blind transition budget and evaluation cadence before launch"
+  },
+  "nondeterminism_handling": "Record non-bit-exact ROS/Gazebo timing before freeze; retain exact physics-step settings, fixed paired course/evaluation seeds, training seed as the independent unit, and transition-matched primary analysis. Do not claim fixed-seed trajectory or step-count identity."
+}
