@@ -1,8 +1,78 @@
 # Curriculum-MaxRL → ICRA 2027 progress report
 
-**Date:** 2026-08-11  
-**Scope:** First bounded implementation pass against `claude-fable-plan.md`  
-**Status:** Campaign plumbing ready; real BARN/Jackal backend and assets blocked externally; no paper-level robotics result yet
+**Date:** 2026-08-11
+**Updated:** 2026-08-14
+**Scope:** First bounded implementation pass plus current BARN/Hopper readiness
+**Status:** CPU-only BARN engineering gates passed; protocol frozen at `23dacb8`; no BARN scientific evidence launched
+
+## Current update — 2026-08-14
+
+The earlier external-asset/backend blocker is closed. The official 300-course
+BARN archive, all 900 adapter-consumed asset hashes, the deterministic 240/60
+train/held-out split, ROS 2/Gazebo container, exact-step backend, real BARN
+runner, frozen-shape analyzer, blind selector/merger, and source-bound Hopper
+workflow are now implemented and verified. No BARN scientific endpoint has run
+or been inspected.
+
+### Outcome-blind Hopper engineering ledger
+
+| job | purpose | terminal result | retained decision |
+|---:|---|---|---|
+| 9366805 | dataset preparation | failed `127:0` in 11 s | Missing host `/usr/bin/time`; switched all BARN jobs to Bash timing. |
+| 9366814 | dataset preparation retry | failed `1:0` in 48 s | Hopper scratch rejected directory `renameat2(RENAME_NOREPLACE)`; changed publication to an atomic canonical-directory claim with `COMPLETE` hard-linked last. |
+| 9366817 | dataset preparation | completed `0:0` in 42 s | Canonical checksum-closed package retained. |
+| 9366819 | one-update train-only smoke | failed `1:0` in 39 s | Exact binaries built and no-asset guard passed; preserved ROS `PYTHONPATH` so `rclpy` remains importable. |
+| 9366821 | corrected train-only smoke | completed `0:0` in 8 min 28 s | Runtime validation retained, but its receipt lacked simulator-step/phase timing counters and was not used for the final projection. |
+| 9366831 | resource-instrumented train-only smoke | completed `0:0` in 7 min 15 s scheduler elapsed (422 s receipt elapsed) | Final outcome-blind feasibility receipt retained. |
+
+Dataset preparation receipt SHA-256:
+`216408ddfb6ef95c6d7cc912608aac0428240d09a562f20b03069408b1a9d76f`.
+Training smoke receipt SHA-256:
+`d9d251c819bbf602dae6c829e3c6755b514639f2fa1c3c9f83cd5b13d21c8738`.
+
+Job 9366831 reported only resource counters: 50,570 training simulator steps,
+16 training episodes, 330.497 training seconds, and 62.233 seconds for two
+evaluations on train course `barn-299`. It was CPU-only, read no held-out
+course, retained no metric artifact, and emitted no success, reward, AUC,
+trajectory, held-out result, paper endpoint, or scientific comparison.
+
+### Timing decision frozen before evidence
+
+The resource receipt implies 153.012 training simulator steps/second, 1.815
+hours for one million training transitions per arm, and 31.116 seconds per
+evaluation episode. Six checkpoints over all 60 held-out courses project to
+3.112 evaluation hours per arm, or 4.927 hours total per arm. Therefore:
+
+- four-arm primary cell: 19.708 hours nominal, 23.650 hours with 20% padding;
+- two-arm ablation cell: 9.854 hours nominal;
+- margin under a 24-hour task after primary padding: only 0.350 hours;
+- recommended Slurm request: 36 hours, leaving 12.350 hours beyond the padded
+  primary estimate.
+
+The 36-hour request is scheduler headroom only. It does not change the frozen
+one-million-transition training budget, checkpoint cadence, evaluation course
+count, arm definitions, or paired seeds.
+
+### Freeze milestone and next action
+
+The preregistration and machine protocol are now exactly `FROZEN` in commit
+`23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33`. The frozen protocol SHA-256 is
+`36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2`;
+the frozen preregistration SHA-256 is
+`975e3cced69807c86569acd167f5292d5cf8d8e1872b2f8b9a5f876cc464ab77`;
+the analyzer SHA-256 is
+`9469bdd52be8ceab9370dd982fd142faf48d58dea16726fce039ca52c5ea944f`.
+The milestone gate passed 93 BARN contract tests, 17 core tests, four
+fail-closed shell workflow mocks, shell syntax, Python compilation, and
+whitespace validation. No BARN evidence had been submitted or inspected at
+freeze. The next authorized action is a fresh evidence-mode source stage from
+that commit, followed by the exact source-bound four-cell submission; no
+engineering bundle may be reused.
+
+## Historical 2026-08-11 bounded implementation snapshot
+
+The sections below preserve the original 2026-08-11 snapshot; superseded
+blockers and hashes are historical rather than the current campaign state.
 
 ## Bottom line
 
@@ -152,4 +222,3 @@ The checkout began with extensive intentional user changes and untracked E2c
 artifacts. No branch switch, merge, commit, reset, push, or publication was
 performed. The nine-page ICLR release branch remains unreconciled exactly as
 required by the existing branch handoff.
-

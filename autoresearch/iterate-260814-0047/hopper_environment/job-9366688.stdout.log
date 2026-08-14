@@ -1,0 +1,16 @@
+INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
+INFO:    gocryptfs not found, will not be able to use gocryptfs
+INFO:    Converting SIF file to temporary sandbox...
+INFO:    Cleaning up image...
+container.sha256: OK
+dpkg.tsv: OK
+gazebo-version.txt: OK
+headless-boot.txt: OK
+os-release.txt: OK
+pip-freeze.txt: OK
+python-version.txt: OK
+ros-environment.txt: OK
+runtime.json: OK
+uname.txt: OK
+environment_result=/scratch/lwang44/icra2027/environment/job-9366688
+ROS CONTAINER CHECK PASS

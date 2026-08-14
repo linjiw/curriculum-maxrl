@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "snapshot_utc": "2026-08-14T07:58:00Z",
+  "state": "active_pre_evidence_frozen_committed",
+  "evidence_launch_authorized": false,
+  "scientific_endpoints_inspected": false,
+  "next_action": "run a fresh evidence-mode source stage from milestone commit 23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33, then submit the exact four cells under one campaign ID without inspecting endpoints",
+  "gates": {
+    "manifest": "PASS",
+    "split": "PASS_COMMITTED_23DACB8",
+    "barn_runner": "PASS_COMMITTED_23DACB8",
+    "machine_protocol": "FROZEN_COMMITTED_23DACB8",
+    "analyzer": "PASS_HASH_BOUND_COMMITTED_23DACB8",
+    "merger_and_retry_selector": "PASS_COMMITTED_23DACB8",
+    "source_bound_workflow": "PASS_COMMITTED_23DACB8",
+    "environment_receipt": "PASS_JOB_9366688",
+    "dataset_prepare": "PASS_JOB_9366817",
+    "training_smoke": "PASS_RESOURCE_ONLY_JOB_9366831",
+    "timing_projection": "PASS_RECOMMEND_36H_REQUEST",
+    "preregistration": "FROZEN_COMMITTED_23DACB8",
+    "milestone_commit": "PASS_23DACB88CF7B1F46DDDF9D2453DBD7E0BCBBBF33",
+    "barn_evidence": "READY_TO_STAGE_NOT_LAUNCHED"
+  },
+  "stable_hashes": {
+    "barn_archive_sha256": "5ad443412f6f2f38b6d0e1d330c9a820ab48e566553197459005e751711fe320",
+    "barn_manifest_sha256": "1015a6a48ef44add7224200da2ace1cd6c8d7780275b30d7266a44dc88e9ec61",
+    "barn_split_sha256": "c0ed1d7024ebc240d96a023efb6a124e879fdb06d0342a5e5de7b6d6ed07d7d7",
+    "container_sha256": "cd6620e33c0822f7d6a03c6de6ea9dd4304f0927e8d7997c003560f5b4781be0",
+    "analyzer_sha256": "9469bdd52be8ceab9370dd982fd142faf48d58dea16726fce039ca52c5ea944f",
+    "dataset_prepare_receipt_sha256": "216408ddfb6ef95c6d7cc912608aac0428240d09a562f20b03069408b1a9d76f",
+    "training_smoke_receipt_sha256": "d9d251c819bbf602dae6c829e3c6755b514639f2fa1c3c9f83cd5b13d21c8738",
+    "feasibility_projection_receipt_sha256": "242e89a90832dd6aeb2b70e8fe94f1f9c1bac32c5d0daaf683d5e60005b59237",
+    "machine_protocol_sha256": "36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2",
+    "preregistration_sha256": "975e3cced69807c86569acd167f5292d5cf8d8e1872b2f8b9a5f876cc464ab77",
+    "milestone_commit": "23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33"
+  },
+  "engineering_jobs": {
+    "9366805": "FAILED_NO_HOST_USR_BIN_TIME_FIXED",
+    "9366814": "FAILED_RENAMEAT2_EINVAL_FIXED",
+    "9366817": "PASS_DATASET_PREPARE",
+    "9366819": "FAILED_RCLPY_PYTHONPATH_FIXED",
+    "9366821": "PASS_RUNTIME_RECEIPT_COUNTERS_INSUFFICIENT",
+    "9366831": "PASS_RESOURCE_ONLY_TIMING_RECEIPT"
+  },
+  "timing_projection": {
+    "source_job_id": 9366831,
+    "training_sim_steps_per_second": 153.012153,
+    "training_hours_per_arm": 1.815397,
+    "evaluation_hours_per_arm": 3.111628,
+    "total_hours_per_arm": 4.927025,
+    "primary_four_arm_hours": 19.708101,
+    "primary_four_arm_hours_with_20_percent_padding": 23.649721,
+    "ablation_two_arm_hours": 9.85405,
+    "recommended_slurm_limit_hours": 36,
+    "scientific_budget_changed": false
+  }
+}

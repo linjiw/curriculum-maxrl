@@ -1,0 +1,1 @@
+Gazebo multi-robot simulator, version 11.10.2

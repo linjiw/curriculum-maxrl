@@ -1,0 +1,10 @@
+{
+  "artifact_type": "barn_hopper_environment_fingerprint",
+  "container_path": "/scratch/lwang44/ros2-gazebo-classic.sif",
+  "container_size_bytes": 1192398848,
+  "cpu_only": true,
+  "created_utc": "2026-08-14T04:59:24.545764+00:00",
+  "evidence_status": "engineering_environment_check_not_paper_evidence",
+  "job_id": 9366688,
+  "node": "hop072.orc.gmu.edu"
+}
