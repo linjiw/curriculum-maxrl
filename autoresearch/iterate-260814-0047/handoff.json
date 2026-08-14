@@ -1,25 +1,27 @@
 {
   "schema_version": 1,
-  "snapshot_utc": "2026-08-14T08:09:00Z",
-  "state": "active_frozen_barn_evidence_running",
+  "snapshot_utc": "2026-08-14T10:37:04Z",
+  "state": "active_amended_frozen_barn_evidence_running",
   "evidence_launch_authorized": true,
   "scientific_endpoints_inspected": false,
-  "next_action": "monitor only scheduler metadata for the four running arrays; retry any failed cell as a complete five-seed attempt, then finalize and seal only after exact all-cell terminal closure",
+  "next_action": "monitor only scheduler and accounting metadata for campaign barn-icra2027-20260814-003; retry any failed cell as one complete five-seed attempt with the identical source, then finalize and seal only after exact all-cell terminal closure",
   "gates": {
     "manifest": "PASS",
     "split": "PASS_COMMITTED_23DACB8",
     "barn_runner": "PASS_COMMITTED_23DACB8",
-    "machine_protocol": "FROZEN_COMMITTED_23DACB8",
+    "machine_protocol": "FROZEN_BYTE_IDENTICAL_36007D8C",
     "analyzer": "PASS_HASH_BOUND_COMMITTED_23DACB8",
     "merger_and_retry_selector": "PASS_COMMITTED_23DACB8",
-    "source_bound_workflow": "PASS_COMMITTED_55D46CC_SOURCE_043D73A6",
+    "source_bound_workflow": "PASS_COMMITTED_96AB585_SOURCE_B9E20A56",
+    "directory_publication": "PASS_HOPPER_PROBE_AND_CONCURRENCY_TESTS",
     "environment_receipt": "PASS_JOB_9366688",
     "dataset_prepare": "PASS_JOB_9366817",
     "training_smoke": "PASS_RESOURCE_ONLY_JOB_9366831",
-    "timing_projection": "PASS_RECOMMEND_36H_REQUEST",
-    "preregistration": "FROZEN_COMMITTED_23DACB8",
-    "milestone_commit": "PASS_23DACB88CF7B1F46DDDF9D2453DBD7E0BCBBBF33",
-    "barn_evidence": "RUNNING_EXACT_FOUR_CELLS_20_TASKS"
+    "timing_projection": "PASS_36H_REQUEST",
+    "preregistration": "FROZEN_WITH_DATED_OUTCOME_BLIND_AMENDMENTS",
+    "freeze_commit": "PASS_23DACB88CF7B1F46DDDF9D2453DBD7E0BCBBBF33",
+    "publication_fix_commit": "PASS_96AB585FAEDB041E3501FE71D732289D0D5C23FC",
+    "barn_evidence": "RUNNING_CAMPAIGN_003_EXACT_FOUR_CELLS_20_TASKS"
   },
   "stable_hashes": {
     "barn_archive_sha256": "5ad443412f6f2f38b6d0e1d330c9a820ab48e566553197459005e751711fe320",
@@ -30,9 +32,14 @@
     "dataset_prepare_receipt_sha256": "216408ddfb6ef95c6d7cc912608aac0428240d09a562f20b03069408b1a9d76f",
     "training_smoke_receipt_sha256": "d9d251c819bbf602dae6c829e3c6755b514639f2fa1c3c9f83cd5b13d21c8738",
     "feasibility_projection_receipt_sha256": "242e89a90832dd6aeb2b70e8fe94f1f9c1bac32c5d0daaf683d5e60005b59237",
+    "directory_publish_probe_receipt_sha256": "2ebe0a818d82bc557d6e258a834246377373a789662c6674d46d464bb9a2c72a",
     "machine_protocol_sha256": "36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2",
-    "preregistration_sha256": "f9dcc5f56ef890a7a32fd14244fd7073f50f27f7ad4ad5dea20efcb347f01864",
-    "milestone_commit": "23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33"
+    "preregistration_sha256": "bd6910523d8494e6386b3bb1e816a8e9841becbbaf75809166addc382bd8f0d3",
+    "evidence_source_sha256": "b9e20a561c8edc93daec8638b15f031dd532eacb39f9d7488582c516ca3dc81c",
+    "seed_sbatch_sha256": "85a9f99702f118635716060eade2c597992ab6387e7a05aba8954f72aa93a8cb",
+    "campaign_finalizer_sha256": "92638fb81e31d5517a19c5ee46642367d05bbfe1a37e84d2ce21c142dfa50013",
+    "freeze_commit": "23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33",
+    "publication_fix_commit": "96ab585faedb041e3501fe71d732289d0d5c23fc"
   },
   "engineering_jobs": {
     "9366805": "FAILED_NO_HOST_USR_BIN_TIME_FIXED",
@@ -42,21 +49,43 @@
     "9366821": "PASS_RUNTIME_RECEIPT_COUNTERS_INSUFFICIENT",
     "9366831": "PASS_RESOURCE_ONLY_TIMING_RECEIPT"
   },
-  "prelaunch_jobs": {
-    "9366866": "CANCELLED_WHILE_USER_HELD_NO_COMPUTE_ALLOCATION"
+  "abandoned_campaigns": {
+    "barn-icra2027-20260814-001": {
+      "array": 9366866,
+      "state": "CANCELLED_WHILE_USER_HELD_NO_COMPUTE_ALLOCATION",
+      "endpoints_inspected": false
+    },
+    "barn-icra2027-20260814-002": {
+      "arrays": [
+        9366868,
+        9366873,
+        9366878,
+        9366883
+      ],
+      "tasks": 20,
+      "state": "CANCELLED_OUTCOME_BLIND_UNSUPPORTED_DIRECTORY_PUBLISH",
+      "canonical_seed_blocks_after_cancel": 0,
+      "complete_markers_after_cancel": 0,
+      "endpoints_inspected": false
+    }
   },
   "evidence_campaign": {
-    "campaign_id": "barn-icra2027-20260814-002",
-    "source_sha256": "043d73a64cd63c2bc94e7f3c8fac4a97a3ff3e6b7671775a6402d0066db27760",
-    "launch_ledger_sha256": "54fb6e79a833758227a30cd944ae654994d66e768c83aeace63725f83fa2364d",
+    "campaign_id": "barn-icra2027-20260814-003",
+    "source_bundle": "/scratch/lwang44/maxrl/bundles/barn_source/b9e20a561c8edc93daec",
+    "source_sha256": "b9e20a561c8edc93daec8638b15f031dd532eacb39f9d7488582c516ca3dc81c",
+    "launch_ledger_sha256": "0a1fc224e71ad2437fce35b40c6561c4b8aeb8750ef6af66af0c34bae731d576",
     "arrays": {
-      "primary": 9366868,
-      "ablation_n2": 9366873,
-      "ablation_n4": 9366878,
-      "ablation_n16": 9366883
+      "primary": 9367009,
+      "ablation_n2": 9367011,
+      "ablation_n4": 9367020,
+      "ablation_n16": 9367022
     },
     "tasks": 20,
     "snapshot_scheduler_state": "RUNNING_ALL_20",
+    "cpu_per_task": 8,
+    "memory_per_task": "24G",
+    "gpu_or_gres": false,
+    "slurm_limit": "1-12:00:00",
     "endpoints_inspected": false
   },
   "timing_projection": {

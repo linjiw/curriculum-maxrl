@@ -1,7 +1,7 @@
 # Results
 
-**Snapshot:** 2026-08-14 03:58 America/New_York
-**Scientific evidence launched:** no
+**Snapshot:** 2026-08-14 06:37 America/New_York
+**Scientific evidence launched:** yes, outcome-blind; no endpoint inspected
 
 ## Iteration decisions
 
@@ -60,14 +60,38 @@
     canceled. No endpoint was opened. The source-bound submitter now reuses an
     exact staged-ledger upload on resume, with a network-free interruption
     regression. Evidence will restart under a new campaign ID and source SHA.
-13. **Keep as the evidence launch milestone:** amended source commit
+13. **Discard as a scientifically unusable execution attempt; retain all
+    accounting and the audit trail:** amended source commit
     `55d46ccb04ceef2707c382293248ad50087cbb58` staged at SHA-256
     `043d73a64cd63c2bc94e7f3c8fac4a97a3ff3e6b7671775a6402d0066db27760`.
     Campaign `barn-icra2027-20260814-002` contains exact five-seed arrays
     9366868 (primary), 9366873 (N=2), 9366878 (N=4), and 9366883 (N=16).
     Its 20-row launch ledger SHA-256 is
     `54fb6e79a833758227a30cd944ae654994d66e768c83aeace63725f83fa2364d`.
-    All 20 tasks reached `RUNNING`; only scheduler metadata was inspected.
+    All 20 tasks reached `RUNNING`, but a pre-terminal source audit proved that
+    both its seed publisher and campaign sealer used a directory
+    `renameat2(RENAME_NOREPLACE)` operation rejected by Hopper scratch.  The
+    arrays were canceled after about 2 hours 11 minutes.  Zero canonical seed
+    blocks and zero completion markers existed, and no endpoint was inspected.
+14. **Keep as an outcome-blind operational correction:** Hopper probe receipt
+    SHA-256
+    `2ebe0a818d82bc557d6e258a834246377373a789662c6674d46d464bb9a2c72a`
+    reproduces `EINVAL` for the old operation and verifies the replacement
+    exclusive hard-link claim plus ordinary same-parent rename.  Commit
+    `96ab585faedb041e3501fe71d732289d0d5c23fc` changes only publication and
+    audit plumbing.  It passes 93 BARN tests, 17 core tests, five workflow
+    mocks, 24 concurrent seed races, 16 concurrent sealer races, syntax,
+    compilation, JSON, and whitespace checks.  The machine protocol remains
+    byte-identical.
+15. **Keep as the replacement evidence launch milestone:** the 40-file source
+    closure staged at SHA-256
+    `b9e20a561c8edc93daec8638b15f031dd532eacb39f9d7488582c516ca3dc81c`.
+    Campaign `barn-icra2027-20260814-003` contains arrays 9367009 (primary),
+    9367011 (N=2), 9367020 (N=4), and 9367022 (N=16), exactly five seeds each.
+    Its local/remote 20-row ledger SHA-256 is
+    `0a1fc224e71ad2437fce35b40c6561c4b8aeb8750ef6af66af0c34bae731d576`.
+    At `2026-08-14T10:37:04Z` all 20 tasks were `RUNNING`, CPU-only, under the
+    frozen 36-hour limit; no result or raw log was inspected.
 
 ## Outcome-blind design decisions
 
@@ -92,7 +116,7 @@
 
 No scientific comparison, gate result, or paper claim is available yet. The
 outcome-blind package was frozen in milestone commit
-`23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33` and now carries the dated
-pre-execution operational amendment above. The exact evidence campaign is now
-running, but no scientific endpoint, comparison, gate result, or paper claim
-has been inspected.
+`23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33` and now carries the two dated,
+outcome-blind operational amendments above.  Replacement campaign 003 is
+running under the byte-identical scientific protocol, but no scientific
+endpoint, comparison, gate result, or paper claim has been inspected.

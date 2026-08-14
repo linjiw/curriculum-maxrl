@@ -14,6 +14,15 @@ the resulting 36-hour scheduler safety limit are bound into the frozen
 preregistration and `barn_protocol.json`. No BARN paper endpoint was launched
 or inspected before freeze.
 
+Current execution state (2026-08-14): campaign 002 was canceled without
+endpoint access after an outcome-blind audit found an unsupported Hopper
+directory-publication syscall. The dated amendment in the preregistration
+binds the corrected hard-link-claim publication contract. Replacement
+campaign `barn-icra2027-20260814-003` is running the exact four cells and five
+seeds under source SHA-256
+`b9e20a561c8edc93daec8638b15f031dd532eacb39f9d7488582c516ca3dc81c`;
+raw outputs remain sealed.
+
 Stable inputs:
 
 - official archive SHA-256:

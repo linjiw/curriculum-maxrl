@@ -3,7 +3,7 @@
 **Date:** 2026-08-11
 **Updated:** 2026-08-14
 **Scope:** First bounded implementation pass plus current BARN/Hopper readiness
-**Status:** CPU-only BARN engineering gates passed; protocol frozen at `23dacb8`; no BARN scientific evidence launched
+**Status:** protocol frozen; outcome-blind publication amendment committed; exact 20-task BARN campaign 003 running CPU-only
 
 ## Current update — 2026-08-14
 
@@ -11,8 +11,9 @@ The earlier external-asset/backend blocker is closed. The official 300-course
 BARN archive, all 900 adapter-consumed asset hashes, the deterministic 240/60
 train/held-out split, ROS 2/Gazebo container, exact-step backend, real BARN
 runner, frozen-shape analyzer, blind selector/merger, and source-bound Hopper
-workflow are now implemented and verified. No BARN scientific endpoint has run
-or been inspected.
+workflow are now implemented and verified.  Full-domain evidence tasks are
+running, but no BARN scientific endpoint, raw result, selector, merger, or
+analysis has been inspected.
 
 ### Outcome-blind Hopper engineering ledger
 
@@ -65,9 +66,8 @@ the analyzer SHA-256 is
 The milestone gate passed 93 BARN contract tests, 17 core tests, four
 fail-closed shell workflow mocks, shell syntax, Python compilation, and
 whitespace validation. No BARN evidence had been submitted or inspected at
-freeze. The next authorized action is a fresh evidence-mode source stage from
-that commit, followed by the exact source-bound four-cell submission; no
-engineering bundle may be reused.
+freeze.  The subsequent source-bound launch history and dated operational
+amendments are recorded below; no engineering bundle was reused.
 
 ### Pre-execution ledger amendment — 2026-08-14
 
@@ -90,7 +90,7 @@ dated outcome-blind operational amendment; its SHA-256 is now
 Scientific settings and the machine protocol are unchanged. Evidence will
 restart under a new campaign ID and freshly staged source SHA.
 
-### Frozen evidence launch — 2026-08-14
+### First frozen evidence launch and outcome-blind cancellation — 2026-08-14
 
 The amended source closure was committed at
 `55d46ccb04ceef2707c382293248ad50087cbb58` and staged in evidence mode at
@@ -106,10 +106,71 @@ held-array transaction as the exact declared four cells:
 
 The normalized launch ledger has exactly 20 rows and SHA-256
 `54fb6e79a833758227a30cd944ae654994d66e768c83aeace63725f83fa2364d`.
-At 04:09 EDT all 20 tasks were `RUNNING`, each with the frozen 36-hour time
-limit. Only scheduler job identity, state, reason, elapsed time, limit, and node
-metadata were inspected. Raw logs, per-seed artifacts, endpoints, selectors,
-mergers, and analyses remain unopened until exact all-cell terminal closure.
+All 20 tasks reached `RUNNING`, each with the frozen 36-hour time limit.  A
+pre-terminal source-closure audit then found that the exact bundled seed job
+and remote campaign sealer still used directory
+`renameat2(RENAME_NOREPLACE)`, even though engineering job 9366814 had already
+shown Hopper scratch rejects that primitive with `EINVAL`.  Because all rows
+bound one unrepairable source SHA, no unchanged whole-cell retry could publish
+a valid artifact.
+
+The four arrays were canceled outcome-blindly at
+`2026-08-14T10:19:32Z`, after about 2 hours 11 minutes per task, to avoid
+roughly 18 additional hours of guaranteed-wasted CPU per primary task.  All
+20 tasks are retained as `CANCELLED`; an existence-only check found zero
+canonical seed blocks and zero canonical completion markers.  No raw log,
+result JSON, reward, success, AUC, trajectory, held-out outcome, selector,
+merger, or analysis was inspected.  Campaign 002 will never be finalized or
+analyzed.
+
+### Directory-publication amendment — 2026-08-14
+
+An outcome-free probe on Hopper's NFS-backed `/scratch` reproduced errno 22
+for the old syscall and verified the replacement contract: an exclusive
+sibling hard-link claim succeeds once, a second claimant receives `EEXIST`,
+ordinary same-parent directory rename succeeds, and a nonempty destination is
+preserved.  Probe receipt SHA-256:
+`2ebe0a818d82bc557d6e258a834246377373a789662c6674d46d464bb9a2c72a`.
+
+Both publishers now hard-link the checksum-bound `COMPLETE` file as a hidden
+claim, verify its regular-file inode identity and destination absence, then
+perform one same-parent rename.  The retained claim is provenance and a retry
+fence; a pre-rename crash exposes no canonical endpoint, while a post-rename
+crash exposes only the complete directory.  Collision, handled-failure, crash,
+and concurrency regressions passed, including 24 seed-publisher and 16
+campaign-sealer races.  The full verification result was 93 BARN tests,
+17 core tests, five workflow/publication mocks, Bash syntax, Python
+compilation, JSON validation, and whitespace validation.
+
+The correction and dated preregistration amendment were committed at
+`96ab585faedb041e3501fe71d732289d0d5c23fc`.  The amended preregistration
+SHA-256 is
+`bd6910523d8494e6386b3bb1e816a8e9841becbbaf75809166addc382bd8f0d3`;
+the machine protocol remains byte-identical at
+`36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2`.
+No scientific arm, seed, split, transition budget, evaluation schedule,
+timeout, analysis, retry-selection, or gate rule changed.
+
+### Replacement frozen evidence launch — 2026-08-14
+
+The corrected 40-file evidence source closure staged at SHA-256
+`b9e20a561c8edc93daec8638b15f031dd532eacb39f9d7488582c516ca3dc81c`.
+The exact staged seed publisher passed an outcome-free Hopper scratch probe.
+Fresh campaign `barn-icra2027-20260814-003` then launched:
+
+- primary: array 9367009, attempt `primary-attempt-001`;
+- N=2: array 9367011, attempt `n2-attempt-001`;
+- N=4: array 9367020, attempt `n4-attempt-001`;
+- N=16: array 9367022, attempt `n16-attempt-001`.
+
+The local and canonical remote 20-row ledgers match at SHA-256
+`0a1fc224e71ad2437fce35b40c6561c4b8aeb8750ef6af66af0c34bae731d576`.
+Primary job 9367009 remained held while its immutable ledger stage propagated
+between two Hopper login hosts, then the exact same source-bound transaction
+installed the canonical bytes and released the same array.  No alternate job
+or ledger was created.  At `2026-08-14T10:37:04Z`, all 20 tasks were
+`RUNNING`, with 8 CPUs, 24 GB, no GPU/GRES, and the frozen 36-hour limit.
+Monitoring remains scheduler-only until exact all-cell terminal closure.
 
 ## Historical 2026-08-11 bounded implementation snapshot
 
