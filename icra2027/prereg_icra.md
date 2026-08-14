@@ -305,6 +305,26 @@ requires the three fresh merged cells plus the complete primary merge.
 - The Aug. 24 gate is binding. A tie or directional win versus both named
   controls permits the ICRA deadline; otherwise move to the RA-L timeline.
 
+## Outcome-blind operational amendment — 2026-08-14
+
+Before any BARN evidence task received a compute allocation, the first primary
+submission transaction (campaign `barn-icra2027-20260814-001`, held array job
+9366866) lost its remote ledger-install acknowledgement. The array remained
+exactly `PENDING|JobHeldUser`; no seed task ran, no endpoint or raw job log was
+opened, and the incomplete campaign was abandoned with its pending ledger
+retained. Job 9366866 was canceled while still held.
+
+The source-bound submitter was amended to make this pre-execution transaction
+idempotent: an exact SHA-256-matching remote ledger staging file is reused on
+resume, while a partial regular staging file is replaced from the durable
+local proposal; the canonical ledger still must verify before release. The
+network-free regression now interrupts the install after upload and proves
+that the same held array and attempt resume without a second allocation or
+upload. Evidence restarts under a new campaign ID and a newly content-addressed
+source bundle. This amendment changes no scientific arm, seed, split, budget,
+checkpoint, timeout, isolation, analysis, retry-selection, or gate rule; the
+machine protocol remains unchanged.
+
 ## Venue constraints
 
 The ICRA 2027 deadline is September 15, 2026, 11:59 PST. The manuscript is

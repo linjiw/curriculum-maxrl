@@ -53,6 +53,13 @@
     held-out course, retained no internal metric artifact, and emitted no paper
     endpoint. Receipt SHA-256:
     `d9d251c819bbf602dae6c829e3c6755b514639f2fa1c3c9f83cd5b13d21c8738`.
+12. **Discard the incomplete campaign, retain the audit trail and fix:** the
+    first primary transaction created held job 9366866, but its remote ledger
+    install/acknowledgement did not complete. The job stayed
+    `PENDING|JobHeldUser`, never received a compute allocation, and was
+    canceled. No endpoint was opened. The source-bound submitter now reuses an
+    exact staged-ledger upload on resume, with a network-free interruption
+    regression. Evidence will restart under a new campaign ID and source SHA.
 
 ## Outcome-blind design decisions
 
@@ -76,6 +83,6 @@
   alter the frozen scientific budgets.
 
 No scientific comparison, gate result, or paper claim is available yet. The
-outcome-blind package is frozen in milestone commit
-`23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33`; no BARN evidence job has
-launched as of this snapshot.
+outcome-blind package was frozen in milestone commit
+`23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33` and now carries the dated
+pre-execution operational amendment above. No BARN seed task has run.

@@ -570,14 +570,41 @@ PY
 fi
 readonly LEDGER_SHA PROPOSED_LEDGER
 readonly REMOTE_LEDGER_STAGE="$REMOTE_CAMPAIGN_ROOT/.SUBMISSION_LEDGER.stage-$ARRAY_JOB_ID-$LEDGER_SHA"
-ssh "${SSH_OPTS[@]}" "$HOST" bash -s -- \
-  "$REMOTE_CAMPAIGN_ROOT" "$REMOTE_LEDGER_STAGE" <<'REMOTE'
+if ! ledger_stage_state=$(ssh "${SSH_OPTS[@]}" "$HOST" bash -s -- \
+  "$REMOTE_CAMPAIGN_ROOT" "$REMOTE_LEDGER_STAGE" "$LEDGER_SHA" <<'REMOTE'
 set -euo pipefail
 mkdir -p -- "$1"
-[[ -d "$1" && ! -L "$1" && ! -e "$2" && ! -L "$2" ]] || exit 2
+[[ -d "$1" && ! -L "$1" && ! -L "$2" ]] || exit 2
+if [[ -e "$2" ]]; then
+  [[ -f "$2" ]] || exit 2
+  if [[ "$(sha256sum -- "$2" | awk '{print $1}')" == "$3" ]]; then
+    printf 'PRESENT\n'
+  else
+    # A transport interruption may leave a partial upload.  This path is a
+    # transaction-owned staging file, never the canonical ledger; discard the
+    # partial bytes and retry from the durable local proposal.
+    rm -f -- "$2"
+    printf 'MISSING\n'
+  fi
+else
+  printf 'MISSING\n'
+fi
 REMOTE
-scp "${SSH_OPTS[@]}" -p -- "$PROPOSED_LEDGER" \
-  "$HOST:$REMOTE_LEDGER_STAGE"
+); then
+  echo "remote ledger staging preflight failed; array remains held" >&2
+  exit 2
+fi
+case "$ledger_stage_state" in
+  MISSING)
+    scp "${SSH_OPTS[@]}" -p -- "$PROPOSED_LEDGER" \
+      "$HOST:$REMOTE_LEDGER_STAGE"
+    ;;
+  PRESENT) ;;
+  *)
+    echo "remote ledger staging state mismatch; array remains held" >&2
+    exit 2
+    ;;
+esac
 
 if ! install_output=$(ssh "${SSH_OPTS[@]}" "$HOST" bash -s -- \
   "$REMOTE_LEDGER_STAGE" "$REMOTE_LEDGER" "$PREVIOUS_LEDGER_SHA" \

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "snapshot_utc": "2026-08-14T07:58:00Z",
-  "state": "active_pre_evidence_frozen_committed",
+  "snapshot_utc": "2026-08-14T08:05:00Z",
+  "state": "active_pre_evidence_frozen_operational_amendment_pending_restage",
   "evidence_launch_authorized": false,
   "scientific_endpoints_inspected": false,
-  "next_action": "run a fresh evidence-mode source stage from milestone commit 23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33, then submit the exact four cells under one campaign ID without inspecting endpoints",
+  "next_action": "restage evidence from the commit containing this operational amendment, then restart the exact four cells under a new campaign ID without inspecting endpoints",
   "gates": {
     "manifest": "PASS",
     "split": "PASS_COMMITTED_23DACB8",
@@ -12,14 +12,14 @@
     "machine_protocol": "FROZEN_COMMITTED_23DACB8",
     "analyzer": "PASS_HASH_BOUND_COMMITTED_23DACB8",
     "merger_and_retry_selector": "PASS_COMMITTED_23DACB8",
-    "source_bound_workflow": "PASS_COMMITTED_23DACB8",
+    "source_bound_workflow": "PASS_OPERATIONAL_AMENDMENT_COMMIT_CONTAINING_THIS_SNAPSHOT",
     "environment_receipt": "PASS_JOB_9366688",
     "dataset_prepare": "PASS_JOB_9366817",
     "training_smoke": "PASS_RESOURCE_ONLY_JOB_9366831",
     "timing_projection": "PASS_RECOMMEND_36H_REQUEST",
     "preregistration": "FROZEN_COMMITTED_23DACB8",
     "milestone_commit": "PASS_23DACB88CF7B1F46DDDF9D2453DBD7E0BCBBBF33",
-    "barn_evidence": "READY_TO_STAGE_NOT_LAUNCHED"
+    "barn_evidence": "NO_SEED_TASK_RAN_JOB_9366866_CANCELLED_HELD"
   },
   "stable_hashes": {
     "barn_archive_sha256": "5ad443412f6f2f38b6d0e1d330c9a820ab48e566553197459005e751711fe320",
@@ -31,7 +31,7 @@
     "training_smoke_receipt_sha256": "d9d251c819bbf602dae6c829e3c6755b514639f2fa1c3c9f83cd5b13d21c8738",
     "feasibility_projection_receipt_sha256": "242e89a90832dd6aeb2b70e8fe94f1f9c1bac32c5d0daaf683d5e60005b59237",
     "machine_protocol_sha256": "36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2",
-    "preregistration_sha256": "975e3cced69807c86569acd167f5292d5cf8d8e1872b2f8b9a5f876cc464ab77",
+    "preregistration_sha256": "f9dcc5f56ef890a7a32fd14244fd7073f50f27f7ad4ad5dea20efcb347f01864",
     "milestone_commit": "23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33"
   },
   "engineering_jobs": {
@@ -41,6 +41,9 @@
     "9366819": "FAILED_RCLPY_PYTHONPATH_FIXED",
     "9366821": "PASS_RUNTIME_RECEIPT_COUNTERS_INSUFFICIENT",
     "9366831": "PASS_RESOURCE_ONLY_TIMING_RECEIPT"
+  },
+  "prelaunch_jobs": {
+    "9366866": "CANCELLED_WHILE_USER_HELD_NO_COMPUTE_ALLOCATION"
   },
   "timing_projection": {
     "source_job_id": 9366831,

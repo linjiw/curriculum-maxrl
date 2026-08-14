@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "submissions": [
+    {
+      "artifact_complete": false,
+      "artifact_path": "/scratch/lwang44/maxrl/barn/campaigns/barn-icra2027-20260814-001/cells/primary/attempts/primary-attempt-001/seed-1/results/seed-1.json",
+      "artifact_sha256": null,
+      "attempt_id": "primary-attempt-001",
+      "campaign_cell": "primary",
+      "campaign_id": "barn-icra2027-20260814-001",
+      "expected_hashes": {
+        "analyzer_sha256": "9469bdd52be8ceab9370dd982fd142faf48d58dea16726fce039ca52c5ea944f",
+        "container_sha256": "cd6620e33c0822f7d6a03c6de6ea9dd4304f0927e8d7997c003560f5b4781be0",
+        "manifest_sha256": "1015a6a48ef44add7224200da2ace1cd6c8d7780275b30d7266a44dc88e9ec61",
+        "prereg_sha256": "975e3cced69807c86569acd167f5292d5cf8d8e1872b2f8b9a5f876cc464ab77",
+        "protocol_sha256": "36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2",
+        "source_sha256": "4fee1bb8d3588c512ac1b33eebfa2d58c43f95bacb696ff631063058c6e30a5b",
+        "split_sha256": "c0ed1d7024ebc240d96a023efb6a124e879fdb06d0342a5e5de7b6d6ed07d7d7"
+      },
+      "seed": 1,
+      "slurm_array_job_id": "9366866",
+      "slurm_array_task_id": 1,
+      "slurm_job_id": null,
+      "submitted_utc": "2026-08-14T08:00:12Z"
+    },
+    {
+      "artifact_complete": false,
+      "artifact_path": "/scratch/lwang44/maxrl/barn/campaigns/barn-icra2027-20260814-001/cells/primary/attempts/primary-attempt-001/seed-2/results/seed-2.json",
+      "artifact_sha256": null,
+      "attempt_id": "primary-attempt-001",
+      "campaign_cell": "primary",
+      "campaign_id": "barn-icra2027-20260814-001",
+      "expected_hashes": {
+        "analyzer_sha256": "9469bdd52be8ceab9370dd982fd142faf48d58dea16726fce039ca52c5ea944f",
+        "container_sha256": "cd6620e33c0822f7d6a03c6de6ea9dd4304f0927e8d7997c003560f5b4781be0",
+        "manifest_sha256": "1015a6a48ef44add7224200da2ace1cd6c8d7780275b30d7266a44dc88e9ec61",
+        "prereg_sha256": "975e3cced69807c86569acd167f5292d5cf8d8e1872b2f8b9a5f876cc464ab77",
+        "protocol_sha256": "36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2",
+        "source_sha256": "4fee1bb8d3588c512ac1b33eebfa2d58c43f95bacb696ff631063058c6e30a5b",
+        "split_sha256": "c0ed1d7024ebc240d96a023efb6a124e879fdb06d0342a5e5de7b6d6ed07d7d7"
+      },
+      "seed": 2,
+      "slurm_array_job_id": "9366866",
+      "slurm_array_task_id": 2,
+      "slurm_job_id": null,
+      "submitted_utc": "2026-08-14T08:00:12Z"
+    },
+    {
+      "artifact_complete": false,
+      "artifact_path": "/scratch/lwang44/maxrl/barn/campaigns/barn-icra2027-20260814-001/cells/primary/attempts/primary-attempt-001/seed-3/results/seed-3.json",
+      "artifact_sha256": null,
+      "attempt_id": "primary-attempt-001",
+      "campaign_cell": "primary",
+      "campaign_id": "barn-icra2027-20260814-001",
+      "expected_hashes": {
+        "analyzer_sha256": "9469bdd52be8ceab9370dd982fd142faf48d58dea16726fce039ca52c5ea944f",
+        "container_sha256": "cd6620e33c0822f7d6a03c6de6ea9dd4304f0927e8d7997c003560f5b4781be0",
+        "manifest_sha256": "1015a6a48ef44add7224200da2ace1cd6c8d7780275b30d7266a44dc88e9ec61",
+        "prereg_sha256": "975e3cced69807c86569acd167f5292d5cf8d8e1872b2f8b9a5f876cc464ab77",
+        "protocol_sha256": "36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2",
+        "source_sha256": "4fee1bb8d3588c512ac1b33eebfa2d58c43f95bacb696ff631063058c6e30a5b",
+        "split_sha256": "c0ed1d7024ebc240d96a023efb6a124e879fdb06d0342a5e5de7b6d6ed07d7d7"
+      },
+      "seed": 3,
+      "slurm_array_job_id": "9366866",
+      "slurm_array_task_id": 3,
+      "slurm_job_id": null,
+      "submitted_utc": "2026-08-14T08:00:12Z"
+    },
+    {
+      "artifact_complete": false,
+      "artifact_path": "/scratch/lwang44/maxrl/barn/campaigns/barn-icra2027-20260814-001/cells/primary/attempts/primary-attempt-001/seed-4/results/seed-4.json",
+      "artifact_sha256": null,
+      "attempt_id": "primary-attempt-001",
+      "campaign_cell": "primary",
+      "campaign_id": "barn-icra2027-20260814-001",
+      "expected_hashes": {
+        "analyzer_sha256": "9469bdd52be8ceab9370dd982fd142faf48d58dea16726fce039ca52c5ea944f",
+        "container_sha256": "cd6620e33c0822f7d6a03c6de6ea9dd4304f0927e8d7997c003560f5b4781be0",
+        "manifest_sha256": "1015a6a48ef44add7224200da2ace1cd6c8d7780275b30d7266a44dc88e9ec61",
+        "prereg_sha256": "975e3cced69807c86569acd167f5292d5cf8d8e1872b2f8b9a5f876cc464ab77",
+        "protocol_sha256": "36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2",
+        "source_sha256": "4fee1bb8d3588c512ac1b33eebfa2d58c43f95bacb696ff631063058c6e30a5b",
+        "split_sha256": "c0ed1d7024ebc240d96a023efb6a124e879fdb06d0342a5e5de7b6d6ed07d7d7"
+      },
+      "seed": 4,
+      "slurm_array_job_id": "9366866",
+      "slurm_array_task_id": 4,
+      "slurm_job_id": null,
+      "submitted_utc": "2026-08-14T08:00:12Z"
+    },
+    {
+      "artifact_complete": false,
+      "artifact_path": "/scratch/lwang44/maxrl/barn/campaigns/barn-icra2027-20260814-001/cells/primary/attempts/primary-attempt-001/seed-5/results/seed-5.json",
+      "artifact_sha256": null,
+      "attempt_id": "primary-attempt-001",
+      "campaign_cell": "primary",
+      "campaign_id": "barn-icra2027-20260814-001",
+      "expected_hashes": {
+        "analyzer_sha256": "9469bdd52be8ceab9370dd982fd142faf48d58dea16726fce039ca52c5ea944f",
+        "container_sha256": "cd6620e33c0822f7d6a03c6de6ea9dd4304f0927e8d7997c003560f5b4781be0",
+        "manifest_sha256": "1015a6a48ef44add7224200da2ace1cd6c8d7780275b30d7266a44dc88e9ec61",
+        "prereg_sha256": "975e3cced69807c86569acd167f5292d5cf8d8e1872b2f8b9a5f876cc464ab77",
+        "protocol_sha256": "36007d8c979b2dacccd595a43a4620dca7be24c1f50ef91a8a9ee4e869202cb2",
+        "source_sha256": "4fee1bb8d3588c512ac1b33eebfa2d58c43f95bacb696ff631063058c6e30a5b",
+        "split_sha256": "c0ed1d7024ebc240d96a023efb6a124e879fdb06d0342a5e5de7b6d6ed07d7d7"
+      },
+      "seed": 5,
+      "slurm_array_job_id": "9366866",
+      "slurm_array_task_id": 5,
+      "slurm_job_id": null,
+      "submitted_utc": "2026-08-14T08:00:12Z"
+    }
+  ]
+}

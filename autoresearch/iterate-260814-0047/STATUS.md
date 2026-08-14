@@ -1,7 +1,7 @@
 # Status
 
-**State:** active, pre-evidence, frozen and committed
-**Last updated:** 2026-08-14 03:58 America/New_York
+**State:** active, pre-evidence, frozen with outcome-blind operational amendment
+**Last updated:** 2026-08-14 04:05 America/New_York
 
 ## Bottom line
 
@@ -10,7 +10,7 @@ MAZE/Hopper loop was classified out of scope and left scheduler-only. Work is
 now aligned to the governing ICRA goal. The CPU-only Hopper dataset preparation
 and outcome-blind timing smoke passed, and the complete protocol package was
 frozen and committed at `23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33`.
-No BARN evidence has yet been submitted.
+No BARN seed task has run or received a compute allocation.
 
 ## Passed gates
 
@@ -71,11 +71,24 @@ No BARN evidence has yet been submitted.
 - Evidence launch remains held only until a fresh evidence-mode stage creates
   the source bundle and SHA bound to this commit. Engineering bundle hashes
   must not be reused.
+- The first source-bound primary submission created held array 9366866, but a
+  transient remote ledger-install/acknowledgement failure left the canonical
+  ledger absent. The array stayed `PENDING|JobHeldUser` and was canceled before
+  allocation. Its incomplete campaign, pending ledger, and scheduler record
+  are retained. An outcome-blind preregistration amendment records the event;
+  the preregistration SHA-256 is now
+  `f9dcc5f56ef890a7a32fd14244fd7073f50f27f7ad4ad5dea20efcb347f01864`.
+- The submitter now reuses an exact hash-matched staging upload on resume and
+  replaces only a partial transaction-owned upload. Its new regression
+  interrupts the install after upload and proves same-job recovery. All four
+  workflow mocks and all 93 BARN tests pass after the amendment.
 
 ## Next BARN actions
 
-1. Run `stage_barn_campaign.sh evidence` to obtain a new source path and SHA
-   for commit `23dacb88cf7b1f46dddf9d2453dbd7e0bcbbbf33`.
+1. Treat the commit containing this status as the source-bound ledger-resume
+   amendment, then rerun `stage_barn_campaign.sh evidence` to obtain a new
+   source path and SHA. Do not reuse the abandoned campaign ID or source SHA
+   `4fee1bb8...0a5b`.
 2. With one `CAMPAIGN_ID` and that evidence source pair, call
    `submit_barn_campaign.sh` once each for `primary`, `ablation_n2`,
    `ablation_n4`, and `ablation_n16`, using unique attempt IDs. A retry is a
@@ -91,7 +104,7 @@ No BARN evidence has yet been submitted.
 
 ## Scheduler state
 
-All six BARN engineering jobs listed above are terminal. No BARN evidence job
-has been submitted as of this snapshot. The unrelated MAZE scheduler work
-remains out of scope and was neither expanded nor inspected for scientific
-endpoints.
+All six BARN engineering jobs listed above are terminal. Held prelaunch job
+9366866 was canceled before allocation; no BARN seed task has run. The
+unrelated MAZE scheduler work remains out of scope and was neither expanded
+nor inspected for scientific endpoints.

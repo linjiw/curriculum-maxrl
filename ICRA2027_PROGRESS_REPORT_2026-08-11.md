@@ -69,6 +69,27 @@ freeze. The next authorized action is a fresh evidence-mode source stage from
 that commit, followed by the exact source-bound four-cell submission; no
 engineering bundle may be reused.
 
+### Pre-execution ledger amendment — 2026-08-14
+
+The first source-bound primary submission created held array job 9366866 for
+campaign `barn-icra2027-20260814-001`, but the remote canonical-ledger install
+or its acknowledgement did not complete. The fail-closed wrapper never
+released the array. Scheduler-only inspection confirmed
+`PENDING|JobHeldUser`; the job was canceled in that state with no compute
+allocation, seed execution, endpoint inspection, or raw metric-log access.
+The incomplete campaign and exact pending ledger are retained.
+
+The source-bound submitter was hardened to reuse an exact SHA-256-matching
+ledger staging file on same-attempt resume and to replace only a partial
+transaction-owned upload from the durable local proposal. A network-free
+regression now interrupts the install after upload and proves that recovery
+uses the same held job without a second allocation or upload. All 93 BARN
+tests and four workflow mocks pass after this change. The preregistration has a
+dated outcome-blind operational amendment; its SHA-256 is now
+`f9dcc5f56ef890a7a32fd14244fd7073f50f27f7ad4ad5dea20efcb347f01864`.
+Scientific settings and the machine protocol are unchanged. Evidence will
+restart under a new campaign ID and freshly staged source SHA.
+
 ## Historical 2026-08-11 bounded implementation snapshot
 
 The sections below preserve the original 2026-08-11 snapshot; superseded

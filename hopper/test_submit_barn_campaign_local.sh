@@ -89,13 +89,21 @@ for argument in "$@"; do
     *) mapped+=("$argument") ;;
   esac
 done
+joined=" ${mapped[*]} "
+if [[ ${mapped[0]:-} == bash && ${mapped[1]:-} == -s \
+   && "$joined" == *".SUBMISSION_LEDGER.stage-"* \
+   && "$joined" == *"SUBMISSION_LEDGER.json"* \
+   && ${MOCK_FAIL_LEDGER_INSTALL_ONCE:-0} == 1 \
+   && ! -e "$REMOTE/.ledger-install-failed-once" ]]; then
+  : > "$REMOTE/.ledger-install-failed-once"
+  exit 98
+fi
 set +e
 output=$("${mapped[@]}")
 status=$?
 set -e
 (( status == 0 )) || exit "$status"
 if [[ ${mapped[0]:-} == bash && ${mapped[1]:-} == -s ]]; then
-  joined=" ${mapped[*]} "
   if [[ "$joined" == *".SUBMISSION_LEDGER.stage-"* \
      && "$joined" == *"SUBMISSION_LEDGER.json"* ]]; then
     printf 'ledger_verified\n' >> "$EVENTS"
@@ -242,6 +250,36 @@ grep -Fq $'BARN_ARRAY_RESUMED\tjob_id=7001\tcampaign=campaign-upload-fail' \
   || fail "resume did not release exactly once"
 [[ ! -e "$LEDGERS/.campaign-upload-fail.pending-submission.json" ]] \
   || fail "successful resume retained its pending marker"
+
+# A lost install acknowledgement or connection may leave a complete staged
+# ledger on Hopper.  The exact same transaction must reuse it without a second
+# array allocation or an unsafe manual cleanup.
+: > "$EVENTS"
+if MOCK_FAIL_LEDGER_INSTALL_ONCE=1 run_submit \
+    "$REPO/hopper/submit_barn_campaign.sh" campaign-install-fail attempt-001 \
+    > "$TMP/install-fail.out" 2> "$TMP/install-fail.err"; then
+  fail "ledger install interruption unexpectedly released held job"
+fi
+grep -q '^submit_held$' "$EVENTS" \
+  || fail "install interruption never held a job"
+[[ $(grep -c '^ledger_scp$' "$EVENTS") -eq 1 ]] \
+  || fail "install interruption did not leave exactly one staged upload"
+! grep -q '^release$' "$EVENTS" \
+  || fail "install interruption released held job"
+if ! run_submit "$REPO/hopper/submit_barn_campaign.sh" \
+    campaign-install-fail attempt-001 > "$TMP/install-resume.out" \
+    2> "$TMP/install-resume.err"; then
+  sed -n '1,120p' "$TMP/install-resume.err" >&2
+  fail "resume did not reuse and install the complete staged ledger"
+fi
+grep -Fq $'BARN_ARRAY_RESUMED\tjob_id=7001\tcampaign=campaign-install-fail' \
+  "$TMP/install-resume.out" || fail "staged-ledger resume metadata missing"
+[[ $(grep -c '^submit_held$' "$EVENTS") -eq 1 ]] \
+  || fail "staged-ledger resume allocated a second array"
+[[ $(grep -c '^ledger_scp$' "$EVENTS") -eq 1 ]] \
+  || fail "staged-ledger resume redundantly uploaded the exact staging file"
+[[ $(grep -c '^release$' "$EVENTS") -eq 1 ]] \
+  || fail "staged-ledger resume did not release exactly once"
 
 mkdir -p "$REMOTE/maxrl/barn/campaigns/campaign-sealed/sealed_campaigns/campaign-deadbeef"
 printf 'sealed metadata control\n' \

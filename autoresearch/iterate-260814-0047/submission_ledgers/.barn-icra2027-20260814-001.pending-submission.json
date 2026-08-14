@@ -1,0 +1,12 @@
+{
+  "attempt_id": "primary-attempt-001",
+  "campaign_cell": "primary",
+  "campaign_id": "barn-icra2027-20260814-001",
+  "previous_ledger_sha256": "ABSENT",
+  "proposed_ledger_name": ".barn-icra2027-20260814-001.pending-ledger-8cea8a9f33048caf3e22b3aee261f9fc4f4a4a401b7f3a4958cc38ea5ea58f20.json",
+  "proposed_ledger_sha256": "8cea8a9f33048caf3e22b3aee261f9fc4f4a4a401b7f3a4958cc38ea5ea58f20",
+  "schema_version": 1,
+  "slurm_array_job_id": "9366866",
+  "source_sha256": "4fee1bb8d3588c512ac1b33eebfa2d58c43f95bacb696ff631063058c6e30a5b",
+  "submitted_utc": "2026-08-14T08:00:12Z"
+}
