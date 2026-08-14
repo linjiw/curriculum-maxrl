@@ -33,9 +33,7 @@ if [[ "$REMOTE_MODE" == true ]]; then
     "$LEDGER_SHA256" "$WRAPPER_SHA256" "$SCRATCH" "$APPTAINER_BIN" <<'PY'
 from __future__ import annotations
 
-import ctypes
 from datetime import datetime, timezone
-import errno
 import hashlib
 import json
 import os
@@ -184,21 +182,82 @@ def parse_complete(path: Path) -> dict[str, str]:
     return rows
 
 
+# BARN_SEALED_PUBLISH_PY_BEGIN
 def atomic_publish_directory(source: Path, destination: Path) -> None:
-    libc = ctypes.CDLL(None, use_errno=True)
-    renameat2 = getattr(libc, "renameat2", None)
-    refuse(renameat2 is not None,
-           "renameat2 unavailable; refusing non-atomic publish")
-    renameat2.argtypes = [ctypes.c_int, ctypes.c_char_p,
-                          ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
-    renameat2.restype = ctypes.c_int
-    result = renameat2(-100, os.fsencode(source), -100,
-                       os.fsencode(destination), 1)
-    if result != 0:
-        error = ctypes.get_errno()
-        if error == errno.EEXIST:
-            raise Refusal("sealed campaign destination appeared concurrently")
-        raise OSError(error, os.strerror(error), destination)
+    """Publish one sealed package under a retained, source-bound claim.
+
+    Hopper scratch rejects directory renameat2(RENAME_NOREPLACE).  The
+    checksum-bound COMPLETE file therefore becomes an exclusive sibling
+    regular-file claim.  Every compliant publisher checks the destination,
+    wins and verifies that hard-link claim, checks the destination again, and
+    only then performs one ordinary same-parent directory rename.  The claim
+    remains linked to the canonical COMPLETE file after success as a
+    provenance record and permanent retry fence.  A handled rename failure
+    with no destination releases only its own inode-identical claim so the
+    surrounding transaction can remove the hidden stage and retry safely.
+    """
+    refuse(source.parent == destination.parent,
+           "sealed campaign publication must remain within one parent")
+    require_canonical_directory(source, label="sealed campaign stage")
+    require_canonical_directory(
+        destination.parent, label="sealed campaign publish root")
+    complete = source / "COMPLETE"
+    require_regular(complete, label="sealed campaign COMPLETE")
+    source_info = os.lstat(source)
+    complete_info = os.lstat(complete)
+    parent_info = os.lstat(destination.parent)
+    refuse(source_info.st_dev == parent_info.st_dev
+           and complete_info.st_dev == parent_info.st_dev,
+           "sealed campaign publication crosses filesystems")
+
+    claim = destination.parent / f".{destination.name}.publish-claim"
+
+    def refuse_existing_destination() -> None:
+        try:
+            os.lstat(destination)
+        except FileNotFoundError:
+            return
+        raise Refusal("sealed campaign destination already exists")
+
+    # The first check avoids claiming after a completed idempotent publish.
+    # The second closes the window between concurrent compliant publishers.
+    refuse_existing_destination()
+    try:
+        os.link(complete, claim, follow_symlinks=False)
+    except FileExistsError as error:
+        raise Refusal(
+            "sealed campaign publication claim already exists") from error
+
+    claim_info = os.lstat(claim)
+    refuse(stat.S_ISREG(claim_info.st_mode)
+           and not stat.S_ISLNK(claim_info.st_mode)
+           and (claim_info.st_dev, claim_info.st_ino)
+           == (complete_info.st_dev, complete_info.st_ino),
+           "sealed campaign publication claim identity mismatch")
+    refuse_existing_destination()
+    try:
+        os.rename(source, destination)
+    except OSError:
+        # A normal, observable failure before any destination appeared is
+        # recoverable: remove only the hard-link claim this stage owns.  If a
+        # destination appeared, or claim identity changed, retain the fence
+        # and fail closed because publication state is ambiguous.  SIGKILL
+        # cannot enter this handler and likewise leaves the claim retained.
+        try:
+            os.lstat(destination)
+        except FileNotFoundError:
+            try:
+                current_claim = os.lstat(claim)
+            except FileNotFoundError:
+                current_claim = None
+            if (current_claim is not None
+                    and stat.S_ISREG(current_claim.st_mode)
+                    and not stat.S_ISLNK(current_claim.st_mode)
+                    and (current_claim.st_dev, current_claim.st_ino)
+                    == (complete_info.st_dev, complete_info.st_ino)):
+                claim.unlink()
+        raise
+# BARN_SEALED_PUBLISH_PY_END
 
 
 def run_tool(label: str, script: Path, arguments: list[str]) -> None:

@@ -325,6 +325,46 @@ source bundle. This amendment changes no scientific arm, seed, split, budget,
 checkpoint, timeout, isolation, analysis, retry-selection, or gate rule; the
 machine protocol remains unchanged.
 
+## Outcome-blind operational amendment — 2026-08-14, directory publication
+
+After campaign `barn-icra2027-20260814-002` received compute allocations but
+before any task became terminal, a source-closure audit found that the exact
+bundled seed job still used directory `renameat2(RENAME_NOREPLACE)` for its
+final checksum-closed publication.  Outcome-free engineering job `9366814`
+had already shown that Hopper `/scratch` rejects that operation with `EINVAL`;
+the remote sealed-campaign publisher used the same unsupported primitive.  A
+fresh outcome-free probe on the campaign filesystem reproduced errno 22 and
+then verified the replacement contract: an exclusive sibling hard-link claim
+succeeds once, a second claim receives `EEXIST`, ordinary same-filesystem
+directory rename succeeds, and an existing nonempty destination is preserved
+with `EEXIST`.  The immutable probe receipt is
+`icra2027/receipts/barn_hopper_directory_publish_probe.json`, SHA-256
+`2ebe0a818d82bc557d6e258a834246377373a789662c6674d46d464bb9a2c72a`.
+
+Because every campaign-002 row bound the same unrepairable source closure,
+all four five-seed arrays were canceled at `2026-08-14T10:19:32Z` after about
+2 hours 11 minutes.  Only source hashes, filesystem behavior, scheduler
+metadata, and existence of completion controls were inspected.  No raw BARN
+log, result JSON, success, reward, AUC, trajectory, status outcome, held-out
+endpoint, selector, merger, or analysis was opened.  An existence-only check
+after cancellation found zero canonical seed blocks and zero canonical
+`COMPLETE` markers.  The ledger, accounting, and hidden incomplete work are
+retained; campaign 002 is abandoned and will never be finalized or analyzed.
+
+For replacement runs, both directory publishers acquire a deterministic
+hidden sibling claim by hard-linking the checksum-bound `COMPLETE` file,
+verify that claim's regular-file inode identity, recheck that the destination
+is absent, and then use one ordinary same-parent directory rename.  The claim
+is retained as a provenance record and permanent retry fence.  A crash before
+rename exposes no canonical endpoint; a crash after rename exposes only the
+complete directory.  Existing destinations and claims fail closed.  This
+amendment is recorded before the replacement run and is covered by
+network-free collision, crash-window, and concurrent-publisher regressions.
+Evidence restarts with a new content-addressed source bundle and a fresh
+campaign ID.  No arm, seed, split, promotion rule, transition budget,
+checkpoint, evaluation panel, timeout, isolation, analysis, retry-selection,
+or gate rule changes; the machine protocol remains byte-identical.
+
 ## Venue constraints
 
 The ICRA 2027 deadline is September 15, 2026, 11:59 PST. The manuscript is

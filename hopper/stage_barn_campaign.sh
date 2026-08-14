@@ -67,6 +67,7 @@ FILES=(
   icra2027/receipts/barn_hopper_dataset_prepare.json
   icra2027/receipts/barn_hopper_training_smoke.json
   icra2027/receipts/barn_hopper_feasibility_projection.json
+  icra2027/receipts/barn_hopper_directory_publish_probe.json
   icra2027/results/barn_backend_throughput_2026-08-14.json
   hopper/ros2-gazebo-classic.def
   hopper/stage_barn_campaign.sh

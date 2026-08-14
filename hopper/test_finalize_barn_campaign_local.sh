@@ -22,6 +22,257 @@ mkdir -p "$LOCAL_HOPPER/sbatch"
 cp -p -- "$SOURCE_FINALIZER" "$FINALIZER"
 cp -p -- "$SOURCE_SBATCH" "$LOCAL_HOPPER/sbatch/barn_finalize_cpu.sbatch"
 bash -n "$FINALIZER" "$LOCAL_HOPPER/sbatch/barn_finalize_cpu.sbatch"
+
+# Exercise the exact embedded remote directory publisher independently of the
+# larger mocked Slurm transaction so collision and crash-window behavior are
+# deterministic and do not require opening any package endpoint.
+readonly SEALED_PUBLISHER="$TMP/sealed-publish.py"
+cat > "$SEALED_PUBLISHER" <<'PY'
+import os
+from pathlib import Path
+import stat
+import sys
+
+
+class Refusal(RuntimeError):
+    pass
+
+
+def refuse(condition: bool, message: str) -> None:
+    if not condition:
+        raise Refusal(message)
+
+
+def require_canonical_directory(path: Path, *, label: str) -> None:
+    try:
+        info = os.lstat(path)
+    except FileNotFoundError as error:
+        raise Refusal(f"{label} is missing") from error
+    refuse(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode),
+           f"{label} is non-directory or symbolic")
+    refuse(path.resolve(strict=True) == path,
+           f"{label} has a symbolic or non-canonical ancestor")
+
+
+def require_regular(path: Path, *, label: str) -> None:
+    try:
+        info = os.lstat(path)
+    except FileNotFoundError as error:
+        raise Refusal(f"{label} is missing") from error
+    refuse(stat.S_ISREG(info.st_mode) and not stat.S_ISLNK(info.st_mode),
+           f"{label} is non-regular or symbolic")
+    refuse(path.resolve(strict=True) == path,
+           f"{label} has a symbolic or non-canonical ancestor")
+PY
+awk '
+  /^# BARN_SEALED_PUBLISH_PY_BEGIN$/ { capture = 1; next }
+  /^# BARN_SEALED_PUBLISH_PY_END$/ { capture = 0; found = 1; next }
+  capture { print }
+  END { if (!found) exit 1 }
+' "$FINALIZER" >> "$SEALED_PUBLISHER" \
+  || fail "could not extract embedded sealed publisher"
+cat >> "$SEALED_PUBLISHER" <<'PY'
+
+
+rename_mode = os.environ.get("BARN_TEST_SEALED_RENAME_MODE")
+if rename_mode:
+    original_rename = os.rename
+
+    def injected_rename(source, destination):
+        if rename_mode == "fail_absent":
+            raise OSError("synthetic handled rename failure")
+        if rename_mode == "nonempty_collision":
+            target = Path(destination)
+            target.mkdir()
+            (target / "original.txt").write_text("original\n")
+            return original_rename(source, destination)
+        raise RuntimeError("unknown synthetic rename mode")
+
+    os.rename = injected_rename
+atomic_publish_directory(Path(sys.argv[1]), Path(sys.argv[2]))
+PY
+python3 -m py_compile "$SEALED_PUBLISHER"
+! grep -Fq 'ctypes.CDLL' "$SEALED_PUBLISHER" \
+  || fail "remote sealed publisher retained unsupported rename syscall"
+grep -Fq 'os.link(complete, claim, follow_symlinks=False)' "$SEALED_PUBLISHER" \
+  || fail "remote sealed publisher lacks exclusive COMPLETE claim"
+grep -Fq 'os.rename(source, destination)' "$SEALED_PUBLISHER" \
+  || fail "remote sealed publisher lacks ordinary same-parent rename"
+
+make_publish_stage() {
+  local stage=$1 payload=$2
+  mkdir -p -- "$stage/results"
+  printf 'artifact_type\tbarn_four_cell_campaign_complete\n' \
+    > "$stage/COMPLETE"
+  printf '%s\n' "$payload" > "$stage/results/payload.txt"
+}
+
+run_sealed_publish() {
+  python3 "$SEALED_PUBLISHER" "$1" "$2"
+}
+
+expect_sealed_publish_failure() {
+  local source=$1 destination=$2 label=$3
+  if run_sealed_publish "$source" "$destination" \
+      > "$TMP/sealed-publish-failure.out" 2>&1; then
+    fail "$label unexpectedly published"
+  fi
+}
+
+assert_publish_claim() {
+  local claim=$1 complete=$2
+  [[ -f "$claim" && ! -L "$claim" ]] \
+    || fail "sealed publication claim is not regular"
+  [[ "$(stat -c '%d:%i' -- "$claim")" == \
+     "$(stat -c '%d:%i' -- "$complete")" ]] \
+    || fail "sealed publication claim is not hard-linked to COMPLETE"
+}
+
+# Happy path and the post-rename crash window: the retained claim identifies
+# the canonical COMPLETE inode, and an idempotent retry cannot replace it.
+publish_root="$TMP/publish-happy"
+mkdir -p -- "$publish_root"
+publish_source="$publish_root/.campaign-stage-winner"
+publish_destination="$publish_root/campaign-happy"
+publish_claim="$publish_root/.campaign-happy.publish-claim"
+make_publish_stage "$publish_source" winner
+run_sealed_publish "$publish_source" "$publish_destination"
+[[ ! -e "$publish_source" && -d "$publish_destination" ]] \
+  || fail "sealed happy-path rename was not atomic"
+[[ "$(< "$publish_destination/results/payload.txt")" == winner ]] \
+  || fail "sealed happy-path payload changed"
+assert_publish_claim "$publish_claim" "$publish_destination/COMPLETE"
+publish_retry="$publish_root/.campaign-stage-retry"
+make_publish_stage "$publish_retry" retry-must-not-win
+expect_sealed_publish_failure "$publish_retry" "$publish_destination" \
+  "post-rename crash retry"
+[[ -d "$publish_retry" \
+   && "$(< "$publish_destination/results/payload.txt")" == winner ]] \
+  || fail "post-rename retry overwrote the sealed destination"
+
+# Existing destination collisions of every filesystem kind fail before the
+# exclusive claim.  In particular, a nonempty canonical-looking package is
+# preserved byte-for-byte.
+for kind in nonempty_dir empty_dir regular_file symlink; do
+  publish_root="$TMP/publish-existing-$kind"
+  mkdir -p -- "$publish_root"
+  publish_source="$publish_root/.campaign-stage-contender"
+  publish_destination="$publish_root/campaign-collision"
+  publish_claim="$publish_root/.campaign-collision.publish-claim"
+  make_publish_stage "$publish_source" contender
+  case "$kind" in
+    nonempty_dir)
+      mkdir -- "$publish_destination"
+      printf 'original\n' > "$publish_destination/original.txt"
+      ;;
+    empty_dir) mkdir -- "$publish_destination" ;;
+    regular_file) printf 'original\n' > "$publish_destination" ;;
+    symlink) ln -s -- nowhere "$publish_destination" ;;
+  esac
+  expect_sealed_publish_failure "$publish_source" "$publish_destination" \
+    "existing $kind"
+  [[ -d "$publish_source" && ! -e "$publish_claim" \
+     && ! -L "$publish_claim" ]] \
+    || fail "existing $kind did not fail before sealed claim"
+  if [[ "$kind" == nonempty_dir ]]; then
+    [[ "$(< "$publish_destination/original.txt")" == original ]] \
+      || fail "nonempty sealed destination was overwritten"
+  fi
+done
+
+# A retained pre-rename claim models a crash after the exclusive hard link.
+# Retry fails closed, leaves the sealed stage hidden, and exposes no endpoint.
+publish_root="$TMP/publish-crash-before-rename"
+mkdir -p -- "$publish_root"
+publish_source="$publish_root/.campaign-stage-crashed"
+publish_destination="$publish_root/campaign-crashed"
+publish_claim="$publish_root/.campaign-crashed.publish-claim"
+make_publish_stage "$publish_source" hidden-after-crash
+ln -- "$publish_source/COMPLETE" "$publish_claim"
+expect_sealed_publish_failure "$publish_source" "$publish_destination" \
+  "stale pre-rename claim"
+[[ -d "$publish_source" && ! -e "$publish_destination" \
+   && ! -L "$publish_destination" ]] \
+  || fail "pre-rename crash exposed a sealed endpoint"
+assert_publish_claim "$publish_claim" "$publish_source/COMPLETE"
+
+# A handled rename failure with the destination still absent removes only the
+# inode-identical claim it just created.  The stage stays hidden here; the real
+# finalizer's surrounding finally block then removes it.
+publish_root="$TMP/publish-handled-rename-failure"
+mkdir -p -- "$publish_root"
+publish_source="$publish_root/.campaign-stage-handled-failure"
+publish_destination="$publish_root/campaign-handled-failure"
+publish_claim="$publish_root/.campaign-handled-failure.publish-claim"
+make_publish_stage "$publish_source" handled-failure
+if BARN_TEST_SEALED_RENAME_MODE=fail_absent \
+    run_sealed_publish "$publish_source" "$publish_destination" \
+    > "$TMP/handled-rename-failure.out" 2>&1; then
+  fail "synthetic handled rename failure unexpectedly published"
+fi
+[[ -d "$publish_source" && ! -e "$publish_destination" \
+   && ! -L "$publish_destination" && ! -e "$publish_claim" \
+   && ! -L "$publish_claim" ]] \
+  || fail "handled rename failure stranded its publication claim"
+
+# If a nonempty destination appears after the claim but before rename, the
+# ordinary rename fails, preserves the collision, and retains the claim as an
+# ambiguity fence instead of risking overwrite or automatic reclamation.
+publish_root="$TMP/publish-late-collision"
+mkdir -p -- "$publish_root"
+publish_source="$publish_root/.campaign-stage-late-collision"
+publish_destination="$publish_root/campaign-late-collision"
+publish_claim="$publish_root/.campaign-late-collision.publish-claim"
+make_publish_stage "$publish_source" late-contender
+if BARN_TEST_SEALED_RENAME_MODE=nonempty_collision \
+    run_sealed_publish "$publish_source" "$publish_destination" \
+    > "$TMP/late-collision.out" 2>&1; then
+  fail "late nonempty collision unexpectedly published"
+fi
+[[ -d "$publish_source" && -d "$publish_destination" \
+   && "$(< "$publish_destination/original.txt")" == original ]] \
+  || fail "late nonempty collision did not preserve the destination"
+assert_publish_claim "$publish_claim" "$publish_source/COMPLETE"
+
+# Concurrent compliant publishers race only on the exclusive hard-link
+# claim. Exactly one complete directory wins and the loser remains hidden.
+for iteration in $(seq 1 16); do
+  publish_root="$TMP/publish-concurrent-$iteration"
+  mkdir -p -- "$publish_root"
+  publish_source_a="$publish_root/.campaign-stage-a"
+  publish_source_b="$publish_root/.campaign-stage-b"
+  publish_destination="$publish_root/campaign-concurrent"
+  publish_claim="$publish_root/.campaign-concurrent.publish-claim"
+  make_publish_stage "$publish_source_a" A
+  make_publish_stage "$publish_source_b" B
+
+  set +e
+  run_sealed_publish "$publish_source_a" "$publish_destination" \
+    > "$publish_root/a.out" 2>&1 & publish_pid_a=$!
+  run_sealed_publish "$publish_source_b" "$publish_destination" \
+    > "$publish_root/b.out" 2>&1 & publish_pid_b=$!
+  wait "$publish_pid_a"; publish_status_a=$?
+  wait "$publish_pid_b"; publish_status_b=$?
+  set -e
+
+  if (( (publish_status_a == 0) + (publish_status_b == 0) != 1 )); then
+    fail "sealed concurrency iteration $iteration lacked exactly one winner"
+  fi
+  [[ -d "$publish_destination" \
+     && -f "$publish_destination/COMPLETE" \
+     && -f "$publish_destination/results/payload.txt" ]] \
+    || fail "sealed concurrent winner exposed an incomplete package"
+  publish_winner=$(< "$publish_destination/results/payload.txt")
+  case "$publish_winner" in
+    A) [[ ! -e "$publish_source_a" && -d "$publish_source_b" ]] \
+         || fail "sealed concurrent A winner state is inconsistent" ;;
+    B) [[ ! -e "$publish_source_b" && -d "$publish_source_a" ]] \
+         || fail "sealed concurrent B winner state is inconsistent" ;;
+    *) fail "sealed concurrent winner payload is invalid" ;;
+  esac
+  assert_publish_claim "$publish_claim" "$publish_destination/COMPLETE"
+done
+
 readonly MOCK_BIN="$TMP/mock-bin"
 readonly FAKE_REMOTE_ROOT="$TMP/remote"
 readonly LOCAL_PACKAGES="$TMP/local-packages"
@@ -493,6 +744,10 @@ done
   || fail "merger calls were not selection-receipt bound"
 
 package_sha=$(sha256sum "$package/SHA256SUMS" | awk '{print $1}')
+remote_package="$FAKE_REMOTE_ROOT/maxrl/barn/campaigns/campaign-complete/sealed_campaigns/campaign-$package_sha"
+remote_claim="$(dirname "$remote_package")/.$(basename "$remote_package").publish-claim"
+[[ -d "$remote_package" ]] || fail "remote sealed campaign package is missing"
+assert_publish_claim "$remote_claim" "$remote_package/COMPLETE"
 if run_finalize campaign-complete "$ledger_sha" > "$TMP/repeat.out" 2> "$TMP/repeat.err"; then
   fail "repeat fetch overwrote a sealed local campaign"
 fi
@@ -500,6 +755,7 @@ grep -Fq 'refusing to overwrite prior sealed campaign' "$TMP/repeat.err" \
   || fail "repeat fetch lacked no-clobber refusal"
 [[ "$(sha256sum "$package/SHA256SUMS" | awk '{print $1}')" == "$package_sha" ]] \
   || fail "repeat invocation changed the prior package"
+assert_publish_claim "$remote_claim" "$remote_package/COMPLETE"
 
 subset_sha=$(make_campaign campaign-subset subset)
 if run_finalize campaign-subset "$subset_sha" > "$TMP/subset.out" 2> "$TMP/subset.err"; then

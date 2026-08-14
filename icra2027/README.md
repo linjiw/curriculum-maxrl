@@ -27,7 +27,9 @@ Stable inputs:
 - Hopper dataset-preparation receipt SHA-256:
   `216408ddfb6ef95c6d7cc912608aac0428240d09a562f20b03069408b1a9d76f`;
 - Hopper training-only smoke receipt SHA-256:
-  `d9d251c819bbf602dae6c829e3c6755b514639f2fa1c3c9f83cd5b13d21c8738`.
+  `d9d251c819bbf602dae6c829e3c6755b514639f2fa1c3c9f83cd5b13d21c8738`;
+- outcome-blind Hopper directory-publication probe SHA-256:
+  `2ebe0a818d82bc557d6e258a834246377373a789662c6674d46d464bb9a2c72a`.
 
 ## Protocol
 
@@ -61,6 +63,7 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=curriculum_maxrl:. \
   icra2027/test_select_barn_attempts.py
 
 bash hopper/test_stage_barn_local.sh
+bash hopper/test_barn_seed_publish_local.sh
 bash hopper/test_submit_barn_campaign_local.sh
 bash hopper/test_finalize_barn_ledger_local.sh
 bash hopper/test_finalize_barn_campaign_local.sh

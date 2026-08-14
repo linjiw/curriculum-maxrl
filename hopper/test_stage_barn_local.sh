@@ -68,6 +68,7 @@ FILES=(
   icra2027/receipts/barn_hopper_dataset_prepare.json
   icra2027/receipts/barn_hopper_training_smoke.json
   icra2027/receipts/barn_hopper_feasibility_projection.json
+  icra2027/receipts/barn_hopper_directory_publish_probe.json
   icra2027/results/barn_backend_throughput_2026-08-14.json
   hopper/ros2-gazebo-classic.def
   hopper/stage_barn_campaign.sh
@@ -377,6 +378,14 @@ grep -Fq 'mkdir_claim_plus_complete_last_hardlink' "$dataset_job" \
   || fail "dataset preparation lacks the completion-last publication receipt"
 grep -Fq 'os.link(temporary, destination)' "$dataset_job" \
   || fail "dataset preparation lacks atomic exclusive COMPLETE publication"
+seed_job="$HERE/sbatch/barn_seed_cpu.sbatch"
+if grep -Fq 'ctypes.CDLL' "$seed_job"; then
+  fail "evidence seed publication retained unsupported syscall publisher"
+fi
+grep -Fq 'os.link(complete, claim, follow_symlinks=False)' "$seed_job" \
+  || fail "evidence seed publication lacks its exclusive hard-link claim"
+grep -Fq 'os.rename(source, destination)' "$seed_job" \
+  || fail "evidence seed publication lacks atomic same-parent rename"
 for ros_job in \
   "$HERE/sbatch/barn_training_smoke.sbatch" \
   "$HERE/sbatch/barn_seed_cpu.sbatch"; do

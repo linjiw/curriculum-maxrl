@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "artifact_type": "barn_hopper_directory_publish_probe_receipt",
+  "status": "complete",
+  "checked_utc": "2026-08-14T10:24:24.735856+00:00",
+  "evidence_status": "outcome_blind_operational_probe_not_paper_evidence",
+  "probe_parent": "/scratch/lwang44/maxrl",
+  "filesystem_type": "nfs",
+  "launched_source": {
+    "campaign_id": "barn-icra2027-20260814-002",
+    "source_bundle": "/scratch/lwang44/maxrl/bundles/barn_source/043d73a64cd63c2bc94e",
+    "source_manifest_sha256": "043d73a64cd63c2bc94e7f3c8fac4a97a3ff3e6b7671775a6402d0066db27760",
+    "barn_seed_cpu_sbatch_sha256": "9ce33b25fa32f206456b1ca28ca5729e62a3e6f81d497e38e8d83aba120cbcae",
+    "finalize_barn_campaign_sha256": "bfe8daded7f3d2cd0788c73571c9533ffb5997411c608ec06d7d26e6ffd75702"
+  },
+  "unsupported_primitive": {
+    "operation": "directory renameat2(RENAME_NOREPLACE)",
+    "renameat2_available": true,
+    "return_code": -1,
+    "errno": 22,
+    "error": "Invalid argument"
+  },
+  "replacement_contract_probe": {
+    "operation": "exclusive sibling hard-link claim followed by same-filesystem directory rename",
+    "second_claim_errno": 17,
+    "claim_then_rename_publish_ok": true,
+    "nonempty_destination_errno": 17,
+    "existing_payload_preserved": true,
+    "replacement_payload_absent": true
+  },
+  "no_peek": {
+    "scientific_endpoints_inspected": false,
+    "raw_barn_logs_inspected": false,
+    "result_json_inspected": false,
+    "heldout_outcomes_inspected": false,
+    "paper_evidence_used": false
+  },
+  "decision": "Cancel the structurally unpublishable campaign outcome-blindly; amend both publication paths, verify collision/crash behavior, stage a new source closure, and relaunch the unchanged scientific protocol under a fresh campaign ID."
+}

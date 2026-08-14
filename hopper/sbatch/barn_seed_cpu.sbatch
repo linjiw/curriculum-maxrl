@@ -513,29 +513,61 @@ find "$BLOCK" -type f -exec chmod 0440 {} +
 find "$BLOCK" -type d -exec chmod 0550 {} +
 
 # Publish the entire checksum-closed seed block atomically and without
-# replacement.  This is intentionally the final command: a failed job can
-# retain its hidden work block without ever exposing a canonical partial
-# artifact, while a successful Slurm task can only expose a complete block.
+# replacement.  Hopper scratch does not support directory
+# renameat2(RENAME_NOREPLACE), so first acquire an exclusive regular-file
+# sibling claim by hard-linking the sealed COMPLETE marker.  Every compliant
+# publisher must own that claim before using an ordinary same-parent rename;
+# an extant destination or claim fails closed.  The claim is deliberately
+# retained as provenance and as a permanent retry fence.  This is
+# intentionally the final command: a crash before the rename retains only a
+# hidden work block/claim, while the rename exposes the complete directory in
+# one atomic operation and never exposes a canonical partial endpoint.
 python3 - "$BLOCK" "$FINAL_BLOCK" <<'PY'
-import ctypes
-import errno
+# BARN_SEED_PUBLISH_PY_BEGIN
 import os
+from pathlib import Path
+import stat
 import sys
 
-source, destination = map(os.fsencode, sys.argv[1:3])
-libc = ctypes.CDLL(None, use_errno=True)
-renameat2 = getattr(libc, "renameat2", None)
-if renameat2 is None:
-    raise SystemExit("renameat2 unavailable; refusing non-atomic fallback")
-renameat2.argtypes = [ctypes.c_int, ctypes.c_char_p,
-                      ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
-renameat2.restype = ctypes.c_int
-AT_FDCWD = -100
-RENAME_NOREPLACE = 1
-if renameat2(AT_FDCWD, source, AT_FDCWD, destination,
-             RENAME_NOREPLACE) != 0:
-    error = ctypes.get_errno()
-    if error == errno.EEXIST:
-        raise SystemExit("evidence block destination already exists")
-    raise OSError(error, os.strerror(error), os.fsdecode(destination))
+source = Path(sys.argv[1])
+destination = Path(sys.argv[2])
+if source.parent != destination.parent:
+    raise SystemExit("evidence publication must remain within one parent")
+
+source_info = os.lstat(source)
+if not stat.S_ISDIR(source_info.st_mode) or stat.S_ISLNK(source_info.st_mode):
+    raise SystemExit("evidence work block is not a real directory")
+complete = source / "COMPLETE"
+complete_info = os.lstat(complete)
+if not stat.S_ISREG(complete_info.st_mode) or stat.S_ISLNK(complete_info.st_mode):
+    raise SystemExit("evidence work block lacks a regular COMPLETE marker")
+
+claim = destination.parent / f".{destination.name}.publish-claim"
+
+def refuse_existing_destination():
+    try:
+        os.lstat(destination)
+    except FileNotFoundError:
+        return
+    raise SystemExit("evidence block destination already exists")
+
+# Avoid creating a new claim when a completed canonical block is already
+# present, then repeat the destination check after winning the claim to close
+# the concurrent-publisher window.
+refuse_existing_destination()
+try:
+    os.link(complete, claim, follow_symlinks=False)
+except FileExistsError:
+    raise SystemExit("evidence block publication claim already exists")
+
+claim_info = os.lstat(claim)
+if (not stat.S_ISREG(claim_info.st_mode)
+        or stat.S_ISLNK(claim_info.st_mode)
+        or (claim_info.st_dev, claim_info.st_ino)
+        != (complete_info.st_dev, complete_info.st_ino)):
+    raise SystemExit("evidence block publication claim identity mismatch")
+
+refuse_existing_destination()
+os.rename(source, destination)
+# BARN_SEED_PUBLISH_PY_END
 PY
