@@ -1,19 +1,66 @@
 # Integrated Status Review and Improvement Plan
 
-> ## Execution status — updated 2026-08-14 23:55 EDT
+> ## Execution status — updated 2026-08-15 00:45 EDT
 >
-> The review below was produced read-only. **Four of its §5 immediate actions have
-> since been executed** and are recorded here so the document is not read as
-> pending. Everything else in §5 remains open.
+> The review below was produced read-only. Most of §5 has since been executed.
+> **E2c has run and is now CLOSED** — see the second box.
 >
 > | §5 item | State | Evidence |
 > |---|---|---|
 > | 2. E2c amendment written before the edit | **DONE** | `autoresearch/iterate-260810-2240/E2C_PREREG_AMENDMENT_2026-08-14.md` |
-> | 3. Minimal driver fix (`env` token, three sites) | **DONE** | driver `729447c4…` → `ac4148db…`, 15,676 → 15,688 B; all 17 `readonly` guards intact |
-> | 4. Delete the 0-byte log, then launch | **DONE — E2c IS TRAINING** | readiness `integrity_status: pass`, `issues: []`; first arm `e2_clean_b1_s3_260809` past step 5/60 at 23:54, GPU 66% |
-> | 9. Reap four orphaned `gzserver` PIDs | **NOT DONE** | still running; verified unrelated to Hopper campaign 003 |
-> | 1. Repo private + push | **NOT DONE — needs a human** | account-level action, see §7.1 |
-> | 5. Selective clean commit | **NOT DONE** | 280 uncommitted paths remain |
+> | 3. Minimal driver fix (`env` token, three sites) | **DONE** | driver `729447c4…` → `ac4148db…`; all 17 `readonly` guards intact |
+> | 4. Delete the 0-byte log, then launch | **DONE — and E2c has since CLOSED** | `E2C_CLOSURE_2026-08-15.md` |
+> | 5. Selective clean commit | **DONE (by linjiw, 00:12–00:13)** | 14 commits; tree now clean, which unblocks `stage_maze_score.sh evidence` |
+> | 6. BARN scheduler poll | **DONE — campaign healthy** | all 20 tasks RUNNING on hop064–073, 17:47:33 elapsed of a 36 h limit, 0 failures. Metadata only; no log or endpoint opened |
+> | 8. MAZE-SCORE power memo | **DONE — recommendation changed, see below** | `hopper/MAZE_SCORE_POWER_MEMO_2026-08-15.md` |
+> | §4 Cut 1. UED lane closure note | **DONE** | `ued_benchmark/LANE_CLOSURE_2026-08-15.md` |
+> | P0-A canonicalization + parity test | **DONE** | `curriculum_maxrl/test_score_contract.py`, 13 tests |
+> | 9. Reap four orphaned `gzserver` PIDs | **NOT DONE — one command for a human** | `kill 2874122 2900798 2903603 2905340 && rm -rf /tmp/icra_barn_adapter_test*` (11.1 CPU-hours burned; verified unrelated to campaign 003) |
+> | 1. Repo private + push | **NOT DONE — needs a human** | now **24** unpushed commits; account-level action, see §7.1 |
+> | 7. `docs/index.html` retracted claim | **NOT DONE** | resolves itself if the repo goes private |
+>
+> ### E2c: closed, INCONCLUSIVE by preregistered rule
+>
+> The repaired driver ran the frozen order through `b1_s3`, `b2_s3`, the frozen
+> reservoir, and the static preflight — all passing. Replay seed 1 then stopped
+> at step 39 on **runtime validity gate 7**: cumulative optimizer-token mismatch
+> 5.7856% over the 5% tolerance. Per the frozen rule this makes the three-seed
+> direction test **inconclusive**, and gates/reservoir/matcher/budget are not
+> changed under the E2c label. Seeds 2–3 were not attempted. No endpoint exists.
+>
+> The drift is structural, not transient: monotone and accelerating from ~step 25
+> (0.45% → 1.44% → 2.35% → 3.40% → 4.67% → 5.79%), with `fallback_slots = 0` at
+> all 38 steps. Cause: **source diversity collapses**. Late steps draw as many as
+> seven replacement groups from a single reservoir entry while `dead_slots` sits
+> at 5–8, so one fixed response length is substituted for varying targets.
+>
+> Recorded finding: *dose-matched replay from a frozen immutable reservoir
+> degrades as the policy sharpens, because the pool of distinct, length-compatible
+> informative sources shrinks exactly when demand for replacements grows.*
+> This strengthens §2.5 — E2c was never the critical path — and it satisfies the
+> Aug 28 stop 13 days early. **The RTX 5090 is free.**
+>
+> ### MAZE-SCORE: §2.4's recommendation is superseded
+>
+> §2.4 recommends 72 blocks + Monte-Carlo. Simulating the *actual* conjunction at
+> `analyze_maze_score.py:529` changes that in three ways:
+>
+> 1. **Sample size cannot rescue an effect at the SESOI.** The rule requires the
+>    *observed* mean to clear +.005, so a true effect of exactly +.005 is a coin
+>    flip at every n (45.7% at n=30, 50.2% at n=72). §2.4's "50% → 88%" silently
+>    assumed a larger true effect. The prereg must state a powered-for effect
+>    (≥ +.0075).
+> 2. **The curve knees at 40 and flattens past 48**, so 48 → 72 costs +26.7
+>    MIG-slice-h for +4.1 points.
+> 3. **`MAX_EXACT_SIGN_FLIP_N = 40` is a memory guard, not a wall.** The test is
+>    meet-in-the-middle: 268 MB at n=48, 1.1 GB at 52, 17 GB at 60, 1.1 TB at 72.
+>
+> **Revised recommendation: 48 blocks (seeds 20–67), cap 40 → 48, keeping the
+> exact test.** That is 90.0% of the 94.1% power 72 would give, at two-thirds the
+> compute, and it avoids swapping a preregistered *exact* randomization test for a
+> sampled approximation — a change of instrument, not of sample size.
+> `test_sample_size_contract.py` now cross-checks the four encodings of N that
+> nothing previously compared.
 >
 > **The root cause found tonight is not in the review below and supersedes its
 > E2c framing.** The frozen driver had never been able to launch *any* training
