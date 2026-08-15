@@ -40,6 +40,39 @@
 > This strengthens §2.5 — E2c was never the critical path — and it satisfies the
 > Aug 28 stop 13 days early. **The RTX 5090 is free.**
 >
+> ### §2.2 is ANSWERED: peak-location specificity is not supported
+>
+> The u₆₄ arm §2.2 called "the only new experiment whose result changes the
+> paper's central claim" ran, plus a stronger dose–response that §2.2 did not
+> propose. Both preregistered, both analyzed exactly once.
+>
+> | contrast | Hopper (Xeon 6240R) | local (Ultra 7 265K) |
+> |---|---|---|
+> | u16 − u64 | −.01127, p .2349, 10/20 | −.01279, p .1307, 7/20 |
+> | u16 − p(1−p) | **+.03217, p .000105, 17/20** | **+.03074, p .000507, 16/20** |
+>
+> Dose–response with the deployed estimator pinned at N=16 throughout:
+> uniform .658 | u2 .644 | u4 .668 | u8 .665 | **u16 .675** | u32 .679 |
+> **u64 .688 (argmax)** | u128 .681 — **Spearman(exponent, mean) = +0.929**.
+>
+> **The curve rises past the deployed N.** A score peaked at p\*=.064 does at
+> least as well as one peaked at the "matched" .169, on both platforms. So
+> D4 resolves to its second branch: the replicated finding is *"harder-peaked
+> beats p(1−p)"*, and deployed-N peak-location specificity **must not be
+> claimed**. Risk-register item 2 is closed by evidence rather than hedging.
+>
+> **What got stronger:** the V2 primary now replicates on two further platforms
+> with a *tighter* p than V2's own — the first reproduction outside the machine
+> that produced it. That is precisely the §2.1 reframe's load-bearing claim, now
+> evidence-backed. Caveats that bound it are in
+> `acrobot_nsweep/FINDINGS_2026-08-15.md`: the two new campaigns share seeds so
+> their agreement is portability not extra n; and magnitude is platform-sensitive
+> (+.048 arm64 vs +.031/.032 x86 on identical seeds).
+>
+> The algebra is untouched — A_N(p)=2(pass@N−pass@1), T=N−1, and the closed-form
+> Beta posterior all stand. What fails is a claim about where the score should
+> peak, not about the algebra producing it.
+>
 > ### MAZE-SCORE: §2.4's recommendation is superseded
 >
 > §2.4 recommends 72 blocks + Monte-Carlo. Simulating the *actual* conjunction at
