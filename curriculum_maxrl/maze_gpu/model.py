@@ -37,9 +37,14 @@ class TinyTransformer(nn.Module):
 
     @torch.no_grad()
     def generate(self, prompts: torch.Tensor, prompt_lens: torch.Tensor,
-                 max_new: int, eos: int, temperature: float = 1.0) -> torch.Tensor:
+                 max_new: int, eos: int, temperature: float = 1.0,
+                 generator: torch.Generator | None = None) -> torch.Tensor:
         """Batched sampling. prompts: (B, Lp) right-padded. Returns (B, max_new)
-        response tokens right-padded with PAD after EOS."""
+        response tokens right-padded with PAD after EOS.
+
+        ``generator`` lets callers isolate rollout and evaluation sampling
+        streams.  Omitting it preserves the historical global-RNG behavior.
+        """
         B = prompts.shape[0]
         device = prompts.device
         ids = torch.full((B, prompts.shape[1] + max_new), PAD, dtype=torch.long,
@@ -52,7 +57,7 @@ class TinyTransformer(nn.Module):
             logits = self.forward(ids[:, :L])
             step_logits = logits[torch.arange(B, device=device), cur - 1]
             probs = F.softmax(step_logits / temperature, dim=-1)
-            nxt = torch.multinomial(probs, 1).squeeze(1)
+            nxt = torch.multinomial(probs, 1, generator=generator).squeeze(1)
             nxt = torch.where(alive, nxt, torch.full_like(nxt, PAD))
             ids[torch.arange(B, device=device), cur] = nxt
             cur = cur + alive.long()

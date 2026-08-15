@@ -13,6 +13,33 @@ import numpy as np
 EPS = 1e-6
 
 
+def coefficient_activity(p, n_rollouts: int):
+    """Exact deployed-N coefficient-activity score.
+
+    This is the paper's ``u_N(p) = 1 - (1-p)^N - p``.  The helper is kept
+    NumPy-only so protocol tests and launch validation do not require a GPU.
+    Scalars remain NumPy scalars and arrays retain their input shape.
+    """
+    if n_rollouts < 1:
+        raise ValueError("n_rollouts must be at least 1")
+    p_arr = np.asarray(p, dtype=float)
+    return 1.0 - (1.0 - p_arr) ** n_rollouts - p_arr
+
+
+def legacy_frontier_activity(p, n_rollouts: int):
+    """Historical maze frontier heuristic, named explicitly for provenance.
+
+    ``(1-(1-p)^N)(1-p)`` is algebraically ``u_{N+1}(p)``.  It remains
+    available so ``legacy_v1`` runs reproduce their historical behavior,
+    while new MAZE-SCORE runs can select :func:`coefficient_activity` without
+    an off-by-one ambiguity.
+    """
+    if n_rollouts < 1:
+        raise ValueError("n_rollouts must be at least 1")
+    p_arr = np.asarray(p, dtype=float)
+    return (1.0 - (1.0 - p_arr) ** n_rollouts) * (1.0 - p_arr)
+
+
 def weights_reinforce(r: np.ndarray) -> np.ndarray:
     return r / len(r)
 
