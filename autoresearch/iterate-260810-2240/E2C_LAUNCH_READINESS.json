@@ -602,20 +602,176 @@
     {
       "arm": "b1",
       "checkpoint": "/data/robotixx/curriculum-maxrl-runtime/checkpoints/e2_clean_b1_s3_260809/global_step_60/actor/huggingface/config.json",
+      "checkpoint_fingerprint": {
+        "config.json": {
+          "bytes": 859,
+          "sha256": "283834b57c6e55af57e59b007df3bfcaf2f898dbb22fb535a46d224b73acb0cd"
+        },
+        "model.safetensors": {
+          "bytes": 1447317080,
+          "sha256": "d6dde472abcfdcc995a6d0e41093de65e0c1f07c6219f7a8d3b79341b098bdad"
+        }
+      },
+      "configuration_validation": {
+        "checks": {
+          "actor_learning_rate_1e_5": true,
+          "actor_lr_cycles_0_5": true,
+          "actor_lr_schedule_constant": true,
+          "actor_microbatch_4": true,
+          "actor_min_lr_ratio_0": true,
+          "actor_minibatch_8": true,
+          "actor_no_kl_loss": true,
+          "actor_no_lr_warmup_ratio": true,
+          "actor_no_lr_warmup_steps": true,
+          "actor_one_ppo_epoch": true,
+          "actor_section_logged": true,
+          "actor_seed": true,
+          "actor_weight_decay_0_01": true,
+          "algorithm_section_logged": true,
+          "checkpoint_contents": true,
+          "data_section_logged": true,
+          "data_seed": true,
+          "dataloader_workers_0": true,
+          "exact_optimizer_step_sequence": true,
+          "experiment_name": true,
+          "filter_overlong_false": true,
+          "final_step_logged": true,
+          "fresh_start": true,
+          "heldout_data_configured_but_not_run": true,
+          "hindsight_arm_assignment": true,
+          "hindsight_max_groups_8": true,
+          "hindsight_one_target_false": true,
+          "hindsight_scale_1": true,
+          "hindsight_utility_gate_false": true,
+          "live_replay_assignment": true,
+          "logprob_microbatch_8": true,
+          "max_prompt_length_256": true,
+          "max_response_length_128": true,
+          "maxrl_estimator": true,
+          "maxrl_pass_k_16": true,
+          "maxrl_truncate_order_16": true,
+          "no_kl_reward": true,
+          "one_gpu_one_node": true,
+          "output_directory": true,
+          "response_length_128": true,
+          "reward_function_name": true,
+          "reward_function_path": true,
+          "reward_manager_dapo": true,
+          "rollout_backend_hf": true,
+          "rollout_microbatch_128": true,
+          "rollout_temperature_1": true,
+          "rollout_top_k_0": true,
+          "rollout_top_p_1": true,
+          "rollouts_16": true,
+          "runtime_scheduler_60_steps_no_warmup": true,
+          "save_step_60": true,
+          "source_model": true,
+          "test_frequency_disabled": true,
+          "train_batch_8": true,
+          "train_data": true,
+          "trainer_section_logged": true,
+          "training_steps_60": true,
+          "validation_before_training_false": true,
+          "validation_on_last_step_false": true
+        },
+        "failed_checks": [],
+        "status": "pass"
+      },
       "marker": "/data/robotixx/curriculum-maxrl-runtime/checkpoints/e2_clean_b1_s3_260809/.complete",
       "run_id": "e2_clean_b1_s3_260809",
       "seed": 3,
-      "status": "missing",
-      "training_log": "/home/robotixx/curriculum-maxrl/autoresearch/iterate-260809-1533/e2_logs/e2_clean_b1_s3_260809.log"
+      "status": "complete",
+      "training_log": "/home/robotixx/curriculum-maxrl/autoresearch/iterate-260810-2240/e2c_logs/e2_clean_b1_s3_260809.log",
+      "training_log_sha256": "132ce37b3dcb7f948ed3dc118f8f11dfebad43a8a92ae5bf52415b12204747cc"
     },
     {
       "arm": "b2",
       "checkpoint": "/data/robotixx/curriculum-maxrl-runtime/checkpoints/e2_clean_b2_s3_260809/global_step_60/actor/huggingface/config.json",
+      "checkpoint_fingerprint": {
+        "config.json": {
+          "bytes": 859,
+          "sha256": "283834b57c6e55af57e59b007df3bfcaf2f898dbb22fb535a46d224b73acb0cd"
+        },
+        "model.safetensors": {
+          "bytes": 1447317080,
+          "sha256": "0feeffaee7a459eb2be294149d58e7809af215671ae860c30aac0741a96c85e1"
+        }
+      },
+      "configuration_validation": {
+        "checks": {
+          "actor_learning_rate_1e_5": true,
+          "actor_lr_cycles_0_5": true,
+          "actor_lr_schedule_constant": true,
+          "actor_microbatch_4": true,
+          "actor_min_lr_ratio_0": true,
+          "actor_minibatch_8": true,
+          "actor_no_kl_loss": true,
+          "actor_no_lr_warmup_ratio": true,
+          "actor_no_lr_warmup_steps": true,
+          "actor_one_ppo_epoch": true,
+          "actor_section_logged": true,
+          "actor_seed": true,
+          "actor_weight_decay_0_01": true,
+          "algorithm_section_logged": true,
+          "checkpoint_contents": true,
+          "data_section_logged": true,
+          "data_seed": true,
+          "dataloader_workers_0": true,
+          "exact_optimizer_step_sequence": true,
+          "experiment_name": true,
+          "filter_overlong_false": true,
+          "final_step_logged": true,
+          "fresh_start": true,
+          "heldout_data_configured_but_not_run": true,
+          "hindsight_arm_assignment": true,
+          "hindsight_max_groups_8": true,
+          "hindsight_one_target_false": true,
+          "hindsight_scale_1": true,
+          "hindsight_utility_gate_false": true,
+          "live_replay_assignment": true,
+          "logprob_microbatch_8": true,
+          "max_prompt_length_256": true,
+          "max_response_length_128": true,
+          "maxrl_estimator": true,
+          "maxrl_pass_k_16": true,
+          "maxrl_truncate_order_16": true,
+          "no_kl_reward": true,
+          "one_gpu_one_node": true,
+          "output_directory": true,
+          "response_length_128": true,
+          "reward_function_name": true,
+          "reward_function_path": true,
+          "reward_manager_dapo": true,
+          "rollout_backend_hf": true,
+          "rollout_microbatch_128": true,
+          "rollout_temperature_1": true,
+          "rollout_top_k_0": true,
+          "rollout_top_p_1": true,
+          "rollouts_16": true,
+          "runtime_scheduler_60_steps_no_warmup": true,
+          "save_step_60": true,
+          "source_model": true,
+          "test_frequency_disabled": true,
+          "train_batch_8": true,
+          "train_data": true,
+          "trainer_section_logged": true,
+          "training_steps_60": true,
+          "validation_before_training_false": true,
+          "validation_on_last_step_false": true
+        },
+        "failed_checks": [],
+        "status": "pass"
+      },
+      "dose_schedule": "/data/robotixx/curriculum-maxrl-runtime/checkpoints/e2_clean_b2_s3_260809/dose_accounting.jsonl",
+      "dose_schedule_rows": 60,
+      "dose_schedule_sha256": "5cc46af2f417869d6cdad28a1531158a110881185873447db1ebf98987432913",
       "marker": "/data/robotixx/curriculum-maxrl-runtime/checkpoints/e2_clean_b2_s3_260809/.complete",
       "run_id": "e2_clean_b2_s3_260809",
+      "scheduled_groups": 228,
       "seed": 3,
-      "status": "missing",
-      "training_log": "/home/robotixx/curriculum-maxrl/autoresearch/iterate-260809-1533/e2_logs/e2_clean_b2_s3_260809.log"
+      "status": "complete",
+      "training_log": "/home/robotixx/curriculum-maxrl/autoresearch/iterate-260810-2240/e2c_logs/e2_clean_b2_s3_260809.log",
+      "training_log_sha256": "1a8715b8a7ac6bc2ea3f5d6dc3dd034d536c61347f73c37f0d85819c68ce63aa"
     }
   ],
   "delivery_gate": {
@@ -650,38 +806,66 @@
     ],
     "steps": 60
   },
-  "generated_at": "2026-08-12T00:40:57-04:00",
+  "generated_at": "2026-08-15T00:08:39-04:00",
   "gpu": {
     "ceiling_mib": 4096,
-    "compute_processes": [
-      {
-        "pid": 2786996,
-        "process_name": "/home/robotixx/cosmos-framework/.venv/bin/python",
-        "used_memory_mib": 7350
-      },
-      {
-        "pid": 2786727,
-        "process_name": "/home/robotixx/snmr/../holosoma/.venv/hsmujoco/bin/python",
-        "used_memory_mib": 3392
-      },
-      {
-        "pid": 2856400,
-        "process_name": "/home/robotixx/miniconda3/envs/env_isaaclab/bin/python",
-        "used_memory_mib": 3958
-      }
-    ],
-    "gate_pass": false,
-    "memory_used_mib": 17132
+    "compute_processes": [],
+    "gate_pass": true,
+    "memory_used_mib": 1503
   },
   "heldout_artifact_count": 0,
   "heldout_artifacts_inspected": false,
   "integrity_status": "pass",
   "issues": [],
-  "launch_authorized_now": false,
-  "next_stage": "train_e2_clean_b1_s3_260809",
+  "launch_authorized_now": true,
+  "next_stage": "train_e2c_reservoir_replay_s1_260810",
   "reservoir": {
+    "artifact": "/data/robotixx/curriculum-maxrl-runtime/checkpoints/e2c_reservoir_collect_260810/replay_reservoir.pt",
+    "configuration_validation": {
+      "checks": {
+        "actor_seed_424242": true,
+        "checkpoint_saving_disabled": true,
+        "collector_enabled": true,
+        "collector_group_size": true,
+        "collector_max_groups": true,
+        "collector_output": true,
+        "collector_seed": true,
+        "data_seed_424242": true,
+        "experiment_name": true,
+        "final_step_logged": true,
+        "fresh_start": true,
+        "heldout_data_configured_but_not_run": true,
+        "hindsight_disabled": true,
+        "learning_rate_zero": true,
+        "live_replay_disabled": true,
+        "maxrl_estimator": true,
+        "microbatch_4": true,
+        "minibatch_8": true,
+        "one_ppo_epoch": true,
+        "output_directory": true,
+        "response_length_128": true,
+        "reward_function_name": true,
+        "reward_function_path": true,
+        "rollout_backend_hf": true,
+        "rollouts_16": true,
+        "source_model": true,
+        "temperature_1": true,
+        "test_frequency_disabled": true,
+        "top_k_0": true,
+        "top_p_1": true,
+        "train_batch_8": true,
+        "train_data": true,
+        "training_steps_60": true,
+        "validation_before_training_false": true,
+        "validation_on_last_step_false": true
+      },
+      "failed_checks": [],
+      "status": "pass"
+    },
     "run_id": "e2c_reservoir_collect_260810",
-    "status": "missing"
+    "sha256": "38fdd2124a544ebf720536059d014ca694f5963405b19f2f99a986cd4e532fa9",
+    "status": "complete",
+    "training_log_sha256": "94d1c508d80d96bfa1e4beab55f39530a15a720367561253565de567ea794db6"
   },
   "runtime": {
     "maxrl_commit": "7197bbb46a2ecd866da52f6b401ff20a34fe9390",
@@ -691,6 +875,6 @@
   },
   "static_preflight": {
     "path": "/home/robotixx/curriculum-maxrl/autoresearch/iterate-260810-2240/E2C_PREFLIGHT.json",
-    "status": "missing"
+    "status": "pass"
   }
 }

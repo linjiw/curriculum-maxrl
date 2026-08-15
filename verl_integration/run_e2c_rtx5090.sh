@@ -153,7 +153,7 @@ run_comparator() {
   fi
   require_gpu_clear
   echo "starting comparator $run_id"
-  RUNTIME_ROOT="$RUNTIME_ROOT" MAXRL_ROOT="$RUNTIME_ROOT/maxrl" \
+  env RUNTIME_ROOT="$RUNTIME_ROOT" MAXRL_ROOT="$RUNTIME_ROOT/maxrl" \
     PYTHON_BIN="$PYTHON_BIN" MODEL_PATH="$MODEL_PATH" \
     HF_HOME="$RUNTIME_ROOT/hf" RAY_DIR="/data/robotixx/cmrl-ray/${run_id:0:16}" \
     TRAIN_DATA="$TRAIN_DATA" VAL_DATA="$TEST_DATA" \
@@ -205,7 +205,7 @@ collect_reservoir() {
   fi
   require_gpu_clear
   echo "starting frozen-SFT reservoir collection"
-  RUNTIME_ROOT="$RUNTIME_ROOT" MAXRL_ROOT="$RUNTIME_ROOT/maxrl" \
+  env RUNTIME_ROOT="$RUNTIME_ROOT" MAXRL_ROOT="$RUNTIME_ROOT/maxrl" \
     PYTHON_BIN="$PYTHON_BIN" MODEL_PATH="$MODEL_PATH" \
     HF_HOME="$RUNTIME_ROOT/hf" \
     RAY_DIR="/data/robotixx/cmrl-ray/${RESERVOIR_RUN_ID:0:16}" \
@@ -284,7 +284,7 @@ run_e2c() {
   }
   require_gpu_clear
   echo "starting $run_id"
-  RUNTIME_ROOT="$RUNTIME_ROOT" MAXRL_ROOT="$RUNTIME_ROOT/maxrl" \
+  env RUNTIME_ROOT="$RUNTIME_ROOT" MAXRL_ROOT="$RUNTIME_ROOT/maxrl" \
     PYTHON_BIN="$PYTHON_BIN" MODEL_PATH="$MODEL_PATH" \
     HF_HOME="$RUNTIME_ROOT/hf" RAY_DIR="/data/robotixx/cmrl-ray/${run_id:0:16}" \
     TRAIN_DATA="$TRAIN_DATA" VAL_DATA="$TEST_DATA" \
