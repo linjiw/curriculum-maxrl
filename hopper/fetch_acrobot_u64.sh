@@ -12,30 +12,40 @@ REMOTE=${HOPPER_REMOTE:-lwang44@hopper.orc.gmu.edu}
 SCRATCH=${HOPPER_SCRATCH:-/scratch/lwang44}
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 
-JOB=${1:?usage: fetch_acrobot_u64.sh <array_job_id> [dest_dir]}
-[[ "$JOB" =~ ^[0-9]+$ ]] || { echo "invalid job id: $JOB" >&2; exit 1; }
-DEST=${2:-$ROOT/acrobot_u64/results/confirmatory-$JOB}
-
-SRC="$SCRATCH/acrobot_u64/results/$JOB"
+# A campaign may span several array submissions against the IDENTICAL bundle
+# digest and lock (e.g. a one-task validation followed by the remainder). Each
+# submission writes under its own array job id, so accept several and merge
+# them into one matrix. The analyzer independently requires a single shared
+# lock digest, so a merge across mismatched submissions still fails closed.
+DEST_OVERRIDE=""
+JOBS=()
+for arg in "$@"; do
+  if [[ "$arg" =~ ^[0-9]+$ ]]; then JOBS+=("$arg"); else DEST_OVERRIDE=$arg; fi
+done
+(( ${#JOBS[@]} >= 1 )) || { echo "usage: fetch_acrobot_u64.sh <job_id...> [dest]" >&2; exit 1; }
+DEST=${DEST_OVERRIDE:-$ROOT/acrobot_u64/results/confirmatory-${JOBS[0]}}
 
 if [[ -e "$DEST" ]]; then
   echo "destination already exists, refusing to overwrite: $DEST" >&2
   exit 1
 fi
 
-echo "remote : $SRC"
-REMOTE_N=$(ssh "$REMOTE" "ls '$SRC'/*.json 2>/dev/null | wc -l" | tr -d '[:space:]')
-REMOTE_PARTIAL=$(ssh "$REMOTE" "ls '$SRC'/*.partial 2>/dev/null | wc -l" | tr -d '[:space:]')
-echo "remote json    : $REMOTE_N"
-echo "remote partial : $REMOTE_PARTIAL"
-
-if [[ "$REMOTE_PARTIAL" != "0" ]]; then
-  echo "partial files present remotely; the campaign is still writing" >&2
-  exit 1
-fi
-
 mkdir -p "$DEST"
-scp -q "$REMOTE:$SRC/*.json" "$DEST/"
+REMOTE_N=0
+for JOB in "${JOBS[@]}"; do
+  SRC="$SCRATCH/acrobot_u64/results/$JOB"
+  n=$(ssh "$REMOTE" "ls '$SRC'/*.json 2>/dev/null | wc -l" | tr -d '[:space:]')
+  p=$(ssh "$REMOTE" "ls '$SRC'/*.partial 2>/dev/null | wc -l" | tr -d '[:space:]')
+  echo "remote $JOB : $n json, $p partial"
+  if [[ "$p" != "0" ]]; then
+    echo "partial files present in $SRC; that submission is still writing" >&2
+    exit 1
+  fi
+  (( n > 0 )) || { echo "no results under $SRC" >&2; exit 1; }
+  scp -q "$REMOTE:$SRC/*.json" "$DEST/"
+  REMOTE_N=$(( REMOTE_N + n ))
+done
+echo "remote total   : $REMOTE_N"
 
 LOCAL_N=$(ls "$DEST"/*.json 2>/dev/null | wc -l | tr -d '[:space:]')
 echo "fetched        : $LOCAL_N"
