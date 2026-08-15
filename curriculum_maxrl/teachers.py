@@ -26,6 +26,11 @@ from __future__ import annotations
 import numpy as np
 from dataclasses import dataclass, field
 
+try:  # package import
+    from .estimators import coefficient_activity, legacy_frontier_activity
+except ImportError:  # direct-script import, as several run_*.py entry points do
+    from estimators import coefficient_activity, legacy_frontier_activity
+
 
 @dataclass
 class TaskStats:
@@ -132,6 +137,17 @@ class MaxRLFrontierTeacher(Teacher):
     frontier (p << 1/N, group almost surely dropped); maximal on the widest
     band of "hard but reachable" tasks.  p is drawn from the task's Beta
     posterior (Thompson sampling) so that uncertain tasks are probed.
+
+    PROVENANCE — this is NOT the paper's score.  Algebraically
+
+        (1 - (1-p)^N) * (1 - p) = 1 - p - (1-p)^(N+1) = u_{N+1}(p),
+
+    i.e. the deployed-N score shifted by one.  The paper's exact score is
+    ``u_N(p) = 1 - (1-p)^N - p`` (:func:`estimators.coefficient_activity`,
+    used by :class:`AdvMassTeacher` and by the ``frontier_un`` maze teacher).
+    This class is retained unchanged so historical runs reproduce
+    bit-for-bit; it computes :func:`estimators.legacy_frontier_activity`.
+    Do not use it for new deployed-N claims.
     """
 
     def __init__(self, n_tasks: int, seed: int = 0, n_rollouts: int = 16,
@@ -145,7 +161,9 @@ class MaxRLFrontierTeacher(Teacher):
         for i, st in enumerate(self.stats):
             a, b = st.alpha_beta
             p = self.rng.beta(a, b)
-            w[i] = (1.0 - (1.0 - p) ** self.n_rollouts) * (1.0 - p)
+            # Historical shifted form: (1-(1-p)^N)(1-p) == u_{N+1}(p).
+            # This is NOT the paper's u_N score; see estimators.py.
+            w[i] = legacy_frontier_activity(p, self.n_rollouts)
         if w.sum() <= 1e-12:
             w[:] = 1.0
         probs = w / w.sum()
@@ -183,7 +201,8 @@ class AdvMassTeacher(Teacher):
         for i, st in enumerate(self.stats):
             a, b = st.alpha_beta
             p = self.rng.beta(a, b)
-            w[i] = (1.0 - (1.0 - p) ** self.n_rollouts) - p
+            # Exact deployed-N score: u_N(p) = 1 - (1-p)^N - p.
+            w[i] = coefficient_activity(p, self.n_rollouts)
         w = np.maximum(w, 0.0) ** self.power
         if w.sum() <= 1e-12:
             w[:] = 1.0
