@@ -1,0 +1,123 @@
+"""Per-group advantage weights for REINFORCE / RLOO / GRPO / MaxRL.
+
+Each function maps a binary reward vector r (n rollouts of one prompt) to
+per-rollout scalar weights w such that the gradient estimate is
+sum_j w_j * S_j, with S_j = grad log pi(z_j).  These mirror the formulas in
+verl/trainer/ppo/core_algos.py of the MaxRL codebase, minus token masking.
+"""
+
+from __future__ import annotations
+
+import numpy as np
+
+EPS = 1e-6
+
+
+def coefficient_activity(p, n_rollouts: int):
+    """Exact deployed-N coefficient-activity score.
+
+    This is the paper's ``u_N(p) = 1 - (1-p)^N - p``.  The helper is kept
+    NumPy-only so protocol tests and launch validation do not require a GPU.
+    Scalars remain NumPy scalars and arrays retain their input shape.
+    """
+    if n_rollouts < 1:
+        raise ValueError("n_rollouts must be at least 1")
+    p_arr = np.asarray(p, dtype=float)
+    return 1.0 - (1.0 - p_arr) ** n_rollouts - p_arr
+
+
+def legacy_frontier_activity(p, n_rollouts: int):
+    """Historical maze frontier heuristic, named explicitly for provenance.
+
+    ``(1-(1-p)^N)(1-p)`` is algebraically ``u_{N+1}(p)``.  It remains
+    available so ``legacy_v1`` runs reproduce their historical behavior,
+    while new MAZE-SCORE runs can select :func:`coefficient_activity` without
+    an off-by-one ambiguity.
+    """
+    if n_rollouts < 1:
+        raise ValueError("n_rollouts must be at least 1")
+    p_arr = np.asarray(p, dtype=float)
+    return (1.0 - (1.0 - p_arr) ** n_rollouts) * (1.0 - p_arr)
+
+
+def weights_reinforce(r: np.ndarray) -> np.ndarray:
+    return r / len(r)
+
+
+def weights_rloo(r: np.ndarray) -> np.ndarray:
+    n = len(r)
+    if n < 2:
+        return r.copy()
+    loo_mean = (r.sum() - r) / (n - 1)
+    return (r - loo_mean) / n
+
+
+def weights_grpo(r: np.ndarray) -> np.ndarray:
+    n = len(r)
+    std = r.std(ddof=1) if n > 1 else 1.0
+    return (r - r.mean()) / (std + EPS) / n
+
+
+def weights_grpo_nostd(r: np.ndarray) -> np.ndarray:
+    """Dr.-GRPO-style: mean-centered, NO std normalization (R1-Q3 arm).
+
+    Expected mass E[sum|w|] = 2K(N-K)/N^2 -> 2p(1-p): RLOO's profile
+    (Prop 2), so the mass account predicts this variant does NOT
+    over-serve the mastered tail the way sample-SD GRPO does. If it
+    still loses coverage under a fixed schedule, the mechanism is
+    mean-centering (success conditioning), not variance normalization.
+    """
+    n = len(r)
+    return (r - r.mean()) / n
+
+
+def weights_maxrl(r: np.ndarray) -> np.ndarray:
+    """Variance-reduced MaxRL estimator, eq. (10)/Algorithm 1 of the paper.
+
+    w_j = (r_j / K - 1/N); the whole group is dropped when K = 0.
+    Unbiased for the truncated ML objective with T = N-1 (dropping the
+    K=0 control variate shifts the order; see PROOFS.md Prop 1 correction).
+    """
+    n = len(r)
+    k = r.sum()
+    if k == 0:
+        return np.zeros(n)
+    return r / k - 1.0 / n
+
+
+def _c_TN(K: int, N: int, T: int) -> float:
+    """Per-success weight of the subset estimator (maclaurin.py c_sub_TN,
+    paper appendix eq. 51): unbiased for the T-truncated objective with N
+    rollouts, any T <= N.  c_{N,N}(K) = 1/K recovers Algorithm 1."""
+    from math import lgamma, log, exp
+    if K == 0 or T <= 0:
+        return 0.0
+
+    def logcomb(a, kk):
+        if kk < 0 or a < kk or a < 0:
+            return float("-inf")
+        return lgamma(a + 1) - lgamma(kk + 1) - lgamma(a - kk + 1)
+
+    F = N - K
+    logC_NT = logcomb(N, T)
+    s = 0.0
+    for k in range(1, min(T, K) + 1):
+        lt = logcomb(K - 1, k - 1) + logcomb(F, T - k) - logC_NT - log(k)
+        if lt > float("-inf"):
+            s += exp(lt)
+    return s
+
+
+def weights_maxrl_t(r: np.ndarray, T: int) -> np.ndarray:
+    """MaxRL subset estimator with decoupled truncation order T <= N.
+
+    w_succ = c_{T,N}(K) - 1/N, w_fail = -1/N (same zero-mean control variate
+    as eq. 10); group dropped at K = 0.  T = N recovers weights_maxrl; T = 1
+    gives E[w*] matching plain RL weighting.
+    """
+    n = len(r)
+    k = int(r.sum())
+    if k == 0:
+        return np.zeros(n)
+    c = _c_TN(k, n, min(T, n))
+    return r * c - 1.0 / n

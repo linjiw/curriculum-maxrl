@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "snapshot_utc": "2026-08-14T04:39:00Z",
+  "state": "active",
+  "evidence_launch_authorized": false,
+  "next_action": "monitor job 9366552 without opening endpoint files; fetch and verify only after terminal completion",
+  "hopper": {
+    "host": "lwang44@hopper.orc.gmu.edu",
+    "account": "xiao",
+    "environment_dir": "/scratch/lwang44/envs/maze-score-ad774d459fa77bb6",
+    "environment_lock_sha256": "ad774d459fa77bb68c01c4a225db1e7faa3213216422eb5eabdf5b3c0e3d6224",
+    "engineering_bundle_dir": "/scratch/lwang44/maxrl/bundles/maze_score/f4359095fb05490192b4",
+    "engineering_bundle_manifest_sha256": "f4359095fb05490192b404ea03f9fc2413fc7fcd97b20571855b1c38160eaf80"
+  },
+  "jobs": {
+    "9361275": "CANCELLED_PRE_ALLOCATION",
+    "9366532": "COMPLETED_VERIFIED",
+    "9366547": "COMPLETED_VERIFIED",
+    "9366552": "PENDING_PRIORITY"
+  },
+  "gates": {
+    "local_protocol_analyzer": "PASS",
+    "cpu_io_smoke": "PASS",
+    "gpu_import_smoke": "PASS",
+    "full_arm_cost_smoke": "PENDING",
+    "outcome_blind_sample_freeze": "HOLD",
+    "clean_evidence_bundle": "HOLD",
+    "maze_score_evidence": "HOLD",
+    "barn_evidence": "HOLD"
+  }
+}

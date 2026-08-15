@@ -1,0 +1,4 @@
+# MAZE-SCORE runtime pins. The PyTorch wheel is installed from the CUDA 12.4
+# index by hopper/setup_env.sh; this file is hashed into every source bundle.
+numpy==2.2.6
+torch==2.6.0+cu124

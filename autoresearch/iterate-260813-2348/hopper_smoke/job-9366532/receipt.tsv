@@ -1,0 +1,9 @@
+key	value
+job_id	9366532
+utc	2026-08-14T04:19:07Z
+user	lwang44
+host	hop055.orc.gmu.edu
+partition	normal
+cpus_per_task	1
+submit_dir	/scratch/lwang44/maxrl
+bash	4.4.20(1)-release

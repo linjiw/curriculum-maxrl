@@ -1,0 +1,13 @@
+{
+  "cuda_available": true,
+  "environment_lock_sha256": "ad774d459fa77bb68c01c4a225db1e7faa3213216422eb5eabdf5b3c0e3d6224",
+  "gpu_memory_bytes": 10200547328,
+  "gpu_name": "NVIDIA A100-SXM4-80GB MIG 1g.10gb",
+  "hostname": "gpu020.orc.gmu.edu",
+  "job_id": "9366547",
+  "numpy": "2.2.6",
+  "python": "3.10.20",
+  "source_manifest_sha256": "f4359095fb05490192b404ea03f9fc2413fc7fcd97b20571855b1c38160eaf80",
+  "torch": "2.6.0+cu124",
+  "torch_cuda": "12.4"
+}
