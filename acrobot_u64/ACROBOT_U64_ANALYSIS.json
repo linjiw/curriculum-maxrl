@@ -1,0 +1,291 @@
+{
+  "engine_field": "auc_mean_pass_by_transitions",
+  "familywise_alpha": 0.05,
+  "metric": "target_uniform_transition_auc",
+  "multiplicity": "Holm over {A, B}",
+  "prereg": "acrobot_u64/ACROBOT_U64_PREREG.md",
+  "primary_A_u16_minus_u64": {
+    "arm_means": {
+      "u16_shared_h64": 0.6737174052686756,
+      "u64_shared_h64": 0.6849915891333412
+    },
+    "estimand": "u16_shared_h64 minus u64_shared_h64",
+    "exact_two_sided_sign_flip_p": 0.2349262237548828,
+    "holm_adjusted_p": 0.2349262237548828,
+    "mean_paired_difference": -0.011274183864665643,
+    "meets_sesoi": false,
+    "metric": "target_uniform_transition_auc",
+    "n_paired_seeds": 20,
+    "paired_bootstrap_ci95": [
+      -0.029731860672832355,
+      0.005717301596402648
+    ],
+    "paired_differences": [
+      -0.003078797240155029,
+      -0.05351791710030296,
+      0.015408643796025134,
+      0.06634030853898942,
+      -0.039717332229541435,
+      -0.03347989069321955,
+      0.0019193247330241414,
+      0.0072474821540513545,
+      -0.10893812382827406,
+      0.01968238030588354,
+      0.04245001597707432,
+      -0.053051290918805116,
+      0.006977487666117388,
+      0.01809887632025453,
+      -0.0683092829180052,
+      -0.0014481203328550185,
+      -0.030474790767648252,
+      -0.029176179086870646,
+      0.0022618311443609596,
+      0.015321697186583605
+    ],
+    "positive_pairs": 10,
+    "raw_p": 0.2349262237548828,
+    "sample_std": 0.04082068675890142,
+    "significant": false,
+    "supported": false,
+    "test_assignments": 1048576
+  },
+  "primary_B_u16_minus_p1mp": {
+    "arm_means": {
+      "p1mp_shared_h64": 0.6415480494640905,
+      "u16_shared_h64": 0.6737174052686756
+    },
+    "estimand": "u16_shared_h64 minus p1mp_shared_h64",
+    "exact_two_sided_sign_flip_p": 0.0001049041748046875,
+    "holm_adjusted_p": 0.000209808349609375,
+    "mean_paired_difference": 0.03216935580458522,
+    "meets_sesoi": true,
+    "metric": "target_uniform_transition_auc",
+    "n_paired_seeds": 20,
+    "paired_bootstrap_ci95": [
+      0.019833227544655743,
+      0.04491046207173088
+    ],
+    "paired_differences": [
+      0.03484459380853622,
+      0.02718186057555949,
+      0.024403149624005804,
+      0.06764814789962659,
+      -0.0021946615672067127,
+      0.03223885925071934,
+      0.011359169437599737,
+      0.043221556304062436,
+      -0.027389297147471292,
+      0.10083179241571394,
+      0.06471777955895286,
+      0.06256859804433046,
+      0.016897367907580674,
+      0.05319492912140922,
+      0.003138710096763142,
+      0.01689888613649715,
+      0.0427049198816728,
+      -0.0011600285603738936,
+      0.03623523336316292,
+      0.036045549940563526
+    ],
+    "positive_pairs": 17,
+    "raw_p": 0.0001049041748046875,
+    "sample_std": 0.02932319857907327,
+    "significant": true,
+    "supported": true,
+    "test_assignments": 1048576
+  },
+  "provenance": {
+    "distinct_cpu_models": [
+      "Intel(R) Xeon(R) Gold 6240R CPU @ 2.40GHz"
+    ],
+    "distinct_hosts": [
+      "hop051.orc.gmu.edu",
+      "hop061.orc.gmu.edu",
+      "hop063.orc.gmu.edu",
+      "hop072.orc.gmu.edu"
+    ],
+    "lock_sha256": "2de1ef40d4ece3c610b0aabed049d0ca0b20ce7080e162d1fea0261a2692d534",
+    "pinned_runtime": {
+      "gymnasium": "1.3.0",
+      "machine": "x86_64",
+      "numpy": "2.5.1",
+      "python": "3.12.13",
+      "python_implementation": "CPython"
+    },
+    "within_seed_pairing_exact": true
+  },
+  "reading": "The replicated finding is 'harder-peaked beats p(1-p)'. Deployed-N peak-location specificity is NOT supported and must not be claimed; report this with equal prominence.",
+  "schema": "curriculum-maxrl/acrobot-u64-analysis/v1",
+  "secondary_descriptive": {
+    "p1mp_minus_uniform": {
+      "arm_means": {
+        "p1mp_shared_h64": 0.6415480494640905,
+        "uniform_shared_h64": 0.6600766408197638
+      },
+      "estimand": "p1mp_shared_h64 minus uniform_shared_h64",
+      "exact_two_sided_sign_flip_p": 0.011610031127929688,
+      "mean_paired_difference": -0.01852859135567328,
+      "metric": "target_uniform_transition_auc",
+      "n_paired_seeds": 20,
+      "paired_bootstrap_ci95": [
+        -0.03048755540342103,
+        -0.005735018281591405
+      ],
+      "paired_differences": [
+        -0.03609349640354487,
+        -0.04467671851973731,
+        0.0002342664286137941,
+        -0.03037374849703356,
+        -0.018503640994108617,
+        -0.05432642424676981,
+        0.03171840953009375,
+        -0.05384194542231624,
+        -0.00939733045340696,
+        -0.023288806846881394,
+        0.034801211454360104,
+        -0.04976007484830369,
+        -0.0258562379467685,
+        0.016316088454403466,
+        -0.03070122798241881,
+        -0.018893877433222017,
+        -0.02910138121963568,
+        0.006619100230663477,
+        0.022753301325624142,
+        -0.05819929372307686
+      ],
+      "positive_pairs": 6,
+      "sample_std": 0.02892976773655492,
+      "test_assignments": 1048576
+    },
+    "u16_minus_uniform": {
+      "arm_means": {
+        "u16_shared_h64": 0.6737174052686756,
+        "uniform_shared_h64": 0.6600766408197638
+      },
+      "estimand": "u16_shared_h64 minus uniform_shared_h64",
+      "exact_two_sided_sign_flip_p": 0.13445281982421875,
+      "mean_paired_difference": 0.01364076444891194,
+      "metric": "target_uniform_transition_auc",
+      "n_paired_seeds": 20,
+      "paired_bootstrap_ci95": [
+        -0.0023702539681364288,
+        0.030657554736392242
+      ],
+      "paired_differences": [
+        -0.0012489025950086496,
+        -0.017494857944177822,
+        0.0246374160526196,
+        0.03727439940259303,
+        -0.02069830256131533,
+        -0.02208756499605047,
+        0.043077578967693486,
+        -0.010620389118253803,
+        -0.03678662760087825,
+        0.07754298556883255,
+        0.09951899101331296,
+        0.012808523196026766,
+        -0.008958870039187827,
+        0.06951101757581268,
+        -0.02756251788565567,
+        -0.0019949912967248684,
+        0.013603538662037118,
+        0.005459071670289584,
+        0.058988534688787064,
+        -0.022153743782513335
+      ],
+      "positive_pairs": 10,
+      "sample_std": 0.03890786796632632,
+      "test_assignments": 1048576
+    },
+    "u64_minus_p1mp": {
+      "arm_means": {
+        "p1mp_shared_h64": 0.6415480494640905,
+        "u64_shared_h64": 0.6849915891333412
+      },
+      "estimand": "u64_shared_h64 minus p1mp_shared_h64",
+      "exact_two_sided_sign_flip_p": 1.9073486328125e-06,
+      "mean_paired_difference": 0.043443539669250866,
+      "metric": "target_uniform_transition_auc",
+      "n_paired_seeds": 20,
+      "paired_bootstrap_ci95": [
+        0.03037700813557897,
+        0.05750170498659515
+      ],
+      "paired_differences": [
+        0.037923391048691246,
+        0.08069977767586245,
+        0.00899450582798067,
+        0.001307839360637164,
+        0.03752267066233472,
+        0.06571874994393889,
+        0.009439844704575595,
+        0.03597407415001108,
+        0.08154882668080277,
+        0.0811494121098304,
+        0.02226776358187854,
+        0.11561988896313558,
+        0.009919880241463286,
+        0.03509605280115469,
+        0.07144799301476834,
+        0.018347006469352167,
+        0.07317971064932105,
+        0.028016150526496753,
+        0.03397340221880196,
+        0.02072385275397992
+      ],
+      "positive_pairs": 20,
+      "sample_std": 0.03161548296554855,
+      "test_assignments": 1048576
+    },
+    "u64_minus_uniform": {
+      "arm_means": {
+        "u64_shared_h64": 0.6849915891333412,
+        "uniform_shared_h64": 0.6600766408197638
+      },
+      "estimand": "u64_shared_h64 minus uniform_shared_h64",
+      "exact_two_sided_sign_flip_p": 0.0042781829833984375,
+      "mean_paired_difference": 0.024914948313577583,
+      "metric": "target_uniform_transition_auc",
+      "n_paired_seeds": 20,
+      "paired_bootstrap_ci95": [
+        0.010503181786128295,
+        0.0387762458564563
+      ],
+      "paired_differences": [
+        0.0018298946451463793,
+        0.03602305915612514,
+        0.009228772256594464,
+        -0.029065909136396395,
+        0.019019029668226106,
+        0.011392325697169081,
+        0.041158254234669345,
+        -0.017867871272305158,
+        0.0721514962273958,
+        0.057860605262949005,
+        0.057068975036238645,
+        0.06585981411483188,
+        -0.015936357705305215,
+        0.05141214125555815,
+        0.04074676503234953,
+        -0.0005468709638698499,
+        0.04407832942968537,
+        0.03463525075716023,
+        0.056726703544426105,
+        -0.03747544096909694
+      ],
+      "positive_pairs": 15,
+      "sample_std": 0.03307993268166883,
+      "test_assignments": 1048576
+    }
+  },
+  "sesoi": 0.01,
+  "v2_frozen_primary_for_reference": {
+    "ci": [
+      0.02094,
+      0.07385
+    ],
+    "mean": 0.04803,
+    "p": 0.003361
+  },
+  "verdict": "H_peak_not_supported_harder_beats_softer"
+}
