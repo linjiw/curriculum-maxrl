@@ -1,15 +1,22 @@
 {
+  "build_host_runtime": {
+    "gymnasium": "1.3.0",
+    "machine": "x86_64",
+    "numpy": "2.5.1",
+    "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "python_implementation": "CPython"
+  },
   "derived_from": {
     "lock": "vendor/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json",
     "note": "V2 sources are vendored byte-identically and verified by verify_vendor_lock.py; the V2 runner is unmodified and is not used for this campaign because its lock requires macOS arm64.",
     "sealed_utc": "2026-08-08T07:00:25.740908+00:00"
   },
   "purpose": "Source/runtime lock for the U64 over-shooting arm, a derivative of the sealed V2 Acrobot tournament.",
-  "runtime": {
+  "runtime_pinned": {
     "gymnasium": "1.3.0",
     "machine": "x86_64",
     "numpy": "2.5.1",
-    "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
     "python": "3.12.13",
     "python_implementation": "CPython"
   },
@@ -70,7 +77,8 @@
   },
   "schema": "curriculum-maxrl/acrobot-u64-tournament/v1",
   "source_sha256": {
-    "run_u64_tournament.py": "4f17992b003af8db9affc5dd2fee2e3e4628f6b9a82585510367eb5fb1a6876c",
+    "analyze_u64_tournament.py": "68f975e57aebf1edacc632e464d5945998b8511ba0602231e76f517ac472f790",
+    "run_u64_tournament.py": "b389eac9c03528af0679355fb80443f96d8dcf4c2b356f440d54f3c453d61de3",
     "vendor/frontier_rl/__init__.py": "1ef143075407ee38e06dbcde7b5711c2c80e82062e1d326682d05be0460ca253",
     "vendor/frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
     "vendor/frontier_rl/estimators.py": "5d37fd1455dd0ce0466a46b7c0247f0172a066e6da12a86f0b40ad92ac03f6df",

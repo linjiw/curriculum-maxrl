@@ -107,6 +107,7 @@ ARM_ORDER = tuple(ARMS)
 
 SOURCE_RELATIVE_PATHS = (
     "run_u64_tournament.py",
+    "analyze_u64_tournament.py",   # frozen before any result exists
     "vendor/frontier_rl/examples/run_acrobot_neural.py",
     "vendor/frontier_rl/adapters/acrobot_neural.py",
     "vendor/frontier_rl/teacher.py",
@@ -116,10 +117,17 @@ SOURCE_RELATIVE_PATHS = (
     "vendor/frontier_rl/__init__.py",
 )
 
+# Fields compared by the lock.  See AMENDMENT_2026-08-15_runtime_scope.md:
+# `platform` is RECORDED but NOT compared, because it embeds the kernel build
+# string, which is not a scientific variable and differs across the nodes of any
+# real cluster.  `machine` IS compared, so an architecture change still
+# fail-closes.
 PINNED_RUNTIME_VERSIONS = {
+    "python_implementation": "CPython",
     "python": "3.12.13",
     "numpy": "2.5.1",
     "gymnasium": "1.3.0",
+    "machine": "x86_64",
 }
 
 
@@ -152,6 +160,17 @@ def live_runtime() -> dict:
 
 def runtime_versions(rt: dict) -> dict:
     return {k: rt[k] for k in PINNED_RUNTIME_VERSIONS}
+
+
+def _cpu_model() -> str:
+    """Recorded so node heterogeneity can be audited after the fact."""
+    try:
+        for line in Path("/proc/cpuinfo").read_text().splitlines():
+            if line.lower().startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    except Exception:
+        pass
+    return platform.processor() or "unknown"
 
 
 def engine_master_seed(logical_seed: int) -> int:
@@ -209,9 +228,10 @@ def load_and_verify_lock(path: Path = LOCK_PATH) -> tuple[dict, str]:
         errors.append("lock schema mismatch")
     rt = live_runtime()
     if runtime_versions(rt) != PINNED_RUNTIME_VERSIONS:
-        errors.append(f"library runtime is not pinned: {runtime_versions(rt)!r}")
-    if lock.get("runtime") != rt:
-        errors.append(f"runtime mismatch: live={rt!r}")
+        errors.append(f"pinned runtime mismatch: live={runtime_versions(rt)!r} "
+                      f"expected={PINNED_RUNTIME_VERSIONS!r}")
+    if lock.get("runtime_pinned") != PINNED_RUNTIME_VERSIONS:
+        errors.append("lock does not carry the expected pinned runtime")
     if lock.get("schedule") != locked_schedule():
         errors.append("schedule mismatch")
     live_hashes = source_hashes()
@@ -352,6 +372,7 @@ def run_one(arm: str, seed: int, mode: str, *, verify_lock: bool = True) -> dict
             "source_sha256": source_hashes(),
             "lock_sha256": lock_digest,
             "hostname": platform.node(),
+            "cpu_model": _cpu_model(),
             "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
             "slurm_array_task_id": os.environ.get("SLURM_ARRAY_TASK_ID"),
         },
@@ -360,10 +381,14 @@ def run_one(arm: str, seed: int, mode: str, *, verify_lock: bool = True) -> dict
 
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--arm", required=True, choices=sorted(ARMS))
+    ap.add_argument("--arm", choices=sorted(ARMS))
+    ap.add_argument("--all-arms", action="store_true",
+                    help="run every arm for --seed in this process, so all "
+                         "paired arms share one node and one interpreter")
+    ap.add_argument("--outdir", help="directory for --all-arms output")
     ap.add_argument("--seed", required=True, type=int)
     ap.add_argument("--mode", default="confirmatory", choices=sorted(MODES))
-    ap.add_argument("--output", required=True)
+    ap.add_argument("--output")
     ap.add_argument("--overwrite", action="store_true")
     ap.add_argument("--build-lock", action="store_true",
                     help="write the lock file instead of running")
@@ -383,7 +408,8 @@ def main(argv=None) -> None:
                          "and is not used for this campaign because its lock "
                          "requires macOS arm64."),
             },
-            "runtime": live_runtime(),
+            "runtime_pinned": PINNED_RUNTIME_VERSIONS,
+            "build_host_runtime": live_runtime(),
             "schedule": locked_schedule(),
             "source_sha256": source_hashes(),
         }
@@ -393,15 +419,28 @@ def main(argv=None) -> None:
         print(f"wrote lock {out}")
         return
 
-    out = Path(args.output)
-    if out.exists() and not args.overwrite:
-        raise SystemExit(f"refusing to overwrite {out}")
-    out.parent.mkdir(parents=True, exist_ok=True)
-    record = run_one(args.arm, args.seed, args.mode)
-    tmp = out.with_suffix(out.suffix + ".partial")
-    tmp.write_text(json.dumps(record, sort_keys=True) + "\n", encoding="utf-8")
-    tmp.replace(out)                      # atomic: no partial file is ever final
-    print(f"{args.arm} seed={args.seed} mode={args.mode} -> {out}")
+    def emit(arm: str, out: Path) -> None:
+        if out.exists() and not args.overwrite:
+            raise SystemExit(f"refusing to overwrite {out}")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        record = run_one(arm, args.seed, args.mode)
+        tmp = out.with_suffix(out.suffix + ".partial")
+        tmp.write_text(json.dumps(record, sort_keys=True) + "\n",
+                       encoding="utf-8")
+        tmp.replace(out)              # atomic: no partial file is ever final
+        print(f"{arm} seed={args.seed} mode={args.mode} -> {out}", flush=True)
+
+    if args.all_arms:
+        if not args.outdir:
+            raise SystemExit("--all-arms requires --outdir")
+        outdir = Path(args.outdir)
+        for arm in ARM_ORDER:
+            emit(arm, outdir / f"{arm}-{args.seed}.json")
+        return
+
+    if not args.arm or not args.output:
+        raise SystemExit("provide --arm and --output, or --all-arms and --outdir")
+    emit(args.arm, Path(args.output))
 
 
 if __name__ == "__main__":
