@@ -59,9 +59,12 @@ else
   ssh "$REMOTE" "set -e; cd '$DEST'; tar --strip-components=1 -xzf bundle.tgz; rm -f bundle.tgz"
 fi
 
+# Must use the same exclusions as the sbatch verifier: __pycache__ is produced
+# by running the bundle, not by staging it.
 REMOTE_SHA=$(ssh "$REMOTE" "set -e; cd '$DEST'; \
-  find . -type f -not -name MANIFEST.sha256 -print0 | LC_ALL=C sort -z \
-  | xargs -0 sha256sum | sha256sum | cut -d' ' -f1")
+  find . -type f -not -name MANIFEST.sha256 \
+    -not -path '*/__pycache__/*' -not -name '*.pyc' -print0 \
+  | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1")
 
 if [[ "$REMOTE_SHA" != "$BUNDLE_SHA" ]]; then
   echo "REMOTE BUNDLE MISMATCH" >&2

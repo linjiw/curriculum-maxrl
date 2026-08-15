@@ -36,8 +36,14 @@ echo "cpu       : $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2- | sed 's/
 BUNDLE="$ACROBOT_U64_BUNDLE_DIR"
 [[ -d "$BUNDLE" ]] || { echo "missing bundle: $BUNDLE" >&2; exit 1; }
 
+# Never let the interpreter mutate the bundle it is being audited against.
+export PYTHONDONTWRITEBYTECODE=1
+
 # --- fail closed on the exact staged bytes ---------------------------------
-ACTUAL=$(cd "$BUNDLE" && find . -type f -not -name MANIFEST.sha256 -print0 \
+# __pycache__ is excluded because it is created by running the bundle, not by
+# staging it; including it made the digest self-invalidating after the first run.
+ACTUAL=$(cd "$BUNDLE" && find . -type f -not -name MANIFEST.sha256 \
+  -not -path '*/__pycache__/*' -not -name '*.pyc' -print0 \
   | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1)
 if [[ "$ACTUAL" != "$ACROBOT_U64_BUNDLE_SHA256" ]]; then
   echo "BUNDLE DIGEST MISMATCH" >&2
@@ -80,11 +86,15 @@ uv run --python 3.12.13 --with numpy==2.5.1 \
    python check_arms_differ.py | tail -3
 
 echo "--- confirmatory: all four arms, seed $SEED ---"
-/usr/bin/time -f 'WALL %e s | MAXRSS %M KB' \
-  uv run --python 3.12.13 --with numpy==2.5.1 \
-     --with 'gymnasium[classic-control]==1.3.0' \
-     python run_u64_tournament.py \
-       --all-arms --seed "$SEED" --mode confirmatory --outdir "$RESULTS"
+# NOTE: /usr/bin/time does not exist on Hopper compute nodes -- it is what
+# killed UED job 9366863 (see hopper/HOPPER_STATUS.md). Use the shell clock and
+# let sacct report MaxRSS instead of depending on GNU time.
+_t0=$SECONDS
+uv run --python 3.12.13 --with numpy==2.5.1 \
+   --with 'gymnasium[classic-control]==1.3.0' \
+   python run_u64_tournament.py \
+     --all-arms --seed "$SEED" --mode confirmatory --outdir "$RESULTS"
+echo "WALL $((SECONDS - _t0)) s (shell clock; see sacct MaxRSS for memory)"
 
 echo "--- produced ---"
 ls -l "$RESULTS" | grep -- "-${SEED}.json" || true
