@@ -11,3 +11,4 @@ icra2027/bin/
 # The licensed, relocated copies live under ued_benchmark/configs/.
 /config/
 acrobot_u64/results/
+acrobot_nsweep/results/
