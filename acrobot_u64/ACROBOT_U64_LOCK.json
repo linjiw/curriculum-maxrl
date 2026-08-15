@@ -1,0 +1,82 @@
+{
+  "derived_from": {
+    "lock": "vendor/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json",
+    "note": "V2 sources are vendored byte-identically and verified by verify_vendor_lock.py; the V2 runner is unmodified and is not used for this campaign because its lock requires macOS arm64.",
+    "sealed_utc": "2026-08-08T07:00:25.740908+00:00"
+  },
+  "purpose": "Source/runtime lock for the U64 over-shooting arm, a derivative of the sealed V2 Acrobot tournament.",
+  "runtime": {
+    "gymnasium": "1.3.0",
+    "machine": "x86_64",
+    "numpy": "2.5.1",
+    "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "python_implementation": "CPython"
+  },
+  "schedule": {
+    "arm_score_exponent": {
+      "p1mp_shared_h64": null,
+      "u16_shared_h64": 16,
+      "u64_shared_h64": 64,
+      "uniform_shared_h64": null
+    },
+    "arms": [
+      "uniform_shared_h64",
+      "p1mp_shared_h64",
+      "u16_shared_h64",
+      "u64_shared_h64"
+    ],
+    "confirmatory_seeds": [
+      20000,
+      20001,
+      20002,
+      20003,
+      20004,
+      20005,
+      20006,
+      20007,
+      20008,
+      20009,
+      20010,
+      20011,
+      20012,
+      20013,
+      20014,
+      20015,
+      20016,
+      20017,
+      20018,
+      20019
+    ],
+    "deployed_n_rollouts": 16,
+    "development_seeds": [
+      20100,
+      20101,
+      20102
+    ],
+    "engine_master_base": 50000000000,
+    "engine_master_stride": 10000000,
+    "eval_interval": 100000,
+    "eval_n": 32,
+    "evaluation_seed_base": 1000000,
+    "learning_rate": 0.0003,
+    "quick_seeds": [
+      20200
+    ],
+    "teacher_decay": 0.7,
+    "teacher_floor": 0.1,
+    "teacher_gamma": 1.0,
+    "transition_budget": 2000000
+  },
+  "schema": "curriculum-maxrl/acrobot-u64-tournament/v1",
+  "source_sha256": {
+    "run_u64_tournament.py": "4f17992b003af8db9affc5dd2fee2e3e4628f6b9a82585510367eb5fb1a6876c",
+    "vendor/frontier_rl/__init__.py": "1ef143075407ee38e06dbcde7b5711c2c80e82062e1d326682d05be0460ca253",
+    "vendor/frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+    "vendor/frontier_rl/estimators.py": "5d37fd1455dd0ce0466a46b7c0247f0172a066e6da12a86f0b40ad92ac03f6df",
+    "vendor/frontier_rl/examples/run_acrobot_neural.py": "7bd8e4c7d2e85e98d0ca769ce6a65c997307cb4c6b65a8b90c00edb862c49cbf",
+    "vendor/frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+    "vendor/frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+    "vendor/frontier_rl/trainer.py": "e7120a3c0b056d3bb5f008b6654c5c52b3ab5930126576f9cc2260db3e05a976"
+  }
+}

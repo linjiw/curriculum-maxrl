@@ -10,3 +10,4 @@ icra2027/bin/
 # Byte-identical working copy of the upstream Apache-2.0 minimax maze configs.
 # The licensed, relocated copies live under ued_benchmark/configs/.
 /config/
+acrobot_u64/results/

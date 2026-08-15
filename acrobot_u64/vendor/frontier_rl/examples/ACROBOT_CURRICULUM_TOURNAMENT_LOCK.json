@@ -1,0 +1,703 @@
+{
+  "schema": "curriculum-maxrl/acrobot-curriculum-tournament-lock/v2",
+  "sealed_utc": "2026-08-08T07:00:25.740908+00:00",
+  "status": "sealed_before_v2_development_or_confirmation",
+  "purpose": "Canonical pre-development and pre-confirmation source/runtime lock for the V2 three-arm Acrobot CPU curriculum tournament.",
+  "protocol_relative_path": "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL.md",
+  "runtime": {
+    "python_implementation": "CPython",
+    "python": "3.12.13",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "numpy": "2.5.1",
+    "gymnasium": "1.3.0"
+  },
+  "schedule": {
+    "condition_names": [
+      "uniform_shared_h64",
+      "p1mp_shared_h64",
+      "u16_shared_h64"
+    ],
+    "confirmatory_seeds": [
+      20000,
+      20001,
+      20002,
+      20003,
+      20004,
+      20005,
+      20006,
+      20007,
+      20008,
+      20009,
+      20010,
+      20011,
+      20012,
+      20013,
+      20014,
+      20015,
+      20016,
+      20017,
+      20018,
+      20019
+    ],
+    "development_seeds": [
+      20100,
+      20101,
+      20102
+    ],
+    "quick_seeds": [
+      20200
+    ],
+    "engine_master_base": 50000000000,
+    "engine_master_stride": 10000000,
+    "rng_domain_offsets": {
+      "actor_parameter": 0,
+      "actor_action": 1,
+      "teacher": 10000,
+      "environment_reset_rng": 11003,
+      "evaluation_episode": 1000000,
+      "evaluation_action": 1000001
+    },
+    "environment_adapter_seed_offset": 1000,
+    "confirmatory_engine_master_seeds": {
+      "20000": 250000000000,
+      "20001": 250010000000,
+      "20002": 250020000000,
+      "20003": 250030000000,
+      "20004": 250040000000,
+      "20005": 250050000000,
+      "20006": 250060000000,
+      "20007": 250070000000,
+      "20008": 250080000000,
+      "20009": 250090000000,
+      "20010": 250100000000,
+      "20011": 250110000000,
+      "20012": 250120000000,
+      "20013": 250130000000,
+      "20014": 250140000000,
+      "20015": 250150000000,
+      "20016": 250160000000,
+      "20017": 250170000000,
+      "20018": 250180000000,
+      "20019": 250190000000
+    },
+    "development_engine_master_seeds": {
+      "20100": 251000000000,
+      "20101": 251010000000,
+      "20102": 251020000000
+    },
+    "quick_engine_master_seeds": {
+      "20200": 252000000000
+    },
+    "transition_budget": 2000000,
+    "eval_interval_transitions": 100000,
+    "eval_n_shared_trajectories": 32,
+    "development_transition_budget": 200000,
+    "development_eval_interval_transitions": 50000,
+    "development_eval_n_shared_trajectories": 16,
+    "quick_transition_budget": 8000,
+    "quick_eval_interval_transitions": 4000,
+    "quick_eval_n_shared_trajectories": 2,
+    "n_rollouts": 16,
+    "learning_rate": 0.0003,
+    "architecture": "shared_h64_task_blind",
+    "teacher_decay": 0.7,
+    "teacher_floor": 0.1,
+    "teacher_gamma": 1.0,
+    "hindsight_scale": 0.0
+  },
+  "seed_collision_audit": {
+    "passed": true,
+    "confirmatory_seeds": [
+      20000,
+      20001,
+      20002,
+      20003,
+      20004,
+      20005,
+      20006,
+      20007,
+      20008,
+      20009,
+      20010,
+      20011,
+      20012,
+      20013,
+      20014,
+      20015,
+      20016,
+      20017,
+      20018,
+      20019
+    ],
+    "development_seeds": [
+      20100,
+      20101,
+      20102
+    ],
+    "quick_seeds": [
+      20200
+    ],
+    "prior_training_seed_blocks": {
+      "legacy_acrobot_core": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "legacy_acrobot_scale": [
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109
+      ],
+      "acrobot_v1_pilot": [
+        10000,
+        10001,
+        10002
+      ],
+      "acrobot_v2_development": [
+        11000,
+        11001,
+        11002
+      ],
+      "acrobot_v3_confirmation": [
+        12000,
+        12001,
+        12002,
+        12003,
+        12004,
+        12005,
+        12006,
+        12007,
+        12008,
+        12009,
+        12010,
+        12011,
+        12012,
+        12013,
+        12014,
+        12015,
+        12016,
+        12017,
+        12018,
+        12019
+      ],
+      "acrobot_hindsight_v4a": [
+        13000,
+        13001,
+        13002
+      ],
+      "acrobot_hindsight_v4b": [
+        14000,
+        14001,
+        14002,
+        14003,
+        14004,
+        14005,
+        14006,
+        14007,
+        14008,
+        14009
+      ],
+      "acrobot_hindsight_v5a": [
+        15000,
+        15001,
+        15002
+      ],
+      "acrobot_hindsight_v5b": [
+        16000,
+        16001,
+        16002,
+        16003,
+        16004,
+        16005,
+        16006,
+        16007,
+        16008,
+        16009,
+        16010,
+        16011,
+        16012,
+        16013,
+        16014,
+        16015,
+        16016,
+        16017,
+        16018,
+        16019
+      ],
+      "mountaincar_v1_development": [
+        17000,
+        17001,
+        17002
+      ],
+      "mountaincar_v1_reserved_confirmation": [
+        18000,
+        18001,
+        18002,
+        18003,
+        18004,
+        18005,
+        18006,
+        18007,
+        18008,
+        18009,
+        18010,
+        18011,
+        18012,
+        18013,
+        18014,
+        18015,
+        18016,
+        18017,
+        18018,
+        18019
+      ],
+      "aborted_tournament_confirmation_rng_overlap": [
+        19000,
+        19001,
+        19002,
+        19003,
+        19004,
+        19005,
+        19006,
+        19007,
+        19008,
+        19009,
+        19010,
+        19011,
+        19012,
+        19013,
+        19014,
+        19015,
+        19016,
+        19017,
+        19018,
+        19019
+      ],
+      "aborted_tournament_development_rng_overlap": [
+        19100,
+        19101,
+        19102
+      ]
+    },
+    "logical_seed_collisions": {
+      "confirmatory_vs_prior": [],
+      "confirmatory_vs_development": [],
+      "confirmatory_vs_quick": [],
+      "development_vs_prior": [],
+      "development_vs_quick": [],
+      "quick_vs_prior": []
+    },
+    "derived_root_collisions": [],
+    "derived_roots_vs_all_logical_training_seeds": [],
+    "scope": "global uniqueness over every registered logical-seed/domain pair; the three arms intentionally reuse one pair's roots as paired CRNs",
+    "mapping": {
+      "engine_master_base": 50000000000,
+      "engine_master_stride": 10000000,
+      "environment_adapter_seed_offset": 1000,
+      "rng_domain_offsets": {
+        "actor_parameter": 0,
+        "actor_action": 1,
+        "teacher": 10000,
+        "environment_reset_rng": 11003,
+        "evaluation_episode": 1000000,
+        "evaluation_action": 1000001
+      },
+      "adapter_internal_reset_rng_rule": "engine master + 1000 adapter argument + 10003 internal offset = engine master + 11003"
+    },
+    "per_logical_seed": {
+      "20000": {
+        "logical_seed": 20000,
+        "engine_master_seed": 250000000000,
+        "environment_adapter_seed_argument": 250000001000,
+        "rng_roots": {
+          "actor_parameter": 250000000000,
+          "actor_action": 250000000001,
+          "teacher": 250000010000,
+          "environment_reset_rng": 250000011003,
+          "evaluation_episode": 250001000000,
+          "evaluation_action": 250001000001
+        }
+      },
+      "20001": {
+        "logical_seed": 20001,
+        "engine_master_seed": 250010000000,
+        "environment_adapter_seed_argument": 250010001000,
+        "rng_roots": {
+          "actor_parameter": 250010000000,
+          "actor_action": 250010000001,
+          "teacher": 250010010000,
+          "environment_reset_rng": 250010011003,
+          "evaluation_episode": 250011000000,
+          "evaluation_action": 250011000001
+        }
+      },
+      "20002": {
+        "logical_seed": 20002,
+        "engine_master_seed": 250020000000,
+        "environment_adapter_seed_argument": 250020001000,
+        "rng_roots": {
+          "actor_parameter": 250020000000,
+          "actor_action": 250020000001,
+          "teacher": 250020010000,
+          "environment_reset_rng": 250020011003,
+          "evaluation_episode": 250021000000,
+          "evaluation_action": 250021000001
+        }
+      },
+      "20003": {
+        "logical_seed": 20003,
+        "engine_master_seed": 250030000000,
+        "environment_adapter_seed_argument": 250030001000,
+        "rng_roots": {
+          "actor_parameter": 250030000000,
+          "actor_action": 250030000001,
+          "teacher": 250030010000,
+          "environment_reset_rng": 250030011003,
+          "evaluation_episode": 250031000000,
+          "evaluation_action": 250031000001
+        }
+      },
+      "20004": {
+        "logical_seed": 20004,
+        "engine_master_seed": 250040000000,
+        "environment_adapter_seed_argument": 250040001000,
+        "rng_roots": {
+          "actor_parameter": 250040000000,
+          "actor_action": 250040000001,
+          "teacher": 250040010000,
+          "environment_reset_rng": 250040011003,
+          "evaluation_episode": 250041000000,
+          "evaluation_action": 250041000001
+        }
+      },
+      "20005": {
+        "logical_seed": 20005,
+        "engine_master_seed": 250050000000,
+        "environment_adapter_seed_argument": 250050001000,
+        "rng_roots": {
+          "actor_parameter": 250050000000,
+          "actor_action": 250050000001,
+          "teacher": 250050010000,
+          "environment_reset_rng": 250050011003,
+          "evaluation_episode": 250051000000,
+          "evaluation_action": 250051000001
+        }
+      },
+      "20006": {
+        "logical_seed": 20006,
+        "engine_master_seed": 250060000000,
+        "environment_adapter_seed_argument": 250060001000,
+        "rng_roots": {
+          "actor_parameter": 250060000000,
+          "actor_action": 250060000001,
+          "teacher": 250060010000,
+          "environment_reset_rng": 250060011003,
+          "evaluation_episode": 250061000000,
+          "evaluation_action": 250061000001
+        }
+      },
+      "20007": {
+        "logical_seed": 20007,
+        "engine_master_seed": 250070000000,
+        "environment_adapter_seed_argument": 250070001000,
+        "rng_roots": {
+          "actor_parameter": 250070000000,
+          "actor_action": 250070000001,
+          "teacher": 250070010000,
+          "environment_reset_rng": 250070011003,
+          "evaluation_episode": 250071000000,
+          "evaluation_action": 250071000001
+        }
+      },
+      "20008": {
+        "logical_seed": 20008,
+        "engine_master_seed": 250080000000,
+        "environment_adapter_seed_argument": 250080001000,
+        "rng_roots": {
+          "actor_parameter": 250080000000,
+          "actor_action": 250080000001,
+          "teacher": 250080010000,
+          "environment_reset_rng": 250080011003,
+          "evaluation_episode": 250081000000,
+          "evaluation_action": 250081000001
+        }
+      },
+      "20009": {
+        "logical_seed": 20009,
+        "engine_master_seed": 250090000000,
+        "environment_adapter_seed_argument": 250090001000,
+        "rng_roots": {
+          "actor_parameter": 250090000000,
+          "actor_action": 250090000001,
+          "teacher": 250090010000,
+          "environment_reset_rng": 250090011003,
+          "evaluation_episode": 250091000000,
+          "evaluation_action": 250091000001
+        }
+      },
+      "20010": {
+        "logical_seed": 20010,
+        "engine_master_seed": 250100000000,
+        "environment_adapter_seed_argument": 250100001000,
+        "rng_roots": {
+          "actor_parameter": 250100000000,
+          "actor_action": 250100000001,
+          "teacher": 250100010000,
+          "environment_reset_rng": 250100011003,
+          "evaluation_episode": 250101000000,
+          "evaluation_action": 250101000001
+        }
+      },
+      "20011": {
+        "logical_seed": 20011,
+        "engine_master_seed": 250110000000,
+        "environment_adapter_seed_argument": 250110001000,
+        "rng_roots": {
+          "actor_parameter": 250110000000,
+          "actor_action": 250110000001,
+          "teacher": 250110010000,
+          "environment_reset_rng": 250110011003,
+          "evaluation_episode": 250111000000,
+          "evaluation_action": 250111000001
+        }
+      },
+      "20012": {
+        "logical_seed": 20012,
+        "engine_master_seed": 250120000000,
+        "environment_adapter_seed_argument": 250120001000,
+        "rng_roots": {
+          "actor_parameter": 250120000000,
+          "actor_action": 250120000001,
+          "teacher": 250120010000,
+          "environment_reset_rng": 250120011003,
+          "evaluation_episode": 250121000000,
+          "evaluation_action": 250121000001
+        }
+      },
+      "20013": {
+        "logical_seed": 20013,
+        "engine_master_seed": 250130000000,
+        "environment_adapter_seed_argument": 250130001000,
+        "rng_roots": {
+          "actor_parameter": 250130000000,
+          "actor_action": 250130000001,
+          "teacher": 250130010000,
+          "environment_reset_rng": 250130011003,
+          "evaluation_episode": 250131000000,
+          "evaluation_action": 250131000001
+        }
+      },
+      "20014": {
+        "logical_seed": 20014,
+        "engine_master_seed": 250140000000,
+        "environment_adapter_seed_argument": 250140001000,
+        "rng_roots": {
+          "actor_parameter": 250140000000,
+          "actor_action": 250140000001,
+          "teacher": 250140010000,
+          "environment_reset_rng": 250140011003,
+          "evaluation_episode": 250141000000,
+          "evaluation_action": 250141000001
+        }
+      },
+      "20015": {
+        "logical_seed": 20015,
+        "engine_master_seed": 250150000000,
+        "environment_adapter_seed_argument": 250150001000,
+        "rng_roots": {
+          "actor_parameter": 250150000000,
+          "actor_action": 250150000001,
+          "teacher": 250150010000,
+          "environment_reset_rng": 250150011003,
+          "evaluation_episode": 250151000000,
+          "evaluation_action": 250151000001
+        }
+      },
+      "20016": {
+        "logical_seed": 20016,
+        "engine_master_seed": 250160000000,
+        "environment_adapter_seed_argument": 250160001000,
+        "rng_roots": {
+          "actor_parameter": 250160000000,
+          "actor_action": 250160000001,
+          "teacher": 250160010000,
+          "environment_reset_rng": 250160011003,
+          "evaluation_episode": 250161000000,
+          "evaluation_action": 250161000001
+        }
+      },
+      "20017": {
+        "logical_seed": 20017,
+        "engine_master_seed": 250170000000,
+        "environment_adapter_seed_argument": 250170001000,
+        "rng_roots": {
+          "actor_parameter": 250170000000,
+          "actor_action": 250170000001,
+          "teacher": 250170010000,
+          "environment_reset_rng": 250170011003,
+          "evaluation_episode": 250171000000,
+          "evaluation_action": 250171000001
+        }
+      },
+      "20018": {
+        "logical_seed": 20018,
+        "engine_master_seed": 250180000000,
+        "environment_adapter_seed_argument": 250180001000,
+        "rng_roots": {
+          "actor_parameter": 250180000000,
+          "actor_action": 250180000001,
+          "teacher": 250180010000,
+          "environment_reset_rng": 250180011003,
+          "evaluation_episode": 250181000000,
+          "evaluation_action": 250181000001
+        }
+      },
+      "20019": {
+        "logical_seed": 20019,
+        "engine_master_seed": 250190000000,
+        "environment_adapter_seed_argument": 250190001000,
+        "rng_roots": {
+          "actor_parameter": 250190000000,
+          "actor_action": 250190000001,
+          "teacher": 250190010000,
+          "environment_reset_rng": 250190011003,
+          "evaluation_episode": 250191000000,
+          "evaluation_action": 250191000001
+        }
+      },
+      "20100": {
+        "logical_seed": 20100,
+        "engine_master_seed": 251000000000,
+        "environment_adapter_seed_argument": 251000001000,
+        "rng_roots": {
+          "actor_parameter": 251000000000,
+          "actor_action": 251000000001,
+          "teacher": 251000010000,
+          "environment_reset_rng": 251000011003,
+          "evaluation_episode": 251001000000,
+          "evaluation_action": 251001000001
+        }
+      },
+      "20101": {
+        "logical_seed": 20101,
+        "engine_master_seed": 251010000000,
+        "environment_adapter_seed_argument": 251010001000,
+        "rng_roots": {
+          "actor_parameter": 251010000000,
+          "actor_action": 251010000001,
+          "teacher": 251010010000,
+          "environment_reset_rng": 251010011003,
+          "evaluation_episode": 251011000000,
+          "evaluation_action": 251011000001
+        }
+      },
+      "20102": {
+        "logical_seed": 20102,
+        "engine_master_seed": 251020000000,
+        "environment_adapter_seed_argument": 251020001000,
+        "rng_roots": {
+          "actor_parameter": 251020000000,
+          "actor_action": 251020000001,
+          "teacher": 251020010000,
+          "environment_reset_rng": 251020011003,
+          "evaluation_episode": 251021000000,
+          "evaluation_action": 251021000001
+        }
+      },
+      "20200": {
+        "logical_seed": 20200,
+        "engine_master_seed": 252000000000,
+        "environment_adapter_seed_argument": 252000001000,
+        "rng_roots": {
+          "actor_parameter": 252000000000,
+          "actor_action": 252000000001,
+          "teacher": 252000010000,
+          "environment_reset_rng": 252000011003,
+          "evaluation_episode": 252001000000,
+          "evaluation_action": 252001000001
+        }
+      }
+    },
+    "unique_derived_root_count": 144,
+    "expected_unique_derived_root_count": 144
+  },
+  "source_sha256": {
+    "frontier_rl/examples/run_acrobot_curriculum_tournament.py": "5cb9ee44c5b73f9ee93c6d18d5d267cb13e3cf0b6f34495623aef7dd3a26e3a2",
+    "frontier_rl/examples/analyze_acrobot_curriculum_tournament.py": "55e41c345f443e15b7be80aa06f34993781982bc4353c3365be6e4a71ac97b0d",
+    "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL.md": "3d02e4c7610cb131bd5de695b530379d8ce5c572106c20c27beb0d03a4a406b8",
+    "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_PROTOCOL_V1_ABORTED_PRE_OUTCOME_AUDIT.md": "c40c15e54aaeba7b5042600ae887167fa3df52765b2db064c77d42cdca773725",
+    "frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK_V1_ABORTED_PRE_OUTCOME_AUDIT.json": "26be1b6abba05bfb47e8f37ac017daa2a1d35964137b129e66c7053fe9907723",
+    "frontier_rl/examples/test_run_acrobot_curriculum_tournament.py": "3246b6b15e7687eb7b9e5bc24548102e1df38549044cceb23d876ef04f45f2cc",
+    "frontier_rl/examples/test_analyze_acrobot_curriculum_tournament.py": "ff3927af298a5c3fa6cdc95f1a58ac43423be5094cc97ed391e7e427af8d24fd",
+    "frontier_rl/examples/run_acrobot_neural.py": "7bd8e4c7d2e85e98d0ca769ce6a65c997307cb4c6b65a8b90c00edb862c49cbf",
+    "frontier_rl/examples/test_run_acrobot_neural.py": "32321da9a9358d2dcae3f5c35e30c0f3521a919a8269c03af8c980a2270b5846",
+    "frontier_rl/__init__.py": "1ef143075407ee38e06dbcde7b5711c2c80e82062e1d326682d05be0460ca253",
+    "frontier_rl/adapters/__init__.py": "739f761b058bdd55c8b97a601dd7dfdd7e8b46a77ab091bec6a82158c88414cc",
+    "frontier_rl/adapters/acrobot_neural.py": "8639564f4b1c838f670e855e5f1d4211096cbade74d13913aea612ca505da2c6",
+    "frontier_rl/teacher.py": "398d8306adedaba18e8566871a0f47b9c6b4dd2842448232a7ccf616f5e8a1a9",
+    "frontier_rl/estimators.py": "5d37fd1455dd0ce0466a46b7c0247f0172a066e6da12a86f0b40ad92ac03f6df",
+    "frontier_rl/interfaces.py": "44a4e3f550cfd586d9e6b72c677a1d6d2addc19789c8da95adad888ad1e3660e",
+    "frontier_rl/trainer.py": "e7120a3c0b056d3bb5f008b6654c5c52b3ab5930126576f9cc2260db3e05a976"
+  },
+  "development_gate": {
+    "required_checks_in_order": [
+      "all_runs_accounting_numeric_verifier_parameter_cadence_valid",
+      "all_tasks_visited_pooled_across_arms_and_seeds",
+      "p1mp_sampler_exhibits_nonuniform_distribution",
+      "u16_sampler_exhibits_nonuniform_distribution",
+      "pooled_dead_mixed_all_pass_regimes_observed",
+      "native_success_checkpoint_values_vary"
+    ],
+    "policy": {
+      "outcome_blind": true,
+      "uses_arm_contrasts": false,
+      "uses_effect_direction": false,
+      "uses_p_values_or_intervals": false,
+      "uses_minimum_effect": false
+    },
+    "confirmation_requires_fresh_recomputed_gate": true
+  },
+  "primary_decision": {
+    "contrast": "u16_shared_h64_minus_p1mp_shared_h64",
+    "metric": "target_uniform_normalized_transition_auc",
+    "minimum_practical_effect_sesoi": 0.01,
+    "test": "exact_two_sided_paired_sign_flip_against_zero",
+    "alpha": 0.05,
+    "support_rule": "mean_paired_difference>=0.01 AND p<=0.05",
+    "p_value_does_not_test_the_sesoi": true
+  },
+  "registered_commands": {
+    "quick_smoke": "uv run --python 3.12.13 --with numpy==2.5.1 --with 'gymnasium[classic-control]==1.3.0' python -m frontier_rl.examples.run_acrobot_curriculum_tournament --quick --output frontier_rl/examples/acrobot_curriculum_tournament_quick.json",
+    "quick_analysis": "uv run --python 3.12.13 --with numpy==2.5.1 --with 'gymnasium[classic-control]==1.3.0' python -m frontier_rl.examples.analyze_acrobot_curriculum_tournament frontier_rl/examples/acrobot_curriculum_tournament_quick.json --output frontier_rl/examples/acrobot_curriculum_tournament_quick_analysis.json",
+    "development": "uv run --python 3.12.13 --with numpy==2.5.1 --with 'gymnasium[classic-control]==1.3.0' python -m frontier_rl.examples.run_acrobot_curriculum_tournament --development --output frontier_rl/examples/acrobot_curriculum_tournament_development.json",
+    "development_analysis": "uv run --python 3.12.13 --with numpy==2.5.1 --with 'gymnasium[classic-control]==1.3.0' python -m frontier_rl.examples.analyze_acrobot_curriculum_tournament frontier_rl/examples/acrobot_curriculum_tournament_development.json --output frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json",
+    "confirmation_after_passing_gate": "uv run --python 3.12.13 --with numpy==2.5.1 --with 'gymnasium[classic-control]==1.3.0' python -m frontier_rl.examples.run_acrobot_curriculum_tournament --development-gate frontier_rl/examples/acrobot_curriculum_tournament_development_gates.json --output frontier_rl/examples/acrobot_curriculum_tournament_confirmatory.json",
+    "confirmatory_analysis": "uv run --python 3.12.13 --with numpy==2.5.1 --with 'gymnasium[classic-control]==1.3.0' python -m frontier_rl.examples.analyze_acrobot_curriculum_tournament frontier_rl/examples/acrobot_curriculum_tournament_confirmatory.json --output frontier_rl/examples/acrobot_curriculum_tournament_analysis.json"
+  },
+  "equality_rule": "Before development, before every sealed run, after finalization, and during independent analysis, runtime, schedule, seed/RNG ledger, exact source key set, and every SHA-256 value must equal this canonical lock."
+}
