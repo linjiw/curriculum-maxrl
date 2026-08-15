@@ -1,23 +1,34 @@
 # Claim-to-artifact trace table for `paper/body_iclr.tex`
 
-**Purpose.** Every quantitative claim in the main text of the ICLR submission body
-(abstract through conclusion; appendix statistics included only where they restate a
-main-text number) is traced here to the checked-in structured artifact that generates
-or records it. Compiled 2026-08-12. No artifact or manuscript file was modified.
+**Purpose.** This bounded inventory traces 62 quantitative claim rows: every
+quantitative claim in the main ICLR narrative plus the previously audited secondary
+rows retained in the appendix. It is not an inventory of every appendix number.
+Compiled 2026-08-12 and re-audited 2026-08-14 after two static-only focus passes.
+Those passes changed no quantitative value or supporting artifact. The paid-probe,
+Countdown, recycling, and gate details now appear only in the appendix; their trace
+rows remain below so moving a claim cannot erase its provenance.
 
-**Provenance note (important).** This working tree (branch `main`) does **not** vendor
-the Acrobot, Digits, paid-probe, N-sweep, registry, or maze-multiverse artifacts.
-Those files are checked into the repository on the remote branch
-`origin/codex/curriculum-maxrl-research` (the release/research branch from which the
-compact draft was extracted). Rows below whose artifact path is marked **[branch]**
-were read from that branch via `git show origin/codex/curriculum-maxrl-research:<path>`;
-all other paths exist in this working tree. Every cited file was opened and the value
-matched; nothing below is inferred from an unopened file.
+**Provenance note (important).** Several inputs were originally read from the remote
+release branch `origin/codex/curriculum-maxrl-research`; rows still marked
+**[branch]** retain that provenance. Seven compact supporting artifacts were later
+vendored additively into this working tree, as detailed below. The release branch's
+562-row registry is intentionally not copied over the distinct 53-row compact
+registry in this checkout. The current manuscript claims the local 53-row count.
+Every cited object was opened and matched; nothing below is inferred from an
+unopened file.
 
 **Status legend.** TRACED = exact match (counts, exact p-values, config constants, or
 values reproduced at full precision). TRACED-ROUNDED = matches the artifact's
 higher-precision value after rounding to the manuscript's precision. Derivations
 (e.g. population-SD to sample-SD, or a difference of two stored means) are noted inline.
+
+**Location note.** Line-number hints in the base table predate the final focus
+rewrite. Rows 37--55 and 59--61 are now appendix-only; row 57 is split between
+the main reproducibility statement (60-run tournament) and appendix
+(320 paid-probe runs). The main narrative now presents the direct Acrobot
+rows 24--36 before the secondary maze rows 14--23; the trace-table row order
+still reflects the original extraction. The claims and supporting values are
+unchanged.
 
 ## Trace table
 
@@ -67,7 +78,7 @@ higher-precision value after rounding to the manuscript's precision. Derivations
 | 42 | "Neither adaptive-versus-sham secondary rejects after Holm (adjusted p=.4568 and .4547)" (L403-404) | same **[branch]** (`secondary_holm_family/procurl_minus_sham`, `u16_minus_sham`) | Holm 0.4567812019012931; Holm 0.45468238514441794 | TRACED-ROUNDED |
 | 43 | "Probes consume about 93.2% of paid transitions" (L405; also L571; App L913: 93.19-93.21%) | same **[branch]** (`arm_descriptives/*/probe_fraction_of_paid`) | 0.932002 (ProCuRL), 0.932135 (sham), 0.931938 (u16) | TRACED-ROUNDED |
 | 44 | "three probed arms trail ordinary uniform by -.314, -.309, and -.312 AUC ... (all Holm-rejected)" (L405-407; App L906-909 at higher precision) | same **[branch]** (`secondary_holm_family/{procurl,u16,sham}_minus_ordinary`) | -0.31377426306862766 (Holm 3.47e-66), -0.30888002720757884 (Holm 9.48e-67), -0.312070021671206 (Holm 4.06e-68); all reject | TRACED-ROUNDED |
-| 45 | (App L909-910, supports main text) mean fixed-paid AUCs .33771 / .33942 / .65149 / .34261 | same **[branch]** (`arm_descriptives/*/auc_target_uniform_mean_success_fixed_paid_budget/mean`) | 0.337714, 0.339419, 0.651489, 0.342609 | TRACED-ROUNDED |
+| 45 | (App. paid-probe result) mean fixed-paid AUCs .33771 / .33942 / .65149 / .34261 | same **[branch]** (`arm_descriptives/*/auc_target_uniform_mean_success_fixed_paid_budget/mean`) | 0.337714, 0.339419, 0.651489, 0.342609 | TRACED-ROUNDED |
 | 46 | Countdown design: "SmolLM2-360M ... N=16 ... three-seed aggregate on a fixed 128-task tier-1 evaluation set at step 60" (L415-418) | curriculum_maxrl/data_integrity_check.json (`test_tier_counts/countdown_tier1`); paper/figures/data/b_scoreboard_3seed.json (3-seed rows); curriculum_maxrl/countdown_reviewer_arms/reviewer_arms_verdicts.json | tier-1 eval 128 unique tasks; scoreboard stores 3-seed [mean, sd] tuples; reviewer arms list 3 seeds each | TRACED |
 | 47 | "1,000 with-replacement resamples of size 16" bootstrap best@16 (L419-420) | paper/figures/data/fig9_bestk_proxy.json (`metric`); reviewer_arms_verdicts.json (`_metric_provenance`) | "1000 with-replacement resamples, not standard unbiased pass@k"; "VERL bootstrap best@16 coverage proxy" | TRACED |
 | 48 | "zero SFT overlap for tier 1, and 27/128 exposed tier-0 tasks" (L426-427; also L633-634, App L992-994) | curriculum_maxrl/data_integrity_check.json (`sft_evaluation_overlap/tiers`) | tier1 sft_overlap_unique_tasks 0/128; tier0 27/128 (overlap_fraction 0.2109375, clean 101) | TRACED |
@@ -78,14 +89,15 @@ higher-precision value after rounding to the manuscript's precision. Derivations
 | 53 | "all three replay endpoints vendored" (L458) | curriculum_maxrl/countdown_reviewer_arms/armB_replay_s{1,2,3}.json | three per-seed endpoint files present in this working tree | TRACED |
 | 54 | "at most 12 auxiliary groups per 64 requested groups (18.75%)" (L460-461) | COUNTDOWN_ANALYSIS.md (cap=12 per amendment A2; "the dose rode its cap (12/12)"); GPU_EXPERIMENT_HANDOFF.md **[branch]** ("recycling affects at most 12 of 64 requested groups") | cap 12; 12/64 = 0.1875 exactly | TRACED (derived ratio) |
 | 55 | GSM8K cell "missed its ... treatment-delivery gate by .00148" (L580-581; App L999: ".601480 versus <.60") | curriculum_maxrl/run_registry.json **[branch]** (row `gsm8k-steering-controlled-g3p`); FINAL_ICLR_REVIEW_AND_COMPLETION_GUIDE_2026-08-07.md (L205-210, local) | run_mean_dead_sampled 0.60148 vs gate <0.60 -> miss 0.00148; guide records 0.601480 and "fails ... by 0.00148" | TRACED |
-| 56 | "562-record registry" / "562-row registry" (L600, L631-632; App L1007-1013: 94 maze, 20 Countdown, 7 GSM8K, 441 Acrobot; 33 vendored, 121 aggregate-ledger, 320 receipts, 88 summaries/external; 40 V3 + 9 V2 dev + 60 V2 conf + 12 pp dev + 320 pp conf) | curriculum_maxrl/run_registry.json **[branch]** (`n_rows`, `counts`) | n_rows 562; by_suite {acrobot 441, countdown 20, gsm8k 7, maze 94}; by_raw_status {vendored 33, vendored-aggregate 121, content-addressed 320, external 60+1+27=88}; by_experiment {v3 40, v2 dev 9, v2 conf 60, pp dev 12, pp conf 320} | TRACED |
-| 57 | "source-locked 60-run Acrobot tournament ... separately locked 320-run paid-probe comparison" (L627-630) | curriculum_maxrl/run_registry.json **[branch]** (`counts/by_experiment`) | acrobot_curriculum_tournament_v2_confirmatory 60; acrobot_procurl_selection_semantics_confirmatory 320 | TRACED |
+| 56 | "53-row compact registry" with 35 maze, 11 Countdown, and 7 GSM8K records (Reproducibility; App artifact accounting) | `curriculum_maxrl/run_registry.json` (`n_rows`, `rows[*].suite`) | n_rows 53; actual rows 53; by_suite {maze 35, countdown 11, gsm8k 7} | TRACED |
+| 57 | source-locked 60-run Acrobot tournament (Reproducibility) and 320 paid-probe runs (Appendix) | `frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_RESULTS.md` (all 60 completed); `frontier_rl/examples/acrobot_procurl_selection_analysis.json` (`primary/n_pairs`, `arm_descriptives`) | 60 tournament runs; 80 paired seeds x 4 arms = 320 paid-probe runs | TRACED |
 | 58 | wave-2 AUC-multiverse anchors "(uniform 6/6, mean +.01496; FrontierMax 6/6, +.02404; sampler-averaged 6/6, +.01950)" (App L980-981; restates main-text L315/L322-326 numbers per sampler) | curriculum_maxrl/maze_gpu_factorial/block_reanalysis.json (`waves/wave2/repeated_sampler_contrasts`) | uniform cov_auc mean 0.01495726495726496 (6/6); frontier_un 0.024038461538461554 (6/6); block-level 0.01949786 (6/6) | TRACED-ROUNDED |
 
 ## Untraced claims requiring attention
 
-**None.** All 58 extracted quantitative claims were matched to a checked-in artifact at
-the manuscript's stated precision.
+**None.** All 58 base-table claims retained across the main text and explicitly
+audited secondary appendix were matched at the manuscript's stated precision; the
+four appended claim rows below are also traced.
 
 Two caveats deserve attention even though no claim is untraced:
 
@@ -96,11 +108,10 @@ Two caveats deserve attention even though no claim is untraced:
    analysis JSONs plus `ACROBOT_CURRICULUM_TOURNAMENT_RESULTS.md`, and
    `paper/results/maze_factorial_block_analysis.json`) were vendored additively
    from that branch into `main`, so those numbers are now auditable from this
-   tree. One exception remains: the 562-row registry count still resolves only to
-   the release branch's `curriculum_maxrl/run_registry.json`; the local file of
-   the same name has 53 rows and is a different object. Do not overwrite it —
-   settle at branch reconciliation per `BRANCH_RECONCILIATION.md`.
-2. **Derived presentation conventions.** The Countdown ±SDs in the body are 3-seed
+   tree. The release branch's 562-row registry remains a distinct, branch-only
+   audit object. It was not copied over the local 53-row compact registry; the
+   manuscript and row 56 now use only the verified local count.
+2. **Derived presentation conventions.** The Countdown ±SDs in the appendix are 3-seed
    *sample* SDs; `b_scoreboard_3seed.json` stores *population* SDs (conversion
    factor sqrt(3/2) confirms every value), and the ARM-B ±SDs are computed from the
    three per-seed endpoints in `reviewer_arms_verdicts.json`. The 18.75% recycling
@@ -108,12 +119,22 @@ Two caveats deserve attention even though no claim is untraced:
    (12/64; 0.60148 - 0.60). These are all consistent, but no single artifact stores
    the printed number verbatim.
 
-**Final count: 58/58 traced** (34 TRACED, 24 TRACED-ROUNDED; 0 UNTRACED).
+**Base-table subtotal: 58/58 traced** (31 TRACED, 27 TRACED-ROUNDED;
+0 UNTRACED).
 
 ## Addendum 2026-08-13: GATE-DR statistics (added to draft after the dose-response study)
 
-| Claim (location) | Artifact | Status |
-|---|---|---|
-| "72--93\% rejection across settings" (main text, gate paragraph) | `curriculum_maxrl/gate_dr/gate_dr_analysis.json` `dose_manipulation_check` (.721–.804 at .85; .883–.896 at .70; ARM A .934–.944 from `countdown_reviewer_arms/PROVENANCE.md`) | TRACED |
-| "no operating point retaining the frozen fraction of the ungated mean gain" | same file, `settings.*.reproduces_useful_point` = false; verdict rule 4 | TRACED |
-| Appendix: transfer 3/3 seeds; rejection grades 0/.72–.80/.88–.90/.93; mean@16 up while standard pass@16 falls .656→.414 (seed 1) | same file `transfer_gate` + `runs` (b1h_s1 `t1_pass16_standard` .6562, g0_s1 .4141) | TRACED |
+| # | Claim (location) | Artifact | Status |
+|---|---|---|---|
+| 59 | "72--93\% rejection across settings" (Appendix negative branches) | `curriculum_maxrl/gate_dr/gate_dr_analysis.json` `dose_manipulation_check` (.721–.804 at .85; .883–.896 at .70; ARM A .934–.944 from `countdown_reviewer_arms/PROVENANCE.md`) | TRACED |
+| 60 | "no operating point retaining the frozen fraction of the ungated mean gain" | same file, `settings.*.reproduces_useful_point` = false; verdict rule 4 | TRACED |
+| 61 | Appendix: transfer 3/3 seeds; rejection grades 0/.72–.80/.88–.90/.93; mean@16 up while standard pass@16 falls .656→.414 (seed 1) | same file `transfer_gate` + `runs` (b1h_s1 `t1_pass16_standard` .6562, g0_s1 .4141) | TRACED |
+
+## Addendum 2026-08-14: analytic Beta-posterior priority
+
+| # | Claim (location) | Artifact | Status |
+|---|---|---|---|
+| 62 | $\mathbb E[u_N(p)]=1-(b)_N/(a+b)_N-a/(a+b)$ for $p\sim\operatorname{Beta}(a,b)$, $\mathbb E[u_N(p)]\leq u_N(\mathbb E[p])$, and the printed closed-form gap (task-sampling method paragraph) | `curriculum_maxrl/test_mass_formulas.py` (`beta_expected_activity`, six independent 256-point Gauss--Legendre checks, Jensen assertions, and exact gap checks) | TRACED |
+
+**Complete count: 62/62 traced** (35 TRACED, 27 TRACED-ROUNDED;
+0 UNTRACED).

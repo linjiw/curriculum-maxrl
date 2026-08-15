@@ -1,11 +1,12 @@
 {
  "_comment": "Frozen input manifest for every paper figure. Regenerate any figure with its command from repo root; checksums are sha256[:16] of the exact inputs used. Values marked raw come from run artifacts; fig2/fig3 tables are transcribed endpoints with per-panel provenance inside the data files.",
  "manuscript": {
-  "body": "paper/body.tex",
+  "body": "paper/body_iclr.tex",
   "wrappers": [
-   "paper/main.tex",
-   "paper/main_iclr.tex"
+   "paper/main_iclr2027.tex"
   ],
+  "extended_body": "paper/body.tex",
+  "extended_wrapper": "paper/main.tex",
   "commit_at_freeze": "d1b460539a7388f48b0d46c31d9d9fe591182b6a"
  },
  "timing": {
