@@ -1,0 +1,390 @@
+{
+  "schema": 1,
+  "protocol_id": "ued-dev-n-factorial-frontier-vs-maxmc-tie-aware-v4-draft",
+  "status": "DRAFT_ENGINEERING_ONLY_NOT_PRODUCTION_AUTHORIZED",
+  "purpose": "outcome_blind_score_isolation_factorial_design_no_endpoint_authorization_not_paper_evidence",
+  "production_driver_authorized": false,
+  "endpoint_access_authorized": false,
+  "paper_evidence": false,
+  "outcome_blind_hold": {
+    "authored_without_performance_or_ood_endpoint_access": true,
+    "development_seeds_are_descriptive_only": true,
+    "forbidden_until_separate_campaign_freeze": [
+      "performance endpoint access",
+      "OOD evaluation",
+      "Hopper or GPU submission",
+      "production scheduling",
+      "confirmatory or paper-evidence labeling"
+    ]
+  },
+  "provenance": {
+    "repository": "https://github.com/facebookresearch/minimax",
+    "base_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "base_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "upstream_pin": {
+      "path": "ued_benchmark/UPSTREAM_PIN.json",
+      "sha256": "375ff36d64a98dd72f9b94f8bf7e63ae2cb6ec99571de37c7a8d483a936401d7"
+    },
+    "overlay_version": "frontier-activity-tie-aware-v4",
+    "core_contract": {
+      "path": "ued_benchmark/OVERLAY_CONTRACT_V4.json",
+      "sha256": "3d5f3827a82a4f713314091289196a1c2909dd5d7c4c96dd532052c5706e832b"
+    },
+    "applicator": {
+      "path": "ued_benchmark/scripts/apply_minimax_overlay_v4.py",
+      "sha256": "c2e5eb3dac02b86723ece485cd348832f1636198c781bae82c1d99df0167590b"
+    },
+    "lineage": {
+      "path": "ued_benchmark/OVERLAY_LINEAGE.json",
+      "sha256": "784e2fd1f545d49c8d10c3f3aeda37aae51fa00127e2c14578702e275bfb6971"
+    },
+    "modules": {
+      "frontier_activity": {
+        "path": "ued_benchmark/overlay/minimax/util/rl/frontier_activity.py",
+        "sha256": "63726251813bd9fafc2722409c4a2942c6ae2728327870797df47d01504738ca"
+      },
+      "tie_aware_rank": {
+        "path": "ued_benchmark/overlay/minimax/util/rl/tie_aware_rank.py",
+        "sha256": "1b9db20d05edd3212346e84d14606af91ae443c0665945a7b679ade161560244"
+      }
+    },
+    "expected_fresh_applied_overlay_manifest_sha256": "9b411f61ebc56bb93fc22cad6b19299c38eab2b696fa17f7783c7729e1db02ae"
+  },
+  "factor": {
+    "name": "declared_coefficient_activity_rollout_count_N",
+    "levels": [
+      2,
+      4,
+      8
+    ],
+    "interpretation": "Within each N, the Frontier-minus-MaxMC contrast isolates score choice conditional on that shared layout. Across N, n_eval, n_parallel, and buffer_size change jointly with declared Frontier N.",
+    "identifiability_limit": "Neither the cross-N cell means nor contrast-of-contrasts isolate estimator N alone; they estimate effect modification by the joint N/n_eval/n_parallel/buffer-size layout factor.",
+    "invariant_streams_per_outer_cycle": 32,
+    "n_rollout_steps": 256,
+    "layouts": [
+      {
+        "N": 2,
+        "n_eval": 2,
+        "n_parallel": 16,
+        "buffer_size": 2000
+      },
+      {
+        "N": 4,
+        "n_eval": 4,
+        "n_parallel": 8,
+        "buffer_size": 1000
+      },
+      {
+        "N": 8,
+        "n_eval": 8,
+        "n_parallel": 4,
+        "buffer_size": 500
+      }
+    ]
+  },
+  "cells": [
+    {
+      "cell_id": "n2-frontier",
+      "N": 2,
+      "arm": "frontier",
+      "ued_score": "coefficient_activity",
+      "config_path": "ued_benchmark/configs/maze_frontier_factorial_n2_16x2_b2000_tie_aware_v4.json",
+      "config_sha256": "2e443515d3876ad8c8a632d9cc21f2a92288adf971cde0b2c4751679eed32791",
+      "grid_generated_xpid": "plr-maze13x13w60na_f-rf_p0.5b2000t0.3s0.3m0.5_ovtie-aware-v4ch3d5f3827_N2ne2a1b1th0eastrictrt_r1s_16p_2e_256t_ae1e-05_sca-ppo_lr0.0003g0.999cv0.5ce0e5mb1l0.98_pc0.2_h32cf16fc1se5ba_re_lstm_h256_0"
+    },
+    {
+      "cell_id": "n2-maxmc",
+      "N": 2,
+      "arm": "maxmc",
+      "ued_score": "max_mc",
+      "config_path": "ued_benchmark/configs/maze_maxmc_factorial_n2_16x2_b2000_tie_aware_v4.json",
+      "config_sha256": "81e2af766e588896c3013de23f22906446e27e18661e2dfc6b6f2cc4e284f1b3",
+      "grid_generated_xpid": "plr-maze13x13w60na_f-rf_p0.5b2000t0.3s0.3m0.5_ovtie-aware-v4ch3d5f3827rt_r1s_16p_2e_256t_ae1e-05_smm-ppo_lr0.0003g0.999cv0.5ce0e5mb1l0.98_pc0.2_h32cf16fc1se5ba_re_lstm_h256_0"
+    },
+    {
+      "cell_id": "n4-frontier",
+      "N": 4,
+      "arm": "frontier",
+      "ued_score": "coefficient_activity",
+      "config_path": "ued_benchmark/configs/maze_frontier_factorial_n4_8x4_b1000_tie_aware_v4.json",
+      "config_sha256": "181ca0210ad988a699d408827b15941ef0a6b9c1588f4abd8c12dc1e6cc706b5",
+      "grid_generated_xpid": "plr-maze13x13w60na_f-rf_p0.5b1000t0.3s0.3m0.5_ovtie-aware-v4ch3d5f3827_N4ne4a1b1th0eastrictrt_r1s_8p_4e_256t_ae1e-05_sca-ppo_lr0.0003g0.999cv0.5ce0e5mb1l0.98_pc0.2_h32cf16fc1se5ba_re_lstm_h256_0"
+    },
+    {
+      "cell_id": "n4-maxmc",
+      "N": 4,
+      "arm": "maxmc",
+      "ued_score": "max_mc",
+      "config_path": "ued_benchmark/configs/maze_maxmc_factorial_n4_8x4_b1000_tie_aware_v4.json",
+      "config_sha256": "9033de1f79ee7f64ac980ebe28e90542e3cfe93dddf63374c20e1e52def824fb",
+      "grid_generated_xpid": "plr-maze13x13w60na_f-rf_p0.5b1000t0.3s0.3m0.5_ovtie-aware-v4ch3d5f3827rt_r1s_8p_4e_256t_ae1e-05_smm-ppo_lr0.0003g0.999cv0.5ce0e5mb1l0.98_pc0.2_h32cf16fc1se5ba_re_lstm_h256_0"
+    },
+    {
+      "cell_id": "n8-frontier",
+      "N": 8,
+      "arm": "frontier",
+      "ued_score": "coefficient_activity",
+      "config_path": "ued_benchmark/configs/maze_frontier_factorial_n8_4x8_b500_tie_aware_v4.json",
+      "config_sha256": "5cdaf48da9b6e3f2ab9dd0b9dd8c94eb7e49fe07d7744fc46b7b5f735b3a436d",
+      "grid_generated_xpid": "plr-maze13x13w60na_f-rf_p0.5b500t0.3s0.3m0.5_ovtie-aware-v4ch3d5f3827_N8ne8a1b1th0eastrictrt_r1s_4p_8e_256t_ae1e-05_sca-ppo_lr0.0003g0.999cv0.5ce0e5mb1l0.98_pc0.2_h32cf16fc1se5ba_re_lstm_h256_0"
+    },
+    {
+      "cell_id": "n8-maxmc",
+      "N": 8,
+      "arm": "maxmc",
+      "ued_score": "max_mc",
+      "config_path": "ued_benchmark/configs/maze_maxmc_factorial_n8_4x8_b500_tie_aware_v4.json",
+      "config_sha256": "105c6695baf86b894d65c6756fc5647d560c84daaef35ee3d3859c1eb9f68090",
+      "grid_generated_xpid": "plr-maze13x13w60na_f-rf_p0.5b500t0.3s0.3m0.5_ovtie-aware-v4ch3d5f3827rt_r1s_4p_8e_256t_ae1e-05_smm-ppo_lr0.0003g0.999cv0.5ce0e5mb1l0.98_pc0.2_h32cf16fc1se5ba_re_lstm_h256_0"
+    }
+  ],
+  "matched_training_contract": {
+    "common": {
+      "n_devices": 1,
+      "n_students": 1,
+      "n_total_updates": 30000,
+      "n_rollout_steps": 256,
+      "streams_per_outer_cycle": 32,
+      "training_transitions_per_outer_cycle": 8192,
+      "replay_prob": 0.5,
+      "staleness_coef": 0.3,
+      "temp": 0.3,
+      "use_score_ranks": true,
+      "tie_aware_score_ranks": true,
+      "min_fill_ratio": 0.5,
+      "use_robust_plr": true,
+      "use_parallel_eval": false,
+      "force_unique": true,
+      "ppo_epochs": 5,
+      "ppo_minibatches": 1,
+      "ppo_unroll_update": 5
+    },
+    "execution_identity_and_path_contract": {
+      "direct_parser_default_xpid": "latest",
+      "direct_parser_launch_is_safe": false,
+      "grid_generated_xpid_is_a_validation_identity_not_a_run_authorization": true,
+      "future_hashed_driver_must_set_and_verify": [
+        "campaign_id",
+        "cell_id",
+        "run_id unique over N, arm, seed, and attempt",
+        "xpid equal to the campaign-bound run identity",
+        "nonoverlapping output directory",
+        "nonoverlapping terminal checkpoint path"
+      ],
+      "path_overlap_or_xpid_latest": "invalidate before training"
+    },
+    "within_N_allowed_arm_differences": [
+      "ued_score",
+      "frontier_n_rollouts",
+      "frontier_require_n_eval_match",
+      "frontier_prior_alpha",
+      "frontier_prior_beta",
+      "frontier_success_threshold",
+      "frontier_posterior_mode",
+      "campaign-bound xpid and run identity"
+    ],
+    "frontier": {
+      "score": "coefficient_activity",
+      "strict_N_equals_n_eval": true,
+      "posterior_mode": "expected_activity",
+      "prior_alpha": 1,
+      "prior_beta": 1,
+      "success_threshold": 0
+    },
+    "maxmc": {
+      "score": "max_mc",
+      "same_layout_as_frontier_within_N": true,
+      "tie_aware_rank_transform_shared_with_frontier": true,
+      "frontier_score_or_posterior_fields_authored": false,
+      "hidden_score_change": false
+    }
+  },
+  "nominal_warm_fill": {
+    "classification": "exact_only_conditioned_on_distinct_accepted_new_groups",
+    "formula": "ceil((buffer_size * min_fill_ratio) / n_parallel) = 63; 63 * 32 * 256 = 516096 transitions",
+    "fill_only_cycles_to_replay_eligibility_if_condition_holds": 63,
+    "transitions_to_replay_eligibility_if_condition_holds": 516096,
+    "earliest_replay_decision_cycle_if_condition_holds": 64,
+    "per_layout": [
+      {
+        "N": 2,
+        "threshold_slots": 1000,
+        "slots_after_cycle_62": 992,
+        "slots_after_cycle_63": 1008
+      },
+      {
+        "N": 4,
+        "threshold_slots": 500,
+        "slots_after_cycle_62": 496,
+        "slots_after_cycle_63": 504
+      },
+      {
+        "N": 8,
+        "threshold_slots": 250,
+        "slots_after_cycle_62": 248,
+        "slots_after_cycle_63": 252
+      }
+    ],
+    "receipt_gate": {
+      "exact_63_cycle_label_requires": [
+        "every one of the first 63 fill cycles accepts exactly n_parallel distinct new groups",
+        "zero duplicate-new groups",
+        "no incomplete or nonfinite rejected groups",
+        "filled-count trajectory matches the per-layout formula"
+      ],
+      "if_gate_fails": "report observed replay-eligibility cycle and exact observed cumulative transitions; never label the warm fill as 63 cycles or 516096 transitions"
+    }
+  },
+  "reporting": {
+    "fixed_update_primary": {
+      "target_student_ppo_updates": 30000,
+      "target_upstream_n_grad_updates": 30000,
+      "target_optimizer_step_applications": 150000,
+      "report_exact_outer_cycles": true,
+      "report_exact_training_transitions": true,
+      "within_N_seed_pair_validity_gate": {
+        "must_equal_exactly": [
+          "terminal n_updates = 30000",
+          "terminal upstream n_grad_updates = 30000",
+          "terminal optimizer step applications = 150000",
+          "outer-cycle count",
+          "training-transition count",
+          "the complete set of aligned fixed-transition cycle observations"
+        ],
+        "failure_policy": "invalidate the entire N/seed pair; do not impute, trim, or report its score contrast"
+      },
+      "across_N_terminal_cycle_or_transition_equality_required": false,
+      "across_N_interpretation": "fixed-update contrast-of-contrasts are layout-conditioned differences of within-layout score contrasts; they are not pure estimator-N effects or equal-transition comparisons",
+      "interpretation": "a terminal Frontier-minus-MaxMC score contrast is valid only when its within-N/seed pair has exactly equal n_updates, upstream n_grad_updates, optimizer applications, outer cycles, and training transitions"
+    },
+    "fixed_transition_secondary": {
+      "outer_cycle_grid": [
+        100,
+        200,
+        500,
+        1000,
+        2000,
+        4000,
+        8000,
+        16000,
+        30000
+      ],
+      "exact_training_transition_grid": [
+        819200,
+        1638400,
+        4096000,
+        8192000,
+        16384000,
+        32768000,
+        65536000,
+        131072000,
+        245760000
+      ],
+      "grid_is_guaranteed_preterminal": "robust PLR performs at most one student PPO update per outer cycle and cannot replay before at least 63 fill cycles, so 30000 updates require at least 30063 outer cycles",
+      "checkpoint_or_evaluation_policy": "use only measurements emitted at the exact cycle boundary; no interpolation or last-observation carry-forward",
+      "alignment_gate": "for every N/seed pair, both arms must contain exactly one valid observation at every declared cycle and transition boundary; otherwise invalidate the pair",
+      "across_N_alignment": "all six cells use the same declared cycle/transition grid, so fixed-transition contrast-of-contrasts are transition-aligned but still estimate the joint layout factor rather than estimator N alone",
+      "interpretation": "transition-indexed results are secondary learning-efficiency descriptions and do not replace the fixed-update primary contrast"
+    }
+  },
+  "terminal_checkpoint_contract": {
+    "resume_allowed": false,
+    "authored_from_last_checkpoint": false,
+    "terminal_checkpoint_required": true,
+    "save_timing": "save a new terminal checkpoint only after the loop has reached exactly 30000 student PPO updates and all terminal counters have been read",
+    "periodic_checkpoint_is_admissible_endpoint": false,
+    "periodic_checkpoint_role": "diagnostic artifact only; it cannot supply a terminal or analysis endpoint and cannot be used for recovery or resume in this campaign without an outcome-blind protocol amendment and new campaign identity",
+    "round_trip_required_before_evaluation": true,
+    "round_trip_must_bind_exactly": [
+      "package manifest SHA-256",
+      "protocol SHA-256",
+      "v4 core-contract SHA-256",
+      "cell config SHA-256",
+      "campaign ID, cell ID, run ID, xpid, arm, N, n_eval, n_parallel, buffer_size, and seed",
+      "terminal checkpoint SHA-256 and nonoverlapping path",
+      "n_updates, upstream n_grad_updates, optimizer step applications, outer cycles, and training transitions",
+      "complete PLR buffer and its static signature including tie-aware mode, Frontier N, and n_eval",
+      "all replay, tie, rejection, duplicate, and fill counters"
+    ],
+    "round_trip_failure_policy": "invalidate the cell and every paired contrast that uses it before evaluation or endpoint access"
+  },
+  "evaluation": {
+    "source": "external minimax.evaluate terminal/checkpoint evaluation; in-training evaluations are secondary only",
+    "environments": [
+      "Maze-SixteenRooms",
+      "Maze-Labyrinth",
+      "Maze-StandardMaze"
+    ],
+    "n_episodes_per_environment": 10,
+    "evaluation_seed_offset": 100000,
+    "primary_metric": "unweighted mean of the three solved rates",
+    "same_seed_within_N": true,
+    "same_seed_across_N_is_a_block_label_not_identical_random_draws": true
+  },
+  "development_design": {
+    "paired_training_seeds": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "independent_unit": "training seed",
+    "development_only": true,
+    "descriptive_only": true,
+    "minimum_two_sided_exact_sign_flip_p_value": 0.0625,
+    "significance_or_beat_claim_forbidden": true
+  },
+  "estimands": {
+    "identifiability": "Delta_N isolates Frontier coefficient_activity versus MaxMC only within the shared N-specific layout. Cross-N contrasts combine changes in declared Frontier N, n_eval, n_parallel, and buffer_size and therefore cannot identify an estimator-N-only effect.",
+    "primary_within_N": [
+      "Delta_2 = mean_seed(metric_frontier_N2 - metric_maxmc_N2)",
+      "Delta_4 = mean_seed(metric_frontier_N4 - metric_maxmc_N4)",
+      "Delta_8 = mean_seed(metric_frontier_N8 - metric_maxmc_N8)"
+    ],
+    "predeclared_contrast_of_contrasts": [
+      "C_linear_log2N = (Delta_8 - Delta_2) / 2",
+      "C_curvature_log2N = Delta_8 - 2*Delta_4 + Delta_2"
+    ],
+    "contrast_of_contrasts_interpretation": {
+      "fixed_update": "layout-conditioned effect modification; within each N/seed pair budgets must match exactly, but terminal cycles need not match across N",
+      "fixed_transition": "all six cells must contribute aligned observations at the declared common transition boundary; interpretation remains joint-layout effect modification"
+    },
+    "required_descriptive_outputs": [
+      "all five paired differences for every Delta_N",
+      "mean and two-sided paired Student-t 95% interval",
+      "two-sided exact paired sign-flip p value labeled descriptive",
+      "both predeclared contrast-of-contrasts by paired seed",
+      "per-environment deltas",
+      "fixed-update and fixed-transition views",
+      "tie sizes, score/replay effective support, and replay duplicate-draw telemetry"
+    ]
+  },
+  "multiplicity_and_confirmatory_hold": {
+    "development_results_do_not_unlock_confirmation": true,
+    "confirmatory_seeds_must_be_new_and_exclude_101_to_105": true,
+    "minimum_new_paired_seed_floor": 10,
+    "final_confirmatory_sample_size": "power and cost decision frozen before confirmatory endpoint access",
+    "target_power": 0.8,
+    "smallest_effect_of_interest": 0.02,
+    "primary_family": "Delta_2, Delta_4, Delta_8 with Holm control of family-wise alpha 0.05",
+    "interaction_family": "C_linear_log2N and C_curvature_log2N are secondary and require a separately frozen multiplicity rule",
+    "beat_claim_requires": [
+      "a separately frozen direct matched ACCEL comparison",
+      "the full predeclared 12-maze panel",
+      "a strictly positive multiplicity-adjusted paired interval",
+      "all integrity, budget, and provenance gates"
+    ],
+    "current_package_authorizes_none_of_these": true
+  },
+  "prerequisites_for_any_future_run": [
+    "a separately hashed trainer that validates this exact protocol and all six config hashes",
+    "one frozen campaign manifest that binds the trainer, evaluator, assembler or finalizer, analyzer, scheduler script, source bundle, and complete environment provenance before endpoint access",
+    "the driver rejects parser-default xpid=latest and binds unique campaign/run/xpid/output/checkpoint identities before training",
+    "fresh v4 applied-source validation under the pinned CPU environment before any scheduler submission",
+    "new post-loop terminal checkpoint with no resume, no periodic-checkpoint substitution, and exact round-trip binding of cell identity, counters, N, n_eval, arm, config, protocol, and manifest",
+    "within each N/seed, exact equality of n_updates, upstream n_grad_updates, optimizer applications, outer cycles, transitions, and aligned fixed-transition observations",
+    "campaign manifest frozen before endpoint access",
+    "receipt support for observed fill trajectory, duplicate-new groups, transitions, tie diagnostics, and replay duplicate draws"
+  ]
+}

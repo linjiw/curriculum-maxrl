@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "package_id": "ued-n-factorial-tie-aware-v4-draft-engineering-v1",
+  "status": "DRAFT_ENGINEERING_ONLY_NOT_PRODUCTION_AUTHORIZED",
+  "protocol": {
+    "path": "ued_benchmark/analysis/development_protocol_v3_n_factorial_tie_aware_draft.json",
+    "sha256": "81a57668d3cfdf595f13710df6152a437b8c4640791fbeeed2ef8c9e9486f26f"
+  },
+  "configs": [
+    {
+      "path": "ued_benchmark/configs/maze_frontier_factorial_n2_16x2_b2000_tie_aware_v4.json",
+      "sha256": "2e443515d3876ad8c8a632d9cc21f2a92288adf971cde0b2c4751679eed32791"
+    },
+    {
+      "path": "ued_benchmark/configs/maze_maxmc_factorial_n2_16x2_b2000_tie_aware_v4.json",
+      "sha256": "81e2af766e588896c3013de23f22906446e27e18661e2dfc6b6f2cc4e284f1b3"
+    },
+    {
+      "path": "ued_benchmark/configs/maze_frontier_factorial_n4_8x4_b1000_tie_aware_v4.json",
+      "sha256": "181ca0210ad988a699d408827b15941ef0a6b9c1588f4abd8c12dc1e6cc706b5"
+    },
+    {
+      "path": "ued_benchmark/configs/maze_maxmc_factorial_n4_8x4_b1000_tie_aware_v4.json",
+      "sha256": "9033de1f79ee7f64ac980ebe28e90542e3cfe93dddf63374c20e1e52def824fb"
+    },
+    {
+      "path": "ued_benchmark/configs/maze_frontier_factorial_n8_4x8_b500_tie_aware_v4.json",
+      "sha256": "5cdaf48da9b6e3f2ab9dd0b9dd8c94eb7e49fe07d7744fc46b7b5f735b3a436d"
+    },
+    {
+      "path": "ued_benchmark/configs/maze_maxmc_factorial_n8_4x8_b500_tie_aware_v4.json",
+      "sha256": "105c6695baf86b894d65c6756fc5647d560c84daaef35ee3d3859c1eb9f68090"
+    }
+  ],
+  "core_dependency": {
+    "path": "ued_benchmark/OVERLAY_CONTRACT_V4.json",
+    "sha256": "3d5f3827a82a4f713314091289196a1c2909dd5d7c4c96dd532052c5706e832b"
+  },
+  "protected_prior_artifacts": [
+    {
+      "path": "ued_benchmark/analysis/development_protocol_v1.json",
+      "sha256": "9d0ccbeaf83564958c5374e6e68793aa644013b1e9f6b889a91da69c99a720ba"
+    },
+    {
+      "path": "ued_benchmark/analysis/development_protocol_v2_tie_aware_draft.json",
+      "sha256": "1e4bd62be2412fa5291fde9d2c8750f30ed2e9c9f43afcda93d8ab552e4a3269"
+    },
+    {
+      "path": "ued_benchmark/configs/maze_maxmc_upstream_official_reference_32x1_b4000.json",
+      "sha256": "a5b8b87799bce31564959b3e8b55cfdaba658b31b8135fa35e3b96704d65185b"
+    },
+    {
+      "path": "ued_benchmark/configs/maze_frontier_posterior_bridge_n8_neval1.json",
+      "sha256": "581369156855cf58718a686ea849df71410253b09561aaf83a68a6353151c883"
+    }
+  ],
+  "production_authorized": false,
+  "endpoint_access_authorized": false,
+  "self_hash_policy": "the validator binds this manifest's raw SHA-256; this manifest binds the exact protocol and six config bytes"
+}

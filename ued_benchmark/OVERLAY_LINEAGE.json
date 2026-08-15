@@ -1,0 +1,99 @@
+{
+  "base_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+  "base_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+  "schema": 1,
+  "versions": {
+    "frontier-activity-tie-aware-v4": {
+      "applicator_path": "ued_benchmark/scripts/apply_minimax_overlay_v4.py",
+      "applicator_sha256": "c2e5eb3dac02b86723ece485cd348832f1636198c781bae82c1d99df0167590b",
+      "contract_path": "ued_benchmark/OVERLAY_CONTRACT_V4.json",
+      "contract_sha256": "3d5f3827a82a4f713314091289196a1c2909dd5d7c4c96dd532052c5706e832b",
+      "draft_development_protocol": {
+        "path": "ued_benchmark/analysis/development_protocol_v2_tie_aware_draft.json",
+        "production_authorized": false,
+        "sha256": "1e4bd62be2412fa5291fde9d2c8750f30ed2e9c9f43afcda93d8ab552e4a3269"
+      },
+      "engineering_drivers": {
+        "grouped_one_update": {
+          "path": "ued_benchmark/scripts/run_grouped_one_update_v4.py",
+          "sha256": "4acf85ab5b4a90a8f14fe94727e7973a5a47c14e85a22f18e8bd32641af88e78"
+        },
+        "matched_terminal": {
+          "path": "ued_benchmark/scripts/run_matched_terminal_v4.py",
+          "sha256": "171e1752980a31b121db427020708902ab046aeabe8af94160ff15cf2af5c9db"
+        }
+      },
+      "matched_configs": {
+        "frontier": {
+          "path": "ued_benchmark/configs/maze_frontier_exact_grouped_n8_tie_aware_v4.json",
+          "sha256": "0e1b1907b319e42437d91ef4b19fef9ea39183a68e49069a17e337d7f78147f2"
+        },
+        "maxmc": {
+          "path": "ued_benchmark/configs/maze_maxmc_group_matched_4x8_b500_tie_aware_v4.json",
+          "sha256": "a3cc3ddf387a3bb7cf3d9759c3f13e6a74f2c7e32de311ac344d54ef5e703ec6"
+        }
+      },
+      "modules": {
+        "frontier_activity": {
+          "path": "ued_benchmark/overlay/minimax/util/rl/frontier_activity.py",
+          "sha256": "63726251813bd9fafc2722409c4a2942c6ae2728327870797df47d01504738ca"
+        },
+        "tie_aware_rank": {
+          "path": "ued_benchmark/overlay/minimax/util/rl/tie_aware_rank.py",
+          "sha256": "1b9db20d05edd3212346e84d14606af91ae443c0665945a7b679ade161560244"
+        }
+      },
+      "source_faithful_reference": {
+        "config_path": "ued_benchmark/configs/maze_maxmc_upstream_official_reference_32x1_b4000.json",
+        "config_sha256": "a5b8b87799bce31564959b3e8b55cfdaba658b31b8135fa35e3b96704d65185b",
+        "overlay_forbidden": true
+      },
+      "stable_rank_compatibility": {
+        "config_path": "ued_benchmark/configs/maze_maxmc_v4_stable_rank_compat_32x1_b4000.json",
+        "config_sha256": "99def895587a85e2ad060c356bf53041cf1fb6d1140304496451748cce207c92",
+        "source_faithful_reference": false
+      }
+    },
+    "frontier-activity-v3": {
+      "applicator_path": "ued_benchmark/scripts/apply_minimax_overlay.py",
+      "applicator_sha256": "ddd3569b86adb703c8c7141fe7f2dae7a49c2c6b08e326edd61c3e3da7a345f7",
+      "contract_path": "ued_benchmark/OVERLAY_CONTRACT.json",
+      "contract_sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000",
+      "frozen_development_protocol_path": "ued_benchmark/analysis/development_protocol_v1.json",
+      "frozen_development_protocol_sha256": "9d0ccbeaf83564958c5374e6e68793aa644013b1e9f6b889a91da69c99a720ba",
+      "frozen_engineering_drivers": {
+        "assembler": {
+          "path": "ued_benchmark/scripts/assemble_matched_run.py",
+          "sha256": "655d4d20da506a074b9365471a1900bdaf6468ddd991e313f6feb67fc84bde57"
+        },
+        "evaluator": {
+          "path": "ued_benchmark/scripts/evaluate_matched_terminal.py",
+          "sha256": "09dbbcafdd3425ea1f751c766cb4cd010d69f438af02aa07f9fc00a3d943ab36"
+        },
+        "grouped_one_update": {
+          "path": "ued_benchmark/scripts/run_grouped_one_update.py",
+          "sha256": "b34ac79ef05330e7209e9309f9d112bb9da9b60025566eb4e29d16b9bf8d9597"
+        },
+        "matched_terminal": {
+          "path": "ued_benchmark/scripts/run_matched_terminal.py",
+          "sha256": "658dc207d40c00929ec10c19ed9fe774b8f74698a981a3daec059a45eee124d7"
+        }
+      },
+      "frozen_matched_configs": {
+        "frontier": {
+          "path": "ued_benchmark/configs/maze_frontier_exact_grouped_n8.json",
+          "sha256": "b49168142a9d5a5d8edce88634975ac52d7615dca8bad9fff1cbcaf29ec43508"
+        },
+        "maxmc": {
+          "path": "ued_benchmark/configs/maze_maxmc_group_matched_4x8_b500.json",
+          "sha256": "6ec2083745ccc585383170f0a14f464397614a4365ba644e5c9e7e4ef422d943"
+        }
+      },
+      "frozen_preregistered_analyzer": {
+        "path": "ued_benchmark/analysis/preregistered_dev_analysis.py",
+        "sha256": "1750cf82e1bbdd86779ab132d73921daeaee187a105c34b93c47f04f93153286"
+      },
+      "status": "immutable_engineering_history"
+    }
+  }
+}

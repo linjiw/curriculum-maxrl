@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "protocol_id": "frontier-calibration-telemetry-v1-draft",
+  "status": "DRAFT_ENGINEERING_ONLY_NOT_PRODUCTION_AUTHORIZED",
+  "purpose": "outcome_blind_online_posterior_predictive_calibration_and_group_matched_maxmc_diagnostics_only",
+  "production_driver_authorized": false,
+  "endpoint_access_authorized": false,
+  "paper_evidence": false,
+  "current_instrumentation_status": "SPECIFIED_NOT_IMPLEMENTED_IN_ANY_FROZEN_OVERLAY",
+  "authorization_hold": {
+    "forbidden": [
+      "Hopper or GPU submission",
+      "training or evaluation endpoint access",
+      "performance, OOD, or BARN inspection",
+      "production scheduling",
+      "confirmatory or paper-evidence labeling"
+    ],
+    "future_requirement": "A separately versioned telemetry overlay, writer, driver, expected campaign contract, and package assembler must be frozen and independently audited before any run. This DRAFT mutates and authorizes none of v1, v3, v4, Hopper, or existing configs."
+  },
+  "frozen_dependencies": {
+    "base_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "base_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "protected_artifacts": [
+      {"path": "ued_benchmark/OVERLAY_CONTRACT.json", "sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000"},
+      {"path": "ued_benchmark/OVERLAY_CONTRACT_V4.json", "sha256": "3d5f3827a82a4f713314091289196a1c2909dd5d7c4c96dd532052c5706e832b"},
+      {"path": "ued_benchmark/OVERLAY_LINEAGE.json", "sha256": "784e2fd1f545d49c8d10c3f3aeda37aae51fa00127e2c14578702e275bfb6971"},
+      {"path": "ued_benchmark/UPSTREAM_PIN.json", "sha256": "375ff36d64a98dd72f9b94f8bf7e63ae2cb6ec99571de37c7a8d483a936401d7"},
+      {"path": "ued_benchmark/analysis/development_protocol_v1.json", "sha256": "9d0ccbeaf83564958c5374e6e68793aa644013b1e9f6b889a91da69c99a720ba"},
+      {"path": "ued_benchmark/analysis/development_protocol_v2_tie_aware_draft.json", "sha256": "1e4bd62be2412fa5291fde9d2c8750f30ed2e9c9f43afcda93d8ab552e4a3269"},
+      {"path": "ued_benchmark/analysis/development_protocol_v3_n_factorial_tie_aware_draft.json", "sha256": "81a57668d3cfdf595f13710df6152a437b8c4640791fbeeed2ef8c9e9486f26f"},
+      {"path": "ued_benchmark/analysis/n_factorial_tie_aware_v4_draft_manifest.json", "sha256": "58e1ffd9c7e3d80992971b331c540d6c8976c9cd4082391fae92de0df4fd417f"},
+      {"path": "ued_benchmark/configs/maze_frontier_exact_grouped_n8.json", "sha256": "b49168142a9d5a5d8edce88634975ac52d7615dca8bad9fff1cbcaf29ec43508"},
+      {"path": "ued_benchmark/configs/maze_frontier_exact_grouped_n8_tie_aware_v4.json", "sha256": "0e1b1907b319e42437d91ef4b19fef9ea39183a68e49069a17e337d7f78147f2"},
+      {"path": "ued_benchmark/configs/maze_frontier_factorial_n2_16x2_b2000_tie_aware_v4.json", "sha256": "2e443515d3876ad8c8a632d9cc21f2a92288adf971cde0b2c4751679eed32791"},
+      {"path": "ued_benchmark/configs/maze_frontier_factorial_n4_8x4_b1000_tie_aware_v4.json", "sha256": "181ca0210ad988a699d408827b15941ef0a6b9c1588f4abd8c12dc1e6cc706b5"},
+      {"path": "ued_benchmark/configs/maze_frontier_factorial_n8_4x8_b500_tie_aware_v4.json", "sha256": "5cdaf48da9b6e3f2ab9dd0b9dd8c94eb7e49fe07d7744fc46b7b5f735b3a436d"},
+      {"path": "ued_benchmark/configs/maze_frontier_posterior_bridge_n8_neval1.json", "sha256": "581369156855cf58718a686ea849df71410253b09561aaf83a68a6353151c883"},
+      {"path": "ued_benchmark/configs/maze_maxmc_factorial_n2_16x2_b2000_tie_aware_v4.json", "sha256": "81e2af766e588896c3013de23f22906446e27e18661e2dfc6b6f2cc4e284f1b3"},
+      {"path": "ued_benchmark/configs/maze_maxmc_factorial_n4_8x4_b1000_tie_aware_v4.json", "sha256": "9033de1f79ee7f64ac980ebe28e90542e3cfe93dddf63374c20e1e52def824fb"},
+      {"path": "ued_benchmark/configs/maze_maxmc_factorial_n8_4x8_b500_tie_aware_v4.json", "sha256": "105c6695baf86b894d65c6756fc5647d560c84daaef35ee3d3859c1eb9f68090"},
+      {"path": "ued_benchmark/configs/maze_maxmc_group_matched_4x8_b500.json", "sha256": "6ec2083745ccc585383170f0a14f464397614a4365ba644e5c9e7e4ef422d943"},
+      {"path": "ued_benchmark/configs/maze_maxmc_group_matched_4x8_b500_tie_aware_v4.json", "sha256": "a3cc3ddf387a3bb7cf3d9759c3f13e6a74f2c7e32de311ac344d54ef5e703ec6"},
+      {"path": "ued_benchmark/configs/maze_maxmc_upstream_official_reference_32x1_b4000.json", "sha256": "a5b8b87799bce31564959b3e8b55cfdaba658b31b8135fa35e3b96704d65185b"},
+      {"path": "ued_benchmark/configs/maze_maxmc_v4_stable_rank_compat_32x1_b4000.json", "sha256": "99def895587a85e2ad060c356bf53041cf1fb6d1140304496451748cce207c92"},
+      {"path": "ued_benchmark/overlay/minimax/util/rl/frontier_activity.py", "sha256": "63726251813bd9fafc2722409c4a2942c6ae2728327870797df47d01504738ca"},
+      {"path": "ued_benchmark/overlay/minimax/util/rl/tie_aware_rank.py", "sha256": "1b9db20d05edd3212346e84d14606af91ae443c0665945a7b679ade161560244"},
+      {"path": "ued_benchmark/scripts/apply_minimax_overlay.py", "sha256": "ddd3569b86adb703c8c7141fe7f2dae7a49c2c6b08e326edd61c3e3da7a345f7"},
+      {"path": "ued_benchmark/scripts/apply_minimax_overlay_v4.py", "sha256": "c2e5eb3dac02b86723ece485cd348832f1636198c781bae82c1d99df0167590b"}
+    ]
+  },
+  "estimand": {
+    "group_model": "K conditional on p is Binomial(N,p)",
+    "realized_target": "m_N(K) = 1{0 < K < N} * (N-K)/N",
+    "conditional_identity": "E[m_N(K) | p] = 1-p-(1-p)^N = u_N(p)",
+    "posterior": "p conditional on pre-batch history is Beta(a,b), a=pre_successes+alpha, b=pre_trials-pre_successes+beta",
+    "predeclared_prior": {"alpha": 1.0, "beta": 1.0},
+    "primary_prediction": "q = E[u_N(p) | pre-batch history] = 1 - (b)_N/(a+b)_N - a/(a+b)",
+    "population_scope": "Calibration is conditional on the adaptively purchased group distribution generated by the curriculum. It is not calibration over every replay-buffer slot, every generated task, or an environment-wide task population.",
+    "unit_weight": "one complete adaptively purchased level group regardless of insertion, update, rejection, or later eviction",
+    "independent_unit": "training_seed",
+    "inference_warning": "Groups sharing a seed, level, or outer cycle are dependent. Group count is never inferential sample size."
+  },
+  "no_current_group_leakage": {
+    "snapshot_key": "exactly one pre-batch snapshot per (level_chain_id, outer_cycle)",
+    "prediction_clock": "Snapshot before reducing or incorporating any outcome from the current outer-cycle vectorized batch and derive every sibling prediction only from that snapshot.",
+    "concurrent_duplicate_policy": "All occurrences of one logical level in one outer cycle use identical pre fields and one snapshot_id; sibling outcomes aggregate only into identical post fields after all predictions are fixed.",
+    "sequence_policy": "Observed cycles strictly increase within a chain and posterior_snapshot_sequence is exactly zero-based contiguous across those cycles.",
+    "new_candidate_policy": "Every new level chain begins at sequence zero with pre_successes=pre_trials=0 and Beta(1,1), even if not inserted. Mutation is a reserved schema value but is rejected by this DRAFT because exact mutation-driver attribution has not been frozen; any future separately frozen mutation contract must require fresh Beta priors and forbid parent count inheritance.",
+    "continuity_policy": "A replay must name the immediately preceding snapshot. Frontier pre counts and score equal its persisted post counts and score. MaxMC pre score equals its prior persisted stored post score exactly.",
+    "eviction_policy": "A nonpersisted or evicted chain terminates permanently and cannot reappear.",
+    "forbidden_predictors": [
+      "counts incorporating any current-batch sibling outcome",
+      "a Frontier score computed from current successes/trials",
+      "a MaxMC score computed from current-group returns or values and labeled pre-group",
+      "a within-batch posterior update canonically ordered only after outcomes are observed"
+    ]
+  },
+  "telemetry_event_schema": {
+    "format": "UTF-8 JSON Lines; one exact-key object per attempted group; duplicate JSON keys, blank rows, and nonfinite numbers are invalid",
+    "required_fields": [
+      "schema", "protocol_id", "run_id", "event_index", "training_seed", "arm", "N", "student_index", "outer_cycle", "within_cycle_group_index", "runner_branch", "pre_upstream_n_iters", "post_upstream_n_iters", "pre_upstream_n_updates", "post_upstream_n_updates", "pre_upstream_n_grad_updates", "post_upstream_n_grad_updates", "pre_optimizer_step_applications", "post_optimizer_step_applications", "snapshot_id", "level_chain_id", "level_sha256", "posterior_snapshot_sequence", "selection_source", "current_successes", "current_trials", "realized_activity", "pre_successes", "pre_trials", "prior_alpha", "prior_beta", "pre_score", "pre_score_semantics", "pre_score_source_snapshot_id", "post_score", "post_score_semantics", "posterior_evidence_accepted", "posterior_persisted_after_snapshot", "post_successes", "post_trials", "slot_index_pre", "slot_generation_pre", "slot_index_post", "slot_generation_post", "disposition"
+    ],
+    "fixed_values": {
+      "schema": 1,
+      "protocol_id": "frontier-calibration-telemetry-v1-draft",
+      "student_index": 0,
+      "runner_branch": ["new", "replay"],
+      "arm": ["frontier", "maxmc"],
+      "N": [2, 4, 8],
+      "selection_source": ["new", "replay", "mutation"],
+      "disposition": ["inserted", "inserted_then_evicted", "updated", "valid_not_persisted", "duplicate_new_rejected", "incomplete_rejected"]
+    },
+    "bounded_integer_policy": "All counters, indices, seeds, N, successes, and trials are JSON integers excluding Boolean, in [0,2^63-1]. Malformed types and overflows fail as TelemetryError.",
+    "cycle_update_attribution": {
+      "snapshot_scope": "The runner branch and all eight pre/post upstream counter fields are sibling-invariant within an outer cycle and are captured directly around that one runner iteration.",
+      "continuity": "The first pre counters are all zero. Across ordered cycles, every pre n_iters, n_updates, n_grad_updates, and optimizer-applications counter exactly equals the preceding post counter.",
+      "n_iters_equation": "post_upstream_n_iters = pre_upstream_n_iters + 1 for every purchased-group cycle.",
+      "update_equations": [
+        "delta_updates = post_upstream_n_updates - pre_upstream_n_updates is in {0,1}",
+        "pre/post upstream n_grad_updates equal pre/post upstream n_updates",
+        "pre/post optimizer applications equal pre/post n_updates * 5 PPO epochs * 1 minibatch"
+      ],
+      "actual_branch_binding": "For the campaign-bound robust-PLR driver with mutations disabled, runner_branch=replay iff every purchased group is replay-sourced and delta_updates=1; runner_branch=new iff every purchased group is new-sourced and delta_updates=0. Mixed-source cycles, all-new claimed updates, and replay cycles without one update fail.",
+      "mutation_policy": "Mutation is forbidden because exact mutation branch semantics are not frozen in this DRAFT."
+    },
+    "canonical_identity": {
+      "level_sha256": "SHA-256 of canonical serialized level; immutable within a chain and globally owned by exactly one chain in a run",
+      "duplicate_new_derivation": "derive from repeated (outer_cycle, level_sha256) among selection_source in {new,mutation}; never trust disposition as source of truth",
+      "distinct_chain_collision": "two distinct level_chain_id values may never share one level_sha256, including regenerated or reinserted levels"
+    },
+    "frontier_semantics": {
+      "pre_score_semantics": "posterior_expected_activity_before_current_batch",
+      "post_score_semantics": "posterior_expected_activity_after_current_batch only when persisted; otherwise null/not_persisted",
+      "score_tolerance": "absolute error <= 5e-7 against analyzer float64 recomputation",
+      "snapshot_arithmetic": "post counts equal pre counts plus all evidence-accepted sibling successes/trials for that (level_chain_id,outer_cycle) snapshot"
+    },
+    "maxmc_semantics": {
+      "new_pre_score": "null/unavailable_new_candidate; a MaxMC current-group score must never be called before the group",
+      "replay_pre_score": "finite stored_maxmc_before_current_group and exactly equal to the immediately preceding persisted stored_maxmc_after_current_batch post_score",
+      "posterior_fields": "pre/post counts, alpha, beta, and posterior_evidence_accepted are null; persistence is Boolean buffer-state telemetry",
+      "scientific_limit": "MaxMC is not a probability forecast and receives no calibration, reliability, or Brier label"
+    },
+    "source_disposition_state_machine": {
+      "replay_complete": ["updated"],
+      "replay_partial": ["incomplete_rejected"],
+      "new_or_mutation_complete": ["inserted", "inserted_then_evicted", "valid_not_persisted", "duplicate_new_rejected"],
+      "new_or_mutation_partial": ["incomplete_rejected"],
+      "forbidden_example": "updated_then_evicted and incomplete_rejected_then_evicted are not schema values: the frozen uniform-source runner has no same-cycle insertion that can evict a replay",
+      "derivation": "Final disposition and persistence are recomputed from the canonically ordered slot lifecycle. inserted_then_evicted is reachable when a later new candidate overwrites an earlier insertion in the same all-new cycle. A replay remains live at the end of its uniform replay cycle; a later all-new cycle may evict it, but does not retroactively mutate the earlier replay event."
+    },
+    "order_and_slot_lifecycle": {
+      "input_order": "file order is preserved; event_index is zero-based contiguous and (outer_cycle,within_cycle_group_index) is already strictly increasing",
+      "cycle_order": "outer cycles and within-cycle groups are zero-based contiguous",
+      "prebatch_replay": "all replay pre-slot identities are checked against the live map before any current-cycle insertion",
+      "candidate_order": "new/mutation insertions apply by within_cycle_group_index only after replay validation",
+      "single_generation": "one live chain per slot, one live slot per chain, and insertion generation advances exactly by one from an empty generation -1",
+      "postbatch_derivation": "persistence and inserted/updated versus then-evicted disposition equal the unique final live occupant"
+    }
+  },
+  "expected_campaign_contract": {
+    "status": "DRAFT_FROZEN_OUTCOME_BLIND_NOT_RUN_AUTHORIZATION",
+    "freeze_clock": "must be byte-frozen before endpoint access and supplied with its independently expected SHA-256",
+    "authorization_fields": {"production_authorized": false, "endpoint_access_authorized": false, "paper_evidence": false},
+    "required_hashed_artifacts": [
+      "this protocol", "this analyzer", "Frontier config", "MaxMC config", "source bundle manifest", "applied overlay manifest", "separately versioned telemetry overlay", "telemetry writer", "training driver", "environment manifest", "scheduler script"
+    ],
+    "artifact_gate": "Every referenced path must be canonical absolute, regular, non-symlink, and its bytes must match its SHA-256. Protocol and analyzer paths, every common artifact role path, and both arm config paths are pairwise distinct where roles are semantically distinct; device/inode identity is also distinct so hardlink aliases fail; arm config bytes are distinct. The two run IDs and one paired training seed are bound before any package is read.",
+    "runner_semantics": {
+      "use_robust_plr": true,
+      "use_mutations": false,
+      "cycle_source_policy": "uniform_new_or_replay_cycle",
+      "binding": "These fields and the hashed training driver bind the actual runner branch whose pre/post counters appear in every sibling event."
+    },
+    "budget_fields": ["N", "n_eval", "n_parallel", "n_rollout_steps", "target_student_ppo_updates", "max_outer_cycles", "ppo_epochs", "ppo_minibatches"],
+    "positive_budget_gate": "Every campaign budget field is a positive bounded integer. The required all-new warm-up implies target_student_ppo_updates + 1 <= max_outer_cycles. Every derived stream, optimizer, transition, and attempted-group product must remain in [0,2^63-1].",
+    "campaign_equations": [
+      "N in {2,4,8}",
+      "n_eval = N",
+      "n_parallel * N = 32",
+      "n_rollout_steps = 256",
+      "ppo_epochs = 5",
+      "ppo_minibatches = 1",
+      "0 < target_student_ppo_updates + 1 <= max_outer_cycles"
+    ],
+    "robust_plr_clock": "One outer cycle is one complete purchased-group runner iteration and increments upstream n_iters. Robust PLR may skip the student/optimizer update on an all-new exploratory cycle, so outer cycles must never be redefined as PPO updates and purchased exploratory groups must never be omitted.",
+    "terminal_receipt_realized_fields": ["outer_cycle_count", "upstream_n_iters", "student_ppo_updates", "upstream_n_updates", "upstream_n_grad_updates", "optimizer_step_applications", "student_training_transition_count"],
+    "terminal_receipt_equations": [
+      "0 < student_ppo_updates = target_student_ppo_updates and target_student_ppo_updates + 1 <= outer_cycle_count <= max_outer_cycles",
+      "upstream_n_iters = outer_cycle_count",
+      "upstream_n_updates = student_ppo_updates",
+      "upstream_n_grad_updates = student_ppo_updates",
+      "optimizer_step_applications = student_ppo_updates * ppo_epochs * ppo_minibatches",
+      "student_training_transition_count = outer_cycle_count * n_parallel * n_eval * n_rollout_steps",
+      "attempted_group_count = telemetry_records = outer_cycle_count * n_parallel",
+      "terminal_outer_cycle = outer_cycle_count - 1"
+    ],
+    "event_ledger_terminal_gate": "Receipt totals equal the final cycle post counters. Every preterminal cycle post_upstream_n_updates is below target; the unique terminal cycle is replay and advances target_student_ppo_updates-1 to target_student_ppo_updates. No post-target cycle is allowed.",
+    "intermediate_progress_semantics": "A live intermediate state may satisfy 0 <= student_ppo_updates < outer_cycle_count <= max_outer_cycles, including one warm-up cycle and zero updates. It is not a closed package: a terminal receipt must reach the positive frozen update target.",
+    "receipt_projection": "Receipt campaign identity, arm/run/seed, group shape, PPO shape, config, protocol, analyzer, campaign, source, overlays, writer, driver, environment, and scheduler hashes must equal the loaded expected campaign contract. Realized cycle, update, optimizer, transition, and attempted-group counts are reconciled from the terminal receipt and event ledger, not copied from a fictitious campaign cycle target."
+  },
+  "calibration_analysis": {
+    "eligibility": "arm=frontier and current_trials=N, derived before disposition filtering",
+    "prediction_source": "analyzer-recomputed pre-batch q; recorded pre_score is integrity telemetry",
+    "target_source": "analyzer-recomputed m_N(current_successes); logged realized_activity is an integrity check",
+    "weighting": "equal complete-group weight",
+    "independent_unit": "training_seed",
+    "frozen_bin_edges": [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0],
+    "bin_membership": "[lower,upper), except final bin includes 1.0",
+    "frozen_errors": {
+      "signed_bias": "mean(target-prediction)",
+      "mean_absolute_error": "mean(abs(target-prediction))",
+      "mean_squared_error": "mean((target-prediction)^2)",
+      "root_mean_squared_error": "sqrt(mean_squared_error)",
+      "fixed_bin_ece": "sum_b n_b/n * abs(mean_target_b-mean_prediction_b)",
+      "fixed_bin_mce": "max over nonempty bins of abs(mean_target_b-mean_prediction_b)"
+    },
+    "mandatory_partitions": ["all complete adaptively purchased groups", "new_or_mutation", "replay"],
+    "uncertainty_policy": "Deterministic per-run descriptive summaries only; no group-level intervals or p-values."
+  },
+  "maxmc_comparator": {
+    "proper_calibration_authorized": false,
+    "matched_requirements": "Both validated packages must reference the same expected campaign contract, seed, N, target_student_ppo_updates, max_outer_cycles, group shape, PPO shape, and common artifact hashes; configs and run IDs remain arm-specific.",
+    "unequal_exposure_policy": "Arm-specific realized outer cycles, transitions, and attempted/complete group counts may differ under robust PLR because replay draws determine when the shared PPO target is reached. They are never forced equal or silently truncated.",
+    "paired_exposure_report": "Report each arm and Frontier-minus-MaxMC deltas for outer cycles, upstream n_iters, PPO/update counters, optimizer applications, student training transitions, attempted groups, and complete groups.",
+    "validated_input_gate": "The comparator consumes only immutable ValidatedPackageResult objects carrying their exact package/campaign paths and externally supplied SHA-256 expectations. On every comparison it reopens and fully revalidates both closed packages, then requires the fresh result to equal the carried result. Mutable dictionaries, caller-asserted package_validated flags, forged result payloads, and post-validation package tampering fail. This is byte-closure verification against caller-supplied expectations, not signer or origin authenticity.",
+    "delivery_diagnostics": ["mean realized activity", "mixed-group rate", "mean success fraction", "Frontier-minus-MaxMC differences"],
+    "pre_group_discrimination": "Spearman correlation of finite replay pre-score versus realized activity; MaxMC is discrimination only.",
+    "interpretation_limits": ["not matched-level causal effect", "not performance or OOD evidence", "not production evidence"]
+  },
+  "run_package": {
+    "payloads": ["telemetry-events.jsonl", "telemetry-receipt.json"],
+    "closure_files": ["telemetry-SHA256SUMS", "telemetry-COMPLETE"],
+    "integrity_zero_gates": ["duplicate_event_id_count", "duplicate_new_group_count", "partial_group_count", "nonfinite_record_count"],
+    "reported_counter": "repeated_level_same_batch_count",
+    "purchased_group_closure": "Every realized outer cycle has exactly n_parallel ordered attempted-group records; no exploratory warm-up or new-level cycle may be omitted to make cycles resemble updates.",
+    "analysis_order": "Externally verify analyzer; verify full static lineage; load and verify expected campaign contract and every referenced byte; verify exact package closure and receipt; then parse events, derive identities/lifecycle/arithmetic, and only then compute diagnostics.",
+    "required_cli_expectations": ["expected analyzer SHA-256", "expected campaign-contract SHA-256", "expected telemetry-SHA256SUMS SHA-256"]
+  },
+  "promotion_requirements": [
+    "Implement only in a separate overlay without changing frozen v1, v3, v4, Hopper, or existing config bytes.",
+    "Prove disabled telemetry is byte- and behavior-equivalent to frozen core and enabled telemetry does not change state, PRNG, scores, replay, or checkpoints.",
+    "Exercise sibling snapshots, per-cycle branch/counter attribution, canonical duplicate-new collisions, mutation rejection until exact semantics are separately frozen, every reachable disposition, cross-cycle replay eviction without retroactive relabeling, eviction/reappearance, slot generations, partial groups, and resume rejection.",
+    "Freeze and independently audit a campaign-specific matched Frontier/MaxMC contract before endpoint access.",
+    "This DRAFT alone authorizes no run."
+  ]
+}

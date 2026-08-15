@@ -1,0 +1,260 @@
+{
+  "analysis": {
+    "confidence_interval": "two-sided paired Student-t 95% interval over training-seed macro solved-rate differences",
+    "exact_randomization_test": "two-sided paired sign-flip test over all 2^5 assignments; descriptive only",
+    "independent_unit": "paired training seed",
+    "keep_rule": {
+      "all_integrity_and_budget_gates_pass": true,
+      "minimum_allowed_per_environment_mean_delta": -0.05,
+      "strictly_positive_primary_mean_delta": true
+    }
+  },
+  "arms": {
+    "frontier": {
+      "config_path": "ued_benchmark/configs/maze_frontier_exact_grouped_n8_tie_aware_v4.json",
+      "config_sha256": "0e1b1907b319e42437d91ef4b19fef9ea39183a68e49069a17e337d7f78147f2",
+      "ued_score": "coefficient_activity"
+    },
+    "maxmc": {
+      "config_path": "ued_benchmark/configs/maze_maxmc_group_matched_4x8_b500_tie_aware_v4.json",
+      "config_sha256": "a3cc3ddf387a3bb7cf3d9759c3f13e6a74f2c7e32de311ac344d54ef5e703ec6",
+      "ued_score": "max_mc"
+    }
+  },
+  "evaluation": {
+    "environments": [
+      "Maze-SixteenRooms",
+      "Maze-Labyrinth",
+      "Maze-StandardMaze"
+    ],
+    "evaluation_seed_offset": 100000,
+    "max_episode_horizon": 450,
+    "n_episodes_per_environment": 10,
+    "primary_metric": "unweighted mean of the three terminal-checkpoint solved rates",
+    "shared_randomness": "for training seed s, both arms use minimax.evaluate seed 100000+s",
+    "source": "external minimax.evaluate result; periodic in-training evaluations are non-primary"
+  },
+  "expected_static_meta_config": {
+    "agent_rl_algo": "ppo",
+    "archive_init_checkpoint": false,
+    "archive_interval": 0,
+    "checkpoint_interval": 1000,
+    "env_args": {
+      "height": 13,
+      "max_episode_steps": 250,
+      "n_walls": 60,
+      "normalize_obs": true,
+      "obs_agent_pos": false,
+      "replace_wall_pos": true,
+      "sample_n_walls": false,
+      "see_agent": false,
+      "width": 13
+    },
+    "env_name": "Maze",
+    "eval_args": {
+      "agent_idxs": "*",
+      "env_names": "Maze-SixteenRooms,Maze-Labyrinth,Maze-StandardMaze",
+      "n_episodes": 10
+    },
+    "eval_env_args": {
+      "normalize_obs": true,
+      "see_agent": false
+    },
+    "from_last_checkpoint": false,
+    "log_interval": 10,
+    "n_devices": 1,
+    "n_total_updates": 30000,
+    "student_model_args": {
+      "base_activation": "relu",
+      "hidden_dim": 32,
+      "n_conv_filters": 16,
+      "n_hidden_layers": 1,
+      "n_scalar_embeddings": 4,
+      "recurrent_arch": "lstm",
+      "recurrent_hidden_dim": 256,
+      "s5_activation": "half_glu1",
+      "s5_layernorm_pos": null,
+      "s5_n_blocks": 1,
+      "s5_n_layers": 4,
+      "scalar_embed_dim": 5,
+      "value_ensemble_size": 1
+    },
+    "student_model_name": "default_student_cnn",
+    "student_rl_args": {
+      "clip_eps": 0.2,
+      "clip_value_loss": true,
+      "entropy_coef": 0.0,
+      "n_epochs": 5,
+      "n_minibatches": 1,
+      "n_unroll_update": 5,
+      "value_loss_coef": 0.5
+    },
+    "test_interval": 100,
+    "train_runner": "plr",
+    "train_runner_args": {
+      "adam_eps": 0.00001,
+      "buffer_size": 500,
+      "discount": 0.999,
+      "force_unique": true,
+      "frontier_n_rollouts": 8,
+      "frontier_overlay_contract_sha256": "3d5f3827a82a4f713314091289196a1c2909dd5d7c4c96dd532052c5706e832b",
+      "frontier_overlay_version": "frontier-activity-tie-aware-v4",
+      "frontier_posterior_mode": "expected_activity",
+      "frontier_prior_alpha": 1.0,
+      "frontier_prior_beta": 1.0,
+      "frontier_require_n_eval_match": true,
+      "frontier_success_threshold": 0.0,
+      "gae_lambda": 0.98,
+      "lr": 0.0003,
+      "lr_anneal_steps": 0,
+      "lr_final": null,
+      "max_grad_norm": 0.5,
+      "min_fill_ratio": 0.5,
+      "mutation_criterion": "batch",
+      "mutation_fn": null,
+      "mutation_subsample_size": 0,
+      "n_eval": 8,
+      "n_mutations": 0,
+      "n_parallel": 4,
+      "n_rollout_steps": 256,
+      "n_students": 1,
+      "n_unroll_rollout": 10,
+      "render": false,
+      "replay_prob": 0.5,
+      "staleness_coef": 0.3,
+      "temp": 0.3,
+      "tie_aware_score_ranks": true,
+      "track_env_metrics": true,
+      "use_parallel_eval": false,
+      "use_robust_plr": true,
+      "use_score_ranks": true
+    },
+    "ued_env_args": {},
+    "verbose": false
+  },
+  "protocol_id": "ued-dev-frontier-vs-maxmc-4x8-b500-tie-aware-v2-draft",
+  "provenance": {
+    "base_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "base_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "overlay_contract_sha256": "3d5f3827a82a4f713314091289196a1c2909dd5d7c4c96dd532052c5706e832b",
+    "overlay_version": "frontier-activity-tie-aware-v4"
+  },
+  "purpose": "draft_engineering_development_only_no_endpoint_authorization_not_paper_evidence",
+  "production_driver_authorized": false,
+  "reference_only": {
+    "source_faithful_upstream_maxmc": {
+      "base_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+      "config_path": "ued_benchmark/configs/maze_maxmc_upstream_official_reference_32x1_b4000.json",
+      "config_sha256": "a5b8b87799bce31564959b3e8b55cfdaba658b31b8135fa35e3b96704d65185b",
+      "patched_overlay_forbidden": true,
+      "tie_aware_score_ranks": false
+    },
+    "v4_stable_rank_compatibility": {
+      "config_path": "ued_benchmark/configs/maze_maxmc_v4_stable_rank_compat_32x1_b4000.json",
+      "config_sha256": "99def895587a85e2ad060c356bf53041cf1fb6d1140304496451748cce207c92",
+      "not_source_faithful_reference": true,
+      "tie_aware_score_ranks": false
+    }
+  },
+  "run_package": {
+    "analyzer_eligible_endpoint_class": "matched_development",
+    "common_payloads": [
+      "checkpoint.pkl",
+      "command.txt",
+      "endpoint.json",
+      "evaluation-COMPLETE",
+      "evaluation-SHA256SUMS",
+      "evaluation-episodes.jsonl",
+      "evaluation-receipt.json",
+      "evaluation.csv",
+      "logs.csv",
+      "meta.json",
+      "run-context.json",
+      "run-manifest.json",
+      "scheduler.json",
+      "stderr.log",
+      "stdout.log",
+      "training-COMPLETE",
+      "training-plr-replay-snapshot.json",
+      "training-SHA256SUMS",
+      "training-receipt.json"
+    ],
+    "engineering_endpoint_class": "bounded_engineering_test",
+    "engineering_package_analyzer_eligible": false,
+    "frontier_additional_payloads": [],
+    "numeric_csv_parse_order": "all ten outer/source closures and all 300 raw episode records must validate first",
+    "schema": 2,
+    "source_closures": {
+      "evaluation": [
+        "evaluation-episodes.jsonl",
+        "evaluation.csv",
+        "evaluation-receipt.json",
+        "evaluation-SHA256SUMS",
+        "evaluation-COMPLETE"
+      ],
+      "training_frontier": [
+        "training-receipt.json",
+        "training-plr-replay-snapshot.json",
+        "training-SHA256SUMS",
+        "training-COMPLETE"
+      ],
+      "training_maxmc": [
+        "training-receipt.json",
+        "training-plr-replay-snapshot.json",
+        "training-SHA256SUMS",
+        "training-COMPLETE"
+      ]
+    }
+  },
+  "schema": 1,
+  "secondary_delivery_diagnostics": {
+    "current_schema_status": "DRAFT_V4_JOINT_SNAPSHOT_AVAILABLE_NOT_ENDPOINT_AUTHORIZED",
+    "do_not_derive_from": [
+      "aggregate logs.csv fields",
+      "unsafe analyzer-side checkpoint unpickling"
+    ],
+    "requested": [
+      "Spearman rank correlation between analytic expected-activity and mean-plugin scores",
+      "top-k overlap between analytic expected-activity and mean-plugin rankings",
+      "mean and replay-mass-weighted Jensen gap (mean-plugin minus analytic expected activity)",
+      "replay probability mass by posterior trial-count quartile"
+    ],
+    "sufficient_future_snapshot_fields": [
+      "filled replay-slot identity",
+      "posterior success count",
+      "posterior trial count",
+      "analytic expected-activity score",
+      "mean-plugin score",
+      "slot age",
+      "normalized replay probability"
+    ]
+  },
+  "training_budget": {
+    "buffer_size": 500,
+    "n_devices": 1,
+    "n_eval": 8,
+    "n_parallel": 4,
+    "n_rollout_steps": 256,
+    "pair_outer_cycles_must_match": true,
+    "pair_optimizer_step_applications_must_match": true,
+    "pair_training_transitions_must_match": true,
+    "ppo_epochs_per_student_update": 5,
+    "ppo_minibatches_per_epoch": 1,
+    "target_optimizer_step_applications": 150000,
+    "target_student_ppo_updates": 30000,
+    "terminal_checkpoint_required": true,
+    "training_transitions_per_outer_cycle": 8192,
+    "upstream_integrity_counters": {
+      "n_grad_updates": 30000,
+      "n_updates": 30000,
+      "semantic_note": "both upstream fields track student PPO updates in this pinned implementation; n_grad_updates is assigned n_updates+1 and does not count the five optimizer applications inside each PPO update"
+    }
+  },
+  "training_seeds": [
+    101,
+    102,
+    103,
+    104,
+    105
+  ]
+}

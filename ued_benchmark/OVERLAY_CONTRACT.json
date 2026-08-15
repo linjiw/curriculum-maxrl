@@ -1,0 +1,14 @@
+{
+  "overlay_version": "frontier-activity-v3",
+  "base_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+  "scoring_module_sha256": "63726251813bd9fafc2722409c4a2942c6ae2728327870797df47d01504738ca",
+  "posterior_default": "expected_activity",
+  "stream_observation": "one Bernoulli observation per evaluation stream per rollout",
+  "strict_group_policy": "reject and count cells where observed streams != n_eval",
+  "duplicate_policy": "accumulate repeated buffered levels; reject and count duplicate new groups",
+  "mixed_batch_policy": "process existing level identities before any new-level eviction",
+  "checkpoint_policy": "require saved PLR buffer and exact stored static PLR signature",
+  "xpid_policy": "all PLR runs encode overlay version and contract hash",
+  "grouped_recurrent_carry": "n_parallel times n_eval streams",
+  "device_scope": "n_devices=1"
+}

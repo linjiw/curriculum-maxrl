@@ -1,0 +1,15 @@
+{
+  "repository": "https://github.com/facebookresearch/minimax",
+  "commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+  "tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+  "license": "Apache-2.0",
+  "reference_environment": {
+    "python": "3.10",
+    "jax": "0.4.31",
+    "jaxlib": "0.4.31",
+    "flax": "0.8.5",
+    "chex": "0.1.86",
+    "optax": "0.2.3",
+    "numpy": "1.25.2"
+  }
+}
