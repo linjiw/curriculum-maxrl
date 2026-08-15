@@ -1,0 +1,243 @@
+{
+  "schema_version": 1,
+  "validated_at_utc": "2026-08-14T09:29:46Z",
+  "scope": "isolated_highest_precision_cpu_numerical_parity_pass_wrapper_gate_incomplete_gpu_not_attempted_no_evidence",
+  "decision": {
+    "cpu_numerical_parity": "GO",
+    "cpu_bounded_training_gate": "INCOMPLETE",
+    "rtx5090_bounded_training_gate": "HOLD",
+    "project_gate": "HOLD",
+    "paper_evidence": "NOT_AUTHORIZED",
+    "reason": "all recovered CPU numerical and checkpoint gates pass, but the single complete CPU candidate exhausted the frozen budget before the wrapper's final provenance-bearing receipt path completed"
+  },
+  "source": {
+    "external_parent_clone": "/data/robotixx/ued_bench/src/minimax-frontier-blackwell-training-jax062-5868d346-d053054",
+    "external_applied_clone": "/data/robotixx/ued_bench/src/minimax-frontier-blackwell-highest-lstm-v1-d053054",
+    "external_reproduction_clone": "/data/robotixx/ued_bench/src/minimax-frontier-blackwell-highest-lstm-repro-v2-d053054",
+    "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "effective_file_count": 14,
+    "changed_files": [
+      "src/minimax/models/common.py"
+    ],
+    "parent_common_sha256": "be8c733114e2f6c0e4ce02af96f94b58f667afd30a3597af66e5df2f5190fd0a",
+    "applied_common_sha256": "b6d56d8cb44a488704d93184b34dade26ed5953ba6ea8012990ea7daa9a9234c",
+    "applied_manifest_sha256": "10f276850036306d9838f44b3266626c8600b69b4a0dcf5757b2bd5468e4d050",
+    "fresh_clone_reproduction": "byte_exact_pass",
+    "remaining_jax_tree_map_occurrences": 0,
+    "canonical_frontier_overlay_modified": false,
+    "source_faithful_jax0431_lane_modified": false,
+    "hopper_files_modified": false
+  },
+  "patch": {
+    "overlay": "blackwell-highest-lstm-v1",
+    "implementation": "jax.default_matmul_precision('highest') around the nn.OptimizedLSTMCell call only",
+    "lstm_precision_context_count": 1,
+    "gru_inside_precision_context": false,
+    "parameter_scope_changed": false,
+    "parameter_initializer_changed": false,
+    "optimizer_changed": false,
+    "loss_changed": false,
+    "environment_or_curriculum_changed": false,
+    "patch_sha256": "a16f4394af0d89289314ab4a11ea43d3334ecba36a22e3c86ed11633d15fb9db",
+    "contract_sha256": "7d8744ff34d064bd324cdc3d92b972b8050f492ff580edc6e44870bbf4aa969e",
+    "applicator_sha256": "4fef0fdb4bee747b9794b06832db2ba87345e54e2d21fb1881536521104abd57"
+  },
+  "protocol": {
+    "path": "HIGHEST_PRECISION_ONE_UPDATE_PROTOCOL.json",
+    "sha256": "ba0b6fd30de472554d732308017cb8d3c28f7ddef0549631fc5fe907610ec4c3",
+    "frozen_before_candidate_execution": true,
+    "tolerances_unchanged_after_execution": true,
+    "schedule": {
+      "outer_cycles": 2,
+      "student_updates": 1,
+      "n_parallel": 4,
+      "n_eval": 8,
+      "frontier_n_rollouts": 8,
+      "rollout_steps": 2,
+      "total_transitions": 128,
+      "buffer_size": 8,
+      "replay_probability": 1.0,
+      "student_recurrent_arch": "lstm",
+      "student_recurrent_hidden_dim": 16
+    },
+    "cpu_tolerances": {
+      "stat_rtol": 0.000001,
+      "stat_atol": 0.000001,
+      "leaf_aggregate_rtol": 0.000001,
+      "leaf_aggregate_atol": 0.0000001
+    },
+    "gpu_tolerances": {
+      "stat_rtol": 0.0005,
+      "stat_atol": 0.00005,
+      "leaf_aggregate_rtol": 0.0005,
+      "leaf_aggregate_atol": 0.00005
+    }
+  },
+  "reference": {
+    "lane": "JAX 0.4.31 CPU",
+    "receipt": "/data/robotixx/ued_bench/runs/blackwell_training_probe_b7c865/reference-jax0431-cpu-protocol-v6/receipt.json",
+    "receipt_sha256": "1005e3c907c38061f23c46ef8b8b24016818603d4bf42bfd1555afe073b3c8e9",
+    "initial_checkpoint_sha256": "4dd07bf02eeb7ec072e4ec72b3aa02180c3ae84284ba20b27174f3dfa9886187"
+  },
+  "environment": {
+    "path": "/data/robotixx/ued_bench/envs/jax062-cuda129-probe",
+    "python": "3.10.12",
+    "jax": "0.6.2",
+    "jaxlib": "0.6.2",
+    "flax": "0.10.7",
+    "optax": "0.2.5",
+    "tensorflow_probability": "0.25.0",
+    "cpu_backend_asserted_after_preimport_platform_selection": true,
+    "jax_threefry_partitionable": false,
+    "pythonpath_cleared": true,
+    "xla_python_client_preallocate": false,
+    "tmpdir": "/data/robotixx/ued_bench/tmp",
+    "pip_cache_dir": "/data/robotixx/ued_bench/cache/pip"
+  },
+  "tests": {
+    "archived_upstream_minimax": {
+      "status": "pass",
+      "passed": 16,
+      "failed": 0,
+      "backend": "cpu"
+    },
+    "frontier_formula_and_buffer": {
+      "status": "pass",
+      "passed": 18,
+      "failed": 0,
+      "backend": "cpu",
+      "optimizer_updates": 0
+    },
+    "highest_precision_contract": {
+      "status": "pass",
+      "passed": 9,
+      "failed": 0,
+      "sha256": "f4bcb2cdf5ac88f352dddbb0283f2011d5f1c556fc9e4c4676b7bbd2fd8ef21b"
+    },
+    "patch_apply_check": "pass",
+    "fresh_clone_byte_reproduction": "pass",
+    "read_only_recovery_ast_no_step": "pass"
+  },
+  "execution_audit": {
+    "harness_preflight": {
+      "status": "failed_before_optimizer",
+      "ppo_updates": 0,
+      "record": "CPU_PREFLIGHT_FAILURE.json",
+      "record_sha256": "d7346fc6bf03d76c89142a4df181c0eed41f1aa510ae5f59d3df4df3e34871b4",
+      "output_directory": "/data/robotixx/ued_bench/runs/blackwell_highest_precision_ba0b6fd3/modern-jax062-cpu-v1",
+      "cause": "shared _assert_cycle helper added a required optimizer-step keyword"
+    },
+    "complete_cpu_candidate": {
+      "outer_cycles": 2,
+      "ppo_updates": 1,
+      "optimizer_step_applications": 1,
+      "raw_receipt_written": true,
+      "wrapper_completion": "failed_after_raw_receipt_write",
+      "cause": "wrapper referenced nonexistent base._atomic_json while rewriting the already-written raw receipt",
+      "runner_at_execution_sha256": "dd9d6a27a6f99125ea0aac38d96cb00792bfa9163fbb9b3f91065b692045a0a0",
+      "future_writer_fixed_runner_sha256": "dec1c6339f20885ecbae77caecc4c2765e35bc93db217db688b889654191d005",
+      "additional_complete_cpu_runs": 0
+    },
+    "read_only_recovery": {
+      "additional_optimizer_updates": 0,
+      "post_resume_update_executed": false,
+      "missing_cycle_two_scalar_keys": [],
+      "missing_wrapper_only_fields": [
+        "helper_api_compatibility.optimizer_step_observations",
+        "preserved_gpu_process",
+        "execution_budget",
+        "wrapper parity summary"
+      ],
+      "receipt_sha256": "824a45896ce919b39cda5d9cf36d50d31ed5a63e92158821571fb70472e44cef"
+    }
+  },
+  "cpu_result": {
+    "run_directory": "/data/robotixx/ued_bench/runs/blackwell_highest_precision_ba0b6fd3/modern-jax062-cpu-shim-v1",
+    "raw_receipt_sha256": "98cba2e35bb79ef9037b6286c3605177b2b188a44ab7bb5dff5da75f50edfdf7",
+    "raw_receipt_wall_seconds": 9.56130889384076,
+    "aggregate_report_sha256": "a168816ee639a25f5ede95d5e17fb9516b4cbb720a934ba448b113f26915ce85",
+    "read_only_recovery_sha256": "824a45896ce919b39cda5d9cf36d50d31ed5a63e92158821571fb70472e44cef",
+    "numerical_parity": {
+      "status": "pass",
+      "failures": 0,
+      "aggregate_gates": 546,
+      "initial_aggregate_gates": 273,
+      "final_aggregate_gates": 273,
+      "statistic_gates": 24,
+      "exact_invariant_gates": 949,
+      "nonfinite_sentinel_gates": 728,
+      "initial_exact_leaf_hashes": 91,
+      "initial_leaf_count": 91,
+      "final_exact_leaf_hashes_informational": 24,
+      "final_leaf_count": 91,
+      "maximum_aggregate_absolute_error": 0.000000059604644775390625,
+      "maximum_aggregate_absolute_error_path": "final.['plr_buffer'].scores.max_abs",
+      "maximum_aggregate_relative_error": 0.2668467358191151,
+      "maximum_aggregate_relative_error_path": "final.['params']['params']['fc_pi_1']['bias'].abs_sum",
+      "maximum_statistic_absolute_error": 0.0000007104790711309761,
+      "maximum_statistic_absolute_error_path": "cycle_2.stats.actor_loss",
+      "all_within_frozen_cpu_tolerances": true
+    },
+    "final_counters": {
+      "n_iters": 2,
+      "n_updates": 1,
+      "n_grad_updates": 1,
+      "optimizer_step_applications": 1,
+      "buffer_filled_count": 4,
+      "frontier_total_trials": 64,
+      "frontier_total_successes": 0,
+      "frontier_incomplete_group_count": 0,
+      "frontier_duplicate_new_group_count": 0
+    },
+    "checkpoint": {
+      "initial_sha256": "6e095ca4637d3894717434dde1832dfabf486a3aeb915a87847f985649f98e08",
+      "final_sha256": "d21e282ea7f2e0fa6721a090f9ab570bf6f53b59a76dcf8cf0d5676c595d5151",
+      "structure_sha256": "ca621b70160c4dd21c94f6cfecc2278dc508a24983ab2c19833c6f39aa1918f0",
+      "serialized_leaf_count": 117,
+      "resumed_train_leaf_count": 91,
+      "exact_pickle_round_trip": true,
+      "exact_fresh_runner_resume": true,
+      "post_resume_update_executed": false
+    }
+  },
+  "auditor_correction": {
+    "invalid_report_sha256": "0978c224e830d8a4a00415fa021cf119e8dde8b3ace780d809e5bd9046dfd8f3",
+    "invalid_auditor_sha256": "11f53130a495935efa98c79da495c4a7312e16ee8ffaaf466e96e6c5f4fd48cf",
+    "error": "treated informational final leaf byte-hash differences as required failures",
+    "correction": "final leaf byte hashes remain informational; initial leaf hashes remain exact-required; all initial/final aggregate tolerances are unchanged",
+    "corrected_auditor_sha256": "b4bb2359f280f990b7b617d7f84976d87c818d43374a1dd400b2a517591ae6f0",
+    "corrected_report_sha256": "a168816ee639a25f5ede95d5e17fb9516b4cbb720a934ba448b113f26915ce85"
+  },
+  "gpu": {
+    "attempted": false,
+    "updates": 0,
+    "gate": "HOLD",
+    "reason": "complete CPU wrapper gate is INCOMPLETE under the exhausted frozen budget",
+    "preserved_process_pid": 2786996,
+    "preserved_process_observed_after_recovery": true,
+    "preserved_process_memory_mib": 7350,
+    "hardware": "NVIDIA GeForce RTX 5090",
+    "uuid": "GPU-dce6b621-b804-a309-7896-a7467ccebf05",
+    "driver": "590.48.01",
+    "memory_total_mib": 32607
+  },
+  "scripts": {
+    "base_parity_runner_sha256": "078ac8deb7dc79b2c3fa8ede65a7b818afae7a70f01221f1204ec170339358f2",
+    "cycle_api_shim_sha256": "f9b0cad2ca1a9bc1df5ded6925bd3bd7166e2efe33684d400244a2852ab16186",
+    "shared_grouped_runner_sha256": "b34ac79ef05330e7209e9309f9d112bb9da9b60025566eb4e29d16b9bf8d9597",
+    "fixed_future_wrapper_sha256": "dec1c6339f20885ecbae77caecc4c2765e35bc93db217db688b889654191d005",
+    "aggregate_auditor_sha256": "b4bb2359f280f990b7b617d7f84976d87c818d43374a1dd400b2a517591ae6f0",
+    "read_only_recovery_sha256": "9a221ab6af4007342a2bfd7e028229ecfa93b7cbd6a7ae5ff2a45cc46d0562b5",
+    "static_test_sha256": "c58f186d6443b0864fd21416d4593965a6db88ee9861975c446b79496429d405"
+  },
+  "forbidden_endpoints": {
+    "ood_evaluation": false,
+    "multiple_seeds": false,
+    "throughput": false,
+    "benchmark": false,
+    "performance_claim": false,
+    "paper_evidence": false,
+    "long_training": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "complete_fail_closed",
+  "payload_sha256": "845a34ae40fb762e72b4c6ec569ef16ab6531b241eeaf6cecbc0523059f3bc78",
+  "protocol_sha256": "024239a6b659097198a6d902b1bb63698849d38e340ac033fa21537b0e5888ce",
+  "earliest_failing_stage": "lstm_input_affine",
+  "classification": "lstm_input_gemm",
+  "earliest_tensor": {
+    "path": "['f']",
+    "time_index": 0,
+    "first_failure_index": [0, 0, 2],
+    "max_absolute_error": 0.00017858296632766724
+  },
+  "inference": "default_precision_lstm_input_gemm_backend_arithmetic_dominates_feature_perturbation",
+  "execution": {
+    "gpu_forward_only_captures": 1,
+    "training_steps": 0,
+    "gradients": 0,
+    "optimizer_proposals": 0,
+    "optimizer_applications": 0,
+    "paper_evidence": false
+  },
+  "next": {
+    "action": "freeze a highest-precision LSTM-dot forward-only protocol",
+    "must_not": "rerun this GPU capture, train, update, relax tolerance, or claim evidence"
+  }
+}

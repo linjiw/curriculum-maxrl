@@ -1,0 +1,7 @@
+iteration	hypothesis	test	result	decision
+1	task or PRNG divergence	exact task/RNG/level comparison	31/31 records byte-exact	ruled out
+2	action sampling divergence	exact rollout action comparison	actions byte-exact	ruled out
+3	forward/GEMM divergence	recurrent carry comparison	max error 0.00012597441673278809; gate failed	retained as earliest cause
+4	loss reduction divergence	normalized advantage and scalar loss comparison	elements fail at 0.0014483332633972168; scalar terms pass	downstream contributor
+5	gradient clipping divergence	global norm, factor, clipped-tree comparison	both factors 1.0; stage passes	ruled out
+6	Adam implementation divergence	analytic first-step proposal from captured clipped gradients	GPU match within 8.185452315956354e-12; active-clipping contract passes	ruled out; Adam amplifies upstream drift

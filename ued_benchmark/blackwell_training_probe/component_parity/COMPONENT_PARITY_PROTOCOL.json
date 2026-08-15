@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-08-14T04:06:04-04:00",
+  "purpose": "non-updating CPU versus RTX 5090 Frontier PPO component-parity diagnosis",
+  "paper_evidence": false,
+  "performance_endpoint": false,
+  "parent_parity_protocol_sha256": "bcd1ba38435b43312e8f4559fad4efdae96169a9a806cb41d551dc76bb8420aa",
+  "source": {
+    "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "frontier_contract_sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000",
+    "frontier_applied_manifest_sha256": "d929efa2f059a93125e217ec4713ae81670c769d979c67abd2b10efc64268af3",
+    "modernization_contract_sha256": "b7c865e007634c5a20e2b942ff98f24d6ac9ff624d5b17b62e5e9fa2124e5c00",
+    "modernization_applied_manifest_sha256": "ea5fb73c0072cd95829630344e559f02a83f65b0f8b479845ef4dff8921ff65c"
+  },
+  "frozen_input": {
+    "kind": "JAX 0.4.31 initial runner checkpoint before cycle one",
+    "path": "/data/robotixx/ued_bench/runs/blackwell_training_probe_b7c865/reference-jax0431-cpu-protocol-v6/initial-checkpoint.pkl",
+    "sha256": "4dd07bf02eeb7ec072e4ec72b3aa02180c3ae84284ba20b27174f3dfa9886187",
+    "seed": 1,
+    "require_exact_loaded_train_state": true
+  },
+  "schedule": {
+    "outer_cycle_one": "complete warmup and insertion with robust-PLR fake update",
+    "outer_cycle_two": "replay rollout and component calculation only; stop before optimizer application",
+    "n_parallel": 4,
+    "n_eval": 8,
+    "frontier_n_rollouts": 8,
+    "rollout_steps": 2,
+    "buffer_size": 8,
+    "minimum_fill_ratio": 0.5,
+    "replay_probability": 1.0,
+    "ppo_epochs": 1,
+    "ppo_minibatches": 1,
+    "student_recurrent_arch": "lstm",
+    "student_recurrent_hidden_dim": 16,
+    "max_grad_norm": 0.5,
+    "learning_rate": 0.0003,
+    "adam_eps": 0.00001
+  },
+  "execution_limits": {
+    "optimizer_applications": 0,
+    "parameter_mutations": 0,
+    "cycle_two_agent_update_calls": 0,
+    "cycle_two_experiment_step_calls": 0,
+    "gpu_component_captures": 1,
+    "gpu_ppo_updates": 0,
+    "ood_evaluations": 0,
+    "seeds": 1,
+    "throughput_measurements": 0,
+    "permit_gradient_transformation_update_for_proposal_only": true,
+    "permit_optax_apply_updates": false,
+    "permit_train_state_apply_gradients": false
+  },
+  "runtime_requirements": {
+    "pythonpath_unset": true,
+    "jax_threefry_partitionable": false,
+    "xla_python_client_preallocate": false,
+    "cpu": {
+      "jax_platforms": "cpu",
+      "jax_platform_name": "cpu",
+      "device_count": 1
+    },
+    "gpu": {
+      "jax_platforms": "cuda",
+      "jax_platform_name": "gpu",
+      "device_count": 1,
+      "device_kind": "NVIDIA GeForce RTX 5090",
+      "preserve_process_pid": 2786996
+    }
+  },
+  "ordered_stages": [
+    {
+      "name": "initial_state",
+      "classification_on_first_failure": "input_or_checkpoint",
+      "comparison": "exact"
+    },
+    {
+      "name": "cycle_one_control",
+      "classification_on_first_failure": "warmup_control_or_environment",
+      "comparison": "exact_discrete_and_numeric_tolerance"
+    },
+    {
+      "name": "task_stream",
+      "classification_on_first_failure": "task_stream",
+      "comparison": "exact"
+    },
+    {
+      "name": "rollout_observation_stream",
+      "classification_on_first_failure": "environment_or_task_stream",
+      "comparison": "exact_discrete_and_numeric_tolerance"
+    },
+    {
+      "name": "rollout_action_stream",
+      "classification_on_first_failure": "sampling",
+      "comparison": "exact"
+    },
+    {
+      "name": "rollout_forward_stream",
+      "classification_on_first_failure": "forward_or_gemm",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "rollout_return_batch",
+      "classification_on_first_failure": "gae_or_return_reduction",
+      "comparison": "exact_discrete_and_numeric_tolerance"
+    },
+    {
+      "name": "minibatch_stream",
+      "classification_on_first_failure": "ppo_sampling",
+      "comparison": "exact_discrete_and_numeric_tolerance"
+    },
+    {
+      "name": "ppo_forward",
+      "classification_on_first_failure": "forward_or_gemm",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "ppo_loss_elements",
+      "classification_on_first_failure": "loss_element_arithmetic",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "ppo_loss_terms",
+      "classification_on_first_failure": "reduction_or_loss",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "unclipped_gradients",
+      "classification_on_first_failure": "gradient",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "clipping_and_global_norm",
+      "classification_on_first_failure": "clipping_or_global_norm",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "adam_proposal",
+      "classification_on_first_failure": "adam_proposal",
+      "comparison": "numeric_tolerance"
+    }
+  ],
+  "comparison": {
+    "exact_dtypes": [
+      "bool",
+      "uint8",
+      "uint16",
+      "uint32",
+      "uint64",
+      "int8",
+      "int16",
+      "int32",
+      "int64"
+    ],
+    "require_exact_shapes": true,
+    "require_exact_dtypes": true,
+    "require_exact_nonfinite_sentinels": true,
+    "require_leafwise_elementwise_and_aggregate_checks": true,
+    "cpu": {
+      "rtol": 0.000001,
+      "atol": 0.0000001
+    },
+    "gpu": {
+      "rtol": 0.0005,
+      "atol": 0.00005
+    },
+    "tolerance_policy": "identical to or stricter than the frozen parent leaf-aggregate gates; never relax after capture"
+  },
+  "required_stage_payloads": {
+    "initial_state": ["train_state", "runner_rng"],
+    "cycle_one_control": ["runner_state", "frontier_counters"],
+    "task_stream": ["rng_keys", "levels", "level_idxs", "is_replay"],
+    "rollout_observation_stream": ["observations", "rewards", "dones"],
+    "rollout_action_stream": ["actions"],
+    "rollout_forward_stream": ["old_log_probabilities", "old_values"],
+    "rollout_return_batch": ["targets", "advantages", "carry"],
+    "minibatch_stream": ["permutation", "minibatch"],
+    "ppo_forward": ["value", "log_probability", "entropy", "carry"],
+    "ppo_loss_elements": ["ratio", "normalized_advantage", "actor_terms", "value_terms", "entropy"],
+    "ppo_loss_terms": ["total", "actor", "value", "entropy", "means"],
+    "unclipped_gradients": ["gradient_tree", "per_leaf_norms"],
+    "clipping_and_global_norm": ["global_norm", "clip_factor", "clipped_gradient_tree"],
+    "adam_proposal": ["parameter_update_tree", "proposed_optimizer_state"]
+  },
+  "stop_rule": "capture all declared non-mutating stages once, compare in declared order, report earliest failing stage, and keep the GPU training gate closed on any failure"
+}

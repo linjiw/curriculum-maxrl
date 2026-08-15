@@ -1,0 +1,19 @@
+# Existing Blackwell-capable base. Do not reinstall these without the matching
+# jax CUDA extra/wheel source used to create the isolated probe environment.
+jax==0.6.2
+jaxlib==0.6.2
+jax-cuda12-pjrt==0.6.2
+jax-cuda12-plugin==0.6.2
+numpy==2.2.6
+scipy==1.15.3
+ml_dtypes==0.6.0
+
+# Direct minimax import dependencies selected for the JAX 0.6.2 lane.
+chex==0.1.89
+flax==0.10.7
+optax==0.2.5
+tensorflow-probability==0.25.0
+pandas==2.3.0
+wandb==0.20.1
+GitPython==3.1.44
+tqdm==4.67.1

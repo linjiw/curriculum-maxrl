@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "scope": "engineering_probe_no_training_no_evidence",
+  "source": {
+    "external_clone": "/data/robotixx/ued_bench/src/minimax-frontier-blackwell-jax062-5868d346-d053054",
+    "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "overlay_contract_sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000",
+    "overlay_manifest_sha256": "d929efa2f059a93125e217ec4713ae81670c769d979c67abd2b10efc64268af3",
+    "overlay_pending_changes_after_modernization": 0
+  },
+  "modernization_patch": {
+    "patch": "minimax-jax062.patch",
+    "patch_sha256": "8d41711e7babf9b7d7e6f8242fc05d23e26a39bf3950c3f26a534f2f4e0d2528",
+    "touched_file": "src/minimax/envs/environment.py",
+    "base_file_sha256": "9c6f5f8929e66c82c1e7741bc9987977a6aaf2c464bd935728d82606a575bda8",
+    "patched_file_sha256": "e402f0475f056554fd82f4058a3711ac141ac1fc30d315bc9e957ee8e5263e4a",
+    "removed_api": "jax.tree_map",
+    "replacement_api": "jax.tree_util.tree_map",
+    "replacements": 2,
+    "remaining_removed_api_occurrences_outside_amaze_path": 33
+  },
+  "environment": {
+    "path": "/data/robotixx/ued_bench/envs/jax062-cuda129-probe",
+    "python": "3.10.12",
+    "jax": "0.6.2",
+    "jaxlib": "0.6.2",
+    "jax_cuda12_pjrt": "0.6.2",
+    "jax_cuda12_plugin": "0.6.2",
+    "numpy": "2.2.6",
+    "cuda_runtime_wheel": "12.9.79",
+    "cuda_nvcc_wheel": "12.9.86",
+    "cudnn_wheel": "9.24.0.43",
+    "freeze": "environment.freeze.txt",
+    "freeze_sha256": "0a9ae6498457aafd71cde1c70f817bdad9c84517b25ad4b639e08e8538e61ec9",
+    "direct_requirements": "requirements.direct.txt",
+    "direct_requirements_sha256": "f4395cddd2de32d5accc27357bd3cb3df56fdf2f929251057ac90b2a5362661f",
+    "pip_check": "pass"
+  },
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "gpu_uuid": "GPU-dce6b621-b804-a309-7896-a7467ccebf05",
+    "driver": "590.48.01",
+    "memory_total_mib": 32607,
+    "preexisting_process_pid": 2786996,
+    "preexisting_process_preserved": true,
+    "xla_python_client_preallocate": false
+  },
+  "dependency_contract": {
+    "upstream_numpy_constraint": "numpy>=1.25,<1.26",
+    "jax_0_6_2_numpy_constraint": "numpy>=1.26",
+    "resolution": "separate modern lane with numpy==2.2.6 and pandas==2.3.0",
+    "source_faithful_lane_unchanged": true
+  },
+  "probe_script": {
+    "path": "run_amaze_jit_probe.py",
+    "sha256": "aad71bc9ee93f04c73d3ddc8fd50f4565319b9e377991ee1f478a0e32c8ef3ee"
+  },
+  "runtime_probe": {
+    "status": "pass",
+    "validated_at": "2026-08-14T03:06:42-04:00",
+    "operation": "one AMaze reset JIT and one AMaze step JIT",
+    "training_updates": 0,
+    "benchmark_episodes": 0,
+    "result": {
+      "action": 0,
+      "backend": "gpu",
+      "device": "cuda:0",
+      "device_kind": "NVIDIA GeForce RTX 5090",
+      "done": false,
+      "obs_image_shape": [5, 5, 3],
+      "next_obs_image_shape": [5, 5, 3],
+      "reset_compile_execute_seconds": 1.05064,
+      "reward": 0.0,
+      "state_time": 1,
+      "step_compile_execute_seconds": 1.344891
+    }
+  },
+  "claims": {
+    "minimax_import_validated": true,
+    "amaze_gpu_jit_validated": true,
+    "training_validated": false,
+    "frontier_training_validated": false,
+    "benchmark_evidence": false
+  }
+}

@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "validated_at": "2026-08-14T04:31:22-04:00",
+  "scope": "non_updating_jax062_cpu_vs_rtx5090_component_parity_no_evidence",
+  "protocol": {
+    "path": "COMPONENT_PARITY_PROTOCOL.json",
+    "sha256": "0f8c083202a189ec234f32c0e1c15e7c09753892fb05af0d6262b9ff0bf9f1a5",
+    "frozen_before_gpu_capture": true,
+    "parent_parity_protocol_sha256": "bcd1ba38435b43312e8f4559fad4efdae96169a9a806cb41d551dc76bb8420aa",
+    "cpu_tolerance": {
+      "rtol": 0.000001,
+      "atol": 0.0000001
+    },
+    "gpu_tolerance": {
+      "rtol": 0.0005,
+      "atol": 0.00005
+    },
+    "tolerance_relaxed": false
+  },
+  "scripts": {
+    "capture": "capture_component_parity.py",
+    "capture_sha256": "733633074972f97524640df65c69c9230156c72c24760659dea1171b20b34022",
+    "compare": "compare_component_parity.py",
+    "compare_sha256": "366f990435577e683ddcfd0f15d18ad73879bf55c01700dfc0c133e37652da9f",
+    "test": "test_component_parity_contract.py",
+    "test_sha256": "9177d6272d389f432857615ad0fbe62e98559aefb1896026f2ba4df4d0228af9"
+  },
+  "source": {
+    "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "frontier_contract_sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000",
+    "frontier_applied_manifest_sha256": "d929efa2f059a93125e217ec4713ae81670c769d979c67abd2b10efc64268af3",
+    "modernization_contract_sha256": "b7c865e007634c5a20e2b942ff98f24d6ac9ff624d5b17b62e5e9fa2124e5c00",
+    "modernization_applied_manifest_sha256": "ea5fb73c0072cd95829630344e559f02a83f65b0f8b479845ef4dff8921ff65c",
+    "canonical_overlay_modified": false,
+    "hopper_files_modified": false
+  },
+  "frozen_input": {
+    "path": "/data/robotixx/ued_bench/runs/blackwell_training_probe_b7c865/reference-jax0431-cpu-protocol-v6/initial-checkpoint.pkl",
+    "sha256": "4dd07bf02eeb7ec072e4ec72b3aa02180c3ae84284ba20b27174f3dfa9886187",
+    "seed": 1,
+    "source_era_threefry_partitionable": false
+  },
+  "run_root": "/data/robotixx/ued_bench/runs/blackwell_component_parity_0f8c0832",
+  "captures": {
+    "jax0431_cpu": {
+      "path": "reference-jax0431-cpu-v1/capture.json",
+      "sha256": "2604739ab7fa32115cca11fd9c469b3a5747bc7353c081993eafdfaa5500dcc0",
+      "record_count": 467,
+      "optimizer_applications": 0,
+      "parameter_mutations": 0
+    },
+    "jax062_cpu": {
+      "path": "modern-jax062-cpu-v1/capture.json",
+      "sha256": "9aefe688d1630f97799220455fdbae32205874e0b8a0971860d3d9bca0ec6382",
+      "record_count": 467,
+      "optimizer_applications": 0,
+      "parameter_mutations": 0
+    },
+    "jax062_rtx5090": {
+      "path": "modern-jax062-rtx5090-v1/capture.json",
+      "sha256": "757d5a52d1af8856e4bf7280a90dde0b6966bfc8dc10423d6a8ca0c95351a651",
+      "record_count": 467,
+      "optimizer_applications": 0,
+      "parameter_mutations": 0,
+      "cycle_two_experiment_steps": 0,
+      "cycle_two_agent_updates": 0,
+      "gradient_transformation_proposals": 1,
+      "parameter_input_sha256": "2343e57072e914aff88c55a31faea54fe2a5b4eba21c5a459a66545720b9d954",
+      "parameter_output_sha256": "2343e57072e914aff88c55a31faea54fe2a5b4eba21c5a459a66545720b9d954"
+    }
+  },
+  "comparisons": {
+    "modern_cpu_selfcheck": {
+      "path": "modern-cpu-selfcheck-v3.json",
+      "sha256": "3975c81c9c83dd611c5ffdeb9dcbb71a262d679e621bffb4c46aa5b26133e8fe",
+      "status": "pass",
+      "earliest_failing_stage": null
+    },
+    "historical_jax0431_vs_modern_cpu": {
+      "path": "cross-version-cpu-comparison-v3.json",
+      "sha256": "62c8e4e59428139ea26f041414b1e7618a7963f4d2993ff0c34dde32d75b1396",
+      "status": "fail_closed_under_stricter_component_gate",
+      "earliest_failing_stage": "ppo_loss_elements",
+      "classification": "loss_element_arithmetic",
+      "role": "ancillary; does not replace the passed parent one-update CPU gate"
+    },
+    "modern_cpu_vs_rtx5090": {
+      "path": "cpu-vs-rtx5090-comparison-v3.json",
+      "sha256": "09b4745799e689e62c0b68db900947fdd55a2ab72cb80747721b6067e48ae2d5",
+      "status": "fail_closed",
+      "earliest_failing_stage": "cycle_one_control",
+      "classification": "forward_or_gemm_recurrent_carry",
+      "stages": {
+        "initial_state": "pass",
+        "cycle_one_control": "fail",
+        "task_stream": "pass",
+        "rollout_observation_stream": "pass",
+        "rollout_action_stream": "pass",
+        "rollout_forward_stream": "pass",
+        "rollout_return_batch": "pass",
+        "minibatch_stream": "pass",
+        "ppo_forward": "fail",
+        "ppo_loss_elements": "fail",
+        "ppo_loss_terms": "pass",
+        "unclipped_gradients": "pass",
+        "clipping_and_global_norm": "pass",
+        "adam_proposal": "fail"
+      }
+    }
+  },
+  "diagnosis": {
+    "initial_exact_records": 92,
+    "initial_record_count": 92,
+    "task_stream_exact": true,
+    "task_stream_exact_records": 31,
+    "action_stream_exact": true,
+    "observation_reward_done_stream_exact": true,
+    "minibatch_permutation_exact": true,
+    "earliest_failure": {
+      "component": "recurrent LSTM carry",
+      "capture_stage": "cycle_one_control",
+      "record_label": "environment_state",
+      "record_path": "[3][0]",
+      "shape": [1, 32, 16],
+      "element_failure_count": 9,
+      "max_absolute_error": 0.00012597441673278809,
+      "classification": "forward_or_gemm_recurrent_carry"
+    },
+    "ppo_forward": {
+      "failing_component": "carry[0]",
+      "element_failure_count_per_duplicate_view": 34,
+      "max_absolute_error": 0.00012597441673278809
+    },
+    "loss_elements": {
+      "failing_components": [
+        "normalized_advantage",
+        "actor_term_one",
+        "actor_term_two",
+        "actor_minimum"
+      ],
+      "max_absolute_error": 0.0014483332633972168
+    },
+    "scalar_loss_terms_pass": true,
+    "scalar_loss_max_absolute_error": 0.00001695007085800171,
+    "unclipped_gradient_stage_pass": true,
+    "unclipped_gradient_max_element_absolute_error": 0.00005101785063743591,
+    "clipping_stage_pass": true,
+    "cpu_global_norm": 0.1379455178976059,
+    "gpu_global_norm": 0.13796302676200867,
+    "cpu_clip_factor": 1.0,
+    "gpu_clip_factor": 1.0,
+    "adam_analytic_input": "captured_clipped_gradient_tree",
+    "captured_clipping_checks_pass": true,
+    "adam_formula_matches_proposals": true,
+    "adam_formula_max_gpu_error": 8.185452315956354e-12,
+    "mechanism": "upstream recurrent/loss numerical drift creates a small near-zero policy-hidden gradient difference that first-step Adam amplifies",
+    "fc_pi_1_bias": {
+      "cpu_gradient_abs_sum": 1.3168447027256391e-09,
+      "gpu_gradient_abs_sum": 0.000007101176407786625,
+      "cpu_clipped_gradient_abs_sum": 1.3168447027256391e-09,
+      "gpu_clipped_gradient_abs_sum": 0.000007101176407786625,
+      "cpu_proposed_update_abs_sum": 3.9505010374085714e-08,
+      "gpu_proposed_update_abs_sum": 0.00020396194759086939,
+      "proposed_update_abs_sum_difference": 0.0002039224425804953,
+      "difference_amplification": 28.722038903530006
+    },
+    "fc_pi_1_kernel": {
+      "cpu_gradient_abs_sum": 2.019016935410345e-09,
+      "gpu_gradient_abs_sum": 0.0000167244681428258,
+      "cpu_clipped_gradient_abs_sum": 2.019016935410345e-09,
+      "gpu_clipped_gradient_abs_sum": 0.0000167244681428258,
+      "cpu_proposed_update_abs_sum": 6.057043392196371e-08,
+      "gpu_proposed_update_abs_sum": 0.0004969743312557284,
+      "proposed_update_abs_sum_difference": 0.0004969137608218065,
+      "difference_amplification": 29.71536986484019
+    },
+    "adam_implementation_mismatch": false,
+    "sampling_mismatch": false,
+    "clipping_mismatch": false
+  },
+  "execution": {
+    "optimizer_applications": 0,
+    "parameter_mutations": 0,
+    "gpu_component_captures": 1,
+    "gpu_ppo_updates": 0,
+    "additional_gpu_updates_after_prior_iteration": 0,
+    "ood_evaluations": 0,
+    "seed_count": 1,
+    "throughput_measurements": 0,
+    "performance_endpoints": 0,
+    "paper_evidence_endpoints": 0
+  },
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "gpu_uuid": "GPU-dce6b621-b804-a309-7896-a7467ccebf05",
+    "driver": "590.48.01",
+    "memory_total_mib": 32607,
+    "preexisting_process_pid": 2786996,
+    "preexisting_process_preserved": true,
+    "preexisting_process_memory_mib_after": 7350,
+    "xla_python_client_preallocate": false
+  },
+  "tests": {
+    "static_contract": {
+      "status": "pass",
+      "passed": 8,
+      "failed": 0
+    },
+    "active_clipping_adam_binding": "pass",
+    "modern_cpu_comparator_selfcheck": "pass",
+    "capture_array_file_hash_validation": "pass",
+    "parameter_digest_continuity": "pass"
+  },
+  "claims": {
+    "earliest_divergence_identified": true,
+    "task_or_action_sampling_mismatch": false,
+    "forward_or_gemm_recurrent_carry_divergence": true,
+    "gradient_clipping_mismatch": false,
+    "adam_arithmetic_mismatch": false,
+    "adam_amplifies_upstream_drift": true,
+    "gpu_training_gate_open": false,
+    "optimizer_update_executed": false,
+    "performance_evaluated": false,
+    "benchmark_evidence": false,
+    "paper_evidence": false
+  },
+  "go_hold": {
+    "frozen_non_updating_component_protocol": "GO_COMPLETE",
+    "modern_cpu_capture_and_selfcheck": "GO_COMPLETE",
+    "read_only_cpu_vs_rtx5090_diagnosis": "GO_COMPLETE_FAIL_CLOSED",
+    "separately_frozen_forward_only_lstm_diagnostic": "GO_NEXT",
+    "rtx5090_training_or_second_ppo_update": "HOLD",
+    "ood_multiseed_throughput_or_performance": "HOLD",
+    "benchmark_or_paper_evidence": "HOLD"
+  },
+  "next_action": "freeze a forward-only convolution and OptimizedLSTMCell gate-preactivation diagnostic; do not apply an optimizer or rerun this capture"
+}

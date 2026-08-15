@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "precision_closure_pass_training_gate_closed",
+  "protocol_sha256": "0abdb46a7b56986756a31f3d4cc1793af20fc6ca53d2b397720386aab7f5b820",
+  "payload_sha256": "845a34ae40fb762e72b4c6ec569ef16ab6531b241eeaf6cecbc0523059f3bc78",
+  "default": {
+    "input_affine_status": "fail",
+    "final_carry_status": "fail",
+    "final_carry_max_absolute_error": 0.00012597441673278809
+  },
+  "highest": {
+    "input_affine_status": "pass",
+    "final_carry_status": "pass",
+    "final_carry_max_absolute_error": 0.000000059604644775390625,
+    "all_required_stages_pass": true
+  },
+  "execution": {
+    "gpu_forward_only_captures": 1,
+    "training_steps": 0,
+    "gradients": 0,
+    "optimizer_proposals": 0,
+    "optimizer_applications": 0,
+    "paper_evidence": false
+  },
+  "decision": {
+    "future_training_gate_may_be_reconsidered": true,
+    "training_gate_open": false,
+    "next": "design and CPU-test a targeted highest-precision LSTM-dot source overlay"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "status": "complete",
+  "manifest": "../../../manifest.json",
+  "next_gate": "Create a separate content-addressed full-training modernization overlay, replace the remaining 33 removed API calls, and establish CPU/JAX-0.4.31 parity before any local 5090 training.",
+  "training_authorized_by_this_probe": false,
+  "benchmark_evidence": false
+}

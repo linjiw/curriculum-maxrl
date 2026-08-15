@@ -1,0 +1,4 @@
+iteration	change	metric	result	decision
+1	replace all 35 jax.tree_map calls	archived upstream tests	16/16 pass	keep
+2	require source-era Threefry mode	JAX 0.6.2 CPU one-update parity	pass; max aggregate abs error 5.960464477539063e-08	keep
+3	run sole bounded RTX 5090 update	GPU one-update parity	fail; fc_pi_1 bias abs_sum error 0.00020395550519458627	reject GPU gate

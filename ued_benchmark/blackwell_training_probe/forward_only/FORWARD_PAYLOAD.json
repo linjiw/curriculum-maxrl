@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-08-14T04:39:00-04:00",
+  "purpose": "exact JAX 0.6.2 CPU payload for non-updating Frontier recurrent-forward localization",
+  "source_capture": {
+    "path": "/data/robotixx/ued_bench/runs/blackwell_component_parity_0f8c0832/modern-jax062-cpu-v1/capture.json",
+    "sha256": "9aefe688d1630f97799220455fdbae32205874e0b8a0971860d3d9bca0ec6382",
+    "protocol_sha256": "0f8c083202a189ec234f32c0e1c15e7c09753892fb05af0d6262b9ff0bf9f1a5",
+    "capture_script_sha256": "733633074972f97524640df65c69c9230156c72c24760659dea1171b20b34022",
+    "lane": "modern",
+    "backend": "cpu"
+  },
+  "initial_checkpoint": {
+    "path": "/data/robotixx/ued_bench/runs/blackwell_training_probe_b7c865/reference-jax0431-cpu-protocol-v6/initial-checkpoint.pkl",
+    "sha256": "4dd07bf02eeb7ec072e4ec72b3aa02180c3ae84284ba20b27174f3dfa9886187"
+  },
+  "record_selectors": {
+    "population_parameters": {
+      "indices": [51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73],
+      "stage": "initial_state",
+      "label": "train_state",
+      "path_prefix": "['params']['params']",
+      "population_index": 0
+    },
+    "runner_rng": {
+      "index": 0,
+      "stage": "initial_state",
+      "label": "runner_rng",
+      "path": ""
+    },
+    "loss_rng": {
+      "index": 283,
+      "stage": "minibatch_stream",
+      "label": "rng_keys",
+      "path": "['loss']"
+    },
+    "image": {
+      "index": 288,
+      "stage": "minibatch_stream",
+      "label": "minibatch",
+      "path": ".obs['image']"
+    },
+    "agent_dir": {
+      "index": 289,
+      "stage": "minibatch_stream",
+      "label": "minibatch",
+      "path": ".obs['agent_dir']"
+    },
+    "dones": {
+      "index": 292,
+      "stage": "minibatch_stream",
+      "label": "minibatch",
+      "path": ".dones"
+    },
+    "carry_c": {
+      "index": 297,
+      "stage": "minibatch_stream",
+      "label": "minibatch",
+      "path": ".carry[0]",
+      "time_index": 0
+    },
+    "carry_h": {
+      "index": 298,
+      "stage": "minibatch_stream",
+      "label": "minibatch",
+      "path": ".carry[1]",
+      "time_index": 0
+    },
+    "expected_carry_c": {
+      "index": 299,
+      "stage": "ppo_forward",
+      "label": "model",
+      "path": "['carry'][0]"
+    },
+    "expected_carry_h": {
+      "index": 300,
+      "stage": "ppo_forward",
+      "label": "model",
+      "path": "['carry'][1]"
+    },
+    "expected_logits": {
+      "index": 301,
+      "stage": "ppo_forward",
+      "label": "model",
+      "path": "['logits']"
+    },
+    "expected_value": {
+      "index": 302,
+      "stage": "ppo_forward",
+      "label": "model",
+      "path": "['value']"
+    }
+  },
+  "derived_exact_inputs": {
+    "initial_carry": "carry_c[0], carry_h[0]",
+    "reset": "reset[0]=false; reset[1:]=dones[:-1]",
+    "rng_policy": "runner_rng and loss_rng are hash-bound provenance inputs; deterministic forward consumes no RNG",
+    "parameter_policy": "strip only the singleton population axis from the 23 frozen parameter leaves"
+  },
+  "model": {
+    "class": "minimax.models.maze.gridworld_models.GridWorldACStudentModel",
+    "output_dim": 7,
+    "n_hidden_layers": 1,
+    "hidden_dim": 16,
+    "n_conv_filters": 4,
+    "conv_kernel_size": 3,
+    "n_scalar_embeddings": 4,
+    "scalar_embed_dim": 5,
+    "recurrent_arch": "lstm",
+    "recurrent_hidden_dim": 16,
+    "base_activation": "relu",
+    "head_activation": "tanh"
+  },
+  "shape_contract": {
+    "image": [2, 32, 5, 5, 3],
+    "agent_dir": [2, 32],
+    "dones": [2, 32],
+    "initial_carry_leaf": [32, 16],
+    "conv_preactivation": [2, 32, 3, 3, 4],
+    "visual_flat": [2, 32, 36],
+    "scalar_embedding": [2, 32, 5],
+    "concatenated_features": [2, 32, 41],
+    "gate_tensor": [2, 32, 16]
+  },
+  "paper_evidence": false,
+  "performance_endpoint": false
+}

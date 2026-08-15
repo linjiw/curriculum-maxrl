@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-08-14T09:22:41Z",
+  "purpose": "audit record for the non-consuming zero-optimizer CPU harness preflight failure",
+  "paper_evidence": false,
+  "status": "failed_before_optimizer",
+  "backend": "cpu",
+  "output_directory": "/data/robotixx/ued_bench/runs/blackwell_highest_precision_ba0b6fd3/modern-jax062-cpu-v1",
+  "error": "_assert_cycle() missing 1 required keyword-only argument: 'expected_optimizer_step_applications'",
+  "cause": "the frozen parent parity runner retained the legacy helper call while the shared grouped-runner helper gained a required optimizer-step argument",
+  "observed_files": {
+    "initial-checkpoint.pkl": {
+      "size_bytes": 137817,
+      "sha256": "6e095ca4637d3894717434dde1832dfabf486a3aeb915a87847f985649f98e08"
+    },
+    "checkpoint.pkl": null,
+    "receipt.json": null,
+    "aggregate-comparison.json": null
+  },
+  "execution": {
+    "reset_completed": true,
+    "initial_checkpoint_saved": true,
+    "cycle_one_rollout_completed_before_assertion_call": true,
+    "cycle_two_started": false,
+    "ppo_updates": 0,
+    "optimizer_step_applications": 0,
+    "gpu_attempted": false,
+    "performance_endpoint": false,
+    "ood_evaluation": false,
+    "multiseed": false
+  },
+  "hashes": {
+    "protocol_sha256": "ba0b6fd30de472554d732308017cb8d3c28f7ddef0549631fc5fe907610ec4c3",
+    "frozen_parent_runner_sha256": "078ac8deb7dc79b2c3fa8ede65a7b818afae7a70f01221f1204ec170339358f2",
+    "shared_grouped_runner_sha256": "b34ac79ef05330e7209e9309f9d112bb9da9b60025566eb4e29d16b9bf8d9597",
+    "runner_at_failure_sha256": "afb82824ec0ef70b3c98bcf1cec20bcbb3a3e838888540bd488753a1bfd6a730"
+  },
+  "authorization": {
+    "treat_as_non_consuming": true,
+    "reason": "parent coordinator explicitly authorized the zero-optimizer harness/API preflight failure as non-consuming",
+    "permitted_next_action": "one isolated-shim complete CPU one-update candidate; GPU remains contingent on complete CPU parity"
+  }
+}

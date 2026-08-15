@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "overlay": "blackwell-highest-lstm-v1",
+  "purpose": "checkpoint-structure-preserving RTX 5090 compatibility patch for the two Flax OptimizedLSTMCell dots",
+  "paper_evidence": false,
+  "parent": {
+    "overlay": "blackwell-training-jax062-v1",
+    "modernization_contract_sha256": "b7c865e007634c5a20e2b942ff98f24d6ac9ff624d5b17b62e5e9fa2124e5c00",
+    "modernization_applied_manifest_sha256": "ea5fb73c0072cd95829630344e559f02a83f65b0f8b479845ef4dff8921ff65c",
+    "frontier_contract_sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000",
+    "frontier_applied_manifest_sha256": "d929efa2f059a93125e217ec4713ae81670c769d979c67abd2b10efc64268af3"
+  },
+  "source": {
+    "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "base_clone": "/data/robotixx/ued_bench/src/minimax-frontier-blackwell-training-jax062-5868d346-d053054",
+    "isolated_applied_clone": "/data/robotixx/ued_bench/src/minimax-frontier-blackwell-highest-lstm-v1-d053054"
+  },
+  "patch": {
+    "path": "minimax-highest-lstm.patch",
+    "sha256": "a16f4394af0d89289314ab4a11ea43d3334ecba36a22e3c86ed11633d15fb9db",
+    "files_changed": 1,
+    "semantic_change": "enter jax.default_matmul_precision('highest') only while calling nn.OptimizedLSTMCell; keep the GRU call outside that context",
+    "exact_equivalence": "Flax 0.10.7 OptimizedLSTMCell contains exactly two jnp.dot operations inside this call: concatenated hidden and input affine transforms"
+  },
+  "files": {
+    "src/minimax/models/common.py": {
+      "source_sha256": "be8c733114e2f6c0e4ce02af96f94b58f667afd30a3597af66e5df2f5190fd0a",
+      "applied_sha256": "b6d56d8cb44a488704d93184b34dade26ed5953ba6ea8012990ea7daa9a9234c",
+      "source_lstm_context_count": 0,
+      "applied_lstm_context_count": 1,
+      "required_context": "with jax.default_matmul_precision('highest'):",
+      "required_cell": "rnn_cell = nn.OptimizedLSTMCell(**rnn_kwargs)",
+      "required_gru": "rnn_cell = nn.GRUCell(**rnn_kwargs)"
+    }
+  },
+  "invariants": {
+    "parameter_scope_name": "OptimizedLSTMCell_0",
+    "parameter_leaf_count": 23,
+    "train_state_leaf_count": 91,
+    "checkpoint_structure_must_match_reference": true,
+    "no_parameter_or_initializer_change": true,
+    "no_environment_or_curriculum_change": true,
+    "no_optimizer_or_loss_change": true,
+    "no_gru_precision_change": true,
+    "all_non_declared_files_must_match_parent_modernization_manifest": true,
+    "canonical_overlay_modified": false,
+    "hopper_files_modified": false
+  },
+  "diagnostic_basis": {
+    "precision_protocol_sha256": "0abdb46a7b56986756a31f3d4cc1793af20fc6ca53d2b397720386aab7f5b820",
+    "precision_comparison_sha256": "e1f6034d2ed66492dd2f0df45d93515eea1852d94ff747763e4f10abf8f86f6f",
+    "highest_final_carry_max_absolute_error": 0.000000059604644775390625,
+    "default_final_carry_max_absolute_error": 0.00012597441673278809
+  }
+}

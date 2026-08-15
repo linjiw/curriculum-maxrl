@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "complete_fail_closed",
+  "protocol_sha256": "0f8c083202a189ec234f32c0e1c15e7c09753892fb05af0d6262b9ff0bf9f1a5",
+  "earliest_failing_stage": "cycle_one_control",
+  "classification": "forward_or_gemm_recurrent_carry",
+  "ruled_out": [
+    "checkpoint input",
+    "task selection",
+    "action sampling",
+    "minibatch permutation",
+    "gradient clipping",
+    "first-step Adam arithmetic"
+  ],
+  "mechanism": "upstream numerical drift in recurrent/loss computation is amplified by Adam on near-zero policy-hidden gradients",
+  "execution": {
+    "optimizer_applications": 0,
+    "parameter_mutations": 0,
+    "gpu_component_captures": 1,
+    "gpu_ppo_updates": 0,
+    "paper_evidence": false
+  },
+  "next": {
+    "action": "freeze a forward-only LSTM gate-preactivation diagnostic",
+    "must_not": "apply an optimizer, rerun this GPU capture, relax tolerance, or claim evidence"
+  }
+}

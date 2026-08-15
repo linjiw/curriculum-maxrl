@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "complete_fail_closed",
+  "metric": {
+    "cpu_one_update_parity": "pass",
+    "gpu_one_update_parity": "fail",
+    "gpu_updates_executed": 1,
+    "additional_gpu_updates_allowed_in_this_iteration": 0
+  },
+  "scope": {
+    "paper_evidence": false,
+    "ood_evaluation": false,
+    "multiple_seeds": false,
+    "long_training": false
+  },
+  "next": {
+    "action": "non-updating CPU/GPU component parity diagnosis",
+    "focus": "fc_pi_1 bias path through rollout, loss, raw gradient, clipping, and optimizer input",
+    "must_not": "run another optimizer update or loosen the frozen tolerance"
+  }
+}

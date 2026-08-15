@@ -1,0 +1,16 @@
+--- a/src/minimax/models/common.py
++++ b/src/minimax/models/common.py
+@@ -177,10 +177,12 @@ class ScannedRNN(nn.Module):
+ 		)
+ 		if self.recurrent_arch == 'lstm':
+ 			rnn_cell = nn.OptimizedLSTMCell(**rnn_kwargs) # defaults to orth init
++			with jax.default_matmul_precision('highest'):
++				new_rnn_state, y = rnn_cell(rnn_state, x)
+ 		elif self.recurrent_arch == 'gru':
+ 			rnn_cell = nn.GRUCell(**rnn_kwargs)
++			new_rnn_state, y = rnn_cell(rnn_state, x)
+ 		else:
+ 			raise ValueError(f'Unsupported recurrent_arch={self.recurrent_arch}')
+ 
+-		new_rnn_state, y = rnn_cell(rnn_state, x)
+ 		return new_rnn_state, y

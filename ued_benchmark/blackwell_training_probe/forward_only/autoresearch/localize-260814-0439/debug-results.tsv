@@ -1,0 +1,6 @@
+iteration	hypothesis	test	result	decision
+1	payload or checkpoint drift	exact 31-record input comparison	31/31 byte-exact	ruled out
+2	convolution or feature divergence	conv/preactivation/ReLU/flatten/embedding comparison	all stages pass; feature max error 5.960464477539063e-08	ruled out as earliest cause
+3	LSTM input affine divergence	four concatenated input-dot gate slices	all fail at time zero; stage max error 0.0001825392246246338	retained as earliest cause
+4	feature drift alone explains affine error	float64 propagation of captured feature delta	predicted max 4.7408848495404665e-08; observed max 0.0001825392246246338	ruled out; backend GEMM arithmetic dominates
+5	state update is earliest divergence	gate/cell/hidden operation ordering	failures occur after input affine	downstream only

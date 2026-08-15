@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "purpose": "engineering-only JAX 0.4.31 versus JAX 0.6.2 grouped Frontier parity gate",
+  "paper_evidence": false,
+  "source_era_prng": {
+    "jax_threefry_partitionable": false,
+    "require_exact_initial_leaf_bytes": true
+  },
+  "exact_invariants": [
+    "two outer cycles",
+    "one PPO update",
+    "four parallel levels",
+    "eight evaluation streams per level",
+    "Frontier N equals eight",
+    "zero incomplete groups",
+    "zero duplicate new groups",
+    "32 posterior trials after warmup",
+    "64 posterior trials after replay",
+    "checkpoint pytree structure",
+    "checkpoint leaf counts",
+    "pickle round-trip",
+    "fresh-runner resume round-trip",
+    "non-finite sentinel counts"
+  ],
+  "schedule": {
+    "n_parallel": 4,
+    "n_eval": 8,
+    "frontier_n_rollouts": 8,
+    "rollout_steps": 2,
+    "outer_cycles": 2,
+    "student_updates": 1,
+    "total_transitions": 128,
+    "buffer_size": 8,
+    "replay_probability": 1.0,
+    "student_recurrent_arch": "lstm",
+    "student_recurrent_hidden_dim": 16
+  },
+  "tolerances": {
+    "cpu": {
+      "stat_rtol": 0.000001,
+      "stat_atol": 0.000001,
+      "leaf_aggregate_rtol": 0.000001,
+      "leaf_aggregate_atol": 0.0000001
+    },
+    "gpu": {
+      "stat_rtol": 0.0005,
+      "stat_atol": 0.00005,
+      "leaf_aggregate_rtol": 0.0005,
+      "leaf_aggregate_atol": 0.00005
+    }
+  },
+  "rationale": "CPU statistic absolute tolerance is approximately eight float32 epsilons; leaf aggregates retain a sub-epsilon-to-one-epsilon floor. GPU tolerances are frozen before the first PPO update and account for reduction-order differences."
+}

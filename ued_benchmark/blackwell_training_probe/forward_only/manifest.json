@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "validated_at": "2026-08-14T04:47:27-04:00",
+  "scope": "frozen_non_updating_jax062_cpu_vs_rtx5090_forward_only_lstm_localization_no_evidence",
+  "payload": {
+    "path": "FORWARD_PAYLOAD.json",
+    "sha256": "845a34ae40fb762e72b4c6ec569ef16ab6531b241eeaf6cecbc0523059f3bc78",
+    "frozen_before_gpu_capture": true,
+    "source_cpu_capture_sha256": "9aefe688d1630f97799220455fdbae32205874e0b8a0971860d3d9bca0ec6382",
+    "initial_checkpoint_sha256": "4dd07bf02eeb7ec072e4ec72b3aa02180c3ae84284ba20b27174f3dfa9886187",
+    "parameter_sha256": "2343e57072e914aff88c55a31faea54fe2a5b4eba21c5a459a66545720b9d954",
+    "parameter_leaves": 23,
+    "rng_keys_hash_bound": ["runner_rng", "loss_rng"],
+    "rng_consumed": false
+  },
+  "protocol": {
+    "path": "FORWARD_ONLY_PROTOCOL.json",
+    "sha256": "024239a6b659097198a6d902b1bb63698849d38e340ac033fa21537b0e5888ce",
+    "frozen_before_gpu_capture": true,
+    "parent_component_protocol_sha256": "0f8c083202a189ec234f32c0e1c15e7c09753892fb05af0d6262b9ff0bf9f1a5",
+    "cpu_tolerance": {"rtol": 0.000001, "atol": 0.0000001},
+    "gpu_tolerance": {"rtol": 0.0005, "atol": 0.00005},
+    "tolerance_relaxed": false
+  },
+  "scripts": {
+    "capture": "capture_forward_only.py",
+    "capture_sha256": "437e65d445b42d78430c7f84f2e2c4dfe8e2d31ad0973acf031f8831ae40d5a4",
+    "compare": "compare_forward_only.py",
+    "compare_sha256": "872aefe58ca12a8710ea92a4750d80e940e84f22fb69e5567e8c269369c1c042",
+    "test": "test_forward_only_contract.py",
+    "test_sha256": "cdbf9cad56914a46e5478a3e505f7e41e52f0bdf3123e1c828601262981f9bde"
+  },
+  "source": {
+    "external_modern_clone": "/data/robotixx/ued_bench/src/minimax-frontier-blackwell-training-jax062-5868d346-d053054",
+    "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "frontier_contract_sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000",
+    "modernization_contract_sha256": "b7c865e007634c5a20e2b942ff98f24d6ac9ff624d5b17b62e5e9fa2124e5c00",
+    "modernization_applied_manifest_sha256": "ea5fb73c0072cd95829630344e559f02a83f65b0f8b479845ef4dff8921ff65c",
+    "canonical_overlay_modified": false,
+    "hopper_files_modified": false
+  },
+  "environment": {
+    "path": "/data/robotixx/ued_bench/envs/jax062-cuda129-probe",
+    "python": "3.10.12",
+    "jax": "0.6.2",
+    "jaxlib": "0.6.2",
+    "flax": "0.10.7",
+    "pythonpath_cleared": true,
+    "jax_threefry_partitionable": false,
+    "xla_python_client_preallocate": false,
+    "tmpdir": "/data/robotixx/ued_bench/tmp",
+    "pip_cache_dir": "/data/robotixx/ued_bench/cache/pip"
+  },
+  "run_root": "/data/robotixx/ued_bench/runs/blackwell_forward_only_024239a6",
+  "captures": {
+    "jax062_cpu": {
+      "path": "modern-jax062-cpu-v1/capture.json",
+      "sha256": "ef1313d15f1fa1587d878d500732b1a59f5e07a3e280a939266d8a485229445c",
+      "status": "captured_forward_only_without_training",
+      "record_count": 65,
+      "canonical_matches_frozen_cpu_capture": true,
+      "manual_carry_matches_canonical": true
+    },
+    "jax062_rtx5090": {
+      "path": "modern-jax062-rtx5090-v1/capture.json",
+      "sha256": "39d2a4eba7773568f88dbc93d735ce9924fc9bb8ee5f22efbca277e2a6261b25",
+      "status": "captured_forward_only_without_training",
+      "record_count": 65,
+      "preserved_process_present_before": true,
+      "preserved_process_present_after": true
+    }
+  },
+  "comparisons": {
+    "modern_cpu_selfcheck": {
+      "path": "modern-cpu-selfcheck-v3.json",
+      "sha256": "ef80527da7211c7d7eec2e37a15a1e111ba3f988294796df323084d61d321c65",
+      "status": "pass_diagnostic_only",
+      "earliest_failing_stage": null
+    },
+    "modern_cpu_vs_rtx5090": {
+      "path": "cpu-vs-rtx5090-comparison-v3.json",
+      "sha256": "1716d6ccbecaa57bf7babb4028e48bc4a8914efd6546afd847158e735d1e2927",
+      "status": "fail_closed",
+      "earliest_failing_stage": "lstm_input_affine",
+      "classification": "lstm_input_gemm",
+      "stages": {
+        "input_payload": "pass_exact",
+        "convolution_preactivation": "pass",
+        "convolution_activation": "pass",
+        "visual_flatten": "pass",
+        "scalar_embedding": "pass_exact",
+        "concatenated_features": "pass",
+        "reset_selected_carry": "pass",
+        "lstm_input_affine": "fail",
+        "lstm_hidden_affine": "fail_downstream",
+        "lstm_gate_preactivation": "fail_downstream",
+        "lstm_gate_activation": "fail_downstream",
+        "lstm_cell_terms": "fail_downstream",
+        "lstm_cell_state": "fail_downstream",
+        "lstm_hidden_state": "fail_downstream",
+        "manual_final_carry": "fail_downstream",
+        "canonical_model_output": "fail_downstream"
+      }
+    }
+  },
+  "localization": {
+    "earliest_operation": "jnp.dot(step_features, concatenated_input_kernel)",
+    "stage": "lstm_input_affine",
+    "classification": "lstm_input_gemm",
+    "earliest_tensor": "forget-gate input-affine slice",
+    "record_label": "concatenated_input_dot",
+    "record_path": "['f']",
+    "shape": [2, 32, 16],
+    "time_index": 0,
+    "first_failure_index": [0, 0, 2],
+    "element_failure_count": 195,
+    "first_tensor_max_absolute_error": 0.00017858296632766724,
+    "input_affine_stage_max_absolute_error": 0.0001825392246246338,
+    "all_four_input_gate_affines_fail": true,
+    "upstream": {
+      "payload_byte_exact": true,
+      "convolution_preactivation_max_absolute_error": 0.00000008940696716308594,
+      "convolution_activation_max_absolute_error": 0.000000059604644775390625,
+      "scalar_embedding_byte_exact": true,
+      "concatenated_feature_max_absolute_error": 0.000000059604644775390625,
+      "all_upstream_stages_pass": true
+    },
+    "downstream": {
+      "cell_state_max_absolute_error": 0.00012597441673278809,
+      "canonical_carry_cell_state_element_failures": 34,
+      "canonical_carry_cell_state_max_absolute_error": 0.00012597441673278809,
+      "reproduces_parent_component_carry_error": true
+    }
+  },
+  "read_only_gemm_counterfactual": {
+    "method": "propagate captured CPU/GPU feature delta through exact frozen kernels in float64 and subtract from observed affine delta",
+    "feature_max_absolute_error": 0.000000059604644775390625,
+    "all_gate_dominance_checks_pass": true,
+    "inference": "default_precision_lstm_input_gemm_backend_arithmetic_dominates_feature_perturbation",
+    "gates": {
+      "f": {
+        "propagated_feature_delta_max_abs": 0.000000040248916047258554,
+        "observed_affine_delta_max_abs": 0.00017858296632766724,
+        "observed_to_propagated_ratio": 4436.963373572167
+      },
+      "g": {
+        "propagated_feature_delta_max_abs": 0.00000004104773885030277,
+        "observed_affine_delta_max_abs": 0.0001812577247619629,
+        "observed_to_propagated_ratio": 4415.778550506587
+      },
+      "i": {
+        "propagated_feature_delta_max_abs": 0.00000003957427202605501,
+        "observed_affine_delta_max_abs": 0.00014314055442810059,
+        "observed_to_propagated_ratio": 3617.0104236878783
+      },
+      "o": {
+        "propagated_feature_delta_max_abs": 0.000000047408848495404665,
+        "observed_affine_delta_max_abs": 0.0001825392246246338,
+        "observed_to_propagated_ratio": 3850.319727599528
+      }
+    },
+    "semantic_mismatch_indicated": false,
+    "backend_arithmetic_mismatch_indicated": true
+  },
+  "execution": {
+    "training_steps": 0,
+    "experiment_step_calls": 0,
+    "agent_update_calls": 0,
+    "gradient_calculations": 0,
+    "gradient_transformation_proposals": 0,
+    "optimizer_applications": 0,
+    "parameter_mutations": 0,
+    "gpu_forward_only_captures": 1,
+    "gpu_ppo_updates": 0,
+    "ood_evaluations": 0,
+    "seed_count": 1,
+    "throughput_measurements": 0,
+    "performance_endpoints": 0,
+    "paper_evidence_endpoints": 0
+  },
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "gpu_uuid": "GPU-dce6b621-b804-a309-7896-a7467ccebf05",
+    "driver": "590.48.01",
+    "memory_total_mib": 32607,
+    "preexisting_process_pid": 2786996,
+    "preexisting_process_preserved": true,
+    "preexisting_process_memory_mib_after": 7350,
+    "gpu_compiler_warning": "XLA dot autotuning rejected the initial hint set and used the full hint set"
+  },
+  "tests": {
+    "static_contract": {"status": "pass", "passed": 10, "failed": 0},
+    "payload_file_hash_validation": "pass",
+    "cpu_canonical_reproduction": "pass",
+    "cpu_manual_carry_reproduction": "pass",
+    "modern_cpu_comparator_selfcheck": "pass",
+    "parameter_digest_continuity": "pass"
+  },
+  "claims": {
+    "earliest_failing_tensor_identified": true,
+    "convolution_or_embedding_is_earliest_failure": false,
+    "lstm_input_gemm_is_earliest_failure": true,
+    "state_update_is_earliest_failure": false,
+    "semantic_or_sampling_mismatch": false,
+    "backend_numeric_arithmetic_divergence": true,
+    "gpu_training_gate_open": false,
+    "training_executed": false,
+    "optimizer_proposal_executed": false,
+    "optimizer_update_executed": false,
+    "performance_evaluated": false,
+    "benchmark_evidence": false,
+    "paper_evidence": false
+  },
+  "go_hold": {
+    "frozen_forward_only_protocol": "GO_COMPLETE",
+    "cpu_reproduction_and_selfcheck": "GO_COMPLETE",
+    "single_rtx5090_forward_capture": "GO_COMPLETE_FAIL_CLOSED",
+    "separately_frozen_highest_precision_input_gemm_probe": "GO_NEXT_WITH_NEW_AUTHORIZATION",
+    "rtx5090_training_or_second_ppo_update": "HOLD",
+    "ood_multiseed_throughput_or_performance": "HOLD",
+    "benchmark_or_paper_evidence": "HOLD"
+  },
+  "next_action": "under a new frozen protocol, test highest-precision LSTM input and hidden dots against the same payload before considering any training"
+}

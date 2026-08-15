@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-08-14T05:02:00-04:00",
+  "purpose": "non-updating default-versus-highest-precision LSTM dot closure probe on the exact frozen Frontier payload",
+  "payload": {
+    "path": "../FORWARD_PAYLOAD.json",
+    "sha256": "845a34ae40fb762e72b4c6ec569ef16ab6531b241eeaf6cecbc0523059f3bc78"
+  },
+  "parent_forward_protocol_sha256": "024239a6b659097198a6d902b1bb63698849d38e340ac033fa21537b0e5888ce",
+  "parent_forward_capture_script_sha256": "437e65d445b42d78430c7f84f2e2c4dfe8e2d31ad0973acf031f8831ae40d5a4",
+  "precision_intervention": {
+    "default": "jnp.dot with precision=None",
+    "highest": "jnp.dot with precision=jax.lax.Precision.HIGHEST",
+    "scope": [
+      "OptimizedLSTMCell concatenated input dot",
+      "OptimizedLSTMCell concatenated hidden dot"
+    ],
+    "convolution_precision_changed": false,
+    "parameters_changed": false,
+    "inputs_changed": false
+  },
+  "execution_limits": {
+    "training_steps": 0,
+    "experiment_step_calls": 0,
+    "agent_update_calls": 0,
+    "gradient_calculations": 0,
+    "gradient_transformation_proposals": 0,
+    "optimizer_applications": 0,
+    "parameter_mutations": 0,
+    "gpu_forward_only_captures": 1,
+    "gpu_ppo_updates": 0,
+    "ood_evaluations": 0,
+    "seeds": 1,
+    "throughput_measurements": 0,
+    "performance_endpoints": 0,
+    "paper_evidence_endpoints": 0
+  },
+  "runtime_requirements": {
+    "pythonpath_unset": true,
+    "jax_threefry_partitionable": false,
+    "xla_python_client_preallocate": false,
+    "tmpdir": "/data/robotixx/ued_bench/tmp",
+    "pip_cache_dir": "/data/robotixx/ued_bench/cache/pip",
+    "cpu": {
+      "jax_platforms": "cpu",
+      "jax_platform_name": "cpu",
+      "device_count": 1
+    },
+    "gpu": {
+      "jax_platforms": "cuda",
+      "jax_platform_name": "gpu",
+      "device_count": 1,
+      "device_kind": "NVIDIA GeForce RTX 5090",
+      "preserve_process_pid": 2786996
+    }
+  },
+  "comparison": {
+    "cpu": {"rtol": 0.000001, "atol": 0.0000001},
+    "gpu": {"rtol": 0.0005, "atol": 0.00005},
+    "exact_dtypes": ["bool", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64"],
+    "require_exact_payload_bytes": true,
+    "require_exact_shapes": true,
+    "require_exact_dtypes": true,
+    "require_exact_nonfinite_sentinels": true,
+    "require_elementwise_and_aggregate_checks": true,
+    "tolerance_relaxed": false
+  },
+  "ordered_stages": [
+    {"name": "input_payload", "mode": "shared", "comparison": "exact"},
+    {"name": "shared_convolution_preactivation", "mode": "shared", "comparison": "numeric_tolerance"},
+    {"name": "shared_features", "mode": "shared", "comparison": "numeric_tolerance"},
+    {"name": "default_lstm_input_affine", "mode": "default", "comparison": "numeric_tolerance"},
+    {"name": "highest_lstm_input_affine", "mode": "highest", "comparison": "numeric_tolerance"},
+    {"name": "default_lstm_hidden_affine", "mode": "default", "comparison": "numeric_tolerance"},
+    {"name": "highest_lstm_hidden_affine", "mode": "highest", "comparison": "numeric_tolerance"},
+    {"name": "default_lstm_gate_preactivation", "mode": "default", "comparison": "numeric_tolerance"},
+    {"name": "highest_lstm_gate_preactivation", "mode": "highest", "comparison": "numeric_tolerance"},
+    {"name": "default_lstm_gate_activation", "mode": "default", "comparison": "numeric_tolerance"},
+    {"name": "highest_lstm_gate_activation", "mode": "highest", "comparison": "numeric_tolerance"},
+    {"name": "default_lstm_cell_state", "mode": "default", "comparison": "numeric_tolerance"},
+    {"name": "highest_lstm_cell_state", "mode": "highest", "comparison": "numeric_tolerance"},
+    {"name": "default_lstm_hidden_state", "mode": "default", "comparison": "numeric_tolerance"},
+    {"name": "highest_lstm_hidden_state", "mode": "highest", "comparison": "numeric_tolerance"},
+    {"name": "default_final_carry", "mode": "default", "comparison": "numeric_tolerance"},
+    {"name": "highest_final_carry", "mode": "highest", "comparison": "numeric_tolerance"},
+    {"name": "canonical_default_output", "mode": "canonical_default", "comparison": "numeric_tolerance"}
+  ],
+  "closure_gate": {
+    "required_highest_cross_backend_stages": [
+      "highest_lstm_input_affine",
+      "highest_lstm_hidden_affine",
+      "highest_lstm_gate_preactivation",
+      "highest_lstm_gate_activation",
+      "highest_lstm_cell_state",
+      "highest_lstm_hidden_state",
+      "highest_final_carry"
+    ],
+    "require_default_input_affine_failure_reproduced": true,
+    "require_default_canonical_carry_failure_reproduced": true,
+    "passing_effect": "permits consideration of a source-level precision patch and a separately authorized one-update parity gate only",
+    "training_gate_opened_by_this_protocol": false
+  },
+  "cpu_gates_before_gpu": {
+    "payload_hash_validation": true,
+    "static_contract_tests": true,
+    "capture_self_comparison": true,
+    "default_decomposition_matches_canonical": true,
+    "highest_and_default_cpu_outputs_match_within_cpu_tolerance": true
+  },
+  "stop_rule": "after one GPU forward-only capture, report default and highest cross-backend results separately; never train or open the training gate",
+  "paper_evidence": false,
+  "performance_endpoint": false
+}

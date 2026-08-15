@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "validated_at": "2026-08-14T03:54:17-04:00",
+  "scope": "engineering_cpu_one_update_compatible_gpu_parity_failed_no_evidence",
+  "source": {
+    "external_modern_clone": "/data/robotixx/ued_bench/src/minimax-frontier-blackwell-training-jax062-5868d346-d053054",
+    "reference_clone": "/data/robotixx/ued_bench/src/minimax-frontier-v3-final-5868d346-d053054",
+    "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "frontier_contract_sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000",
+    "frontier_applied_manifest_sha256": "d929efa2f059a93125e217ec4713ae81670c769d979c67abd2b10efc64268af3",
+    "source_faithful_lane_modified_by_probe": false,
+    "canonical_frontier_overlay_modified_by_probe": false,
+    "hopper_files_modified_by_probe": false
+  },
+  "modernization": {
+    "overlay": "blackwell-training-jax062-v1",
+    "contract": "MODERNIZATION_CONTRACT.json",
+    "contract_sha256": "b7c865e007634c5a20e2b942ff98f24d6ac9ff624d5b17b62e5e9fa2124e5c00",
+    "applied_manifest": ".blackwell_training_overlay.json",
+    "applied_manifest_sha256": "ea5fb73c0072cd95829630344e559f02a83f65b0f8b479845ef4dff8921ff65c",
+    "removed_api": "jax.tree_map",
+    "replacement_api": "jax.tree_util.tree_map",
+    "files": 10,
+    "replacements": 35,
+    "remaining_removed_api_occurrences": 0,
+    "fresh_clone_reproduction": "pass",
+    "external_clone_diff_check": "pass"
+  },
+  "environment": {
+    "modern_path": "/data/robotixx/ued_bench/envs/jax062-cuda129-probe",
+    "modern": {
+      "python": "3.10.12",
+      "jax": "0.6.2",
+      "jaxlib": "0.6.2",
+      "jax_cuda12_pjrt": "0.6.2",
+      "jax_cuda12_plugin": "0.6.2",
+      "flax": "0.10.7",
+      "optax": "0.2.5",
+      "tensorflow_probability": "0.25.0",
+      "numpy": "2.2.6"
+    },
+    "modern_freeze": "../blackwell_probe/environment.freeze.txt",
+    "modern_freeze_sha256": "0a9ae6498457aafd71cde1c70f817bdad9c84517b25ad4b639e08e8538e61ec9",
+    "reference_path": "/data/robotixx/ued_bench/envs/minimax-jax0431-cpu",
+    "reference": {
+      "python": "3.10.19",
+      "jax": "0.4.31",
+      "jaxlib": "0.4.31",
+      "flax": "0.8.5",
+      "optax": "0.2.3",
+      "tensorflow_probability": "0.23.0"
+    },
+    "pytest_target": "/data/robotixx/ued_bench/testdeps/pytest841",
+    "pytest": "8.4.1",
+    "pytest_target_freeze": "pytest-target.freeze.txt",
+    "pytest_target_freeze_sha256": "e6d33b99e70e0d24cfe68e40c51a46b2d6c7b29713d2882cada7946d5f78d5b7",
+    "tmpdir": "/data/robotixx/ued_bench/tmp",
+    "pip_cache_dir": "/data/robotixx/ued_bench/cache/pip",
+    "pythonpath_cleared": true,
+    "xla_python_client_preallocate": false
+  },
+  "protocol": {
+    "path": "PARITY_PROTOCOL.json",
+    "sha256": "bcd1ba38435b43312e8f4559fad4efdae96169a9a806cb41d551dc76bb8420aa",
+    "source_era_threefry_partitionable": false,
+    "backend_selection_before_jax_import": true,
+    "schedule": {
+      "outer_cycles": 2,
+      "student_updates": 1,
+      "n_parallel": 4,
+      "n_eval": 8,
+      "frontier_n_rollouts": 8,
+      "rollout_steps": 2,
+      "total_transitions": 128,
+      "buffer_size": 8,
+      "replay_probability": 1.0,
+      "student_recurrent_arch": "lstm",
+      "student_recurrent_hidden_dim": 16
+    },
+    "cpu_tolerances": {
+      "stat_rtol": 0.000001,
+      "stat_atol": 0.000001,
+      "leaf_aggregate_rtol": 0.000001,
+      "leaf_aggregate_atol": 0.0000001
+    },
+    "gpu_tolerances_frozen_before_update": {
+      "stat_rtol": 0.0005,
+      "stat_atol": 0.00005,
+      "leaf_aggregate_rtol": 0.0005,
+      "leaf_aggregate_atol": 0.00005
+    },
+    "ood_evaluation": false,
+    "paper_evidence": false
+  },
+  "tests": {
+    "archived_upstream": {
+      "status": "pass",
+      "passed": 16,
+      "failed": 0,
+      "backend": "cpu",
+      "backend_asserted": true
+    },
+    "frontier_project": {
+      "status": "pass",
+      "passed": 22,
+      "failed": 0,
+      "backend": "cpu",
+      "backend_asserted": true,
+      "warnings": [
+        "TensorFlow Probability uses deprecated jax.interpreters.xla.pytype_aval_mappings"
+      ]
+    }
+  },
+  "cpu_reference": {
+    "status": "pass",
+    "lane": "jax_0_4_31",
+    "run_directory": "/data/robotixx/ued_bench/runs/blackwell_training_probe_b7c865/reference-jax0431-cpu-protocol-v6",
+    "receipt_sha256": "1005e3c907c38061f23c46ef8b8b24016818603d4bf42bfd1555afe073b3c8e9",
+    "initial_checkpoint_sha256": "4dd07bf02eeb7ec072e4ec72b3aa02180c3ae84284ba20b27174f3dfa9886187",
+    "final_checkpoint_sha256": "d44949a6167a4e57381b4005422cafb4e281d40f815631811d477a754e63da34",
+    "wall_seconds": 19.318562956992537
+  },
+  "cpu_modern": {
+    "status": "pass",
+    "lane": "jax_0_6_2",
+    "run_directory": "/data/robotixx/ued_bench/runs/blackwell_training_probe_b7c865/modern-jax062-cpu-protocol-v6",
+    "receipt_sha256": "bb7e16e266c672d268707600598b56ec58f9ae761088d883b74eb81bf820b5c7",
+    "initial_checkpoint_sha256": "e5c595f239871f5972b204386f1320a66c0363b24d6d3b4321720eb2c88a8693",
+    "final_checkpoint_sha256": "a0e566a81ad6275b5b911fa5756b7678694d503bf85104a28b65291c9d9a8d87",
+    "wall_seconds": 10.08698513219133,
+    "parity": {
+      "status": "pass",
+      "initial_exact_leaf_hashes": 91,
+      "initial_leaf_count": 91,
+      "final_exact_leaf_hashes": 24,
+      "final_leaf_count": 91,
+      "max_final_aggregate_absolute_error": 5.960464477539063e-08
+    },
+    "final_counters": {
+      "n_iters": 2,
+      "n_updates": 1,
+      "n_grad_updates": 1,
+      "buffer_filled_count": 4,
+      "frontier_total_trials": 64,
+      "frontier_total_successes": 0,
+      "frontier_incomplete_group_count": 0,
+      "frontier_duplicate_new_group_count": 0
+    },
+    "checkpoint": {
+      "serialized_leaf_count": 117,
+      "resumed_train_leaf_count": 91,
+      "structure_sha256": "ca621b70160c4dd21c94f6cfecc2278dc508a24983ab2c19833c6f39aa1918f0",
+      "exact_pickle_round_trip": true,
+      "exact_fresh_runner_resume": true
+    }
+  },
+  "gpu_probe": {
+    "status": "failed_numerical_parity",
+    "gate_open": false,
+    "updates_executed": 1,
+    "additional_updates_after_failure": 0,
+    "run_directory": "/data/robotixx/ued_bench/runs/blackwell_training_probe_b7c865/modern-jax062-rtx5090-one-update-v1",
+    "original_process_receipt_present": false,
+    "initial_checkpoint_sha256": "6e095ca4637d3894717434dde1832dfabf486a3aeb915a87847f985649f98e08",
+    "final_checkpoint_sha256": "c1f9c7bf41b9062bf84e778c51d36fb955826cd5947f28f32af4409d9da8f7c8",
+    "read_only_recovery_receipt_sha256": "cad634ba29f3455a2cce5af383414f3ff937564487d51e9bb59b36652fd4d446",
+    "initial_byte_exact_leaves": 91,
+    "initial_leaf_count": 91,
+    "final_exact_leaf_hashes": 21,
+    "final_leaf_count": 91,
+    "checkpoint_structure_sha256": "ca621b70160c4dd21c94f6cfecc2278dc508a24983ab2c19833c6f39aa1918f0",
+    "final_counters": {
+      "n_iters": 2,
+      "n_updates": 1,
+      "n_grad_updates": 1,
+      "buffer_filled_count": 4,
+      "frontier_total_trials": 64,
+      "frontier_total_successes": 0,
+      "frontier_incomplete_group_count": 0,
+      "frontier_duplicate_new_group_count": 0
+    },
+    "parity": {
+      "failure_count": 1,
+      "path": "['params']['params']['fc_pi_1']['bias']",
+      "metric": "abs_sum",
+      "reference": 6.445124767218147e-09,
+      "candidate": 0.0002039619503193535,
+      "absolute_error": 0.00020395550519458627,
+      "relative_error_against_atol_floor": 4.0791101038917255,
+      "rtol": 0.0005,
+      "atol": 0.00005
+    },
+    "next_action": "non-updating rollout/loss/gradient/clip component parity diagnosis"
+  },
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "gpu_uuid": "GPU-dce6b621-b804-a309-7896-a7467ccebf05",
+    "driver": "590.48.01",
+    "memory_total_mib": 32607,
+    "preexisting_process_pid": 2786996,
+    "preexisting_process_preserved": true
+  },
+  "scripts": {
+    "applicator_sha256": "901e487b655c74a6b0a5ecc780fc15ccdf7167755aeb8cb8f4d3002b6a3989b9",
+    "parity_runner_sha256": "078ac8deb7dc79b2c3fa8ede65a7b818afae7a70f01221f1204ec170339358f2",
+    "upstream_test_runner_sha256": "276f41f2c64c98f7d73c71b533a19b0e19512bc801db4deded761a529fd5444f",
+    "recovery_sha256": "fbf6e19bc191c571a7c6f2bfa124157aca0c9271616c15cd20ebd0ff29b98a43",
+    "static_contract_test_sha256": "e9c2d0127195c5956af4a7b2771d510c3860e9e774d3feab9da2626120c755e1"
+  },
+  "claims": {
+    "all_removed_tree_map_calls_modernized": true,
+    "cpu_one_update_training_compatibility": true,
+    "cpu_checkpoint_resume_compatibility": true,
+    "gpu_one_update_executed": true,
+    "gpu_numerical_parity": false,
+    "gpu_training_lane_ready": false,
+    "long_training_validated": false,
+    "ood_evaluation_validated": false,
+    "multi_seed_validated": false,
+    "benchmark_evidence": false,
+    "paper_evidence": false
+  }
+}

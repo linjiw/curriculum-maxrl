@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "protocol": "blackwell-highest-lstm-one-update-v1",
+  "purpose": "engineering-only JAX 0.4.31 CPU reference versus JAX 0.6.2 highest-precision OptimizedLSTMCell compatibility gate",
+  "frozen_at_utc": "2026-08-14T09:12:04Z",
+  "paper_evidence": false,
+  "performance_endpoint": false,
+  "patch": {
+    "overlay": "blackwell-highest-lstm-v1",
+    "patch_sha256": "a16f4394af0d89289314ab4a11ea43d3334ecba36a22e3c86ed11633d15fb9db",
+    "contract_sha256": "7d8744ff34d064bd324cdc3d92b972b8050f492ff580edc6e44870bbf4aa969e",
+    "applicator_sha256": "4fef0fdb4bee747b9794b06832db2ba87345e54e2d21fb1881536521104abd57",
+    "applied_manifest_sha256": "10f276850036306d9838f44b3266626c8600b69b4a0dcf5757b2bd5468e4d050",
+    "changed_files": [
+      "src/minimax/models/common.py"
+    ],
+    "target_applied_sha256": "b6d56d8cb44a488704d93184b34dade26ed5953ba6ea8012990ea7daa9a9234c",
+    "semantic_scope": "jax.default_matmul_precision('highest') applies only to the nn.OptimizedLSTMCell call; GRU remains outside the context"
+  },
+  "parent_artifacts": {
+    "parity_protocol_sha256": "bcd1ba38435b43312e8f4559fad4efdae96169a9a806cb41d551dc76bb8420aa",
+    "parity_runner_sha256": "078ac8deb7dc79b2c3fa8ede65a7b818afae7a70f01221f1204ec170339358f2",
+    "frontier_manifest_sha256": "d929efa2f059a93125e217ec4713ae81670c769d979c67abd2b10efc64268af3",
+    "modernization_contract_sha256": "b7c865e007634c5a20e2b942ff98f24d6ac9ff624d5b17b62e5e9fa2124e5c00",
+    "modernization_manifest_sha256": "ea5fb73c0072cd95829630344e559f02a83f65b0f8b479845ef4dff8921ff65c"
+  },
+  "source": {
+    "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "isolated_clone": "/data/robotixx/ued_bench/src/minimax-frontier-blackwell-highest-lstm-v1-d053054"
+  },
+  "reference": {
+    "receipt": "/data/robotixx/ued_bench/runs/blackwell_training_probe_b7c865/reference-jax0431-cpu-protocol-v6/receipt.json",
+    "receipt_sha256": "1005e3c907c38061f23c46ef8b8b24016818603d4bf42bfd1555afe073b3c8e9",
+    "initial_checkpoint": "/data/robotixx/ued_bench/runs/blackwell_training_probe_b7c865/reference-jax0431-cpu-protocol-v6/initial-checkpoint.pkl",
+    "initial_checkpoint_sha256": "4dd07bf02eeb7ec072e4ec72b3aa02180c3ae84284ba20b27174f3dfa9886187",
+    "jax": "0.4.31",
+    "jaxlib": "0.4.31",
+    "backend": "cpu"
+  },
+  "candidate_environment": {
+    "python_environment": "/data/robotixx/ued_bench/envs/jax062-cuda129-probe",
+    "jax": "0.6.2",
+    "jaxlib": "0.6.2",
+    "cuda_wheel_family": "12.9",
+    "clear_pythonpath": true,
+    "xla_python_client_preallocate": false,
+    "tmpdir": "/data/robotixx/ued_bench/tmp",
+    "pip_cache_dir": "/data/robotixx/ued_bench/cache/pip"
+  },
+  "source_era_prng": {
+    "jax_threefry_partitionable": false,
+    "require_exact_initial_leaf_bytes": true
+  },
+  "exact_invariants": [
+    "two outer cycles",
+    "one PPO update",
+    "four parallel levels",
+    "eight evaluation streams per level",
+    "Frontier N equals eight",
+    "zero incomplete groups",
+    "zero duplicate new groups",
+    "32 posterior trials after warmup",
+    "64 posterior trials after replay",
+    "checkpoint pytree structure",
+    "91 train-state leaves",
+    "checkpoint leaf counts",
+    "pickle round-trip",
+    "fresh-runner resume round-trip",
+    "non-finite sentinel counts",
+    "initial train-state leaf bytes"
+  ],
+  "schedule": {
+    "n_parallel": 4,
+    "n_eval": 8,
+    "frontier_n_rollouts": 8,
+    "rollout_steps": 2,
+    "outer_cycles": 2,
+    "student_updates": 1,
+    "total_transitions": 128,
+    "buffer_size": 8,
+    "replay_probability": 1.0,
+    "student_recurrent_arch": "lstm",
+    "student_recurrent_hidden_dim": 16
+  },
+  "tolerances": {
+    "cpu": {
+      "stat_rtol": 0.000001,
+      "stat_atol": 0.000001,
+      "leaf_aggregate_rtol": 0.000001,
+      "leaf_aggregate_atol": 0.0000001
+    },
+    "gpu": {
+      "stat_rtol": 0.0005,
+      "stat_atol": 0.00005,
+      "leaf_aggregate_rtol": 0.0005,
+      "leaf_aggregate_atol": 0.00005
+    }
+  },
+  "execution_budget": {
+    "cpu_candidate_runs": 1,
+    "gpu_candidate_runs": 1,
+    "gpu_requires_cpu_gate_pass": true,
+    "maximum_gpu_ppo_updates": 1,
+    "preserve_process_pid": 2786996,
+    "forbidden": [
+      "OOD evaluation",
+      "multiple seeds",
+      "throughput measurement",
+      "benchmark endpoint",
+      "performance claim",
+      "paper evidence run"
+    ]
+  },
+  "decision": {
+    "cpu_gate": "all exact invariants, both cycle statistics, all 91 initial leaf hashes, and all 546 initial/final leaf aggregates pass the frozen CPU thresholds",
+    "gpu_gate": "CPU gate passes first, preserved PID survives, and all exact invariants, both cycle statistics, all 91 initial leaf hashes, and all 546 initial/final leaf aggregates pass the frozen GPU thresholds",
+    "fail_closed": true,
+    "no_tolerance_relaxation_after_execution": true
+  }
+}

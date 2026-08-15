@@ -1,0 +1,6 @@
+iteration	hypothesis	test	result	decision
+1	highest precision changes CPU semantics	CPU default/highest tensor comparison	all recurrent records byte-exact	ruled out on frozen CPU payload
+2	default branch no longer reproduces discrepancy	CPU/GPU default comparison	input affine and final carry fail at prior magnitudes	control reproduced
+3	highest precision closes input affine	CPU/GPU highest input-affine comparison	passes; max error 8.940696716308594e-08	closed
+4	highest precision closes recurrent carry	CPU/GPU highest final-carry comparison	passes; max error 5.960464477539063e-08	closed
+5	forward closure opens training gate	frozen closure contract	future gate may be reconsidered; current gate false	hold training; source patch tests next

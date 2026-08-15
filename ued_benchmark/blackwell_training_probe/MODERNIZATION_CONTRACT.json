@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "overlay": "blackwell-training-jax062-v1",
+  "purpose": "mechanical JAX 0.6 tree-map API compatibility for isolated engineering tests",
+  "paper_evidence": false,
+  "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+  "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+  "parent_overlay": "frontier-activity-v3",
+  "parent_overlay_contract_sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000",
+  "parent_applied_manifest_sha256": "d929efa2f059a93125e217ec4713ae81670c769d979c67abd2b10efc64268af3",
+  "removed_api": "jax.tree_map",
+  "replacement_api": "jax.tree_util.tree_map",
+  "total_replacements": 35,
+  "files": {
+    "src/minimax/agents/ppo.py": {
+      "replacements": 2,
+      "parent_sha256": "83fc4c90bd3de0e17d3a6298301ff140d0afff35eb269614544ce35853b7d348",
+      "applied_sha256": "ff9271a3df0563e0dc96d6a53183ba431837bf2b0049fba4d7f1a70ae1220d9d"
+    },
+    "src/minimax/envs/batch_env.py": {
+      "replacements": 1,
+      "parent_sha256": "9624d62c80bc1f3d383d38d7d8f628ce34e9a843e8c497157c3b24ce811cdfd8",
+      "applied_sha256": "db9797b715e6835ab9c55d91e6517bcb30c5d2a02a7908e91127508f136ffc19"
+    },
+    "src/minimax/envs/environment.py": {
+      "replacements": 2,
+      "parent_sha256": "9c6f5f8929e66c82c1e7741bc9987977a6aaf2c464bd935728d82606a575bda8",
+      "applied_sha256": "e402f0475f056554fd82f4058a3711ac141ac1fc30d315bc9e957ee8e5263e4a"
+    },
+    "src/minimax/envs/maze/maze_mutators.py": {
+      "replacements": 2,
+      "parent_sha256": "8c9dc75c1bcd5b081b7e7c829c5c7c289a3ebbe6fb7c6bce25e50af2ead98ce2",
+      "applied_sha256": "ae97e5b36f3b26fcfb1f1ad6d4aa0200f9a11e9731fb64363631455ff6d93963"
+    },
+    "src/minimax/models/common.py": {
+      "replacements": 1,
+      "parent_sha256": "e5b6cf0e8a76f1949107f23005a154846c1bc35ca0de8dc714807de6a71fbef0",
+      "applied_sha256": "be8c733114e2f6c0e4ce02af96f94b58f667afd30a3597af66e5df2f5190fd0a"
+    },
+    "src/minimax/runners/dr_runner.py": {
+      "replacements": 4,
+      "parent_sha256": "85a7e5ce85895b250a680ad6db04d9f0bf6265ac0bc98817235b4383aaa464ae",
+      "applied_sha256": "e1265987a924d93d2b02f09743e8dc7b80dc3b5cedd05298424da7739dcc57ad"
+    },
+    "src/minimax/runners/plr_runner.py": {
+      "replacements": 10,
+      "parent_sha256": "f69ff2497ea27e8bbb320d83cf11cbe49a9ce0c80cae2e8db5690aee3aa5c874",
+      "applied_sha256": "e0453b1973132f5b373449f7481a44920815b3bc3681ce49f4c76021ead3b507"
+    },
+    "src/minimax/util/pytree.py": {
+      "replacements": 1,
+      "parent_sha256": "9937b9815e57c96b8c5751a1c75dd74ef234acadaaf7132e1e051980ea7017b6",
+      "applied_sha256": "7e2dbb41ebadf159fb4fae576fb19c449933ef8882a202f099c15b4c914aa000"
+    },
+    "src/minimax/util/rl/agent_pop.py": {
+      "replacements": 5,
+      "parent_sha256": "e2cfddc552b557a4815e8da32e82c80915e9479a2658d3582259d7f8479bd176",
+      "applied_sha256": "7471bf317cdb2b02f9f8e2658c646fae54966458834d8e8d19cfaf7e7adf9fc2",
+      "post_replacements": [
+        {
+          "old": "\t\t\tpi_params =  jax.tree_util.tree_map(lambda x: x.squeeze(1), pi_params) \n",
+          "new": "\t\t\tpi_params =  jax.tree_util.tree_map(lambda x: x.squeeze(1), pi_params)\n",
+          "count": 1
+        }
+      ]
+    },
+    "src/minimax/util/rl/plr.py": {
+      "replacements": 7,
+      "parent_sha256": "259f87e9815f5b6030d21e310056aa964b244d005738e388050f46fa6d2e8607",
+      "applied_sha256": "49a374a291034a2298321854cb44336221b4026fe66f892401fdaeb60a519264"
+    }
+  }
+}

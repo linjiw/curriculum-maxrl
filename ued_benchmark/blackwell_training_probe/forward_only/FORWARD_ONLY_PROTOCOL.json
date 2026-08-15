@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-08-14T04:41:00-04:00",
+  "purpose": "forward-only CPU versus RTX 5090 localization of Frontier recurrent-carry arithmetic",
+  "payload": {
+    "path": "FORWARD_PAYLOAD.json",
+    "sha256": "845a34ae40fb762e72b4c6ec569ef16ab6531b241eeaf6cecbc0523059f3bc78"
+  },
+  "parent_component_protocol_sha256": "0f8c083202a189ec234f32c0e1c15e7c09753892fb05af0d6262b9ff0bf9f1a5",
+  "source": {
+    "upstream_commit": "d053054c5290a04c1c4cd8b55704d999cad73e30",
+    "upstream_tree": "b0cace1fc54984e21a842f12d15d0b899e33d270",
+    "frontier_contract_sha256": "5868d346ba00e43225424f053ded3dea056b8f76ce4bfdaa1a107a4955cb9000",
+    "modernization_contract_sha256": "b7c865e007634c5a20e2b942ff98f24d6ac9ff624d5b17b62e5e9fa2124e5c00",
+    "modernization_applied_manifest_sha256": "ea5fb73c0072cd95829630344e559f02a83f65b0f8b479845ef4dff8921ff65c"
+  },
+  "execution_limits": {
+    "training_steps": 0,
+    "experiment_step_calls": 0,
+    "agent_update_calls": 0,
+    "gradient_calculations": 0,
+    "gradient_transformation_proposals": 0,
+    "optimizer_applications": 0,
+    "parameter_mutations": 0,
+    "gpu_forward_only_captures": 1,
+    "gpu_ppo_updates": 0,
+    "ood_evaluations": 0,
+    "seeds": 1,
+    "throughput_measurements": 0,
+    "performance_endpoints": 0,
+    "paper_evidence_endpoints": 0
+  },
+  "runtime_requirements": {
+    "pythonpath_unset": true,
+    "jax_threefry_partitionable": false,
+    "xla_python_client_preallocate": false,
+    "tmpdir": "/data/robotixx/ued_bench/tmp",
+    "pip_cache_dir": "/data/robotixx/ued_bench/cache/pip",
+    "cpu": {
+      "jax_platforms": "cpu",
+      "jax_platform_name": "cpu",
+      "device_count": 1
+    },
+    "gpu": {
+      "jax_platforms": "cuda",
+      "jax_platform_name": "gpu",
+      "device_count": 1,
+      "device_kind": "NVIDIA GeForce RTX 5090",
+      "preserve_process_pid": 2786996
+    }
+  },
+  "comparison": {
+    "cpu": {
+      "rtol": 0.000001,
+      "atol": 0.0000001
+    },
+    "gpu": {
+      "rtol": 0.0005,
+      "atol": 0.00005
+    },
+    "exact_dtypes": ["bool", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64"],
+    "require_exact_payload_bytes": true,
+    "require_exact_shapes": true,
+    "require_exact_dtypes": true,
+    "require_exact_nonfinite_sentinels": true,
+    "require_elementwise_and_aggregate_checks": true,
+    "tolerance_relaxed": false
+  },
+  "ordered_stages": [
+    {
+      "name": "input_payload",
+      "classification_on_first_failure": "payload_or_checkpoint",
+      "comparison": "exact"
+    },
+    {
+      "name": "convolution_preactivation",
+      "classification_on_first_failure": "convolution_dot_general",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "convolution_activation",
+      "classification_on_first_failure": "convolution_relu",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "visual_flatten",
+      "classification_on_first_failure": "visual_feature_layout",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "scalar_embedding",
+      "classification_on_first_failure": "scalar_embedding",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "concatenated_features",
+      "classification_on_first_failure": "feature_concatenation",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "reset_selected_carry",
+      "classification_on_first_failure": "reset_or_carry_selection",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "lstm_input_affine",
+      "classification_on_first_failure": "lstm_input_gemm",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "lstm_hidden_affine",
+      "classification_on_first_failure": "lstm_hidden_gemm",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "lstm_gate_preactivation",
+      "classification_on_first_failure": "lstm_gate_addition",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "lstm_gate_activation",
+      "classification_on_first_failure": "lstm_sigmoid_or_tanh",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "lstm_cell_terms",
+      "classification_on_first_failure": "lstm_cell_multiplication",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "lstm_cell_state",
+      "classification_on_first_failure": "lstm_cell_state_addition",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "lstm_hidden_state",
+      "classification_on_first_failure": "lstm_hidden_state_update",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "manual_final_carry",
+      "classification_on_first_failure": "manual_recurrent_carry",
+      "comparison": "numeric_tolerance"
+    },
+    {
+      "name": "canonical_model_output",
+      "classification_on_first_failure": "canonical_model_forward",
+      "comparison": "numeric_tolerance"
+    }
+  ],
+  "cpu_gates_before_gpu": {
+    "payload_hash_validation": true,
+    "static_contract_tests": true,
+    "capture_self_comparison": true,
+    "canonical_output_matches_frozen_cpu_capture": true,
+    "manual_final_carry_matches_canonical_carry": true
+  },
+  "stop_rule": "after one GPU forward-only capture, compare in declared operation order, report the earliest failing tensor and time index, and keep training closed regardless of outcome",
+  "paper_evidence": false,
+  "performance_endpoint": false
+}
