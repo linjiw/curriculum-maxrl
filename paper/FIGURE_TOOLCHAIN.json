@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "status": "PINNED_LOCAL_REPRODUCTION_TOOLCHAIN",
+  "python_version": "3.11.13",
+  "python_executable_sha256": "4627a60ce761a303bb866244833a914aabab9880b8082fbb0fe8cf35c91ea3ed",
+  "requirements": "paper/requirements-figures.lock",
+  "environment_record_sha256": "9a05c8bfbd95df8f94aa413e6304b2dbcd709fabb5e006a198c96688004cf614",
+  "source_date_epoch": 1786718220,
+  "environment_record": {
+    "packages": {
+      "contourpy": "1.3.3",
+      "cycler": "0.12.1",
+      "fonttools": "4.63.0",
+      "kiwisolver": "1.5.0",
+      "matplotlib": "3.11.1",
+      "numpy": "2.4.6",
+      "packaging": "26.3",
+      "pillow": "12.3.0",
+      "pyparsing": "3.3.2",
+      "python": "3.11.13",
+      "python-dateutil": "2.9.0.post0",
+      "six": "1.17.0"
+    },
+    "fonts": {
+      "DejaVu Sans": "3fdf69cabf06049ea70a00b5919340e2ce1e6d02b0cc3c4b44fb6801bd1e0d22",
+      "DejaVu Sans Mono": "602ec86b8948cfcd956482fe64f94c36c867770149ef2f791d4613f443bcecb3",
+      "DejaVu Serif": "107244956e9962b9e96faccdc551825e0ae0898ae13737133e1b921a2fd35ffa"
+    }
+  },
+  "reproduction_contract": {
+    "mode": "isolated_staging_then_exact_byte_comparison",
+    "workspace_figure_overwrite": false,
+    "network_during_render": false,
+    "required_environment": [
+      "PAPER_FIGURE_PYTHON points to the pinned interpreter",
+      "SOURCE_DATE_EPOCH equals the frozen value",
+      "MPLCONFIGDIR is a new isolated directory"
+    ]
+  }
+}
