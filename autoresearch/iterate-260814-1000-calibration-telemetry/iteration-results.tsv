@@ -1,0 +1,12 @@
+iteration	change	metric	result	decision
+1	freeze posterior-predictive estimand, adaptive purchased-group scope, 0.05 reliability bins, and non-production gates	JSON validity and local preflight	PASS	keep
+2	implement fail-closed event/chain/package analyzer and Frontier-only calibration metrics	20 synthetic CPU-only unit tests	PASS	keep
+3	add preceding-snapshot clock binding for all replay scores	current-group leakage and same-batch sibling attacks	PASS	keep
+4	support updated-then-evicted chains and slot-generation replacement	controlled eviction/reinsertion synthetic test	PASS	keep
+5	bind matched budgets/provenance and reject loose MaxMC comparisons	closed paired-package synthetic test	PASS	keep
+6	refreeze one-snapshot-per-chain-cycle ordering, canonical duplicate-new identity, immutable chains, and derived slot/disposition lifecycle	adversarial snapshot/identity/eviction/source-state tests	PASS	keep
+7	bind MaxMC replay pre-score to the preceding persisted stored post-score and forbid evicted-chain reappearance	outcome-clock and terminated-chain adversarial tests	PASS	keep
+8	require external analyzer and campaign hashes, load every campaign artifact, match receipt projection, and enforce positive cycle/PPO/gradient/optimizer/transition equations	34 synthetic CPU-only tests plus 25-artifact local preflight	PASS	keep
+9	repair robust-PLR clock: freeze update target plus cycle cap, receipt n_iters/cycles separately from updates, and allow paired arm-specific exposure	37 synthetic tests including 1-cycle/0-update intermediate, 2-cycle/1-update terminal, unequal-arm exposure, and hostile counter drift	PASS	keep
+10	bind each purchased cycle to sibling-invariant pre/post runner counters, exact robust-PLR new/replay branch semantics, terminal target attribution, immutable comparator inputs, and canonical distinct artifact paths	47 synthetic CPU-only tests plus 25-artifact local preflight, including hostile mixed-source/all-new-update/post-target/discontinuity/type-overflow cases	PASS	keep
+11	close P2 campaign feasibility and bounded derived products, device/inode hardlink alias rejection, exact package revalidation in the comparator, and unreachable replay-disposition narrowing	48 synthetic CPU-only tests including equal-target/cap, product overflow, hardlink, forged-result, post-validation tamper, and cross-cycle eviction regressions	PASS	keep

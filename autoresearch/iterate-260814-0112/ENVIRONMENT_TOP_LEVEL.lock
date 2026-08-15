@@ -1,0 +1,17 @@
+# Source-faithful minimax CPU environment, created 2026-08-14.
+# Full normalized freeze SHA-256:
+# a5a6ff4d57e44c282b4a73a4e54b1fa053f8235702269e71a34218ecec47b5b3
+python==3.10.19
+minimax-lib @ git+https://github.com/facebookresearch/minimax.git@d053054c5290a04c1c4cd8b55704d999cad73e30
+numpy==1.25.2
+pandas==1.5.3
+jax==0.4.31
+jaxlib==0.4.31
+flax==0.8.5
+optax==0.2.3
+tensorflow_probability==0.23.0
+chex==0.1.86
+wandb==0.17.8
+ipython==8.26.0
+GitPython==3.1.43
+tqdm==4.66.5
