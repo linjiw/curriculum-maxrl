@@ -1,7 +1,40 @@
 # UED / AMaze lane closure — 2026-08-15
 
-**Decision: the lane is FROZEN IN PLACE for the ICLR 2027 run-in. All v4
-remote-hardening, calibration-telemetry, and audit work stops now.**
+> ## SUPERSEDED IN PART, same day — see `THROUGHPUT_2026-08-15.md`
+>
+> This note named a bounded throughput probe as the single permitted future
+> action. That probe was then run, took under two minutes, and **overturned
+> three of the four reasons below**. Measured on the RTX 5090 with the
+> unmodified upstream `maze/dr` config: **0.1266 s/update, 64,693
+> transitions/s**, so a full 30,000-update run is **1.06 GPU-hours** (DR) or
+> **2.11 GPU-hours** (robust PLR) — not the better part of a day.
+>
+> The 248.97 tr/s figure this lane planned against was wrong by **260x**; it
+> was compile-contaminated, as the repository itself had flagged.
+>
+> Specifically: reason 2 (492M transitions vs a 1-day cap) is **void**;
+> reason 3 (five seeds floor p at .0625) is **void as stated**, since five
+> seeds was a response to believed compute scarcity and ten seeds now cost
+> ~21 GPU-hours; reason 4 (no ACCEL/PAIRED/robust-PLR arm) is **void**,
+> because upstream *ships* tuned configs for dr, plr, pplr, accel, paccel and
+> paired — the gap was in our configs, not in the benchmark.
+>
+> What still stands: reason 1 (the matched-dev prereg's own "never paper
+> evidence" scope) and reason 5 (the remote-hardening blockers), but reason 5
+> governs the Hopper v4 ladder, which a local campaign does not need.
+>
+> **The stop-work order on v4 remote hardening, calibration telemetry, and
+> further audit rounds REMAINS IN FORCE.** What is reopened is narrower and
+> better defined: a competitive campaign against upstream configs, on the
+> upstream test set, changing only the PLR scoring function.
+>
+> The lesson is recorded in the throughput note: the correct first action for
+> a compute-bound lane is to measure the compute, and this lane instead built
+> a bespoke protocol, a remote ladder, and telemetry without ever doing so.
+
+**Original decision (2026-08-15, superseded in part above): the lane is FROZEN
+IN PLACE for the ICLR 2027 run-in. All v4 remote-hardening,
+calibration-telemetry, and audit work stops now.**
 
 Authority: `RESEARCH_PLAN_2026-08-15.md` §4 Cut 1, and risk-register item 9,
 which requires this decision be written down once so it cannot silently

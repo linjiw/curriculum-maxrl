@@ -348,6 +348,38 @@ are positive. The result therefore supports the deployed-$N$ score shape
 against its $N=2$ ablation in this fixed family, while the $p(1-p)$ arm itself
 is not supported over uniform by the frozen secondary test.
 
+\subsection{Does the deployed-$N$ peak location matter?}
+\label{sec:peaktest}
+
+The score's peak $p^\star_N=1-N^{-1/(N-1)}$ falls $.500\to.169\to.064$ for
+$N=2,16,64$, so in every study above the winning arm is also the
+harder-peaked arm. ``Harder peaks beat $p(1-p)$'' and ``the deployed-$N$ peak
+is correct'' predict identically in all of that data, and only the second
+would be an advance over the $p(1-p)$ literature. We separate them with two
+preregistered campaigns that hold the deployed estimator at $N=16$ in every
+arm and vary only the sampling exponent, on the same 20 logical seeds and the
+same frozen scaffold, analyzed once each.
+
+An over-shooting arm scored by $u_{64}$ does not lose to $u_{16}$: the paired
+difference $u_{16}-u_{64}$ is $-.0113$ (95\% CI $[-.0297,+.0057]$, exact
+$p=.235$, 10/20) on one platform and $-.0128$ ($[-.0284,+.0024]$, $p=.131$,
+7/20) on a second. A seven-point exponent sweep
+$N_{\text{score}}\in\{2,4,8,16,32,64,128\}$ gives arm means
+$.644,.668,.665,.675,.679,.688,.681$, with argmax at $u_{64}$, not at the
+deployed $u_{16}$, and Spearman rank correlation $+.93$ between exponent and
+mean. \textbf{The curve rises past the deployed $N$: peak-location specificity
+is not supported at this operating point.}
+
+The same campaigns replicate the shape effect. Against $p(1-p)$, $u_{16}$ wins
+by $+.0322$ ($[+.0198,+.0449]$, exact $p=.000105$, 17/20) and $+.0307$
+($[+.0166,+.0453]$, $p=.000507$, 16/20), versus $+.0480$ in V2 --- the first
+reproductions outside the machine that produced V2, both with a smaller
+$p$-value than V2's own. Magnitude is platform-sensitive (about $35\%$
+attenuation on identical seeds between architectures), so we attribute
+each number to its platform. Because the two new campaigns share seeds and a
+deterministic engine, their agreement is a portability check, not additional
+independent seeds.
+
 The mean $u_{16}-p(1-p)$ contrasts remain descriptively positive on
 sampled-group ($+.05294$) and optimizer-update ($+.05366$) axes. $u_{16}$
 also receives 2.40 fewer groups and 3.42 fewer updates per million
@@ -520,9 +552,11 @@ eight-threshold family, one 640-parameter learner, and no held-out task
 distribution or native named-method implementation. Its 20-seed choice was
 inherited from a historical precursor rather than set by prospective power
 analysis; its exact paired test also requires sign exchangeability under the
-sharp null. No arm pairs a mismatched-$N$ score with a fixed deployed $N$,
-so the tournament supports rollout-aware difficulty targeting rather than
-peak-location specificity of the deployed-$N$ shape. The four evidence
+sharp null. The V2 tournament paired no mismatched-$N$ score with a fixed
+deployed $N$; \S\ref{sec:peaktest} now does, and finds no peak-location
+specificity, so the evidence supports rollout-aware difficulty targeting and
+specifically not peak-location specificity of the deployed-$N$ shape.
+The four evidence
 families froze their primaries independently at $\alpha=.05$; we claim no
 paper-level error rate. Retained evaluation records do not include per-episode
 trajectories. The maze
