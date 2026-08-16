@@ -223,4 +223,21 @@ governs the whole campaign.
 
 ## Amendments
 
+- **2026-08-16a (submission chunking; outcome-blind, no endpoint opened).**
+  The frozen script declares `#SBATCH --array=20-67%5`, but Hopper's `gpu` QOS
+  caps *submitted* jobs at 40 per user (`MaxSubmitJobsPU=40`, `MaxJobsPU=20`),
+  so a single 48-task array is rejected at submit time with
+  `QOSMaxSubmitJobPerUserLimit` before any allocation. Discovered with an empty
+  queue, so it is a hard policy limit rather than transient contention.
+  The campaign is therefore submitted as two chunks of the **same frozen
+  script, bundle, environment, campaign ID, and attempt ID**, overriding only
+  the array range: seeds 20--43 and 44--67. Their union is exactly the frozen
+  48-block seed set, the in-script seed guard still refuses anything outside
+  20--67, and no per-cell setting changes. Consequence to record: with `%5`
+  applied per chunk, up to 10 cells run concurrently instead of 5, which
+  shortens wall time without altering any cell's resources, inputs, or
+  independence. Retrieval merges both array IDs into the single campaign
+  matrix before analysis, and the analyzer's completeness check over
+  `EXPECTED_SEEDS` remains the authority on whether the matrix is whole.
+
 (none)
