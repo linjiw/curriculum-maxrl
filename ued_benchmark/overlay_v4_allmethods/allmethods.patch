@@ -1,0 +1,179 @@
+--- a/src/minimax/util/rl/ued_scores.py	2026-08-14 03:24:44.264082325 -0400
++++ b/src/minimax/util/rl/ued_scores.py	2026-08-16 09:20:55.561046363 -0400
+@@ -15,6 +15,74 @@
+ import jax.numpy as jnp
+ import chex
+ 
++from .frontier_activity import coefficient_activity_score
++
++
++# ---- Coefficient-activity (curriculum-MaxRL Frontier) configuration --------
++# Promoted from the v3 PLR-runner sidecar into the shared UED score path so
++# every runner -- PLR, ACCEL (PLRRunner + mutations), and PAIRED -- uses one
++# implementation. These are static Python values baked in at trace time, so
++# they must be set before the first jitted score call; runners do so at init.
++_CA = {
++	'n_rollouts': 8,
++	'prior_alpha': 1.0,
++	'prior_beta': 1.0,
++	'posterior_mode': 'expected_activity',
++	'success_threshold': 0.0,
++}
++
++
++def set_coefficient_activity_params(
++		n_rollouts=8,
++		prior_alpha=1.0,
++		prior_beta=1.0,
++		posterior_mode='expected_activity',
++		success_threshold=0.0):
++	"""Configure the coefficient-activity score before any jitted score call."""
++	if n_rollouts < 2:
++		raise ValueError('coefficient activity requires n_rollouts >= 2.')
++	if prior_alpha <= 0 or prior_beta <= 0:
++		raise ValueError('Beta prior parameters must be positive.')
++	if posterior_mode not in ('expected_activity', 'mean_plugin'):
++		raise ValueError(f'Unknown posterior mode {posterior_mode!r}.')
++	_CA.update(
++		n_rollouts=int(n_rollouts),
++		prior_alpha=float(prior_alpha),
++		prior_beta=float(prior_beta),
++		posterior_mode=str(posterior_mode),
++		success_threshold=float(success_threshold))
++
++
++def get_coefficient_activity_params():
++	return dict(_CA)
++
++
++def compute_coefficient_activity(batch):
++	"""Score levels by expected coefficient activity E[u_N(p)].
++
++	Operates on the per-agent batch already reshaped to
++	``(n_steps, n_levels, n_eval)`` by ``compute_ued_scores``. Each evaluation
++	stream contributes at most one Bernoulli observation, matching the v3
++	sidecar semantics: a stream is observed if any ``done`` occurs and
++	successful if any terminal reward exceeds the threshold.
++	"""
++	dones = batch.dones.astype(jnp.bool_)
++	rewards = batch.rewards
++	observed = dones.any(axis=0)
++	successful = jnp.logical_and(dones, rewards > _CA['success_threshold']).any(axis=0)
++	trials = observed.sum(axis=-1)
++	successes = successful.sum(axis=-1)
++	scores = coefficient_activity_score(
++		successes,
++		trials,
++		_CA['n_rollouts'],
++		_CA['prior_alpha'],
++		_CA['prior_beta'],
++		_CA['posterior_mode'])
++	# The generic aggregation path expects a (mean, max) pair; activity is a
++	# single per-level quantity, so both slots carry it.
++	return scores, scores, {}
++
+ 
+ class UEDScore(Enum):
+ 	RELATIVE_REGRET = 1
+@@ -26,6 +94,7 @@
+ 	POSITIVE_VALUE_LOSS = 7
+ 	MAX_MC = 8
+ 	VALUE_DISAGREEMENT = 9
++	COEFFICIENT_ACTIVITY = 10
+ 
+ 
+ @partial(jax.jit, static_argnums=(2,3))
+@@ -124,6 +193,9 @@
+ 	elif score_name == UEDScore.VALUE_DISAGREEMENT:
+ 		mean_scores, max_scores, score_info = compute_value_disagreement(batch)
+ 
++	elif score_name == UEDScore.COEFFICIENT_ACTIVITY:
++		mean_scores, max_scores, score_info = compute_coefficient_activity(batch)
++
+ 	return mean_scores, max_scores, score_info
+ 
+ @partial(jax.jit, static_argnums=(0,2,4,5))
+--- a/src/minimax/arguments.py	2026-08-14 03:24:44.312082809 -0400
++++ b/src/minimax/arguments.py	2026-08-16 09:21:19.022329749 -0400
+@@ -284,6 +284,39 @@
+     prefix='paired',
+     dependency={'train_runner': 'paired'},
+     dest='train_runner')
++# Coefficient activity as a PAIRED teacher objective: the teacher is rewarded
++# for generating levels whose pass rate sits near the score's peak, rather than
++# for maximizing relative regret.
++paired_subparser.add_argument(
++    '--frontier_n_rollouts',
++    type=int,
++    default=8,
++    help='Declared N in the coefficient-activity score 1-(1-p)^N-p.'
++)
++paired_subparser.add_argument(
++    '--frontier_prior_alpha',
++    type=float,
++    default=1.0,
++    help='Alpha parameter of the per-level Beta success prior.'
++)
++paired_subparser.add_argument(
++    '--frontier_prior_beta',
++    type=float,
++    default=1.0,
++    help='Beta parameter of the per-level Beta success prior.'
++)
++paired_subparser.add_argument(
++    '--frontier_posterior_mode',
++    type=str,
++    default='expected_activity',
++    help='Posterior treatment: expected_activity or mean_plugin.'
++)
++paired_subparser.add_argument(
++    '--frontier_success_threshold',
++    type=float,
++    default=0.0,
++    help='Terminal reward above which an evaluation stream counts as a success.'
++)
+ 
+ 
+ # ==== Student RL arguments.
+--- a/src/minimax/runners/paired_runner.py	2026-08-14 03:24:44.263082315 -0400
++++ b/src/minimax/runners/paired_runner.py	2026-08-16 09:21:43.488624359 -0400
+@@ -28,7 +28,8 @@
+ 	RolloutStorage,
+ 	RollingStats,
+ 	UEDScore,
+-	compute_ued_scores
++	compute_ued_scores,
++	set_coefficient_activity_params
+ )
+ 
+ 
+@@ -68,6 +69,11 @@
+ 		teacher_gae_lambda=0.95,
+ 		teacher_agents=None,
+ 		ued_score='relative_regret',
++		frontier_n_rollouts=8,
++		frontier_prior_alpha=1.0,
++		frontier_prior_beta=1.0,
++		frontier_posterior_mode='expected_activity',
++		frontier_success_threshold=0.0,
+ 		track_env_metrics=False,
+ 		n_unroll_rollout=1,
+ 		render=False,
+@@ -76,6 +82,17 @@
+ 
+ 		ued_score = UEDScore[ued_score.upper()]
+ 
++		# Activity-targeted environment design: reward the teacher for placing
++		# levels near the score's peak instead of for maximal relative regret.
++		# Must be configured before the first jitted score call.
++		if ued_score == UEDScore.COEFFICIENT_ACTIVITY:
++			set_coefficient_activity_params(
++				n_rollouts=frontier_n_rollouts,
++				prior_alpha=frontier_prior_alpha,
++				prior_beta=frontier_prior_beta,
++				posterior_mode=frontier_posterior_mode,
++				success_threshold=frontier_success_threshold)
++
+ 		assert len(student_agents) == 1, \
+ 			'Only one type of student supported.'
+ 		assert not (n_students > 2 and ued_score in [UEDScore.RELATIVE_REGRET, UEDScore.MEAN_RELATIVE_REGRET]), \
