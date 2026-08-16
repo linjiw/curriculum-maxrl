@@ -1,13 +1,25 @@
 # MAZE-SCORE: neural-scale test of the deployed-$N$ score shape — preregistration
 
-**Status:** DRAFT v2 — NOT AUTHORIZED FOR EVIDENCE SUBMISSION. The presence of
-an executable array script or a staged bundle is not authorization to submit
-seeds 20--49. While this document says DRAFT, only the non-evidence engineering
-ladder below may run. Authorization begins only after its receipts, the final
-outcome-blind sample count, retry policy, immutable source/environment hashes,
-and analyzer hash are recorded together and this status is changed to FROZEN
-in a clean commit. Changes after that point require a dated outcome-blind
-amendment.
+**Status:** FROZEN 2026-08-16 by the clean commit containing this line.
+Changes after this point require a dated outcome-blind amendment section.
+Evidence submission of seeds 20--67 is authorized only from the clean
+content-addressed bundle staged from that commit, whose ID and manifest
+SHA-256 are recorded in the campaign receipt and in `HOPPER_STATUS.md`.
+
+**Freeze record (all inputs outcome-blind).**
+
+| Item | Value |
+|---|---|
+| Launch-ladder step 1, CPU I/O smoke | job `9366532` COMPLETED exit 0, `hop055`; retrieved and digest-verified |
+| Launch-ladder step 2, GPU import smoke | job `9366547` COMPLETED exit 0 in 34 s, `gpu020`, A100 `1g.10gb` |
+| Launch-ladder step 3, full-arm cost smoke | job `9366552` COMPLETED exit 0 in 22:22, `gpu013`, peak GPU memory 39,672 MiB (seed 99, permanently excluded from inference) |
+| Sample count | 48 blocks, seeds 20--67; justification `hopper/MAZE_SCORE_POWER_MEMO_2026-08-15.md` SHA-256 `1280d988e62fb28ebc5bb57fe2f4cf86c60b52761cb3742b1923ef2015526c1b` |
+| Analyzer | `curriculum_maxrl/maze_score/analyze_maze_score.py` SHA-256 `197f1254f73826744206a256f904346de3ff9010a393d5d051a549ba5b7d7bd5` |
+| Array script | `hopper/sbatch/maze_score_array.sbatch` SHA-256 `4522e1def80de0b6465e309f167096c19a9df8ca43fd4a6574558ea5345615e7` |
+| Trainer | `curriculum_maxrl/maze_gpu/train.py` SHA-256 `835173fb7d83cf2dd689664c604fcee08974caadb375e10fa9cf8dc1fa38bf19` |
+| Environment | `/scratch/lwang44/envs/maze-score-ad774d459fa77bb6`; lock `ad774d459fa77bb68c01c4a225db1e7faa3213216422eb5eabdf5b3c0e3d6224`; freeze `70d7f2c337b75de70adf941dacefdb7d3f7ba1772ac7f32821c896a61e77f36a`; environment JSON `42efa0bf38cc6d4aca56eac21559dfc989c92abda49e9eaf5df4fbcf019bf393` |
+| Retry policy | A cell that reaches a non-`COMPLETED` terminal Slurm state may be resubmitted at most **once**, into a new attempt directory, only for an infrastructure cause identified without opening any result JSONL or metric-bearing stdout. The cause and both attempt IDs are recorded as an amendment before resubmission. A second failure of the same cell ends the campaign at the achieved block count, which is reported as such. No cell is ever rerun for a scientific reason. |
+| Array throttle | `%5`; expected wall about 11.1 h at 1.1142 MIG-slice-h per block |
 **Environment:** GMU Hopper, one `3g.40gb` A100 MIG slice per array task, using
 the lock-hash-addressed environment created by `hopper/setup_maze_env.sh`
 (torch 2.6.0+cu124, numpy 2.2.6; exact path plus lock, full-freeze, and
@@ -49,12 +61,23 @@ All three share the identical Beta posterior (decay 0.7), Thompson mechanism,
 `un` and `learn` is the utility function. The frozen contract test must dispatch
 `frontier_un` to effective exponent 32 and `learnability` to exponent 2.
 
-**Candidate design: 30 fresh independent seed blocks, 20–49.** Waves 1 and 2
-used blocks 0–11. Historical contrast SDs (.0077--.0135) imply that ten blocks
-have only about 18--45% power for the +.005 SESOI; approximate 80% power spans
-roughly 21--59 blocks. The exact count remains an outcome-blind DRAFT item until
-one complete non-evidence arm establishes cost; no new endpoint value may be
-used to select it.
+**Frozen design: 48 fresh independent seed blocks, 20–67.** Waves 1 and 2
+used blocks 0–11. The count was fixed outcome-blind in
+`hopper/MAZE_SCORE_POWER_MEMO_2026-08-15.md` from three inputs only — the
+preregistered SESOI, the historical contrast SD range (.0077--.0135) already
+recorded in this document, and the measured full-arm cost from engineering job
+9366552. No endpoint, telemetry, or checkpoint value was opened.
+
+**Powered-for effect: +.0075, i.e. 1.5x the SESOI.** Because the decision rule
+requires the *observed* mean to clear the SESOI, a true effect of exactly
++.005 is a coin flip at every sample size (45.7% at n=30, 50.2% at n=72); the
+SESOI is the *reporting* threshold, not the detection threshold. At the
+pessimistic SD (.0135) and Holm's worst case, 48 blocks give 90.0% power at
++.0075, against 86.2% at 40 and 94.1% at 72. 48 is the last count at which the
+preregistered *exact* sign-flip enumeration remains feasible (268 MB; 60 blocks
+would need 17 GB and 72 blocks 1.1 TB), so larger designs would silently
+substitute a sampled approximation for the exact randomization test. That
+instrument change was judged a worse cost than the 4.1 power points forgone.
 
 Within a block, all arms load the identical content-addressed SFT checkpoint.
 Its hash is recorded in every run and checked by the analyzer. Creating versus
@@ -133,9 +156,10 @@ queue submission alone is not completion.
    has a verified terminal artifact locally.
 
 A failure or protocol-relevant change returns the process to the earliest
-affected engineering step. It never authorizes bypassing the freeze gate. The
-current 20--49 array and analyzer are a 30-block candidate implementation, not
-an authorized evidence campaign while this document remains DRAFT.
+affected engineering step. It never authorizes bypassing the freeze gate.
+Steps 1--3 completed on 2026-08-14 (jobs 9366532, 9366547, 9366552) and step 4
+completed on 2026-08-16; the 20--67 array and analyzer are the frozen 48-block
+evidence implementation as of the commit carrying the FROZEN status above.
 
 ## Endpoints
 
@@ -147,7 +171,7 @@ an authorized evidence campaign while this document remains DRAFT.
 - **Secondary (one test):** paired `un` − `unif` on the same metric.
 - **Descriptive:** `learn` − `unif`; final-step `delta_cov8`; per-level bands.
 
-## Candidate decision rule (becomes frozen with the campaign receipt)
+## Decision rule (frozen 2026-08-16)
 
 For each paired contrast, compute a two-sided 95% paired percentile-bootstrap
 interval (10,000 block resamples, seed 20260813) and an exact two-sided

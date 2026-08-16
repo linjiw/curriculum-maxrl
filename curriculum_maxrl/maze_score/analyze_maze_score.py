@@ -31,7 +31,7 @@ import numpy as np
 
 PROTOCOL = "maze_score_v2"
 ARMS = ("un", "learn", "unif")
-EXPECTED_SEEDS = tuple(range(20, 50))
+EXPECTED_SEEDS = tuple(range(20, 68))
 EXPECTED_UPDATES = tuple(range(25, 251, 25))
 EXPECTED_LEVELS = tuple(str(level) for level in range(13))
 EXPECTED_ROLLOUTS = 32
@@ -48,7 +48,7 @@ EXPECTED_TEACHER_POWER = 1.0
 BOOTSTRAP_RESAMPLES = 10_000
 RANDOM_SEED = 20_260_813
 SESOI = 0.005
-MAX_EXACT_SIGN_FLIP_N = 40
+MAX_EXACT_SIGN_FLIP_N = 48
 
 _FILENAME_RE = re.compile(r"^mazescore_(un|learn|unif)_s(\d+)\.jsonl$")
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")

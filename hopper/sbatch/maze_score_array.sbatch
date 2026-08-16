@@ -9,7 +9,7 @@
 #SBATCH --mem=60G
 #SBATCH --time=0-12:00:00
 #SBATCH --output=/scratch/%u/maxrl/maze_score/logs/%x_%A_%a.out
-#SBATCH --array=20-49%5
+#SBATCH --array=20-67%5
 
 # Evidence-bearing MAZE-SCORE v2 campaign. This file is deliberately unusable
 # without a clean evidence bundle, exact environment lock, and explicit
@@ -85,8 +85,8 @@ actual_env_json=$(sha256sum "$MAZE_ENV_DIR/ENVIRONMENT.json" | awk '{print $1}')
 "$PY" -m pip check >/dev/null
 
 SEED=$SLURM_ARRAY_TASK_ID
-[[ "$SEED" =~ ^(2[0-9]|3[0-9]|4[0-9])$ ]] \
-  || { echo "evidence seed must be in 20..49" >&2; exit 2; }
+[[ "$SEED" =~ ^(2[0-9]|3[0-9]|4[0-9]|5[0-9]|6[0-7])$ ]] \
+  || { echo "evidence seed must be in 20..67" >&2; exit 2; }
 CAMPAIGN_ROOT="$SCRATCH_ROOT/maxrl/maze_score/campaigns/$MAZE_CAMPAIGN_ID"
 BLOCK="$CAMPAIGN_ROOT/attempts/$MAZE_ATTEMPT_ID/seed-$SEED"
 if [[ -e "$BLOCK" || -L "$BLOCK" ]]; then
