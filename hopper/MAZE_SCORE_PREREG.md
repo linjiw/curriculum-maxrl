@@ -233,10 +233,12 @@ governs the whole campaign.
   script, bundle, environment, campaign ID, and attempt ID**, overriding only
   the array range: seeds 20--43 and 44--67. Their union is exactly the frozen
   48-block seed set, the in-script seed guard still refuses anything outside
-  20--67, and no per-cell setting changes. Consequence to record: with `%5`
-  applied per chunk, up to 10 cells run concurrently instead of 5, which
-  shortens wall time without altering any cell's resources, inputs, or
-  independence. Retrieval merges both array IDs into the single campaign
+  20--67, and no per-cell setting changes. The cap applies to submitted, not
+  running, jobs, so the two 24-task chunks cannot even coexist in the queue:
+  chunk 2 is submitted only once chunk 1 has drained to 16 or fewer tasks.
+  Concurrency therefore stays at the frozen `%5` and total wall time is
+  unchanged from the frozen single-array estimate; only the submission is
+  split. Retrieval merges both array IDs into the single campaign
   matrix before analysis, and the analyzer's completeness check over
   `EXPECTED_SEEDS` remains the authority on whether the matrix is whole.
 
