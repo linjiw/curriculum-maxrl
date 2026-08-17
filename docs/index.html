@@ -283,9 +283,11 @@ curriculum's job description</strong> — is the origin of everything on this pa
     sets, +0.01 on one-shot streams).</p>
   </div>
 </div>
-<p>There is a third, silent channel: <strong>objective safety</strong>. The identical teacher
-grew coverage under MaxRL in every seed, while GRPO decayed coverage in every seed — and in
-the teacher-arm run the collapse was <em>amplified</em> (single-seed arm) —
+<p>There is a third, silent channel: <strong>objective safety</strong>. In the six-block
+maze factorial, MaxRL held higher time-integrated coverage than GRPO in 6/6 blocks under each
+sampler (an estimator-conditioned ordering; an earlier zero-exception per-seed claim was
+retracted after reanalysis) — and in the teacher-arm run the collapse was <em>amplified</em>
+(single-seed arm) —
 the objective underneath decides whether a curriculum is safe at all (section 4). Together:
 <strong>the teacher allocates, hindsight creates, the objective decides whether either is
 safe.</strong> The full evidence decomposition, regime map, and practitioner playbook are in
@@ -579,10 +581,10 @@ claim from the outside.</p>
 <p><strong>Multi-seed confirmation (seeds 0–2, paired via shared per-seed warmstarts):</strong>
 both teacher variants beat uniform+maxrl on AUC in <em>every</em> seed (6/6 paired deltas
 positive); frontier_alp+maxrl wins final mean-pass with the tightest spread
-(0.246&nbsp;±&nbsp;0.002 vs 0.230&nbsp;±&nbsp;0.015). The coverage divergence is systematic, not
-seed noise: GRPO's pass@8 <em>decays</em> in every seed (mean 0.308→0.271) while teacher+MaxRL
-<em>grows</em> it (0.316→0.348) — the paper's coverage-collapse dynamic reproduced at 1.26M
-scale, with the curriculum widening the gap in both directions.</p>
+(0.246&nbsp;±&nbsp;0.002 vs 0.230&nbsp;±&nbsp;0.015). On coverage, the retained claim is the
+six-block factorial's 6/6 ordering (MaxRL above GRPO under each sampler); the earlier
+"decays in every seed / grows in every seed" statement was retracted after independent-unit
+reanalysis and is not asserted here.</p>
 
 <h3>Hindsight relabeling — the biggest single gain</h3>
 <p>MaxRL's Theorem 1 makes the estimator <em>success-conditioned</em>: it learns only from
@@ -683,8 +685,44 @@ interface contract in <code>frontier_rl</code>.</p>
     <tr><td>SmolLM2-360M + GSM8K, curriculum × {maxrl, grpo}</td>
         <td>2×2 complete + replication seed — <a href="#gsm8k">section 4b</a>: P-G2 landed on the registered run; seed 2 (weaker measured steering) did not reproduce it</td>
         <td class="num"><span class="status run">◐ 1 of 2 seeds</span></td></tr>
+    <tr><td><strong>Peak-location specificity</strong> — does the score need to peak where the deployed N puts it? (Aug 15, preregistered, 2 campaigns, 240 runs)</td>
+        <td>Deployed estimator pinned at N=16, score exponent swept 2→128: performance rises <em>past</em> 16, argmax at u<sub>64</sub>, Spearman +0.93. Over-shooting arm u<sub>64</sub> does not lose to u<sub>16</sub> (−.011 and −.013 on two platforms, 10/20 and 7/20). <strong>Harder-peaked shape helps; the deployed-N peak location does not.</strong> The V2 Acrobot primary replicated cross-platform (+.032, +.031 vs +.048).</td>
+        <td class="num"><span class="status no">✗ not supported</span></td></tr>
+    <tr><td><strong>Coefficient activity as a PLR priority on AMaze</strong> — drop-in replacement for MaxMC in <span class="mono">minimax</span> robust PLR, shipped configs verbatim (Aug 16–17, development sweeps, 65 runs)</td>
+        <td>Upstream robust PLR .629, no-curriculum control .539, every activity-priority variant below the control (.500 at N=8, 0/5 seeds beat MaxMC; .551 at N=16). Cause is signal, not shape: MaxMC reads the critic at every timestep, activity gets one Bernoulli per level visit. Same in ACCEL; 4×8 regrouping costs −.207 for MaxMC too.</td>
+        <td class="num"><span class="status no">✗ negative</span></td></tr>
+    <tr><td>E2c immutable-reservoir replay control (Countdown)</td>
+        <td>Ran Aug 14–15 after a driver repair; stopped at step 39 by preregistered gate 7 (optimizer-token mismatch 5.79% &gt; 5%). Drift is structural — source diversity collapses as the policy sharpens. <strong>Inconclusive by frozen rule</strong>; no endpoint.</td>
+        <td class="num"><span class="status no">◐ inconclusive</span></td></tr>
   </tbody>
 </table>
+
+<h3 id="position">Where the claim now stands (updated 2026-08-17)</h3>
+<div class="cards">
+  <div class="card">
+    <h3>What survived</h3>
+    <p>The exact identity <span class="mono">A<sub>N</sub>(p) = 2(pass@N − pass@1)</span>, T = N−1, and the
+    closed-form Beta-posterior priority are untouched. The Acrobot result that
+    u<sub>16</sub> beats p(1−p) is now reproduced on <strong>three platforms</strong> with the same
+    seeds — the first reproduction outside the machine that produced it, both new runs with a
+    smaller p than the original.</p>
+  </div>
+  <div class="card">
+    <h3>What was cut</h3>
+    <p><strong>Peak-location specificity.</strong> The paper's only claimed advance over the
+    p(1−p) literature was that the score should peak where the deployed N puts it. Tested
+    directly and not supported: the curve keeps rising past the deployed N. The honest claim is
+    "harder-peaked scores beat p(1−p)" — rollout-aware difficulty targeting.</p>
+  </div>
+  <div class="card">
+    <h3>What the AMaze negative means</h3>
+    <p>As a <em>replacement</em> for a richer signal, u<sub>N</sub> is starved. It's also not the
+    paper's mechanism there: the minimax student is PPO+GAE and never forms binary rollout
+    groups. Two follow-ups are live — <em>gating</em> MaxMC by activity instead of replacing it
+    (keeps the per-timestep signal, suppresses mastered/hopeless levels), and giving the student
+    the MaxRL group estimator so score and learner share an algebra.</p>
+  </div>
+</div>
 
 <!-- ============================================================ -->
 <h2 id="gsm8k">4b · The experiment ladder at LLM scale — what each run asks, and why</h2>
@@ -1042,8 +1080,8 @@ FrontierTrainer(MyEnv(), MyPolicy(), TrainerConfig(hindsight=True)).train(500)</
   <tbody>
     <tr><td>More optimization per GPU-hour (dead groups avoided + frontier rollouts terminate early)</td>
         <td>22–35% more steps at matched wall-clock, gains landing on frontier tasks</td></tr>
-    <tr><td>Coverage grows instead of collapsing</td>
-        <td>pass@8 ↑ 0.316→0.348 every seed (GRPO's ↓ 0.308→0.271 every seed)</td></tr>
+    <tr><td>Coverage held higher under MaxRL than GRPO</td>
+        <td>six-block factorial: MaxRL above GRPO on time-integrated coverage in 6/6 blocks under each sampler (an estimator-conditioned ordering; the earlier per-seed "every seed" claim was retracted)</td></tr>
     <tr><td>Inference-time sampling efficiency vs GRPO (samples to target coverage, perfect verifier)</td>
         <td>up to <strong>11×</strong> fewer samples on the hardest evaluated level (absolute-0.25 coverage target; ties at levels 2–3, 3× worse at level 4 — the gain lives at the frontier; single checkpoint pair)</td></tr>
     <tr><td>Frontier-heavy regimes: impossible → solved</td>
@@ -1151,7 +1189,13 @@ curriculum can fix, until you recycle it.</em></p>
   diagnostic, not a theorem of learning progress. The score's deployed-N shape carries empirical
   content: in a fresh 20-seed Acrobot tournament at N=16, the rollout-aware score improves
   target-uniform AUC over p(1−p) by <strong>+.0480</strong> (95% paired-bootstrap CI
-  [+.0209,&nbsp;+.0738]) and over uniform sampling as well. Its scope is bounded by design rather
+  [+.0209,&nbsp;+.0738]) and over uniform sampling as well; the effect replicates on two further
+  platforms (+.0322, +.0307). Two preregistered follow-ups then bound the claim: holding the
+  deployed estimator at N=16 and sweeping the score exponent, performance rises <em>past</em>
+  N=16 (argmax at u<sub>64</sub>), so the deployed-N peak <em>location</em> is not what helps —
+  harder-peaked scores are; and dropped into robust PLR on AMaze in place of MaxMC, the pure
+  activity priority is starved of signal at one Bernoulli per level visit and does not beat the
+  upstream baseline. Its scope is bounded by design rather
   than by accident: a fresh 24-block exact-probability Digits counter-test rejects the stronger
   universal estimator-to-sampler mapping, and a qualified, externally recorded six-block maze
   factorial reports higher time-integrated MaxRL than GRPO coverage in <strong>6/6 blocks under
@@ -1178,17 +1222,19 @@ curriculum can fix, until you recycle it.</em></p>
     ARM A dial refutation).</p>
   </div>
   <div class="card">
-    <h3>What's pending before submission</h3>
-    <p>⟳ E2c, the delivery-guaranteed matched Countdown control, is implemented
-    and awaits a free GPU; E2/E2b stopped at frozen delivery gates. The
-    steering-strengthened GSM8K cell also failed its committed delivery gate and
-    is now a boundary result. A later research branch already contains a
-    nine-page ICLR candidate; it must be reconciled with the active E2c worktree,
-    followed by anonymous artifact and camera-ready hashes. Executed since the last status: both factorial waves (retraction +
-    confirmation), ARM A's dial refutation, <strong>P-R2 final (3/3 seeds:
-    the higher-dose replay control exceeds recycling on both meters, bounding
-    what generic extra updates can buy without isolating direction)</strong>, the
-    claims-and-evidence appendix.</p>
+    <h3>What's pending before submission (updated 2026-08-17)</h3>
+    <p>✅ E2c ran and closed by its own preregistered gate (inconclusive; the Aug 28
+    training stop is satisfied early). ✅ Peak-location specificity tested and
+    not supported; the paper now says so in a new subsection instead of conceding
+    it was never run. ✅ AMaze development negative reported honestly. ✅ Compact
+    draft rebuilt: conclusion ends on page 9, references on page 10, deterministic
+    pinned build.<br>
+    ⟳ <strong>MAZE-SCORE</strong> (the 1.26M-parameter neural score test on Hopper)
+    remains the highest-value pending experiment; a power memo recommends 48 seed
+    blocks with the exact sign-flip retained. ⟳ Activity-<em>gated</em> MaxMC sweep
+    on AMaze running. ⟳ Anonymous artifact and camera-ready hashes.<br>
+    Track: ICLR 2027 (abstract Sept 18, paper Sept 25). The ICRA navigation
+    campaign timed out at its 36-hour wall and is redirected to RA-L.</p>
   </div>
 </div>
 

@@ -10,9 +10,15 @@ truncation order to $N-1$. This is an estimator-side diagnostic, not a theorem
 of learning progress. In a fresh 20-seed Acrobot tournament at $N=16$, the
 deployed-$N$ score improves target-uniform AUC over $p(1-p)$ by $+.0480$
 (95\% paired-bootstrap CI $[+.0209,+.0738]$) and also beats uniform sampling
-in this fixed eight-threshold family.
-An exact-probability Digits counter-test rejects a universal
-estimator-to-sampler mapping. On neural gradients, an externally recorded
+in this fixed eight-threshold family; the effect replicates on two further
+platforms ($+.0322$, $+.0307$). Two preregistered follow-ups then bound the
+claim: holding the deployed estimator at $N=16$ and sweeping the score
+exponent, performance rises \emph{past} $N=16$ (argmax at $u_{64}$), so the
+deployed-$N$ peak \emph{location} is not what helps --- harder-peaked scores
+are; and dropped into robust PLR on AMaze in place of MaxMC, the pure
+activity priority is starved of signal at one Bernoulli per level visit and
+does not beat the upstream baseline. An exact-probability Digits counter-test
+rejects a universal estimator-to-sampler mapping. On neural gradients, an externally recorded
 six-block maze factorial finds higher time-integrated coverage under MaxRL
 than GRPO in 6/6 blocks under each sampler, an estimator-conditioned ordering
 rather than a direct score test. Data-selection methods should therefore be
@@ -287,7 +293,7 @@ Object & Claim/mechanism & Evidence allowed here \\
 \midrule
 Coefficient identity & Exact $A_N$, $T=N-1$, and posterior-integrated $u_N$ for the stated practical-MaxRL convention & \textsc{Proved}; estimator activity only, not learning progress \\
 Direct fixed-pool teacher & Thompson-scored $u_N$ with proportional sampling and a uniform floor & \textsc{Scoped empirical}; Acrobot supports the score in one fixed family, while Digits rejects a universal mapping \\
-Coefficient-Activity PLR & Analytic posterior activity replaces MaxMC priority inside robust PLR; replay and staleness remain PLR mechanisms & \textsc{Engineering only / hold}; no AMaze, robotics, or \texttt{minimax}-baseline performance evidence \\
+Coefficient-Activity PLR & Analytic posterior activity replaces MaxMC priority inside robust PLR; replay and staleness remain PLR mechanisms & \textsc{Development negative} (\S\ref{sec:amaze}); as a \emph{replacement} for MaxMC it does not beat upstream robust PLR on AMaze at 5{,}000 updates \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -389,6 +395,38 @@ transition-AUC is $.31085$, $.30521$, and $.37615$ across the three arms.
 App.~\ref{app:protocols} reports the near-equal observed mass means between
 adaptive arms and records the audited but RNG-confounded precursor
 separately.
+
+\subsection{Where the score is starved: activity as a PLR priority on AMaze}
+\label{sec:amaze}
+
+The natural competitive test drops the activity priority into
+\texttt{minimax}'s robust PLR \citep{plr,minimax} in place of MaxMC and runs
+the authors' shipped maze configurations verbatim. We did so in a development
+sweep --- seeds disjoint from any confirmatory block, 5{,}000 of the 30{,}000
+shipped updates, five paired seeds per arm, held-out return averaged over the
+three shipped test mazes --- and report it because it is negative and the
+reason is informative. Upstream robust PLR scores $.629$ and the
+no-curriculum control $.539$; every activity-priority variant is below the
+control. Replacing MaxMC with $\mathbb E[u_N(p)\mid\mathcal D]$ at the shipped
+$32{\times}1$ batch scores $.500$ ($N{=}8$; $0/5$ seeds beat MaxMC, exact
+$p{=}.0625$) and $.551$ ($N{=}16$); a $4{\times}8$ regrouping that buys
+per-level evaluation fidelity with level diversity costs $-.207$ for MaxMC as
+well; the same holds inside ACCEL.
+
+The cause is information, not shape. MaxMC reads the critic's disagreement
+$\max\text{-return}-V(s_t)$ at every timestep, continuously, with memory of
+the best return ever achieved on that level. At the shipped
+\texttt{n\_eval}${=}1$ a success-rate score receives one terminal Bernoulli
+per level visit --- a two-valued posterior, nearly all ties under rank
+prioritisation --- and \texttt{max\_episode\_steps}${=}250$ against a
+$256$-step rollout forbids a second episode; accumulating over revisits does
+not close the gap. This is the AMaze counterpart of \S\ref{sec:peaktest}: the
+\emph{shape} of $u_N$ is a defensible difficulty target, but as a
+\emph{replacement} for a richer signal it is starved. Nor is the mapping the
+paper's mechanism: the AMaze student is PPO with GAE and never forms binary
+rollout groups, so there $u_N$ is a heuristic detached from the estimator that
+derives it. Gating MaxMC by activity rather than replacing it, and giving the
+student the MaxRL group estimator, are follow-ups outside this evidence.
 
 \subsection{Externally recorded fresh-wave maze result}
 
@@ -500,10 +538,9 @@ staleness mixing, and with-replacement draws remain those of the pinned
 \texttt{minimax} substrate \citep{minimax}. The narrow novelty is that the
 priority is the deployed-estimator- and rollout-conditioned posterior
 expectation above. Tie-aware ranking is shared with the matched MaxMC control
-and is treated as an experimental-control correction. This implementation is
-engineering-only: AMaze, robotics transfer, and performance against PLR,
-ACCEL, or other \texttt{minimax} baselines remain \textsc{Hold} and outside
-the evidence in this paper.
+and is treated as an experimental-control correction. \S\ref{sec:amaze}
+reports the development result: as a replacement for MaxMC the activity
+priority does not beat upstream robust PLR, and we say why.
 Generator-based UED --- PAIRED's adversary \citep{paired}, ACCEL's level
 editing \citep{accel} --- creates tasks rather than pricing a fixed pool and
 has no native analogue in our Acrobot threshold family.
@@ -564,10 +601,10 @@ result uses a small transformer,
 one task family, and common rather than estimator-tuned learning rates; its
 easy-band mechanism remains descriptive.
 
-The Coefficient-Activity PLR row in Table~\ref{tab:instantiations} is an
-engineering specification, not evidence. No AMaze or robotics performance is
-reported, and no claim of outperforming PLR, robust PLR, ACCEL, or another
-\texttt{minimax} baseline is made; all remain \textsc{Hold}. The paid-probe,
+The Coefficient-Activity PLR row in Table~\ref{tab:instantiations} carries a
+development negative (\S\ref{sec:amaze}), not preregistered evidence, and no
+claim of outperforming PLR, robust PLR, ACCEL, or another \texttt{minimax}
+baseline is made. No robotics performance is reported. The paid-probe,
 recycling, Countdown, gate, and transfer records are secondary and confined to
 App.~\ref{app:protocols}.
 
@@ -592,14 +629,20 @@ coefficient algebra characterizes which tasks can emit activity at a chosen
 rollout count. A separately specified estimator-conditioned coverage ordering
 was observed under both tested samplers. In a fixed classical-control family,
 $u_{16}$ scoring outperformed both $u_2$ scoring under the same deployed
-$N=16$ estimator and uniform sampling; the Digits study
-shows that the estimator-to-sampler mapping is not universal. The maze result
-supplies supporting estimator-conditioned neural measurement, not direct
-evidence for the score or replay overlay.
-Data-selection methods should therefore be evaluated with the estimator they
-ship on, with $\passat{k}$ computed from retained task outcomes beside
-mean accuracy, and coefficient mass treated as a testable allocation
-hypothesis rather than a universal learning law.
+$N=16$ estimator and uniform sampling, and that advantage replicated on two
+further platforms; the Digits study shows that the estimator-to-sampler
+mapping is not universal. Two preregistered follow-ups then drew the
+boundary. Sweeping the score exponent with the estimator held at $N=16$,
+performance rose past $N=16$, so it is the harder-peaked \emph{shape} that
+helps and not the deployed-$N$ peak \emph{location}. Dropped into robust PLR
+on AMaze in place of MaxMC, the pure activity priority did not beat the
+upstream baseline: at one Bernoulli per level visit it is starved of the
+per-timestep signal a regret proxy reads for free.
+Data-selection methods should therefore be evaluated
+with the estimator they ship on, with $\passat{k}$ computed from retained
+task outcomes beside mean accuracy, and coefficient mass treated as a testable
+allocation hypothesis --- a useful difficulty \emph{shape}, not a peak
+location or a standalone signal --- rather than a universal learning law.
 
 \section*{Reproducibility statement}
 The repository includes exact-enumeration tests, a one-command artifact
@@ -816,15 +859,17 @@ Teacher state, sampler cursor, and checkpoints restore together. Observations
 use pre-relabel rewards so recycled outcomes do not inflate the requested
 task's posterior.
 
-\paragraph{Coefficient-Activity PLR (engineering only).}
+\paragraph{Coefficient-Activity PLR (development negative).}
 The AMaze implementation is a narrow overlay on robust PLR in the pinned
 \texttt{minimax} substrate \citep{plr,minimax}. It uses cumulative Beta
 evidence per replay-buffer slot and replaces MaxMC priority with deterministic
-$\mathbb E[u_N(p)\mid\mathcal D]$ under exact $N=\texttt{n\_eval}$ grouping.
-Buffer admission, the robust replay gate, inverse-rank mass, staleness mixing,
-and with-replacement draws remain PLR mechanisms. Tie-aware ranking is shared
-with the matched MaxMC control. This contract is engineering-only: no AMaze,
-robotics, or baseline-performance endpoint is reported or implied.
+$\mathbb E[u_N(p)\mid\mathcal D]$; the declared $N$ may equal
+\texttt{n\_eval} (exact grouping) or be decoupled from it. Buffer admission,
+the robust replay gate, inverse-rank mass, staleness mixing, and
+with-replacement draws remain PLR mechanisms. Tie-aware ranking is shared with
+the matched MaxMC control. \S\ref{sec:amaze} reports the development sweep:
+the replacement priority does not beat upstream robust PLR, and no
+baseline-performance claim is made.
 
 \paragraph{Relabeling (secondary).}
 For an all-fail request, a verified achieved goal can create an auxiliary
