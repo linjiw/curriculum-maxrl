@@ -420,13 +420,15 @@ the best return ever achieved on that level. At the shipped
 per level visit --- a two-valued posterior, nearly all ties under rank
 prioritisation --- and \texttt{max\_episode\_steps}${=}250$ against a
 $256$-step rollout forbids a second episode; accumulating over revisits does
-not close the gap. This is the AMaze counterpart of \S\ref{sec:peaktest}: the
-\emph{shape} of $u_N$ is a defensible difficulty target, but as a
-\emph{replacement} for a richer signal it is starved. Nor is the mapping the
-paper's mechanism: the AMaze student is PPO with GAE and never forms binary
-rollout groups, so there $u_N$ is a heuristic detached from the estimator that
-derives it. Gating MaxMC by activity rather than replacing it, and giving the
-student the MaxRL group estimator, are follow-ups outside this evidence.
+not close the gap. Gating MaxMC by activity instead of replacing it ---
+keeping the per-timestep signal, suppressing only mastered or hopeless
+levels --- recovers most of the gap ($.590$; $+.089$ over replacement, $4/5$
+seeds; $-.039$ to upstream, $1/5$) but does not clear it. This is the AMaze
+counterpart of \S\ref{sec:peaktest}: $u_N$ is a defensible difficulty
+\emph{shape} on a richer signal, not a signal of its own. Nor is the mapping
+the paper's mechanism --- the AMaze student is PPO with GAE and never forms
+binary rollout groups; giving it the MaxRL group estimator is the faithful
+mapping and remains outside this evidence.
 
 \subsection{Externally recorded fresh-wave maze result}
 
