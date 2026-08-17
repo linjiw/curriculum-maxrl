@@ -1,0 +1,170 @@
+--- a/src/minimax/util/rl/plr.py	2026-08-16 20:03:46.473962985 -0400
++++ b/src/minimax/util/rl/plr.py	2026-08-16 20:41:53.896984492 -0400
+@@ -48,6 +48,9 @@
+ 	# Discount applied to a level's accumulated Beta evidence before adding this
+ 	# visit's observations. 1.0 reproduces the undecayed v3/v4 behaviour.
+ 	frontier_decay: float = struct.field(pytree_node=False, default=1.0)
++	# 'replace' -> score is u_N(posterior)            (pure activity, v3/v4/v5)
++	# 'gate'    -> score is regret * u_N(posterior)   (activity-gated MaxMC, v6)
++	frontier_mode: str = struct.field(pytree_node=False, default='replace')
+ 	frontier_prior_alpha: float = struct.field(pytree_node=False, default=1.0)
+ 	frontier_prior_beta: float = struct.field(pytree_node=False, default=1.0)
+ 	frontier_success_threshold: float = struct.field(pytree_node=False, default=0.0)
+@@ -74,6 +77,7 @@
+ 		frontier_n_eval=1,
+ 		frontier_require_n_eval_match=True,
+ 		frontier_decay=1.0,
++		frontier_mode='replace',
+ 		frontier_prior_alpha=1.0,
+ 		frontier_prior_beta=1.0,
+ 		frontier_success_threshold=0.0,
+@@ -100,6 +104,7 @@
+ 		self.frontier_n_eval = frontier_n_eval
+ 		self.frontier_require_n_eval_match = frontier_require_n_eval_match
+ 		self.frontier_decay = frontier_decay
++		self.frontier_mode = frontier_mode
+ 		self.frontier_prior_alpha = frontier_prior_alpha
+ 		self.frontier_prior_beta = frontier_prior_beta
+ 		self.frontier_success_threshold = frontier_success_threshold
+@@ -116,6 +121,8 @@
+ 				raise ValueError('Frontier Beta prior parameters must be positive.')
+ 			if frontier_posterior_mode not in ('expected_activity', 'mean_plugin'):
+ 				raise ValueError('Unknown frontier_posterior_mode.')
++			if frontier_mode not in ('replace', 'gate'):
++				raise ValueError('Unknown frontier_mode.')
+ 		self.comparator_fn = comparator_fn
+ 
+ 		self.n_devices = n_devices
+@@ -155,6 +162,7 @@
+ 			frontier_require_n_eval_match=self.frontier_require_n_eval_match,
+ 			frontier_prior_alpha=self.frontier_prior_alpha,
+ 			frontier_decay=self.frontier_decay,
++			frontier_mode=self.frontier_mode,
+ 			frontier_prior_beta=self.frontier_prior_beta,
+ 			frontier_success_threshold=self.frontier_success_threshold,
+ 			frontier_posterior_mode=self.frontier_posterior_mode,
+@@ -389,13 +397,22 @@
+ 			candidate_trials = base_trials.astype(jnp.float32)*_decay \
+ 				+ observed_trials.astype(jnp.float32)
+ 			if self.use_frontier_activity:
+-				score = coefficient_activity_score(
++				activity = coefficient_activity_score(
+ 					candidate_successes,
+ 					candidate_trials,
+ 					self.frontier_n_rollouts,
+ 					self.frontier_prior_alpha,
+ 					self.frontier_prior_beta,
+ 					self.frontier_posterior_mode)
++				if self.frontier_mode == 'gate':
++					# Activity-gated regret: keep MaxMC's per-timestep, continuous
++					# value-error signal (arrives in `score`), and multiply by the
++					# posterior activity so mastered (p->1) and hopeless (p->0)
++					# levels are suppressed. MaxMC can be negative; clip at 0 so
++					# the gate cannot invert sign, then scale.
++					score = jnp.maximum(score, 0.0)*activity
++				else:
++					score = activity
+ 
+ 			should_insert = jnp.greater_equal(score, scores.at[insert_idx].get())
+ 			should_insert = jnp.logical_and(should_insert, done_mask)
+@@ -484,7 +501,12 @@
+ 		if parent_idxs is None:
+ 			parent_idxs = jnp.full_like(level_idxs, -1)
+ 
+-		if plr_buffer.ued_score == UEDScore.MAX_MC.value:
++		# Gate mode carries MaxMC under the frontier path, so it must keep the
++		# per-level max-return memory too, even though the enum is the RETURN
++		# placeholder there.
++		_tracks_max_return = (plr_buffer.ued_score == UEDScore.MAX_MC.value) or (
++			self.use_frontier_activity and self.frontier_mode == 'gate')
++		if _tracks_max_return:
+ 			max_returns = info['max_returns']
+ 		else:
+ 			max_returns = jnp.full_like(level_idxs, -1)
+--- a/src/minimax/arguments.py	2026-08-16 20:04:01.935225549 -0400
++++ b/src/minimax/arguments.py	2026-08-16 20:41:10.012510977 -0400
+@@ -210,6 +210,12 @@
+     help='Declared N in the coefficient-activity score 1-(1-p)^N-p.'
+ )
+ plr_subparser.add_argument(
++    '--frontier_mode',
++    type=str,
++    default='replace',
++    help="'replace': score = u_N(posterior). 'gate': score = MaxMC * u_N(posterior)."
++)
++plr_subparser.add_argument(
+     '--frontier_decay',
+     type=float,
+     default=1.0,
+--- a/src/minimax/runners/plr_runner.py	2026-08-16 20:04:01.935225549 -0400
++++ b/src/minimax/runners/plr_runner.py	2026-08-16 20:41:28.451709880 -0400
+@@ -65,6 +65,7 @@
+ 		frontier_n_rollouts=8,
+ 		frontier_require_n_eval_match=True,
+ 		frontier_decay=1.0,
++		frontier_mode='replace',
+ 		frontier_prior_alpha=1.0,
+ 		frontier_prior_beta=1.0,
+ 		frontier_success_threshold=0.0,
+@@ -99,6 +100,7 @@
+ 		self.frontier_n_rollouts = frontier_n_rollouts
+ 		self.frontier_require_n_eval_match = frontier_require_n_eval_match
+ 		self.frontier_decay = frontier_decay
++		self.frontier_mode = frontier_mode
+ 		self.frontier_prior_alpha = frontier_prior_alpha
+ 		self.frontier_prior_beta = frontier_prior_beta
+ 		self.frontier_success_threshold = frontier_success_threshold
+@@ -171,6 +173,7 @@
+ 			frontier_n_eval=self.n_eval,
+ 			frontier_require_n_eval_match=self.frontier_require_n_eval_match,
+ 			frontier_decay=self.frontier_decay,
++			frontier_mode=self.frontier_mode,
+ 			frontier_prior_alpha=self.frontier_prior_alpha,
+ 			frontier_prior_beta=self.frontier_prior_beta,
+ 			frontier_success_threshold=self.frontier_success_threshold,
+@@ -303,13 +306,28 @@
+ 			is_existing = jnp.greater_equal(level_idxs, 0)
+ 			previous_successes = jnp.where(is_existing, previous_successes, 0)
+ 			previous_trials = jnp.where(is_existing, previous_trials, 0)
+-			ued_scores = coefficient_activity_score(
+-				previous_successes + frontier_successes,
+-				previous_trials + frontier_trials,
+-				self.frontier_n_rollouts,
+-				self.frontier_prior_alpha,
+-				self.frontier_prior_beta,
+-				self.frontier_posterior_mode)
++			if self.frontier_mode == 'gate':
++				# Activity-gated MaxMC: the buffer multiplies this per-level regret
++				# by u_N(posterior). Send the raw MaxMC signal here; the buffer's
++				# update loop applies the gate against the accumulated counts.
++				max_returns = jax.vmap(lambda x,y: x.at[y].get())(
++					train_state.plr_buffer.max_returns, level_idxs)
++				max_returns = jnp.where(
++					jnp.greater_equal(level_idxs, 0),
++					max_returns,
++					jnp.full_like(max_returns, -jnp.inf))
++				ued_scores, maxmc_info = compute_ued_scores(
++					UEDScore.MAX_MC, train_batch, self.n_eval,
++					info={'max_returns': max_returns}, ignore_val=-jnp.inf, per_agent=True)
++			else:
++				ued_scores = coefficient_activity_score(
++					previous_successes + frontier_successes,
++					previous_trials + frontier_trials,
++					self.frontier_n_rollouts,
++					self.frontier_prior_alpha,
++					self.frontier_prior_beta,
++					self.frontier_posterior_mode)
++				maxmc_info = {}
+ 			frontier_valid = frontier_group_is_valid(
+ 				frontier_trials, self.n_eval,
+ 				self.frontier_require_n_eval_match)
+@@ -318,6 +336,9 @@
+ 				'frontier_successes': frontier_successes,
+ 				'frontier_trials': frontier_trials,
+ 			}
++			# In gate mode the buffer must also track max_returns for MaxMC.
++			if self.frontier_mode == 'gate' and maxmc_info:
++				ued_score_info.update(maxmc_info)
+ 		else:
+ 			if self.ued_score == UEDScore.MAX_MC:
+ 				max_returns = jax.vmap(lambda x,y: x.at[y].get())(train_state.plr_buffer.max_returns, level_idxs)
