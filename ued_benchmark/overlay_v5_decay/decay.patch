@@ -1,0 +1,107 @@
+--- a/src/minimax/util/rl/plr.py	2026-08-14 03:26:20.650056877 -0400
++++ b/src/minimax/util/rl/plr.py	2026-08-16 20:03:46.473962985 -0400
+@@ -45,6 +45,9 @@
+ 	frontier_n_rollouts: int = struct.field(pytree_node=False, default=8)
+ 	frontier_n_eval: int = struct.field(pytree_node=False, default=1)
+ 	frontier_require_n_eval_match: bool = struct.field(pytree_node=False, default=True)
++	# Discount applied to a level's accumulated Beta evidence before adding this
++	# visit's observations. 1.0 reproduces the undecayed v3/v4 behaviour.
++	frontier_decay: float = struct.field(pytree_node=False, default=1.0)
+ 	frontier_prior_alpha: float = struct.field(pytree_node=False, default=1.0)
+ 	frontier_prior_beta: float = struct.field(pytree_node=False, default=1.0)
+ 	frontier_success_threshold: float = struct.field(pytree_node=False, default=0.0)
+@@ -70,6 +73,7 @@
+ 		frontier_n_rollouts=8,
+ 		frontier_n_eval=1,
+ 		frontier_require_n_eval_match=True,
++		frontier_decay=1.0,
+ 		frontier_prior_alpha=1.0,
+ 		frontier_prior_beta=1.0,
+ 		frontier_success_threshold=0.0,
+@@ -95,6 +99,7 @@
+ 		self.frontier_n_rollouts = frontier_n_rollouts
+ 		self.frontier_n_eval = frontier_n_eval
+ 		self.frontier_require_n_eval_match = frontier_require_n_eval_match
++		self.frontier_decay = frontier_decay
+ 		self.frontier_prior_alpha = frontier_prior_alpha
+ 		self.frontier_prior_beta = frontier_prior_beta
+ 		self.frontier_success_threshold = frontier_success_threshold
+@@ -127,8 +132,8 @@
+ 		self.filled = jnp.zeros(buffer_size, dtype=jnp.bool_)
+ 		self.filled_count = jnp.zeros((1,), dtype=jnp.int32)
+ 		self.n_mutations = jnp.zeros(buffer_size, dtype=jnp.uint32)
+-		self.success_counts = jnp.zeros(buffer_size, dtype=jnp.uint32)
+-		self.trial_counts = jnp.zeros(buffer_size, dtype=jnp.uint32)
++		self.success_counts = jnp.zeros(buffer_size, dtype=jnp.float32)
++		self.trial_counts = jnp.zeros(buffer_size, dtype=jnp.float32)
+ 		self.incomplete_group_count = jnp.zeros((1,), dtype=jnp.uint32)
+ 		self.duplicate_new_group_count = jnp.zeros((1,), dtype=jnp.uint32)
+ 
+@@ -149,6 +154,7 @@
+ 			frontier_n_eval=self.frontier_n_eval,
+ 			frontier_require_n_eval_match=self.frontier_require_n_eval_match,
+ 			frontier_prior_alpha=self.frontier_prior_alpha,
++			frontier_decay=self.frontier_decay,
+ 			frontier_prior_beta=self.frontier_prior_beta,
+ 			frontier_success_threshold=self.frontier_success_threshold,
+ 			frontier_posterior_mode=self.frontier_posterior_mode,
+@@ -374,8 +380,14 @@
+ 				is_new_level, 0, plr_buffer.success_counts.at[insert_idx].get())
+ 			base_trials = jnp.where(
+ 				is_new_level, 0, plr_buffer.trial_counts.at[insert_idx].get())
+-			candidate_successes = base_successes + observed_successes
+-			candidate_trials = base_trials + observed_trials
++			# Discount stale evidence: a level's pass rate drifts as the student
++			# learns, so undecayed counts describe historical difficulty. Mirrors
++			# the deployed discounted Beta tracker in frontier_rl/teacher.py.
++			_decay = jnp.float32(self.frontier_decay)
++			candidate_successes = base_successes.astype(jnp.float32)*_decay \
++				+ observed_successes.astype(jnp.float32)
++			candidate_trials = base_trials.astype(jnp.float32)*_decay \
++				+ observed_trials.astype(jnp.float32)
+ 			if self.use_frontier_activity:
+ 				score = coefficient_activity_score(
+ 					candidate_successes,
+--- a/src/minimax/arguments.py	2026-08-16 09:21:19.022329749 -0400
++++ b/src/minimax/arguments.py	2026-08-16 20:04:01.935225549 -0400
+@@ -210,6 +210,14 @@
+     help='Declared N in the coefficient-activity score 1-(1-p)^N-p.'
+ )
+ plr_subparser.add_argument(
++    '--frontier_decay',
++    type=float,
++    default=1.0,
++    help='Discount on a level\'s accumulated Beta evidence per revisit. '
++         '1.0 keeps the undecayed v3/v4 behaviour; <1 forgets stale evidence '
++         'as the student improves.'
++)
++plr_subparser.add_argument(
+     '--frontier_require_n_eval_match',
+     type=str2bool,
+     default=True,
+--- a/src/minimax/runners/plr_runner.py	2026-08-14 03:26:20.646056837 -0400
++++ b/src/minimax/runners/plr_runner.py	2026-08-16 20:04:01.935225549 -0400
+@@ -64,6 +64,7 @@
+ 		use_parallel_eval=False,
+ 		frontier_n_rollouts=8,
+ 		frontier_require_n_eval_match=True,
++		frontier_decay=1.0,
+ 		frontier_prior_alpha=1.0,
+ 		frontier_prior_beta=1.0,
+ 		frontier_success_threshold=0.0,
+@@ -97,6 +98,7 @@
+ 		self.use_frontier_activity = ued_score == 'coefficient_activity'
+ 		self.frontier_n_rollouts = frontier_n_rollouts
+ 		self.frontier_require_n_eval_match = frontier_require_n_eval_match
++		self.frontier_decay = frontier_decay
+ 		self.frontier_prior_alpha = frontier_prior_alpha
+ 		self.frontier_prior_beta = frontier_prior_beta
+ 		self.frontier_success_threshold = frontier_success_threshold
+@@ -168,6 +170,7 @@
+ 			frontier_n_rollouts=self.frontier_n_rollouts,
+ 			frontier_n_eval=self.n_eval,
+ 			frontier_require_n_eval_match=self.frontier_require_n_eval_match,
++			frontier_decay=self.frontier_decay,
+ 			frontier_prior_alpha=self.frontier_prior_alpha,
+ 			frontier_prior_beta=self.frontier_prior_beta,
+ 			frontier_success_threshold=self.frontier_success_threshold,
