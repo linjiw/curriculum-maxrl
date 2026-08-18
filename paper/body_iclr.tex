@@ -4,7 +4,10 @@ group estimator that converts sampled outcomes into updates. We ask which
 tasks that estimator makes active. For the practical MaxRL convention that
 drops all-fail groups, the expected absolute coefficient mass over $N$
 i.i.d.\ binary rollouts is exactly $2(\passat{N}-\passat{1})$, the
-estimator's own pass@$N$ gap. Its peak moves toward harder tasks as $N$ grows,
+estimator's own pass@$N$ gap, and the resulting score factors exactly as
+$p(1-p)\cdot w_{N-1}(p)$: the learnability score reweighted by MaxRL's own
+weight function at the truncation the deployed estimator targets. Its peak
+moves toward harder tasks as $N$ grows,
 it recovers $p(1-p)$ at $N=2$, and the all-fail rule shifts the corresponding
 truncation order to $N-1$. This is an estimator-side diagnostic, not a theorem
 of learning progress. In a fresh 20-seed Acrobot tournament at $N=16$, the
@@ -29,56 +32,61 @@ as a rollout-aware curriculum hypothesis rather than a universal objective.
 \section{Introduction}
 
 RL with verifiable rewards (RLVR) converts automatically checkable outcomes
-into policy updates, but every update first pays for a group of model
+into policy updates, and every update first pays for a group of $N$ model
 rollouts. A task curriculum tries to make that budget productive by sampling
-tasks believed to be learnable now. Such curricula are often evaluated as
-portable modules, separately from the estimator that turns their sampled data
-into gradients.
+tasks believed to be learnable now. The dominant curriculum score in the
+literature is learnability, $p(1-p)$ \citep{procurl,sfl}: sample tasks the
+policy solves about half the time. We ask a question that score does not:
+\emph{learnable for which learner?} Modern RLVR does not run REINFORCE with one
+rollout. It runs a group estimator --- MaxRL \citep{maxrl}, GRPO, RLOO --- that
+converts $N$ binary outcomes into coefficients, and the coefficients that
+estimator can emit on a task are a function of the task's pass rate and of
+$N$.
 
-That separation is fragile. Group-relative estimators emit no contrast when
-all $N$ samples agree, while success-conditioned estimators may drop all-fail
-groups entirely. Variance normalization can continue weighting near-mastered
-prompts after a success-conditioned estimator has released them. A sampler
-and estimator can therefore move training mass toward different parts of the
-task pool even when both are described as improving efficiency.
-
-We organize these interactions around the expected absolute coefficient mass
-emitted by the deployed estimator before accounting for score-gradient
-direction or magnitude. For practical MaxRL \citep{maxrl}, this mass is
+We answer for practical MaxRL. Its expected absolute coefficient mass on a
+task with pass rate $p$ is exactly
 \[
-A_N(p)=2\{1-(1-p)^N-p\}=2(\passat{N}-\passat{1}).
+A_N(p)=2\{1-(1-p)^N-p\}=2(\passat{N}-\passat{1}),
 \]
-Its two zeros separate a dead zone, a learnable region, and a mastered tail.
-Its peak moves toward harder prompts as the rollout count grows. Coefficient
-mass is not a proof of learning progress, but it is estimator-side activity a
-task sampler can predict before purchasing a group of rollouts.
+and the resulting score factors as
+\[
+u_N(p)=A_N(p)/2=p(1-p)\cdot w_{N-1}(p),
+\]
+where $w_T(p)=\sum_{k=1}^{T}(1-p)^{k-1}$ is MaxRL's own weight function
+(Cor.~\ref{cor:factor}). \textbf{Coefficient activity is learnability
+reweighted by the deployed estimator.} $p(1-p)$ is the $N{=}2$ slice; the
+peak $p^\star_N=1-N^{-1/(N-1)}\simeq\log N/N$ is derived, not tuned, and moves
+toward harder tasks as the rollout budget grows. MaxRL asked which
+\emph{objective} more compute should buy; we ask which \emph{tasks} that
+objective should be fed, and the answer is written in the same weight
+function.
 
-One central claim --- coefficient activity is a rollout-aware acquisition
-hypothesis derived from the deployed estimator --- is supported by three
-rungs:
+We then test the derived score as a curriculum hypothesis and report where it
+holds and where it stops:
 \begin{enumerate}
-\item \textbf{Derivation.}
-We derive $A_N$, its peak and asymptotics, and show that the practical
-drop-all-fail estimator targets truncation order $T=N-1$, not $N$; a
-fixed-completion sweep checks its nontrivial $N$ dependence. The identity
-is an estimator-side diagnostic, not a learning theorem.
-\item \textbf{Controlled scope test.}
-In a fixed eight-threshold Acrobot pool, $u_{16}$ scoring is supported over
-both $p(1-p)=u_2$ scoring and uniform sampling by the frozen rule; all arms
-still deploy the same $N=16$ practical-MaxRL estimator.
-In an exact-probability Digits counter-test, the internally frozen
-interaction fails, mismatched RLOO prefers the same sampler, and neither
-matched sampler beats uniform. Together these studies locate the supported
-boundary at rollout-aware difficulty targeting rather than a universal
-estimator-to-sampler mapping.
-\item \textbf{Supporting neural measurement.}
-At common optimizer settings, the externally recorded fresh maze wave has
-higher MaxRL than GRPO coverage in all six blocks under each sampler. This
-tests an estimator-conditioned ordering, not FrontierMax itself. We preserve
-the external-record and missing-checkpoint limitations and recommend retaining
-raw task outcomes so mean@$k$ and standard $\passat{k}$ can be reported under
-the exact deployed estimator.
+\item \textbf{The shape beats the learnability slice, and replicates.} In a
+fixed Acrobot pool at deployed $N{=}16$, $u_{16}$ beats $p(1-p)$ by
+$+.048$ under a frozen rule, replicated on two further platforms ($+.032$,
+$+.031$). An exact-probability Digits study shows the same shape effect at
+$+.208$ under MaxRL and $+.177$ under RLOO. Table~\ref{tab:contract} states
+exactly what is frozen and what is supporting.
+\item \textbf{The shape helps; the peak location does not.} Holding the
+estimator at $N{=}16$ and sweeping the score exponent, performance rises
+\emph{past} $N{=}16$; harder-peaked scores keep winning at this operating
+point (\S\ref{sec:peaktest}). The value of $u_N$ over $p(1-p)$ is in its tail
+--- precisely where $w_{N-1}$ differs from $1$.
+\item \textbf{As a signal of its own it is starved.} Dropped into robust PLR
+on AMaze in place of MaxMC, activity does not beat upstream: one Bernoulli
+per level visit cannot compete with a critic read at every timestep
+(\S\ref{sec:amaze}).
+\item \textbf{The estimator belongs in the curriculum's evaluation.} Digits
+rejects a universal estimator-to-sampler mapping; the maze factorial shows the
+estimator ordering coverage under either sampler; a Countdown aggregate shows
+a logged proxy moving opposite to raw outcomes. Curricula should be evaluated
+with the estimator they ship.
 \end{enumerate}
+The identity is an estimator-side diagnostic, not a theorem of learning
+progress; the rest of the paper treats it as a testable hypothesis.
 
 The paper is deliberately narrower than the full project record:
 exploratory mechanisms, failed hypotheses, robotics pilots, gate studies,
@@ -165,9 +173,33 @@ transparent: an all-fail task supplies no positive contrast, while an
 all-success task supplies no negative contrast.  It also clarifies why $N$ is
 part of the curriculum definition rather than an implementation detail.
 
+\begin{corollary}[Activity is reweighted learnability]
+\label{cor:factor}
+Write MaxRL's population gradient as $\nabla J_T=\mathbb E_x[w_T(p)\nabla p]$
+with weight function $w_T(p)=\sum_{k=1}^{T}(1-p)^{k-1}$ \citep{maxrl}. Then,
+exactly,
+\[
+u_N(p)\;=\;p(1-p)\cdot w_{N-1}(p).
+\]
+\end{corollary}
+\noindent
+By Lemma~\ref{lem:trunc} the deployed estimator targets $T=N-1$, and
+$p(1-p)\sum_{k=1}^{N-1}(1-p)^{k-1}=p\{1-(1-p)^{N-1}\}\cdot(1-p)/p\cdot p
+=(1-p)\{1-(1-p)^{N-1}\}=u_N(p)$. So coefficient activity is the
+learnability score $p(1-p)$ --- the variance of a single Bernoulli rollout,
+and the $N{=}2$ or pure-REINFORCE case --- reweighted by MaxRL's own weight
+function at the truncation order the deployed estimator actually targets.
+This is the sense in which the score is \emph{derived}: $p(1-p)$ peaks at
+$\tfrac12$ regardless of estimator, $w_{N-1}$ is decreasing in $p$ and grows
+with $N$ as $p\to0$, and their product's peak $p^\star_N=1-N^{-1/(N-1)}$ is
+where an informative rollout meets an estimator that still cares. Every
+learnability curriculum in the literature scores tasks as if the learner were
+REINFORCE with one rollout; $u_N$ scores them for the estimator that is
+deployed.
+
 \begin{figure}[t]
 \centering
-\includegraphics[width=.84\linewidth]{figures/fig1_utility}
+\includegraphics[width=.72\linewidth]{figures/fig1_utility}
 \caption{\textbf{Estimator-conditioned activity.}
 \emph{Left:} $u_N=A_N/2=\passat{N}-\passat{1}$ for several rollout
 counts; its peak is derived rather than tuned and moves toward harder tasks
@@ -179,16 +211,9 @@ coverage ordering.}
 \label{fig:utility}
 \end{figure}
 
-\paragraph{Consequences.}
-The derivative of $u_N(p)=1-p-(1-p)^N$ gives the unique peak
-\[
-p_N^\star=1-N^{-1/(N-1)}\simeq\frac{\log N}{N}.
-\]
-Thus the relevant intermediate difficulty depends on rollout budget. At
-$N=2$, $u_2=p(1-p)$, coinciding with a common learnability score. As
-$p\to0$, MaxRL carries $(N-1)$ times the coefficient mass of standard
-$1/N$-averaged RLOO. As $p\to1$, MaxRL and RLOO both decay at first order in
-$1-p$, whereas
+\paragraph{Across estimators.}
+As $p\to0$, MaxRL carries $(N-1)$ times the coefficient mass of standard
+$1/N$-averaged RLOO; as $p\to1$ both decay at first order in $1-p$, whereas
 sample-SD-normalized GRPO allocates relatively more mass to near-mastered
 prompts (App.~\ref{app:proofs}).
 
@@ -539,15 +564,9 @@ VCRL \citep{vcrl} thresholds realized group variance; PLR \citep{plr} and
 ALP-GMM \citep{alpgmm} use TD error, staleness, or temporal learning
 progress, and can therefore react to forgetting where instantaneous
 coefficient mass cannot.
-Our AMaze implementation is explicitly PLR with a new replay priority, not a
-new replay architecture: robust replay gating, buffer admission, rank and
-staleness mixing, and with-replacement draws remain those of the pinned
-\texttt{minimax} substrate \citep{minimax}. The narrow novelty is that the
-priority is the deployed-estimator- and rollout-conditioned posterior
-expectation above. Tie-aware ranking is shared with the matched MaxMC control
-and is treated as an experimental-control correction. \S\ref{sec:amaze}
-reports the development result: as a replacement for MaxMC the activity
-priority does not beat upstream robust PLR, and we say why.
+Our AMaze arm is robust PLR \citep{minimax} with the replay priority
+replaced by the posterior activity above and nothing else changed;
+\S\ref{sec:amaze} reports that it does not beat MaxMC and why.
 Generator-based UED --- PAIRED's adversary \citep{paired}, ACCEL's level
 editing \citep{accel} --- creates tasks rather than pricing a fixed pool and
 has no native analogue in our Acrobot threshold family.

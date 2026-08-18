@@ -1179,12 +1179,12 @@ of their estimator — and that what the estimator throws away is the one thing 
 curriculum can fix, until you recycle it.</em></p>
 
 <div class="card">
-  <h3>Abstract (compact ICLR submission draft)</h3>
+  <h3>Abstract (compact ICLR submission draft — <em>Learnability, Reweighted: Which Tasks the Estimator Makes Active in Verifiable-Reward RL</em>)</h3>
   <p style="font-size:0.93rem">RL with verifiable rewards (RLVR) often treats task curricula and
   failure recycling as estimator-agnostic data interventions. We ask what task-level activity the
   deployed group estimator makes available to either intervention. For the zero-stabilizer
   practical MaxRL convention with N i.i.d. binary rollouts, the expected absolute coefficient
-  mass is exactly <strong>2·(pass@N − pass@1)</strong>. The resulting activity score has a unique
+  mass is exactly <strong>2·(pass@N − pass@1)</strong>, and the resulting score factors exactly as <strong>p(1−p)·w<sub>N−1</sub>(p)</strong> — the learnability score reweighted by MaxRL's own weight function at the truncation the deployed estimator targets. The activity score has a unique
   compute-dependent peak, recovers the common learnability score p(1−p) at N=2, and shows that
   dropping all-fail groups targets truncation order N−1, not N. It is an estimator-side
   diagnostic, not a theorem of learning progress. The score's deployed-N shape carries empirical
