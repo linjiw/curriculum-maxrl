@@ -188,6 +188,9 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <header class="hero">
   <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-18</p>
   <h1>The estimator defines activity</h1>
+  <p class="lede" style="font-size:1.05rem;font-style:italic;opacity:.85">
+    The estimator defines the coefficient map; the curriculum defines the unit over which that
+    map is averaged. These operations do not commute.</p>
   <p class="lede">
     RL with verifiable rewards leans on two data-level fixes — <em>difficulty curricula</em>
     (train where learning is possible) and <em>failure recycling</em> (relabel failed rollouts
@@ -1210,13 +1213,15 @@ activity stops predicting learning.</em></p>
   PLR on AMaze in place of MaxMC, the pure activity priority is starved at one Bernoulli per
   level visit. And in a 48-block test at 1.26M parameters and deployed N=32 the same shape
   contrast is <em>negative</em> (−.0032, CI [−.0054,&nbsp;−.0011]; effects at or above the
-  registered SESOI are ruled out) — because rollouts inside a group share a level but not a task,
-  so realized coefficient mass falls below A<sub>N</sub>(p) by a factor that grows as p falls, and
-  the deployed-N peak sits in the worst-calibrated band. The controlled positives and these
-  failures support a calibrated conclusion: finite-group coefficient activity is a principled,
-  estimator-conditioned source of curriculum hypotheses, not a universal measure of learning
-  utility — and not even a reliable measure of <em>available</em> update once rollouts stop being
-  i.i.d.</p>
+  registered SESOI are ruled out). Theory explains it. The mass identity needs no independence at
+  all — A<sub>N</sub>(Q) = 2(Pr(K&gt;0) − E[K]/N) for any group law — so what fails is only the
+  <em>p</em>-only reduction: scoring an aggregate by its mean pass rate over-predicts activity by
+  exactly twice its excess all-fail probability, a penalty that grows with N and which the
+  telemetry confirms to floating point. The controlled positives and these failures support a
+  calibrated conclusion: finite-group coefficient activity is a principled, estimator-conditioned
+  source of curriculum hypotheses, not a universal measure of learning utility — and mean pass
+  rate is not a sufficient statistic for it once the curriculum names a coarser unit than the
+  estimator consumes.</p>
 </div>
 
 <div class="grid2">

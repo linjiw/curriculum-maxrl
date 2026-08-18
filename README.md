@@ -42,25 +42,47 @@ value. Three preregistered results draw that line:
 - **It is not a standalone signal.** Dropped into robust PLR on AMaze in place of MaxMC,
   activity does not beat upstream: one Bernoulli per level visit cannot replace a critic
   read at every timestep.
-- **It does not survive to neural scale.** MAZE-SCORE, 48 preregistered blocks at 1.26M
-  parameters and deployed N=32: `u_32` *loses* to `p(1−p)` (−.0032, CI [−.0054, −.0011],
-  15/48 positive) — practically ruled out at the registered +.005 SESOI. Both adaptive
-  samplers still beat uniform (`u_32` − uniform = +.0089), so curriculum sampling helps;
-  what fails is the claim that the rollout-aware shape is the better one.
+- **The `p`-only score does not survive a coarser task unit.** MAZE-SCORE, 48
+  preregistered blocks at 1.26M parameters and deployed N=32, where the
+  curriculum scores a *level* that aggregates many concrete mazes: `u_32`
+  *loses* to `p(1−p)` (−.0032, CI [−.0054, −.0011], 15/48 positive) —
+  practically ruled out at the registered +.005 SESOI. Both adaptive samplers
+  still beat uniform (`u_32` − uniform = +.0089), so curriculum sampling
+  helps; what fails is the claim that the rollout-aware shape is the better one.
 
-**Why it fails, from the telemetry** (post-hoc, descriptive): `A_N(p)` is exact only for
-conditionally i.i.d. rollouts. A group shares a *level*, not a *maze*, so its outcomes are
-correlated and unanimity is far more common than binomial. At p̂≈.11 the model predicts
-2.2% silent groups and **51.2%** are silent. The realization ratio (observed/predicted
-mass) rises monotonically with p — .43 at p̂≈.11, .93 above .7 — so with `p*_32 = .106`,
-`u_32` aims squarely at the worst-calibrated band: it predicts nearly as much activity as
-`p(1−p)` (.81 vs .88) but realizes a quarter less (.44 vs .60), losing 60.7% of its groups
-to silence against 32.2%. *The identity is exact under its assumption; the assumption
-degrades toward hard tasks; so the score over-values the region it was derived to prefer.*
+**Why, and it is a theorem rather than a diagnosis.** Realized group mass is
+the deterministic `M(K) = 2(1 − K/N)·1{K>0}`, so for **any** joint binary
+group law — no independence, no identical distribution —
 
-So: coefficient activity is an estimator-conditioned *source of curriculum hypotheses*,
-not a universal measure of learning utility — and not even a reliable measure of
-*available* update once rollouts stop being i.i.d. The ICLR submission body
+```
+A_N(Q) = 2 ( Pr(K>0) − E[K]/N )
+```
+
+The familiar `2(1 − p − (1−p)^N)` is only its conditional-i.i.d. slice. A group
+here repeats **one** concrete maze N times, so rollouts inside it *are* i.i.d.;
+what is coarse is the *scored* unit. Scoring an aggregate `z` by its mean pass
+rate therefore over-predicts activity by exactly twice its excess all-fail
+probability:
+
+```
+A_N(p̄_z) − 2·E_X[u_N(p_X)] = 2 [ Pr(K=0 | z) − (1−p̄_z)^N ]  ≥ 0
+```
+
+Verified to floating point on the campaign (max deviation 2.8e-16 over 41,101
+cells, invariant to window width). At p̂≈.11 the plug-in predicts 2.2% silent
+groups and **51.2%** are silent. Because `|u_N''|` at `u_N`'s own peak is
+≈34.7 for N=32 against `u_2(p̄) − E[u_2(P)] = Var(P)` exactly, the
+harder-peaked score pays far more for the same heterogeneity: clustered on the
+48 seed blocks, `u_32` realizes .580 [.570,.590] of its predicted mass against
+.703 [.691,.715] for `p(1−p)`, negative in 48/48 blocks.
+
+*The estimator defines the coefficient map; the curriculum defines the unit
+over which that map is averaged. These operations do not commute.*
+
+So: coefficient activity is an estimator-conditioned *source of curriculum
+hypotheses*, not a universal measure of learning utility — and a mean pass
+rate determines it only when the scored unit is the one the estimator
+consumes. The ICLR submission body
 (`paper/body_iclr.tex`, rendered at [`docs/paper-iclr.pdf`](docs/paper-iclr.pdf)) is
 written to exactly that scope.
 

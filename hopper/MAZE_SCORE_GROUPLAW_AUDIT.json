@@ -1,0 +1,77 @@
+{
+  "schema": "curriculum-maxrl/maze-score-group-law-audit/v1",
+  "note": "descriptive; no preregistered quantity is computed. Uncertainty is clustered on the 48 seed blocks.",
+  "n_group_draws": 288000,
+  "identity_checks": {
+    "window_10": {
+      "n_cells": 41101,
+      "max_abs_dev_mass_equals_2_q_minus_p": 2.7755575615628914e-16,
+      "max_abs_dev_plugin_gap_equals_2_excess_silence": 4.440892098500626e-16
+    },
+    "window_25": {
+      "n_cells": 18497,
+      "max_abs_dev_mass_equals_2_q_minus_p": 2.220446049250313e-16,
+      "max_abs_dev_plugin_gap_equals_2_excess_silence": 4.440892098500626e-16
+    },
+    "window_50": {
+      "n_cells": 9355,
+      "max_abs_dev_mass_equals_2_q_minus_p": 2.220446049250313e-16,
+      "max_abs_dev_plugin_gap_equals_2_excess_silence": 4.440892098500626e-16
+    }
+  },
+  "window_sensitivity": {},
+  "arm_un": {
+    "n_seed_blocks": 48,
+    "mean_predicted_mass": 0.7651169542026969,
+    "mean_realized_mass": 0.44373632085805487,
+    "realization_ratio_mean": 0.5804231791372122,
+    "realization_ratio_ci95_seed_clustered": [
+      0.5703574520491408,
+      0.5902003061898871
+    ],
+    "silent_group_share_mean": 0.607568715203301,
+    "silent_group_share_ci95_seed_clustered": [
+      0.6018064877895851,
+      0.6135846942005497
+    ]
+  },
+  "arm_learn": {
+    "n_seed_blocks": 48,
+    "mean_predicted_mass": 0.8477550855367252,
+    "mean_realized_mass": 0.5958600441434471,
+    "realization_ratio_mean": 0.7031080609438298,
+    "realization_ratio_ci95_seed_clustered": [
+      0.6913554182725816,
+      0.7145643318351875
+    ],
+    "silent_group_share_mean": 0.321356915687503,
+    "silent_group_share_ci95_seed_clustered": [
+      0.3157847792863152,
+      0.32701752315878235
+    ]
+  },
+  "arm_unif": {
+    "n_seed_blocks": 48,
+    "mean_predicted_mass": 0.4470791253743469,
+    "mean_realized_mass": 0.262330078125,
+    "realization_ratio_mean": 0.5873963315406961,
+    "realization_ratio_ci95_seed_clustered": [
+      0.574295343389499,
+      0.6004890242117484
+    ],
+    "silent_group_share_mean": 0.67965625,
+    "silent_group_share_ci95_seed_clustered": [
+      0.6736041666666667,
+      0.6862398437499999
+    ]
+  },
+  "paired_realization_ratio_un_minus_learn": {
+    "mean": -0.12268488180661762,
+    "ci95_seed_clustered": [
+      -0.13323706228979237,
+      -0.11174505062106331
+    ],
+    "negative_blocks": 48,
+    "n": 48
+  }
+}

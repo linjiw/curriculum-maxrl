@@ -39,7 +39,7 @@ cal = json.load(open(os.path.join(ROOT, "hopper/MAZE_SCORE_CALIBRATION.json")))
 ana = json.load(open(os.path.join(ROOT, "hopper/MAZE_SCORE_ANALYSIS.json")))
 _ = ana  # frozen primary is reported in the text and in the claim map
 
-fig, axB = plt.subplots(1, 1, figsize=(3.7, 2.45))
+fig, axB = plt.subplots(1, 1, figsize=(3.7, 2.28))
 
 # ------------------------------------------------------------------ Panel B
 p = np.array([b["mean_pass_rate_loo"] for b in cal["bins"]])

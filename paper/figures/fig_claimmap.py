@@ -52,7 +52,7 @@ def p_star(N):
 
 
 fig, (axA, axB, axC) = plt.subplots(
-    1, 3, figsize=(7.5, 2.62), gridspec_kw={"width_ratios": [0.95, 1.26, 1.18]})
+    1, 3, figsize=(7.5, 2.34), gridspec_kw={"width_ratios": [0.95, 1.26, 1.18]})
 
 # ------------------------------------------------------------------ Panel A
 p = np.linspace(1e-4, 1, 2000)
@@ -121,7 +121,7 @@ stop = [
     (-0.039, None, None, "AMaze: gate MaxMC", "1/5", False),
     (-0.00324, -0.00543, -0.00111, "MAZE-SCORE 1.26M", "15/48", True),
 ]
-ys = np.array([5.1, 4.3, 2.7, 1.9, 0.3])
+ys = np.array([5.0, 4.3, 2.6, 1.9, 0.2])
 for y, (m, lo, hi, lab, sup, hasci) in zip(ys, stop):
     if hasci:
         axC.plot([lo, hi], [y, y], color=RED, lw=1.5, solid_capstyle="round")
@@ -131,16 +131,16 @@ axC.axvline(0, color="black", lw=0.8)
 axC.set_yticks(ys)
 axC.set_yticklabels([s[3] for s in stop], fontsize=7.3)
 axC.tick_params(axis="y", length=0)
-axC.set_ylim(-0.5, 6.3)
+axC.set_ylim(-0.35, 6.15)
 axC.set_xlim(-0.158, 0.074)
 axC.set_xticks([-0.12, -0.06, 0])
 axC.set_xlabel("effect")
 axC.set_title("C   where it stops", loc="left", color=RED, pad=8)
-axC.text(0.070, 5.85, "peak location rejected", fontsize=6.9, color=RED,
+axC.text(0.070, 5.75, "peak location rejected", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
-axC.text(0.070, 3.45, "standalone signal rejected", fontsize=6.9, color=RED,
+axC.text(0.070, 3.35, "standalone signal rejected", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
-axC.text(0.070, 1.05, "neural scale rejected", fontsize=6.9, color=RED,
+axC.text(0.070, 0.95, "neural scale rejected", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
 
 fig.tight_layout(pad=0.4, w_pad=1.5)

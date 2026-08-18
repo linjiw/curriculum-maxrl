@@ -40,19 +40,36 @@ uniform, so this is not a failure of curriculum learning; it is a failure of
 No seeds were added, no endpoint substituted, no arm re-run. The Acrobot
 positive stands at 640 parameters; it does not extend to here.
 
-## Why: the i.i.d. assumption fails exactly where the score aims
+## Why: the curriculum names a coarser unit than the theory
 
 Post-hoc, descriptive, computed after the primary and changing no
-preregistered quantity (`curriculum_maxrl/maze_score/calibration.py`).
+preregistered quantity (`curriculum_maxrl/maze_score/calibration.py` and
+`group_law_audit.py`).
 
-Prop. 1 gives the expected group mass $A_N(p)=2(1-p-(1-p)^N)$ **under
-conditionally i.i.d. Bernoulli rollouts**. The telemetry records every group's
-success count and realized mass, so the prediction is directly checkable. To
-avoid circularity — mass is a deterministic function of $K$ — each group's pass
-rate is estimated **leave-one-out** from the other groups on the same level in
-the same 25-update window. 288,000 group draws:
+**Corrected mechanism.** `train.py` draws **one concrete maze per group** and
+repeats that prompt N=32 times; the teacher's posterior pools over the many
+mazes of a *level*. So rollouts inside a group *are* conditionally i.i.d. --
+the conditionally i.i.d. unit is the maze, while the unit the curriculum
+scores is the level. (An earlier draft of this document said the reverse; see
+`PI_CORRECTION_GROUPLAW_GRANULARITY_2026-08-18.md`.)
 
-| $\hat p$ (LOO) | predicted $A_{32}$ | observed mass | realized/predicted | predicted silent | observed silent |
+**The identity never needed independence.** Realized mass is the deterministic
+`M(K) = 2(1 - K/N)1{K>0}`, so for any joint binary group law
+`A_N(Q) = 2(Pr(K>0) - E[K]/N)`. The familiar `2{1-p-(1-p)^N}` is only its
+conditional-i.i.d. slice. What fails at a coarse task unit is the scalar
+`p`-only reduction, and the failure is exact:
+
+> **A_N(p̄_z) − 2·E_X[u_N(p_X)] = 2[Pr(K=0|z) − (1−p̄_z)^N] ≥ 0**
+>
+> the plug-in over-prediction equals twice the aggregate's *excess all-fail
+> probability*.
+
+**Verified to floating point**, not fitted: across 41,101 / 18,497 / 9,355
+(seed, arm, level, window) cells at window widths 10 / 25 / 50 updates, the
+maximum deviation is 2.8e-16 for `M̄ = 2(q̂ − p̂)` and 4.4e-16 for the
+excess-silence identity (`hopper/MAZE_SCORE_GROUPLAW_AUDIT.json`).
+
+| p̂ (LOO) | predicted A₃₂ | observed mass | realized/predicted | predicted silent | observed silent |
 |---|---|---|---|---|---|
 | .007 | .396 | .094 | .24 | 79.5% | 94.6% |
 | **.113** | **1.731** | **.751** | **.43** | **2.2%** | **51.2%** |
@@ -62,39 +79,32 @@ the same 25-update window. 288,000 group draws:
 | .727 | .546 | .505 | .93 | ~0% | 2.0% |
 | .945 | .111 | .103 | .93 | ~0% | 0.4% |
 
-The shape is right (binned Pearson $r=.90$) but the level is not, and the error
-is not uniform: **the realization ratio rises monotonically with $p$.** At
-$\hat p\approx.11$ the Binomial model predicts 2.2% silent groups and 51.2% are
-silent — a 24$\times$ under-estimate; at $\hat p\approx.22$ it is 1000$\times$.
+**Why the harder-peaked score pays more.** Second order, the penalty is
+≈ ½·|u_N''|·Var(p_X); at u_N's own peak |u_N''| = (N−1)/(1−p*_N) ≈ 34.7 for
+N=32, against the exact and far milder `u_2(p̄) − E[u_2(P)] = Var(P)`. Raising
+N moves activity toward harder tasks *and* makes the geometry more sensitive
+to curriculum granularity.
 
-The cause is over-dispersion. A group shares a *level*, not a *maze*. Outcomes
-inside a group are therefore positively correlated, unanimity is far more
-common than Binomial, and since $A_N$ is concave, $\mathbb E_{\text{maze}}
-[A_N(p_{\text{maze}})] < A_N(\mathbb E[p_{\text{maze}}])$. The teacher scores
-levels, so it pays exactly this concavity penalty — and the penalty is largest
-where the pass rate is lowest.
+Clustered on the 48 seed blocks (never on the 288,000 group draws):
 
-Per arm, over identical seeds and SFT checkpoints:
+| arm | realized/predicted | 95% CI (seed-clustered) | silent groups |
+|---|---|---|---|
+| `un` (u₃₂) | **.580** | [.570, .590] | **60.8%** |
+| `learn` (p(1−p)) | **.703** | [.691, .715] | **32.1%** |
+| `unif` | .587 | [.574, .601] | 68.0% |
 
-| arm | mean $\hat p$ of selected levels | predicted mass | realized mass | realized/predicted | silent groups |
-|---|---|---|---|---|---|
-| `un` ($u_{32}$) | .171 | .812 | .444 | **.55** | **60.7%** |
-| `learn` ($p(1-p)$) | .380 | .876 | .595 | **.68** | **32.2%** |
-| `unif` | .189 | .490 | .262 | .54 | 68.0% |
+Paired, `un` − `learn` = **−.123** [−.133, −.112], negative in **48/48**
+blocks.
 
-$u_{32}$ *predicts* nearly as much activity as $p(1-p)$ (.81 vs .88) but
-*realizes* a quarter less (.44 vs .60), because its peak
-$p^\star_{32}=.106$ sits in the worst-calibrated band while $p(1-p)$ peaks at
-.5, where the model is close to right. It loses almost twice as many groups to
-silence.
-
-**The identity is exact under its assumption; the assumption degrades toward
-hard tasks; so the score systematically over-values the region it was derived
-to prefer.** That is a scale-and-substrate boundary on the derivation, not a
-refutation of the algebra, and it is consistent with every other boundary we
-measured: the exponent sweep (harder peaks win where gradients are exact), the
-AMaze starvation result (one Bernoulli per visit), and the branching audit
-(activity ranks utility but locates it poorly).
+**Claim boundary.** This exactly accounts for the *coefficient-mass prediction
+error* and is consistent with the endpoint contrast. It is not an
+intervention, so it is not established as the sole causal mediator of the
+endpoint. "Neural scale" is a property of this protocol, not an isolated
+causal variable: capacity, function approximation, task heterogeneity and
+curriculum granularity all change together. The windowed estimates pool
+maze-to-maze heterogeneity with learner nonstationarity; the identity's
+window-invariance bounds but does not remove that. No counterfactual
+"a corrected score would have won" is asserted.
 
 ## What this does to the paper
 
@@ -104,8 +114,10 @@ parameters, a replication on two further platforms, and **three** preregistered
 boundaries: peak location, standalone-signal bandwidth, and now neural scale.
 The thesis that survives all of them is the one the paper already argues —
 a deployed estimator induces an activity geometry, and activity is not learning
-utility — with one addition this campaign earns: *activity is not even realized
-activity once rollouts stop being i.i.d.*
+utility — with one addition this campaign earns, now stated as a theorem
+rather than a diagnosis: *the estimator defines the coefficient map, the
+curriculum defines the unit over which that map is averaged, and these
+operations do not commute.*
 
 Not done, deliberately: no extra seeds, no metric substitution, no promotion of
 the branching $H{=}20$ secondary to rescue the headline.

@@ -7,11 +7,17 @@ on a task with pass rate p is A_N(p) = 2(1 - p - (1-p)^N).  The MAZE-SCORE
 telemetry records, for every group actually drawn, its success count K and its
 realized mass, so the prediction is checkable at the deployed N=32.
 
-Circularity is the whole difficulty: mass is a deterministic function of K, so
+Each group repeats ONE concrete maze N times, so rollouts within a group are
+conditionally i.i.d.; the heterogeneity is across the mazes of a level, which
+is the unit the teacher scores.  This is the task-granularity gap of Cor. 2,
+not a within-group dependence.
+
+Circularity is the difficulty: mass is a deterministic function of K, so
 binning by the same group's K would test nothing.  We therefore estimate each
-group's pass rate LEAVE-ONE-OUT from the OTHER groups drawn on the same level
-in the same 25-update window, and compare the observed mass of the held-out
-group against A_32 evaluated at that independent estimate.
+group's level pass rate LEAVE-ONE-OUT from the OTHER groups drawn on that
+level in the same 25-update window, and compare the observed mass of the
+held-out group against A_32 evaluated at that independent estimate.
+See group_law_audit.py for the exact-accounting version.
 
 This is a mechanism read, not an endpoint.  It is computed after the frozen
 primary and changes no preregistered quantity.
@@ -96,10 +102,10 @@ def main(argv=None):
             "predicted_mass_A32": float(a_n(pm)),
             "observed_mass_mean": float(m[sel].mean()),
             "observed_mass_sem": float(m[sel].std(ddof=1) / np.sqrt(sel.sum())),
-            # Over-dispersion check: under the i.i.d. Bernoulli model assumed by
-            # Prop. 1, a group is silent with probability (1-p)^N.  Real groups
-            # share a level but not a maze, so heterogeneity inside the group
-            # inflates both tails and starves the middle.
+            # Granularity check: a level scored by its MEAN pass rate would be
+            # silent with probability (1-p_bar)^N.  A level is a mixture over
+            # concrete mazes, so its true silence is higher by exactly the
+            # excess term of Cor. 2.
             "predicted_dead_fraction_binomial": float((1.0 - pm) ** N_ROLLOUTS),
             "observed_dead_fraction": float((k[sel] == 0).mean()),
             "predicted_allpass_fraction_binomial": float(pm ** N_ROLLOUTS),

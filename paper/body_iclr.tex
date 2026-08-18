@@ -22,18 +22,20 @@ exponent, performance rises \emph{past} $N{=}16$ (argmax at $u_{64}$), so the
 harder-peaked \emph{shape} is what helps and the deployed-$N$ peak
 \emph{location} is not. Dropped into robust PLR on AMaze in place of MaxMC,
 the pure activity priority is starved of signal at one Bernoulli per level
-visit and does not beat the upstream baseline. A third, 48-block
-preregistration then bounds the scale: at 1.26M parameters and deployed
-$N{=}32$ the same shape contrast is \emph{negative} ($-.0032$, CI
-$[-.0054,-.0011]$; an effect at or above the registered SESOI is ruled out),
-and the telemetry says why --- rollouts inside a group share a level but not a
-task, so realized coefficient mass falls below $A_N(p)$ by a factor that grows
-as $p$ falls, and the deployed-$N$ peak sits in the worst-calibrated band. The
-controlled positives and these failures support a calibrated conclusion:
-finite-group coefficient activity is a principled, estimator-conditioned
-source of curriculum hypotheses, not a universal measure of learning utility
---- and not even a reliable measure of \emph{available} update once rollouts
-stop being i.i.d.
+visit and does not beat the upstream baseline. A third, 48-block preregistration then
+bounds the task unit: where the curriculum scores a \emph{level} aggregating
+heterogeneous mazes, the same shape contrast is \emph{negative} ($-.0032$, CI
+$[-.0054,-.0011]$; an effect at or above the registered SESOI is ruled out).
+Theory explains it. The mass identity needs no independence at all
+--- $A_N=2(\Pr(K{>}0)-\mathbb E[K]/N)$ for any group law --- so what fails is
+only the $p$-only reduction: scoring an aggregate by its mean pass rate
+over-predicts activity by exactly twice its excess all-fail probability, a
+penalty that grows with $N$ and which the telemetry confirms to floating
+point. The controlled positives and these failures support a calibrated
+conclusion: finite-group coefficient activity is a principled,
+estimator-conditioned source of curriculum hypotheses, not a universal measure
+of learning utility --- and mean pass rate is not a sufficient statistic for
+it once the curriculum names a coarser unit than the estimator consumes.
 \end{abstract}
 
 \section{Introduction}
@@ -43,30 +45,24 @@ into policy updates, and every update first pays for a group of $N$ model
 rollouts. A task curriculum tries to make that budget productive by sampling
 tasks believed to be learnable now. The dominant curriculum score in the
 literature is learnability, $p(1-p)$ \citep{procurl,sfl}: sample tasks the
-policy solves about half the time. We ask a question that score does not:
-\emph{learnable for which learner?} Modern RLVR does not run REINFORCE with one
-rollout. It runs a group estimator --- MaxRL \citep{maxrl}, GRPO, RLOO --- that
-converts $N$ binary outcomes into coefficients, and the coefficients that
-estimator can emit on a task are a function of the task's pass rate and of
-$N$.
+policy solves about half the time. We ask what that score does not:
+\emph{learnable for which learner?} Modern RLVR runs a group estimator ---
+MaxRL \citep{maxrl}, GRPO, RLOO --- and the coefficients it can emit on a task
+are a function of that task's group outcome law and of $N$.
 
-We answer for practical MaxRL. Its expected absolute coefficient mass on a
-task with pass rate $p$ is exactly
-\[
-A_N(p)=2\{1-(1-p)^N-p\}=2(\passat{N}-\passat{1}),
-\]
-and the resulting score factors as
+We answer for practical MaxRL. Its expected absolute coefficient mass obeys
+$A_N=2(\Pr(K{>}0)-\mathbb E[K]/N)$ for \emph{any} group law
+(Prop.~\ref{prop:mass}); under conditionally i.i.d.\ rollouts this is
+$2\{1-(1-p)^N-p\}=2(\passat{N}-\passat{1})$ and factors as
 \[
 u_N(p)=A_N(p)/2=p(1-p)\cdot w_{N-1}(p),
 \]
 where $w_T(p)=\sum_{k=1}^{T}(1-p)^{k-1}$ is MaxRL's own weight function
 (Cor.~\ref{cor:factor}). \textbf{Coefficient activity is learnability
-reweighted by the deployed estimator.} $p(1-p)$ is the $N{=}2$ slice; the
-peak $p^\star_N=1-N^{-1/(N-1)}\simeq\log N/N$ is derived, not tuned, and moves
-toward harder tasks as the rollout budget grows. MaxRL asked which
-\emph{objective} more compute should buy; we ask which \emph{tasks} that
-objective should be fed, and the answer is written in the same weight
-function.
+reweighted by the deployed estimator.} $p(1-p)$ is the $N{=}2$ slice, and the
+peak $p^\star_N=1-N^{-1/(N-1)}\simeq\log N/N$ is derived, not tuned. MaxRL
+asked which \emph{objective} more compute should buy; we ask which
+\emph{tasks} that objective should be fed.
 
 We then test the derived score as a curriculum hypothesis and report where it
 holds and where it stops:
@@ -84,12 +80,13 @@ is in its tail --- precisely where $w_{N-1}$ differs from $1$.
 on AMaze in place of MaxMC, activity does not beat upstream: one Bernoulli
 per level visit cannot compete with a critic read at every timestep
 (\S\ref{sec:amaze}).
-\item \textbf{And it does not survive to neural scale.} In a 48-block
-preregistered test at 1.26M parameters and deployed $N{=}32$, $u_{32}$ loses
-to $p(1-p)$ ($-.0032$, CI $[-.0054,-.0011]$) --- an effect at or above the
-registered SESOI is ruled out. The telemetry says why: rollouts inside a group
-are not i.i.d., realized mass falls furthest below $A_N(p)$ at low $p$, and
-$u_{32}$ aims exactly there (\S\ref{sec:mazescore}).
+\item \textbf{And the $p$-only score does not survive a coarser task unit.}
+In a 48-block preregistered test at 1.26M parameters and deployed $N{=}32$,
+where the curriculum scores a \emph{level} that aggregates heterogeneous
+mazes, $u_{32}$ loses to $p(1-p)$ ($-.0032$, CI $[-.0054,-.0011]$) --- an
+effect at or above the registered SESOI is ruled out. Cor.~\ref{cor:gran} says
+why, and the telemetry confirms it to floating point
+(\S\ref{sec:mazescore}).
 \item \textbf{The estimator belongs in the curriculum's evaluation.} Digits
 rejects a universal estimator-to-sampler mapping; the maze factorial shows the
 estimator ordering coverage under either sampler; a Countdown aggregate shows
@@ -122,8 +119,11 @@ implementation detail remain in the appendix and artifact.
 \label{sec:theory}
 
 \paragraph{Setup.}
-For task $x$, let $r_i\in\{0,1\}$ be $N$ conditionally independent rollout
-rewards with pass rate $p=p_\theta(x)$ and $K=\sum_i r_i$. Let
+For a task $x$ let $\mathbf r\in\{0,1\}^N$ be the group's rollout rewards,
+drawn from a joint law $Q_x$, and $K=\sum_i r_i$. Write $\bar
+p=\mathbb E_{Q_x}[K]/N$ and $q_N=\Pr_{Q_x}(K>0)$; when the $N$ rollouts are
+conditionally i.i.d.\ Bernoulli$(p)$ these are $p$ and $\passat{N}=1-(1-p)^N$.
+Let
 $s_i=\nabla_\theta\log\pi_\theta(y_i\mid x)$ be the response score and
 $\hat g=\sum_iw_i s_i$ the group update. Then
 $\passat{N}=1-(1-p)^N$. We analyze the zero-stabilizer idealization of the
@@ -133,33 +133,37 @@ w_i=\frac{r_i}{K}-\frac1N\quad\text{when }K>0,
 \qquad w_i=0\quad\text{when }K=0.
 \]
 All-pass groups also have zero contrast. The released implementation uses a
-finite denominator stabilizer $\varepsilon$; for $K>0$ this multiplies the
-ideal coefficients by $K/(K+N\varepsilon)$. Thus the identities below are
-exact for the stated zero-$\varepsilon$ convention rather than for its
-finite-$\varepsilon$ magnitude.
+finite denominator stabilizer $\varepsilon$, multiplying the ideal
+coefficients by $K/(K+N\varepsilon)$ when $K>0$; the identities below are
+exact for the zero-$\varepsilon$ convention, not for its finite-$\varepsilon$
+magnitude.
 
 \begin{definition}[Finite-group activity geometry]
 \label{def:geom}
-A symmetric binary group estimator $\mathcal E$ assigns coefficients
-$\mathbf c_{\mathcal E}(K)\in\mathbb R^N$ to a group with $K$ successes. Its
-\emph{activity geometry} is the expected absolute coefficient mass it emits on
-a task of pass rate $p$,
+A binary group estimator $\mathcal E$ maps a group outcome $\mathbf r$ to
+coefficients $\mathbf c_{\mathcal E}(\mathbf r)\in\mathbb R^N$. Its
+\emph{activity geometry} is the expected absolute mass it emits on a task whose
+group outcomes follow $Q_x$,
 \[
-\mathcal A_{\mathcal E,N}(p)
-=\mathbb E_{K\sim\mathrm{Bin}(N,p)}\|\mathbf c_{\mathcal E}(K)\|_1
-=\sum_{k=0}^{N}\binom Nk p^k(1-p)^{N-k}\,a_{\mathcal E,k},
-\qquad a_{\mathcal E,k}=\|\mathbf c_{\mathcal E}(k)\|_1,
+\mathcal A_{\mathcal E,N}(Q_x)
+=\mathbb E_{\mathbf r\sim Q_x}\|\mathbf c_{\mathcal E}(\mathbf r)\|_1
+\;\;\overset{\text{symmetric}}{=}\;\;
+\sum_{k=0}^{N}Q_x(K{=}k)\,a_{\mathcal E,k},
+\qquad a_{\mathcal E,k}=\|\mathbf c_{\mathcal E}(k)\|_1 .
 \]
-a Bernstein polynomial in $p$ whose coefficients are the estimator's
-per-outcome masses.
+Under conditionally i.i.d.\ rollouts, $Q_x=\mathrm{Bernoulli}(p_x)^{\otimes N}$
+and this becomes the Bernstein polynomial
+$\sum_k\binom Nkp_x^k(1-p_x)^{N-k}a_{\mathcal E,k}$ --- a one-dimensional
+geometry over pass rate.
 \end{definition}
 \noindent
-Choosing an estimator fixes $\{a_{\mathcal E,k}\}$ and therefore fixes which
-tasks can emit an update at all. This is orthogonal to the objective-side
-question of which finite-rollout objective to deploy \citep{maxrl,rl2ml}: we
-hold the deployed estimator fixed and ask which tasks its realized
-coefficients make active. What singles out practical MaxRL is that its
-Bernstein sum collapses to a closed form.
+Every estimator induces activity over a \emph{group outcome law}; conditional
+i.i.d.\ sampling is what reduces that law to a geometry over a single scalar.
+Choosing an estimator fixes $\{a_{\mathcal E,k}\}$ and therefore which tasks can
+emit an update at all, orthogonally to the objective-side question of which
+finite-rollout objective to deploy \citep{maxrl,rl2ml}. What singles out
+practical MaxRL is that its mass is affine in the two statistics $(q_N,\bar
+p)$, so the sum collapses without any independence assumption.
 
 \begin{lemma}[Practical truncation order]
 \label{lem:trunc}
@@ -178,54 +182,43 @@ For $J_T(p)=-\sum_{t=1}^{T}(1-p)^t/t$, direct conditioning gives
 The correction matters whenever a theoretical truncation parameter is mapped
 to a deployed group size. \emph{This $N-1$ statement does not revise MaxRL's
 theorem for its uncentered conditional estimator}; it characterizes the
-released practical centered convention after its all-fail group is zeroed, so
-the shift from $N$ to $N-1$ is a property of the deployed
-centered-and-dropped rule rather than of the maximum-likelihood expansion.
+released centered convention after its all-fail group is zeroed, so the shift
+is a property of the deployed rule, not of the maximum-likelihood expansion.
 Details and the non-dropped control-variate convention are in
 App.~\ref{app:proofs}.
 
-\begin{proposition}[Exact coefficient mass]
+\begin{proposition}[Exact coefficient mass under any group law]
 \label{prop:mass}
-The expected absolute coefficient mass of the practical estimator is
+For \emph{any} joint binary group law $Q$ --- no independence and no identical
+distribution required --- the practical estimator's expected absolute
+coefficient mass is
 \[
-A_N(p)=\mathbb E\!\left[\sum_{i=1}^{N}|w_i|\right]
-=2\{1-p-(1-p)^N\}
-=2(\passat{N}-\passat{1}).
+A_N(Q)=\mathbb E_Q\!\left[\sum_{i=1}^{N}|w_i|\right]=2\left(q_N-\bar p\right).
+\]
+If the rollouts are conditionally i.i.d.\ Bernoulli$(p)$ this is
+\[
+A_N(p)=2\{1-p-(1-p)^N\}=2(\passat{N}-\passat{1}).
 \]
 \end{proposition}
 \noindent
-For a mixed group with $0<K<N$, successes and failures each contribute
-$(N-K)/N$ absolute mass. Therefore
-\[
-A_N(p)=\frac{2}{N}\mathbb E[(N-K)\mathbf1\{K>0\}]
-=2\{(1-p)-(1-p)^N\}.
-\]
-This identity concerns coefficients, not gradient norm, signal-to-noise
-ratio, or expected improvement: score-gradient geometry can change its
-downstream effect.
+The realized mass of a group is the deterministic function
+$M(K)=2(1-K/N)\mathbf1\{K>0\}$ --- successes and failures each contribute
+$(N-K)/N$ when $0<K<N$ --- so $A_N(Q)=\mathbb E_Q[M(K)]=2(q_N-\bar p)$ needs no
+distributional assumption at all; only the scalarization to $p$ does. This
+identity concerns coefficients, not gradient norm, signal-to-noise ratio, or
+expected improvement: score-gradient geometry can change its downstream
+effect.
 
-The bridge to the expected update is nevertheless exact. With
-$\mu_+=\mathbb E[s_i\mid r_i=1,x]$ and
-$\mu_-=\mathbb E[s_i\mid r_i=0,x]$,
-\[
-\mathbb E[\hat g\mid x]=u_N(p)(\mu_+-\mu_-),
-\qquad u_N(p)=A_N(p)/2.
-\]
-Thus $u_N$ is the estimator-controlled scalar factor in the expected update;
-the conditional score geometry remains outside the mass calculation.
-It also has a direct event interpretation.  For any designated rollout,
-
-\[
-u_N(p)=\Pr(K>0)-\Pr(r_1=1)
-=\Pr(r_1=0,\,K>0)
-=(1-p)\{1-(1-p)^{N-1}\}.
-\]
-
-Thus activity is precisely the probability that one rollout fails while at
-least one peer in the purchased group succeeds.  This makes the two dead zones
-transparent: an all-fail task supplies no positive contrast, while an
-all-success task supplies no negative contrast.  It also clarifies why $N$ is
-part of the curriculum definition rather than an implementation detail.
+The bridge to the expected update is exact: with
+$\mu_\pm=\mathbb E[s_i\mid r_i{=}1/0,x]$ we have
+$\mathbb E[\hat g\mid x]=u_N(p)(\mu_+-\mu_-)$ for $u_N=A_N/2$, so $u_N$ is the
+estimator-controlled scalar factor in the expected update and the conditional
+score geometry stays outside the mass calculation. Under i.i.d.\ rollouts
+$u_N(p)=\Pr(r_1{=}0,\,K>0)=(1-p)\{1-(1-p)^{N-1}\}$: activity is the
+probability that one rollout fails while a peer in the purchased group
+succeeds. Both dead zones follow --- an all-fail task supplies no positive
+contrast, an all-success task no negative contrast --- as does why $N$ belongs
+in the curriculum's definition rather than its implementation.
 
 \begin{corollary}[Activity is reweighted learnability]
 \label{cor:factor}
@@ -238,20 +231,40 @@ u_N(p)\;=\;p(1-p)\cdot w_{N-1}(p).
 \end{corollary}
 \noindent
 By Lemma~\ref{lem:trunc} the deployed estimator targets $T=N-1$, and
-$p(1-p)\sum_{k=1}^{N-1}(1-p)^{k-1}=p\{1-(1-p)^{N-1}\}\cdot(1-p)/p\cdot p
-=(1-p)\{1-(1-p)^{N-1}\}=u_N(p)$. So coefficient activity is the
-learnability score $p(1-p)$ --- the variance of a single Bernoulli rollout,
-and the $N{=}2$ or pure-REINFORCE case --- reweighted by MaxRL's own weight
-function at the truncation order the deployed estimator actually targets.
-This is the sense in which the score is \emph{derived}: $p(1-p)$ peaks at
-$\tfrac12$ regardless of estimator, $w_{N-1}$ is decreasing in $p$ and grows
-with $N$ as $p\to0$, and their product's peak $p^\star_N=1-N^{-1/(N-1)}$ is
-where an informative rollout meets an estimator that still cares. The canonical
-binary-success learnability score $p(1-p)$ --- used explicitly by SFL and
-LILO \citep{sfl,lilo}, and recovered here as RLOO's coefficient mass --- is
-therefore the $N{=}2$ slice of practical MaxRL activity: it scores tasks as
-if the learner were REINFORCE with one rollout, while $u_N$ scores them for
-the estimator that is deployed.
+$p(1-p)\sum_{k=1}^{N-1}(1-p)^{k-1}=(1-p)\{1-(1-p)^{N-1}\}=u_N(p)$. So
+coefficient activity is the learnability score reweighted by MaxRL's own
+weight function at the truncation the deployed estimator targets: $p(1-p)$
+peaks at $\tfrac12$ regardless of estimator, $w_{N-1}$ decreases in $p$ and
+grows with $N$ as $p\to0$, and their product peaks at
+$p^\star_N=1-N^{-1/(N-1)}$, where an informative rollout meets an estimator
+that still cares. The canonical binary-success score $p(1-p)$ --- used by SFL
+and LILO \citep{sfl,lilo} and recovered here as RLOO's coefficient mass --- is
+therefore the $N{=}2$ slice: it scores tasks as if the learner were REINFORCE
+with one rollout, while $u_N$ scores them for the estimator deployed.
+
+\begin{corollary}[Task granularity]
+\label{cor:gran}
+Suppose a curriculum scores an aggregate $z$ (a level, template, or domain)
+whose concrete tasks are $X\sim\nu(\cdot\mid z)$ with conditionally i.i.d.\
+rollouts given $X$. Because $u_N''(p)=-N(N-1)(1-p)^{N-2}<0$, plugging the
+aggregate's mean pass rate $\bar p_z$ into $u_N$ over-predicts its activity,
+and the gap is exactly the aggregate's excess all-fail probability:
+\[
+A_N(\bar p_z)-2\,\mathbb E_X[u_N(p_X)]
+=2\left[\Pr(K{=}0\mid z)-(1-\bar p_z)^N\right]\;\ge\;0 .
+\]
+\end{corollary}
+\noindent
+Both sides follow from Prop.~\ref{prop:mass}: the aggregate's own group law has
+$q_N=1-\Pr(K{=}0\mid z)$, so $2(q_N-\bar p_z)$ is its true activity and
+subtracting it from $A_N(\bar p_z)$ leaves the excess-silence term. Curvature
+says who pays: near $p^\star_N$ the penalty is
+$\approx\tfrac12|u_N''|\operatorname{Var}(p_X)$ with
+$|u_N''(p^\star_N)|=(N-1)/(1-p^\star_N)\approx34.7$ at $N{=}32$, against the
+exact and far milder $u_2(\bar p)-\mathbb E[u_2(p_X)]=\operatorname{Var}(p_X)$.
+\textbf{Raising $N$ moves activity toward harder tasks and makes the geometry
+more sensitive to how coarsely the curriculum names a task}
+(\S\ref{sec:mazescore}).
 
 
 
@@ -263,15 +276,12 @@ allocates relatively more mass to near-mastered prompts
 (Fig.~\ref{fig:utility}, App.~\ref{app:proofs}).
 
 \paragraph{Fixed-completion check.}
-On a 36-task CPU skill-chain testbed with $N\in\{2,4,8,16,32\}$, eight paired
-seeds, and exactly 51,200 sampled completions per cell (decay normalized per
-completion, so changing $N$ does not change the teacher's memory horizon), the
-mean normalized pass-rate AUC difference $u_N-p(1-p)$ is $.0000$, $+.0307$,
-$+.0920$, $+.1526$, $+.1909$, and $u_N-\mathrm{uniform}$ is $-.0106$,
-$-.0032$, $+.0309$, $+.0453$, $+.0836$. The $N=2$ identity reproduces
-bit-for-bit and every $N>2$ beats $p(1-p)$ in all eight seeds, but only 5/8
-trajectories are monotone, so we claim no scaling law, and $u_N$ passes
-uniform only at $N\ge8$. Descriptive and not preregistered.
+On a 36-task CPU skill-chain testbed at fixed sampled-completion budget, the
+mean normalized pass-rate AUC difference $u_N-p(1-p)$ rises $.0000$, $+.0307$,
+$+.0920$, $+.1526$, $+.1909$ over $N\in\{2,4,8,16,32\}$, positive in all eight
+paired seeds for every $N>2$, though only 5/8 trajectories are monotone and
+$u_N$ passes uniform only at $N\ge8$. Descriptive, not preregistered;
+protocol and the uniform contrasts are in App.~\ref{app:protocols}.
 
 \paragraph{Exact-probability counter-test.}
 The stronger test does not generalize the sampler mapping. Under an
@@ -282,50 +292,40 @@ interaction, $+.01589$ (95\% CI $[-.01686,+.04712]$, $p=.350$; 15/24), is not
 supported: MaxRL favors $u_8$ over $p(1-p)$ by $+.20842$ (23/24), but so does
 RLOO ($+.17665$, 24/24), reversing its prediction, and both matched samplers
 fall below uniform. One study thus carries the paper's largest shape effect
-and its sharpest negative --- the harder-peaked score wins under \emph{both}
-estimators, while the estimator-\emph{matching} rule that would make it a
-mapping is rejected.
+and its sharpest negative.
 
 \paragraph{Instantiation.}
 \label{sec:method}
 FrontierMax operationalizes the geometry without changing the within-group
-estimator. Each task keeps discounted Beta evidence, draws a posterior pass
+estimator: each task keeps discounted Beta evidence, draws a posterior pass
 rate $\tilde p_x$, and is sampled with probability $q(x)=\epsilon/M+
 (1-\epsilon)[u_N(\tilde p_x)]^\gamma/\sum_j[u_N(\tilde p_j)]^\gamma$. The
 floor $\epsilon$, concentration $\gamma$, decay, and posterior estimator
-remain empirical choices: the theory supplies the utility and its
-$N$-dependence, not a parameter-free scheduler. The same utility admits an
-exact deterministic posterior priority --- for
+remain empirical choices; the theory supplies the utility and its
+$N$-dependence, not a parameter-free scheduler. An exact deterministic
+posterior priority is also available --- for
 $p_x\mid\mathcal D\sim\operatorname{Beta}(a_x,b_x)$ with $(z)_N$ the rising
 factorial,
-\[
-\mathbb E[u_N(p_x)\mid\mathcal D]
-=1-\frac{(b_x)_N}{(a_x+b_x)_N}-\frac{a_x}{a_x+b_x},
-\]
-which the AMaze arm uses; scoring the posterior \emph{mean} instead overstates
-expected activity by a closed-form uncertainty penalty
-(App.~\ref{app:proofs}). Coefficient activity is the shared quantity, not a
-license to conflate a proved identity, a tested fixed-pool teacher, and an
-untested replay overlay; Table~\ref{tab:instantiations} in
-App.~\ref{app:algs} attaches a status to each object separately. The mass
-curves finally motivate, but do not prove, one empirical expectation: MaxRL
-and variance-normalized GRPO can show different coverage orderings under a
-common sampler.
+$\mathbb E[u_N(p_x)\mid\mathcal D]=1-(b_x)_N/(a_x+b_x)_N-a_x/(a_x+b_x)$, which
+the AMaze arm uses; scoring the posterior \emph{mean} instead overstates
+activity by a closed-form uncertainty penalty (App.~\ref{app:proofs}), the
+same concavity that drives Cor.~\ref{cor:gran}. Coefficient activity is the
+shared quantity, not a license to conflate a proved identity, a tested
+fixed-pool teacher, and an untested replay overlay;
+Table~\ref{tab:instantiations} in App.~\ref{app:algs} attaches a status to
+each object separately.
 
 \section{Evidence}
 \label{sec:evidence}
 
-The evidence has two roles: the Acrobot tournament isolates the deployed-$N$
-score shape under a fixed scaffold, while the maze factorial tests an
-estimator-conditioned coverage ordering on real neural gradients --- an
-estimator-side prediction, not the score. The Digits counter-test supplies
-both the boundary on estimator-matching and, read the other way, the largest
-shape effect in the paper. The score's positive support is deliberately
-small-scale and fully controlled --- deliberately, and now measurably so:
-\S\ref{sec:mazescore} reports the preregistered neural-scale test it does
-\emph{not} pass. Figure~\ref{fig:claimmap} states for each contrast what it is
-and is not: one frozen primary, concordant supporting measurements, three
-preregistered boundaries.
+The Acrobot tournament isolates the deployed-$N$ score shape under a fixed
+scaffold where the scored unit is the task itself; the maze factorial tests an
+estimator-conditioned coverage ordering, not the score; and Digits supplies
+both the boundary on estimator-matching and the largest shape effect here. The
+positive support is deliberately controlled and, as \S\ref{sec:mazescore}
+shows, measurably bounded. Figure~\ref{fig:claimmap} states for each contrast
+what it is and is not: one frozen primary, concordant supporting
+measurements, three preregistered boundaries.
 
 
 
@@ -333,15 +333,13 @@ preregistered boundaries.
 \label{sec:acrobot}
 
 We isolate the arbitrary-$N$ score on official Gymnasium
-\texttt{Acrobot-v1}. Eight nested tip-height predicates share one task-blind
-H64 actor (640 parameters), the hardest being exactly native Acrobot success.
-All arms use practical MaxRL at $N=16$, no hindsight, learning rate
-$3\times10^{-4}$, and a nominal two million paid environment transitions;
-twenty fresh paired seeds compare uniform sampling, the common-scaffold
-$p(1-p)=u_2$ score, and $u_{16}$ under identical discounted Beta tracking. The
-internally frozen primary is target-uniform normalized transition-AUC ---
-evaluation success averaged uniformly over the eight predicates, integrated
-over the paid-transition axis and normalized by the budget --- for
+\texttt{Acrobot-v1}, where the scored unit \emph{is} the task. Eight nested
+tip-height predicates share one task-blind H64 actor (640 parameters), the
+hardest being exactly native Acrobot success. All arms use practical MaxRL at
+$N=16$, no hindsight, learning rate $3\times10^{-4}$, and a nominal two
+million paid transitions; twenty fresh paired seeds compare uniform sampling,
+$p(1-p)=u_2$, and $u_{16}$ under identical discounted Beta tracking. The
+internally frozen primary is target-uniform normalized transition-AUC for
 $u_{16}-p(1-p)$, requiring a positive exact two-sided sign-flip test at $.05$
 and a point estimate of at least $+.01$.
 
@@ -402,15 +400,14 @@ independent seeds.
 
 \paragraph{Why the curve rises past the deployed $N$.}
 Branching an exact-gradient pool to measure true continuation utility
-$U_H(x)=J(\mathrm{Train}_H(\theta;x))-J(\theta)$ at $H=8$, $u_{16}$ ranks it far
-better than $p(1-p)$ ($+.106$, 10 seeds, exact $p=.002$), while under RLOO ---
-whose mass \emph{is} $2p(1-p)$ --- the two are indistinguishable ($+.0001$).
-But $U_H$ peaks near $p\approx.02$, below both $p^\star_{16}$ and
+$U_H(x)=J(\mathrm{Train}_H(\theta;x))-J(\theta)$ at $H=8$, $u_{16}$ ranks it
+far better than $p(1-p)$ ($+.106$, 10 seeds, exact $p=.002$), while under RLOO
+--- whose mass \emph{is} $2p(1-p)$ --- the two are indistinguishable
+($+.0001$). But $U_H$ peaks near $p\approx.02$, below both $p^\star_{16}$ and
 $p^\star_{64}$: activity ranks utility well and \emph{locates} it poorly.
-That local activity and downstream benefit can diverge is also reported
-across domains under GRPO \citep{tac}; we observe it within one family at a
-fixed deployed $N$. Mechanism on 36 synthetic tasks, not evidence for a
-sampler.
+Local activity and downstream benefit are also reported to diverge across
+domains under GRPO \citep{tac}. Mechanism on 36 synthetic tasks, not evidence
+for a sampler.
 
 The contrast stays descriptively positive on sampled-group ($+.05294$) and
 optimizer-update ($+.05366$) axes, and $u_{16}$ receives 2.40 fewer groups and
@@ -425,17 +422,15 @@ audited but RNG-confounded precursor.
 
 The natural competitive test drops the activity priority into
 \texttt{minimax}'s robust PLR \citep{plr,minimax} in place of MaxMC, running
-the authors' shipped maze configurations verbatim. Our development sweep ---
-seeds disjoint from any confirmatory block, 5{,}000 of the 30{,}000 shipped
-updates, five paired seeds per arm, held-out return over the three shipped
-test mazes --- is negative, and the reason is informative. Upstream robust PLR
-scores $.629$ and the no-curriculum control $.539$; every activity-priority
-variant is below the control. Replacing MaxMC with
-$\mathbb E[u_N(p)\mid\mathcal D]$ at the shipped $32{\times}1$ batch scores
-$.500$ ($N{=}8$; $0/5$ seeds beat MaxMC, exact $p{=}.0625$) and $.551$
-($N{=}16$); a $4{\times}8$ regrouping that buys per-level evaluation fidelity
-with level diversity costs $-.207$ for MaxMC too, and the same holds inside
-ACCEL.
+the shipped maze configurations verbatim. Our development sweep --- seeds
+disjoint from any confirmatory block, 5{,}000 of the 30{,}000 shipped updates,
+five paired seeds per arm, held-out return over the three shipped test mazes
+--- is negative, and the reason is informative. Upstream robust PLR scores
+$.629$ and the no-curriculum control $.539$, with every activity variant below
+the control: replacing MaxMC with $\mathbb E[u_N(p)\mid\mathcal D]$ at the
+shipped $32{\times}1$ batch scores $.500$ ($N{=}8$; $0/5$ seeds beat MaxMC,
+exact $p{=}.0625$) and $.551$ ($N{=}16$), while a $4{\times}8$ regrouping that
+buys evaluation fidelity with level diversity costs $-.207$ for MaxMC too.
 
 The cause is information, not shape. MaxMC reads critic disagreement
 $\max\text{-return}-V(s_t)$ at every timestep, with memory of the best return
@@ -443,13 +438,12 @@ ever achieved on that level, while at the shipped \texttt{n\_eval}${=}1$ a
 success-rate score gets one terminal Bernoulli per level visit --- a
 two-valued posterior, nearly all ties under rank prioritisation --- and
 \texttt{max\_episode\_steps}${=}250$ against a $256$-step rollout forbids a
-second episode; accumulating over revisits does not close the gap. Gating
-MaxMC by activity rather than replacing it recovers most of the gap ($.590$;
-$-.039$ to upstream, $1/5$) without clearing it. The AMaze student is PPO with
+second episode. Gating MaxMC by activity rather than replacing it recovers
+most of the gap ($.590$; $-.039$ to upstream, $1/5$) without clearing it. The AMaze student is PPO with
 GAE and never forms binary rollout groups, so the faithful mapping is outside
 this evidence.
 
-\subsection{Neural scale: the shape does not transfer}
+\subsection{A coarser task unit: the $p$-only score does not transfer}
 \label{sec:mazescore}
 
 Every positive above is at 640 or 4{,}810 parameters with exact or
@@ -465,53 +459,56 @@ bound, \emph{and} at least $+.005$.
 The primary is \textbf{practically ruled out} by the frozen rule: $u_{32}$
 minus $p(1-p)$ is $-.00324$ (95\% CI $[-.00543,-.00111]$, exact $p=.0054$,
 15/48), the interval's upper bound falling below the SESOI. The registered
-secondary is supported --- $u_{32}$ beats uniform by $+.00888$
-($[+.00657,+.01115]$, 41/48) --- so curriculum sampling helps here; what fails
-is that the rollout-aware shape is the \emph{better} one. Per the branch fixed
-in advance we report that effects at or above the SESOI are ruled out under
-this protocol, and claim no universal non-transfer.
+secondary is supported ($u_{32}$ beats uniform by $+.00888$,
+$[+.00657,+.01115]$, 41/48), so curriculum sampling helps here; what fails is
+that the rollout-aware shape is the \emph{better} one. Per the branch fixed in
+advance, effects at or above the SESOI are ruled out under this protocol and
+no universal non-transfer is claimed.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=.52\linewidth]{figures/fig_mazescore}
-\caption{\textbf{Why the shape stops transferring} (descriptive, computed
-after the frozen primary). Predicted mass assumes conditionally i.i.d.
-rollouts; each group's pass rate is estimated leave-one-out from the other
-groups on its level, so mass is never binned against its own $K$. Realized
-mass tracks the predicted \emph{shape} ($r=.90$ over 288{,}000 group draws)
-but falls below it, and the shortfall grows as $p$ falls.}
+\caption{\textbf{The task-granularity gap} (descriptive, computed after the
+frozen primary). Plug-in prediction evaluates $A_{32}$ at a level's mean pass
+rate, estimated leave-one-out from the other groups on that level so mass is
+never binned against its own $K$. Realized mass tracks the predicted
+\emph{shape} ($r=.90$, 288{,}000 group draws) but lies below it by exactly
+twice the level's excess all-fail probability (Cor.~\ref{cor:gran}), a gap
+that widens as $p$ falls.}
 \label{fig:mazescore}
 \end{figure}
 
-\paragraph{Why: the i.i.d. assumption fails where the score aims.}
-Proposition~\ref{prop:mass} is exact for conditionally i.i.d.\ rollouts. A
-group here shares a \emph{level}, not a maze, so its outcomes are positively
-correlated, unanimity is far more common than binomial, and by concavity of
-$A_N$ realized mass falls below $A_N(\hat p)$. The telemetry measures the gap
-(Fig.~\ref{fig:mazescore}): at $\hat p\approx.11$ the binomial model predicts
-$2.2\%$ silent groups and $51.2\%$ are silent; at $\hat p\approx.22$,
-$0.03\%$ against $31.6\%$. The realization ratio rises monotonically with $p$
-($.43$ at $\hat p\approx.11$, $.78$ near $.45$, $.93$ above $.7$), so with
-$p^\star_{32}=.106$ the score aims at the worst-calibrated band: $u_{32}$
-\emph{predicts} nearly as much activity as $p(1-p)$ ($.81$ vs $.88$) but
-\emph{realizes} a quarter less ($.44$ vs $.60$), losing $60.7\%$ of its groups
-to silence against $32.2\%$. The identity is exact under its assumption, the
-assumption degrades toward hard tasks, and so the score over-values precisely
-the region it was derived to prefer. Post-hoc; no registered quantity
-changes.
+\paragraph{Why: the curriculum names a coarser unit than the theory.}
+The trainer draws one concrete maze per group and repeats that prompt $N$
+times, while the teacher's posterior pools over the many mazes of a level. The
+conditionally i.i.d.\ unit is the maze; the unit scored is the level. So
+Prop.~\ref{prop:mass} still holds exactly --- what fails is its $p$-only
+reduction, and Cor.~\ref{cor:gran} prices the failure. The telemetry confirms
+both identities to floating point: across $41{,}101$ (seed, arm, level,
+window) cells realized mass equals $2(\hat q-\hat p)$ and the plug-in
+over-prediction equals twice the excess all-fail probability, each to
+$<5\times10^{-16}$, unchanged at window widths $10$, $25$, $50$
+(App.~\ref{app:protocols}). The gap is large where the score aims: at $\hat
+p\approx.11$ the binomial predicts $2.2\%$ silent groups and $51.2\%$ are
+silent (Fig.~\ref{fig:mazescore}). Clustered on the 48 seed blocks, $u_{32}$
+realizes $.580$ $[.570,.590]$ of its prediction against $.703$ $[.691,.715]$
+for $p(1-p)$ (paired $-.123$, 48/48 blocks negative), losing $60.8\%$ of its
+groups to silence against $32.1\%$ --- as Cor.~\ref{cor:gran} predicts for the
+harder-peaked score. This exactly accounts for the mass prediction error and
+is consistent with the endpoint, but it is not an intervention and we claim no
+sole mediation. Post-hoc; no registered quantity changes.
 
 \paragraph{Externally recorded maze factorial (secondary).}
 A balanced six-block factorial crossing
 $\{\text{MaxRL},\text{GRPO}\}\times\{\text{uniform},\text{FrontierMax}\}$ on
-the same 1.26M-parameter maze learner tests an \emph{estimator} ordering, not
-the score. Its first wave rejected the stronger externally recorded endpoint
-claim (3/6, 4/6) and we retracted the earlier zero-exception cohort claim; the
-re-registered wave-2 primary, time-integrated $\passat{8}$ coverage, is
-positive in all six fresh blocks under \emph{each} sampler (exact sign
-$p=.03125$ per sampler; block mean $+.0195$, post-hoc 95\% $t$ interval
-$[+.0115,+.0275]$). We read this as an estimator-conditioned coverage ordering
-at common optimizer settings, not universal estimator superiority. Protocol,
-retraction record, and per-block contrasts are in App.~\ref{app:protocols}.
+the same maze learner tests an \emph{estimator} ordering, not the score. Its
+first wave rejected the stronger externally recorded endpoint claim (3/6, 4/6)
+and we retracted the earlier zero-exception cohort claim; the re-registered
+wave-2 primary, time-integrated $\passat{8}$ coverage, is positive in all six
+fresh blocks under \emph{each} sampler (exact sign $p=.03125$ per sampler;
+block mean $+.0195$, $[+.0115,+.0275]$) --- an estimator-conditioned coverage
+ordering at common optimizer settings, not universal estimator superiority.
+Protocol and retraction record in App.~\ref{app:protocols}.
 
 \paragraph{Secondary records.}
 Paid-probe selection, failure recycling, and the historical Countdown
@@ -542,12 +539,10 @@ standard-deviation-normalized branch: the group-SD identity with DAPO's
 silent-group mass $p^G+(1-p)^G$ \citep{groupstd}, an expected absolute GRPO
 advantage of $2\sqrt{p(1-p)}$ motivating 50\%-success targets in a
 learned-curator bandit \citep{actorcurator}, and energy- or variance-based
-selection scores \citep{lze}. There the per-rollout magnitude peaks at $p=.5$
-independent of $N$, which enters only through the silent-group factor; the
-practical-MaxRL mass is instead the estimator's own unnormalized pass@$N$ gap,
-with a peak migrating as $\ln N/N$. MoPPS \citep{mopps} anticipates the
-posterior machinery (streaming Beta posteriors, Thompson-sampled pass rates,
-targeting $p\approx.5$); our novelty claim is only the utility sampled toward.
+selection scores \citep{lze}. There the magnitude peaks at $p=.5$ independent
+of $N$; the practical-MaxRL mass is the estimator's own unnormalized pass@$N$
+gap, peaking as $\ln N/N$. MoPPS \citep{mopps} anticipates the posterior
+machinery; our novelty claim is only the utility sampled toward.
 
 \paragraph{Curricula and rollout allocation.}
 Intermediate-difficulty sampling predates this work: under ProCuRL's
@@ -557,25 +552,28 @@ binary reward variance. Our distinction is convention-specific: $u_N=A_N/2$ is
 the arbitrary-$N$ expected half-mass of the deployed centered MaxRL rule,
 derived from its algebra rather than estimated online. VCRL \citep{vcrl}
 thresholds realized group variance; PLR \citep{plr} and ALP-GMM
-\citep{alpgmm} use TD error, staleness, or temporal learning progress, and so
-react to forgetting where instantaneous coefficient mass cannot --- our AMaze
-arm is robust PLR \citep{minimax} with only the replay priority replaced
-(\S\ref{sec:amaze}). Generator-based UED --- PAIRED \citep{paired}, ACCEL
-\citep{accel} --- creates tasks rather than pricing a fixed pool. GRESO
-\citep{greso} and DPS \citep{dps} select prompts before rollout from reward
-dynamics, VIP \citep{vip} varies per-prompt rollout counts to cut predicted
-gradient variance, and adaptive allocators stage extra rollouts toward
-high-value prompts (HORA \citep{hora}, VIGOR \citep{vigor}, DARS
-\citep{dars}, Reinforce-Ada \citep{reinforceada}); FrontierMax instead selects
-the task distribution before generation at fixed $N$. BBG \citep{yuan} gates
-updates by posterior marginal $\passat{k}$ contribution and boundary-aware
-Curriculum RL \citep{cai} adds guidance near an estimated reasoning boundary.
-These target hit probability, variance, exploration, boundary metrics, or
-signal creation --- not practical-MaxRL coefficient mass. RL2ML \citep{rl2ml}
-separates finite-rollout objectives, update scale, variance, and metric gain;
-its $T=N$ alignment retains $K=0$ via the direct estimator or a score-baseline
-control variate, while our $T=N-1$ statement is for the deployed hybrid that
-centers only when $K>0$ and zeros $K=0$.
+\citep{alpgmm} use TD error, staleness, or learning progress, and so react to
+forgetting where instantaneous mass cannot --- our AMaze arm is robust PLR
+\citep{minimax} with only the replay priority replaced (\S\ref{sec:amaze}).
+Generator-based UED --- PAIRED \citep{paired}, ACCEL \citep{accel} --- creates
+tasks rather than pricing a fixed pool. GRESO \citep{greso} and DPS
+\citep{dps} select prompts from reward dynamics before rollout, VIP
+\citep{vip} varies per-prompt rollout counts to cut predicted gradient
+variance, and allocators stage extra rollouts toward high-value prompts (HORA
+\citep{hora}, VIGOR \citep{vigor}, DARS \citep{dars}, Reinforce-Ada
+\citep{reinforceada}); we instead select the task distribution before
+generation at fixed $N$. HORA's posterior-integrated hit utility makes the
+move Cor.~\ref{cor:gran} formalizes --- integrate a nonlinear rollout utility
+over the relevant distribution rather than evaluate it at a mean --- but for
+epistemic uncertainty about one prompt, where ours is heterogeneity inside a
+scored aggregate. BBG \citep{yuan} gates updates by posterior marginal
+$\passat{k}$ contribution and boundary-aware Curriculum RL \citep{cai} adds
+guidance near a reasoning boundary. These target hit probability, variance,
+exploration, boundary metrics, or signal creation --- not practical-MaxRL
+coefficient mass. RL2ML \citep{rl2ml} separates finite-rollout objectives,
+update scale, variance, and metric gain; its $T=N$ alignment retains $K=0$ via
+the direct estimator or a score-baseline control variate, while our $T=N-1$
+statement is for the deployed hybrid that centers only when $K>0$.
 
 \paragraph{Coverage measurement.}
 RLVR can improve pass@1 while reducing high-$k$ coverage
@@ -609,12 +607,17 @@ deployed-$N$ peak. The four evidence families froze their primaries
 independently at $\alpha=.05$; we claim no paper-level error rate. Retained
 evaluation records do not include per-episode trajectories. The maze factorial uses a small transformer, one task family, and common
 rather than estimator-tuned learning rates; its easy-band mechanism remains
-descriptive. MAZE-SCORE (\S\ref{sec:mazescore}) rules out effects at or above
-its $+.005$ SESOI for one task family, one architecture, one $N$, and one
-budget; it is not evidence that no rollout-aware score transfers, and its
-over-dispersion diagnosis is post-hoc. Whether a group-level score computed
-from a \emph{task}-level rather than level-level posterior would close that
-gap is untested here.
+descriptive. MAZE-SCORE (\S\ref{sec:mazescore}) rules out effects at or above its $+.005$
+SESOI for one task family, one architecture, one $N$, and one budget. Its
+protocol varies model capacity, function approximation, task heterogeneity and
+curriculum granularity together, so ``scale'' is not an isolated causal
+variable here. The granularity diagnosis is post-hoc and exactly accounts for
+the coefficient-mass prediction error, but no intervention establishes it as
+the sole mediator of the endpoint; its windowed estimates also pool
+maze-to-maze heterogeneity with learner nonstationarity, which the
+window-invariance of the identity bounds but does not remove. Whether scoring
+$\hat q_z-\hat p_z$ directly, or a task-level posterior, closes the gap is
+untested here and we assert no counterfactual outcome.
 The Coefficient-Activity PLR row in Table~\ref{tab:instantiations} is a
 development negative (\S\ref{sec:amaze}), not preregistered evidence, and we
 claim no advantage over PLR, robust PLR, ACCEL, or any other \texttt{minimax}
@@ -636,22 +639,21 @@ auditing and preclude a broad neural claim.
 
 \section{Conclusion}
 
-The estimator belongs in the evaluation of data-selection design: its
-coefficient algebra fixes which tasks can emit activity at a chosen rollout
-count. In a fixed classical-control family $u_{16}$ beat both $u_2$ at the
-same deployed $N{=}16$ and uniform sampling, replicating twice; Digits shows
-the estimator-to-sampler mapping is not universal. Three preregistered
-follow-ups then drew the boundary: performance rises \emph{past} the deployed
-$N$, so the harder-peaked shape helps and its peak location does not; as a
+The estimator belongs in the evaluation of data-selection design: its algebra
+fixes which tasks can emit activity at a given rollout count. In a fixed
+classical-control family $u_{16}$ beat both $u_2$ at the deployed $N{=}16$ and
+uniform sampling, twice replicated; Digits rejects a universal mapping. Three
+preregistered follow-ups drew the boundary: performance rises \emph{past} the
+deployed $N$, so the shape helps and its peak location does not; as a
 standalone PLR priority activity is starved at one Bernoulli per level visit;
-and at 1.26M parameters the contrast reverses, because groups sharing a level
-but not a task are likelier to be unanimous than the i.i.d.\ model behind
-$A_N$ allows, so the score over-values the low-$p$ band it prefers. Each
-estimator induces its own activity geometry, but activity diagnoses
-\emph{available} update, not learning utility --- and once rollouts correlate,
-not even that reliably. Evaluate data selection with the estimator it ships
-on, report $\passat{k}$ from retained outcomes, and treat coefficient mass as
-a gate, not a law.
+and where the curriculum scores a level aggregating heterogeneous mazes the
+contrast reverses, by exactly the excess all-fail probability of
+Cor.~\ref{cor:gran}. The estimator defines the coefficient map; the curriculum
+defines the unit over which it is averaged, and the two do not commute.
+Activity diagnoses \emph{available} update, not learning utility, and a mean
+pass rate determines it only when the scored unit is the estimator's own.
+Evaluate data selection with the estimator it ships on, report $\passat{k}$
+from retained outcomes, and treat activity as a gate, not a law.
 
 \section*{Reproducibility statement}
 The repository includes exact-enumeration tests, a one-command artifact
@@ -950,6 +952,18 @@ policy already reaches \citep{her,gcsl}.
 
 \section{Experimental protocols and secondary results}
 \label{app:protocols}
+
+\paragraph{Fixed-completion $N$-sweep (post-guidance, descriptive).}
+36-task CPU skill-chain testbed, $N\in\{2,4,8,16,32\}$, eight paired seeds, no
+recycling, exactly 51,200 sampled completions per cell, teacher decay
+normalized per completion so changing $N$ does not change the memory horizon.
+Against uniform the contrasts are $-.0106$, $-.0032$, $+.0309$, $+.0453$,
+$+.0836$; positive-seed counts against $p(1-p)$ are identical at $N{=}2$ then
+8/8, 8/8, 8/8, 8/8, and against uniform 3/8, 3/8, 8/8, 7/8, 7/8. The $N{=}2$
+identity reproduces bit-for-bit. Designed after the theoretical guidance
+existed, hence not preregistered, and on one co-designed testbed: evidence for
+rollout awareness, not a scaling law or a blanket curriculum advantage.
+
 
 \begin{figure}[t]
 \centering
