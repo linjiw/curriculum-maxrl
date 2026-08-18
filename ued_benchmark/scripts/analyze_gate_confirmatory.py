@@ -79,22 +79,35 @@ def load(results: Path) -> dict:
                 raise AnalysisError(f"missing meta.json for {xpid}")
             if not ev.is_file():
                 raise AnalysisError(f"missing shipped evaluate CSV for {xpid}: {ev}")
+            # minimax writes meta.json as {config: {..., train_runner_args: {...}}}.
+            # Amendment 2026-08-18 (pre-data): the first draft read a flat
+            # "args" key that does not exist and would have refused every cell.
             meta = json.loads((d / "meta.json").read_text())
-            args = meta.get("args", meta)
-            if int(args.get("n_total_updates", -1)) != 30000:
+            cfg = meta.get("config", {})
+            tra = cfg.get("train_runner_args", {})
+            if int(cfg.get("n_total_updates", -1)) != 30000:
                 raise AnalysisError(f"{xpid}: n_total_updates != 30000")
-            if int(args.get("seed", -1)) != s:
+            if int(cfg.get("seed", -1)) != s:
                 raise AnalysisError(f"{xpid}: seed mismatch")
+            if int(tra.get("n_parallel", -1)) != 32 or int(tra.get("n_eval", -1)) != 1:
+                raise AnalysisError(f"{xpid}: batch structure is not the shipped 32x1")
             if arm == "plrGate":
-                if args.get("ued_score") != "coefficient_activity":
+                if tra.get("ued_score") != "coefficient_activity":
                     raise AnalysisError(f"{xpid}: not the gate score")
-                if args.get("plr_frontier_mode") != "gate":
+                if tra.get("frontier_mode") != "gate":
                     raise AnalysisError(f"{xpid}: frontier_mode != gate")
-                if int(args.get("plr_frontier_n_rollouts", -1)) != 8:
+                if int(tra.get("frontier_n_rollouts", -1)) != 8:
                     raise AnalysisError(f"{xpid}: N != 8")
             else:
-                if args.get("ued_score") != "max_mc":
+                if tra.get("ued_score") != "max_mc":
                     raise AnalysisError(f"{xpid}: baseline is not max_mc")
+            # Completion is n_updates reaching the budget in logs.csv; upstream
+            # never flips meta.successful, so it is not consulted.
+            log = (d / "logs.csv").read_text().splitlines()
+            hdr = log[0].lstrip("# ").split(",")
+            last = dict(zip(hdr, log[-1].split(",")))
+            if int(float(last.get("n_updates", 0))) < 29990:
+                raise AnalysisError(f"{xpid}: training did not reach 30000 updates")
             cells[(arm, s)] = load_eval(ev)
     return cells
 

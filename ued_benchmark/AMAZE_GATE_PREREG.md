@@ -115,3 +115,35 @@ requires the shipped evaluate CSV for every cell.
 - Ten seeds put the sign-flip floor at 2/1024 = .00195 and give roughly 80%
   power to detect +0.05 at the development SD; a true +0.02 will often read
   inconclusive, and that is what the rule says to report.
+
+---
+
+## Amendment 2026-08-18 — analyzer read path (pre-data)
+
+**Timing.** Written while training was 3/20 complete and **before any
+`minimax.evaluate` output existed**. No held-out number for any confirmatory
+cell had been produced or read. The primary estimand, test, SESOI, verdict
+table, seeds, and secondaries are unchanged.
+
+**What was wrong.** The frozen analyzer read cell configuration from a flat
+`meta["args"]` key. minimax writes `meta.json` as
+`{config: {..., train_runner_args: {...}}}`, so the analyzer would have
+refused every cell with `n_total_updates != 30000` and never analysed the
+campaign. It also relied on `meta.successful`, which upstream initialises to
+`False` and never updates.
+
+**What changed.** The config checks now read `config.n_total_updates`,
+`config.seed`, and `config.train_runner_args.{n_parallel,n_eval,ued_score,
+frontier_mode,frontier_n_rollouts}` — and additionally assert the shipped
+32x1 batch structure. Completion is established from `logs.csv`
+(`n_updates >= 29990`) instead of `meta.successful`. Verified against the
+three completed cells: budget 30,000, correct seeds, 32x1, correct score/mode/N,
+final `n_updates` 29,990–29,999.
+
+**Also recorded.** minimax's `_tick` counter is roughly 2x `n_updates` under
+robust PLR at replay probability 0.5, because new-level evaluation cycles do
+not update the student; 59,950 ticks is exactly the shipped 30,000-update
+budget. And per-run wall time is 13,135–13,197 s (3.65 h) rather than the
+~65 min projected from an idle-GPU measurement, because the RTX 5090 is shared
+with four other lab jobs (~19 GB); the campaign will take ~24 h wall, not 7–8.
+Neither affects the protocol.
