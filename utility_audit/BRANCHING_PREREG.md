@@ -74,3 +74,39 @@ the *full* pool at this warm depth, to compare against the linear-chain values
 - One-task-at-a-time utility at `H=8`, exact gradients, 88-task synthetic
   forest. This tests whether the *factors are separable in principle*, which
   is the question the linear chain could not pose.
+
+---
+
+## Amendment 2026-08-18 — the matching criterion was wrong (post-hoc, declared)
+
+**Timing, stated plainly.** This amendment was written **after** running the
+preregistered test and seeing its result. It is therefore *not* pre-data, and
+the corrected test below is labelled exploratory. The original result stands
+as preregistered and is reported in `BRANCHING_RESULT.md` regardless.
+
+**The flaw.** §2 forms pairs by matching `u_N`. But `u_N` is **unimodal**: it
+takes the same value on both sides of its peak. Matching on `u_N` alone
+therefore pairs tasks of wildly different difficulty. Inspecting the `C`
+ratio ≥ 5× band directly: mean pass rate is **0.852 on the high-`C` side and
+0.011 on the low-`C` side** — a mastered task paired against a nearly-dead
+one, at mean depths 1.06 and 3.94. The primary was not measuring "same
+availability, different transfer"; over that band it was measuring "mastered
+versus dead".
+
+The PI judgment's Experiment ① specifies "相同的当前 pass rate；相同的
+A_N(p)" — *same pass rate* **and** same activity. Only the second was
+enforced. This is my error in operationalising the spec, and it is visible
+from `p`, `C` and depth alone; but I did not go looking until the >5× band
+came back negative, so I record the discovery as outcome-adjacent.
+
+**The correction.** Pairs must additionally satisfy `|p_i − p_j| ≤ 0.02`.
+Matching on `p` implies matching on `u_N` for any fixed `N`, so this is
+strictly stronger and removes the branch ambiguity. Feasibility measured
+before running: at warm 200 this yields ~1,000 pairs per seed with `C` ratio
+≥ 3× (example: `p` 0.3866 vs 0.3864, `C` 40 vs 4); at 400, ~100–300; at 800
+it collapses to ~0–30. **Warm depth moves to 200** for the corrected test,
+chosen on pair count alone.
+
+Everything else — `H=8`, 10 seeds, exact sign-flip, SESOI +0.002, the verdict
+table, the frozen secondaries — is unchanged. Results appear under
+`branch2-*` and are reported beside, never merged with, the preregistered run.
