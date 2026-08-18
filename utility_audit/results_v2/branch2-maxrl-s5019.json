@@ -1,0 +1,23 @@
+{
+ "seed": 5019,
+ "estimator": "maxrl",
+ "warm": 200,
+ "n_pairs": 0,
+ "mean_delta": null,
+ "deltas": [],
+ "deltas_by_h": {
+  "4": [],
+  "8": [],
+  "20": []
+ },
+ "mean_delta_by_h": {
+  "4": null,
+  "8": null,
+  "20": null
+ },
+ "c_ratios": [],
+ "rho_uN": 0.7456940579761192,
+ "rho_uNC": 0.7489697439329365,
+ "rho_C": 0.8466415413335212,
+ "corr_p_C": 0.6391232310678446
+}
