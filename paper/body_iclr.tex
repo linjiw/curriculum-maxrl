@@ -446,6 +446,15 @@ each number to its platform. Because the two new campaigns share seeds and a
 deterministic engine, their agreement is a portability check, not additional
 independent seeds.
 
+\paragraph{Why the curve rises past the deployed $N$.}
+Branching an exact-gradient pool to measure true continuation utility
+$U_H(x)=J(\mathrm{Train}_H(\theta;x))-J(\theta)$, $u_{16}$ ranks $U_H$ far
+better than $p(1-p)$ ($+.106$, 10 seeds, exact $p=.002$), while under RLOO ---
+whose mass \emph{is} $2p(1-p)$ --- the two are indistinguishable ($+.0001$).
+But $U_H$ peaks near $p\approx.02$, below both $p^\star_{16}$ and
+$p^\star_{64}$: activity ranks utility well and \emph{locates} it poorly.
+Mechanism on 36 synthetic tasks, not evidence for a sampler.
+
 The mean $u_{16}-p(1-p)$ contrasts remain descriptively positive on
 sampled-group ($+.05294$) and optimizer-update ($+.05366$) axes. $u_{16}$
 also receives 2.40 fewer groups and 3.42 fewer updates per million
@@ -480,15 +489,12 @@ the best return ever achieved on that level. At the shipped
 per level visit --- a two-valued posterior, nearly all ties under rank
 prioritisation --- and \texttt{max\_episode\_steps}${=}250$ against a
 $256$-step rollout forbids a second episode; accumulating over revisits does
-not close the gap. Gating MaxMC by activity instead of replacing it ---
-keeping the per-timestep signal, suppressing only mastered or hopeless
-levels --- recovers most of the gap ($.590$; $+.089$ over replacement, $4/5$
-seeds; $-.039$ to upstream, $1/5$) but does not clear it. This is the AMaze
-counterpart of \S\ref{sec:peaktest}: $u_N$ is a defensible difficulty
-\emph{shape} on a richer signal, not a signal of its own. Nor is the mapping
-the paper's mechanism --- the AMaze student is PPO with GAE and never forms
-binary rollout groups; giving it the MaxRL group estimator is the faithful
-mapping and remains outside this evidence.
+not close the gap. Gating MaxMC by activity instead of replacing it recovers
+most of the gap ($.590$; $+.089$ over replacement, $4/5$ seeds; $-.039$ to
+upstream, $1/5$) but does not clear it: $u_N$ serves as a gate on a richer
+signal, not as a signal of its own. The AMaze student is PPO with GAE and never forms
+binary rollout groups; the faithful mapping, giving it the MaxRL group
+estimator, is outside this evidence.
 
 \subsection{Externally recorded fresh-wave maze result}
 
@@ -664,11 +670,11 @@ helps and not the deployed-$N$ peak \emph{location}. Dropped into robust PLR
 on AMaze in place of MaxMC, the pure activity priority did not beat the
 upstream baseline: at one Bernoulli per level visit it is starved of the
 per-timestep signal a regret proxy reads for free.
-Data-selection methods should therefore be evaluated
-with the estimator they ship on, with $\passat{k}$ computed from retained
-task outcomes beside mean accuracy, and coefficient mass treated as a testable
-allocation hypothesis --- a useful difficulty \emph{shape}, not a peak
-location or a standalone signal --- rather than a universal learning law.
+Each group estimator induces its own task-activity geometry, but activity
+diagnoses \emph{available} update, not learning utility. Evaluate data
+selection with the estimator it ships on, report $\passat{k}$ from retained
+outcomes, and treat coefficient mass as a principled gate where activity
+binds --- not as a universal learning law.
 
 \section*{Reproducibility statement}
 The repository includes exact-enumeration tests, a one-command artifact
