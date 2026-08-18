@@ -42,9 +42,25 @@ value. Three preregistered results draw that line:
 - **It is not a standalone signal.** Dropped into robust PLR on AMaze in place of MaxMC,
   activity does not beat upstream: one Bernoulli per level visit cannot replace a critic
   read at every timestep.
+- **It does not survive to neural scale.** MAZE-SCORE, 48 preregistered blocks at 1.26M
+  parameters and deployed N=32: `u_32` *loses* to `p(1−p)` (−.0032, CI [−.0054, −.0011],
+  15/48 positive) — practically ruled out at the registered +.005 SESOI. Both adaptive
+  samplers still beat uniform (`u_32` − uniform = +.0089), so curriculum sampling helps;
+  what fails is the claim that the rollout-aware shape is the better one.
+
+**Why it fails, from the telemetry** (post-hoc, descriptive): `A_N(p)` is exact only for
+conditionally i.i.d. rollouts. A group shares a *level*, not a *maze*, so its outcomes are
+correlated and unanimity is far more common than binomial. At p̂≈.11 the model predicts
+2.2% silent groups and **51.2%** are silent. The realization ratio (observed/predicted
+mass) rises monotonically with p — .43 at p̂≈.11, .93 above .7 — so with `p*_32 = .106`,
+`u_32` aims squarely at the worst-calibrated band: it predicts nearly as much activity as
+`p(1−p)` (.81 vs .88) but realizes a quarter less (.44 vs .60), losing 60.7% of its groups
+to silence against 32.2%. *The identity is exact under its assumption; the assumption
+degrades toward hard tasks; so the score over-values the region it was derived to prefer.*
 
 So: coefficient activity is an estimator-conditioned *source of curriculum hypotheses*,
-not a universal measure of learning utility. The ICLR submission body
+not a universal measure of learning utility — and not even a reliable measure of
+*available* update once rollouts stop being i.i.d. The ICLR submission body
 (`paper/body_iclr.tex`, rendered at [`docs/paper-iclr.pdf`](docs/paper-iclr.pdf)) is
 written to exactly that scope.
 

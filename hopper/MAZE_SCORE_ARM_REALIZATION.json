@@ -1,0 +1,26 @@
+{
+  "un": {
+    "n": 96000,
+    "mean_selected_pass_rate": 0.1708154296875,
+    "mean_predicted_mass": 0.8118504201109763,
+    "mean_observed_mass": 0.44359830729166666,
+    "realization_ratio": 0.5464039881029177,
+    "observed_dead_fraction": 0.6073854166666667
+  },
+  "learn": {
+    "n": 96000,
+    "mean_selected_pass_rate": 0.38014095052083335,
+    "mean_predicted_mass": 0.8756005290590989,
+    "mean_observed_mass": 0.5949680989583334,
+    "realization_ratio": 0.6794971898859781,
+    "observed_dead_fraction": 0.322375
+  },
+  "unif": {
+    "n": 96000,
+    "mean_selected_pass_rate": 0.1891787109375,
+    "mean_predicted_mass": 0.49030874940736496,
+    "mean_observed_mass": 0.262330078125,
+    "realization_ratio": 0.5350303832882397,
+    "observed_dead_fraction": 0.67965625
+  }
+}

@@ -1,0 +1,1328 @@
+{
+  "analysis": {
+    "bootstrap_interval": "paired percentile 95% (NumPy linear percentile)",
+    "bootstrap_resamples": 10000,
+    "multiplicity": "Holm adjustment across primary and secondary",
+    "practically_ruled_out_rule": "CI upper<0.005",
+    "random_seed": 20260813,
+    "randomization_test": "exact two-sided paired sign-flip test on the mean",
+    "support_rule": "mean>=0.005 and CI lower>0 and Holm p<0.05"
+  },
+  "arms": [
+    "un",
+    "learn",
+    "unif"
+  ],
+  "campaign": "maze-score-v2-20260816-001",
+  "cells": {
+    "20": {
+      "learn": {
+        "cov_auc_delta": 0.013942307692307754,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-20/results/mazescore_learn_s20.jsonl",
+        "mean_rl_cov8": 0.2711538461538462,
+        "post_sft_cov8": 0.25721153846153844,
+        "sft_checkpoint_sha256": "79c24a60af59c3529d265486031b9950ca7999f9a807331b1fdab031321e1dab"
+      },
+      "un": {
+        "cov_auc_delta": 0.004807692307692291,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-20/results/mazescore_un_s20.jsonl",
+        "mean_rl_cov8": 0.2620192307692307,
+        "post_sft_cov8": 0.25721153846153844,
+        "sft_checkpoint_sha256": "79c24a60af59c3529d265486031b9950ca7999f9a807331b1fdab031321e1dab"
+      },
+      "unif": {
+        "cov_auc_delta": -0.006009615384615363,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-20/results/mazescore_unif_s20.jsonl",
+        "mean_rl_cov8": 0.2512019230769231,
+        "post_sft_cov8": 0.25721153846153844,
+        "sft_checkpoint_sha256": "79c24a60af59c3529d265486031b9950ca7999f9a807331b1fdab031321e1dab"
+      }
+    },
+    "21": {
+      "learn": {
+        "cov_auc_delta": -0.005048076923076905,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-21/results/mazescore_learn_s21.jsonl",
+        "mean_rl_cov8": 0.2762019230769231,
+        "post_sft_cov8": 0.28125,
+        "sft_checkpoint_sha256": "3fba0266a61da0c0eddf6a671f663a48d1d1d665b3392c577a63da56c9533a40"
+      },
+      "un": {
+        "cov_auc_delta": -0.0021634615384615863,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-21/results/mazescore_un_s21.jsonl",
+        "mean_rl_cov8": 0.2790865384615384,
+        "post_sft_cov8": 0.28125,
+        "sft_checkpoint_sha256": "3fba0266a61da0c0eddf6a671f663a48d1d1d665b3392c577a63da56c9533a40"
+      },
+      "unif": {
+        "cov_auc_delta": -0.01081730769230771,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-21/results/mazescore_unif_s21.jsonl",
+        "mean_rl_cov8": 0.2704326923076923,
+        "post_sft_cov8": 0.28125,
+        "sft_checkpoint_sha256": "3fba0266a61da0c0eddf6a671f663a48d1d1d665b3392c577a63da56c9533a40"
+      }
+    },
+    "22": {
+      "learn": {
+        "cov_auc_delta": 0.006249999999999978,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-22/results/mazescore_learn_s22.jsonl",
+        "mean_rl_cov8": 0.29951923076923076,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "2578030befc5be467fde004b24a017823df5e4a532a063969481dfd05dcbb29e"
+      },
+      "un": {
+        "cov_auc_delta": 0.00024038461538461453,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-22/results/mazescore_un_s22.jsonl",
+        "mean_rl_cov8": 0.2935096153846154,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "2578030befc5be467fde004b24a017823df5e4a532a063969481dfd05dcbb29e"
+      },
+      "unif": {
+        "cov_auc_delta": -0.026201923076923095,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-22/results/mazescore_unif_s22.jsonl",
+        "mean_rl_cov8": 0.2670673076923077,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "2578030befc5be467fde004b24a017823df5e4a532a063969481dfd05dcbb29e"
+      }
+    },
+    "23": {
+      "learn": {
+        "cov_auc_delta": 0.017548076923076916,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-23/results/mazescore_learn_s23.jsonl",
+        "mean_rl_cov8": 0.27716346153846155,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "48d66f0c740589c0f9f1dd51e918975fe403bb9ddc5dabb55e148417617888d9"
+      },
+      "un": {
+        "cov_auc_delta": 0.0173076923076923,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-23/results/mazescore_un_s23.jsonl",
+        "mean_rl_cov8": 0.27692307692307694,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "48d66f0c740589c0f9f1dd51e918975fe403bb9ddc5dabb55e148417617888d9"
+      },
+      "unif": {
+        "cov_auc_delta": 0.019951923076923006,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-23/results/mazescore_unif_s23.jsonl",
+        "mean_rl_cov8": 0.27956730769230764,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "48d66f0c740589c0f9f1dd51e918975fe403bb9ddc5dabb55e148417617888d9"
+      }
+    },
+    "24": {
+      "learn": {
+        "cov_auc_delta": -0.016826923076923073,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-24/results/mazescore_learn_s24.jsonl",
+        "mean_rl_cov8": 0.31009615384615385,
+        "post_sft_cov8": 0.3269230769230769,
+        "sft_checkpoint_sha256": "62c6dccd8f62a56903f4df4dff55913dac635bee668e7de1f0cad80da4d6f64a"
+      },
+      "un": {
+        "cov_auc_delta": -0.023317307692307665,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-24/results/mazescore_un_s24.jsonl",
+        "mean_rl_cov8": 0.30360576923076926,
+        "post_sft_cov8": 0.3269230769230769,
+        "sft_checkpoint_sha256": "62c6dccd8f62a56903f4df4dff55913dac635bee668e7de1f0cad80da4d6f64a"
+      },
+      "unif": {
+        "cov_auc_delta": -0.03894230769230772,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-24/results/mazescore_unif_s24.jsonl",
+        "mean_rl_cov8": 0.2879807692307692,
+        "post_sft_cov8": 0.3269230769230769,
+        "sft_checkpoint_sha256": "62c6dccd8f62a56903f4df4dff55913dac635bee668e7de1f0cad80da4d6f64a"
+      }
+    },
+    "25": {
+      "learn": {
+        "cov_auc_delta": 0.022596153846153877,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-25/results/mazescore_learn_s25.jsonl",
+        "mean_rl_cov8": 0.3134615384615385,
+        "post_sft_cov8": 0.29086538461538464,
+        "sft_checkpoint_sha256": "8685d2a9c47b630f264b4aa38c7d643e75e811d5d5221e2358bcfd41933b7adf"
+      },
+      "un": {
+        "cov_auc_delta": 0.021874999999999978,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-25/results/mazescore_un_s25.jsonl",
+        "mean_rl_cov8": 0.3127403846153846,
+        "post_sft_cov8": 0.29086538461538464,
+        "sft_checkpoint_sha256": "8685d2a9c47b630f264b4aa38c7d643e75e811d5d5221e2358bcfd41933b7adf"
+      },
+      "unif": {
+        "cov_auc_delta": 0.008653846153846123,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-25/results/mazescore_unif_s25.jsonl",
+        "mean_rl_cov8": 0.29951923076923076,
+        "post_sft_cov8": 0.29086538461538464,
+        "sft_checkpoint_sha256": "8685d2a9c47b630f264b4aa38c7d643e75e811d5d5221e2358bcfd41933b7adf"
+      }
+    },
+    "26": {
+      "learn": {
+        "cov_auc_delta": -0.012019230769230782,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-26/results/mazescore_learn_s26.jsonl",
+        "mean_rl_cov8": 0.28365384615384615,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "d2dc1cc65470828c65304eb1f911b10ed743cd1549a4574f5886b7a8ddbb33d6"
+      },
+      "un": {
+        "cov_auc_delta": -0.014903846153846156,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-26/results/mazescore_un_s26.jsonl",
+        "mean_rl_cov8": 0.28076923076923077,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "d2dc1cc65470828c65304eb1f911b10ed743cd1549a4574f5886b7a8ddbb33d6"
+      },
+      "unif": {
+        "cov_auc_delta": -0.010336538461538425,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-26/results/mazescore_unif_s26.jsonl",
+        "mean_rl_cov8": 0.2853365384615385,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "d2dc1cc65470828c65304eb1f911b10ed743cd1549a4574f5886b7a8ddbb33d6"
+      }
+    },
+    "27": {
+      "learn": {
+        "cov_auc_delta": -0.01586538461538467,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-27/results/mazescore_learn_s27.jsonl",
+        "mean_rl_cov8": 0.2581730769230769,
+        "post_sft_cov8": 0.27403846153846156,
+        "sft_checkpoint_sha256": "9c043244c92fb57e228e9f8838ed0f81dbf6665f03e2404e2e91789db7ca65ee"
+      },
+      "un": {
+        "cov_auc_delta": -0.01033653846153848,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-27/results/mazescore_un_s27.jsonl",
+        "mean_rl_cov8": 0.2637019230769231,
+        "post_sft_cov8": 0.27403846153846156,
+        "sft_checkpoint_sha256": "9c043244c92fb57e228e9f8838ed0f81dbf6665f03e2404e2e91789db7ca65ee"
+      },
+      "unif": {
+        "cov_auc_delta": -0.01850961538461543,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-27/results/mazescore_unif_s27.jsonl",
+        "mean_rl_cov8": 0.25552884615384613,
+        "post_sft_cov8": 0.27403846153846156,
+        "sft_checkpoint_sha256": "9c043244c92fb57e228e9f8838ed0f81dbf6665f03e2404e2e91789db7ca65ee"
+      }
+    },
+    "28": {
+      "learn": {
+        "cov_auc_delta": -0.00721153846153838,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-28/results/mazescore_learn_s28.jsonl",
+        "mean_rl_cov8": 0.264423076923077,
+        "post_sft_cov8": 0.27163461538461536,
+        "sft_checkpoint_sha256": "b3ada21f5d30b545dcdda390bb51e4341f1b82bdf4ea24fbaaeb91de54a28950"
+      },
+      "un": {
+        "cov_auc_delta": -0.011538461538461553,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-28/results/mazescore_un_s28.jsonl",
+        "mean_rl_cov8": 0.2600961538461538,
+        "post_sft_cov8": 0.27163461538461536,
+        "sft_checkpoint_sha256": "b3ada21f5d30b545dcdda390bb51e4341f1b82bdf4ea24fbaaeb91de54a28950"
+      },
+      "unif": {
+        "cov_auc_delta": -0.027163461538461525,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-28/results/mazescore_unif_s28.jsonl",
+        "mean_rl_cov8": 0.24447115384615384,
+        "post_sft_cov8": 0.27163461538461536,
+        "sft_checkpoint_sha256": "b3ada21f5d30b545dcdda390bb51e4341f1b82bdf4ea24fbaaeb91de54a28950"
+      }
+    },
+    "29": {
+      "learn": {
+        "cov_auc_delta": 0.009374999999999967,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-29/results/mazescore_learn_s29.jsonl",
+        "mean_rl_cov8": 0.3050480769230769,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "ce5a7caf3bb3c17703f497dc3f3de438c5f015634b3f39c4f0cde983c22e3729"
+      },
+      "un": {
+        "cov_auc_delta": 0.009374999999999967,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-29/results/mazescore_un_s29.jsonl",
+        "mean_rl_cov8": 0.3050480769230769,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "ce5a7caf3bb3c17703f497dc3f3de438c5f015634b3f39c4f0cde983c22e3729"
+      },
+      "unif": {
+        "cov_auc_delta": -0.01081730769230771,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-29/results/mazescore_unif_s29.jsonl",
+        "mean_rl_cov8": 0.2848557692307692,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "ce5a7caf3bb3c17703f497dc3f3de438c5f015634b3f39c4f0cde983c22e3729"
+      }
+    },
+    "30": {
+      "learn": {
+        "cov_auc_delta": 0.008413461538461564,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-30/results/mazescore_learn_s30.jsonl",
+        "mean_rl_cov8": 0.27524038461538464,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "5a06d472abd78016d06e3cf52b1487615fef9443b713e7f9e4765e096be2d66d"
+      },
+      "un": {
+        "cov_auc_delta": -0.002403846153846201,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-30/results/mazescore_un_s30.jsonl",
+        "mean_rl_cov8": 0.26442307692307687,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "5a06d472abd78016d06e3cf52b1487615fef9443b713e7f9e4765e096be2d66d"
+      },
+      "unif": {
+        "cov_auc_delta": 0.00264423076923076,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-30/results/mazescore_unif_s30.jsonl",
+        "mean_rl_cov8": 0.26947115384615383,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "5a06d472abd78016d06e3cf52b1487615fef9443b713e7f9e4765e096be2d66d"
+      }
+    },
+    "31": {
+      "learn": {
+        "cov_auc_delta": -0.004567307692307676,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-31/results/mazescore_learn_s31.jsonl",
+        "mean_rl_cov8": 0.240625,
+        "post_sft_cov8": 0.24519230769230768,
+        "sft_checkpoint_sha256": "7afa1f0b5bec5142813a2834d26bc6a730ef66f84a0f6f46eae7e6e95f2861f2"
+      },
+      "un": {
+        "cov_auc_delta": 0.004567307692307704,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-31/results/mazescore_un_s31.jsonl",
+        "mean_rl_cov8": 0.24975961538461539,
+        "post_sft_cov8": 0.24519230769230768,
+        "sft_checkpoint_sha256": "7afa1f0b5bec5142813a2834d26bc6a730ef66f84a0f6f46eae7e6e95f2861f2"
+      },
+      "unif": {
+        "cov_auc_delta": 0.001923076923076944,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-31/results/mazescore_unif_s31.jsonl",
+        "mean_rl_cov8": 0.24711538461538463,
+        "post_sft_cov8": 0.24519230769230768,
+        "sft_checkpoint_sha256": "7afa1f0b5bec5142813a2834d26bc6a730ef66f84a0f6f46eae7e6e95f2861f2"
+      }
+    },
+    "32": {
+      "learn": {
+        "cov_auc_delta": 0.0012019230769231282,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-32/results/mazescore_learn_s32.jsonl",
+        "mean_rl_cov8": 0.311298076923077,
+        "post_sft_cov8": 0.31009615384615385,
+        "sft_checkpoint_sha256": "5fdb4979e9b9ce56b8fb24a957d0eb6231b2c56cb9468c4e8b8a17d978aff2ad"
+      },
+      "un": {
+        "cov_auc_delta": 0.00048076923076917355,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-32/results/mazescore_un_s32.jsonl",
+        "mean_rl_cov8": 0.31057692307692303,
+        "post_sft_cov8": 0.31009615384615385,
+        "sft_checkpoint_sha256": "5fdb4979e9b9ce56b8fb24a957d0eb6231b2c56cb9468c4e8b8a17d978aff2ad"
+      },
+      "unif": {
+        "cov_auc_delta": -0.007692307692307665,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-32/results/mazescore_unif_s32.jsonl",
+        "mean_rl_cov8": 0.3024038461538462,
+        "post_sft_cov8": 0.31009615384615385,
+        "sft_checkpoint_sha256": "5fdb4979e9b9ce56b8fb24a957d0eb6231b2c56cb9468c4e8b8a17d978aff2ad"
+      }
+    },
+    "33": {
+      "learn": {
+        "cov_auc_delta": 0.005048076923076905,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-33/results/mazescore_learn_s33.jsonl",
+        "mean_rl_cov8": 0.271875,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "8a1f9d528129fd65443f2e9eae19b079b68fa8fb6485002f49e30d6749ca2bf1"
+      },
+      "un": {
+        "cov_auc_delta": 0.015384615384615385,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-33/results/mazescore_un_s33.jsonl",
+        "mean_rl_cov8": 0.28221153846153846,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "8a1f9d528129fd65443f2e9eae19b079b68fa8fb6485002f49e30d6749ca2bf1"
+      },
+      "unif": {
+        "cov_auc_delta": -0.0009615384615384581,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-33/results/mazescore_unif_s33.jsonl",
+        "mean_rl_cov8": 0.2658653846153846,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "8a1f9d528129fd65443f2e9eae19b079b68fa8fb6485002f49e30d6749ca2bf1"
+      }
+    },
+    "34": {
+      "learn": {
+        "cov_auc_delta": -0.011538461538461497,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-34/results/mazescore_learn_s34.jsonl",
+        "mean_rl_cov8": 0.29855769230769236,
+        "post_sft_cov8": 0.31009615384615385,
+        "sft_checkpoint_sha256": "e75feea70c36b865741a762a125dbcdb6808ee6a419ab2edbb3dd9f42754ad03"
+      },
+      "un": {
+        "cov_auc_delta": -0.007692307692307665,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-34/results/mazescore_un_s34.jsonl",
+        "mean_rl_cov8": 0.3024038461538462,
+        "post_sft_cov8": 0.31009615384615385,
+        "sft_checkpoint_sha256": "e75feea70c36b865741a762a125dbcdb6808ee6a419ab2edbb3dd9f42754ad03"
+      },
+      "unif": {
+        "cov_auc_delta": -0.022355769230769262,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-34/results/mazescore_unif_s34.jsonl",
+        "mean_rl_cov8": 0.2877403846153846,
+        "post_sft_cov8": 0.31009615384615385,
+        "sft_checkpoint_sha256": "e75feea70c36b865741a762a125dbcdb6808ee6a419ab2edbb3dd9f42754ad03"
+      }
+    },
+    "35": {
+      "learn": {
+        "cov_auc_delta": -0.011057692307692213,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-35/results/mazescore_learn_s35.jsonl",
+        "mean_rl_cov8": 0.26057692307692315,
+        "post_sft_cov8": 0.27163461538461536,
+        "sft_checkpoint_sha256": "8e34b996c2211d4c622d1437a72b1416c5614ce11e8404fa7dde8ddec8314df0"
+      },
+      "un": {
+        "cov_auc_delta": -0.007932692307692335,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-35/results/mazescore_un_s35.jsonl",
+        "mean_rl_cov8": 0.26370192307692303,
+        "post_sft_cov8": 0.27163461538461536,
+        "sft_checkpoint_sha256": "8e34b996c2211d4c622d1437a72b1416c5614ce11e8404fa7dde8ddec8314df0"
+      },
+      "unif": {
+        "cov_auc_delta": -0.020192307692307676,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-35/results/mazescore_unif_s35.jsonl",
+        "mean_rl_cov8": 0.2514423076923077,
+        "post_sft_cov8": 0.27163461538461536,
+        "sft_checkpoint_sha256": "8e34b996c2211d4c622d1437a72b1416c5614ce11e8404fa7dde8ddec8314df0"
+      }
+    },
+    "36": {
+      "learn": {
+        "cov_auc_delta": -0.0024038461538461453,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-36/results/mazescore_learn_s36.jsonl",
+        "mean_rl_cov8": 0.2932692307692308,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "b018169695e0e167be95daa1b5b053e2a7543dd0bb23c731db19164458e249fe"
+      },
+      "un": {
+        "cov_auc_delta": -0.02331730769230772,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-36/results/mazescore_un_s36.jsonl",
+        "mean_rl_cov8": 0.2723557692307692,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "b018169695e0e167be95daa1b5b053e2a7543dd0bb23c731db19164458e249fe"
+      },
+      "unif": {
+        "cov_auc_delta": -0.016346153846153844,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-36/results/mazescore_unif_s36.jsonl",
+        "mean_rl_cov8": 0.2793269230769231,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "b018169695e0e167be95daa1b5b053e2a7543dd0bb23c731db19164458e249fe"
+      }
+    },
+    "37": {
+      "learn": {
+        "cov_auc_delta": 0.007451923076923106,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-37/results/mazescore_learn_s37.jsonl",
+        "mean_rl_cov8": 0.2742788461538462,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "bcee5619e3a3ced4b927a233d4aa0df153b5974bb9fce5494c1289864fffa0b2"
+      },
+      "un": {
+        "cov_auc_delta": 0.005528846153846245,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-37/results/mazescore_un_s37.jsonl",
+        "mean_rl_cov8": 0.2723557692307693,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "bcee5619e3a3ced4b927a233d4aa0df153b5974bb9fce5494c1289864fffa0b2"
+      },
+      "unif": {
+        "cov_auc_delta": -0.008413461538461509,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-37/results/mazescore_unif_s37.jsonl",
+        "mean_rl_cov8": 0.25841346153846156,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "bcee5619e3a3ced4b927a233d4aa0df153b5974bb9fce5494c1289864fffa0b2"
+      }
+    },
+    "38": {
+      "learn": {
+        "cov_auc_delta": 0.010336538461538425,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-38/results/mazescore_learn_s38.jsonl",
+        "mean_rl_cov8": 0.30600961538461535,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "c23f8bb9bd41b08a8c5683d8b46c371dfed3997eb8f50c72022bbabf34fbe628"
+      },
+      "un": {
+        "cov_auc_delta": -0.00024038461538461453,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-38/results/mazescore_un_s38.jsonl",
+        "mean_rl_cov8": 0.2954326923076923,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "c23f8bb9bd41b08a8c5683d8b46c371dfed3997eb8f50c72022bbabf34fbe628"
+      },
+      "unif": {
+        "cov_auc_delta": -0.0016826923076923572,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-38/results/mazescore_unif_s38.jsonl",
+        "mean_rl_cov8": 0.29399038461538457,
+        "post_sft_cov8": 0.2956730769230769,
+        "sft_checkpoint_sha256": "c23f8bb9bd41b08a8c5683d8b46c371dfed3997eb8f50c72022bbabf34fbe628"
+      }
+    },
+    "39": {
+      "learn": {
+        "cov_auc_delta": 0.00024038461538455902,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-39/results/mazescore_learn_s39.jsonl",
+        "mean_rl_cov8": 0.30793269230769227,
+        "post_sft_cov8": 0.3076923076923077,
+        "sft_checkpoint_sha256": "a0aff67771654f968dd982591f70700e48cc577dd5332332f6aab57e1a3bb667"
+      },
+      "un": {
+        "cov_auc_delta": -0.0074519230769230504,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-39/results/mazescore_un_s39.jsonl",
+        "mean_rl_cov8": 0.30024038461538466,
+        "post_sft_cov8": 0.3076923076923077,
+        "sft_checkpoint_sha256": "a0aff67771654f968dd982591f70700e48cc577dd5332332f6aab57e1a3bb667"
+      },
+      "unif": {
+        "cov_auc_delta": -0.017548076923076916,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-39/results/mazescore_unif_s39.jsonl",
+        "mean_rl_cov8": 0.2901442307692308,
+        "post_sft_cov8": 0.3076923076923077,
+        "sft_checkpoint_sha256": "a0aff67771654f968dd982591f70700e48cc577dd5332332f6aab57e1a3bb667"
+      }
+    },
+    "40": {
+      "learn": {
+        "cov_auc_delta": -0.004567307692307676,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-40/results/mazescore_learn_s40.jsonl",
+        "mean_rl_cov8": 0.2814903846153846,
+        "post_sft_cov8": 0.2860576923076923,
+        "sft_checkpoint_sha256": "53098a676c6237ae9c3e42716e56ab5d1708d5b7f105410807a3ba10c5bbc608"
+      },
+      "un": {
+        "cov_auc_delta": -0.006971153846153766,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-40/results/mazescore_un_s40.jsonl",
+        "mean_rl_cov8": 0.2790865384615385,
+        "post_sft_cov8": 0.2860576923076923,
+        "sft_checkpoint_sha256": "53098a676c6237ae9c3e42716e56ab5d1708d5b7f105410807a3ba10c5bbc608"
+      },
+      "unif": {
+        "cov_auc_delta": -0.014903846153846156,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-40/results/mazescore_unif_s40.jsonl",
+        "mean_rl_cov8": 0.27115384615384613,
+        "post_sft_cov8": 0.2860576923076923,
+        "sft_checkpoint_sha256": "53098a676c6237ae9c3e42716e56ab5d1708d5b7f105410807a3ba10c5bbc608"
+      }
+    },
+    "41": {
+      "learn": {
+        "cov_auc_delta": -0.016346153846153844,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-41/results/mazescore_learn_s41.jsonl",
+        "mean_rl_cov8": 0.2865384615384615,
+        "post_sft_cov8": 0.30288461538461536,
+        "sft_checkpoint_sha256": "f06871fc78f11a46b32a5c60be20b6a6139776dee9864ea1cb042df667530c17"
+      },
+      "un": {
+        "cov_auc_delta": -0.020192307692307676,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-41/results/mazescore_un_s41.jsonl",
+        "mean_rl_cov8": 0.2826923076923077,
+        "post_sft_cov8": 0.30288461538461536,
+        "sft_checkpoint_sha256": "f06871fc78f11a46b32a5c60be20b6a6139776dee9864ea1cb042df667530c17"
+      },
+      "unif": {
+        "cov_auc_delta": -0.025240384615384637,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-41/results/mazescore_unif_s41.jsonl",
+        "mean_rl_cov8": 0.2776442307692307,
+        "post_sft_cov8": 0.30288461538461536,
+        "sft_checkpoint_sha256": "f06871fc78f11a46b32a5c60be20b6a6139776dee9864ea1cb042df667530c17"
+      }
+    },
+    "42": {
+      "learn": {
+        "cov_auc_delta": 0.019471153846153832,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-42/results/mazescore_learn_s42.jsonl",
+        "mean_rl_cov8": 0.27908653846153847,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "dd17ed450250e17466e4b70770e7e42e512e23a6a4dfed0ace20842cb74d2a3b"
+      },
+      "un": {
+        "cov_auc_delta": 0.013942307692307698,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-42/results/mazescore_un_s42.jsonl",
+        "mean_rl_cov8": 0.27355769230769234,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "dd17ed450250e17466e4b70770e7e42e512e23a6a4dfed0ace20842cb74d2a3b"
+      },
+      "unif": {
+        "cov_auc_delta": 0.010336538461538425,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-42/results/mazescore_unif_s42.jsonl",
+        "mean_rl_cov8": 0.26995192307692306,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "dd17ed450250e17466e4b70770e7e42e512e23a6a4dfed0ace20842cb74d2a3b"
+      }
+    },
+    "43": {
+      "learn": {
+        "cov_auc_delta": -0.002403846153846201,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-43/results/mazescore_learn_s43.jsonl",
+        "mean_rl_cov8": 0.3052884615384615,
+        "post_sft_cov8": 0.3076923076923077,
+        "sft_checkpoint_sha256": "a8b8e148c6cc2e44909d14dc4543e3abc05a61f8eac9b65bd65f292588e3e6c8"
+      },
+      "un": {
+        "cov_auc_delta": -0.0012019230769230727,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-43/results/mazescore_un_s43.jsonl",
+        "mean_rl_cov8": 0.30649038461538464,
+        "post_sft_cov8": 0.3076923076923077,
+        "sft_checkpoint_sha256": "a8b8e148c6cc2e44909d14dc4543e3abc05a61f8eac9b65bd65f292588e3e6c8"
+      },
+      "unif": {
+        "cov_auc_delta": -0.0033653846153846034,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-43/results/mazescore_unif_s43.jsonl",
+        "mean_rl_cov8": 0.3043269230769231,
+        "post_sft_cov8": 0.3076923076923077,
+        "sft_checkpoint_sha256": "a8b8e148c6cc2e44909d14dc4543e3abc05a61f8eac9b65bd65f292588e3e6c8"
+      }
+    },
+    "44": {
+      "learn": {
+        "cov_auc_delta": 0.014903846153846156,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-44/results/mazescore_learn_s44.jsonl",
+        "mean_rl_cov8": 0.28173076923076923,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "a2441f3c4cb5960c2b2e2713eca1253359e746ac0803af2a8b577e9149816aa1"
+      },
+      "un": {
+        "cov_auc_delta": -0.005048076923076961,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-44/results/mazescore_un_s44.jsonl",
+        "mean_rl_cov8": 0.2617788461538461,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "a2441f3c4cb5960c2b2e2713eca1253359e746ac0803af2a8b577e9149816aa1"
+      },
+      "unif": {
+        "cov_auc_delta": -0.011538461538461497,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-44/results/mazescore_unif_s44.jsonl",
+        "mean_rl_cov8": 0.2552884615384616,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "a2441f3c4cb5960c2b2e2713eca1253359e746ac0803af2a8b577e9149816aa1"
+      }
+    },
+    "45": {
+      "learn": {
+        "cov_auc_delta": -0.011778846153846168,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-45/results/mazescore_learn_s45.jsonl",
+        "mean_rl_cov8": 0.2670673076923077,
+        "post_sft_cov8": 0.27884615384615385,
+        "sft_checkpoint_sha256": "fdeb5fd433c5b0d6180ad222daf41c07f162c1bea33afc8903f6d4dcdb89b495"
+      },
+      "un": {
+        "cov_auc_delta": -0.016346153846153844,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-45/results/mazescore_un_s45.jsonl",
+        "mean_rl_cov8": 0.2625,
+        "post_sft_cov8": 0.27884615384615385,
+        "sft_checkpoint_sha256": "fdeb5fd433c5b0d6180ad222daf41c07f162c1bea33afc8903f6d4dcdb89b495"
+      },
+      "unif": {
+        "cov_auc_delta": -0.008413461538461564,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-45/results/mazescore_unif_s45.jsonl",
+        "mean_rl_cov8": 0.2704326923076923,
+        "post_sft_cov8": 0.27884615384615385,
+        "sft_checkpoint_sha256": "fdeb5fd433c5b0d6180ad222daf41c07f162c1bea33afc8903f6d4dcdb89b495"
+      }
+    },
+    "46": {
+      "learn": {
+        "cov_auc_delta": 0.01057692307692304,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-46/results/mazescore_learn_s46.jsonl",
+        "mean_rl_cov8": 0.2725961538461538,
+        "post_sft_cov8": 0.2620192307692308,
+        "sft_checkpoint_sha256": "b142ec22f0d6a2d3864f1dedf9c48784e083b5f716ea6151b985570cd6e1b14e"
+      },
+      "un": {
+        "cov_auc_delta": 0.008653846153846123,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-46/results/mazescore_un_s46.jsonl",
+        "mean_rl_cov8": 0.2706730769230769,
+        "post_sft_cov8": 0.2620192307692308,
+        "sft_checkpoint_sha256": "b142ec22f0d6a2d3864f1dedf9c48784e083b5f716ea6151b985570cd6e1b14e"
+      },
+      "unif": {
+        "cov_auc_delta": 0.009615384615384581,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-46/results/mazescore_unif_s46.jsonl",
+        "mean_rl_cov8": 0.27163461538461536,
+        "post_sft_cov8": 0.2620192307692308,
+        "sft_checkpoint_sha256": "b142ec22f0d6a2d3864f1dedf9c48784e083b5f716ea6151b985570cd6e1b14e"
+      }
+    },
+    "47": {
+      "learn": {
+        "cov_auc_delta": -0.02548076923076925,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-47/results/mazescore_learn_s47.jsonl",
+        "mean_rl_cov8": 0.26778846153846153,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "311ca6fc38d177e6b885c7230839e6d4f5bc4263420dffff995864e9c54acfb7"
+      },
+      "un": {
+        "cov_auc_delta": -0.02379807692307695,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-47/results/mazescore_un_s47.jsonl",
+        "mean_rl_cov8": 0.26947115384615383,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "311ca6fc38d177e6b885c7230839e6d4f5bc4263420dffff995864e9c54acfb7"
+      },
+      "unif": {
+        "cov_auc_delta": -0.03581730769230773,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-47/results/mazescore_unif_s47.jsonl",
+        "mean_rl_cov8": 0.25745192307692305,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "311ca6fc38d177e6b885c7230839e6d4f5bc4263420dffff995864e9c54acfb7"
+      }
+    },
+    "48": {
+      "learn": {
+        "cov_auc_delta": 0.0024038461538461453,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-48/results/mazescore_learn_s48.jsonl",
+        "mean_rl_cov8": 0.28365384615384615,
+        "post_sft_cov8": 0.28125,
+        "sft_checkpoint_sha256": "c1be2bd10e63f1989c5c4627c953c14954f45c8d00eda3882fc52fa14dff4630"
+      },
+      "un": {
+        "cov_auc_delta": 0.004807692307692346,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-48/results/mazescore_un_s48.jsonl",
+        "mean_rl_cov8": 0.28605769230769235,
+        "post_sft_cov8": 0.28125,
+        "sft_checkpoint_sha256": "c1be2bd10e63f1989c5c4627c953c14954f45c8d00eda3882fc52fa14dff4630"
+      },
+      "unif": {
+        "cov_auc_delta": -0.0028846153846153744,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-48/results/mazescore_unif_s48.jsonl",
+        "mean_rl_cov8": 0.2783653846153846,
+        "post_sft_cov8": 0.28125,
+        "sft_checkpoint_sha256": "c1be2bd10e63f1989c5c4627c953c14954f45c8d00eda3882fc52fa14dff4630"
+      }
+    },
+    "49": {
+      "learn": {
+        "cov_auc_delta": 0.0007211538461538436,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-49/results/mazescore_learn_s49.jsonl",
+        "mean_rl_cov8": 0.2939903846153846,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "fc524f7c1a7eedef1f7cdebdd5e9e2fef39110c031f0e97413e40df018c36400"
+      },
+      "un": {
+        "cov_auc_delta": 0.00817307692307695,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-49/results/mazescore_un_s49.jsonl",
+        "mean_rl_cov8": 0.30144230769230773,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "fc524f7c1a7eedef1f7cdebdd5e9e2fef39110c031f0e97413e40df018c36400"
+      },
+      "unif": {
+        "cov_auc_delta": -0.01586538461538467,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-49/results/mazescore_unif_s49.jsonl",
+        "mean_rl_cov8": 0.2774038461538461,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "fc524f7c1a7eedef1f7cdebdd5e9e2fef39110c031f0e97413e40df018c36400"
+      }
+    },
+    "50": {
+      "learn": {
+        "cov_auc_delta": -0.0033653846153846034,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-50/results/mazescore_learn_s50.jsonl",
+        "mean_rl_cov8": 0.28028846153846154,
+        "post_sft_cov8": 0.28365384615384615,
+        "sft_checkpoint_sha256": "c078d98ce5edc7fa687cbbab03b5e49af78a00d453722640e0312fbcf432df5a"
+      },
+      "un": {
+        "cov_auc_delta": -0.019471153846153832,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-50/results/mazescore_un_s50.jsonl",
+        "mean_rl_cov8": 0.2641826923076923,
+        "post_sft_cov8": 0.28365384615384615,
+        "sft_checkpoint_sha256": "c078d98ce5edc7fa687cbbab03b5e49af78a00d453722640e0312fbcf432df5a"
+      },
+      "unif": {
+        "cov_auc_delta": -0.02499999999999991,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-50/results/mazescore_unif_s50.jsonl",
+        "mean_rl_cov8": 0.25865384615384623,
+        "post_sft_cov8": 0.28365384615384615,
+        "sft_checkpoint_sha256": "c078d98ce5edc7fa687cbbab03b5e49af78a00d453722640e0312fbcf432df5a"
+      }
+    },
+    "51": {
+      "learn": {
+        "cov_auc_delta": 0.003605769230769218,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-51/results/mazescore_learn_s51.jsonl",
+        "mean_rl_cov8": 0.29206730769230765,
+        "post_sft_cov8": 0.28846153846153844,
+        "sft_checkpoint_sha256": "506b7812bcc8828dad6866d76e14417348d1ce8a7c239727a793d3e25a446e64"
+      },
+      "un": {
+        "cov_auc_delta": 0.017788461538461586,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-51/results/mazescore_un_s51.jsonl",
+        "mean_rl_cov8": 0.30625,
+        "post_sft_cov8": 0.28846153846153844,
+        "sft_checkpoint_sha256": "506b7812bcc8828dad6866d76e14417348d1ce8a7c239727a793d3e25a446e64"
+      },
+      "unif": {
+        "cov_auc_delta": 0.005288461538461464,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-51/results/mazescore_unif_s51.jsonl",
+        "mean_rl_cov8": 0.2937499999999999,
+        "post_sft_cov8": 0.28846153846153844,
+        "sft_checkpoint_sha256": "506b7812bcc8828dad6866d76e14417348d1ce8a7c239727a793d3e25a446e64"
+      }
+    },
+    "52": {
+      "learn": {
+        "cov_auc_delta": -0.011778846153846168,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-52/results/mazescore_learn_s52.jsonl",
+        "mean_rl_cov8": 0.24783653846153847,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "4da5b584c345f395c16b6107c569628d2a0dabe3e4ca7555f1c4eae0ac337044"
+      },
+      "un": {
+        "cov_auc_delta": -0.016105769230769257,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-52/results/mazescore_un_s52.jsonl",
+        "mean_rl_cov8": 0.24350961538461538,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "4da5b584c345f395c16b6107c569628d2a0dabe3e4ca7555f1c4eae0ac337044"
+      },
+      "unif": {
+        "cov_auc_delta": -0.036057692307692346,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-52/results/mazescore_unif_s52.jsonl",
+        "mean_rl_cov8": 0.2235576923076923,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "4da5b584c345f395c16b6107c569628d2a0dabe3e4ca7555f1c4eae0ac337044"
+      }
+    },
+    "53": {
+      "learn": {
+        "cov_auc_delta": -0.022115384615384648,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-53/results/mazescore_learn_s53.jsonl",
+        "mean_rl_cov8": 0.2831730769230769,
+        "post_sft_cov8": 0.30528846153846156,
+        "sft_checkpoint_sha256": "265f597e31f69baaf85064e33d4d6697fee48b1f46ffaa24698dae17ddf52b09"
+      },
+      "un": {
+        "cov_auc_delta": -0.02067307692307696,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-53/results/mazescore_un_s53.jsonl",
+        "mean_rl_cov8": 0.2846153846153846,
+        "post_sft_cov8": 0.30528846153846156,
+        "sft_checkpoint_sha256": "265f597e31f69baaf85064e33d4d6697fee48b1f46ffaa24698dae17ddf52b09"
+      },
+      "unif": {
+        "cov_auc_delta": -0.031971153846153844,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-53/results/mazescore_unif_s53.jsonl",
+        "mean_rl_cov8": 0.2733173076923077,
+        "post_sft_cov8": 0.30528846153846156,
+        "sft_checkpoint_sha256": "265f597e31f69baaf85064e33d4d6697fee48b1f46ffaa24698dae17ddf52b09"
+      }
+    },
+    "54": {
+      "learn": {
+        "cov_auc_delta": -0.015865384615384615,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-54/results/mazescore_learn_s54.jsonl",
+        "mean_rl_cov8": 0.27740384615384617,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "cc9519b98cf6aaf606b157869d47475a4589bc26b793d02f3178bd8d728c3fe1"
+      },
+      "un": {
+        "cov_auc_delta": -0.0076923076923077205,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-54/results/mazescore_un_s54.jsonl",
+        "mean_rl_cov8": 0.28557692307692306,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "cc9519b98cf6aaf606b157869d47475a4589bc26b793d02f3178bd8d728c3fe1"
+      },
+      "unif": {
+        "cov_auc_delta": -0.020432692307692346,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-54/results/mazescore_unif_s54.jsonl",
+        "mean_rl_cov8": 0.27283653846153844,
+        "post_sft_cov8": 0.2932692307692308,
+        "sft_checkpoint_sha256": "cc9519b98cf6aaf606b157869d47475a4589bc26b793d02f3178bd8d728c3fe1"
+      }
+    },
+    "55": {
+      "learn": {
+        "cov_auc_delta": 0.012740384615384626,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-55/results/mazescore_learn_s55.jsonl",
+        "mean_rl_cov8": 0.30360576923076926,
+        "post_sft_cov8": 0.29086538461538464,
+        "sft_checkpoint_sha256": "9fedb2ee8c9b7edd4fdf09409114bb76e5e17a43b903f25c1aefe20b53f1833d"
+      },
+      "un": {
+        "cov_auc_delta": 0.0,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-55/results/mazescore_un_s55.jsonl",
+        "mean_rl_cov8": 0.29086538461538464,
+        "post_sft_cov8": 0.29086538461538464,
+        "sft_checkpoint_sha256": "9fedb2ee8c9b7edd4fdf09409114bb76e5e17a43b903f25c1aefe20b53f1833d"
+      },
+      "unif": {
+        "cov_auc_delta": -0.00552884615384619,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-55/results/mazescore_unif_s55.jsonl",
+        "mean_rl_cov8": 0.28533653846153845,
+        "post_sft_cov8": 0.29086538461538464,
+        "sft_checkpoint_sha256": "9fedb2ee8c9b7edd4fdf09409114bb76e5e17a43b903f25c1aefe20b53f1833d"
+      }
+    },
+    "56": {
+      "learn": {
+        "cov_auc_delta": 0.0036057692307691624,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-56/results/mazescore_learn_s56.jsonl",
+        "mean_rl_cov8": 0.2776442307692307,
+        "post_sft_cov8": 0.27403846153846156,
+        "sft_checkpoint_sha256": "50d4d1a0df6507135f226b5d6a24bd5e56ce6e948c76799f3b066d06a506593b"
+      },
+      "un": {
+        "cov_auc_delta": 0.0016826923076922462,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-56/results/mazescore_un_s56.jsonl",
+        "mean_rl_cov8": 0.2757211538461538,
+        "post_sft_cov8": 0.27403846153846156,
+        "sft_checkpoint_sha256": "50d4d1a0df6507135f226b5d6a24bd5e56ce6e948c76799f3b066d06a506593b"
+      },
+      "unif": {
+        "cov_auc_delta": -0.024519230769230765,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-56/results/mazescore_unif_s56.jsonl",
+        "mean_rl_cov8": 0.2495192307692308,
+        "post_sft_cov8": 0.27403846153846156,
+        "sft_checkpoint_sha256": "50d4d1a0df6507135f226b5d6a24bd5e56ce6e948c76799f3b066d06a506593b"
+      }
+    },
+    "57": {
+      "learn": {
+        "cov_auc_delta": -0.006730769230769207,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-57/results/mazescore_learn_s57.jsonl",
+        "mean_rl_cov8": 0.26730769230769236,
+        "post_sft_cov8": 0.27403846153846156,
+        "sft_checkpoint_sha256": "4eedbbaf1eaabe9ec32cf4ac804faa7bffa76665b316515720f7d2d2d904476c"
+      },
+      "un": {
+        "cov_auc_delta": -0.015625,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-57/results/mazescore_un_s57.jsonl",
+        "mean_rl_cov8": 0.25841346153846156,
+        "post_sft_cov8": 0.27403846153846156,
+        "sft_checkpoint_sha256": "4eedbbaf1eaabe9ec32cf4ac804faa7bffa76665b316515720f7d2d2d904476c"
+      },
+      "unif": {
+        "cov_auc_delta": -0.015625,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-57/results/mazescore_unif_s57.jsonl",
+        "mean_rl_cov8": 0.25841346153846156,
+        "post_sft_cov8": 0.27403846153846156,
+        "sft_checkpoint_sha256": "4eedbbaf1eaabe9ec32cf4ac804faa7bffa76665b316515720f7d2d2d904476c"
+      }
+    },
+    "58": {
+      "learn": {
+        "cov_auc_delta": 0.00048076923076928457,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-58/results/mazescore_learn_s58.jsonl",
+        "mean_rl_cov8": 0.3009615384615385,
+        "post_sft_cov8": 0.3004807692307692,
+        "sft_checkpoint_sha256": "246f2579c30d1eca63387d4bd856fa7ca42cb28658f2109eec1cada926ca582b"
+      },
+      "un": {
+        "cov_auc_delta": -0.01610576923076923,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-58/results/mazescore_un_s58.jsonl",
+        "mean_rl_cov8": 0.284375,
+        "post_sft_cov8": 0.3004807692307692,
+        "sft_checkpoint_sha256": "246f2579c30d1eca63387d4bd856fa7ca42cb28658f2109eec1cada926ca582b"
+      },
+      "unif": {
+        "cov_auc_delta": -0.018990384615384603,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-58/results/mazescore_unif_s58.jsonl",
+        "mean_rl_cov8": 0.2814903846153846,
+        "post_sft_cov8": 0.3004807692307692,
+        "sft_checkpoint_sha256": "246f2579c30d1eca63387d4bd856fa7ca42cb28658f2109eec1cada926ca582b"
+      }
+    },
+    "59": {
+      "learn": {
+        "cov_auc_delta": 0.017788461538461586,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-59/results/mazescore_learn_s59.jsonl",
+        "mean_rl_cov8": 0.3038461538461539,
+        "post_sft_cov8": 0.2860576923076923,
+        "sft_checkpoint_sha256": "02e2b9acdd6fd190d137ef5d0e130ee908be18b96b3355142dddc874daf8cec1"
+      },
+      "un": {
+        "cov_auc_delta": 0.009855769230769251,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-59/results/mazescore_un_s59.jsonl",
+        "mean_rl_cov8": 0.29591346153846154,
+        "post_sft_cov8": 0.2860576923076923,
+        "sft_checkpoint_sha256": "02e2b9acdd6fd190d137ef5d0e130ee908be18b96b3355142dddc874daf8cec1"
+      },
+      "unif": {
+        "cov_auc_delta": 0.0036057692307692735,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-59/results/mazescore_unif_s59.jsonl",
+        "mean_rl_cov8": 0.28966346153846156,
+        "post_sft_cov8": 0.2860576923076923,
+        "sft_checkpoint_sha256": "02e2b9acdd6fd190d137ef5d0e130ee908be18b96b3355142dddc874daf8cec1"
+      }
+    },
+    "60": {
+      "learn": {
+        "cov_auc_delta": 0.009134615384615408,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-60/results/mazescore_learn_s60.jsonl",
+        "mean_rl_cov8": 0.2711538461538462,
+        "post_sft_cov8": 0.2620192307692308,
+        "sft_checkpoint_sha256": "1554b47dc67caddca8676551eb239810007c52adab4a86cd676d0a58e752dc95"
+      },
+      "un": {
+        "cov_auc_delta": -0.003605769230769218,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-60/results/mazescore_un_s60.jsonl",
+        "mean_rl_cov8": 0.25841346153846156,
+        "post_sft_cov8": 0.2620192307692308,
+        "sft_checkpoint_sha256": "1554b47dc67caddca8676551eb239810007c52adab4a86cd676d0a58e752dc95"
+      },
+      "unif": {
+        "cov_auc_delta": -0.018509615384615402,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-60/results/mazescore_unif_s60.jsonl",
+        "mean_rl_cov8": 0.24350961538461538,
+        "post_sft_cov8": 0.2620192307692308,
+        "sft_checkpoint_sha256": "1554b47dc67caddca8676551eb239810007c52adab4a86cd676d0a58e752dc95"
+      }
+    },
+    "61": {
+      "learn": {
+        "cov_auc_delta": -0.009615384615384637,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-61/results/mazescore_learn_s61.jsonl",
+        "mean_rl_cov8": 0.2980769230769231,
+        "post_sft_cov8": 0.3076923076923077,
+        "sft_checkpoint_sha256": "66875cf886999cfdf65782eaa1e5862f523bd26063cc97fa490eb5825ce18f80"
+      },
+      "un": {
+        "cov_auc_delta": -0.00528846153846152,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-61/results/mazescore_un_s61.jsonl",
+        "mean_rl_cov8": 0.3024038461538462,
+        "post_sft_cov8": 0.3076923076923077,
+        "sft_checkpoint_sha256": "66875cf886999cfdf65782eaa1e5862f523bd26063cc97fa490eb5825ce18f80"
+      },
+      "unif": {
+        "cov_auc_delta": -0.02067307692307696,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-61/results/mazescore_unif_s61.jsonl",
+        "mean_rl_cov8": 0.28701923076923075,
+        "post_sft_cov8": 0.3076923076923077,
+        "sft_checkpoint_sha256": "66875cf886999cfdf65782eaa1e5862f523bd26063cc97fa490eb5825ce18f80"
+      }
+    },
+    "62": {
+      "learn": {
+        "cov_auc_delta": 0.0,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-62/results/mazescore_learn_s62.jsonl",
+        "mean_rl_cov8": 0.2860576923076923,
+        "post_sft_cov8": 0.2860576923076923,
+        "sft_checkpoint_sha256": "6b8a497376d7361e84feb5516f9def479d50eb136dbefa87247b66be39102698"
+      },
+      "un": {
+        "cov_auc_delta": -0.00048076923076922906,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-62/results/mazescore_un_s62.jsonl",
+        "mean_rl_cov8": 0.28557692307692306,
+        "post_sft_cov8": 0.2860576923076923,
+        "sft_checkpoint_sha256": "6b8a497376d7361e84feb5516f9def479d50eb136dbefa87247b66be39102698"
+      },
+      "unif": {
+        "cov_auc_delta": -0.01346153846153847,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-62/results/mazescore_unif_s62.jsonl",
+        "mean_rl_cov8": 0.2725961538461538,
+        "post_sft_cov8": 0.2860576923076923,
+        "sft_checkpoint_sha256": "6b8a497376d7361e84feb5516f9def479d50eb136dbefa87247b66be39102698"
+      }
+    },
+    "63": {
+      "learn": {
+        "cov_auc_delta": 0.028124999999999956,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-63/results/mazescore_learn_s63.jsonl",
+        "mean_rl_cov8": 0.29495192307692303,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "c32c5d85a81d53fb6998b959e5d530d729187025ee2c082de05ba4318e524dfa"
+      },
+      "un": {
+        "cov_auc_delta": 0.020192307692307676,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-63/results/mazescore_un_s63.jsonl",
+        "mean_rl_cov8": 0.28701923076923075,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "c32c5d85a81d53fb6998b959e5d530d729187025ee2c082de05ba4318e524dfa"
+      },
+      "unif": {
+        "cov_auc_delta": 0.0009615384615384581,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-63/results/mazescore_unif_s63.jsonl",
+        "mean_rl_cov8": 0.26778846153846153,
+        "post_sft_cov8": 0.2668269230769231,
+        "sft_checkpoint_sha256": "c32c5d85a81d53fb6998b959e5d530d729187025ee2c082de05ba4318e524dfa"
+      }
+    },
+    "64": {
+      "learn": {
+        "cov_auc_delta": -0.009374999999999967,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-64/results/mazescore_learn_s64.jsonl",
+        "mean_rl_cov8": 0.24783653846153847,
+        "post_sft_cov8": 0.25721153846153844,
+        "sft_checkpoint_sha256": "fb6ef9c2744cc55e3804b33900c07d92ae8a12ce3a7f8cd92225e420fa474835"
+      },
+      "un": {
+        "cov_auc_delta": -0.018990384615384603,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-64/results/mazescore_un_s64.jsonl",
+        "mean_rl_cov8": 0.23822115384615383,
+        "post_sft_cov8": 0.25721153846153844,
+        "sft_checkpoint_sha256": "fb6ef9c2744cc55e3804b33900c07d92ae8a12ce3a7f8cd92225e420fa474835"
+      },
+      "unif": {
+        "cov_auc_delta": -0.020673076923076905,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-64/results/mazescore_unif_s64.jsonl",
+        "mean_rl_cov8": 0.23653846153846153,
+        "post_sft_cov8": 0.25721153846153844,
+        "sft_checkpoint_sha256": "fb6ef9c2744cc55e3804b33900c07d92ae8a12ce3a7f8cd92225e420fa474835"
+      }
+    },
+    "65": {
+      "learn": {
+        "cov_auc_delta": 0.007211538461538436,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-65/results/mazescore_learn_s65.jsonl",
+        "mean_rl_cov8": 0.2668269230769231,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "a5e43ef4469d5831f8e45af9c39b65b2208e146da046356f0db5ae43fb3c125d"
+      },
+      "un": {
+        "cov_auc_delta": -0.0007211538461538991,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-65/results/mazescore_un_s65.jsonl",
+        "mean_rl_cov8": 0.25889423076923074,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "a5e43ef4469d5831f8e45af9c39b65b2208e146da046356f0db5ae43fb3c125d"
+      },
+      "unif": {
+        "cov_auc_delta": -0.006971153846153821,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-65/results/mazescore_unif_s65.jsonl",
+        "mean_rl_cov8": 0.2526442307692308,
+        "post_sft_cov8": 0.25961538461538464,
+        "sft_checkpoint_sha256": "a5e43ef4469d5831f8e45af9c39b65b2208e146da046356f0db5ae43fb3c125d"
+      }
+    },
+    "66": {
+      "learn": {
+        "cov_auc_delta": 0.0076923076923077205,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-66/results/mazescore_learn_s66.jsonl",
+        "mean_rl_cov8": 0.29134615384615387,
+        "post_sft_cov8": 0.28365384615384615,
+        "sft_checkpoint_sha256": "17bbe78e2b2957965ecbfaa0d00f1e53de1fde33e4f791421bdf6db973215f33"
+      },
+      "un": {
+        "cov_auc_delta": 0.0021634615384615863,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-66/results/mazescore_un_s66.jsonl",
+        "mean_rl_cov8": 0.28581730769230773,
+        "post_sft_cov8": 0.28365384615384615,
+        "sft_checkpoint_sha256": "17bbe78e2b2957965ecbfaa0d00f1e53de1fde33e4f791421bdf6db973215f33"
+      },
+      "unif": {
+        "cov_auc_delta": -0.0033653846153846034,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-66/results/mazescore_unif_s66.jsonl",
+        "mean_rl_cov8": 0.28028846153846154,
+        "post_sft_cov8": 0.28365384615384615,
+        "sft_checkpoint_sha256": "17bbe78e2b2957965ecbfaa0d00f1e53de1fde33e4f791421bdf6db973215f33"
+      }
+    },
+    "67": {
+      "learn": {
+        "cov_auc_delta": -0.0012019230769230727,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-67/results/mazescore_learn_s67.jsonl",
+        "mean_rl_cov8": 0.28725961538461536,
+        "post_sft_cov8": 0.28846153846153844,
+        "sft_checkpoint_sha256": "d48d5b7e51e9bb13a5ccecfd642e3c831657e3a963cecef44bbefbce6db75033"
+      },
+      "un": {
+        "cov_auc_delta": 0.0012019230769231282,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-67/results/mazescore_un_s67.jsonl",
+        "mean_rl_cov8": 0.28966346153846156,
+        "post_sft_cov8": 0.28846153846153844,
+        "sft_checkpoint_sha256": "d48d5b7e51e9bb13a5ccecfd642e3c831657e3a963cecef44bbefbce6db75033"
+      },
+      "unif": {
+        "cov_auc_delta": -0.006971153846153821,
+        "input": "/data/robotixx/maze_score/campaign-20260818/seed-67/results/mazescore_unif_s67.jsonl",
+        "mean_rl_cov8": 0.2814903846153846,
+        "post_sft_cov8": 0.28846153846153844,
+        "sft_checkpoint_sha256": "d48d5b7e51e9bb13a5ccecfd642e3c831657e3a963cecef44bbefbce6db75033"
+      }
+    }
+  },
+  "complete": true,
+  "contrasts": {
+    "primary_un_minus_learn": {
+      "bootstrap_ci_95": [
+        -0.005433693910256415,
+        -0.0011067708333333266
+      ],
+      "decision": "practically_ruled_out",
+      "holm_adjusted_p": 0.005416302361368253,
+      "label": "un - learn",
+      "mean": -0.0032351762820512857,
+      "negative_pairs": 32,
+      "per_seed_difference": {
+        "20": -0.009134615384615463,
+        "21": 0.002884615384615319,
+        "22": -0.006009615384615363,
+        "23": -0.00024038461538461453,
+        "24": -0.006490384615384592,
+        "25": -0.0007211538461538991,
+        "26": -0.0028846153846153744,
+        "27": 0.00552884615384619,
+        "28": -0.004326923076923173,
+        "29": 0.0,
+        "30": -0.010817307692307765,
+        "31": 0.00913461538461538,
+        "32": -0.0007211538461539546,
+        "33": 0.01033653846153848,
+        "34": 0.0038461538461538325,
+        "35": 0.003124999999999878,
+        "36": -0.020913461538461575,
+        "37": -0.0019230769230768607,
+        "38": -0.01057692307692304,
+        "39": -0.0076923076923076095,
+        "40": -0.00240384615384609,
+        "41": -0.0038461538461538325,
+        "42": -0.005528846153846134,
+        "43": 0.0012019230769231282,
+        "44": -0.019951923076923117,
+        "45": -0.004567307692307676,
+        "46": -0.0019230769230769162,
+        "47": 0.0016826923076923017,
+        "48": 0.002403846153846201,
+        "49": 0.007451923076923106,
+        "50": -0.01610576923076923,
+        "51": 0.014182692307692368,
+        "52": -0.004326923076923089,
+        "53": 0.0014423076923076872,
+        "54": 0.008173076923076894,
+        "55": -0.012740384615384626,
+        "56": -0.0019230769230769162,
+        "57": -0.008894230769230793,
+        "58": -0.016586538461538514,
+        "59": -0.007932692307692335,
+        "60": -0.012740384615384626,
+        "61": 0.004326923076923117,
+        "62": -0.00048076923076922906,
+        "63": -0.00793269230769228,
+        "64": -0.009615384615384637,
+        "65": -0.007932692307692335,
+        "66": -0.005528846153846134,
+        "67": 0.002403846153846201
+      },
+      "positive_pairs": 15,
+      "practically_ruled_out": true,
+      "sesoi": 0.005,
+      "sign_flip_p_two_sided_exact": 0.005416302361368253,
+      "supported": false,
+      "zero_pairs": 1
+    },
+    "secondary_un_minus_unif": {
+      "bootstrap_ci_95": [
+        0.006565504807692312,
+        0.011147836538461534
+      ],
+      "decision": "supported",
+      "holm_adjusted_p": 5.270067049423233e-09,
+      "label": "un - unif",
+      "mean": 0.008879206730769236,
+      "negative_pairs": 6,
+      "per_seed_difference": {
+        "20": 0.010817307692307654,
+        "21": 0.008653846153846123,
+        "22": 0.02644230769230771,
+        "23": -0.0026442307692307043,
+        "24": 0.015625000000000056,
+        "25": 0.013221153846153855,
+        "26": -0.004567307692307732,
+        "27": 0.00817307692307695,
+        "28": 0.015624999999999972,
+        "29": 0.020192307692307676,
+        "30": -0.005048076923076961,
+        "31": 0.00264423076923076,
+        "32": 0.008173076923076839,
+        "33": 0.016346153846153844,
+        "34": 0.014663461538461597,
+        "35": 0.012259615384615341,
+        "36": -0.006971153846153877,
+        "37": 0.013942307692307754,
+        "38": 0.0014423076923077427,
+        "39": 0.010096153846153866,
+        "40": 0.00793269230769239,
+        "41": 0.005048076923076961,
+        "42": 0.0036057692307692735,
+        "43": 0.0021634615384615308,
+        "44": 0.006490384615384537,
+        "45": -0.00793269230769228,
+        "46": -0.0009615384615384581,
+        "47": 0.012019230769230782,
+        "48": 0.0076923076923077205,
+        "49": 0.02403846153846162,
+        "50": 0.005528846153846079,
+        "51": 0.012500000000000122,
+        "52": 0.01995192307692309,
+        "53": 0.011298076923076883,
+        "54": 0.012740384615384626,
+        "55": 0.00552884615384619,
+        "56": 0.02620192307692301,
+        "57": 0.0,
+        "58": 0.0028846153846153744,
+        "59": 0.006249999999999978,
+        "60": 0.014903846153846184,
+        "61": 0.015384615384615441,
+        "62": 0.01298076923076924,
+        "63": 0.019230769230769218,
+        "64": 0.0016826923076923017,
+        "65": 0.006249999999999922,
+        "66": 0.00552884615384619,
+        "67": 0.00817307692307695
+      },
+      "positive_pairs": 41,
+      "practically_ruled_out": false,
+      "sesoi": 0.005,
+      "sign_flip_p_two_sided_exact": 2.6350335247116163e-09,
+      "supported": true,
+      "zero_pairs": 1
+    }
+  },
+  "endpoint": {
+    "definition": "mean pass@8 coverage over ten RL evaluations minus post-SFT coverage",
+    "evaluation_completed_updates": [
+      25,
+      50,
+      75,
+      100,
+      125,
+      150,
+      175,
+      200,
+      225,
+      250
+    ],
+    "name": "cov_auc_delta"
+  },
+  "protocol": "maze_score_v2",
+  "seed_blocks": [
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67
+  ],
+  "source_manifest": "d98fe3ed02acbbeb7c1e29d90670128c59bb788805a537553011f7e1c8867ba2"
+}

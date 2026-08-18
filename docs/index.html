@@ -1195,25 +1195,28 @@ activity stops predicting learning.</em></p>
   tasks that estimator makes active. Every finite-group estimator induces an <em>activity
   geometry</em> over pass rates — the expected absolute mass of the coefficient vector it can
   emit — and for the practical MaxRL convention that drops all-fail groups this geometry has an
-  exact closed form, <strong>A<sub>N</sub>(p) = 2·(pass@N − pass@1)</strong>, the estimator's own
-  pass@N gap. It factors exactly as <strong>p(1−p)·w<sub>N−1</sub>(p)</strong>: the canonical
-  learnability score reweighted by MaxRL's own objective weight at the truncation the deployed
-  estimator targets, recovering p(1−p) as the N=2 slice, with a peak that migrates toward harder
-  tasks as log N / N and an all-fail rule that shifts the truncation order to N−1. This is an
-  estimator-side diagnostic, not a theorem of learning progress, and we test it as a hypothesis.
-  In a fresh 20-seed Acrobot tournament at N=16, the deployed-N score improves target-uniform AUC
-  over p(1−p) by <strong>+.0480</strong> (95% paired-bootstrap CI [+.0209,&nbsp;+.0738]) and also
-  beats uniform sampling in this fixed eight-threshold family; the effect replicates on two
-  further platforms (+.0322, +.0307). Two preregistered follow-ups then bound the claim. Holding
-  the deployed estimator at N=16 and sweeping only the score exponent, performance rises
-  <em>past</em> N=16 (argmax at u<sub>64</sub>), so the harder-peaked <em>shape</em> is what helps
-  and the deployed-N peak <em>location</em> is not. Dropped into robust PLR on AMaze in place of
-  MaxMC, the pure activity priority is starved of signal at one Bernoulli per level visit and does
-  not beat the upstream baseline, while an exact-probability Digits counter-test rejects a
-  universal estimator-to-sampler mapping. The controlled positive and these two complementary
+  exact closed form, <strong>A<sub>N</sub>(p) = 2·(pass@N − pass@1)</strong>. It factors exactly
+  as <strong>p(1−p)·w<sub>N−1</sub>(p)</strong>: the canonical learnability score reweighted by
+  MaxRL's own objective weight at the truncation the deployed estimator targets, recovering
+  p(1−p) as the N=2 slice, with a peak that migrates toward harder tasks as log N / N and an
+  all-fail rule that shifts the truncation order to N−1. This is an estimator-side diagnostic,
+  not a theorem of learning progress, and we test it as a hypothesis. In a fresh 20-seed Acrobot
+  tournament at N=16, the deployed-N score improves target-uniform AUC over p(1−p) by
+  <strong>+.0480</strong> (95% CI [+.0209,&nbsp;+.0738]) and also beats uniform sampling; the
+  effect replicates on two further platforms (+.0322, +.0307). Three preregistered follow-ups
+  then bound the claim. Sweeping only the score exponent with the estimator held at N=16,
+  performance rises <em>past</em> N=16 (argmax at u<sub>64</sub>), so the harder-peaked
+  <em>shape</em> helps and the deployed-N peak <em>location</em> does not. Dropped into robust
+  PLR on AMaze in place of MaxMC, the pure activity priority is starved at one Bernoulli per
+  level visit. And in a 48-block test at 1.26M parameters and deployed N=32 the same shape
+  contrast is <em>negative</em> (−.0032, CI [−.0054,&nbsp;−.0011]; effects at or above the
+  registered SESOI are ruled out) — because rollouts inside a group share a level but not a task,
+  so realized coefficient mass falls below A<sub>N</sub>(p) by a factor that grows as p falls, and
+  the deployed-N peak sits in the worst-calibrated band. The controlled positives and these
   failures support a calibrated conclusion: finite-group coefficient activity is a principled,
   estimator-conditioned source of curriculum hypotheses, not a universal measure of learning
-  utility.</p>
+  utility — and not even a reliable measure of <em>available</em> update once rollouts stop being
+  i.i.d.</p>
 </div>
 
 <div class="grid2">

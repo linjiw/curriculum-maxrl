@@ -29,7 +29,7 @@ all other paper-evidence submissions remain `HOLD`.
 | Tie-aware v4 remote contract | LOCAL CONTRACT GO / REMOTE HOLD | deterministic snapshot `da74eb3e0debc7781d6d` passes seven focused tests and twin closure, but independent audit finds four primary remote blockers: protected-overlay incompatibility, R2 `job-<id>` mismatch, system-Python GPU probing, and invalid mandatory MIG-gpumem accounting; it implements no submit operation |
 | AMaze UED full campaign | **HOLD** | bounded jobs do not authorize 100-update, five-seed, matched-arm, endpoint analysis, or paper-evidence execution |
 | GPU engineering job 9361275 | RETIRED | canceled while pending, elapsed `00:00:00`; no GPU allocation, result, or endpoint |
-| MAZE-SCORE evidence | **LAUNCHED SEALED** | prereg FROZEN 2026-08-16 (48 blocks, seeds 20--67); clean evidence bundle `d98fe3ed02acbbeb7c1e`; chunk 1 seeds 20--43 submitted as array `9389151`; chunk 2 seeds 44--67 auto-submits when the gpu QOS submit cap (40/user) frees. No partial endpoint may be opened until the full 48-block matrix is retrieved |
+| MAZE-SCORE evidence | **COMPLETE — REPORTED** | All 48 blocks (seeds 20--67) terminal `COMPLETED 0:0` across arrays `9389151` (20--43) and `9389243` (44--67); fetched 2026-08-18 to `/data/robotixx/maze_score/campaign-20260818`, tree digest `1f9eb70447b212b1…`, 48/48 per-cell `SHA256SUMS` verified. Frozen analyzer (hash-matched) run **once**. Primary `un`−`learn` = −.00324 [−.00543,−.00111], **practically ruled out**; secondary `un`−`unif` = +.00888 supported. Written up in `hopper/MAZE_SCORE_RESULT_2026-08-18.md` |
 | BARN evidence | FROZEN / RUNNING SEALED | campaign 002 was canceled outcome-blind after an unsupported publication operation; replacement campaign `barn-icra2027-20260814-003` runs the same frozen 20 CPU tasks under the amended hard-link publication contract; no partial log or endpoint may be opened |
 | E2c | LOCAL ONLY | frozen protocol forbids moving it to Hopper |
 
@@ -267,7 +267,8 @@ support the required homogeneity assumption.
    only then construct the exact successor one-update submission. Jobs 9366896
    and 9366897 are not cross-bundle prerequisites. Only after both fresh gates
    pass may the single bounded terminal-chain engineering smoke be submitted.
-5. Keep MAZE-SCORE evidence and every new BARN submission on `HOLD`. Preserve
+5. MAZE-SCORE is complete and reported; no further MAZE-SCORE submission is
+   authorized. Keep every new BARN submission on `HOLD`. Preserve
    campaign 003 and use only its frozen ledger/finalization path after all tasks
    are terminal.
 6. Keep v4 staging and submission on `HOLD`. Repair the four primary audited
