@@ -234,10 +234,15 @@ hashed local protocol without an immutable public pre-execution commit, a fresh
 exactly before every update. Its internally frozen
 estimator-by-sampler interaction is $+.01589$ (95\% CI
 $[-.01686,+.04712]$, exact sign-flip $p=.350$; 15/24 positive) and is not
-supported. MaxRL favors $u_8$ over $p(1-p)$ by $+.20842$, but RLOO also favors
-$u_8$, reversing its prediction; both estimator-matched samplers are below
-uniform. The activity algebra therefore generates testable hypotheses, not a
-universal learnability or curriculum-optimality law.
+supported. MaxRL favors $u_8$ over $p(1-p)$ by $+.20842$ (23/24), but RLOO
+also favors $u_8$ ($+.17665$, 24/24), reversing its prediction; both
+estimator-matched samplers are below uniform. The same study therefore
+carries the paper's largest and cleanest shape effect and its sharpest
+negative: the harder-peaked score beats $p(1-p)$ under \emph{both}
+estimators, so the shape advantage is real and estimator-independent, while
+the estimator-\emph{matching} rule that would make it a mapping is rejected.
+The activity algebra generates testable hypotheses, not a universal
+learnability or curriculum-optimality law.
 
 \section{From mass to interventions}
 \label{sec:method}
@@ -310,11 +315,41 @@ requires controlled measurement.
 The main evidence has two roles. The Acrobot tournament directly isolates the
 deployed-$N$ score shape under a fixed scaffold, while the maze factorial
 tests an estimator-conditioned coverage ordering on real neural gradients.
-The preceding Digits counter-test supplies the negative boundary. The score's
-positive support is deliberately small-scale and fully controlled; the neural
-maze family tests an estimator-side prediction, not the score.
+The Digits counter-test supplies both the negative boundary on
+estimator-matching and, read the other way, the largest shape effect in the
+paper. The score's positive support is deliberately small-scale and fully
+controlled; the neural maze family tests an estimator-side prediction, not the
+score. Table~\ref{tab:contract} states, for each contrast, what it is and is
+not: exactly one shape contrast is a frozen confirmatory primary, and the rest
+are concordant supporting measurements. We claim the shape effect on that
+basis and no stronger.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Claim-to-evidence contract for ``the deployed-$N$ score shape beats
+its $N{=}2$ slice $p(1-p)$''. One frozen primary; three concordant supporting
+reads; two preregistered boundaries.}
+\label{tab:contract}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llrll@{}}
+\toprule
+study & contrast & effect & support & status\\
+\midrule
+Acrobot V2 (\S\ref{sec:acrobot}) & $u_{16}-p(1-p)$ & $+.0480$ & 15/20 & \textbf{frozen primary}\\
+Acrobot replications (\S\ref{sec:peaktest}) & $u_{16}-p(1-p)$ & $+.0322$, $+.0307$ & 17/20, 16/20 & replication, 2 platforms\\
+Digits, MaxRL (\S\ref{sec:evidence}) & $u_{8}-p(1-p)$ & $+.2084$ & 23/24 & secondary read\\
+Digits, RLOO & $u_{8}-p(1-p)$ & $+.1767$ & 24/24 & secondary read\\
+$N$ sweep (Tab.~\ref{tab:nsweep}) & $u_{N}-p(1-p)$, $N{>}2$ & $+.031$ to $+.191$ & 8/8 each & descriptive\\
+\midrule
+Exponent sweep (\S\ref{sec:peaktest}) & $u_{16}-u_{64}$ & $-.011$, $-.013$ & 10/20, 7/20 & \textbf{boundary}: peak location\\
+AMaze PLR (\S\ref{sec:amaze}) & activity vs MaxMC & $-.128$ / gate $-.039$ & 0/5, 1/5 & \textbf{boundary}: standalone signal\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Fresh fixed-pool Acrobot score test}
+\label{sec:acrobot}
 
 We first isolate the arbitrary-$N$ score on official Gymnasium
 \texttt{Acrobot-v1}. Eight nested tip-height predicates share one task-blind
@@ -432,64 +467,34 @@ mapping and remains outside this evidence.
 
 \subsection{Externally recorded fresh-wave maze result}
 
-We next retain the maze factorial as a secondary estimator measurement; it
-does not test the acquisition score.
+We retain the maze factorial as a secondary estimator measurement; it does
+not test the acquisition score. A 1.26M-parameter transformer is trained on
+procedurally generated $17\times17$ mazes in balanced blocks that share seed,
+warm start, task pool, and evaluation schedule across
+$\{\text{MaxRL},\text{GRPO}\}\times\{\text{uniform},\text{FrontierMax}\}$,
+with $N=32$, eight prompt groups per step, 250 steps, evaluation every 25
+steps on 16 held-out mazes per level, and identical deployed optimizer
+settings with no per-estimator learning-rate tuning. The outcome is
+time-integrated $\passat{8}$ coverage relative to the warm start. The first
+factorial rejected its stronger externally recorded endpoint claim (3/6 and
+4/6 blocks with the predicted sign) and we retracted the earlier
+zero-exception cohort claim; wave-1 time-integrated coverage was positive in
+all blocks but discovered exploratorily, so the external record specifies it
+as wave 2's primary with a falsification rule before new seeds ran, though the
+locking commit object is not vendored in this checkout.
 
-\paragraph{Design.}
-The testbed is a 1.26M-parameter transformer trained on procedurally generated
-$17\times17$ mazes. Each balanced block shares a seed, warm start, task pool,
-and evaluation schedule across
-$\{\text{MaxRL},\text{GRPO}\}\times
-\{\text{uniform},\text{FrontierMax}\}$. The outcome is time-integrated
-$\passat{8}$ coverage relative to the warm-start checkpoint, not final
-reward, at identical deployed optimizer settings with no per-estimator
-learning-rate tuning.
-
-Each run uses $N=32$, eight prompt groups per training step, and 250 steps.
-Evaluation occurs every 25 steps on 16 held-out mazes per level; coverage
-AUC is the mean $\passat{8}$ over steps 25--250 minus the warm-start value.
-
-The first factorial rejected its stronger externally recorded endpoint claim
-(3/6 uniform and 4/6 FrontierMax blocks with the predicted sign), and we
-retracted the earlier zero-exception cohort claim. Wave-1 time-integrated
-coverage was positive in all blocks under each sampler, but that outcome was
-discovered exploratorily; the external record specifies it as wave 2's
-primary, with a falsification rule, before new seeds ran, though the locking
-commit object is not vendored in this checkout.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=.94\linewidth]{figures/fig_maze_block_contrasts}
-\caption{\textbf{Maze factorial at the independent seed-block unit.}
-\emph{(a)} The externally recorded fresh-wave result is positive in 6/6 blocks under each
-sampler (exact sign $p=.03125$ each). Connected observations share a block.
-\emph{(b)} Sampler-averaging gives wave-2 mean $+.0195$ and post-hoc 95\% CI
-$[+.0115,+.0275]$; 12/12 cross-wave block averages are descriptive.
-\emph{(c)} Easy-band localization is suggestive: four positive blocks, one
-tie, one negative, and an interval containing zero.}
-\label{fig:maze}
-\end{figure}
-
-\paragraph{Result.}
-The wave-2 primary is positive in all six fresh blocks under uniform
-sampling and all six under FrontierMax (exact two-sided sign $p=.03125$ per
-sampler). Six blocks put this sign test at its granularity floor (6/6 is
-the only outcome clearing $.05$; the frozen 5/6 bar could not), so the
-inferential anchor is the block-averaged mean: averaging the correlated
-sampler observations within each block yields $+.0195$, post-hoc 95\% $t$
-interval $[+.0115,+.0275]$, with every leave-one-block-out interval above zero.
-Across both waves, all 12 block averages are positive, but that statement is
-descriptive because wave 1 selected the outcome.
-
-The data support an estimator-conditioned coverage ordering at common
-deployed optimizer settings, not universal estimator superiority or the
-strong mechanism account we initially expected. The recorded pair-level
-easy-band criterion was met, yet block aggregation leaves four positive, one
-tied, and one negative easy-band contrast with an interval crossing zero.
-Localization therefore remains suggestive. We froze an AUC robustness
-multiverse, but the checkpoint trajectories required to evaluate its warmup,
-integration, and horizon variants remain external
-(App.~\ref{app:protocols}).
+The wave-2 primary is positive in all six fresh blocks under each sampler
+(exact two-sided sign $p=.03125$ per sampler; 6/6 is the only outcome
+clearing $.05$ at six blocks). The inferential anchor is therefore the
+block-averaged mean, $+.0195$ (post-hoc 95\% $t$ interval $[+.0115,+.0275]$;
+every leave-one-block-out interval above zero); all 12 cross-wave block
+averages are positive but that is descriptive because wave 1 selected the
+outcome. This supports an estimator-conditioned coverage ordering at common
+deployed optimizer settings, not universal estimator superiority. Easy-band
+localization is suggestive only (four positive blocks, one tie, one negative;
+interval crossing zero), and the AUC robustness multiverse we froze awaits
+checkpoint trajectories that remain external (Fig.~\ref{fig:maze},
+App.~\ref{app:protocols}).
 
 \paragraph{Secondary records.}
 Paid-probe selection, failure recycling, and the historical Countdown
@@ -889,6 +894,19 @@ policy already reaches \citep{her,gcsl}.
 
 \section{Experimental protocols and secondary results}
 \label{app:protocols}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\linewidth]{figures/fig_maze_block_contrasts}
+\caption{\textbf{Maze factorial at the independent seed-block unit.}
+\emph{(a)} The externally recorded fresh-wave result is positive in 6/6 blocks under each
+sampler (exact sign $p=.03125$ each). Connected observations share a block.
+\emph{(b)} Sampler-averaging gives wave-2 mean $+.0195$ and post-hoc 95\% CI
+$[+.0115,+.0275]$; 12/12 cross-wave block averages are descriptive.
+\emph{(c)} Easy-band localization is suggestive: four positive blocks, one
+tie, one negative, and an interval containing zero.}
+\label{fig:maze}
+\end{figure}
 
 \paragraph{Fixed-completion $N$-sweep.}
 The environment contains three nested 12-level chains and ten actions.
