@@ -9,13 +9,28 @@ sys.path.insert(0, str(HERE)); sys.path.insert(0, str(HERE.parent / "curriculum_
 from branching_pool import make_branching                       # noqa: E402
 from estimators import weights_maxrl, weights_rloo, coefficient_activity  # noqa: E402
 import run_utility_audit as A                                   # noqa: E402
+import copy                                                     # noqa: E402
+
+
+def _cu(env, task, wfn, seed, h):
+    """continuation utility at an explicit horizon h."""
+    b = copy.deepcopy(env); b.rng = np.random.default_rng(seed)
+    j0 = A.J(b)
+    for _ in range(h):
+        A.one_step(b, task, wfn)
+    return A.J(b) - j0
 
 WARM = int(__import__("os").environ.get("BRANCH_WARM", 400))
+H_LIST = tuple(int(x) for x in __import__("os").environ.get("BRANCH_H","8").split(","))
 H = A.H
 N = A.N
 U_TOL = 0.05
+U_ABS = float(__import__("os").environ.get("BRANCH_U_ABS", "1e9"))  # absolute u_N tol; default off
 C_RATIO = 3.0
-SEEDS = tuple(range(4001, 4011))
+SEEDS = tuple(int(x) for x in __import__("os").environ.get("BRANCH_SEEDS","4001-4010").replace("-"," ").split()) \
+    if "-" not in __import__("os").environ.get("BRANCH_SEEDS","4001-4010") else \
+    tuple(range(int(__import__("os").environ.get("BRANCH_SEEDS","4001-4010").split("-")[0]),
+                int(__import__("os").environ.get("BRANCH_SEEDS","4001-4010").split("-")[1]) + 1))
 
 
 P_TOL = float(__import__("os").environ.get("BRANCH_P_TOL", "0"))  # 0 = original u_N-only matching
@@ -32,7 +47,7 @@ def matched_pairs(uN, C, p=None):
         for j in range(i + 1, n):
             if uN[i] <= 1e-6 or uN[j] <= 1e-6:
                 continue
-            if abs(uN[i] - uN[j]) / umax > U_TOL:
+            if abs(uN[i] - uN[j]) > U_ABS:
                 continue
             if P_TOL > 0 and p is not None and abs(p[i] - p[j]) > P_TOL:
                 continue
@@ -52,9 +67,13 @@ def run_seed(seed: int, estimator: str) -> dict:
     pairs = matched_pairs(uN, C, p)
 
     need = sorted({t for pr in pairs for t in pr[:2]})
-    U = {t: A.continuation_utility(env, t, wfn, seed * 1_000_003 + WARM * 1_009 + t)
-         for t in need}
+    UH = {}
+    for h in H_LIST:
+        UH[h] = {t: _cu(env, t, wfn, seed * 1_000_003 + WARM * 1_009 + t, h)
+                 for t in need}
+    U = UH[H_LIST[0]] if 8 not in H_LIST else UH[8]
     deltas = [U[hi] - U[lo] for hi, lo, _ in pairs]
+    deltas_by_h = {str(h): [UH[h][hi] - UH[h][lo] for hi, lo, _ in pairs] for h in H_LIST}
     ratios = [r for _, _, r in pairs]
 
     # frozen secondaries over the full pool
@@ -65,6 +84,8 @@ def run_seed(seed: int, estimator: str) -> dict:
         "n_pairs": len(pairs),
         "mean_delta": float(np.mean(deltas)) if deltas else None,
         "deltas": [float(x) for x in deltas],
+        "deltas_by_h": {k: [float(x) for x in v] for k, v in deltas_by_h.items()},
+        "mean_delta_by_h": {k: (float(np.mean(v)) if v else None) for k, v in deltas_by_h.items()},
         "c_ratios": ratios,
         "rho_uN": A.spearman(uN, Uall),
         "rho_uNC": A.spearman(uN * C, Uall),
