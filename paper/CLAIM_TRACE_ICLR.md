@@ -178,3 +178,30 @@ appendix. Every trace row above and in the base table still resolves; no
 quantitative value was edited. One factual correction was made while adding
 row 63's surrounding text: the MAZE-SCORE setup had been drafted as
 "17×13-level mazes" and is now "17×17 mazes across 13 goal-distance levels".
+
+---
+
+## Addendum 2026-08-18b — group-law correction (rows 76–82)
+
+Added after a direct audit of `curriculum_maxrl/maze_gpu/train.py` overturned
+the mechanism wording of rows 69–75's surrounding prose. **Rows 63–75 and every
+frozen endpoint are unchanged**; what changed is the explanation and the theory
+that carries it. See `PI_CORRECTION_GROUPLAW_GRANULARITY_2026-08-18.md`.
+
+| # | claim in `body_iclr.tex` | value | artifact | status |
+|---|---|---|---|---|
+| 76 | group semantics: one concrete maze per group, repeated $N$ times; posterior pools at the level | — | `curriculum_maxrl/maze_gpu/train.py` L680–689, L704 | TRACED (source) |
+| 77 | Prop. 1, arbitrary group law: $A_N(Q)=2(\Pr(K{>}0)-\mathbb E[K]/N)$ | exact | `curriculum_maxrl/test_group_law.py::test_mass_identity_holds_for_arbitrary_group_laws` (dependent, anti-correlated, heterogeneous, random dense laws; $N=2..5$) | TRACED (proved + tested) |
+| 78 | i.i.d. reduction parity to $2\{1-p-(1-p)^N\}$ | exact | same, `::test_iid_reduction_matches_closed_form` | TRACED |
+| 79 | Cor. 2 granularity gap $=2[\Pr(K{=}0\mid z)-(1-\bar p_z)^N]\ge0$ | exact | same, `::test_granularity_gap_equals_twice_excess_all_fail`, `::test_granularity_gap_vanishes_without_heterogeneity` | TRACED |
+| 80 | both identities hold on the campaign to $<5\times10^{-16}$ over 41,101 / 18,497 / 9,355 cells at windows 10/25/50 | 2.8e-16, 4.4e-16 | `hopper/MAZE_SCORE_GROUPLAW_AUDIT.json` `.identity_checks` | TRACED |
+| 81 | seed-clustered realization ratios .580 [.570,.590] vs .703 [.691,.715]; paired −.123, 48/48 negative | — | same, `.arm_un`, `.arm_learn`, `.paired_realization_ratio_un_minus_learn` | TRACED |
+| 82 | silent-group shares 60.8% vs 32.1% (seed-clustered) | — | same, `.silent_group_share_mean` | TRACED |
+
+**Supersedes.** Rows 74–75 quoted arm-level realization figures computed by
+`calibration.py` with uncertainty implicitly at the group-draw level (.81/.88
+predicted, .44/.60 realized, 60.7%/32.2% silent). Rows 81–82 recompute the same
+quantities with uncertainty clustered on the 48 seed blocks, which is the
+correct independent unit; the manuscript now cites the clustered figures
+(.580/.703 ratios, 60.8%/32.1% silent). The small differences are the change of
+aggregation unit, not of data. No frozen quantity is affected.

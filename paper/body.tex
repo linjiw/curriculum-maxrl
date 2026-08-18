@@ -222,6 +222,57 @@ recycling rule.
 
 \section{The estimator's activity geometry}\label{sec:theory}
 
+\begin{proposition}[Coefficient mass under an arbitrary group law]
+\label{prop:grouplaw}
+Under the practical centered drop-all-fail convention with zero stabilizer,
+the realized absolute coefficient mass of a group with $K$ successes is the
+deterministic function $M(K)=2(1-K/N)\mathbf1\{K>0\}$. Hence for \emph{any}
+joint binary group law $Q$ on $\{0,1\}^N$ --- no independence and no identical
+distribution assumed ---
+\[
+A_N(Q)=\mathbb E_Q[M(K)]=2\left(\Pr\nolimits_Q(K>0)-\frac{\mathbb E_Q[K]}{N}\right)
+=2(q_N-\bar p).
+\]
+Specializing to $Q=\mathrm{Bernoulli}(p)^{\otimes N}$ gives $q_N=1-(1-p)^N$
+and recovers $A_N(p)=2\{1-p-(1-p)^N\}$.
+\end{proposition}
+\begin{interp}
+The coefficient-mass identity requires no independence at all. What requires
+conditionally i.i.d.\ rollouts is the \emph{scalarization}: compressing the
+group law $Q_x$ into the single number $p_x$, and with it the factorization
+$p(1-p)w_{N-1}(p)$ and the peak $p^\star_N$. Estimator activity remains
+exactly realized activity; what can fail is predicting it from a coarse mean
+pass rate.
+\end{interp}
+
+\begin{corollary}[Task granularity]
+\label{cor:granularity}
+Let a curriculum score an aggregate $z$ (a level, template, or domain) whose
+concrete tasks are $X\sim\nu(\cdot\mid z)$, with rollouts conditionally
+i.i.d.\ given $X$. Since $u_N''(p)=-N(N-1)(1-p)^{N-2}<0$, Jensen gives
+$\mathbb E_X[u_N(p_X)]\le u_N(\bar p_z)$, and the gap is exact:
+\[
+A_N(\bar p_z)-2\,\mathbb E_X[u_N(p_X)]
+=2\left[\Pr(K{=}0\mid z)-(1-\bar p_z)^N\right]\;\ge\;0,
+\]
+twice the aggregate's \emph{excess all-fail probability} over the binomial at
+the same mean.
+\end{corollary}
+\begin{interp}
+Curvature decides who pays. Near $u_N$'s own peak the penalty is
+$\approx\tfrac12|u_N''(p^\star_N)|\operatorname{Var}(p_X)$ with
+$|u_N''(p^\star_N)|=(N-1)/(1-p^\star_N)$ --- about $34.7$ at $N=32$ --- while
+for the canonical score the relation is exact and far milder,
+$u_2(\bar p)-\mathbb E[u_2(p_X)]=\operatorname{Var}(p_X)$. So raising $N$ moves
+activity toward harder tasks \emph{and} makes the geometry more sensitive to
+how coarsely the curriculum names a task. Both identities are verified to
+floating point on 288{,}000 real group draws in
+\texttt{curriculum\_maxrl/maze\_score/group\_law\_audit.py}; the contract tests
+in \texttt{curriculum\_maxrl/test\_group\_law.py} exercise them against the
+deployed estimator under dependent, anti-correlated, heterogeneous and random
+dense joint laws.
+\end{interp}
+
 \begin{lemma}[Truncation order of the practical estimator]
 \label{lem:trunc}
 Let $J_T(p) = -\sum_{t=1}^{T}(1-p)^t/t$ denote the $T$-truncated ML
