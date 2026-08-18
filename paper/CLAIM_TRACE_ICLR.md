@@ -138,3 +138,43 @@ Two caveats deserve attention even though no claim is untraced:
 
 **Complete count: 62/62 traced** (35 TRACED, 27 TRACED-ROUNDED;
 0 UNTRACED).
+
+---
+
+## Addendum 2026-08-18 — MAZE-SCORE rows (63–75)
+
+Added after the frozen 48-block campaign `maze-score-v2-20260816-001` was
+retrieved and analysed once. Campaign digest `1f9eb70447b212b1…`; all 48
+per-cell `SHA256SUMS` verified; source manifest
+`d98fe3ed02acbbeb7c1e29d9…`. Analyzer SHA-256 `197f1254…7bd5`, byte-identical
+to the value frozen in `hopper/MAZE_SCORE_PREREG.md` before launch.
+
+| # | claim in `body_iclr.tex` | value | artifact | status |
+|---|---|---|---|---|
+| 63 | primary `u_32 − p(1−p)` | −.00324 | `hopper/MAZE_SCORE_ANALYSIS.json` `contrasts.primary_un_minus_learn.mean` | TRACED |
+| 64 | its 95% bootstrap CI | [−.00543, −.00111] | same, `.bootstrap_ci_95` | TRACED |
+| 65 | its exact sign-flip p | .0054 | same, `.sign_flip_p_two_sided_exact` (.005416) | TRACED-ROUNDED |
+| 66 | positive pairs | 15/48 | same, `.positive_pairs` / `.n` | TRACED |
+| 67 | secondary `u_32 − uniform` | +.00888, [+.00657,+.01115], 41/48 | same, `contrasts.secondary_un_minus_unif` | TRACED |
+| 68 | practically-ruled-out verdict | CI upper < +.005 SESOI | same, `.decision`, `.sesoi`; rule in prereg §"Decision rule" | TRACED |
+| 69 | group draws used for calibration | 288,000 | `hopper/MAZE_SCORE_CALIBRATION.json` `.n_group_draws_used` | TRACED |
+| 70 | binned predicted-vs-observed correlation | r = .90 | same, `.pearson_r_binned` (.8978) | TRACED-ROUNDED |
+| 71 | silent groups at p̂≈.11 | 2.2% predicted, 51.2% observed | same, `bins[1]` `.predicted_dead_fraction_binomial` / `.observed_dead_fraction` | TRACED-ROUNDED |
+| 72 | silent groups at p̂≈.22 | 0.03% predicted, 31.6% observed | same, `bins[2]` | TRACED-ROUNDED |
+| 73 | realization ratios .43 / .78 / .93 | observed÷predicted at p̂ ≈ .11 / .45 / .73 | same, `bins[1]`, `bins[5]`, `bins[6]`; ratio derived from the two stored means | TRACED (derived) |
+| 74 | per-arm predicted .81 vs .88, realized .44 vs .60 | `un` vs `learn` | `hopper/MAZE_SCORE_ARM_REALIZATION.json` | TRACED-ROUNDED |
+| 75 | silent-group share 60.7% vs 32.2% | `un` vs `learn` | same, `.observed_dead_fraction` | TRACED |
+
+Rows 69–75 are **post-hoc descriptive**: computed after the frozen primary by
+`curriculum_maxrl/maze_score/calibration.py`, which is *not* the frozen
+analyzer and computes no preregistered quantity. The manuscript labels them as
+such at the point of use (§"Why: the i.i.d. assumption fails where the score
+aims").
+
+**Structural note.** This addendum accompanies a layout change, not a value
+change: the maze factorial moved from a subsection to a paragraph, and
+`tab:instantiations` plus the estimator-comparison figure moved to the
+appendix. Every trace row above and in the base table still resolves; no
+quantitative value was edited. One factual correction was made while adding
+row 63's surrounding text: the MAZE-SCORE setup had been drafted as
+"17×13-level mazes" and is now "17×17 mazes across 13 goal-distance levels".
