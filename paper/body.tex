@@ -25,8 +25,19 @@ did not validate under corrected code. Together, these results support
 a calibrated conclusion: curricula and recyclers must be evaluated
 jointly with the estimator beneath them, and mean accuracy alone can
 hide a loss of coverage. We also show that dropping all-fail groups
-targets truncation order $T{=}N{-}1$, not $N$.
+targets truncation order $T{=}N{-}1$, not $N$ --- a property of the deployed
+centered-and-dropped convention, not a revision of MaxRL's theorem for its
+uncentered conditional estimator.
 \end{abstract}
+
+\begin{center}\small\fbox{\parbox{0.93\linewidth}{\textbf{Status.} This is the
+extended research record: every rung, every retraction, and the full
+implementation detail. The \emph{current scope of claims} is the 9-page ICLR
+submission body (\texttt{paper/body\_iclr.tex}), which is narrower --- it treats
+coefficient activity as an estimator-conditioned source of curriculum
+hypotheses rather than a curriculum law, and reports the two preregistered
+boundaries in \S\ref{sec:boundaries}. Where the two differ, the submission body
+governs.}}\end{center}
 
 \section{Introduction}
 
@@ -130,8 +141,11 @@ Our contributions:
   under success-conditioned RL is exactly $2(\passat{N}-\passat{1})$,
   compute-indexed, with peak location and $N$-scaling derived rather
   than tuned, and exact zeros at $p\in\{0,1\}$ anchoring the dead
-  zone, the learnable region, and the mastered tail; the common
-  $p(1-p)$ learnability score is its $N{=}2$ slice. (The functional is
+  zone, the learnable region, and the mastered tail; the canonical
+  binary-success $p(1-p)$ learnability score is its $N{=}2$ slice.
+  \emph{Derived is not the same as optimal}: a later preregistered
+  exponent sweep (\S\ref{sec:boundaries}) rejects the deployed-$N$ peak
+  \emph{location} while supporting the harder-peaked shape. (The functional is
   closed-form; the sampler built on it still estimates $p$ and keeps
   standard knobs.)
 \item \textbf{A derived teacher and a characterized recycler}
@@ -206,7 +220,7 @@ is an \emph{implicit, gradient-level} curriculum. Our work is the
 data-level complement: the same algebra, read as a sampling rule plus a
 recycling rule.
 
-\section{The estimator is the curriculum}\label{sec:theory}
+\section{The estimator's activity geometry}\label{sec:theory}
 
 \begin{lemma}[Truncation order of the practical estimator]
 \label{lem:trunc}
@@ -1174,6 +1188,43 @@ that requires a prospective raw-outcome pass@$k$ test. The current
 evidence does not establish a relabel-specific causal mechanism or a
 successful gate.
 
+\section{Preregistered boundaries}\label{sec:boundaries}
+
+Two campaigns registered after this draft's experiment ladder bound the
+claim, and both are reported in full in the ICLR submission body
+(\texttt{paper/body\_iclr.tex}).
+
+\paragraph{The peak location is not what helps.} In every rung above, the
+winning arm is also the harder-peaked arm, so ``harder peaks beat $p(1-p)$''
+and ``the deployed-$N$ peak is correct'' predict identically --- and only the
+second would advance on the $p(1-p)$ literature. Holding the deployed
+estimator at $N=16$ and varying \emph{only} the sampling exponent, an
+over-shooting $u_{64}$ arm is not beaten by $u_{16}$ ($-.0113$, 95\% CI
+$[-.0297,+.0057]$, exact $p=.235$, 10/20; and $-.0128$,
+$[-.0284,+.0024]$, $p=.131$, 7/20 on a second platform). A seven-point sweep
+$N_{\text{score}}\in\{2,\dots,128\}$ has its argmax at $u_{64}$, not at the
+deployed $u_{16}$ (Spearman $+.93$ between exponent and mean). The value of
+$u_N$ over $p(1-p)$ lies in its tail, precisely where $w_{N-1}$ differs from
+$1$ --- not in the derived peak. Branching an exact-gradient pool to measure
+true continuation utility $U_H$ at $H=8$ shows why: $u_{16}$ ranks $U_H$ far
+better than $p(1-p)$ under MaxRL ($+.106$, exact $p=.002$) but not under RLOO
+($+.0001$), while $U_H$ itself peaks near $p\approx.02$, below both
+$p^\star_{16}$ and $p^\star_{64}$. Activity ranks utility well and
+\emph{locates} it poorly.
+
+\paragraph{Activity is not a standalone replay signal.} Dropping the
+posterior activity priority into \texttt{minimax}'s robust PLR in place of
+MaxMC, with the shipped maze configurations otherwise verbatim, is negative:
+upstream scores $.629$ and the no-curriculum control $.539$, while every
+activity-priority variant falls below the control ($.500$ at $N{=}8$, $0/5$
+seeds). The cause is bandwidth, not shape --- MaxMC reads critic disagreement
+at every timestep, whereas at the shipped \texttt{n\_eval}${=}1$ a
+success-rate score receives one terminal Bernoulli per level visit. Gating
+MaxMC by activity rather than replacing it recovers most of the gap ($.590$;
+$-.039$ to upstream, $1/5$) without clearing it. The AMaze student is PPO with
+GAE and never forms binary rollout groups, so this bounds activity as a replay
+priority, not the estimator-derived mechanism itself.
+
 \section{Limitations and negative results}\label{sec:limits}
 
 \paragraph{Scale, and what the retraction taught about design.} The
@@ -1770,7 +1821,7 @@ sensitivity.}
 \toprule
 knob & default & derived or tuned & sensitivity \\
 \midrule
-peak location/$N$-scaling & --- & \textbf{derived} (Prop.~1) & the theory claim \\
+score shape / $N$-scaling & --- & \textbf{derived} (Prop.~1) & shape supported; peak \emph{location} rejected (\S\ref{sec:boundaries}) \\
 posterior decay & 0.7 & tuned (V2b) & closes ${\sim}19\%$ of oracle gap \\
 uniform floor & 0.1 & tuned & 0.15 on maze; robust 0.05--0.2 \\
 $\gamma$ (concentration) & 1 & tuned (V6) & 4 on chains; no transfer to maze \\

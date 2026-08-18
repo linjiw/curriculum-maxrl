@@ -21,11 +21,32 @@ E[Σ|w|] = 2 · (pass@N(p) − pass@1(p)) = 2 · ((1−(1−p)^N) − p)
 ```
 
 — twice the probability the prompt is *solvable within N attempts but not within one*.
-This is a compute-indexed formalization of the zone of proximal development, peaking at
-p* ≈ ln(N)/N. The teacher Thompson-samples a decayed Beta posterior over each prompt's
-pass rate and samples prompts proportional to this utility; the optimal per-prompt
-rollout allocation is greedy water-filling on the marginal `p(1−p)^N` (the probability
-the next rollout is a group's first success).
+More generally, every finite-group estimator induces an **activity geometry** over pass
+rates (the expected L1 mass of the coefficient vector it can emit, a Bernstein polynomial
+in p); practical MaxRL is notable because that sum collapses to a closed form, and RLOO's
+collapses to 2p(1−p) — so the canonical learnability score is the N=2 slice. The teacher
+Thompson-samples a decayed Beta posterior over each prompt's pass rate and samples
+proportional to this utility; the optimal per-prompt rollout allocation is greedy
+water-filling on the marginal `p(1−p)^N`.
+
+## Where the claim stands (read this before the ladder)
+
+Activity says where an update is *available*. It does not say where training has the most
+value. Three preregistered results draw that line:
+
+- **The shape helps.** In a fixed Acrobot pool at deployed N=16, `u_16` beats `p(1−p)` by
+  +.0480 (95% CI [+.0209, +.0738]), replicated on two further platforms (+.0322, +.0307).
+- **The peak location does not.** Holding the estimator at N=16 and sweeping only the score
+  exponent, performance keeps rising *past* N=16 (argmax at `u_64`). The harder-peaked
+  shape is what helps — not the derived peak.
+- **It is not a standalone signal.** Dropped into robust PLR on AMaze in place of MaxMC,
+  activity does not beat upstream: one Bernoulli per level visit cannot replace a critic
+  read at every timestep.
+
+So: coefficient activity is an estimator-conditioned *source of curriculum hypotheses*,
+not a universal measure of learning utility. The ICLR submission body
+(`paper/body_iclr.tex`, rendered at [`docs/paper-iclr.pdf`](docs/paper-iclr.pdf)) is
+written to exactly that scope.
 
 ## The experiment ladder — what each experiment asks, and what to expect
 
@@ -40,7 +61,7 @@ post-hoc stories.
 |---|---|---|---|
 | **CPU skill-chain** (36 tasks, exact gradients) | do the channels work at all? | teacher > uniform; recycling adds | ✓ 0.65→0.73→0.89 — **corrected**: a floor-and-γ-matched true-p oracle *ties* the full stack (0.8885 vs 0.8895; "beats the oracle" is retracted); recycling adds on top of even the oracle (0.8935) |
 | **V5 frontier-heavy regime** (max pool p=1e-5) | what happens when NO task is samplable? | pure samplers get exactly 0; recycling invents the curriculum below the pool | ✓ categorical: 0.93 AUC vs 0.00 for uniform/DAPO/teacher-alone |
-| **Balanced maze factorial** ({maxrl,grpo}×{uniform,teacher}×6 blocks, 250 fixed steps, pre-registered) | does the estimator coverage divergence survive a clean design? | ≥5/6 paired blocks MaxRL>GRPO under both samplers | **✗ FAILED (3/6, 4/6) — the cohort's zero-exception claim is retracted.** Survives: exact-rung ordering 10/10; exploratory time-integrated ordering 12/12 (now the registered primary of confirmation wave 2, running) |
+| **Balanced maze factorial** ({maxrl,grpo}×{uniform,teacher}×6 blocks, 250 fixed steps, pre-registered) | does the estimator coverage divergence survive a clean design? | ≥5/6 paired blocks MaxRL>GRPO under both samplers | **✗ FAILED (3/6, 4/6) — the cohort's zero-exception claim is retracted.** Wave 2 re-registered time-integrated coverage as primary and landed 6/6 fresh blocks under *each* sampler (block-mean +.0195); reported as an estimator-conditioned ordering at common optimizer settings, not universal estimator superiority |
 | **E-LLM-1: GSM8K 2×2** (SmolLM2-360M, one A10G) | do channels 1+3 transfer to LLM RLVR? | P-G2: grpo+teacher does NOT beat grpo | Registered run landed P-G2 (only regressing cell); **replication seed with weaker measured steering climbed instead — 1-of-2 seeds, dose-dependent, not established**; teacher-deficit *direction* is 2/2 seeds |
 | **E-LLM-2/2b: Countdown** (exact-verifier recycling, v2 pool) | channel 2 at LLM scale | recycling ignites unreachable tiers | v1 pool: both nulls (guesser-saturated). The reported 3-seed aggregate is mean@16 up while VERL bootstrap best@16 falls; this is a coverage proxy, not standard pass@16, and complete seed records are missing. The buggy-decay gate did not validate; corrected strong gating failed. Higher-dose replay does not isolate dose from direction; matched E2/E2b controls failed delivery and E2c prospectively retains raw outcomes. |
 | **Jugs (water-measuring)** | does the whole family fail together where no band exists? | pre-registered all-null | ✓ all-null landed — the negative control |
@@ -53,7 +74,7 @@ Full LLM-experiment roadmap with novelty checks and differentiation map:
 
 | path | contents |
 |---|---|
-| `paper/` | **The paper** — LaTeX source (`main.tex`/`body.tex`), figures with vendored data, compiled at `docs/paper-draft.pdf`. (`PAPER.md` is the superseded markdown outline) |
+| `paper/` | **The paper** — ICLR submission body `body_iclr.tex` (9-page bound, rendered at `docs/paper-iclr.pdf`); `main.tex`/`body.tex` is the extended research record (`docs/paper-draft.pdf`); figures with vendored data. (`PAPER.md` is the superseded markdown outline) |
 | `GUIDE.md` | Design guide: approaches tried, verification status of each, and what's next |
 | `REPORT.md` | Full experiment report: math→algorithm→evidence chain, findings, goal assessment |
 | `SCHEDULE.md` | Live experiment tracking: executing queue, decision trees, next wave |

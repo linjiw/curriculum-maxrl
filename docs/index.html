@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Curriculum-MaxRL — a teacher curriculum derived from the MaxRL objective</title>
+<title>Curriculum-MaxRL — the activity geometry a deployed estimator induces</title>
 <meta name="description" content="How Maximum Likelihood RL works, why it is an implicit curriculum, and how we derive an explicit teacher curriculum from the estimator's own algebra.">
 <style>
 :root {
@@ -186,8 +186,8 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <body>
 
 <header class="hero">
-  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-11</p>
-  <h1>The estimator decides</h1>
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-18</p>
+  <h1>The estimator defines activity</h1>
   <p class="lede">
     RL with verifiable rewards leans on two data-level fixes — <em>difficulty curricula</em>
     (train where learning is possible) and <em>failure recycling</em> (relabel failed rollouts
@@ -271,8 +271,9 @@ curriculum's job description</strong> — is the origin of everything on this pa
     <p>The estimator learns only from successes (Theorem 1 of the paper), so its expected
     signal per prompt has a closed form — and that form, 2·(pass@N − pass@1), is a
     zone-of-proximal-development functional the estimator was computing implicitly all along.
-    Sampling by it is the curriculum. Bounded by the oracle ceiling: allocation only
-    redistributes signal that exists.</p>
+    Sampling by it is a <em>rollout-aware curriculum hypothesis</em> — one we test, and
+    bound, below. Capped by the allocation ceiling: a sampler only redistributes signal
+    that already exists.</p>
   </div>
   <div class="card">
     <h3>Channel 2 → the recycler (signal creation)</h3>
@@ -414,8 +415,12 @@ beyond-frontier prompts (group dies) and mastered prompts (no headroom) — and 
   <span class="frac"><span class="num rm">ln N</span><span class="den rm">N</span></span>
 </div>
 
-<p>so larger group sizes automatically shift the optimal curriculum band toward harder prompts —
-the teacher and the objective share the same compute knob.</p>
+<p>so larger group sizes shift the <em>activity</em> band toward harder prompts. N fixes the
+estimator's activity geometry — but whether the deployed-N peak is also the best place to
+sample is a separate empirical question, and our preregistered exponent sweep answers it
+<strong>no</strong>: with the estimator held at N=16, performance keeps rising past N=16
+(argmax at u<sub>64</sub>). The harder-peaked <em>shape</em> is what helps; the deployed-N
+peak <em>location</em> is not.</p>
 
 <!-- Chart 2: advantage mass -->
 <figure>
@@ -1100,24 +1105,29 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
 <p><strong>The hidden benefits — quieter, arguably worth more:</strong></p>
 <div class="grid2">
   <div class="card">
-    <h3>Zero difficulty hyperparameters</h3>
-    <p>ADARFT-style bands need targets and widths tuned per task. Here the band is
-    <em>derived</em>: the rollout budget N you already chose sets the peak (≈ ln N / N) and the
-    width. Doubling N moves the curriculum harder automatically — the compute knob and the
-    curriculum knob are the same knob.</p>
+    <h3>No hand-set difficulty band</h3>
+    <p>ADARFT-style bands need targets and widths tuned per task. Here the score's shape is
+    <em>derived</em>: the rollout budget N you already chose sets its peak (≈ ln N / N) and
+    width, with no difficulty target to pick. That is not the same as being
+    hyperparameter-free — the posterior decay, exploration floor, sampling concentration γ,
+    and tracking scheme all remain empirical choices, and the exponent sweep shows the
+    derived peak location is not the one that performs best.</p>
   </div>
   <div class="card">
     <h3>A safety diagnosis, not just a method</h3>
-    <p>The same algebra that builds the teacher predicts when a curriculum will
-    <em>backfire</em>: GRPO's inverted weight function relies on easy prompts for maintenance,
-    so a frontier curriculum amplifies its collapse. Negative knowledge that saves other
-    people's compute — verified per-seed, not anecdotal.</p>
+    <p>The same algebra says where a curriculum is riskiest: GRPO's weight function leans on
+    easy prompts for maintenance, so a frontier curriculum has less to fall back on. Our maze
+    factorial found higher time-integrated coverage under MaxRL than GRPO in 6/6 fresh blocks
+    under <em>each</em> sampler — an estimator-conditioned ordering at common optimizer
+    settings, not a claim of universal estimator superiority.</p>
   </div>
   <div class="card">
     <h3>Conceptual compression</h3>
-    <p>Learnability curricula (p(1−p)), DAPO-style dynamic filtering, and HER stop being three
-    separate tricks: they are the N=2 slice, the sampling shadow, and the success-manufacturing
-    complement of <em>one identity</em>. Fewer moving parts to tune, one theory to reason with.</p>
+    <p>The canonical binary-success learnability score p(1−p), DAPO-style dynamic filtering, and
+    HER line up against <em>one identity</em>: the N=2 slice, the sampling shadow, and the
+    success-manufacturing complement. That is a subsumption of the p(1−p) family specifically —
+    advantage-bandit curricula (SEC, DUMP) and transfer-aware ones (TAC) score tasks on different
+    quantities and are not covered by it.</p>
   </div>
   <div class="card">
     <h3>Free telemetry</h3>
@@ -1174,40 +1184,36 @@ remains the extended research record. We studied the MaxRL paper's own craft —
 T=1" subsumption move, theorem boxes with plain-English interpretations, an escalating
 experimental ladder with one takeaway per rung — and hold this draft to that bar. Our
 one-line hook mirrors theirs one level up: <em>they showed RL is a first-order
-approximation of maximum likelihood; we show the curriculum is a closed-form property
-of their estimator — and that what the estimator throws away is the one thing no
-curriculum can fix, until you recycle it.</em></p>
+approximation of maximum likelihood; we show that a deployed estimator's task-level
+activity is a closed-form property of that same algebra — and then measure where
+activity stops predicting learning.</em></p>
 
 <div class="card">
   <h3>Abstract (compact ICLR submission draft — <em>Learnability, Reweighted: Which Tasks the Estimator Makes Active in Verifiable-Reward RL</em>)</h3>
-  <p style="font-size:0.93rem">RL with verifiable rewards (RLVR) often treats task curricula and
-  failure recycling as estimator-agnostic data interventions. We ask what task-level activity the
-  deployed group estimator makes available to either intervention. For the zero-stabilizer
-  practical MaxRL convention with N i.i.d. binary rollouts, the expected absolute coefficient
-  mass is exactly <strong>2·(pass@N − pass@1)</strong>, and the resulting score factors exactly as <strong>p(1−p)·w<sub>N−1</sub>(p)</strong> — the learnability score reweighted by MaxRL's own weight function at the truncation the deployed estimator targets. The activity score has a unique
-  compute-dependent peak, recovers the common learnability score p(1−p) at N=2, and shows that
-  dropping all-fail groups targets truncation order N−1, not N. It is an estimator-side
-  diagnostic, not a theorem of learning progress. The score's deployed-N shape carries empirical
-  content: in a fresh 20-seed Acrobot tournament at N=16, the rollout-aware score improves
-  target-uniform AUC over p(1−p) by <strong>+.0480</strong> (95% paired-bootstrap CI
-  [+.0209,&nbsp;+.0738]) and over uniform sampling as well; the effect replicates on two further
-  platforms (+.0322, +.0307). Two preregistered follow-ups then bound the claim: holding the
-  deployed estimator at N=16 and sweeping the score exponent, performance rises <em>past</em>
-  N=16 (argmax at u<sub>64</sub>), so the deployed-N peak <em>location</em> is not what helps —
-  harder-peaked scores are; and dropped into robust PLR on AMaze in place of MaxMC, the pure
-  activity priority is starved of signal at one Bernoulli per level visit and does not beat the
-  upstream baseline. Its scope is bounded by design rather
-  than by accident: a fresh 24-block exact-probability Digits counter-test rejects the stronger
-  universal estimator-to-sampler mapping, and a qualified, externally recorded six-block maze
-  factorial reports higher time-integrated MaxRL than GRPO coverage in <strong>6/6 blocks under
-  each sampler</strong> at common optimizer settings — an estimator-conditioned ordering, not
-  universal superiority. A reported three-seed Countdown aggregate couples higher mean@16 with a
-  lower logged VERL bootstrap best@16 coverage proxy under a deployed recycling package,
-  motivating pass@k recomputed from retained raw outcomes. Together, the positive and negative
-  results support a calibrated conclusion: coefficient activity is a productive source of
-  curriculum hypotheses, not a universal curriculum objective, and data-selection interventions
-  should be evaluated with the estimator beneath them, with raw mean@k and pass@k outcomes
-  retained.</p>
+  <p style="font-size:0.93rem">RL with verifiable rewards often treats task curricula as
+  independent of the group estimator that converts sampled outcomes into updates. We ask which
+  tasks that estimator makes active. Every finite-group estimator induces an <em>activity
+  geometry</em> over pass rates — the expected absolute mass of the coefficient vector it can
+  emit — and for the practical MaxRL convention that drops all-fail groups this geometry has an
+  exact closed form, <strong>A<sub>N</sub>(p) = 2·(pass@N − pass@1)</strong>, the estimator's own
+  pass@N gap. It factors exactly as <strong>p(1−p)·w<sub>N−1</sub>(p)</strong>: the canonical
+  learnability score reweighted by MaxRL's own objective weight at the truncation the deployed
+  estimator targets, recovering p(1−p) as the N=2 slice, with a peak that migrates toward harder
+  tasks as log N / N and an all-fail rule that shifts the truncation order to N−1. This is an
+  estimator-side diagnostic, not a theorem of learning progress, and we test it as a hypothesis.
+  In a fresh 20-seed Acrobot tournament at N=16, the deployed-N score improves target-uniform AUC
+  over p(1−p) by <strong>+.0480</strong> (95% paired-bootstrap CI [+.0209,&nbsp;+.0738]) and also
+  beats uniform sampling in this fixed eight-threshold family; the effect replicates on two
+  further platforms (+.0322, +.0307). Two preregistered follow-ups then bound the claim. Holding
+  the deployed estimator at N=16 and sweeping only the score exponent, performance rises
+  <em>past</em> N=16 (argmax at u<sub>64</sub>), so the harder-peaked <em>shape</em> is what helps
+  and the deployed-N peak <em>location</em> is not. Dropped into robust PLR on AMaze in place of
+  MaxMC, the pure activity priority is starved of signal at one Bernoulli per level visit and does
+  not beat the upstream baseline, while an exact-probability Digits counter-test rejects a
+  universal estimator-to-sampler mapping. The controlled positive and these two complementary
+  failures support a calibrated conclusion: finite-group coefficient activity is a principled,
+  estimator-conditioned source of curriculum hypotheses, not a universal measure of learning
+  utility.</p>
 </div>
 
 <div class="grid2">
