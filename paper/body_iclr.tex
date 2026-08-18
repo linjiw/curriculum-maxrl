@@ -448,7 +448,7 @@ independent seeds.
 
 \paragraph{Why the curve rises past the deployed $N$.}
 Branching an exact-gradient pool to measure true continuation utility
-$U_H(x)=J(\mathrm{Train}_H(\theta;x))-J(\theta)$, $u_{16}$ ranks $U_H$ far
+$U_H(x)=J(\mathrm{Train}_H(\theta;x))-J(\theta)$ at $H=8$, $u_{16}$ ranks it far
 better than $p(1-p)$ ($+.106$, 10 seeds, exact $p=.002$), while under RLOO ---
 whose mass \emph{is} $2p(1-p)$ --- the two are indistinguishable ($+.0001$).
 But $U_H$ peaks near $p\approx.02$, below both $p^\star_{16}$ and
@@ -599,11 +599,13 @@ that centers only when $K>0$ and zeros $K=0$.
 
 \paragraph{Coverage measurement.}
 RLVR can improve pass@1 while reducing high-$k$ coverage
-\citep{yue,yuan,passkinv}. Entropy collapse supplies complementary evidence of reduced
-exploration \citep{cui}; Pass@$k$ objectives address the metric directly
-\citep{passk}. We study whether an external curriculum changes that coverage
-under two estimators. The secondary hindsight and relabeling record is confined
-to App.~\ref{app:protocols}; it is not evidence for the acquisition score.
+\citep{yue,yuan,passkinv}; entropy collapse is complementary evidence
+\citep{cui} and pass@$k$ objectives address the metric directly \citep{passk}.
+We study whether an external curriculum changes that coverage under two
+estimators. The secondary hindsight and relabeling record is confined
+to App.~\ref{app:protocols}; it is not evidence for the acquisition score. It does mark the
+limit of allocation: a sampler redistributes existing signal, while relabeling
+can create signal outside its support --- at $A_N=0$ no priority helps.
 
 \section{Limitations}
 \label{sec:limits}
@@ -658,13 +660,12 @@ gaps limit auditing and preclude a broad neural claim.
 
 The estimator belongs in the evaluation of data-selection design: its
 coefficient algebra characterizes which tasks can emit activity at a chosen
-rollout count. A separately specified estimator-conditioned coverage ordering
-was observed under both tested samplers. In a fixed classical-control family,
-$u_{16}$ scoring outperformed both $u_2$ scoring under the same deployed
-$N=16$ estimator and uniform sampling, and that advantage replicated on two
-further platforms; the Digits study shows that the estimator-to-sampler
-mapping is not universal. Two preregistered follow-ups then drew the
-boundary. Sweeping the score exponent with the estimator held at $N=16$,
+rollout count, and a separately specified estimator-conditioned coverage
+ordering held under both tested samplers. In a fixed classical-control family
+$u_{16}$ beat both $u_2$ under the same deployed $N=16$ estimator and uniform
+sampling, replicating on two further platforms, while Digits shows the
+estimator-to-sampler mapping is not universal. Two preregistered follow-ups
+then drew the boundary. Sweeping the score exponent with the estimator held at $N=16$,
 performance rose past $N=16$, so it is the harder-peaked \emph{shape} that
 helps and not the deployed-$N$ peak \emph{location}. Dropped into robust PLR
 on AMaze in place of MaxMC, the pure activity priority did not beat the
@@ -673,8 +674,8 @@ per-timestep signal a regret proxy reads for free.
 Each group estimator induces its own task-activity geometry, but activity
 diagnoses \emph{available} update, not learning utility. Evaluate data
 selection with the estimator it ships on, report $\passat{k}$ from retained
-outcomes, and treat coefficient mass as a principled gate where activity
-binds --- not as a universal learning law.
+outcomes, and treat coefficient mass as a gate where activity binds, not as a
+universal learning law.
 
 \section*{Reproducibility statement}
 The repository includes exact-enumeration tests, a one-command artifact
