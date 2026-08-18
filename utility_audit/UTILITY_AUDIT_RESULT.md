@@ -72,3 +72,51 @@ of its family; exact gradients, 360-parameter policy, synthetic pool. This
 audit says the structural count does not help ranking on this substrate; it
 does not say no `C` could. A learned or curvature-based `C` is a different
 hypothesis and would need its own preregistration.
+
+---
+
+## Addendum 2026-08-18 — reading the audit against the PI judgment
+
+The PI judgment (`PI_JUDGMENT_2026-08-18.md`) predicts
+`activity ≠ immediate gain ≠ continuation utility`, and its Experiment ②
+predicts the gap opens with horizon. An exploratory horizon probe on the same
+harness (5 seeds × 3 depths, structured pool, MaxRL, **not preregistered**):
+
+| H | ρ(u_16, U_H) | where U_H peaks (median p) |
+|---|---|---|
+| 1 | +.651 | .051 |
+| 4 | +.797 | .075 |
+| 8 | +.818 | .023 |
+| 20 | +.810 | .004 |
+| 50 | +.784 | .002 |
+
+Two things at once, and they must be stated together:
+
+1. **Ranking does not collapse with horizon.** Availability keeps ranking
+   continuation utility at ρ≈.80 out to H=50. On this substrate, "activity
+   ≠ utility" is *not* a ranking failure of `u_N`.
+2. **The utility peak migrates into the dead zone.** From H=8 onward the
+   highest-utility tasks sit at p≈.002–.02 — tasks `u_16` scores near zero,
+   below both `p*_16` and `p*_64`. The gap is real, and it is a *peak-location*
+   gap: sampling proportional to `u_N` systematically under-weights the tasks
+   with the highest long-horizon value. This is a sharper statement of the
+   exponent-sweep finding, and it explains it: performance rose past the
+   deployed N because true utility peaks far past it.
+
+**Why the structural `C` was inert, precisely.** The shipped pool is three
+*linear* chains: task level `l` requires skills `1..l`, so every task's skills
+are a prefix of every harder task's in its chain. Compounding is monotone in
+level and level is monotone in `p`, so `C` is a function of `p` and cannot
+carry information `u_N(p)` lacks. **The judgment's Experiment ① — activity-
+matched, transfer-mismatched pairs — cannot be constructed on this pool.** It
+requires a *branching* task graph where two tasks share `p` but differ in how
+many downstream tasks their skills unlock. Building that pool is the
+prerequisite for testing the compounding hypothesis at all; today's "not
+needed" verdict is a statement about linear chains only and does not close
+the question.
+
+**What this means for the paper's boundary.** The estimator-conditioning
+claim got *stronger* today (`u_16` beats `p(1−p)` at ranking ground-truth
+utility, +.106, p=.002, and only under MaxRL). The peak-location boundary got
+a mechanism (true utility peaks in the tail). Neither requires the continuation
+machinery to state, and both belong in the current paper's closing.
