@@ -1305,7 +1305,25 @@ inconclusive, so we make no LLM interaction claim.
 The frozen E2c design repairs the historical result's most important
 measurement defects: it retains binary task outcomes, recomputes
 standard pass@16, pairs evaluation seeds and task manifests, and gates
-fixed-slot and response-token dose before exposing endpoints. It is
+fixed-slot and response-token dose before exposing endpoints. \emph{That
+design has since been shown infeasible, and the reason is a structural
+discovery rather than a miss.} E2c stopped at step 39 on preregistered runtime
+validity gate 7 (cumulative optimizer-token mismatch $5.79\%$ against a $5\%$
+tolerance). The drift was monotone and accelerating from about step 25, and
+\texttt{fallback\_slots} was $0$ at all 38 recorded steps, so the matcher was
+never starved in the sense the protocol guards against. What collapsed was
+\emph{source diversity}: late steps drew as many as seven replacement groups
+from a single reservoir entry against three to four distinct sources early,
+while \texttt{dead\_slots} rose from 2--4 to 5--8 per step. One fixed source
+then supplies one fixed response length to targets of varying length, and
+delivered tokens reach 6{,}823 against a 4{,}481 target. As a policy sharpens,
+more groups die exactly when the frozen reservoir can no longer supply distinct
+length-compatible sources: \textbf{an immutable reservoir and a delivered-dose
+tolerance are jointly unsatisfiable late in training.} Any successor must match
+\emph{delivered optimizer tokens} within a tolerance band enforced by
+throttling the richer arm, rather than freezing the source pool. The three-seed
+direction test is inconclusive; nothing was retried and no gate, budget,
+reservoir or matcher was changed under the E2c label. It is
 still not a pure relabel-direction experiment. B2 uses current-policy
 failures rewritten to achieved goals, whereas E2c replays informative
 groups from a frozen-SFT reservoir. Source age, behavior distribution,
