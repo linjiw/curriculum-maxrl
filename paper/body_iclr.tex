@@ -1,32 +1,29 @@
 \begin{abstract}
-RL with verifiable rewards often treats task curricula as independent of the
-group estimator that converts sampled outcomes into updates. We ask which tasks
-that estimator makes active. A deployed estimator's task-level activity is a
-closed-form property of its own algebra: for the practical MaxRL convention
-that drops all-fail groups, the expected absolute coefficient mass obeys
-$A_N(Q)=2\{\Pr(K{>}0)-\mathbb E[K]/N\}$ for \emph{any} group outcome law, with
-no independence assumed. Under conditionally i.i.d.\ rollouts this collapses to
-the estimator's own pass@$N$ gap and factors as $p(1-p)\cdot w_{N-1}(p)$ ---
-the canonical learnability score reweighted by MaxRL's own objective weight,
-recovering $p(1-p)$ exactly as its $N{=}2$ slice. This is an estimator-side
-diagnostic, not a theorem of learning progress, and we test it as a hypothesis.
-In a fresh 20-seed Acrobot tournament the deployed-$N$ score improves
-target-uniform AUC over $p(1-p)$ by $+.0480$ (95\% paired-bootstrap CI
-$[+.0209,+.0738]$) and replicates on two further platforms. Three
-preregistered follow-ups then bound the claim, and the third is the
-informative one. Sweeping only the score exponent, performance rises
-\emph{past} the deployed $N$: the harder-peaked shape helps, its peak location
-does not. As a standalone replay priority the score is starved of signal.
-And where the curriculum scores a \emph{level} aggregating heterogeneous tasks,
-the shape contrast reverses ($-.0032$, CI $[-.0054,-.0011]$) --- which the
-theory predicts, because scoring an aggregate by its mean pass rate
-over-predicts its activity by exactly twice its excess all-fail probability.
-The estimator defines the coefficient map; the curriculum defines the unit over
-which that map is averaged, and these operations do not commute. Coefficient
-activity is a principled, estimator-conditioned source of curriculum
-hypotheses, not a universal measure of learning utility --- and mean pass rate
-stops being a sufficient statistic for it the moment the curriculum names a
-coarser unit than the estimator consumes.
+Curriculum methods for RL with verifiable rewards summarize each task unit by a
+pass rate $p$ and apply a learnability curve $f(p)$. That presumes the unit the
+curriculum scores is the random object the group estimator consumes. It need
+not be: a unit of uniformly uncertain tasks and a unit mixing mastered with
+impossible tasks share a mean pass rate, yet only the first yields
+mixed-outcome groups and non-zero updates. We formalize the mismatch. For a
+permutation-equivariant binary group estimator, activity is a functional of the
+\emph{success-count law}, $\mathcal A(z)=\sum_kP(K{=}k\mid z)\,M_{\mathcal
+E}(k)$, with closed-form $M_{\mathcal E}$ for MaxRL, RLOO and GRPO; for
+practical MaxRL it is $2\{\Pr(K{>}0)-\mathbb E[K]/N\}$ under \emph{any} joint
+law, and the familiar $2(\passat{N}-\passat{1})$ is only its
+conditionally-i.i.d.\ atomic slice, which factors as $p(1-p)\cdot w_{N-1}(p)$
+and recovers $p(1-p)$ at $N{=}2$. For a coarse unit, plugging in the mean pass
+rate over-predicts activity by exactly twice its excess all-fail probability.
+Empirically, where the scored unit is the estimator's own, the deployed-$N$
+shape beats $p(1-p)$ by $+.0480$ (95\% paired-bootstrap CI $[+.0209,+.0738]$)
+and replicates on two further platforms. Three preregistered follow-ups then
+bound it: performance rises \emph{past} the deployed $N$, the score is starved
+as a standalone replay priority, and where the curriculum scores a level
+aggregating heterogeneous tasks the contrast reverses ($-.0032$, CI
+$[-.0054,-.0011]$), with the coefficient-mass error accounted for to floating
+point. The estimator defines the coefficient map; the curriculum defines the
+unit over which that map is averaged, and these operations do not commute.
+Coefficient activity is a principled, estimator-conditioned source of
+curriculum hypotheses, not a measure of learning utility.
 \end{abstract}
 
 \section{Introduction}
@@ -57,13 +54,15 @@ asked which \emph{objective} more compute should buy; we ask which
 
 Our contributions are organized by what each is entitled to claim.
 \begin{enumerate}
-\item \textbf{Theory, proved and machine-verified.} The group-law identity
-above; its conditional-i.i.d.\ collapse and factorization; the expected-update
-bridge $\mathbb E[\hat g\mid x]=u_N(p)(\mu_+-\mu_-)$, which is why a
-coefficient surrogate is defensible at all; Lemma~\ref{lem:trunc}, that the
-deployed drop-$K{=}0$ rule targets truncation $T=N-1$; and
-Cor.~\ref{cor:gran}, which prices a coarse scored unit exactly. Every one is
-checked as a code contract against the deployed estimator.
+\item \textbf{Theory, proved and machine-verified.} Activity is a functional of
+the \emph{success-count law}, not of mean pass rate: $\mathcal
+A_{\mathcal E,N}(z)=\sum_kP(K{=}k\mid z)M_{\mathcal E}(k)$, with closed-form
+$M_{\mathcal E}$ for MaxRL, RLOO and GRPO. The familiar $p$-curves are its
+conditional-i.i.d.\ slice; Cor.~\ref{cor:gran} prices a coarse scored unit
+exactly; the bridge $\mathbb E[\hat g\mid x]=u_N(p)(\mu_+-\mu_-)$ is why a
+coefficient surrogate is defensible; Lemma~\ref{lem:trunc} fixes the deployed
+truncation at $T=N-1$. All checked as code contracts against the deployed
+estimators.
 \item \textbf{Registered and confirmed.} In a fixed Acrobot pool at deployed
 $N{=}16$, $u_{16}$ beats $p(1-p)$ by $+.048$ under a frozen rule and
 replicates on two further platforms (\S\ref{sec:acrobot}).
@@ -75,7 +74,9 @@ starved: one Bernoulli per level visit against a critic read every timestep
 (\S\ref{sec:amaze}). And where the curriculum scores a \emph{level}
 aggregating heterogeneous tasks, the contrast reverses, $-.0032$ with CI
 $[-.0054,-.0011]$ and effects at or above the registered SESOI ruled out ---
-the sign Cor.~\ref{cor:gran} predicts (\S\ref{sec:mazescore}). Granularity,
+a sign consistent with Cor.~\ref{cor:gran}, which predicts the
+\emph{calibration} bias and not the endpoint (\S\ref{sec:mazescore}).
+Granularity,
 not scale, separates these studies.
 \item \textbf{Named as open.} Whether scoring the concrete task recovers that
 loss is registered and running, not claimed here; the LLM-scale interaction and
@@ -147,30 +148,47 @@ magnitude.
 
 \begin{definition}[Finite-group activity geometry]
 \label{def:geom}
-A binary group estimator $\mathcal E$ maps a group outcome $\mathbf r$ to
-coefficients $\mathbf c_{\mathcal E}(\mathbf r)\in\mathbb R^N$. Its
-\emph{activity geometry} is the expected absolute mass it emits on a task whose
-group outcomes follow $Q_x$,
+A permutation-equivariant binary group estimator $\mathcal E$ maps a group
+outcome to coefficients whose absolute mass, under binary rewards, depends only
+on the success count: write $M_{\mathcal E}(k)=\|\mathbf
+c_{\mathcal E}(k)\|_1$. Its \emph{activity} on a unit $z$ whose groups follow
+the count law $P(K\mid z)$ is
 \[
-\mathcal A_{\mathcal E,N}(Q_x)
-=\mathbb E_{\mathbf r\sim Q_x}\|\mathbf c_{\mathcal E}(\mathbf r)\|_1
-\;\;\overset{\text{symmetric}}{=}\;\;
-\sum_{k=0}^{N}Q_x(K{=}k)\,a_{\mathcal E,k},
-\qquad a_{\mathcal E,k}=\|\mathbf c_{\mathcal E}(k)\|_1 .
+\mathcal A_{\mathcal E,N}(z)=\sum_{k=0}^{N}P(K{=}k\mid z)\,M_{\mathcal E}(k),
+\qquad
+\begin{aligned}
+M_{\text{MaxRL}}(k)&=2(1-k/N)\mathbf 1\{k>0\},\\
+M_{\text{RLOO}}(k)&=\tfrac{2k(N-k)}{N(N-1)},\\
+M_{\text{GRPO}}(k)&=\tfrac{2}{N}\sqrt{\tfrac{N-1}{N}}\sqrt{k(N-k)},
+\end{aligned}
 \]
-Under conditionally i.i.d.\ rollouts, $Q_x=\mathrm{Bernoulli}(p_x)^{\otimes N}$
-and this becomes the Bernstein polynomial
-$\sum_k\binom Nkp_x^k(1-p_x)^{N-k}a_{\mathcal E,k}$ --- a one-dimensional
-geometry over pass rate.
+the last for the sample-SD convention at zero stabilizer.
 \end{definition}
 \noindent
-Every estimator induces activity over a \emph{group outcome law}; conditional
-i.i.d.\ sampling is what reduces that law to a geometry over a single scalar.
+\textbf{The sufficient statistic for estimator activity is the success-count
+law, not the mean pass rate.} Under conditionally i.i.d.\ rollouts
+$P(K\mid z)$ is Binomial$(N,p)$ and the sum collapses to a Bernstein polynomial
+in $p$ --- the familiar one-dimensional curves --- but that collapse is an
+assumption about the scored unit, not a property of the estimator. All three
+masses above are verified against the deployed implementations for
+$N\in\{4,8,16,32\}$ and every $k$ (App.~\ref{app:proofs}).
 Choosing an estimator fixes $\{a_{\mathcal E,k}\}$ and therefore which tasks can
 emit an update at all, orthogonally to the objective-side question of which
 finite-rollout objective to deploy \citep{maxrl,rl2ml}. What singles out
 practical MaxRL is that its mass is affine in the two statistics $(q_N,\bar
 p)$, so the sum collapses without any independence assumption.
+
+\paragraph{Why $\ell_1$ coefficient mass.}
+Three properties, and one limit. On a live MaxRL group the coefficients sum to
+zero, so $\tfrac12\|\mathbf w\|_1$ is simultaneously the total positive and the
+total negative mass: it measures how much success-versus-failure contrast the
+estimator can form. If rollout scores are bounded, $\|s_i\|\le B$, then
+$\|\sum_i w_is_i\|\le B\|\mathbf w\|_1$, so activity is a worst-case update
+envelope that depends on the estimator alone and not on unknown score geometry.
+And it is knowable before any rollout is spent, from a posterior over outcomes.
+The limit is equally sharp: activity is not the gradient norm and not expected
+improvement, because the realized update also carries the direction
+$\mu_+-\mu_-$.
 
 \begin{lemma}[Practical truncation order]
 \label{lem:trunc}
@@ -273,28 +291,30 @@ group law, whose $q_N$ is $1-\Pr(K{=}0\mid z)$. Curvature says who pays: near $p
 $\approx\tfrac12|u_N''|\operatorname{Var}(p_X)$ with
 $|u_N''(p^\star_N)|=(N-1)/(1-p^\star_N)\approx34.7$ at $N{=}32$, against the
 exact and far milder $u_2(\bar p)-\mathbb E[u_2(p_X)]=\operatorname{Var}(p_X)$.
-\textbf{Raising $N$ moves activity toward harder tasks and makes the geometry
-more sensitive to how coarsely the curriculum names a task}
-(\S\ref{sec:mazescore}).
+\textbf{Raising $N$ moves activity toward harder tasks and, near that active
+region, amplifies its sensitivity to how coarsely the curriculum names a task}
+(\S\ref{sec:mazescore}). This is a local statement: for a fixed heterogeneous
+$\nu(\cdot\mid z)$ with all $p_X>0$, both $\mathbb E[(1-p_X)^N]$ and
+$(1-\bar p_z)^N$ vanish as $N\to\infty$, so the gap is not monotone in $N$
+globally.
 
 
 
 \paragraph{Across estimators.}
-As $p\to0$ MaxRL carries $(N-1)$ times RLOO's mass; as $p\to1$ both decay at
-first order in $1-p$, whereas sample-SD-normalized GRPO --- whose Bernstein sum
-does not collapse --- keeps relatively more mass on near-mastered prompts
-(Fig.~\ref{fig:regimes}B, App.~\ref{app:proofs}).
+The three masses differ in shape, zeros and tails rather than in a scale a
+learning rate could absorb: as $p\to0$ MaxRL carries $(N-1)$ times RLOO's, and
+sample-SD GRPO keeps relatively more on near-mastered prompts
+(Fig.~\ref{fig:regimes}B).
 
 \paragraph{Exact-probability counter-test.}
 The stronger test does not generalize the sampler mapping. A fresh 24-block
 Digits contextual bandit, computing each example's exact correct-class
 probability before every update, leaves its frozen estimator-by-sampler
-interaction unsupported ($+.016$, 95\% CI $[-.017,+.047]$, $p=.350$; 15/24):
-MaxRL favors $u_8$ over $p(1-p)$ by $+.208$ (23/24), but so does RLOO
-($+.177$, 24/24), reversing its prediction, and both matched samplers fall
-below uniform --- the paper's largest shape effect and its sharpest negative in
-one study. Its lock is internally hashed without an immutable public
-pre-execution commit.
+interaction unsupported ($+.016$, CI $[-.017,+.047]$, $p=.350$; 15/24): MaxRL
+favors $u_8$ over $p(1-p)$ by $+.208$ (23/24), but so does RLOO ($+.177$,
+24/24), reversing its prediction, and both matched samplers fall below uniform
+--- the largest shape effect here and its sharpest negative in one study, under
+an internally hashed lock with no public pre-execution commit.
 
 \paragraph{Instantiation.}
 \label{sec:method}
@@ -482,25 +502,12 @@ p\approx.11$ the binomial predicts $2.2\%$ silent groups and $51.2\%$ are
 silent (Fig.~\ref{fig:mazescore}). Clustered on the 48 seed blocks, $u_{32}$
 realizes $.580$ $[.570,.590]$ of its prediction against $.703$ $[.691,.715]$
 for $p(1-p)$ (paired $-.123$, 48/48 blocks negative), losing $60.8\%$ of its
-groups to silence against $32.1\%$ --- as Cor.~\ref{cor:gran} predicts for the
-harder-peaked score. This exactly accounts for the mass prediction error and
+groups to silence against $32.1\%$, the direction Cor.~\ref{cor:gran} gives for
+the harder-peaked score. The corollary bounds the \emph{activity} error, not
+the endpoint: it is consistent with the observed contrast, not a prediction
+of it. This exactly accounts for the mass prediction error and
 is consistent with the endpoint, but it is not an intervention and we claim no
 sole mediation. Post-hoc; no registered quantity changes.
-
-\paragraph{The creation channel, and how to gate it.}
-Where activity is zero no sampler can help, and relabeling a failed rollout as
-a success of the goal it did reach is the only channel that adds signal
-(Fig.~\ref{fig:regimes}A). Two results carry to practice. Gating relabels by an
-\emph{estimated destination pass rate} rather than by observed frequency is
-registered and confirmed: one probe rollout per step recovers $98\%$ of the
-frequency-to-oracle gap (AUC $.798\to.877$ against an oracle $.879$; 10/10
-seeds), and probe budgets of 1, 4 and 16 are indistinguishable --- P-PB1
-confirmed, while its monotonicity sub-hypothesis P-PB2 is not supported
-(1/10 seeds). Descriptively, how relabels are \emph{grouped} matters as much as
-whether they happen: each relabeled row as its own $K{=}1$ group scores
-$.952$, one destination per group $.881$, and a shared-$K$ coupled form
-$.749$, against $.705$ with no recycling --- both orderings 10/10 seeds,
-ten-seed AUC means on the fixed chain pool, exploratory.
 
 \paragraph{Secondary records.}
 An externally recorded six-block factorial tests an \emph{estimator} ordering
@@ -508,8 +515,11 @@ rather than the score: after its first wave rejected the stronger registered
 endpoint claim (3/6, 4/6), the re-registered wave-2 primary is positive in all
 six fresh blocks under \emph{each} sampler (block mean $+.0195$,
 $[+.0115,+.0275]$) --- an estimator-conditioned ordering, not universal
-estimator superiority. That record, with the $N$-sweep, paid-probe selection
-and the historical Countdown aggregate, is in App.~\ref{app:protocols} and
+estimator superiority. Where activity is zero no sampler can help and only relabeling adds signal; a
+registered probe-fed gate recovers $98\%$ of the frequency-to-oracle gap
+(10/10 seeds) and, descriptively, relabel group structure matters as much as
+relabeling itself. That record, with the $N$-sweep, paid-probe selection and
+the historical Countdown aggregate, is in App.~\ref{app:protocols} and
 supports no named-method superiority claim; their measurement lesson is that
 raw per-task outcomes are needed to separate mean accuracy from standard
 $\passat{k}$.
@@ -517,17 +527,15 @@ $\passat{k}$.
 \takeaway{\textbf{If you are deploying this.}
 \emph{(i)} Score with $u_M$ for $M\ge$ your deployed $N$: the deployed $N$ is a
 floor on the score exponent, not an optimum (\S\ref{sec:peaktest}).
-\emph{(ii)} Score the unit your estimator consumes. If the curriculum names a
-bucket that aggregates heterogeneous tasks, its mean pass rate over-predicts
-activity by exactly $2[\Pr(K{=}0\mid z)-(1-\bar p_z)^N]$ --- computable from
-group outcomes you already log, as $u_N(\hat p_z)$ minus the realized
-$\hat q_z-\hat p_z$.
+\emph{(ii)} Score the unit your estimator consumes; if the curriculum names a
+coarser bucket, score it by the realized count law $\hat q_z-\hat p_z$ rather
+than by $u_N(\hat p_z)$. Both come free from group outcomes you already log.
 \emph{(iii)} Do not expect activity to replace a per-timestep regret signal; at
 one Bernoulli per visit it is a gate on a richer signal, not a signal
 (\S\ref{sec:amaze}).
-\emph{(iv)} Outside the band a sampler cannot help: relabel, gate the relabels
-by estimated destination pass rate with one probe rollout per step rather than
-by frequency, and implement each relabeled row as its own $K{=}1$ group.
+\emph{(iv)} Outside the band, relabel rather than re-sample, and gate the
+relabels by estimated destination pass rate with one probe rollout per step
+(App.~\ref{app:protocols}).
 \emph{(v)} Log the dead-group fraction and realized-versus-predicted mass
 beside $\passat{k}$: those two diagnosed \S\ref{sec:mazescore}.}
 
@@ -643,19 +651,16 @@ auditing and preclude a broad neural claim.
 
 \section{Conclusion}
 
-The teacher allocates, hindsight creates, the estimator decides whether either
-is safe. Its coefficient algebra fixes which tasks can emit activity at a given
-rollout count, and in a fixed classical-control family $u_{16}$ beat both $u_2$
-at the deployed $N{=}16$ and uniform sampling, twice replicated. Three
-preregistered follow-ups then bounded it: the deployed-$N$ peak location is not
-what helps, the score is starved as a standalone replay priority, and on a
-level aggregating heterogeneous tasks the contrast reverses by exactly the
-excess all-fail probability of Cor.~\ref{cor:gran}. The estimator defines the
-coefficient map; the curriculum defines the unit over which it is averaged, and
-the two do not commute --- which separates the studies where the shape wins from
-the one where it does not. Evaluate data selection with the estimator it ships
-on, report $\passat{k}$ from retained outcomes, and treat activity as a gate,
-not a law.
+Estimator activity is a functional of the success-count law. Where the
+curriculum scores the estimator's own unit, the deployed-$N$ shape beat both
+$u_2$ and uniform sampling, twice replicated; three preregistered follow-ups
+then bounded it: the peak location is not what helps, the score is starved as a
+standalone replay priority, and on a level aggregating heterogeneous tasks the
+contrast reverses, its coefficient-mass error priced exactly by
+Cor.~\ref{cor:gran}. The estimator defines the coefficient map; the curriculum
+defines the unit over which it is averaged, and the two do not commute.
+Evaluate data selection with the estimator it ships on, report $\passat{k}$
+from retained outcomes, and treat activity as a gate, not a law.
 
 \section*{Reproducibility statement}
 The repository includes exact-enumeration tests, a one-command artifact
@@ -957,6 +962,22 @@ policy already reaches \citep{her,gcsl}.
 
 \section{Experimental protocols and secondary results}
 \label{app:protocols}
+
+\paragraph{The creation channel, and how to gate it.}
+Where activity is zero no sampler can help, and relabeling a failed rollout as
+a success of the goal it did reach is the only channel that adds signal
+(Fig.~\ref{fig:regimes}A). Two results carry to practice. Gating relabels by an
+\emph{estimated destination pass rate} rather than by observed frequency is
+registered and confirmed: one probe rollout per step recovers $98\%$ of the
+frequency-to-oracle gap (AUC $.798\to.877$ against an oracle $.879$; 10/10
+seeds), and probe budgets of 1, 4 and 16 are indistinguishable --- P-PB1
+confirmed, while its monotonicity sub-hypothesis P-PB2 is not supported
+(1/10 seeds). Descriptively, how relabels are \emph{grouped} matters as much as
+whether they happen: each relabeled row as its own $K{=}1$ group scores
+$.952$, one destination per group $.881$, and a shared-$K$ coupled form
+$.749$, against $.705$ with no recycling --- both orderings 10/10 seeds,
+ten-seed AUC means on the fixed chain pool, exploratory.
+
 
 \begin{figure}[t]
 \centering
