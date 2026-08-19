@@ -28,15 +28,20 @@ curriculum hypotheses, not a measure of learning utility.
 
 \section{Introduction}
 
-RL with verifiable rewards (RLVR) converts automatically checkable outcomes
-into policy updates, and every update first pays for a group of $N$ model
-rollouts. A task curriculum tries to make that budget productive by sampling
-tasks believed to be learnable now. The dominant curriculum score in the
-literature is learnability, $p(1-p)$ \citep{procurl,sfl}: sample tasks the
-policy solves about half the time. We ask what that score does not:
-\emph{learnable for which learner?} Modern RLVR runs a group estimator ---
-MaxRL \citep{maxrl}, GRPO, RLOO --- and the coefficients it can emit on a task
-are a function of that task's group outcome law and of $N$.
+RL with verifiable rewards converts automatically checkable outcomes into
+policy updates, and every update first pays for a group of $N$ model rollouts.
+Curricula make that budget productive by summarizing each task unit with a pass
+rate $p$ and sampling by a learnability curve $f(p)$ \citep{procurl,sfl}. That
+presumes the unit the curriculum scores is the random object the estimator
+consumes. Consider two units, each with mean pass rate $\tfrac12$ at $N{=}16$
+(Fig.~\ref{fig:counterex}). In the first, every task is solved about half the
+time: groups come back mixed and the estimator forms success-versus-failure
+contrast on nearly every one. In the second, half the tasks are mastered and
+half are impossible: every group is unanimous, all-pass groups carry no
+contrast, all-fail groups are dropped, and realized activity is exactly zero.
+Any $f(\bar p)$ scores them identically; the estimator does not. The question
+is not which function of pass rate to use, but \emph{when pass rate is a
+sufficient statistic at all}.
 
 We answer for practical MaxRL. Its expected absolute coefficient mass obeys
 $A_N=2(\Pr(K{>}0)-\mathbb E[K]/N)$ for \emph{any} group law
@@ -87,20 +92,15 @@ Throughout, curricula are evaluated with the estimator they ship.
 \vspace{-2pt}
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/fig_regimes}
-\caption{\textbf{The three-regime map: the teacher allocates, hindsight
-creates, the estimator decides whether either is safe.}
-\emph{(A)} Coefficient activity has exact zeros at $p{=}0$ and $p{=}1$, so the
-pass-rate axis splits into a band where a sampler can redistribute existing
-signal and two regions where no priority rule can help. Edges are
-budget-dependent: with $B$ groups per step a task is \emph{operationally dead
-at budget} when it yields under one live group, $B\{1-(1-p)^N\}<1$; drawn at
-$B{=}8$, $N{=}16$. Relabeling is the only channel that adds signal outside the
-band (App.~\ref{app:protocols}).
-\emph{(B)} Which estimator is deployed decides the band's shape. GRPO's
-geometry retains mass on near-mastered prompts, so a frontier curriculum is not
-automatically safe under it.}
-\label{fig:regimes}
+\includegraphics[width=\linewidth]{figures/fig_counterexample}
+\caption{\textbf{One mean pass rate, two opposite worlds.}
+\emph{(A)} Two curriculum units at $N{=}16$ with identical mean pass rate
+$\bar p_z=\tfrac12$ and different success-count laws: Level A has every task at
+$p=\tfrac12$; Level B mixes mastered with impossible tasks.
+\emph{(B)} Scored by any $f(\bar p_z)$ both receive $1.00$. Their realized
+coefficient activity $A_N=2\{\Pr(K{>}0)-\mathbb E[K]/N\}$ is $1.00$ and
+$0.00$. Exact, not simulated.}
+\label{fig:counterex}
 \end{figure}
 
 \begin{figure}[t]
@@ -962,6 +962,24 @@ policy already reaches \citep{her,gcsl}.
 
 \section{Experimental protocols and secondary results}
 \label{app:protocols}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_regimes}
+\caption{\textbf{The three-regime map: the teacher allocates, hindsight
+creates, the estimator decides whether either is safe.}
+\emph{(A)} Coefficient activity has exact zeros at $p{=}0$ and $p{=}1$, so the
+pass-rate axis splits into a band where a sampler can redistribute existing
+signal and two regions where no priority rule can help. Edges are
+budget-dependent: with $B$ groups per step a task is \emph{operationally dead
+at budget} when it yields under one live group, $B\{1-(1-p)^N\}<1$; drawn at
+$B{=}8$, $N{=}16$. Relabeling is the only channel that adds signal outside the
+band (App.~\ref{app:protocols}).
+\emph{(B)} Which estimator is deployed decides the band's shape. GRPO's
+geometry retains mass on near-mastered prompts, so a frontier curriculum is not
+automatically safe under it.}
+\label{fig:regimes}
+\end{figure}
 
 \paragraph{The creation channel, and how to gate it.}
 Where activity is zero no sampler can help, and relabeling a failed rollout as

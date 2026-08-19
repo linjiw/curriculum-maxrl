@@ -159,3 +159,15 @@ whether *granularity* moves learning on this substrate; it does not establish
 that task-level scoring beats the canonical `p(1−p)` score, nor that the result
 transfers to a fresh-sample regime — where, as §2 notes, per-task scoring is not
 available at all.
+
+---
+
+## SUPERSEDED 2026-08-19, before any run
+
+Never launched; no cell exists. Replaced by
+`GROUP_LAW_FLIP_PREREG.md`, which tests the same corollary with a strictly
+better design: the count-law score `q̂_z − p̂_z` is estimable from the success
+counts a trainer already observes, so it needs **no finite pool** and runs on
+the MAZE-SCORE substrate unchanged. The obstacle this v1 worked around — that a
+per-task posterior is undefined in a fresh-sample regime — is dissolved rather
+than accommodated. v1's finding about that regime is carried forward verbatim.
