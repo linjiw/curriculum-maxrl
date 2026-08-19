@@ -110,7 +110,7 @@ axB.set_ylim(-0.7, len(surv) - 0.3)
 axB.set_xlim(-0.012, 0.302)
 axB.set_xticks([0, 0.1, 0.2])
 axB.set_xlabel("effect vs $p(1{-}p)$")
-axB.set_title("B   shape supported (exact-gradient scale)", loc="left",
+axB.set_title("B   shape supported: scored unit = task", loc="left",
               color=BLUE, pad=8)
 
 # ------------------------------------------------------------------ Panel C
@@ -119,7 +119,7 @@ stop = [
     (-0.0128, -0.0284, 0.0024, "$u_{16}-u_{64}$  (B)", "7/20", True),
     (-0.128, None, None, "AMaze: replace MaxMC", "0/5", False),
     (-0.039, None, None, "AMaze: gate MaxMC", "1/5", False),
-    (-0.00324, -0.00543, -0.00111, "MAZE-SCORE 1.26M", "15/48", True),
+    (-0.00324, -0.00543, -0.00111, "MAZE-SCORE: unit = level", "15/48", True),
 ]
 ys = np.array([5.0, 4.3, 2.6, 1.9, 0.2])
 for y, (m, lo, hi, lab, sup, hasci) in zip(ys, stop):
@@ -140,7 +140,7 @@ axC.text(0.070, 5.75, "peak location rejected", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
 axC.text(0.070, 3.35, "standalone signal rejected", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
-axC.text(0.070, 0.95, "neural scale rejected", fontsize=6.9, color=RED,
+axC.text(0.070, 0.95, "coarse scored unit rejected", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
 
 fig.tight_layout(pad=0.4, w_pad=1.5)
