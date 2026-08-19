@@ -1,0 +1,26 @@
+
+[1] shared-instance is necessary for a nonzero granularity gap
+    plug-in u_8(p_bar)      = 0.496094
+    A (shared instance)     = 0.000000   gap = +0.496094
+    A (resampled per member)= 0.496094   gap = +0.000000
+    -> shared gap is the corollary 2[Pr(K=0)-(1-p)^N]/2 = 0.496094
+    PASS: shared-instance Level B has EXACTLY zero activity
+    PASS: resampled-instance activity EQUALS the plug-in
+    MC check: shared=+0.0000 (theory +0.0000), resampled=+0.4961 (theory +0.4961)
+
+[2] SFL learnability == M_RLOO(k) x (N-1)/(2N), exactly, at every k
+    N=4   ratio=0.375000000000000  (N-1)/(2N)=0.375000000000000  PASS
+    N=8   ratio=0.437500000000000  (N-1)/(2N)=0.437500000000000  PASS
+    N=10  ratio=0.450000000000000  (N-1)/(2N)=0.450000000000000  PASS
+    N=16  ratio=0.468750000000000  (N-1)/(2N)=0.468750000000000  PASS
+    N=32  ratio=0.484375000000000  (N-1)/(2N)=0.484375000000000  PASS
+    PASS: identity holds at every N tested
+    but the MaxRL mass is a DIFFERENT shape: argmax k = 1 vs RLOO/SFL argmax k = 4  -> a genuine rival ranking, not a rescaling
+
+[3] the gate normaliser is 2(1-1/N), not 2*max_p u_N(p)
+    N=8   2*max_p u_N(p)=1.300245 (p*=0.2570, ln N/N=0.2599)   max_k M_MaxRL=1.750000   ratio=1.3459
+    N=16  2*max_p u_N(p)=1.558571 (p*=0.1688, ln N/N=0.1733)   max_k M_MaxRL=1.875000   ratio=1.2030
+    N=32  2*max_p u_N(p)=1.732561 (p*=0.1058, ln N/N=0.1083)   max_k M_MaxRL=1.937500   ratio=1.1183
+    -> A_N = 2*u_N under conditional i.i.d.; the count law reaches strictly higher
+
+done.
