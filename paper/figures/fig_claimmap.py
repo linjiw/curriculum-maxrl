@@ -52,7 +52,7 @@ def p_star(N):
 
 
 fig, (axA, axB, axC) = plt.subplots(
-    1, 3, figsize=(7.5, 2.34), gridspec_kw={"width_ratios": [0.95, 1.26, 1.18]})
+    1, 3, figsize=(7.8, 2.08), gridspec_kw={"width_ratios": [0.95, 1.26, 1.18]})
 
 # ------------------------------------------------------------------ Panel A
 p = np.linspace(1e-4, 1, 2000)
