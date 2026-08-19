@@ -147,3 +147,85 @@ budget. And per-run wall time is 13,135–13,197 s (3.65 h) rather than the
 ~65 min projected from an idle-GPU measurement, because the RTX 5090 is shared
 with four other lab jobs (~19 GB); the campaign will take ~24 h wall, not 7–8.
 Neither affects the protocol.
+
+---
+
+## Amendment 2026-08-19 — evaluated checkpoints were not the final model (outcome-blind)
+
+**Timing and blindness.** Written after the 2026-08-17 execution finished all 20
+runs and 20 evaluations, and after the frozen analyzer **refused to run**. No
+`minimax.evaluate` output has been opened, no held-out number for any cell has
+been read, and `AMAZE_GATE_ANALYSIS.json` was never created. The primary
+estimand, test, SESOI, seeds, verdict table and secondaries are **unchanged**.
+
+**What went wrong.** The analyzer's completion check (`logs.csv` final
+`n_updates >= 29990`, added in the 2026-08-18 amendment) rejected
+`arm-plrMM-s2004-u30000` at 29,981. Investigating that rejection uncovered a
+larger defect.
+
+`minimax`'s `xp_runner` writes checkpoints inside the training loop on
+`tick % checkpoint_interval == 0`, and the file ends with that block — **there
+is no post-loop save**. Under robust PLR at replay probability 0.5 a tick is
+roughly half an update, so a 30,000-update run reaches ~59,650–60,200 ticks.
+Our launcher `run_arm.sh` overrode the shipped `checkpoint_interval` of 1000
+with `$UPDATES` (30,000), conflating updates with ticks. Checkpoints were
+therefore written only at ticks 30,000 and 60,000, and runs whose tick stream
+stopped short of 60,000 kept the tick-30,000 file.
+
+Read directly from each checkpoint's own stored `n_updates`:
+
+| seed | plrMM | plrGate | paired | fraction of budget |
+|---|---|---|---|---|
+| 2001 | 14,945 | 14,945 | yes | 49.8% |
+| 2002 | 29,940 | 29,940 | yes | 99.8% |
+| 2003 | 14,899 | 14,899 | yes | 49.7% |
+| 2004 | 15,003 | 15,003 | yes | 50.0% |
+| 2005 | 29,932 | 29,932 | yes | 99.8% |
+| 2006 | 14,938 | 14,938 | yes | 49.8% |
+| 2007 | 15,098 | 15,098 | yes | 50.3% |
+| 2008 | 15,124 | 15,124 | yes | 50.4% |
+| 2009 | 29,929 | 29,929 | yes | 99.8% |
+| 2010 | 29,900 | 29,900 | yes | 99.7% |
+
+Six of ten seeds were evaluated at about **half** the shipped budget. §3 of this
+preregistration evaluates "each run's **final checkpoint** (`checkpoint.pkl` at
+update 30,000)"; that description is false of this artifact, so the campaign
+did not execute the registered study. Pairing survives — both arms of a seed
+sit at an identical `n_updates`, because the tick stream is seed-determined —
+but a mixture of six half-budget and four full-budget paired comparisons is not
+the design that was frozen, and no verdict may be issued from it.
+
+**What is done about it.**
+
+1. The 2026-08-17 campaign is **quarantined, not analysed**. Its directory is
+   retained under `gate-confirmatory-20260817-DEFECTIVE-ckpt-budget/` for audit.
+   Its 20 evaluation CSVs remain unread. The single authorized analysis run of
+   this preregistration is therefore still unspent.
+2. `run_arm.sh` now sets `--checkpoint_interval=100` (ticks, about 50 updates).
+   `safe_checkpoint` writes to a temp file and `os.replace`s onto
+   `checkpoint.pkl`, and `archive_interval=0`, so this overwrites in place and
+   costs I/O but no storage. It changes no scientific parameter, consumes no
+   randomness, and leaves training bit-identical.
+3. A new fail-closed guard: `verify_checkpoint_budget.py` reads each
+   checkpoint's stored `n_updates` into `ckpt_budget.json`, and the analyzer
+   now **requires** that file and refuses any cell whose evaluated checkpoint
+   holds fewer than 29,900 updates. The old `logs.csv` bound is relaxed to a
+   loose 29,000 sanity check, because `logs.csv` is flushed every
+   `log_interval` ticks and its final row legitimately sits up to one interval
+   short of the budget — the 29,990 threshold was itself calibrated on three
+   early cells and was wrong.
+4. The campaign is **re-run** on the same seeds 2001–2010, same two arms, same
+   frozen configuration, changing only `checkpoint_interval`. Under §6 seeds
+   are never substituted and the block is never extended; both hold.
+
+**Why re-running is legitimate here.** This is not a re-run for a scientific
+reason and not a response to any outcome: nothing about any endpoint is known
+to anyone. Training executed correctly and to budget in all 20 runs (`rc=0`,
+zero failures); what failed was the artifact-writing step, which saved the
+wrong model state. The final weights were never written to disk and cannot be
+recovered, so re-execution is the only way to obtain the registered study.
+
+**What this does not change.** No claim in the manuscript rests on this
+campaign; the AMaze development negative already reported there is a separate,
+clearly-labelled five-seed development sweep at 5,000 updates that used
+last-logged in-training evaluation rather than checkpoints, and is unaffected.

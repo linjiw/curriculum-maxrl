@@ -66,7 +66,20 @@ def load_eval(path: Path) -> dict[str, float]:
     return out
 
 
+MIN_CHECKPOINT_UPDATES = 29_900
+
+
 def load(results: Path) -> dict:
+    # Amendment 2026-08-19 (outcome-blind): minimax checkpoints on
+    # `tick % checkpoint_interval == 0` and never saves after the loop, so
+    # checkpoint.pkl is NOT guaranteed to be the final model.  The prereg
+    # evaluates "each run's final checkpoint at update 30,000", so the stored
+    # training state of every evaluated checkpoint is now verified here.
+    budget_path = results / "ckpt_budget.json"
+    if not budget_path.is_file():
+        raise AnalysisError(
+            f"missing {budget_path}; run verify_checkpoint_budget.py first")
+    budget = json.loads(budget_path.read_text())
     cells = {}
     for arm in ARMS:
         for s in SEEDS:
@@ -106,8 +119,18 @@ def load(results: Path) -> dict:
             log = (d / "logs.csv").read_text().splitlines()
             hdr = log[0].lstrip("# ").split(",")
             last = dict(zip(hdr, log[-1].split(",")))
-            if int(float(last.get("n_updates", 0))) < 29990:
+            # logs.csv is flushed every `log_interval` TICKS, so its last row
+            # sits up to one interval short of the budget; a loose bound only.
+            if int(float(last.get("n_updates", 0))) < 29_000:
                 raise AnalysisError(f"{xpid}: training did not reach 30000 updates")
+            stored = budget.get(xpid)
+            if stored is None:
+                raise AnalysisError(f"{xpid}: no entry in ckpt_budget.json")
+            if int(stored) < MIN_CHECKPOINT_UPDATES:
+                raise AnalysisError(
+                    f"{xpid}: evaluated checkpoint holds n_updates={stored}, "
+                    f"below the required {MIN_CHECKPOINT_UPDATES}; this is not "
+                    f"the final checkpoint the preregistration evaluates")
             cells[(arm, s)] = load_eval(ev)
     return cells
 
