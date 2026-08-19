@@ -33,17 +33,19 @@ export XLA_PYTHON_CLIENT_PREALLOCATE=false
 CMD=$("$PY" -m minimax.config.make_cmd --config "maze/$BASE" 2>/dev/null | tr -d '\\\n')
 
 # Fixed overrides for every pilot/campaign arm.
+#
+# checkpoint_interval is counted in TICKS, not updates, and xp_runner has no
+# post-loop save: the evaluated checkpoint.pkl is whatever the last
+# tick%interval==0 wrote.  Under robust PLR a tick is ~0.5 updates, so the old
+# "=$UPDATES" override left half-trained checkpoints (see the 2026-08-19
+# amendment in ued_benchmark/AMAZE_GATE_PREREG.md).  100 ticks ~ 50 updates;
+# safe_checkpoint overwrites in place, so this costs I/O but no storage.
+CKPT_INTERVAL=${CKPT_INTERVAL:-100}
 CMD=$(printf '%s' "$CMD" \
   | sed "s#--log_dir=[^ ]*#--log_dir=$LOGDIR#" \
   | sed "s#--n_total_updates=[0-9]*#--n_total_updates=$UPDATES#" \
   | sed "s#--seed=[0-9]*#--seed=$SEED#" \
-  # checkpoint_interval is counted in TICKS, not updates, and the runner has
-  # no post-loop save: the evaluated checkpoint.pkl is whatever the last
-  # tick%interval==0 wrote.  Under robust PLR a tick is ~0.5 updates, so the
-  # old "=$UPDATES" override left half-trained checkpoints (amendment
-  # 2026-08-19 in AMAZE_GATE_PREREG.md).  100 ticks ~ 50 updates, and
-  # safe_checkpoint overwrites in place, so this costs I/O but no storage.
-  | sed "s#--checkpoint_interval=[0-9]*#--checkpoint_interval=100#" \
+  | sed "s#--checkpoint_interval=[0-9]*#--checkpoint_interval=$CKPT_INTERVAL#" \
   | sed "s#--log_interval=[0-9]*#--log_interval=50#")
 
 # Caller overrides: replace the flag if present, otherwise append it.
