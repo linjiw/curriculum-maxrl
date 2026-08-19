@@ -28,6 +28,14 @@ The driver is executing this file. bash reads scripts incrementally, so editing
 it in place can make a running shell resume at a shifted byte offset. The
 correct time to apply the patch is after the campaign is terminal.
 
+## A second thing the same change broke
+
+Progress monitoring. Counting `arm-*/checkpoint.pkl` used to approximate
+"runs finished"; it now counts every run that has been alive for a minute. A
+monitor built on it reported "10/20 runs finished" when 8 were complete and 2
+were in flight. Completion counts must come from the driver's `^OK` lines, not
+from file presence — the same distinction the patch below makes.
+
 ## Backstops that are already active
 
 1. The monitor reports `AMAZE DRIVER GONE ... campaign incomplete` rather than

@@ -229,3 +229,22 @@ recovered, so re-execution is the only way to obtain the registered study.
 campaign; the AMaze development negative already reported there is a separate,
 clearly-labelled five-seed development sweep at 5,000 updates that used
 last-logged in-training evaluation rather than checkpoints, and is unaffected.
+
+### Operational verification 2026-08-19, 8/20 runs into the re-run (outcome-blind)
+
+The re-run's fix was checked mid-campaign on the completed cells, reading only
+each checkpoint's stored `n_updates` — a provenance field, not an endpoint. No
+evaluation output exists yet and none was opened.
+
+| cell | stored `n_updates` |
+|---|---|
+| `arm-plrMM-s2001` / `arm-plrGate-s2001` | 29,975 / 29,975 |
+| `arm-plrMM-s2002` / `arm-plrGate-s2002` | 29,990 / 29,990 |
+| `arm-plrMM-s2003` / `arm-plrGate-s2003` | 29,971 / 29,971 |
+| `arm-plrMM-s2004` / `arm-plrGate-s2004` | 29,960 / 29,960 |
+
+All within 40 updates of the 30,000 budget and above the analyzer's 29,900
+guard, against 14,899–15,124 for six of ten seeds in the quarantined campaign.
+Paired arms agree exactly per seed, confirming the tick stream is
+seed-determined and the pairing is intact. Wall time 8,189–10,141 s per run at
+concurrency 2.
