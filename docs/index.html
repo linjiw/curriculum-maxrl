@@ -186,7 +186,7 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <body>
 
 <header class="hero">
-  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-18</p>
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-19</p>
   <h1>The estimator defines activity</h1>
   <p class="lede" style="font-size:1.05rem;font-style:italic;opacity:.85">
     The estimator defines the coefficient map; the curriculum defines the unit over which that
@@ -207,6 +207,47 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     retractions with equal prominence, because each defines where the score can be
     trusted.
   </p>
+  <div class="card" style="margin-top:18px;border-left:4px solid #2a78d6">
+    <p class="eyebrow" style="margin-bottom:8px">The result the whole project now turns on</p>
+    <p style="margin:0 0 10px">Realized group mass is the deterministic
+    <span class="mono">M(K) = 2(1 − K/N)·1{K&gt;0}</span>, so for <strong>any</strong> joint binary
+    group law — no independence, no identical distribution —</p>
+    <p class="mono" style="margin:0 0 10px;text-align:center;font-size:1.05rem">
+    A<sub>N</sub>(Q) = 2 · ( Pr(K&gt;0) − E[K]/N )</p>
+    <p style="margin:0 0 10px">The familiar <span class="mono">2(1 − p − (1−p)<sup>N</sup>)</span> is
+    only the conditional-i.i.d. slice. <strong>The identity never needed independence.</strong> What
+    needs it is the collapse to a single number <em>p</em> — and that is exactly what a curriculum
+    breaks when it scores a coarse unit. Scoring an aggregate <em>z</em> by its mean pass rate
+    over-predicts activity by <em>exactly</em> twice its excess all-fail probability:</p>
+    <p class="mono" style="margin:0 0 10px;text-align:center">
+    A<sub>N</sub>(p̄<sub>z</sub>) − 2·E<sub>X</sub>[u<sub>N</sub>(p<sub>X</sub>)]
+    = 2 [ Pr(K=0 | z) − (1−p̄<sub>z</sub>)<sup>N</sup> ] ≥ 0</p>
+    <p style="margin:0">Verified to floating point on 288,000 real rollout groups (max deviation
+    2.8×10<sup>−16</sup> over 41,101 cells, invariant to window width), and proved as a code
+    contract against the deployed estimator under dependent, anti-correlated, heterogeneous and
+    random dense joint laws.</p>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <p class="eyebrow" style="margin-bottom:8px">Why it matters: granularity, not scale</p>
+    <p style="margin:0 0 10px">That corollary predicts the <em>sign</em> of every score contrast we
+    ever ran. The <em>p</em>-only score works when the curriculum scores the unit the estimator
+    consumes, and fails when it scores a strict aggregate:</p>
+    <table style="margin:0">
+      <thead><tr><th>study</th><th>scored unit</th><th>= the i.i.d. unit?</th><th class="num">u<sub>N</sub> vs p(1−p)</th></tr></thead>
+      <tbody>
+        <tr><td>CPU skill chain</td><td>task, exact gradients</td><td><span class="status ok">yes</span></td><td class="num">+.031 → +.191</td></tr>
+        <tr><td>Acrobot ×3</td><td>predicate; fresh reset seed <em>per rollout</em></td><td><span class="status ok">yes</span></td><td class="num">+.048, +.032, +.031</td></tr>
+        <tr><td>Digits</td><td>one example, exact class probability</td><td><span class="status ok">yes</span></td><td class="num">+.208, +.177</td></tr>
+        <tr><td><strong>MAZE-SCORE</strong></td><td><strong>level</strong> — one maze per group, posterior pools over the level</td><td><span class="status no">no</span></td><td class="num"><strong>−.0032</strong></td></tr>
+      </tbody>
+    </table>
+    <p style="margin:10px 0 0;font-size:.93rem;opacity:.85">Read <em>post hoc</em>, across studies not
+    designed to test it. The prospective test is cheap and named in the paper: hold substrate,
+    estimator, budget and seeds fixed and vary <em>only</em> whether the posterior is kept per level
+    or per task.</p>
+  </div>
+
   <div class="card" style="margin-top:18px">
     <p class="eyebrow" style="margin-bottom:8px">Three headline results</p>
     <p style="margin:0">
@@ -530,10 +571,13 @@ the hindsight conditional-law characterization), each Monte-Carlo verified in
 <h2 id="results">4 · What we verified (and what failed)</h2>
 
 <h3>Exact formulas, Monte-Carlo checked</h3>
+<p style="margin:0 0 10px">The first row holds for <em>any</em> group law; the rest assume the
+<em>N</em> rollouts are conditionally i.i.d. given the task.</p>
 <table>
   <thead><tr><th>Estimator</th><th>E[Σ|w|] (exact)</th><th>Reading</th><th class="num">Status</th></tr></thead>
   <tbody>
-    <tr><td>MaxRL</td><td class="mono">2(pass@N − pass@1)</td><td>solvable in N tries but not in one — the derived teacher utility</td><td class="num"><span class="status ok">✓ 200k-trial MC</span></td></tr>
+    <tr><td><strong>MaxRL, any group law</strong></td><td class="mono">2(Pr(K&gt;0) − E[K]/N)</td><td>no independence assumed — realized mass is a deterministic function of K</td><td class="num"><span class="status ok">✓ proved + contract tests</span></td></tr>
+    <tr><td>MaxRL, i.i.d. rollouts</td><td class="mono">2(pass@N − pass@1)</td><td>solvable in N tries but not in one — the derived teacher utility</td><td class="num"><span class="status ok">✓ 200k-trial MC</span></td></tr>
     <tr><td>RLOO</td><td class="mono">2p(1−p)</td><td>identical to SFL “learnability” — two literatures, one object</td><td class="num"><span class="status ok">✓ exact</span></td></tr>
     <tr><td>GRPO</td><td class="mono">≈2√(p(1−p))·P(K∉{0,N})</td><td>realized signal on hard prompts ~2× below the population curve</td><td class="num"><span class="status ok">✓ binomial sum</span></td></tr>
   </tbody>
