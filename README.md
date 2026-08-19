@@ -79,6 +79,20 @@ harder-peaked score pays far more for the same heterogeneity: clustered on the
 *The estimator defines the coefficient map; the curriculum defines the unit
 over which that map is averaged. These operations do not commute.*
 
+**And that predicts the sign of every score contrast we ran** — the organizing
+variable is granularity, not scale:
+
+| study | scored unit | = the i.i.d. unit? | `u_N` vs `p(1−p)` |
+|---|---|---|---|
+| CPU skill chain | task, exact gradients | yes | +.031 → +.191 |
+| Acrobot ×3 | predicate; fresh reset seed *per rollout* | yes | +.048, +.032, +.031 |
+| Digits | one example, exact class probability | yes | +.208, +.177 |
+| **MAZE-SCORE** | **level** — one maze per group, posterior pools over the level | **no** | **−.0032** |
+
+Read *post hoc*, across studies not designed to test it. The prospective test is
+cheap and named in the paper: hold substrate, estimator, budget and seeds fixed
+and vary *only* whether the posterior is kept per level or per task.
+
 So: coefficient activity is an estimator-conditioned *source of curriculum
 hypotheses*, not a universal measure of learning utility — and a mean pass
 rate determines it only when the scored unit is the one the estimator
