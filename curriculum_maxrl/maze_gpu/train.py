@@ -39,6 +39,7 @@ from model import TinyTransformer
 from estimators import (coefficient_activity, legacy_frontier_activity,
                         weights_reinforce, weights_rloo, weights_grpo,
                         weights_maxrl)
+from count_law_stats import CountLawStats
 
 ESTIMATORS = {
     "reinforce": weights_reinforce,
@@ -48,7 +49,7 @@ ESTIMATORS = {
 }
 
 DEVICE = "cuda"
-PROTOCOLS = ("legacy_v1", "maze_score_v2")
+PROTOCOLS = ("legacy_v1", "maze_score_v2", "group_law_flip_v1")
 MAZE_SCORE_V2_STEPS = 250
 MAZE_SCORE_V2_EVAL_EVERY = 25
 MAZE_SCORE_V2_EVAL_TASKS_PER_LEVEL = 32
@@ -65,7 +66,7 @@ def resolve_sft_checkpoint(protocol: str, sft_ckpt: str, seed: int,
     exactly (without adding the seed or script directory).  Requiring the
     parent up front turns a common scratch/staging typo into a launch error.
     """
-    if protocol == "maze_score_v2":
+    if protocol in {"maze_score_v2", "group_law_flip_v1"}:
         path = Path(sft_ckpt)
         if not path.is_absolute():
             raise ValueError("maze_score_v2 requires an absolute --sft-ckpt")
@@ -138,7 +139,22 @@ def score_metadata(teacher: str, n_rollouts: int) -> tuple[str, int | None]:
         return "coefficient_activity_tilt", n_rollouts
     if teacher == "frontier_alp":
         return "legacy_frontier_activity_plus_alp", n_rollouts + 1
+    if teacher == "group_law_plugin":
+        return "iid_plugin_from_count_law_mean", n_rollouts
+    if teacher == "group_law_activity":
+        return "group_law_activity", None
     return teacher, None
+
+
+def posterior_metadata(teacher: str) -> tuple[str, str]:
+    """Return the posterior family and selection statistic logged in configs."""
+    if teacher in {"group_law_plugin", "group_law_activity"}:
+        # P0 shares this posterior exactly across arms.  Only the functional
+        # applied to its mean count law differs.
+        return "count_law_moments", "posterior_mean"
+    if teacher == "uniform":
+        return "none", "none"
+    return "beta", "thompson"
 
 
 # ------------------------------------------------------------------ teachers
@@ -282,6 +298,76 @@ class FrontierUNTiltTeacher(FrontierTeacher):
         return (1 - self.floor) * probs + self.floor * unif
 
 
+class CountLawScoreTeacher(Teacher):
+    """Shared P0 posterior with one selectable score functional.
+
+    Both P0 arms carry the same four sufficient statistics per level and use
+    their deterministic posterior mean.  ``plugin`` applies the i.i.d. MaxRL
+    curve to the implied mean pass rate; ``grouplaw`` applies MaxRL's realized
+    mass directly.  The posterior family, prior, decay, floor, and uncertainty
+    treatment are therefore identical, so the arm contrast isolates only the
+    statistic named in the preregistration.
+    """
+
+    def __init__(self, n_rollouts: int, seed: int, score_mode: str,
+                 floor: float = 0.15, decay: float = 0.7):
+        super().__init__(n_rollouts, seed)
+        if score_mode not in {"plugin", "grouplaw"}:
+            raise ValueError(f"unknown count-law score mode {score_mode!r}")
+        self.score_mode = score_mode
+        self.floor = float(floor)
+        self.decay = float(decay)
+        # Match the original Beta(1,1) teacher's two pseudo-rollouts.  One
+        # categorical count observation represents N rollouts, so the
+        # equivalent count-law prior carries 2/N pseudo-groups, not one full
+        # group.  Under decay this keeps prior shrinkage equal across the P0
+        # arms and avoids a 16x stronger prior at N=32.
+        self.prior_mass = 2.0 / self.n_rollouts
+        self.bank = CountLawStats(
+            len(LEVELS), n_rollouts, p0=0.5, prior_mass=self.prior_mass,
+            decay=self.decay)
+
+    def observe(self, level: int, rewards: np.ndarray, decay: float = 0.7):
+        if len(rewards) != self.n_rollouts:
+            raise ValueError(
+                f"count-law teacher expected {self.n_rollouts} rewards, "
+                f"got {len(rewards)}")
+        if float(decay) != self.decay:
+            raise ValueError(
+                f"count-law teacher decay is frozen at {self.decay}, got {decay}")
+        self.bank.observe(int(level), int(np.asarray(rewards).sum()))
+
+    def p_hat(self) -> np.ndarray:
+        return np.asarray(self.bank.mean_pass_rate(), dtype=float)
+
+    def raw_score(self) -> np.ndarray:
+        if self.score_mode == "plugin":
+            score = self.bank.plugin_activity("maxrl")
+        else:
+            score = self.bank.activity("maxrl")
+        return np.maximum(np.asarray(score, dtype=float), 0.0)
+
+    def distribution(self) -> np.ndarray:
+        score = self.raw_score()
+        if score.sum() <= 1e-12:
+            score[:] = 1.0
+        probs = score / score.sum()
+        unif = np.full(len(LEVELS), 1.0 / len(LEVELS))
+        return (1.0 - self.floor) * probs + self.floor * unif
+
+
+class GroupLawPluginTeacher(CountLawScoreTeacher):
+    def __init__(self, n_rollouts: int, seed: int, floor: float = 0.15,
+                 decay: float = 0.7):
+        super().__init__(n_rollouts, seed, "plugin", floor, decay)
+
+
+class GroupLawActivityTeacher(CountLawScoreTeacher):
+    def __init__(self, n_rollouts: int, seed: int, floor: float = 0.15,
+                 decay: float = 0.7):
+        super().__init__(n_rollouts, seed, "grouplaw", floor, decay)
+
+
 TEACHERS = {
     "uniform": UniformTeacher,
     "frontier": FrontierTeacher,
@@ -290,6 +376,8 @@ TEACHERS = {
     "frontier_un": FrontierUNTeacher,
     "coefficient_activity": FrontierUNTeacher,
     "frontier_un_tilt": FrontierUNTiltTeacher,
+    "group_law_plugin": GroupLawPluginTeacher,
+    "group_law_activity": GroupLawActivityTeacher,
 }
 
 
@@ -456,7 +544,10 @@ def main():
     ap.add_argument("--arm", type=str, default=None)
     args = ap.parse_args()
 
-    is_v2 = args.protocol == "maze_score_v2"
+    is_group_law_flip = args.protocol == "group_law_flip_v1"
+    # Both controlled protocols share the frozen MAZE-SCORE substrate and RNG
+    # contract.  The P0 protocol adds only two new teacher choices.
+    is_v2 = args.protocol in {"maze_score_v2", "group_law_flip_v1"}
     if is_v2 and args.sft_seed not in (None, args.seed):
         ap.error("maze_score_v2 requires --sft-seed equal to --seed")
     if is_v2 and not args.prepare_sft_only:
@@ -507,13 +598,20 @@ def main():
                               ("--arm", args.arm)):
             if value is None or not value.strip():
                 ap.error(f"maze_score_v2 requires nonempty {option}")
-        expected_teachers = {
-            "un": {"frontier_un", "coefficient_activity"},
-            "learn": {"learnability"},
-            "unif": {"uniform"},
-        }
+        if is_group_law_flip:
+            expected_teachers = {
+                "plugin": {"group_law_plugin"},
+                "grouplaw": {"group_law_activity"},
+            }
+        else:
+            expected_teachers = {
+                "un": {"frontier_un", "coefficient_activity"},
+                "learn": {"learnability"},
+                "unif": {"uniform"},
+            }
         if args.arm not in expected_teachers:
-            ap.error("maze_score_v2 --arm must be one of: un, learn, unif")
+            choices = ", ".join(expected_teachers)
+            ap.error(f"{args.protocol} --arm must be one of: {choices}")
         if args.teacher not in expected_teachers[args.arm]:
             ap.error(
                 f"maze_score_v2 arm {args.arm!r} is incompatible with "
@@ -597,6 +695,7 @@ def main():
     if is_v2:
         score_family, effective_exponent = score_metadata(
             args.teacher, args.rollouts)
+        posterior_family, posterior_sampling = posterior_metadata(args.teacher)
         config = {
             "record_type": "config",
             "protocol": args.protocol,
@@ -607,8 +706,17 @@ def main():
             "teacher": args.teacher,
             "estimator": args.estimator,
             "score_family": score_family,
+            "score_estimator": "maxrl",
             "rollouts": args.rollouts,
             "effective_exponent": effective_exponent,
+            "posterior_family": posterior_family,
+            "posterior_sampling": posterior_sampling,
+            "posterior_prior_p0": 0.5,
+            "posterior_prior_mass": (
+                teacher.prior_mass
+                if isinstance(teacher, CountLawScoreTeacher) else 2.0),
+            "posterior_decay": 0.7,
+            "teacher_floor": 0.15,
             "seeds": {
                 "base": args.seed,
                 "sft": sft_seed,

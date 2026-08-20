@@ -1,0 +1,6 @@
+iteration	change	verification	status	notes
+0	baseline audit	209 count-law tests passed; core integration passed; P0 still DRAFT	keep	Beta-vs-count-law posterior confound identified before freeze
+1	shared count-law posterior with plugin/grouplaw modes	70 trainer/score/count-law tests passed (1 optional skip)	keep	initial test exposed prior-strength mismatch
+2	match Beta(1,1) strength with prior_mass=2/N	70 tests passed; unanimous-mixture separation passes	keep	prevents a 16x over-strong group prior at N=32
+3	power plus outcome-blind treatment replay	48 blocks gives .901 proxy power at +.0075; full-run expected visit TV .29959	keep	replay opened historical group counts only, never evaluation records
+4	fail-closed analyzer and Hopper campaign package	271 tests passed; full 48-block synthetic analysis passed in 5.0s/572MB; Hopper smoke 9419940 exit 0	keep	first harness smoke 9419891 failed before RL on legacy checkpoint path and was corrected

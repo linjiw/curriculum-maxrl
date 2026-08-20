@@ -1,0 +1,461 @@
+{
+  "blocks": {
+    "20": {
+      "full_run_expected_visit_tv": 0.32821802474627126,
+      "max_tv": 0.5062612719672696,
+      "mean_tv": 0.3571257425444651,
+      "median_tv": 0.3532553792967956,
+      "min_tv": 0.0,
+      "seed": 20
+    },
+    "21": {
+      "full_run_expected_visit_tv": 0.281394846352756,
+      "max_tv": 0.4289678697518339,
+      "mean_tv": 0.31684969383796646,
+      "median_tv": 0.3090412738216999,
+      "min_tv": 0.0,
+      "seed": 21
+    },
+    "22": {
+      "full_run_expected_visit_tv": 0.2917176044093994,
+      "max_tv": 0.47581096378117177,
+      "mean_tv": 0.3319367718012065,
+      "median_tv": 0.3372817857220458,
+      "min_tv": 0.0,
+      "seed": 22
+    },
+    "23": {
+      "full_run_expected_visit_tv": 0.2865586031233526,
+      "max_tv": 0.45795274492677807,
+      "mean_tv": 0.31592396338402706,
+      "median_tv": 0.3112917145214149,
+      "min_tv": 0.0,
+      "seed": 23
+    },
+    "24": {
+      "full_run_expected_visit_tv": 0.27584635010353514,
+      "max_tv": 0.4681406124409805,
+      "mean_tv": 0.32794568391205586,
+      "median_tv": 0.32492737911918246,
+      "min_tv": 0.0,
+      "seed": 24
+    },
+    "25": {
+      "full_run_expected_visit_tv": 0.2919986916597027,
+      "max_tv": 0.5024236994568713,
+      "mean_tv": 0.32129766708354784,
+      "median_tv": 0.317022344730193,
+      "min_tv": 0.0,
+      "seed": 25
+    },
+    "26": {
+      "full_run_expected_visit_tv": 0.3364142897058835,
+      "max_tv": 0.4423342637984828,
+      "mean_tv": 0.3560977868943613,
+      "median_tv": 0.3653582026732422,
+      "min_tv": 0.0,
+      "seed": 26
+    },
+    "27": {
+      "full_run_expected_visit_tv": 0.3027097322852759,
+      "max_tv": 0.49810401047480035,
+      "mean_tv": 0.3451125545288342,
+      "median_tv": 0.34025828203636316,
+      "min_tv": 0.0,
+      "seed": 27
+    },
+    "28": {
+      "full_run_expected_visit_tv": 0.32391992999337826,
+      "max_tv": 0.5367783546717446,
+      "mean_tv": 0.3477018080950671,
+      "median_tv": 0.34499366630819905,
+      "min_tv": 0.0,
+      "seed": 28
+    },
+    "29": {
+      "full_run_expected_visit_tv": 0.29464543347197253,
+      "max_tv": 0.4458420140681919,
+      "mean_tv": 0.32247472905074004,
+      "median_tv": 0.3175720529127593,
+      "min_tv": 0.0,
+      "seed": 29
+    },
+    "30": {
+      "full_run_expected_visit_tv": 0.2864456809247806,
+      "max_tv": 0.4888617243448034,
+      "mean_tv": 0.33564467351423916,
+      "median_tv": 0.3318786187276722,
+      "min_tv": 0.0,
+      "seed": 30
+    },
+    "31": {
+      "full_run_expected_visit_tv": 0.32235290465268235,
+      "max_tv": 0.4674603307757729,
+      "mean_tv": 0.35060000573809447,
+      "median_tv": 0.34995929766065487,
+      "min_tv": 0.0,
+      "seed": 31
+    },
+    "32": {
+      "full_run_expected_visit_tv": 0.2777408174143884,
+      "max_tv": 0.5352124091511581,
+      "mean_tv": 0.31728092564689225,
+      "median_tv": 0.3096636035025054,
+      "min_tv": 0.0,
+      "seed": 32
+    },
+    "33": {
+      "full_run_expected_visit_tv": 0.28291884961763863,
+      "max_tv": 0.46141408781727294,
+      "mean_tv": 0.325090707307072,
+      "median_tv": 0.32981020964251134,
+      "min_tv": 0.0,
+      "seed": 33
+    },
+    "34": {
+      "full_run_expected_visit_tv": 0.2691540862202785,
+      "max_tv": 0.46403057957526683,
+      "mean_tv": 0.31714709648789674,
+      "median_tv": 0.3138517134789153,
+      "min_tv": 0.0,
+      "seed": 34
+    },
+    "35": {
+      "full_run_expected_visit_tv": 0.29968177101496135,
+      "max_tv": 0.4798905125821989,
+      "mean_tv": 0.3300585075191874,
+      "median_tv": 0.3275221785326209,
+      "min_tv": 0.0,
+      "seed": 35
+    },
+    "36": {
+      "full_run_expected_visit_tv": 0.3257451003651374,
+      "max_tv": 0.4920140252859062,
+      "mean_tv": 0.3583104712354005,
+      "median_tv": 0.35600180176315943,
+      "min_tv": 0.0,
+      "seed": 36
+    },
+    "37": {
+      "full_run_expected_visit_tv": 0.28328014380371513,
+      "max_tv": 0.47712618965878684,
+      "mean_tv": 0.3228816522571692,
+      "median_tv": 0.31896168461260843,
+      "min_tv": 0.0,
+      "seed": 37
+    },
+    "38": {
+      "full_run_expected_visit_tv": 0.29294408316418113,
+      "max_tv": 0.4730431065662839,
+      "mean_tv": 0.3304581710643259,
+      "median_tv": 0.32886460705121134,
+      "min_tv": 0.0,
+      "seed": 38
+    },
+    "39": {
+      "full_run_expected_visit_tv": 0.29110899795948125,
+      "max_tv": 0.4390976877407782,
+      "mean_tv": 0.3249968203770701,
+      "median_tv": 0.32143870104256383,
+      "min_tv": 0.0,
+      "seed": 39
+    },
+    "40": {
+      "full_run_expected_visit_tv": 0.2775821517045652,
+      "max_tv": 0.4836028876010044,
+      "mean_tv": 0.3144435405366701,
+      "median_tv": 0.3090725314290242,
+      "min_tv": 0.0,
+      "seed": 40
+    },
+    "41": {
+      "full_run_expected_visit_tv": 0.27432133624781696,
+      "max_tv": 0.4776667446782057,
+      "mean_tv": 0.3191214275492089,
+      "median_tv": 0.3133588811619644,
+      "min_tv": 0.0,
+      "seed": 41
+    },
+    "42": {
+      "full_run_expected_visit_tv": 0.32566228392050045,
+      "max_tv": 0.4641099849192852,
+      "mean_tv": 0.36161239518094895,
+      "median_tv": 0.35635249689341764,
+      "min_tv": 0.0,
+      "seed": 42
+    },
+    "43": {
+      "full_run_expected_visit_tv": 0.2926266419136818,
+      "max_tv": 0.45274173834726783,
+      "mean_tv": 0.3295215483514967,
+      "median_tv": 0.3230803079589657,
+      "min_tv": 0.0,
+      "seed": 43
+    },
+    "44": {
+      "full_run_expected_visit_tv": 0.2730182109057463,
+      "max_tv": 0.43775996539429934,
+      "mean_tv": 0.32044651949134795,
+      "median_tv": 0.3197790367397717,
+      "min_tv": 0.0,
+      "seed": 44
+    },
+    "45": {
+      "full_run_expected_visit_tv": 0.3203671300308643,
+      "max_tv": 0.49247077290950453,
+      "mean_tv": 0.3528435991062316,
+      "median_tv": 0.3518258598074305,
+      "min_tv": 0.0,
+      "seed": 45
+    },
+    "46": {
+      "full_run_expected_visit_tv": 0.30683655424926726,
+      "max_tv": 0.4661547890750013,
+      "mean_tv": 0.33336670104585564,
+      "median_tv": 0.3311764466031709,
+      "min_tv": 0.0,
+      "seed": 46
+    },
+    "47": {
+      "full_run_expected_visit_tv": 0.2917607536798781,
+      "max_tv": 0.5389280661694221,
+      "mean_tv": 0.33267019562926176,
+      "median_tv": 0.3316045976790714,
+      "min_tv": 0.0,
+      "seed": 47
+    },
+    "48": {
+      "full_run_expected_visit_tv": 0.30401511697071315,
+      "max_tv": 0.41370606316907527,
+      "mean_tv": 0.3322319274338556,
+      "median_tv": 0.3331690559467443,
+      "min_tv": 0.0,
+      "seed": 48
+    },
+    "49": {
+      "full_run_expected_visit_tv": 0.3165428532305231,
+      "max_tv": 0.499024204290664,
+      "mean_tv": 0.3486351787584457,
+      "median_tv": 0.34162175946236145,
+      "min_tv": 0.0,
+      "seed": 49
+    },
+    "50": {
+      "full_run_expected_visit_tv": 0.33705191933857404,
+      "max_tv": 0.4785531544778741,
+      "mean_tv": 0.3552799444034839,
+      "median_tv": 0.3528706200608047,
+      "min_tv": 0.0,
+      "seed": 50
+    },
+    "51": {
+      "full_run_expected_visit_tv": 0.26346811878725757,
+      "max_tv": 0.42983989131833544,
+      "mean_tv": 0.2993647571897355,
+      "median_tv": 0.29395843869133453,
+      "min_tv": 0.0,
+      "seed": 51
+    },
+    "52": {
+      "full_run_expected_visit_tv": 0.32542344926735634,
+      "max_tv": 0.5280049748531128,
+      "mean_tv": 0.36104434546434594,
+      "median_tv": 0.3537797011175154,
+      "min_tv": 0.0,
+      "seed": 52
+    },
+    "53": {
+      "full_run_expected_visit_tv": 0.29798988491696826,
+      "max_tv": 0.4584785194794958,
+      "mean_tv": 0.33084597878319977,
+      "median_tv": 0.32770235608273823,
+      "min_tv": 0.0,
+      "seed": 53
+    },
+    "54": {
+      "full_run_expected_visit_tv": 0.2936160022311178,
+      "max_tv": 0.47691697078196815,
+      "mean_tv": 0.3396206626538385,
+      "median_tv": 0.3363526508326811,
+      "min_tv": 0.0,
+      "seed": 54
+    },
+    "55": {
+      "full_run_expected_visit_tv": 0.3490086453748766,
+      "max_tv": 0.46093601138133444,
+      "mean_tv": 0.36283229030530595,
+      "median_tv": 0.35774434249897014,
+      "min_tv": 0.0,
+      "seed": 55
+    },
+    "56": {
+      "full_run_expected_visit_tv": 0.3227670044311171,
+      "max_tv": 0.46457700419775644,
+      "mean_tv": 0.34355206431525054,
+      "median_tv": 0.3432305190137809,
+      "min_tv": 0.0,
+      "seed": 56
+    },
+    "57": {
+      "full_run_expected_visit_tv": 0.32477503642053374,
+      "max_tv": 0.4707092855073346,
+      "mean_tv": 0.3572315880033173,
+      "median_tv": 0.35882255637802624,
+      "min_tv": 0.0,
+      "seed": 57
+    },
+    "58": {
+      "full_run_expected_visit_tv": 0.2871523735831168,
+      "max_tv": 0.5063341038251215,
+      "mean_tv": 0.33203469620999887,
+      "median_tv": 0.32838674274209195,
+      "min_tv": 0.0,
+      "seed": 58
+    },
+    "59": {
+      "full_run_expected_visit_tv": 0.2495990105781572,
+      "max_tv": 0.447899323810907,
+      "mean_tv": 0.28725038834753286,
+      "median_tv": 0.2837366915500874,
+      "min_tv": 0.0,
+      "seed": 59
+    },
+    "60": {
+      "full_run_expected_visit_tv": 0.27288753691293244,
+      "max_tv": 0.4459776936079756,
+      "mean_tv": 0.3115623722500195,
+      "median_tv": 0.3065828552424362,
+      "min_tv": 0.0,
+      "seed": 60
+    },
+    "61": {
+      "full_run_expected_visit_tv": 0.3044475828772081,
+      "max_tv": 0.4570931915860048,
+      "mean_tv": 0.3375358230662149,
+      "median_tv": 0.33883409538325404,
+      "min_tv": 0.0,
+      "seed": 61
+    },
+    "62": {
+      "full_run_expected_visit_tv": 0.2844573849428966,
+      "max_tv": 0.43563240027656863,
+      "mean_tv": 0.32822599493455334,
+      "median_tv": 0.32716911723014264,
+      "min_tv": 0.0,
+      "seed": 62
+    },
+    "63": {
+      "full_run_expected_visit_tv": 0.28100002541135627,
+      "max_tv": 0.4670981608450254,
+      "mean_tv": 0.32688407634675937,
+      "median_tv": 0.3187457403254138,
+      "min_tv": 0.0,
+      "seed": 63
+    },
+    "64": {
+      "full_run_expected_visit_tv": 0.3424265909971259,
+      "max_tv": 0.4970898717411632,
+      "mean_tv": 0.3738254486770046,
+      "median_tv": 0.3783883608239217,
+      "min_tv": 0.0,
+      "seed": 64
+    },
+    "65": {
+      "full_run_expected_visit_tv": 0.3230510260513798,
+      "max_tv": 0.4631905405754204,
+      "mean_tv": 0.35047100661097114,
+      "median_tv": 0.34879161294003624,
+      "min_tv": 0.0,
+      "seed": 65
+    },
+    "66": {
+      "full_run_expected_visit_tv": 0.2855832185329004,
+      "max_tv": 0.48552695718773253,
+      "mean_tv": 0.34174901932864465,
+      "median_tv": 0.33558949621012035,
+      "min_tv": 0.0,
+      "seed": 66
+    },
+    "67": {
+      "full_run_expected_visit_tv": 0.30810340548523124,
+      "max_tv": 0.5141456247968584,
+      "mean_tv": 0.33618904564646984,
+      "median_tv": 0.3366322568828002,
+      "min_tv": 0.0,
+      "seed": 67
+    }
+  },
+  "input_contract": "historical MAZE-SCORE un-arm telemetry only",
+  "interpretation": "Design calibration only; replay does not estimate an endpoint because teacher-dependent visits and model states are not counterfactually replayed.",
+  "max_block_full_run_expected_visit_tv": 0.3490086453748766,
+  "max_block_mean_tv": 0.3738254486770046,
+  "mean_full_run_expected_visit_tv_across_blocks": 0.299590358124634,
+  "mean_update_tv_across_blocks": 0.334902665997908,
+  "min_block_full_run_expected_visit_tv": 0.2495990105781572,
+  "min_block_mean_tv": 0.28725038834753286,
+  "n_seed_blocks": 48,
+  "outcome_blind": true,
+  "posterior": {
+    "decay": 0.7,
+    "family": "count_law_moments",
+    "prior_mass_groups": 0.0625,
+    "prior_mass_rollouts": 2.0,
+    "prior_p0": 0.5,
+    "sampling": "posterior_mean"
+  },
+  "schema": "curriculum-maxrl/group-law-flip-delivery-replay/v1",
+  "seed_blocks": [
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67
+  ],
+  "teacher": {
+    "floor": 0.15,
+    "n_rollouts": 32
+  }
+}

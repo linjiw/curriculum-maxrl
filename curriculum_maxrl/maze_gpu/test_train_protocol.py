@@ -61,6 +61,18 @@ class ProtocolDispatchTest(unittest.TestCase):
                          ("coefficient_activity", 32))
         self.assertEqual(train.score_metadata("frontier", 32),
                          ("legacy_frontier_activity", 33))
+        self.assertIs(train.TEACHERS["group_law_plugin"],
+                      train.GroupLawPluginTeacher)
+        self.assertIs(train.TEACHERS["group_law_activity"],
+                      train.GroupLawActivityTeacher)
+        self.assertEqual(train.score_metadata("group_law_plugin", 32),
+                         ("iid_plugin_from_count_law_mean", 32))
+        self.assertEqual(train.score_metadata("group_law_activity", 32),
+                         ("group_law_activity", None))
+        self.assertEqual(train.posterior_metadata("group_law_plugin"),
+                         ("count_law_moments", "posterior_mean"))
+        self.assertEqual(train.posterior_metadata("group_law_activity"),
+                         ("count_law_moments", "posterior_mean"))
 
     def test_v2_checkpoint_is_absolute_and_exact(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -74,6 +86,17 @@ class ProtocolDispatchTest(unittest.TestCase):
             with self.assertRaises(FileNotFoundError):
                 train.resolve_sft_checkpoint(
                     "maze_score_v2", str(missing), 7)
+
+    def test_group_law_flip_checkpoint_uses_same_absolute_contract(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "shared.pt"
+            self.assertEqual(
+                train.resolve_sft_checkpoint(
+                    "group_law_flip_v1", str(path), 3001),
+                path)
+            with self.assertRaises(ValueError):
+                train.resolve_sft_checkpoint(
+                    "group_law_flip_v1", "shared.pt", 3001)
 
     def test_prepare_sft_only_creates_and_hashes_exact_path_on_cpu(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -119,6 +142,46 @@ class ProtocolDispatchTest(unittest.TestCase):
         self.assertAlmostEqual(float(dist.sum()), 1.0)
         np.testing.assert_array_equal(
             inspected.sample_levels(64), control.sample_levels(64))
+
+    def test_p0_arms_share_prior_and_posterior_state(self):
+        plugin = train.GroupLawPluginTeacher(32, seed=9)
+        grouplaw = train.GroupLawActivityTeacher(32, seed=9)
+        np.testing.assert_allclose(plugin.p_hat(), grouplaw.p_hat(), atol=0)
+        np.testing.assert_allclose(
+            plugin.raw_score(), grouplaw.raw_score(), rtol=0, atol=1e-15)
+        np.testing.assert_allclose(
+            plugin.distribution(), grouplaw.distribution(), rtol=0, atol=1e-15)
+        self.assertAlmostEqual(plugin.prior_mass, 2.0 / 32)
+        self.assertAlmostEqual(grouplaw.prior_mass, 2.0 / 32)
+
+        stream = [0, 32, 0, 32, 0, 32]
+        for k in stream:
+            rewards = np.array([1.0] * k + [0.0] * (32 - k))
+            plugin.observe(3, rewards)
+            grouplaw.observe(3, rewards)
+        for left, right in zip(plugin.bank.stats, grouplaw.bank.stats):
+            np.testing.assert_allclose(left, right, rtol=0, atol=0)
+        np.testing.assert_allclose(plugin.p_hat(), grouplaw.p_hat(), atol=0)
+
+    def test_p0_functionals_separate_on_same_mean_different_count_law(self):
+        plugin = train.GroupLawPluginTeacher(32, seed=4)
+        grouplaw = train.GroupLawActivityTeacher(32, seed=4)
+        for i in range(40):
+            k = 0 if i % 2 else 32
+            rewards = np.array([1.0] * k + [0.0] * (32 - k))
+            plugin.observe(2, rewards)
+            grouplaw.observe(2, rewards)
+        self.assertAlmostEqual(plugin.p_hat()[2], grouplaw.p_hat()[2])
+        self.assertGreater(plugin.raw_score()[2], 1.0)
+        self.assertLess(grouplaw.raw_score()[2], 0.05)
+        self.assertGreater(plugin.distribution()[2], grouplaw.distribution()[2])
+
+    def test_p0_teacher_rejects_partial_groups_and_decay_drift(self):
+        teacher = train.GroupLawActivityTeacher(32, seed=1)
+        with self.assertRaises(ValueError):
+            teacher.observe(0, np.zeros(31))
+        with self.assertRaises(ValueError):
+            teacher.observe(0, np.zeros(32), decay=0.9)
 
     def test_per_level_task_stream_is_arm_order_independent(self):
         streams_a = train.make_level_task_rngs(73)

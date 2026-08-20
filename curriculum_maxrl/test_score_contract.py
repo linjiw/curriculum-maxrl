@@ -189,6 +189,10 @@ class DeployedExponentMapping(unittest.TestCase):
                              ("legacy_frontier_activity", n + 1))
             self.assertEqual(mod.score_metadata("learnability", n),
                              ("coefficient_activity", 2))
+            self.assertEqual(mod.score_metadata("group_law_plugin", n),
+                             ("iid_plugin_from_count_law_mean", n))
+            self.assertEqual(mod.score_metadata("group_law_activity", n),
+                             ("group_law_activity", None))
 
     def test_maze_score_arm_selects_the_exact_u32(self):
         """The MAZE-SCORE 'un' arm must deploy u_32, not u_33."""

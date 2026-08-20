@@ -135,5 +135,10 @@ class GroupLawPosterior:
 
     def granularity_gap(self, estimator: str = "maxrl",
                         law: np.ndarray | None = None) -> float:
-        """plug-in minus truth.  For MaxRL this is 2[P(K=0) - (1-p_bar)^N] >= 0."""
+        """Plug-in minus truth.
+
+        For MaxRL this is exactly ``2[P(K=0) - (1-p_bar)^N]``.  Its sign is
+        nonnegative for mixtures of conditionally-i.i.d. atomic tasks, not for
+        an arbitrary count law (under-dispersion at zero can reverse it).
+        """
         return self.plugin_activity(estimator, law) - self.activity(estimator, law)
