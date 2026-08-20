@@ -230,9 +230,10 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 
   <div class="card" style="margin-top:14px">
     <p class="eyebrow" style="margin-bottom:8px">Why it matters: granularity, not scale</p>
-    <p style="margin:0 0 10px">That corollary predicts the <em>sign</em> of every score contrast we
-    ever ran. The <em>p</em>-only score works when the curriculum scores the unit the estimator
-    consumes, and fails when it scores a strict aggregate:</p>
+    <p style="margin:0 0 10px">This organizes a post-hoc cross-study pattern; it does
+    <strong>not</strong> predict learning signs. The corollary predicts coefficient-activity
+    calibration only. The observed score contrasts align with whether the curriculum scores
+    the unit the estimator consumes:</p>
     <table style="margin:0">
       <thead><tr><th>study</th><th>scored unit</th><th>= the i.i.d. unit?</th><th class="num">u<sub>N</sub> vs p(1−p)</th></tr></thead>
       <tbody>
@@ -243,9 +244,11 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
       </tbody>
     </table>
     <p style="margin:10px 0 0;font-size:.93rem;opacity:.85">Read <em>post hoc</em>, across studies not
-    designed to test it. The prospective test is cheap and named in the paper: hold substrate,
-    estimator, budget and seeds fixed and vary <em>only</em> whether the posterior is kept per level
-    or per task.</p>
+    designed to test it. The prospective P0 test holds the substrate, estimator, budget, seeds,
+    and four-moment count-law posterior fixed and varies <em>only</em> the score functional: the
+    i.i.d.-at-the-mean plug-in versus realized MaxRL count-law activity. Its 48 paired blocks
+    (seeds 3001--3048) were frozen before launch and are running blind; no endpoint is claimed
+    here.</p>
   </div>
 
   <div class="card" style="margin-top:18px">
@@ -1275,23 +1278,26 @@ activity stops predicting learning.</em></p>
     interpretation lines after every proposition, the escalating experiment ladder
     (§6.1–6.9, one bolded takeaway each), related work, limitations-with-diagnoses,
     and a claims-and-evidence appendix table with per-claim registration status.
-    All numbers audit-traced; figures regenerate from checksummed data files
-    (<span class="mono">paper/results/manifest.json</span>); pre-registered
+    All manuscript numbers are audit-traced. The compact figure manifest and
+    portable regeneration path are under repair after the audit found one vendored
+    figure without its source script and a drifted pinned plotting environment;
+    pre-registered
     falsification branches demonstrably executed (factorial retraction,
     ARM A dial refutation).</p>
   </div>
   <div class="card">
-    <h3>What's pending before submission (updated 2026-08-17)</h3>
+    <h3>What's pending before submission (updated 2026-08-20)</h3>
     <p>✅ E2c ran and closed by its own preregistered gate (inconclusive; the Aug 28
     training stop is satisfied early). ✅ Peak-location specificity tested and
     not supported; the paper now says so in a new subsection instead of conceding
-    it was never run. ✅ AMaze development negative reported honestly. ✅ Compact
-    draft rebuilt: conclusion ends on page 9, references on page 10, deterministic
-    pinned build.<br>
-    ⟳ <strong>MAZE-SCORE</strong> (the 1.26M-parameter neural score test on Hopper)
-    remains the highest-value pending experiment; a power memo recommends 48 seed
-    blocks with the exact sign-flip retained. ⟳ Activity-<em>gated</em> MaxMC sweep
-    on AMaze running. ⟳ Anonymous artifact and camera-ready hashes.<br>
+    it was never run. ✅ AMaze development negative reported honestly. ✅ A diagnostic
+    build of the current compact source places the conclusion on page 9 and
+    reproducibility/references on page 10.<br>
+    ⟳ <strong>P0 count-law correction</strong> (shared count-law posterior;
+    plug-in versus realized count-law functional) is frozen and running blind over
+    48 paired Hopper blocks. No endpoint has been opened. ⟳ Compact figure-manifest
+    and portable reproduction repair. ⟳ Anonymous release-artifact and final PDF
+    hashes.<br>
     Track: ICLR 2027 (abstract Sept 18, paper Sept 25). The ICRA navigation
     campaign timed out at its 36-hour wall and is redirected to RA-L.</p>
   </div>

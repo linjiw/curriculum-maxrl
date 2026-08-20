@@ -32,7 +32,7 @@ water-filling on the marginal `p(1−p)^N`.
 ## Where the claim stands (read this before the ladder)
 
 Activity says where an update is *available*. It does not say where training has the most
-value. Three preregistered results draw that line:
+value. Four preregistered results draw that line:
 
 - **The shape helps.** In a fixed Acrobot pool at deployed N=16, `u_16` beats `p(1−p)` by
   +.0480 (95% CI [+.0209, +.0738]), replicated on two further platforms (+.0322, +.0307).
@@ -79,8 +79,10 @@ harder-peaked score pays far more for the same heterogeneity: clustered on the
 *The estimator defines the coefficient map; the curriculum defines the unit
 over which that map is averaged. These operations do not commute.*
 
-**And that predicts the sign of every score contrast we ran** — the organizing
-variable is granularity, not scale:
+**This organizes a post-hoc cross-study pattern; it does not predict learning
+signs.** The corollary predicts coefficient-activity calibration only. The observed
+score contrasts align with whether the curriculum scored the unit the estimator
+consumed:
 
 | study | scored unit | = the i.i.d. unit? | `u_N` vs `p(1−p)` |
 |---|---|---|---|
@@ -89,9 +91,11 @@ variable is granularity, not scale:
 | Digits | one example, exact class probability | yes | +.208, +.177 |
 | **MAZE-SCORE** | **level** — one maze per group, posterior pools over the level | **no** | **−.0032** |
 
-Read *post hoc*, across studies not designed to test it. The prospective test is
-cheap and named in the paper: hold substrate, estimator, budget and seeds fixed
-and vary *only* whether the posterior is kept per level or per task.
+Read *post hoc*, across studies not designed to test it. The prospective P0 test
+holds the substrate, estimator, budget, seeds, and four-moment count-law posterior
+fixed and varies *only* the score functional: the i.i.d.-at-the-mean plug-in versus
+realized MaxRL count-law activity. Its 48 paired blocks (seeds 3001--3048) were
+frozen before launch and are running blind; no endpoint is claimed here.
 
 So: coefficient activity is an estimator-conditioned *source of curriculum
 hypotheses*, not a universal measure of learning utility — and a mean pass

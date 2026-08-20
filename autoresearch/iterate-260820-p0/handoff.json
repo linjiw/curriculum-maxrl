@@ -3,6 +3,6 @@
   "goal": "freeze, execute, and report the P0 group-law flip before updating the ICLR paper",
   "status": "in_progress",
   "iteration_cap": 25,
-  "current_iteration": 4,
-  "next": "commit the frozen protocol, stage the clean evidence bundle, record the launch receipt, and submit both blind seed chunks"
+  "current_iteration": 5,
+  "next": "wait for all 48 paired blocks, retrieve only after complete hash preflight, invoke the frozen analyzer once, and integrate the exact registered verdict into the ICLR paper"
 }
