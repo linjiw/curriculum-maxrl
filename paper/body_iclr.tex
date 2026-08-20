@@ -556,13 +556,17 @@ induces (Def.~\ref{def:geom}), derived from its algebra before any curriculum
 hypothesis is tested. Superiority over the methods below is untested and not
 claimed.
 
-\paragraph{Concurrent exact analyses of group estimators.}
-A concurrent cluster derives closed-form update magnitudes on the
-standard-deviation-normalized branch \citep{groupstd,actorcurator,lze}, where
-the magnitude peaks at $p=.5$ independent of $N$; the practical-MaxRL mass is
-instead the estimator's own unnormalized pass@$N$ gap, peaking as $\ln N/N$.
-MoPPS \citep{mopps} anticipates the posterior machinery; our novelty claim is
-only the utility sampled toward.
+\paragraph{Concurrent estimator and selection analyses.}
+Closed-form magnitudes for the standard-deviation-normalized branch peak at
+$p=.5$ independent of $N$ \citep{groupstd,actorcurator}; practical-MaxRL mass
+instead peaks as $\ln N/N$. LZE's LLM-scale study derives approximate
+$p(1-p)G/n$ GRPO gradient variance under atomic i.i.d., fixed-baseline and
+homogeneous-score assumptions, then adds history and momentum \citep{lze}; we
+derive exact coefficient activity under a count law, not gradient variance.
+F-GRPO treats rare correct modes omitted within a group by changing its
+weighting \citep{fgrpo}; we change task selection and expose coarse pooling.
+MoPPS establishes streaming Beta/Thompson selection \citep{mopps}; posterior
+machinery is precedent, while count-law sufficiency is our question.
 
 \paragraph{Curricula and rollout allocation.}
 Intermediate-difficulty sampling predates this work: ProCuRL's proximal score
@@ -801,6 +805,9 @@ online predicted for accelerating RL finetuning of reasoning models?
 \emph{KDD}, 2026. arXiv:2507.04632.
 \bibitem[Cui(2026)]{lze} Cui, P. Learning-zone energy: online data
 selection for efficient RL post-training. arXiv:2605.17003, 2026.
+\bibitem[Plyusov et al.(2026)]{fgrpo} Plyusov, D., Gorbatovski, A., et al.
+F-GRPO: Don't let your policy learn the obvious and forget the rare.
+arXiv:2602.06717, 2026.
 \bibitem[Zhou et al.(2026)]{passkinv} Zhou, T., et al. When RLVR shrinks
 the reasoning boundary: diagnosing pass@$k$ inversion. arXiv:2607.20543,
 2026.
