@@ -123,12 +123,13 @@ record before the first scientific run; an internal draft is not registered.
 
 ### Open, and never to be described as running evidence
 
-- **P0 count-law flip is DRAFT, not frozen, not launched, and not running.**
-  Its shared-posterior trainer integration, outcome-blind delivery replay,
-  48-block power memo, fail-closed analyzer, content-addressed bundle, and
-  counterbalanced launcher now exist. The remaining pre-freeze gate is a
-  successful remote engineering smoke followed by the immutable freeze
-  commit. Standalone tests or a smoke are not intervention evidence.
+- **P0 count-law flip is frozen and running blind.** The protocol was frozen
+  in commit `f27ba8a` before the first evidence submission. The clean evidence
+  manifest is `b0cf3d2d...f3a2c95a`; Hopper array `9419991` covers seeds
+  3001–3024, while 3025–3048 waits only for queue capacity. Do not open result
+  JSONL or endpoint summaries. Scheduler state, completion receipts, hashes,
+  and telemetry integrity are the permitted monitoring surface. Standalone
+  tests or the successful smoke `9419940` are not intervention evidence.
 - P0 uses 48 paired blocks and requires the observed mean to be at least its
   `+.005` SESOI. It is powered at `.901` for `+.0075` under the pessimistic
   historical paired SD `.0135`; a true effect exactly at the SESOI still has

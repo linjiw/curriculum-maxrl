@@ -83,8 +83,9 @@ a sign consistent with Cor.~\ref{cor:gran}, which predicts the
 \emph{calibration} bias and not the endpoint (\S\ref{sec:mazescore}).
 Granularity,
 not scale, separates these studies.
-\item \textbf{Named as open.} Whether scoring the concrete task recovers that
-loss is registered and running, not claimed here; the LLM-scale interaction and
+\item \textbf{Named as open.} Whether replacing the mean-pass-rate plug-in by
+the realized count-law functional recovers that loss is preregistered and
+running blind, not claimed here; the LLM-scale interaction and
 the Countdown mechanism remain open and are confined to
 App.~\ref{app:protocols}.
 \end{enumerate}
@@ -268,10 +269,11 @@ weight function at the truncation the deployed estimator targets: $p(1-p)$
 peaks at $\tfrac12$ regardless of estimator, $w_{N-1}$ decreases in $p$ and
 grows with $N$ as $p\to0$, and their product peaks at
 $p^\star_N=1-N^{-1/(N-1)}$, where an informative rollout meets an estimator
-that still cares. The canonical binary-success score $p(1-p)$ --- used by SFL
-and LILO \citep{sfl,lilo} and recovered here as RLOO's coefficient mass --- is
-therefore the $N{=}2$ slice: it scores tasks as if the learner were REINFORCE
-with one rollout, while $u_N$ scores them for the estimator deployed.
+that still cares. The familiar binary-success score $p(1-p)$ is both RLOO's
+i.i.d.\ expected half-mass and practical MaxRL's $N{=}2$ slice. SFL's
+finite-group score is the corresponding realized RLOO mass up to a fixed
+factor; for practical MaxRL at arbitrary $N$, the estimator-matched curve is
+$u_N$.
 
 \begin{corollary}[Task granularity]
 \label{cor:gran}
@@ -346,8 +348,9 @@ each update --- and in all three the deployed-$N$ shape beats $p(1-p)$.
 MAZE-SCORE is the one study that violates it, drawing a single maze per group
 while the posterior pools over a level's many mazes, and it is the one study
 where the shape loses. We read this \emph{post hoc}, across studies not
-designed to test it, and name in \S\ref{sec:limits} the experiment that would
-isolate it. Figure~\ref{fig:claimmap} states for each contrast what it is and
+designed to test it. The preregistered intervention in \S\ref{sec:limits}
+now varies only the plug-in versus count-law functional and is running blind;
+no outcome from it enters this draft. Figure~\ref{fig:claimmap} states for each contrast what it is and
 is not: one frozen primary, concordant supporting measurements, three
 preregistered boundaries.
 
@@ -564,10 +567,14 @@ only the utility sampled toward.
 \paragraph{Curricula and rollout allocation.}
 Intermediate-difficulty sampling predates this work: ProCuRL's proximal score
 reduces to $p(1-p)$ under its optimal-success assumption \citep{procurl}, and
-SFL \citep{sfl} and LILO \citep{lilo} prioritize binary reward variance. Our
-distinction is convention-specific: $u_N=A_N/2$ is the arbitrary-$N$ expected
-half-mass of the deployed centered MaxRL rule, derived rather than estimated
-online. VCRL \citep{vcrl} thresholds realized group variance; PLR \citep{plr} and
+LILO \citep{lilo} prioritizes binary reward variance. More tightly, SFL's
+realized score $(k/N)(1-k/N)$ \citep{sfl} is exactly
+$M_{\mathrm{RLOO}}(k)(N-1)/(2N)$ at fixed $N$: our framework recovers SFL as
+the count-law curriculum for RLOO rather than replacing it as a heuristic.
+The surviving distinction is estimator-specific geometry (MaxRL peaks at
+$k=1$, RLOO/SFL at the middle), bias from pooling a nonlinear score over a
+coarse unit, and scoring cost. For practical MaxRL, $u_N=A_N/2$ is its
+arbitrary-$N$ expected half-mass. VCRL \citep{vcrl} thresholds realized group variance; PLR \citep{plr} and
 ALP-GMM \citep{alpgmm} use TD error, staleness or learning progress and so
 react to forgetting where instantaneous mass cannot --- our AMaze arm is robust
 PLR \citep{minimax} with only the replay priority replaced (\S\ref{sec:amaze})
@@ -627,10 +634,11 @@ mediator, and its windowed estimates pool task heterogeneity with learner
 nonstationarity, which the identity's window-invariance bounds but does not
 remove. The same applies to the reading in \S\ref{sec:evidence} that
 granularity rather than scale separates our studies. The experiment that
-isolates it is now preregistered with both verdict branches drafted before
-data --- hold substrate, estimator, budget and seeds fixed and vary only
-whether the posterior is kept per level or per task --- and is running; we
-assert no counterfactual outcome here. The Coefficient-Activity PLR row in
+isolates the scoring correction is preregistered with both verdict branches
+drafted before data: both arms keep the same deterministic count-law posterior,
+prior, decay and floor, while one evaluates the i.i.d.-at-the-mean plug-in and
+the other evaluates realized MaxRL count-law activity. It is running blind;
+we assert no counterfactual outcome here. The Coefficient-Activity PLR row in
 Table~\ref{tab:instantiations} is a development negative
 (\S\ref{sec:amaze}), not preregistered evidence, and we claim no advantage
 over PLR, robust PLR, ACCEL, or any other \texttt{minimax} baseline. No

@@ -1,0 +1,43 @@
+{
+  "schema": "curriculum-maxrl/group-law-flip/launch-receipt/v1",
+  "protocol": "group_law_flip_v1",
+  "campaign": "group-law-flip-v1-20260820-001",
+  "attempt": "attempt-001",
+  "frozen_git_commit": "f27ba8aece35a609d14cec3b95e5e4a7a8b9a029",
+  "source_bundle": {
+    "id": "b0cf3d2deb388a8f3eac",
+    "manifest_sha256": "b0cf3d2deb388a8f3eac7c05d15c14dbe8e3f6cda58b8a1903e27f31f3a2c95a",
+    "remote_path": "/scratch/lwang44/maxrl/bundles/group_law_flip/b0cf3d2deb388a8f3eac",
+    "mode": "evidence",
+    "worktree_dirty": false
+  },
+  "environment": {
+    "remote_path": "/scratch/lwang44/envs/maze-score-ad774d459fa77bb6",
+    "lock_sha256": "ad774d459fa77bb68c01c4a225db1e7faa3213216422eb5eabdf5b3c0e3d6224",
+    "freeze_sha256": "70d7f2c337b75de70adf941dacefdb7d3f7ba1772ac7f32821c896a61e77f36a",
+    "json_sha256": "42efa0bf38cc6d4aca56eac21559dfc989c92abda49e9eaf5df4fbcf019bf393"
+  },
+  "engineering_smoke": {
+    "successful_job_id": 9419940,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:00:29"
+  },
+  "submissions": [
+    {
+      "slurm_array_job_id": 9419991,
+      "seeds": "3001-3024",
+      "max_concurrent": 5,
+      "status_at_receipt": "submitted_blind"
+    },
+    {
+      "slurm_array_job_id": null,
+      "submission_dependency_job_id": 9420095,
+      "dependency": "afterok:9419991",
+      "seeds": "3025-3048",
+      "max_concurrent": 5,
+      "status_at_receipt": "scheduled_after_first_chunk_success"
+    }
+  ],
+  "endpoint_opened": false
+}
