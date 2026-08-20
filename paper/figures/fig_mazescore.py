@@ -3,10 +3,11 @@
 
 Left   the frozen primary and secondary, paired over 48 blocks.
 Right  why: predicted vs realized coefficient mass, leave-one-out pass rate.
-       The identity is exact under conditionally i.i.d. rollouts; real groups
-       share a level but not a maze, so unanimity is far more common than
-       Binomial and realized mass falls short -- most where p is lowest, which
-       is exactly where the deployed-N score puts its mass.
+       Each group repeats one concrete maze, while the teacher pools groups
+       over many heterogeneous mazes at the level.  The resulting level count
+       law has far more unanimity than a Binomial law at its mean, so realized
+       mass falls short -- most where p is lowest, which is exactly where the
+       deployed-N score puts its mass.
 
 Numbers from hopper/MAZE_SCORE_ANALYSIS.json (frozen analyzer, run once) and
 hopper/MAZE_SCORE_CALIBRATION.json (post-hoc, descriptive).
