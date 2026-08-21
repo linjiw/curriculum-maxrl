@@ -1227,8 +1227,9 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
 <!-- ============================================================ -->
 <h2 id="paper">8 · The paper draft — abstract, status, and how we write</h2>
 
-<p><strong><a href="paper-draft.pdf">📄 Read the rendered PDF draft</a></strong> (LaTeX,
-recompiled on every update). The compact 9-page submission body lives at
+<p><strong><a href="paper-iclr.pdf">📄 Read the compact ICLR PDF draft</a></strong> (anonymous LaTeX build).
+The extended research record remains available as <a href="paper-draft.pdf">paper-draft.pdf</a>.
+The compact 9-page submission body lives at
 <span class="mono">paper/body_iclr.tex</span>; <span class="mono">paper/body.tex</span>
 remains the extended research record. We studied the MaxRL paper's own craft — the "your method is our method at
 T=1" subsumption move, theorem boxes with plain-English interpretations, an escalating
@@ -1240,35 +1241,25 @@ activity stops predicting learning.</em></p>
 
 <div class="card">
   <h3>Abstract (compact ICLR submission draft — <em>Learnability, Reweighted: Which Tasks the Estimator Makes Active in Verifiable-Reward RL</em>)</h3>
-  <p style="font-size:0.93rem">RL with verifiable rewards often treats task curricula as
-  independent of the group estimator that converts sampled outcomes into updates. We ask which
-  tasks that estimator makes active. Every finite-group estimator induces an <em>activity
-  geometry</em> over pass rates — the expected absolute mass of the coefficient vector it can
-  emit — and for the practical MaxRL convention that drops all-fail groups this geometry has an
-  exact closed form, <strong>A<sub>N</sub>(p) = 2·(pass@N − pass@1)</strong>. It factors exactly
-  as <strong>p(1−p)·w<sub>N−1</sub>(p)</strong>: the canonical learnability score reweighted by
-  MaxRL's own objective weight at the truncation the deployed estimator targets, recovering
-  p(1−p) as the N=2 slice, with a peak that migrates toward harder tasks as log N / N and an
-  all-fail rule that shifts the truncation order to N−1. This is an estimator-side diagnostic,
-  not a theorem of learning progress, and we test it as a hypothesis. In a fresh 20-seed Acrobot
-  tournament at N=16, the deployed-N score improves target-uniform AUC over p(1−p) by
-  <strong>+.0480</strong> (95% CI [+.0209,&nbsp;+.0738]) and also beats uniform sampling; the
-  effect replicates on two further platforms (+.0322, +.0307). Three preregistered follow-ups
-  then bound the claim. Sweeping only the score exponent with the estimator held at N=16,
-  performance rises <em>past</em> N=16 (argmax at u<sub>64</sub>), so the harder-peaked
-  <em>shape</em> helps and the deployed-N peak <em>location</em> does not. Dropped into robust
-  PLR on AMaze in place of MaxMC, the pure activity priority is starved at one Bernoulli per
-  level visit. And in a 48-block test at 1.26M parameters and deployed N=32 the same shape
-  contrast is <em>negative</em> (−.0032, CI [−.0054,&nbsp;−.0011]; effects at or above the
-  registered SESOI are ruled out). Theory explains it. The mass identity needs no independence at
-  all — A<sub>N</sub>(Q) = 2(Pr(K&gt;0) − E[K]/N) for any group law — so what fails is only the
-  <em>p</em>-only reduction: scoring an aggregate by its mean pass rate over-predicts activity by
-  exactly twice its excess all-fail probability, a penalty that grows with N and which the
-  telemetry confirms to floating point. The controlled positives and these failures support a
-  calibrated conclusion: finite-group coefficient activity is a principled, estimator-conditioned
-  source of curriculum hypotheses, not a universal measure of learning utility — and mean pass
-  rate is not a sufficient statistic for it once the curriculum names a coarser unit than the
-  estimator consumes.</p>
+  <p style="font-size:0.93rem">Curriculum methods for RL with verifiable rewards summarize each
+  task unit by a pass rate <em>p</em> and apply a learnability curve. That presumes the unit the
+  curriculum scores is the random object the group estimator consumes. It need not be: a unit of
+  uniformly uncertain tasks and one mixing mastered with impossible tasks share a mean pass rate,
+  yet only the first yields mixed-outcome groups and non-zero updates. For a binary group estimator,
+  activity is a functional of the <em>success-count law</em>, with closed-form count masses for
+  MaxRL, RLOO and GRPO. For practical MaxRL it is
+  <strong>2·(Pr(K&gt;0) − E[K]/N)</strong> under any joint law; the familiar
+  <strong>2·(pass@N − pass@1)</strong> is only its conditionally-i.i.d. atomic slice. For a coarse
+  unit, plugging in the mean pass rate over-predicts activity by exactly twice its excess all-fail
+  probability. Where the scored unit is the estimator's own, the deployed-N shape beats p(1−p) by
+  <strong>+.0480</strong> (95% paired-bootstrap CI [+.0209,&nbsp;+.0738]) and replicates on two
+  further platforms. Three preregistered follow-ups bound it: performance rises past the deployed
+  N, the score is starved as a standalone replay priority, and on a level aggregating heterogeneous
+  tasks the contrast reverses (−.0032, CI [−.0054,&nbsp;−.0011]), with the coefficient-mass error
+  accounted for to floating point. The estimator defines the coefficient map; the curriculum
+  defines the unit over which that map is averaged, and these operations do not commute.
+  Coefficient activity is a principled, estimator-conditioned source of curriculum hypotheses,
+  not a measure of learning utility.</p>
 </div>
 
 <div class="grid2">
@@ -1278,9 +1269,10 @@ activity stops predicting learning.</em></p>
     interpretation lines after every proposition, the escalating experiment ladder
     (§6.1–6.9, one bolded takeaway each), related work, limitations-with-diagnoses,
     and a claims-and-evidence appendix table with per-claim registration status.
-    All manuscript numbers are audit-traced. The compact figure manifest and
-    portable regeneration path are under repair after the audit found one vendored
-    figure without its source script and a drifted pinned plotting environment;
+    All manuscript numbers are audit-traced. The missing compact maze-figure
+    generator has been restored from its structured seed-block analysis. The
+    portable regeneration path remains under repair because the pinned plotting
+    environment has drifted;
     pre-registered
     falsification branches demonstrably executed (factorial retraction,
     ARM A dial refutation).</p>
@@ -1290,9 +1282,9 @@ activity stops predicting learning.</em></p>
     <p>✅ E2c ran and closed by its own preregistered gate (inconclusive; the Aug 28
     training stop is satisfied early). ✅ Peak-location specificity tested and
     not supported; the paper now says so in a new subsection instead of conceding
-    it was never run. ✅ AMaze development negative reported honestly. ✅ A diagnostic
-    build of the current compact source places the conclusion on page 9 and
-    reproducibility/references on page 10.<br>
+    it was never run. ✅ AMaze development negative reported honestly. ✅ The current
+    published compact build places the conclusion on page 9; reproducibility begins
+    on page 9 and references follow on page 10.<br>
     ⟳ <strong>P0 count-law correction</strong> (shared count-law posterior;
     plug-in versus realized count-law functional) is frozen and running blind over
     48 paired Hopper blocks. No endpoint has been opened. ⟳ Compact figure-manifest

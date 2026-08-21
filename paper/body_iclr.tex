@@ -613,53 +613,34 @@ helps, and only creation adds signal.
 
 Coefficient mass ignores score-gradient direction, parameter sharing,
 optimizer state, task transfer, and non-i.i.d.\ rollouts: it is a
-sampler-facing surrogate, not a guarantee of loss reduction or metric
-improvement. The $N$-sweep is post-guidance (not preregistered) on one
-co-designed synthetic chain; the Digits counter-test is a contextual bandit,
-not trajectory RL. The fresh V2 Acrobot test uses one fixed eight-threshold
-family, one 640-parameter learner, and no held-out task distribution or native
-named-method implementation; its 20 seeds were inherited from a historical
-precursor rather than set by prospective power analysis, and its exact paired
-test requires sign exchangeability under the sharp null. V2 paired no
-mismatched-$N$ score against a fixed deployed $N$; \S\ref{sec:peaktest} does,
-and finds no peak-location specificity. The four evidence families froze their
-primaries independently at $\alpha=.05$; we claim no paper-level error rate.
-Retained evaluation records do not include per-episode trajectories. The maze
-factorial uses a small transformer, one task family, and common rather than
-estimator-tuned learning rates; its easy-band mechanism remains descriptive.
+sampler-facing surrogate, not a learning guarantee. The $N$-sweep is
+post-guidance on one co-designed synthetic chain; Digits is a contextual
+bandit. Acrobot uses one fixed eight-threshold family, a 640-parameter learner,
+no held-out task distribution or native named-method implementation, and 20
+historically inherited rather than prospectively powered seeds; its exact test
+assumes sign exchangeability. The maze factorial uses one small transformer,
+one family and common learning rates; its easy-band mechanism is descriptive.
+The four families froze $\alpha=.05$ primaries separately, so no paper-level
+error rate is claimed; retained evaluations omit per-episode trajectories.
 
-MAZE-SCORE rules out effects at or above its $+.005$ SESOI for one task
-family, one architecture, one $N$, one budget. Its protocol varies model
-capacity, function approximation, task heterogeneity and curriculum
-granularity together, so ``scale'' is not an isolated causal variable here.
-The granularity diagnosis exactly accounts for the coefficient-mass prediction
-error but is post-hoc: no intervention establishes it as the endpoint's sole
-mediator, and its windowed estimates pool task heterogeneity with learner
-nonstationarity, which the identity's window-invariance bounds but does not
-remove. The same applies to the reading in \S\ref{sec:evidence} that
-granularity rather than scale separates our studies. The experiment that
-isolates the scoring correction is preregistered with both verdict branches
-drafted before data: both arms keep the same deterministic count-law posterior,
-prior, decay and floor, while one evaluates the i.i.d.-at-the-mean plug-in and
-the other evaluates realized MaxRL count-law activity. It is running blind;
-we assert no counterfactual outcome here. The Coefficient-Activity PLR row in
-Table~\ref{tab:instantiations} is a development negative
-(\S\ref{sec:amaze}), not preregistered evidence, and we claim no advantage
-over PLR, robust PLR, ACCEL, or any other \texttt{minimax} baseline. No
-robotics performance is reported; the paid-probe, recycling, Countdown, gate
-and transfer records are secondary and confined to App.~\ref{app:protocols}.
+MAZE-SCORE bounds one task family, architecture, $N$ and budget; because it
+also changes capacity, approximation, heterogeneity and granularity, it does
+not isolate scale. The post-hoc diagnosis exactly accounts for coefficient-mass
+calibration, not sole endpoint mediation, and its windows mix heterogeneity
+with learner nonstationarity. P0 isolates the score functional: both arms share
+one deterministic count-law posterior, prior, decay and floor, and it is
+running blind with no outcome claimed. The PLR study is a development negative,
+not evidence of superiority to PLR, robust PLR, ACCEL or another
+\texttt{minimax} baseline. No robotics performance is reported; paid-probe,
+recycling, Countdown, gate and transfer records remain secondary
+(App.~\ref{app:protocols}).
 
-Registration timing is the recurring gap. The Digits lock and the Acrobot
-tournament lock are internally hashed --- the latter binds source, runtime,
-gates, and artifacts --- but neither is backed by an immutable public
-pre-execution commit independently establishing timing, and the external maze
-wave-2 record, though specified before execution, has no locking commit object
-vendored here: the release can audit stored protocols and verdicts, not their
-timing. Artifact coverage is likewise incomplete, with maze checkpoint
-trajectories external and the Digits replay payload local without a download
-URI; App.~\ref{app:artifact} itemizes these gaps alongside the 53-row compact
-registry and the distinct release-branch audit object. Together they limit
-auditing and preclude a broad neural claim.
+Registration timing remains a gap: the internally hashed Digits and Acrobot
+locks lack immutable public pre-execution commits, and the external maze
+wave-2 record has no vendored locking commit. Maze checkpoint trajectories
+remain external and the Digits replay payload has no download URI;
+App.~\ref{app:artifact} itemizes these gaps and the 53-row compact registry.
+They limit auditing and preclude a broad neural claim.
 
 \section{Conclusion}
 
