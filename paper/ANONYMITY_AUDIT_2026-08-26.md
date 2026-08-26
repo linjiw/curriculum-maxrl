@@ -8,21 +8,21 @@ release.**
 
 - The export implementation is `scripts/export_anonymous.sh`; its source
   allowlist is `scripts/anonymous_allowlist.txt`. The verified source commit is
-  `1145ed059a53`.
+  `8cef1a388004`.
 - Two independent exports from that clean commit produced the same archive
   SHA-256:
-  `ca90acb63f41cf6a8d958f2be274e26fffc5d3eade145c670565d0588ae3e313`.
-  The archive is 4,246,137 bytes and contains a 384-file, history-free
+  `75c2efc8cbcf6d36b52a2b91559fdd78abf8a8fdd673b1938b8d38690ed1824c`.
+  The archive is 4,263,540 bytes and contains a 384-file, history-free
   snapshot with 22 PDFs.
 - Each extracted snapshot passed portable `reproduce.sh --build`: 99 focused
   tests passed and one skipped, 17 manifest inputs verified, all eight compact
   figures regenerated, both manuscript PDFs rebuilt, and every preregistered
   verdict spot check passed.
 - The compact and web PDFs are byte-identical at
-  `37421c77c2d67631b8d0d9b97f33c0991c08b328324a0de6b6039972327497e7`;
+  `8e337e232762aa425129371926d7da7d35414b17e37c20ae69070a62957da0d6`;
   the extended PDF is
   `dcb2b6f16969a465e5c8259f605a9617283a436faf063a6dd444c12ecd467907`.
-- The compact PDF has 19 total pages. The conclusion remains on page 9;
+- The compact PDF has 20 total pages. The conclusion remains on page 9;
   references begin on page 10. PDF metadata exposes no Author, Title,
   Subject, or Keywords value.
 - The exporter removed Git metadata, internal anonymity records, working
