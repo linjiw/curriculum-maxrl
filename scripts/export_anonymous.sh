@@ -247,6 +247,25 @@ PY
     bash reproduce.sh --build
 )
 
+# Verification creates interpreter and test-runner caches that are neither
+# source artifacts nor reviewer evidence. Remove only these known transient
+# paths from the validated staging tree before scanning and packaging it.
+SNAPSHOT="$SNAPSHOT" "$EXPORT_PYTHON" - <<'PY'
+from pathlib import Path
+import os
+import shutil
+
+root = Path(os.environ["SNAPSHOT"])
+for directory_name in (".pytest_cache", "__pycache__", ".mplconfig"):
+    for path in sorted(root.rglob(directory_name), reverse=True):
+        if path.is_dir() and not path.is_symlink():
+            shutil.rmtree(path)
+for pattern in ("*.pyc", "*.pyo", ".coverage"):
+    for path in root.rglob(pattern):
+        if path.is_file() and not path.is_symlink():
+            path.unlink()
+PY
+
 SNAPSHOT="$SNAPSHOT" "$EXPORT_PYTHON" - <<'PY'
 from __future__ import annotations
 
@@ -316,7 +335,8 @@ report = {
     "history_free": not (root / ".git").exists(),
     "allowlist": "committed scripts/anonymous_allowlist.txt",
     "portable_reproduce_build": "passed",
-    "file_count": file_count,
+    # Include this report, which is written immediately below.
+    "file_count": file_count + 1,
     "pdf_count": len(pdfs),
     "scans": {
         "personal_absolute_paths": "passed",
