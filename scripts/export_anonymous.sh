@@ -49,8 +49,8 @@ for target in "$SNAPSHOT_OUT" "$ARCHIVE_OUT" "$CHECKSUM_OUT" "$REPORT_OUT"; do
   }
 done
 
-EXPORT_PYTHON=${EXPORT_PYTHON:-python3}
-PYTHON=${PYTHON:-python3}
+EXPORT_PYTHON=${EXPORT_PYTHON:-$(command -v python3 || true)}
+PYTHON=${PYTHON:-$(command -v python3 || true)}
 PAPER_FIGURE_PYTHON=${PAPER_FIGURE_PYTHON:-$PYTHON}
 [ -n "${TECTONIC_BIN:-}" ] || TECTONIC_BIN=$(command -v tectonic || true)
 for executable in "$EXPORT_PYTHON" "$PYTHON" "$PAPER_FIGURE_PYTHON" "$TECTONIC_BIN"; do
