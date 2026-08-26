@@ -1,68 +1,61 @@
 # Anonymous-release audit — 2026-08-26
 
-Status: **PDF green; clean-clone reproduction green; full repository snapshot
-red for anonymity. Do not publish the current Git clone or its history as the
-anonymous artifact.**
+Status: **PDF green; clean-clone reproduction green; allowlisted anonymous
+export green. The full Git clone and its history remain red for anonymous
+release.**
 
-## Verified build surface
+## Verified release surface
 
-- Audited commit: `059c604`.
-- A `git clone --no-local` into a fresh temporary directory passed
-  `REPRO_MODE=portable bash reproduce.sh --build` without an outside-repository
-  scientific-data read.
-- The compact and web PDFs were byte-identical at
-  `e3d566c40ce211867cd7be4658d4886c4326825083598bc25a7c30b12b38bff6`;
-  the extended PDF was
-  `f9f387b4e29f1fbb0d4108820f6d6d380c4fdb3e7ea73fa86075bff8607d313c`.
-- The compact PDF has 19 total pages. The conclusion is on page 9, the
-  uncounted reproducibility and AI-use statements begin on page 9, and
-  references begin on page 10.
-- `pdfinfo` exposes no Title, Subject, Keywords, or Author value. Its only
-  creator fields are `LaTeX with hyperref` and `xdvipdfmx (0.1)`. The seven
-  compact figure PDFs expose only Matplotlib creator/backend metadata.
-- The build logs contain no undefined reference, undefined citation,
-  overfull-box, emergency-stop, or fatal-error diagnostic. Tectonic reports
-  underfull boxes and an encoding warning in the vendored ICLR style files;
-  neither changes the verified PDF or page boundary.
-- Direct links from the site and superseded markdown paper to the author-owned
-  repository and Pages site were removed before this audit.
+- The export implementation is `scripts/export_anonymous.sh`; its source
+  allowlist is `scripts/anonymous_allowlist.txt`. The verified source commit is
+  `1145ed059a53`.
+- Two independent exports from that clean commit produced the same archive
+  SHA-256:
+  `ca90acb63f41cf6a8d958f2be274e26fffc5d3eade145c670565d0588ae3e313`.
+  The archive is 4,246,137 bytes and contains a 384-file, history-free
+  snapshot with 22 PDFs.
+- Each extracted snapshot passed portable `reproduce.sh --build`: 99 focused
+  tests passed and one skipped, 17 manifest inputs verified, all eight compact
+  figures regenerated, both manuscript PDFs rebuilt, and every preregistered
+  verdict spot check passed.
+- The compact and web PDFs are byte-identical at
+  `37421c77c2d67631b8d0d9b97f33c0991c08b328324a0de6b6039972327497e7`;
+  the extended PDF is
+  `dcb2b6f16969a465e5c8259f605a9617283a436faf063a6dd444c12ecd467907`.
+- The compact PDF has 19 total pages. The conclusion remains on page 9;
+  references begin on page 10. PDF metadata exposes no Author, Title,
+  Subject, or Keywords value.
+- The exporter removed Git metadata, internal anonymity records, working
+  plans, raw execution logs, scheduler stdout, and generated caches. It then
+  passed scans for personal absolute paths, author-owned repository/site URLs,
+  PDF metadata, PDF text, and symlinks.
+- Twenty text/checksum transformations are recorded in the exported
+  `ANONYMIZATION_TRANSFORMS.json`. The immutable Acrobot source remains
+  unchanged at
+  `463fa1a01d95922976f09f75b21f6d8f2c6a8d256081ebedfa4ba968a06f356b`;
+  its exported copy changes only two host paths and hashes to
+  `6f21c254b953f2c1a6826867e3a81d80bb79a7080a080acd28173aa96900ff11`.
+  The export similarly records every other scrub and rebinds the copied
+  manifest/provenance checksums to the copied bytes. Scientific values are not
+  transformed.
 
-## Repository-snapshot blockers
+The complete command, hashes, transformation examples, and remaining PI-owned
+steps are recorded in `paper/ANONYMOUS_EXPORT_DRY_RUN_2026-08-26.md`.
 
-The fresh clone is reproducible, but it is not anonymous:
+## Why the full repository is still not an anonymous artifact
 
-- Git history contains four distinct author records and must not accompany a
-  double-blind release.
-- One immutable Acrobot terminal analysis contains two historical
-  identity-bearing absolute-path fields. It remains untouched because silently
-  editing a hash-recorded result artifact would violate provenance. Its current
-  SHA-256 is
-  `463fa1a01d95922976f09f75b21f6d8f2c6a8d256081ebedfa4ba968a06f356b`.
-- Historical execution records contain host-specific absolute paths: 63
-  tracked files match the local home prefix and 124 match the local data prefix.
-  These paths are usually runtime provenance rather than author names, but a
-  full-tree release would expose machine/account details and is not portable.
-- The configured upstream remote is author-owned. Even a text-clean working
-  tree would be deanonymized by publishing the current remote or Git metadata.
+- Git history contains multiple author records.
+- Historical execution records contain host-specific paths and working-memory
+  material outside the compact claim perimeter.
+- The configured upstream remote is author-owned. Publishing this clone, its
+  `.git` directory, or its remote would disclose identity even though the
+  manuscript itself is anonymous.
 
-## Required release operation
+## Remaining PI-owned release operation
 
-Before external release, the PI must create a **history-free, anonymously
-hosted export**, not publish this clone. That export must:
-
-1. use an explicit allowlist for the compact manuscript, manifest inputs,
-   analyzers, protocols, result memos, and reproduction code;
-2. carry a mechanically produced anonymized copy of the Acrobot analysis that
-   changes only the two path fields and records the canonical hash above;
-3. omit host-bound logs and working-memory documents not needed by the compact
-   claim perimeter;
-4. rerun the direct-identity, absolute-path, URL, PDF-metadata, and archive-name
-   scans on the exported bytes;
-5. pass portable `reproduce.sh --build` from a fresh extraction; and
-6. publish the checksum-matched provenance payload only through an anonymous
-   archive. The DOI in `PROVENANCE_DEPOSIT.json` must remain null until that
-   PI-owned publication succeeds.
-
-This audit deliberately does not mutate the canonical Acrobot result, delete
-historical evidence, rewrite Git history, publish an archive, or claim that the
-repository is submission-ready.
+At the artifact freeze, rerun the exporter from a clean release commit, retain
+the resulting archive checksum, upload only that history-free archive through
+an anonymous host, and bind the returned DOI in the external deposit record.
+The DOI remains null and upload status remains `not_uploaded_pi_owned` until
+that publication succeeds. Do not publish the current clone or rewrite the
+canonical result artifacts.
