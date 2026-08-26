@@ -109,14 +109,37 @@ fi
 
 # This internal audit intentionally names source commits and therefore must
 # not enter the reviewer-facing export it audits.
-INTERNAL_ANONYMITY_AUDIT="$SNAPSHOT/paper/ANONYMITY_AUDIT_2026-08-26.md"
-if [ -e "$INTERNAL_ANONYMITY_AUDIT" ]; then
-  [ -f "$INTERNAL_ANONYMITY_AUDIT" ] && [ ! -L "$INTERNAL_ANONYMITY_AUDIT" ] || {
-    echo "unexpected audit type: $INTERNAL_ANONYMITY_AUDIT" >&2
-    exit 1
-  }
-  rm "$INTERNAL_ANONYMITY_AUDIT"
-fi
+for internal_record in \
+  "$SNAPSHOT/paper/ANONYMITY_AUDIT_2026-08-26.md" \
+  "$SNAPSHOT/paper/ANONYMOUS_EXPORT_DRY_RUN_2026-08-26.md" \
+  "$SNAPSHOT/curriculum_maxrl/GSM8K_A10G_PLAN.md"; do
+  if [ -e "$internal_record" ]; then
+    [ -f "$internal_record" ] && [ ! -L "$internal_record" ] || {
+      echo "unexpected internal-record type: $internal_record" >&2
+      exit 1
+    }
+    rm "$internal_record"
+  fi
+done
+
+# Raw execution logs and scheduler stdout are neither compact-claim inputs nor
+# portable reviewer evidence. They are deliberately outside the export even
+# when their parent source directory is allowlisted.
+SNAPSHOT="$SNAPSHOT" "$EXPORT_PYTHON" - <<'PY'
+from pathlib import Path
+import os
+import shutil
+
+root = Path(os.environ["SNAPSHOT"])
+log_directory = root / "curriculum_maxrl/gate_dr/logs"
+if log_directory.exists():
+    if not log_directory.is_dir() or log_directory.is_symlink():
+        raise SystemExit(f"unexpected raw-log directory type: {log_directory}")
+    shutil.rmtree(log_directory)
+for path in root.rglob("*.log"):
+    if path.is_file() and not path.is_symlink():
+        path.unlink()
+PY
 
 SNAPSHOT="$SNAPSHOT" "$EXPORT_PYTHON" - <<'PY'
 from __future__ import annotations
@@ -260,7 +283,7 @@ for directory_name in (".pytest_cache", "__pycache__", ".mplconfig"):
     for path in sorted(root.rglob(directory_name), reverse=True):
         if path.is_dir() and not path.is_symlink():
             shutil.rmtree(path)
-for pattern in ("*.pyc", "*.pyo", ".coverage"):
+for pattern in ("*.pyc", "*.pyo", "*.log", ".coverage"):
     for path in root.rglob(pattern):
         if path.is_file() and not path.is_symlink():
             path.unlink()
