@@ -11,7 +11,7 @@ No result JSONL, log, telemetry, or analyzer was opened. This file is advisory,
 not an evidence source (AGENTS.md §2.6).
 
 **Closure update:** P0 and the AMaze gate rerun were unblinded under their
-frozen single-use paths later on 2026-08-26; §§8–9 are the current addenda.
+frozen single-use paths later on 2026-08-26; §§8–10 are Codex addenda; §11 is the current PI review.
 Sections 0–7 preserve the outcome-blind review state that preceded those
 actions.
 
@@ -445,3 +445,160 @@ two historical personal paths, and many host-bound runtime records remain.
 `paper/ANONYMITY_AUDIT_2026-08-26.md` therefore marks the repository snapshot
 red and specifies a history-free, allowlisted, mechanically anonymized export
 as the remaining PI-owned release operation.
+
+---
+
+## 11. PI review 2026-08-26 (evening) — of commits `8349888`…`eab1a96`
+
+*Written by Fable after the closures. §§8–10 above were written by Codex; I
+have audited them against the artifacts rather than taken them on trust.*
+
+### 11.1 Independent verification of the two verdicts
+
+**P0.** I recomputed the primary from the 48 per-seed differences in
+`GROUP_LAW_FLIP_ANALYSIS.json`: mean `+.006656`, sample SD `.00808`, 40/48
+positive, percentile-bootstrap 95% CI `[+.00441,+.00887]` (20k resamples,
+seed 20260820 — reproduces the stored interval to 5 decimals), Monte-Carlo
+sign-flip p ≈ 5e-6 (consistent with the stored exact 9.56e-7). All four frozen
+support conditions hold; delivery TV `.336` vs `.05` threshold. Analyzer hash
+matches the frozen `9d88d6…`. The paper's P0 paragraph is the prereg §7
+"Supported" sentence with numbers filled in, plus the three prereg
+non-claims. **Verdict and tier (2) are correct.**
+
+**AMaze gate.** `+.0633`, CI `[+.0003,+.1410]`, p=.156, 5/3/2. Prereg table:
+positive needs mean ≥ .02 *and* p ≤ .05 (fails on p); negative needs CI upper
+< .02 (fails); "otherwise → inconclusive at n=10, report the interval, claim
+nothing." **Correct branch, correctly appendix-only, correctly Tier 4.**
+Note for the record: two *tied* pairs at n=10 on a 3-maze mean means two
+seeds solved identically in both arms — that ceiling (gate .973, upstream
+.910) is why the test has no power here; do not read the positive CI as a
+near-miss.
+
+### 11.2 Manuscript — what landed, verified
+- Abstract: 3 number-objects (P0 with CI, `+.0480`, `−.0032`) — within the
+  house rule with an interval counted as one object. Fine.
+- Contribution 4 is now "Preregistered correction, confirmed" with the
+  exact non-claims. Good.
+- Algorithm box (`alg:countlaw`) in the main text with the four sufficient
+  statistics and estimator-specific scores. ✅ (R3 closed.)
+- Lemma `lem:relabel` + two-line appendix proof. ✅ (R8/§4-5 closed.)
+- Digits demoted to "a boundary … not a replication." ✅ (R5 closed.)
+- Horizon/compounding sentence with pointer to transfer-matrix utility. ✅ (R4 closed.)
+- SFL fixed-N identity + variable-n `(n−1)/(n+1)` factor; SPEED-RL cited
+  with its own bug flag. ✅ (R6 closed.)
+- Takeaway (iv) narrowed; takeaway (ii) now cites P0. ✅
+- Conclusion on p. 9, references p. 10, 19 pp total. Clean-clone portable
+  build reproduces PDF hash. Manifest rebuilt to the seven used figures;
+  `reproduce.sh` no longer escapes the repo. Registry 55 rows; trace rows
+  83–88 (P0) + AMaze rows traced. ✅ (§4-9/10 closed.)
+
+### 11.3 Problems found — fix before the 09-12 perimeter freeze
+
+**P-1. Report the P0 arm means; the framing will otherwise be attacked.**
+From the cells: `plugin` mean cov-AUC-delta = **−.00425**, `grouplaw` =
+**+.00240**, post-SFT cov@8 = `.280` for both. So under the plug-in score,
+RL on average *loses* held-out coverage relative to its SFT warmstart, and the
+count-law score turns that into a small gain. That is a legitimate and
+arguably stronger story ("the plug-in arm's curriculum was net-harmful to
+coverage on this substrate; scoring the count law flips the sign"), but it
+must be stated, exactly as §3.1 states Acrobot's three arm means. If a
+reviewer computes it from the artifact first, the omission reads as
+concealment. Add one sentence after the P0 numbers: *"Arm means are −.0043
+(plug-in) and +.0024 (count law) relative to post-SFT coverage .280."*
+
+**P-2. The frozen descriptive secondary is not in the paper.** Prereg §5.2
+says "report" the per-level calibration gap and its Spearman correlation with
+the per-level contrast; the result memo has it (ρ = .157) but `body_iclr.tex`
+does not. Reporting a frozen secondary is not optional. Put it in App. C with
+the per-level table — and be candid that the rank correlation is weak. The
+per-level picture is actually informative: gains concentrate at levels 2–4
+(`+.041, +.035, +.017`) where the measured plug-in gap is largest
+(`.24, .60, .97`), levels 8–12 are identically zero in both arms (dead
+levels), and level 5 (gap `.86`) is **−.023**. State that as "consistent
+with, not evidence of, mediation," and make it a small appendix figure
+(gain vs. gap, one point per level, dead levels marked). That figure answers
+the "is this mechanism or luck" question better than ρ does.
+
+**P-3. Do not let "recovers the loss" creep in.** P0's `+.0067` and
+MAZE-SCORE's `−.0032` are on the same endpoint and substrate, but the arms
+differ (P0 has no `p(1−p)` arm and both arms use the count-law posterior).
+The current text is careful; keep the Fig. 2B caption explicit that the P0
+row shares the endpoint with the `−.0032` row but is a different contrast.
+
+**P-4. Two titles.** `main_iclr2027.tex` says *Learnability, Reweighted: Which
+Tasks the Estimator Makes Active…*; `main_iclr.tex` says *Rollout-Aware
+Coefficient Activity for Data Selection in…*. One must go. My recommendation
+as PI: the paper's thesis is now the count law, not "reweighted learnability."
+Candidates —
+(a) *Score the Count Law, Not the Mean Pass Rate: Estimator Activity for
+Curriculum Selection in Verifiable-Reward RL*;
+(b) *Mean Pass Rate Is Not a Sufficient Statistic: Count-Law Curricula for
+Group Estimators*.
+Pick one by 09-01 and regenerate `OPENREVIEW_ABSTRACT_CANDIDATE.md`.
+
+**P-5. Anonymity export is still a plan, not a script.** The audit correctly
+refuses to rewrite history or edit the hash-bound Acrobot artifact. But steps
+1–5 of its "required release operation" are mechanical and should exist as
+`scripts/export_anonymous.sh` (allowlist → copy → path-scrub the one Acrobot
+JSON with a recorded canonical/scrubbed hash pair → identity/path/URL/metadata
+scans → portable `reproduce.sh --build` from the extraction → tarball +
+SHA-256). Only step 6 (upload, DOI) is PI-only. Have Codex write and test
+the script now; I run it and deposit.
+
+### 11.4 Decisions (PI)
+1. **LLM rung:** stays de-scoped (b). No RL training.
+2. **E4 (frozen-checkpoint LLM count-law calibration measurement):** now
+   *approved* as the only remaining experiment, with a hard stop of
+   **2026-09-08**. Rationale: with P0 supported, R1 is no longer "no neural
+   evidence," it is "no LLM evidence"; a preregistered, training-free
+   measurement of `Pr(K=0|z) − (1−p̄_z)^N` per coarse bucket on one frozen
+   checkpoint (SmolLM2-360M or Qwen2.5-0.5B, N=16, GSM8K difficulty buckets
+   from `lime-nlp/GSM8K_Difficulty` or Countdown operand tiers) answers "does
+   the gap exist at LLM scale" for a few GPU-hours. Tier 2′ descriptive, one
+   appendix figure, one sentence in §3.4. Prereg the bucket definition,
+   checkpoint hash, N, sample size, and the statistic *before* sampling; no
+   hypothesis test, no decision rule, so no branch to write. If it is not
+   frozen by 09-03 it does not run.
+3. **No other experiments.** AMaze gate is closed at Tier 4; no seed
+   extension (prereg forbids it).
+4. **Push** the eight commits to `origin/main` once P-1/P-2 are in; the
+   pre-unblinding commit `8349888` should be publicly visible before any
+   external release for the timing argument to hold.
+
+### 11.5 Work queue for Codex, in order
+1. P-1 arm-means sentence + P-2 appendix table/figure + P-3 caption check;
+   rebuild; confirm conclusion still on p. 9; refresh claim trace (rows 89+)
+   and `manifest.json` for the new figure.
+2. P-4: apply the chosen title to both `main_iclr*.tex`, regenerate the
+   OpenReview candidate.
+3. P-5: `scripts/export_anonymous.sh` + a dry-run report.
+4. E4 preregistration draft (`llm_calibration/LLM_COUNTLAW_CALIBRATION_PREREG.md`)
+   for my freeze — do not sample before it is frozen and committed.
+5. Run `/ars-reviewer` on the rebuilt PDF and file the simulated reviews under
+   `reviews_round5/`; triage only items that are wording/scope, not new
+   experiments.
+6. Then the pre-submission checklist: clean-clone rebuild, claim-trace total,
+   `reproduce.sh` exact mode, ICLR style compliance, reciprocal-review
+   eligibility.
+
+### 11.6 Calendar
+| date | milestone | status |
+|---|---|---|
+| 08-26 | P0 closed (Tier 2), AMaze gate closed (Tier 4), LLM (b) | **done** |
+| 09-01 | title decision | open (P-4) |
+| 09-03 | E4 prereg frozen or E4 dropped | open |
+| 09-08 | E4 hard stop | — |
+| 09-12 | claim table / perimeter freeze | on track if P-1/P-2 land this week |
+| 09-16 | OpenReview title + abstract lock | — |
+| 09-18 AOE | abstract deadline | — |
+| 09-22 | draft freeze | — |
+| 09-25 AOE | paper + supplement | — |
+
+### 11.7 Bottom line
+The two closures were executed exactly as preregistered and the verdicts are
+right. The paper is now what §6 hoped for — a method with a priced boundary
+and one preregistered neural-scale causal confirmation — and the manuscript
+queue from §4 is essentially cleared. What remains is honesty-of-presentation
+(arm means, the frozen secondary), one title decision, one mechanical
+anonymity export, and an optional training-free LLM measurement with a hard
+stop. Nothing on the critical path needs a GPU.

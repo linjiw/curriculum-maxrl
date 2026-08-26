@@ -40,6 +40,22 @@
       },
       "notes": "P0 row is read from the frozen single-use analysis. Earlier transcribed rows resolve through paper/CLAIM_TRACE_ICLR.md."
     },
+    "fig_grouplaw_secondary": {
+      "script": "paper/figures/fig_grouplaw_secondary.py",
+      "inputs": [
+        "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json"
+      ],
+      "outputs": [
+        "paper/figures/fig_grouplaw_secondary.pdf",
+        "paper/figures/fig_grouplaw_secondary.png"
+      ],
+      "command": "python paper/figures/fig_grouplaw_secondary.py",
+      "checksums": {
+        "paper/figures/fig_grouplaw_secondary.py": "66cf0bd67794df75",
+        "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json": "c1e6dc3ead1ef11d"
+      },
+      "notes": "Frozen descriptive P0 secondary. One point is one level; the plotted rank association is descriptive and not a mediation test."
+    },
     "fig_maze_block_contrasts": {
       "script": "paper/figures/fig_maze_block_contrasts.py",
       "inputs": [

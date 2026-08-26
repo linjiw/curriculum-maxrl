@@ -118,7 +118,9 @@ positive-pair counts, filled marker for the one frozen primary.
 \emph{(B)} Three preregistered boundaries plus the preregistered count-law
 correction on the same coarse-unit substrate. Rows there are different
 endpoints on their own studies' scales, shown together only to mark direction
-and interval; the filled blue marker is the correction's frozen primary.
+and interval; the filled blue marker is the correction's frozen primary. The
+MAZE-SCORE and P0 rows share the cov-AUC endpoint and substrate but compare
+different arms: P0 has no $p(1-p)$ arm and is not a recovery contrast.
 AMaze entries are five-seed development means at one-sixth budget and carry no
 interval.}
 \label{fig:claimmap}
@@ -528,7 +530,10 @@ The delivered intervention (mean visit TV $.33597$; frozen threshold $.05$)
 improves cov-AUC by $+.00666$ (95\% CI $[+.00441,+.00887]$, exact paired
 $p=9.56\times10^{-7}$, 40/48 positive blocks), exceeding the preregistered
 $+.005$ SESOI. The frozen verdict is \textbf{supported}: the correction is
-causally relevant on this substrate. This does not show that the algebra
+causally relevant on this substrate. Arm means are $-.0043$ (plug-in) and
+$+.0024$ (count law) relative to their common post-SFT coverage $.280$: the
+plug-in arm's RL is net-negative for held-out coverage here, while the
+correction flips the sign. This does not show that the algebra
 predicted the learning sign, that the correction alone explains the earlier
 contrast, or that either arm beats $p(1-p)$.
 
@@ -1016,6 +1021,56 @@ never binned against its own $K$. Realized mass tracks the predicted
 twice the level's excess all-fail probability (Cor.~\ref{cor:gran}), a gap
 that widens as $p$ falls.}
 \label{fig:mazescore}
+\end{figure}
+
+\paragraph{P0 frozen descriptive secondary.}
+The registered secondary pools observed group counts across both P0 arms and
+all blocks, then compares each level's measured plug-in-minus-count-law
+activity gap with its paired count-law-minus-plug-in coverage contrast. Their
+Spearman rank correlation is only $\rho=.157$ (Fig.~\ref{fig:grouplawsecondary}).
+Positive contrasts occur at levels 1--4; at levels 2--4 they are
+$+.041,+.035,+.017$ where the gaps are $.239,.600,.966$, but level 5 has gap
+$.864$ and contrast $-.023$. Levels 8--12 have contrasts within $.00013$ of
+zero (levels 10--12 exactly zero). This pattern is consistent with, not
+evidence of, mediation; levels and pooled groups are not independent
+replicates and the secondary had no decision threshold.
+
+\begin{figure}[t]
+\centering
+\begin{minipage}[c]{.50\linewidth}
+\centering
+\includegraphics[width=\linewidth]{figures/fig_grouplaw_secondary}
+\end{minipage}\hfill
+\begin{minipage}[c]{.44\linewidth}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.0pt}
+\begin{tabular}{@{}rrr@{}}
+\toprule
+level & activity gap & cov-AUC $\Delta$\\
+\midrule
+0 & .022 & -.0015\\
+1 & .026 & +.0207\\
+2 & .239 & +.0408\\
+3 & .600 & +.0349\\
+4 & .966 & +.0171\\
+5 & .864 & -.0229\\
+6 & .052 & -.0020\\
+7 & .002 & -.0006\\
+8 & $\approx0$ & -.0001\\
+9 & .000 & +.0001\\
+10 & .000 & .0000\\
+11 & .000 & .0000\\
+12 & .000 & .0000\\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\caption{\textbf{P0 per-level secondary (frozen, descriptive).} The activity
+gap pools group counts across arms and blocks; the coverage contrast is first
+paired by seed and then averaged within level. One point is one level, not an
+independent training replicate. The weak rank association and level-5 reversal
+do not establish mediation.}
+\label{fig:grouplawsecondary}
 \end{figure}
 
 \paragraph{Fixed-completion $N$-sweep (post-guidance, descriptive).}

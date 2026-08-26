@@ -5,7 +5,7 @@
 
 ## Title
 
-Learnability, Reweighted: Which Tasks the Estimator Makes Active in Verifiable-Reward RL
+Score the Count Law, Not the Mean Pass Rate: Estimator Activity for Curriculum Selection in Verifiable-Reward RL
 
 ## Abstract (regenerated verbatim in substance from body_iclr.tex)
 

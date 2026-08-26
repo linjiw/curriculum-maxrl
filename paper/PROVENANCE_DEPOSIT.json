@@ -3,13 +3,13 @@
   "prepared_utc": "2026-08-26T16:15:09Z",
   "status": "not_deposited",
   "doi": null,
-  "title": "Learnability, Reweighted: provenance records",
+  "title": "Score the Count Law, Not the Mean Pass Rate: provenance records",
   "description": "Deposit-ready checksum inventory for the compact-paper figure manifest, the source-locked Acrobot tournament, and the retained Digits confirmation descriptor. This inventory does not claim that the external raw payloads disclosed by the manuscript are included.",
   "payload": [
     {
       "path": "paper/results/manifest.json",
-      "bytes": 6155,
-      "sha256": "884466159682651b4a5b3b10fda9c7ac06b9e2477d1bb2e5c96d512c7f208f7c",
+      "bytes": 6885,
+      "sha256": "de66724186790b85ffddee5830cbcb57e3b681c86fbd0705138f6902d2dc4fca",
       "role": "compact-paper figure, input, and external-boundary manifest"
     },
     {

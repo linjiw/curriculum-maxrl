@@ -244,4 +244,20 @@ SHA-256 `c0162e99...c86774e`.
 This Tier-4 result neither promotes the development gate observation nor
 changes the separate registered standalone-priority negative.
 
-**Current total through the 2026-08-26b addendum: 92/92 traced; 0 untraced.**
+## Addendum 2026-08-26c — P0 arm means and frozen secondary (rows 93–96)
+
+Added after the PI-requested completeness pass over the already-unsealed P0
+analysis. These rows report existing frozen outputs; they do not add an
+endpoint, threshold, hypothesis test, seed, or analysis.
+
+| # | claim in `body_iclr.tex` | value | artifact | status |
+|---|---|---|---|---|
+| 93 | P0 arm mean cov-AUC changes and common post-SFT coverage | plug-in −.0043; count law +.0024; post-SFT .280 | `curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json` `cells/*/{plugin,grouplaw}/cov_auc_delta` and `post_sft_cov8`, averaged over the frozen 48 blocks | TRACED-ROUNDED |
+| 94 | frozen descriptive per-level Spearman correlation | ρ=.157 | same, `descriptive_secondary/spearman_gap_vs_coverage_difference` (.1568682839); status `descriptive_only` | TRACED-ROUNDED |
+| 95 | levels 2–4 activity gaps and coverage contrasts; level-5 reversal | gaps [.239,.600,.966], contrasts [+.041,+.035,+.017]; level 5 gap .864, contrast −.023 | same, `descriptive_secondary/per_level/{2,3,4,5}` | TRACED-ROUNDED |
+| 96 | levels 8–12 near-zero contrast; levels 10–12 exact zeros | max absolute contrast .0001303 over 8–12; levels 10–12 0 exactly | same, `descriptive_secondary/per_level/{8,9,10,11,12}/mean_cov_auc_difference_grouplaw_minus_plugin` | TRACED-ROUNDED |
+
+The secondary is Tier 2′ descriptive. Its weak rank association is consistent
+with, not evidence of, mediation; no p-value or decision rule is attached.
+
+**Current total through the 2026-08-26c addendum: 96/96 traced; 0 untraced.**
