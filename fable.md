@@ -437,3 +437,11 @@ checksum-bound 386-file bundle.
 and Digits descriptor by full SHA-256. It correctly records `doi: null`: only
 the PI can choose the archive/license and publish the checksum-matched payload,
 and no placeholder identifier is cited during double-blind review.
+
+A no-local clean clone at commit `059c604` passes the portable build and
+reproduces the locked PDF hashes. The PDF surface is anonymous, but the full
+repository snapshot is not: Git author history, one immutable Acrobot result's
+two historical personal paths, and many host-bound runtime records remain.
+`paper/ANONYMITY_AUDIT_2026-08-26.md` therefore marks the repository snapshot
+red and specifies a history-free, allowlisted, mechanically anonymized export
+as the remaining PI-owned release operation.
