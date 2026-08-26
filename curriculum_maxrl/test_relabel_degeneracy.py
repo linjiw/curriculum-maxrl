@@ -4,8 +4,8 @@ The recurring proposal for the `A_E = 0` dead zone is hindsight relabeling: when
 a group of N rollouts all fail, rewrite each member's goal to the state that
 member actually achieved, so the group "succeeds" and a gradient appears.
 
-**Lemma (per-member relabeling is degenerate).** For every permutation-
-equivariant binary group estimator, realized mass vanishes at k = N:
+**Lemma (per-member relabeling is degenerate).** For each deployed centered
+binary group estimator in this repository, realized mass vanishes at k = N:
 
     M_MaxRL(N) = 2(1 - N/N) = 0,
     M_RLOO(N)  = 2N(N-N)/(N(N-1)) = 0,

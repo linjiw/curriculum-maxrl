@@ -8,13 +8,20 @@
 #                                # ICLR-2027 PDF and the extended-research PDF
 #
 # Requires: python3 (numpy), matplotlib for figure regeneration
-# (PYTHON_MPL below points at a venv that has it). For --build, set
-# TECTONIC_BIN and XDG_CACHE_HOME to the pinned Tectonic executable and
-# populated cache verified below. SOURCE_DATE_EPOCH is pinned by default.
+# (PAPER_FIGURE_PYTHON may point at a separate venv). Portable mode validates
+# declared inputs and fresh nonempty renders. Set REPRO_MODE=exact for strict
+# byte comparison under the pinned figure and Tectonic toolchains. For
+# --build, set TECTONIC_BIN or place tectonic on PATH; exact mode requires
+# TECTONIC_BIN plus the pinned populated XDG_CACHE_HOME. SOURCE_DATE_EPOCH is
+# pinned by default.
 set -e
 cd "$(dirname "$0")"
 PYTHON=${PYTHON:-python3}
 PAPER_FIGURE_PYTHON=${PAPER_FIGURE_PYTHON:-}
+REPRO_MODE=${REPRO_MODE:-portable}
+case "$REPRO_MODE" in portable|exact) ;; *)
+  echo "REPRO_MODE must be portable or exact" >&2; exit 2;;
+esac
 FAIL=0
 step() { echo; echo "== $* =="; }
 
@@ -24,16 +31,16 @@ $PYTHON curriculum_maxrl/test_verl_curriculum.py
 $PYTHON frontier_rl/test_framework.py
 $PYTHON -m unittest curriculum_maxrl.test_audit_countdown_sft_overlap
 
-step "2/5 figure-endpoint derivations (fail on mismatch)"
-(cd paper/figures && $PYTHON verify_fig2a_from_artifacts.py)
-(cd paper/figures && $PYTHON verify_fig2c_from_logs.py) || {
-  echo "  (fig2c needs the execution fork's raw maze logs; skipping is a"
-  echo "   MISS only if ../maxrl is present)"; [ -d ../maxrl ] && FAIL=1; }
-$PYTHON curriculum_maxrl/maze_gpu_factorial/block_reanalysis.py >/dev/null
+step "2/5 compact-paper derivations (no outside-repository reads)"
+$PYTHON control_port/verify_note_claims.py
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 $PYTHON -m pytest -q \
+  curriculum_maxrl/test_count_law_stats.py \
+  curriculum_maxrl/test_relabel_degeneracy.py \
+  curriculum_maxrl/group_law_flip/test_analyze_group_law_flip.py
 
 step "3/5 manifest, canonical-paper, and compact-registry checks"
 $PYTHON - <<'EOF'
-import collections, hashlib, json, os, sys
+import collections, hashlib, json, os, re, sys
 m = json.load(open('paper/results/manifest.json'))
 bad = []
 manuscript = m.get('manuscript', {})
@@ -62,6 +69,44 @@ for section in sections:
         if got != want:
             bad.append(f"{name}: {path} checksum {got} != {want}")
 
+body = open(expected_manuscript['body'], encoding='utf-8').read()
+included = {
+    'paper/' + match + ('' if os.path.splitext(match)[1] else '.pdf')
+    for match in re.findall(r'\\includegraphics(?:\[[^]]*\])?\{([^}]+)\}', body)
+}
+declared = {
+    output
+    for entry in m['figures'].values()
+    for output in entry.get('outputs', [])
+    if output.endswith('.pdf')
+}
+if included != declared:
+    bad.append(
+        f"compact figure perimeter mismatch: included-only={sorted(included-declared)!r}, "
+        f"manifest-only={sorted(declared-included)!r}")
+for name, entry in m['figures'].items():
+    script = entry.get('script')
+    if not script or not os.path.isfile(script):
+        bad.append(f"{name}: missing declared script {script!r}")
+    for output in entry.get('outputs', []):
+        if not os.path.isfile(output) or os.path.getsize(output) == 0:
+            bad.append(f"{name}: missing/nonempty tracked output {output}")
+
+deposit = json.load(open('paper/PROVENANCE_DEPOSIT.json'))
+if deposit.get('status') != 'not_deposited' or deposit.get('doi') is not None:
+  bad.append("provenance deposit must remain explicitly unminted until PI publication")
+for entry in deposit.get('payload', []):
+  path = entry.get('path')
+  if not path or not os.path.isfile(path):
+    bad.append(f"provenance deposit: missing payload {path!r}")
+    continue
+  data = open(path, 'rb').read()
+  if len(data) != entry.get('bytes'):
+    bad.append(f"provenance deposit: {path} bytes {len(data)} != {entry.get('bytes')}")
+  got = hashlib.sha256(data).hexdigest()
+  if got != entry.get('sha256'):
+    bad.append(f"provenance deposit: {path} sha256 {got} != {entry.get('sha256')}")
+
 registry = json.load(open('curriculum_maxrl/run_registry.json'))
 rows = registry.get('rows')
 expected_suites = {
@@ -85,19 +130,24 @@ for b in bad: print("  MISMATCH:", b)
 sys.exit(1 if bad else 0)
 EOF
 
-step "4/5 regenerate figures in isolation and compare frozen bytes"
+step "4/5 regenerate the compact figure perimeter in isolation ($REPRO_MODE)"
 FIGURE_REPRO_DIR=$(mktemp -d paper/.figures-repro.XXXXXX)
 figure_repro_cleanup() { rm -rf "$FIGURE_REPRO_DIR"; }
 trap figure_repro_cleanup EXIT
-[ -n "$PAPER_FIGURE_PYTHON" ] && [ -x "$PAPER_FIGURE_PYTHON" ] || {
-  echo "PAPER_FIGURE_PYTHON must name the pinned figure interpreter" >&2; exit 1; }
+FIGURE_PYTHON=${PAPER_FIGURE_PYTHON:-$PYTHON}
+case "$FIGURE_PYTHON" in */*) ;; *) FIGURE_PYTHON=$(command -v "$FIGURE_PYTHON") ;; esac
+[ -x "$FIGURE_PYTHON" ] || {
+  echo "figure interpreter is not executable: $FIGURE_PYTHON" >&2; exit 1; }
 FIGURE_PYTHON_SHA256=4627a60ce761a303bb866244833a914aabab9880b8082fbb0fe8cf35c91ea3ed
 FIGURE_ENVIRONMENT_SHA256=9a05c8bfbd95df8f94aa413e6304b2dbcd709fabb5e006a198c96688004cf614
-[ "$(sha256sum "$PAPER_FIGURE_PYTHON" | cut -d' ' -f1)" = "$FIGURE_PYTHON_SHA256" ] || {
-  echo "PAPER_FIGURE_PYTHON executable does not match" >&2; exit 1; }
 mkdir "$FIGURE_REPRO_DIR/.mplconfig"
-FIGURE_ENVIRONMENT_ACTUAL=$(MPLCONFIGDIR="$FIGURE_REPRO_DIR/.mplconfig" \
-  "$PAPER_FIGURE_PYTHON" -I -B - <<'PY'
+if [ "$REPRO_MODE" = exact ]; then
+  [ -n "$PAPER_FIGURE_PYTHON" ] || {
+    echo "exact mode requires PAPER_FIGURE_PYTHON" >&2; exit 1; }
+  [ "$(sha256sum "$FIGURE_PYTHON" | cut -d' ' -f1)" = "$FIGURE_PYTHON_SHA256" ] || {
+    echo "PAPER_FIGURE_PYTHON executable does not match" >&2; exit 1; }
+  FIGURE_ENVIRONMENT_ACTUAL=$(MPLCONFIGDIR="$FIGURE_REPRO_DIR/.mplconfig" \
+    "$FIGURE_PYTHON" -I -B - <<'PY'
 from hashlib import sha256
 import json
 import sys
@@ -139,30 +189,65 @@ for family in ("DejaVu Sans", "DejaVu Serif", "DejaVu Sans Mono"):
 payload = json.dumps(record, sort_keys=True, separators=(",", ":")).encode()
 print(sha256(payload).hexdigest())
 PY
-)
-[ "$FIGURE_ENVIRONMENT_ACTUAL" = "$FIGURE_ENVIRONMENT_SHA256" ] || {
-  echo "Pinned figure package/font environment does not match" >&2; exit 1; }
+  )
+  [ "$FIGURE_ENVIRONMENT_ACTUAL" = "$FIGURE_ENVIRONMENT_SHA256" ] || {
+    echo "Pinned figure package/font environment does not match" >&2; exit 1; }
+else
+  MPLCONFIGDIR="$FIGURE_REPRO_DIR/.mplconfig" "$FIGURE_PYTHON" - <<'PY'
+import matplotlib, numpy
+print(f"  portable figure environment: matplotlib={matplotlib.__version__}, numpy={numpy.__version__}")
+PY
+fi
 cp -a paper/figures/. "$FIGURE_REPRO_DIR/"
-for f in "$FIGURE_REPRO_DIR"/fig*.py; do
-  stem=$(basename "$f" .py)
+COMPACT_FIGURES=$($PYTHON - <<'PY'
+import json
+m = json.load(open('paper/results/manifest.json'))
+for entry in m['figures'].values():
+    print(entry['script'].rsplit('/', 1)[-1][:-3])
+PY
+)
+for stem in $COMPACT_FIGURES; do
   rm -f "$FIGURE_REPRO_DIR/$stem.pdf" "$FIGURE_REPRO_DIR/$stem.png"
-  echo "  paper/figures/$(basename "$f")"
+  echo "  paper/figures/$stem.py"
   (cd "$FIGURE_REPRO_DIR" && \
     SOURCE_DATE_EPOCH=1786718220 FORCE_SOURCE_DATE=1 \
     MPLCONFIGDIR="$FIGURE_REPRO_DIR/.mplconfig" \
-    "$PAPER_FIGURE_PYTHON" -I -B "$(basename "$f")" >/dev/null)
+    "$FIGURE_PYTHON" -I -B "$stem.py" >/dev/null)
 done
-for f in paper/figures/fig*.py; do
-  stem=$(basename "$f" .py)
+for stem in $COMPACT_FIGURES; do
   for ext in pdf png; do
     tracked="paper/figures/$stem.$ext"
     regenerated="$FIGURE_REPRO_DIR/$stem.$ext"
-    [ -f "$tracked" ] && [ -f "$regenerated" ] || {
+    [ -s "$tracked" ] && [ -s "$regenerated" ] || {
       echo "  MISSING regenerated figure: $stem.$ext" >&2; exit 1; }
-    cmp -s "$tracked" "$regenerated" || {
-      echo "  MISMATCH regenerated figure: $stem.$ext" >&2; exit 1; }
+    if [ "$REPRO_MODE" = exact ]; then
+      cmp -s "$tracked" "$regenerated" || {
+        echo "  MISMATCH regenerated figure: $stem.$ext" >&2; exit 1; }
+    fi
   done
 done
+if [ "$REPRO_MODE" = portable ]; then
+  "$FIGURE_PYTHON" - "$FIGURE_REPRO_DIR" $COMPACT_FIGURES <<'PY'
+from pathlib import Path
+import sys
+from PIL import Image
+
+root = Path(sys.argv[1])
+for stem in sys.argv[2:]:
+    pdf = root / f"{stem}.pdf"
+    png = root / f"{stem}.png"
+    if not pdf.read_bytes().startswith(b"%PDF-") or pdf.stat().st_size < 1000:
+        raise SystemExit(f"invalid regenerated PDF: {pdf}")
+    with Image.open(png) as image:
+        image.verify()
+    with Image.open(png) as image:
+        if min(image.size) < 200:
+            raise SystemExit(f"implausibly small regenerated PNG: {png} {image.size}")
+print(f"  portable render validation passed for {len(sys.argv)-2} compact figures")
+PY
+else
+  echo "  exact byte comparison passed for all compact figures"
+fi
 figure_repro_cleanup
 trap - EXIT
 
@@ -232,8 +317,11 @@ if [ "${1:-}" = "--build" ]; then
   }
   trap 'paper_build_cleanup $?' EXIT
 
-  [ -n "${TECTONIC_BIN:-}" ] || {
-    echo "--build requires the pinned TECTONIC_BIN" >&2; exit 1; }
+  if [ -z "${TECTONIC_BIN:-}" ]; then
+    TECTONIC_BIN=$(command -v tectonic || true)
+  fi
+  [ -n "$TECTONIC_BIN" ] || {
+    echo "--build requires TECTONIC_BIN or tectonic on PATH" >&2; exit 1; }
   [ -x "$TECTONIC_BIN" ] || {
     echo "TECTONIC_BIN is not executable: $TECTONIC_BIN" >&2; exit 1; }
   TECTONIC_SHA256=397efac4cabf7dfa02f238fe23681215b535ea665e99ba27d123b8bc655b88cb
@@ -241,32 +329,33 @@ if [ "${1:-}" = "--build" ]; then
   TECTONIC_INDEX_SHA256=0fb434b0fa5fdebea7f767ed9c31939c99a780d6f95cd3f540aae55910bb5697
   TECTONIC_MAPPING_SHA256=1f94cb6e6893fb09037585fdde65d436f90e2d726175e06363723529f52c880e
   TECTONIC_FORMAT_SHA256=a86ffcac335474fb9fae47cd9986b929719dc3ddf29bfb31123ecc1790ef6bbb
-  TECTONIC_BUNDLE_TREE_SHA256=e582b51bd80124956fc212c0b1e9da88cb662ccbec2a03a2e3a49c7c31d85a95
-  EXPECTED_COMPACT_SHA256=36a6c1fb899b3b05477bd7d724899ba4a704b80a90cd0de970626da6d0e3abcb
-  EXPECTED_EXTENDED_SHA256=25023b853823133ba7ab38d82fa2d0fec9c328611d19468a47f8f8eec9d16dea
-  EXPECTED_COMPACT_LOG_SHA256=d86b8c00f3432da571de6c9bd3eba07ad727cdd26f73ac6099578e53eb8671af
-  EXPECTED_EXTENDED_LOG_SHA256=9c3af95746d2709a9610336ae0175f26a89e030fb4cfe9c34e9770a47d8a3208
-  [ "$(sha256sum "$TECTONIC_BIN" | cut -d' ' -f1)" = "$TECTONIC_SHA256" ] || {
-    echo "TECTONIC_BIN does not match the pinned 0.16.9 executable" >&2; exit 1; }
-  [ -n "${XDG_CACHE_HOME:-}" ] || {
-    echo "Pinned Tectonic build requires explicit XDG_CACHE_HOME" >&2; exit 1; }
-  TECTONIC_INDEX="$XDG_CACHE_HOME/Tectonic/bundles/data/$TECTONIC_BUNDLE_ID.index"
-  TECTONIC_MAPPING="$XDG_CACHE_HOME/Tectonic/bundles/hashes/https,58,,47,,47,relay.fullyjustified.net,47,default_bundle_v33.tar"
-  TECTONIC_BUNDLE_DIR="$XDG_CACHE_HOME/Tectonic/bundles/data/$TECTONIC_BUNDLE_ID"
-  TECTONIC_FORMAT="$XDG_CACHE_HOME/Tectonic/formats/$TECTONIC_BUNDLE_ID-latex-33.fmt"
-  [ -f "$TECTONIC_INDEX" ] \
-    && [ ! -L "$TECTONIC_INDEX" ] \
-    && [ "$(sha256sum "$TECTONIC_INDEX" | cut -d' ' -f1)" = "$TECTONIC_INDEX_SHA256" ] || {
-      echo "Tectonic bundle index is missing or does not match" >&2; exit 1; }
-  [ -f "$TECTONIC_FORMAT" ] \
-    && [ ! -L "$TECTONIC_FORMAT" ] \
-    && [ "$(sha256sum "$TECTONIC_FORMAT" | cut -d' ' -f1)" = "$TECTONIC_FORMAT_SHA256" ] || {
-      echo "Tectonic LaTeX format is missing or does not match" >&2; exit 1; }
-  [ -f "$TECTONIC_MAPPING" ] \
-    && [ ! -L "$TECTONIC_MAPPING" ] \
-    && [ "$(sha256sum "$TECTONIC_MAPPING" | cut -d' ' -f1)" = "$TECTONIC_MAPPING_SHA256" ] || {
-      echo "Tectonic URL-to-bundle mapping is missing or does not match" >&2; exit 1; }
-  TECTONIC_BUNDLE_TREE_ACTUAL=$($PYTHON - "$TECTONIC_BUNDLE_DIR" <<'PY'
+  TECTONIC_BUNDLE_TREE_SHA256=c14bb81785d0b14fc2ae638a90d8b6d96bbf8180570e4b06ec3ca50aec09db17
+  EXPECTED_COMPACT_SHA256=e3d566c40ce211867cd7be4658d4886c4326825083598bc25a7c30b12b38bff6
+  EXPECTED_EXTENDED_SHA256=f9f387b4e29f1fbb0d4108820f6d6d380c4fdb3e7ea73fa86075bff8607d313c
+  EXPECTED_COMPACT_LOG_SHA256=cb6210b31f0695a20e0fed913468c3b28fc3f1cd9008b776bce12a177844afa4
+  EXPECTED_EXTENDED_LOG_SHA256=d13067aaa00bc88e153e8ce6d43143cfd9c615e14bf86b1786fd7c86410d77c6
+  if [ "$REPRO_MODE" = exact ]; then
+    [ "$(sha256sum "$TECTONIC_BIN" | cut -d' ' -f1)" = "$TECTONIC_SHA256" ] || {
+      echo "TECTONIC_BIN does not match the pinned 0.16.9 executable" >&2; exit 1; }
+    [ -n "${XDG_CACHE_HOME:-}" ] || {
+      echo "Pinned Tectonic build requires explicit XDG_CACHE_HOME" >&2; exit 1; }
+    TECTONIC_INDEX="$XDG_CACHE_HOME/Tectonic/bundles/data/$TECTONIC_BUNDLE_ID.index"
+    TECTONIC_MAPPING="$XDG_CACHE_HOME/Tectonic/bundles/hashes/https,58,,47,,47,relay.fullyjustified.net,47,default_bundle_v33.tar"
+    TECTONIC_BUNDLE_DIR="$XDG_CACHE_HOME/Tectonic/bundles/data/$TECTONIC_BUNDLE_ID"
+    TECTONIC_FORMAT="$XDG_CACHE_HOME/Tectonic/formats/$TECTONIC_BUNDLE_ID-latex-33.fmt"
+    [ -f "$TECTONIC_INDEX" ] \
+      && [ ! -L "$TECTONIC_INDEX" ] \
+      && [ "$(sha256sum "$TECTONIC_INDEX" | cut -d' ' -f1)" = "$TECTONIC_INDEX_SHA256" ] || {
+        echo "Tectonic bundle index is missing or does not match" >&2; exit 1; }
+    [ -f "$TECTONIC_FORMAT" ] \
+      && [ ! -L "$TECTONIC_FORMAT" ] \
+      && [ "$(sha256sum "$TECTONIC_FORMAT" | cut -d' ' -f1)" = "$TECTONIC_FORMAT_SHA256" ] || {
+        echo "Tectonic LaTeX format is missing or does not match" >&2; exit 1; }
+    [ -f "$TECTONIC_MAPPING" ] \
+      && [ ! -L "$TECTONIC_MAPPING" ] \
+      && [ "$(sha256sum "$TECTONIC_MAPPING" | cut -d' ' -f1)" = "$TECTONIC_MAPPING_SHA256" ] || {
+        echo "Tectonic URL-to-bundle mapping is missing or does not match" >&2; exit 1; }
+    TECTONIC_BUNDLE_TREE_ACTUAL=$($PYTHON - "$TECTONIC_BUNDLE_DIR" <<'PY'
 from hashlib import sha256
 from pathlib import Path
 import sys
@@ -284,13 +373,17 @@ for path in sorted(root.rglob("*"), key=lambda item: item.relative_to(root).as_p
     digest.update(b"\0")
     digest.update(sha256(path.read_bytes()).digest())
     count += 1
-if count != 483:
+if count != 386:
     raise SystemExit(f"unexpected Tectonic bundle member count: {count}")
 print(digest.hexdigest())
 PY
-  )
-  [ "$TECTONIC_BUNDLE_TREE_ACTUAL" = "$TECTONIC_BUNDLE_TREE_SHA256" ] || {
-    echo "Tectonic bundle members do not match" >&2; exit 1; }
+    )
+    [ "$TECTONIC_BUNDLE_TREE_ACTUAL" = "$TECTONIC_BUNDLE_TREE_SHA256" ] || {
+      echo "Tectonic bundle members do not match" >&2; exit 1; }
+    echo "  exact Tectonic executable/cache contract passed"
+  else
+    echo "  portable Tectonic: $($TECTONIC_BIN --version | head -n 1)"
+  fi
 
   (cd paper && \
     "$TECTONIC_BIN" -C --keep-logs -o "$PAPER_BUILD_DIR" main_iclr2027.tex \
@@ -303,10 +396,27 @@ PY
       && [ "$(sha256sum "$path" | cut -d' ' -f1)" = "$expected" ] || {
         echo "Built artifact is missing or does not match: $path" >&2; return 1; }
   }
-  require_build_hash "$PAPER_BUILD_DIR/main_iclr2027.pdf" "$EXPECTED_COMPACT_SHA256"
-  require_build_hash "$PAPER_BUILD_DIR/main.pdf" "$EXPECTED_EXTENDED_SHA256"
-  require_build_hash "$PAPER_BUILD_DIR/main_iclr2027.log" "$EXPECTED_COMPACT_LOG_SHA256"
-  require_build_hash "$PAPER_BUILD_DIR/main.log" "$EXPECTED_EXTENDED_LOG_SHA256"
+  require_build_file() {
+    path=$1
+    [ -s "$path" ] && [ ! -L "$path" ] || {
+      echo "Built artifact is missing, empty, or a symlink: $path" >&2; return 1; }
+  }
+  for built in \
+      "$PAPER_BUILD_DIR/main_iclr2027.pdf" "$PAPER_BUILD_DIR/main.pdf" \
+      "$PAPER_BUILD_DIR/main_iclr2027.log" "$PAPER_BUILD_DIR/main.log"; do
+    require_build_file "$built"
+  done
+  if [ "$REPRO_MODE" = exact ]; then
+    require_build_hash "$PAPER_BUILD_DIR/main_iclr2027.pdf" "$EXPECTED_COMPACT_SHA256"
+    require_build_hash "$PAPER_BUILD_DIR/main.pdf" "$EXPECTED_EXTENDED_SHA256"
+    require_build_hash "$PAPER_BUILD_DIR/main_iclr2027.log" "$EXPECTED_COMPACT_LOG_SHA256"
+    require_build_hash "$PAPER_BUILD_DIR/main.log" "$EXPECTED_EXTENDED_LOG_SHA256"
+  else
+    head -c 5 "$PAPER_BUILD_DIR/main_iclr2027.pdf" | grep -q '^%PDF-' || {
+      echo "Compact build is not a PDF" >&2; exit 1; }
+    head -c 5 "$PAPER_BUILD_DIR/main.pdf" | grep -q '^%PDF-' || {
+      echo "Extended build is not a PDF" >&2; exit 1; }
+  fi
   if grep -Eiq 'undefined references|undefined citations|overfull|emergency stop|fatal error' \
       "$PAPER_BUILD_DIR/main_iclr2027.log" "$PAPER_BUILD_DIR/main.log"; then
     echo "Paper build logs contain a forbidden diagnostic" >&2
@@ -326,9 +436,9 @@ PY
   install -m 0664 "$PAPER_BUILD_DIR/main_iclr2027.pdf" "$PAPER_STAGED_COMPACT"
   install -m 0664 "$PAPER_BUILD_DIR/main_iclr2027.pdf" "$PAPER_STAGED_WEB"
   install -m 0664 "$PAPER_BUILD_DIR/main.pdf" "$PAPER_STAGED_EXTENDED"
-  require_build_hash "$PAPER_STAGED_COMPACT" "$EXPECTED_COMPACT_SHA256"
-  require_build_hash "$PAPER_STAGED_WEB" "$EXPECTED_COMPACT_SHA256"
-  require_build_hash "$PAPER_STAGED_EXTENDED" "$EXPECTED_EXTENDED_SHA256"
+  cmp -s "$PAPER_BUILD_DIR/main_iclr2027.pdf" "$PAPER_STAGED_COMPACT"
+  cmp -s "$PAPER_BUILD_DIR/main_iclr2027.pdf" "$PAPER_STAGED_WEB"
+  cmp -s "$PAPER_BUILD_DIR/main.pdf" "$PAPER_STAGED_EXTENDED"
   PAPER_PUBLISH_STARTED=1
   mv -f "$PAPER_STAGED_COMPACT" paper/main_iclr.pdf
   PAPER_STAGED_COMPACT=
@@ -336,9 +446,14 @@ PY
   PAPER_STAGED_WEB=
   mv -f "$PAPER_STAGED_EXTENDED" paper/main.pdf
   PAPER_STAGED_EXTENDED=
-  require_build_hash paper/main_iclr.pdf "$EXPECTED_COMPACT_SHA256"
-  require_build_hash docs/paper-iclr.pdf "$EXPECTED_COMPACT_SHA256"
-  require_build_hash paper/main.pdf "$EXPECTED_EXTENDED_SHA256"
+  cmp -s "$PAPER_BUILD_DIR/main_iclr2027.pdf" paper/main_iclr.pdf
+  cmp -s "$PAPER_BUILD_DIR/main_iclr2027.pdf" docs/paper-iclr.pdf
+  cmp -s "$PAPER_BUILD_DIR/main.pdf" paper/main.pdf
+  if [ "$REPRO_MODE" = exact ]; then
+    require_build_hash paper/main_iclr.pdf "$EXPECTED_COMPACT_SHA256"
+    require_build_hash docs/paper-iclr.pdf "$EXPECTED_COMPACT_SHA256"
+    require_build_hash paper/main.pdf "$EXPECTED_EXTENDED_SHA256"
+  fi
   PAPER_PUBLISH_COMPLETE=1
   echo "  built paper/main_iclr.pdf + docs/paper-iclr.pdf + paper/main.pdf"
   sha256sum paper/main_iclr.pdf docs/paper-iclr.pdf paper/main.pdf

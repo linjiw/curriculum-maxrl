@@ -1,0 +1,39 @@
+{
+  "schema": "curriculum-maxrl/provenance-deposit/v1",
+  "prepared_utc": "2026-08-26T16:15:09Z",
+  "status": "not_deposited",
+  "doi": null,
+  "title": "Learnability, Reweighted: provenance records",
+  "description": "Deposit-ready checksum inventory for the compact-paper figure manifest, the source-locked Acrobot tournament, and the retained Digits confirmation descriptor. This inventory does not claim that the external raw payloads disclosed by the manuscript are included.",
+  "payload": [
+    {
+      "path": "paper/results/manifest.json",
+      "bytes": 6155,
+      "sha256": "884466159682651b4a5b3b10fda9c7ac06b9e2477d1bb2e5c96d512c7f208f7c",
+      "role": "compact-paper figure, input, and external-boundary manifest"
+    },
+    {
+      "path": "acrobot_u64/vendor/frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_LOCK.json",
+      "bytes": 23094,
+      "sha256": "0e6438d42ddc53b89d774233805c465dc562bb6be5f8ac93ecf8a4d09b5d9af3",
+      "role": "source, runtime, seed, and protocol lock for the 60-run Acrobot tournament"
+    },
+    {
+      "path": "curriculum_maxrl/digits_factorial/analyses/confirmation_registered_v1/confirmation_analysis.json",
+      "bytes": 15047,
+      "sha256": "346e46414d82155f2064ee2a448b89cf976bdc6897e0ff8ced06a389056799d6",
+      "role": "retained Digits confirmation descriptor and block-level analysis; embeds source_lock_sha256 d72b93a29a2e6a096a6acb0611f69fe6df9dcda80256000aed6de5208ef4eb36"
+    }
+  ],
+  "external_boundaries": [
+    "The Digits 5.08 GB replay payload is not included.",
+    "The Acrobot tournament lock and retained-ledger reanalysis are included in the repository; this deposit inventory does not imply that every historical raw record is locally available.",
+    "No DOI exists until the PI uploads and publishes this exact payload through the selected archive."
+  ],
+  "pi_actions_before_publish": [
+    "Choose the archive and license without exposing author identity during double-blind review.",
+    "Recompute all three byte counts and SHA-256 digests and require exact agreement with this inventory.",
+    "Upload these three payload files plus this inventory without content transformation.",
+    "After publication, record the minted DOI in the repository and replace manuscript wording only if the DOI resolves anonymously."
+  ]
+}

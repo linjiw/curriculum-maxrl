@@ -285,11 +285,9 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     reading. The gate did not validate.</p>
   </div>
   <div class="links">
-    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl">Code &amp; docs ↗</a>
     <a class="btn" href="paper-draft.pdf">📄 Paper PDF (working draft)</a>
     <a class="btn" href="paper-iclr.pdf">📄 ICLR-format PDF</a>
     <a class="btn" href="https://arxiv.org/abs/2602.02710">MaxRL paper ↗</a>
-    <a class="btn" href="https://github.com/linjiw/curriculum-maxrl/blob/main/GUIDE.md">Design guide ↗</a>
     <button id="themeToggle" type="button">Toggle theme</button>
   </div>
 </header>
@@ -341,8 +339,8 @@ retracted after reanalysis) — and in the teacher-arm run the collapse was <em>
 (single-seed arm) —
 the objective underneath decides whether a curriculum is safe at all (section 4). Together:
 <strong>the teacher allocates, hindsight creates, the objective decides whether either is
-safe.</strong> The full evidence decomposition, regime map, and practitioner playbook are in
-<a href="https://github.com/linjiw/curriculum-maxrl/blob/main/EVIDENCE.md">EVIDENCE.md</a>.</p>
+safe.</strong> The artifact's <code>EVIDENCE.md</code> contains the full evidence
+decomposition, regime map, and practitioner playbook.</p>
 
 <!-- ============================================================ -->
 <h2 id="maxrl">1 · How MaxRL works, in three steps</h2>
@@ -543,11 +541,11 @@ peak <em>location</em> is not.</p>
 </ol>
 </div>
 
-<p>In the <a href="https://github.com/linjiw/curriculum-maxrl">repo</a> this is
+<p>In the artifact this is
 <code>FrontierTeacher</code> + <code>CurriculumSampler</code>: ~150 lines, wired into the official
 MaxRL/verl trainer behind <code>+data.curriculum.enable=true</code>, with teacher state
 checkpointed alongside the model — and packaged environment-agnostically in
-<a href="https://github.com/linjiw/curriculum-maxrl/tree/main/frontier_rl"><code>frontier_rl/</code></a>
+<code>frontier_rl/</code>
 for gym and robotics tasks.</p>
 
 <h3 id="proof">The two-line proof (Proposition 1)</h3>
@@ -567,10 +565,10 @@ magnitude telescopes:</p>
   <span class="rm">=</span> 2·(<span class="rm">pass@</span>N − <span class="rm">pass@</span>1) <span class="rm">∎</span>
 </div>
 <p>Every claim on this page traces to identities of this kind — seven propositions with proofs in
-<a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/PROOFS.md">PROOFS.md</a>
+<code>curriculum_maxrl/PROOFS.md</code>
 (peak location, water-filling optimality, RLOO ≡ learnability, the ~N× frontier-signal ratio,
 the hindsight conditional-law characterization), each Monte-Carlo verified in
-<a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/run_validation.py">run_validation.py</a>.</p>
+<code>curriculum_maxrl/run_validation.py</code>.</p>
 </div>
 
 <!-- ============================================================ -->
@@ -1033,7 +1031,7 @@ run; the pre-registered kill criterion did its job.)</p>
 <h2 id="framework">5 · One schedule, any environment: <span class="mono">frontier_rl</span></h2>
 
 <p>The validated schedule is packaged as an environment-agnostic framework
-(<a href="https://github.com/linjiw/curriculum-maxrl/tree/main/frontier_rl"><code>frontier_rl/</code></a>,
+(<code>frontier_rl/</code>,
 numpy-only core). You implement four methods — task bins, group rollout, hindsight relabel, and
 one weighted policy update — and the teacher, estimator, and hindsight logic come for free. The
 same code reproduces the validated numbers on the skill chain (regression anchor) and transfers
@@ -1231,7 +1229,10 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
     <p>At fixed N, SFL's realized score (k/N)(1−k/N) is exactly
     M<sub>RLOO</sub>(k)(N−1)/(2N): SFL is already the realized count-law curriculum
     for RLOO. The surviving wedge is estimator-specific mass shape, coarse-unit
-    pooling bias, variable-N semantics, and scoring cost. SEC's empirical-|advantage|
+    pooling bias, variable-N semantics, and scoring cost. With variable sampled count
+    n, SFL's n/(n+1) correction combines with
+    E[p̂(1−p̂)]=p(1−p)(n−1)/n, leaving a level-dependent (n−1)/(n+1) factor.
+    SEC's empirical-|advantage|
     bandit reward has our formulas as its exact expectation.</p>
   </div>
 </div>
@@ -1326,10 +1327,10 @@ inert, and the negative results carry diagnoses, not apologies.</p>
 <p class="footnote">
   Built on the official <a href="https://arxiv.org/abs/2602.02710">MaxRL</a> codebase
   (Tajwar, Zeng, et&nbsp;al., ICML 2026 — a verl fork). Curriculum design draws on PLR, PAIRED,
-  ALP-GMM, and SFL learnability; see the
-  <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/RESEARCH.md">verified literature synthesis</a>.
-  Full derivations: <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/curriculum_maxrl/THEORY.md">THEORY.md</a>.
-  Method-by-method verification status: <a href="https://github.com/linjiw/curriculum-maxrl/blob/main/GUIDE.md">GUIDE.md</a>.
+  ALP-GMM, and SFL learnability; the artifact includes the verified literature
+  synthesis in <code>curriculum_maxrl/RESEARCH.md</code>, full derivations in
+  <code>curriculum_maxrl/THEORY.md</code>, and method-by-method status in
+  <code>GUIDE.md</code>.
 </p>
 
 </main>

@@ -10,7 +10,7 @@
 > | 2. E2c amendment written before the edit | **DONE** | `autoresearch/iterate-260810-2240/E2C_PREREG_AMENDMENT_2026-08-14.md` |
 > | 3. Minimal driver fix (`env` token, three sites) | **DONE** | driver `729447c4…` → `ac4148db…`; all 17 `readonly` guards intact |
 > | 4. Delete the 0-byte log, then launch | **DONE — and E2c has since CLOSED** | `E2C_CLOSURE_2026-08-15.md` |
-> | 5. Selective clean commit | **DONE (by linjiw, 00:12–00:13)** | 14 commits; tree now clean, which unblocks `stage_maze_score.sh evidence` |
+> | 5. Selective clean commit | **DONE (by the PI, 00:12–00:13)** | 14 commits; tree now clean, which unblocks `stage_maze_score.sh evidence` |
 > | 6. BARN scheduler poll | **DONE — campaign healthy** | all 20 tasks RUNNING on hop064–073, 17:47:33 elapsed of a 36 h limit, 0 failures. Metadata only; no log or endpoint opened |
 > | 8. MAZE-SCORE power memo | **DONE — recommendation changed, see below** | `hopper/MAZE_SCORE_POWER_MEMO_2026-08-15.md` |
 > | §4 Cut 1. UED lane closure note | **DONE** | `ued_benchmark/LANE_CLOSURE_2026-08-15.md` |
@@ -200,7 +200,7 @@ Per-run wall clock is `UNKNOWN`. Obtain it from the timing fields in `curriculum
 
 ### 3. The repository is a public, single-disk single point of failure for two double-blind submissions
 
-**Evidence, all [V] this session.** `git rev-list --count origin/main..main` = **6**. `origin/main` tip is `2fe4481`, i.e. the six unpushed commits are the entire preregistration-freeze provenance chain for the ICRA campaign **that is running sealed right now**. `git remote -v` → `https://github.com/linjiw/curriculum-maxrl` — named for the author. `docs/paper-iclr.pdf` is 220,740 bytes, byte-identical to the double-blind submission PDF `paper/main_iclr.pdf` **[V]**. `docs/index.html` asserts the **retracted** zero-exception maze claim at **two** places: line 287 ("grew coverage under MaxRL in every seed, while GRPO decayed coverage in every seed") and line 583 ("GRPO's pass@8 decays in every seed") **[V]**, while retracting it 70 lines earlier. ICLR 2027 is double-blind; ICRA 2027 is double-anonymous. Anonymity policy appears nowhere in the repo **[S]**. Untracked-but-irreplaceable work totals 3.2 MB across ~44k LOC **[S]**.
+**Evidence, all [V] this session.** `git rev-list --count origin/main..main` = **6**. `origin/main` tip is `2fe4481`, i.e. the six unpushed commits are the entire preregistration-freeze provenance chain for the ICRA campaign **that is running sealed right now**. `git remote -v` identified the author's account in the repository URL. `docs/paper-iclr.pdf` is 220,740 bytes, byte-identical to the double-blind submission PDF `paper/main_iclr.pdf` **[V]**. `docs/index.html` asserts the **retracted** zero-exception maze claim at **two** places: line 287 ("grew coverage under MaxRL in every seed, while GRPO decayed coverage in every seed") and line 583 ("GRPO's pass@8 decays in every seed") **[V]**, while retracting it 70 lines earlier. ICLR 2027 is double-blind; ICRA 2027 is double-anonymous. Anonymity policy appears nowhere in the repo **[S]**. Untracked-but-irreplaceable work totals 3.2 MB across ~44k LOC **[S]**.
 
 **Consequence.** The paper already concedes that its maze/Acrobot locking commits are not externally verifiable (`body_iclr.tex:540-546`); the BARN freeze is now reproducing that failure *live and self-inflicted*, on one disk. And a title search de-anonymizes both submissions. **A single action fixes all of it: make the GitHub repository private, then push.** That preserves a server-side third-party commit timestamp (the freeze anchor), removes the de-anonymization vector, takes the Pages site with its live retracted claim offline, and eliminates the loss exposure — in one step, needing no content edits.
 
@@ -308,7 +308,7 @@ The campaign is nearly free (already running, CPU-only, 30-minute sealer). The m
 
 **1. Decide repo visibility, then push.** *(needs human authorization — account-level)*
 ```bash
-# 1a. confirm current visibility in a browser: https://github.com/linjiw/curriculum-maxrl
+# 1a. confirm current visibility in a browser at the private author-owned remote
 # 1b. RECOMMENDED: set repository to Private in GitHub settings (this also takes the
 #     Pages site, with its live retracted claim and the byte-identical submission PDF, offline)
 git -C /home/robotixx/curriculum-maxrl push origin main
@@ -379,7 +379,7 @@ Total ≈ 118 agent-hours planned against ≈252 available (42 d × 6 h) = **47%
 
 ## 7. Open questions requiring a human decision
 
-1. **Repository visibility and anonymity policy.** *Blocks §5.1 and §5.7.* Is `github.com/linjiw/curriculum-maxrl` public? It hosts the byte-identical double-blind submission PDF and a Pages site stating every headline number under the author's name, against a double-blind ICLR and a double-anonymous ICRA. I could not check (no network). Proceeding either way under an assumption is unsafe: pushing to a public repo worsens de-anonymization; not pushing leaves the ICRA freeze provenance on one disk. **Recommendation: private, then push.**
+1. **Repository visibility and anonymity policy.** *Blocks §5.1 and §5.7.* Is the author-owned remote public? It hosts the byte-identical double-blind submission PDF and a Pages site stating every headline number under the author's name, against a double-blind ICLR and a double-anonymous ICRA. I could not check (no network). Proceeding either way under an assumption is unsafe: pushing to a public repo worsens de-anonymization; not pushing leaves the ICRA freeze provenance on one disk. **Recommendation: private, then push.**
 
 2. **Authorization to edit the hash-pinned E2c orchestrator under a dated amendment.** `CODEX_GOAL_ICLR_2026-08-12.md:36` says run it "unchanged," and `E2C_PREREG.md:110-112` records its byte size and SHA-256. The same document's item 4 means the alternative to fixing is that **E2c never runs at all**. The repo has clear precedent for exactly this pattern (`E2C_PREREG.md:7-19`; the BARN operational amendments). **Recommendation: authorize, with the amendment written before the edit.**
 

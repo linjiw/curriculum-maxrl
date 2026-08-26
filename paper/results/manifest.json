@@ -1,184 +1,148 @@
 {
- "_comment": "Frozen input manifest for every paper figure. Regenerate any figure with its command from repo root; checksums are sha256[:16] of the exact inputs used. Values marked raw come from run artifacts; fig2/fig3 tables are transcribed endpoints with per-panel provenance inside the data files.",
- "manuscript": {
-  "body": "paper/body_iclr.tex",
-  "wrappers": [
-   "paper/main_iclr2027.tex"
-  ],
-  "extended_body": "paper/body.tex",
-  "extended_wrapper": "paper/main.tex",
-  "commit_at_freeze": "d1b460539a7388f48b0d46c31d9d9fe591182b6a"
- },
- "timing": {
-  "artifact": "paper/figures/data/generation_timing.json",
-  "checksum": "f823e116eb7e5d67",
-  "facts": {
-   "total_steps": 1188,
-   "overall_weighted_mean": 0.3117,
-   "gen_dominated_sessions": 8,
-   "gen_dominated_steps": 282,
-   "gen_dominated_weighted_mean": 0.8337
-  }
- },
- "audits": {
-  "countdown_sft_overlap_summary": {
-   "inputs": [
-    "curriculum_maxrl/data_integrity_check.json"
-   ],
-   "checksums": {
-    "curriculum_maxrl/data_integrity_check.json": "be4e80ac892e9618"
-   },
-   "verification": "python -m unittest curriculum_maxrl.test_audit_countdown_sft_overlap",
-   "notes": "The stored source audit reports 27/128 tier-0 SFT/evaluation overlap and zero in tiers 1-2. Historical source manifests and per-task outcomes are not vendored, so the 101-task numerical reanalysis remains blocked."
+  "schema": 2,
+  "updated": "2026-08-26",
+  "_comment": "Compact-paper manifest. Every figure included by paper/body_iclr.tex appears exactly once below. Checksums are sha256[:16]. Extended-record figures are intentionally outside this compact perimeter.",
+  "manuscript": {
+    "body": "paper/body_iclr.tex",
+    "wrappers": [
+      "paper/main_iclr2027.tex"
+    ],
+    "extended_body": "paper/body.tex",
+    "extended_wrapper": "paper/main.tex"
   },
-  "amaze_gate_confirmatory": {
-   "inputs": [
-    "ued_benchmark/AMAZE_GATE_ANALYSIS.json"
-   ],
-   "checksums": {
-    "ued_benchmark/AMAZE_GATE_ANALYSIS.json": "c0162e9906507391"
-   },
-   "verification": "ued_benchmark/scripts/close_gate_confirmatory.sh (single-use; already consumed)",
-   "notes": "Frozen ten-pair full-budget gate primary; raw campaign and read-only checkpoint-budget receipt remain external at the disclosed canonical path. Verdict: inconclusive_at_n10."
-  }
- },
- "figures": {
-  "fig_claimmap": {
-   "script": "paper/figures/fig_claimmap.py",
-   "inputs": [
-    "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json"
-   ],
-   "command": "python paper/figures/fig_claimmap.py",
-   "checksums": {
-    "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json": "c1e6dc3ead1ef11d"
-   },
-   "notes": "P0 row is read from the frozen single-use analysis; earlier rows remain transcribed and resolve through CLAIM_TRACE_ICLR.md pending the full compact-figure manifest rebuild."
+  "figures": {
+    "fig_counterexample": {
+      "script": "paper/figures/fig_counterexample.py",
+      "inputs": [],
+      "outputs": [
+        "paper/figures/fig_counterexample.pdf",
+        "paper/figures/fig_counterexample.png"
+      ],
+      "command": "python paper/figures/fig_counterexample.py",
+      "checksums": {
+        "paper/figures/fig_counterexample.py": "832336d3980f1eef"
+      },
+      "notes": "Analytic same-mean/different-count-law construction; no empirical input."
+    },
+    "fig_claimmap": {
+      "script": "paper/figures/fig_claimmap.py",
+      "inputs": [
+        "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json"
+      ],
+      "outputs": [
+        "paper/figures/fig_claimmap.pdf",
+        "paper/figures/fig_claimmap.png"
+      ],
+      "command": "python paper/figures/fig_claimmap.py",
+      "checksums": {
+        "paper/figures/fig_claimmap.py": "6b367edb3600e794",
+        "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json": "c1e6dc3ead1ef11d"
+      },
+      "notes": "P0 row is read from the frozen single-use analysis. Earlier transcribed rows resolve through paper/CLAIM_TRACE_ICLR.md."
+    },
+    "fig_maze_block_contrasts": {
+      "script": "paper/figures/fig_maze_block_contrasts.py",
+      "inputs": [
+        "curriculum_maxrl/maze_gpu_factorial/block_reanalysis.json"
+      ],
+      "outputs": [
+        "paper/figures/fig_maze_block_contrasts.pdf",
+        "paper/figures/fig_maze_block_contrasts.png"
+      ],
+      "command": "python paper/figures/fig_maze_block_contrasts.py",
+      "checksums": {
+        "paper/figures/fig_maze_block_contrasts.py": "ab08a37cfa0b23fd",
+        "curriculum_maxrl/maze_gpu_factorial/block_reanalysis.json": "42b8fcb886b140dc"
+      },
+      "notes": "Intervals and counts use the independent seed/warmstart block."
+    },
+    "fig_mazescore": {
+      "script": "paper/figures/fig_mazescore.py",
+      "inputs": [
+        "hopper/MAZE_SCORE_ANALYSIS.json",
+        "hopper/MAZE_SCORE_CALIBRATION.json"
+      ],
+      "outputs": [
+        "paper/figures/fig_mazescore.pdf",
+        "paper/figures/fig_mazescore.png"
+      ],
+      "command": "python paper/figures/fig_mazescore.py",
+      "checksums": {
+        "paper/figures/fig_mazescore.py": "d11d2efedfa8cfc5",
+        "hopper/MAZE_SCORE_ANALYSIS.json": "b03039d4e243f9db",
+        "hopper/MAZE_SCORE_CALIBRATION.json": "760e61d73b361e38"
+      },
+      "notes": "Frozen primary plus post-hoc descriptive calibration; the script uses the calibration bins while loading the frozen analysis as provenance."
+    },
+    "fig_regimes": {
+      "script": "paper/figures/fig_regimes.py",
+      "inputs": [],
+      "outputs": [
+        "paper/figures/fig_regimes.pdf",
+        "paper/figures/fig_regimes.png"
+      ],
+      "command": "python paper/figures/fig_regimes.py",
+      "checksums": {
+        "paper/figures/fig_regimes.py": "09afb605f735d0ca"
+      },
+      "notes": "Analytic finite-N activity curves and operational budget bands."
+    },
+    "fig1_utility": {
+      "script": "paper/figures/fig1_utility.py",
+      "inputs": [],
+      "outputs": [
+        "paper/figures/fig1_utility.pdf",
+        "paper/figures/fig1_utility.png"
+      ],
+      "command": "python paper/figures/fig1_utility.py",
+      "checksums": {
+        "paper/figures/fig1_utility.py": "76b877b6bc958db7"
+      },
+      "notes": "Analytic MaxRL/RLOO/GRPO activity curves under the declared conventions."
+    },
+    "fig_countdown_core": {
+      "script": "paper/figures/fig_countdown_core.py",
+      "inputs": [
+        "paper/figures/data/b_scoreboard_3seed.json",
+        "curriculum_maxrl/countdown_reviewer_arms/reviewer_arms_verdicts.json"
+      ],
+      "outputs": [
+        "paper/figures/fig_countdown_core.pdf",
+        "paper/figures/fig_countdown_core.png"
+      ],
+      "command": "python paper/figures/fig_countdown_core.py",
+      "checksums": {
+        "paper/figures/fig_countdown_core.py": "4134385e887a6271",
+        "paper/figures/data/b_scoreboard_3seed.json": "f5c41f561f120d02",
+        "curriculum_maxrl/countdown_reviewer_arms/reviewer_arms_verdicts.json": "820fb80fcab1f8df"
+      },
+      "notes": "B1/B2 stored three-seed scoreboard plus all three ARM-B endpoints; coverage axis is the VERL bootstrap best@16 proxy, not standard pass@16."
+    }
   },
-  "fig1_utility": {
-   "script": "paper/figures/fig1_utility.py",
-   "inputs": [],
-   "notes": "analytic curves only; GRPO uses sample-SD convention matching curriculum_maxrl/estimators.py (ddof=1)",
-   "command": "python paper/figures/fig1_utility.py",
-   "checksums": {}
+  "audits": {
+    "countdown_sft_overlap_summary": {
+      "inputs": [
+        "curriculum_maxrl/data_integrity_check.json"
+      ],
+      "checksums": {
+        "curriculum_maxrl/data_integrity_check.json": "be4e80ac892e9618"
+      },
+      "verification": "python -m unittest curriculum_maxrl.test_audit_countdown_sft_overlap",
+      "notes": "The stored audit reports 27/128 tier-0 SFT/evaluation overlap and zero in tiers 1-2. Missing historical manifests and raw outcomes block the 101-task numerical reanalysis."
+    },
+    "amaze_gate_confirmatory": {
+      "inputs": [
+        "ued_benchmark/AMAZE_GATE_ANALYSIS.json"
+      ],
+      "checksums": {
+        "ued_benchmark/AMAZE_GATE_ANALYSIS.json": "c0162e9906507391"
+      },
+      "verification": "ued_benchmark/scripts/close_gate_confirmatory.sh (single-use; already consumed)",
+      "notes": "Frozen ten-pair full-budget gate primary; raw campaign and read-only checkpoint-budget receipt remain external. Verdict: inconclusive_at_n10."
+    }
   },
-  "fig2_ladder": {
-   "script": "paper/figures/fig2_ladder.py",
-   "inputs": [
-    "paper/figures/data/fig2_ladder_data.json"
-   ],
-   "command": "python paper/figures/fig2_ladder.py",
-   "checksums": {
-    "paper/figures/data/fig2_ladder_data.json": "4046e7caeb588ddd"
-   },
-   "verification": "verify_fig2a_from_artifacts.py (panels a+b from per-seed artifacts: v7_oracle_result.json, hindsight_controls.json, curriculum_maxrl/results_baselines_regimes.json) + verify_fig2c_from_logs.py (panel c from raw maze seed logs); panel d transcribed with provenance"
-  },
-  "fig3_gsm8k": {
-   "script": "paper/figures/fig3_gsm8k.py",
-   "inputs": [
-    "paper/figures/data/fig3_gsm8k_data.json"
-   ],
-   "command": "python paper/figures/fig3_gsm8k.py",
-   "checksums": {
-    "paper/figures/data/fig3_gsm8k_data.json": "cf19fc758d2e7c56"
-   }
-  },
-  "fig4_algorithm": {
-   "script": "paper/figures/fig4_algorithm.py",
-   "inputs": [],
-   "command": "python paper/figures/fig4_algorithm.py",
-   "checksums": {}
-  },
-  "fig5_channels": {
-   "script": "paper/figures/fig5_channels.py",
-   "inputs": [],
-   "command": "python paper/figures/fig5_channels.py",
-   "checksums": {}
-  },
-  "fig6_gym": {
-   "script": "paper/figures/fig6_gym.py",
-   "inputs": [
-    "frontier_rl/examples/gym_convergence.json",
-    "frontier_rl/examples/gym_performance.json",
-    "frontier_rl/examples/gym_performance_3x.json"
-   ],
-   "command": "python paper/figures/fig6_gym.py",
-   "checksums": {
-    "frontier_rl/examples/gym_convergence.json": "5662f83722888827",
-    "frontier_rl/examples/gym_performance.json": "a4a73dd1892163e9",
-    "frontier_rl/examples/gym_performance_3x.json": "5c8e57e1565ae70c"
-   },
-   "notes": "inputs added 2026-08-05 (draft-review artifact gap: manifest previously listed no input for the empirical Gym figure)"
-  },
-  "fig7_sharpening": {
-   "script": "paper/figures/fig7_sharpening.py",
-   "inputs": [
-    "paper/figures/data/b_scoreboard_3seed.json",
-    "paper/figures/data/b_cells_dynamics.json",
-    "paper/figures/data/b_strong_gate_1seed.json",
-    "paper/figures/data/armA_designed_gate_3seed.json"
-   ],
-   "command": "python paper/figures/fig7_sharpening.py",
-   "checksums": {
-    "paper/figures/data/b_scoreboard_3seed.json": "f5c41f561f120d02",
-    "paper/figures/data/b_cells_dynamics.json": "e131d9c29e7296fa",
-    "paper/figures/data/b_strong_gate_1seed.json": "fec7993338cadb25",
-    "paper/figures/data/armA_designed_gate_3seed.json": "48b738edd4e527e9"
-   },
-   "notes": "armA_designed_gate_3seed.json added 2026-08-06: P-R1 refuted, panel (a) redrawn as operating-point scatter per committed branch"
-  },
-  "fig8_bands": {
-   "script": "paper/figures/fig8_bands.py",
-   "inputs": [
-    "paper/figures/data/fig8_run_manifest.json"
-   ],
-   "notes": "run cohort frozen in the manifest; raw runs in curriculum_maxrl/maze_gpu/ per manifest entries",
-   "command": "python paper/figures/fig8_bands.py",
-   "checksums": {
-    "paper/figures/data/fig8_run_manifest.json": "84f366c208086b87"
-   }
-  },
-  "fig9_ksweep": {
-   "script": "paper/figures/fig9_ksweep.py",
-   "inputs": [
-    "paper/figures/data/ksweep_results.json"
-   ],
-   "command": "python paper/figures/fig9_ksweep.py",
-   "checksums": {
-    "paper/figures/data/ksweep_results.json": "3e0bd4accd4c1b6e"
-   }
-  },
-  "fig9_passk": {
-   "script": "paper/figures/fig9_passk.py",
-   "inputs": [
-    "paper/figures/data/fig9_bestk_proxy.json"
-   ],
-   "command": "python paper/figures/fig9_passk.py",
-   "checksums": {
-    "paper/figures/data/fig9_bestk_proxy.json": "fd32d790031648ab"
-   },
-   "notes": "Single-seed, step-60 VERL bootstrap best@k proxy; with-replacement resampling, not standard unbiased pass@k. Points and session provenance moved from hard-coded script arrays into the declared input."
-  },
-  "fig10_jugs_entropy": {
-   "script": "paper/figures/fig10_jugs_entropy.py",
-   "inputs": [
-    "jugs_llm/results/entropy_trajectories.json"
-   ],
-   "command": "python paper/figures/fig10_jugs_entropy.py",
-   "checksums": {
-    "jugs_llm/results/entropy_trajectories.json": "aaa5736f96ec4dbd"
-   },
-   "notes": "appendix Jugs pool-conditionality figure, added 2026-08-06 (gap-tracker S4)"
-  },
-  "fig11_factorial_blocks": {
-   "script": "paper/figures/fig11_factorial_blocks.py",
-   "inputs": [
-    "curriculum_maxrl/maze_gpu_factorial/block_reanalysis.json"
-   ],
-   "command": "python paper/figures/fig11_factorial_blocks.py",
-   "checksums": {
-    "curriculum_maxrl/maze_gpu_factorial/block_reanalysis.json": "42b8fcb886b140dc"
-   },
-   "notes": "independent-unit repair: sampler contrasts are repeated observations within each seed/warmstart block; intervals and cross-wave counts use one sampler-averaged value per block"
-  }
- }
+  "external_boundaries": [
+    "The historical fig2 panel-c raw maze logs are not in this repository. The compact paper no longer includes fig2_ladder; portable verification therefore does not reach outside the clone.",
+    "Maze checkpoint trajectories, the Digits 5.08 GB replay payload, and the 1.375 GB paid-probe raw remain external as disclosed in Appendix D."
+  ]
 }

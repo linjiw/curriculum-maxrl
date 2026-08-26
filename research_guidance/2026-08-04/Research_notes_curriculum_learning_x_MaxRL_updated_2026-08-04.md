@@ -44,7 +44,7 @@ That version is both stronger mathematically and more defensible empirically.
 
 ## P0.1 — Anonymize the paper and artifacts
 
-Page 1 says “Anonymous authors” while linking directly to `github.com/linjiw/curriculum-maxrl`. This reveals the author identity immediately. Before anonymous submission:
+Page 1 says “Anonymous authors” while linking directly to an author-owned repository. This reveals the author identity immediately. Before anonymous submission:
 
 - replace the repository with an anonymous artifact link;
 - scrub usernames from paths, commit metadata, issue links, and generated JSON;

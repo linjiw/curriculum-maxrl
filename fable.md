@@ -407,3 +407,33 @@ is `ued_benchmark/AMAZE_GATE_ANALYSIS.json`; the calibrated memo is
 The next red items are now the P0-independent manuscript and artifact queue in
 §7: algorithm box, Digits relocation, relabel lemma, R4 sentence, DOI,
 manifest/reproduction repair, and anonymous-clone build.
+
+---
+
+## 10. Update 2026-08-26 (manuscript and artifact repair)
+
+The main-text algorithm box now states the four sufficient statistics,
+estimator-specific count-law score, sampling floor, and categorical sampler.
+Digits is an appendix boundary rather than a replication; the scoped relabel
+degeneracy lemma and proof cover the deployed centered MaxRL/RLOO/GRPO
+coefficients; and the horizon paragraph now separates one-update activity from
+the exact transfer-matrix utility that compounds over updates. The secondary
+axis metrics moved to the appendix to pay the page cost.
+
+Related work now records both SFL identities: fixed-$N$ realized SFL is RLOO
+coefficient mass times $(N-1)/(2N)$, while its shipped variable-$n$ correction
+leaves a level-dependent $(n-1)/(n+1)$ factor. SPEED-RL is cited for its
+theoretical/SNR framing only because its current arXiv record flags unresolved
+experimental bugs.
+
+The compact manifest has been rebuilt around exactly the seven figures included
+by `body_iclr.tex`. `reproduce.sh` no longer reads `../maxrl`: portable mode
+validates fresh renders, while exact mode retains byte locks for the figure and
+Tectonic environments. Portable and exact checks now pass end to end, including
+both PDFs, after relocking the stale Tectonic cache member count to the actual
+checksum-bound 386-file bundle.
+
+`paper/PROVENANCE_DEPOSIT.json` now binds the compact manifest, Acrobot lock,
+and Digits descriptor by full SHA-256. It correctly records `doi: null`: only
+the PI can choose the archive/license and publish the checksum-matched payload,
+and no placeholder identifier is cited during double-blind review.

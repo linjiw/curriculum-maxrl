@@ -363,5 +363,4 @@ and flow-policy VLAs.
 
 ---
 
-*Repo: https://github.com/linjiw/curriculum-maxrl · Site:
-https://linjiw.github.io/curriculum-maxrl/ · Base: MaxRL (arXiv:2602.02710)*
+*Anonymous artifact snapshot · Base: MaxRL (arXiv:2602.02710)*

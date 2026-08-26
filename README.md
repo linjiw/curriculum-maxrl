@@ -154,6 +154,33 @@ Full LLM-experiment roadmap with novelty checks and differentiation map:
 | `curriculum_maxrl/maze_gpu/` | GPU testbed: 1.26M-param transformer on 17×17 mazes, goal-distance curriculum (13 levels), pass@k eval, matched wall-clock sweep protocol + logs |
 | `verl_integration/` | Production integration for the MaxRL verl fork: `curriculum.py` (drop-in module), patches for `main_ppo.py` / `ray_trainer.py`, SmolLM+GSM8K launch script |
 
+## Reproduce the compact artifact
+
+The default path is portable: it verifies the declared inputs, runs the core
+tests and stored endpoint checks, regenerates every compact-paper figure in an
+isolated directory, and validates fresh renders without requiring byte-identical
+Matplotlib output.
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r paper/requirements-figures.lock pytest torch
+PYTHON=.venv/bin/python PAPER_FIGURE_PYTHON=.venv/bin/python bash reproduce.sh
+```
+
+Add `--build` and provide Tectonic to rebuild and publish the compact and
+extended PDFs. `REPRO_MODE=exact` additionally enforces the pinned Python,
+package/font, Tectonic executable/cache, figure-byte, PDF-byte, and log-byte
+contracts recorded in `reproduce.sh`; it is intended for the locked release
+environment. The compact manifest deliberately excludes superseded extended
+figures and never reads outside the clone. Its disclosed external boundaries
+are the historical maze logs/checkpoints, the Digits replay payload, and the
+paid-probe raw payload.
+
+The deposit-ready provenance inventory is
+[`paper/PROVENANCE_DEPOSIT.json`](paper/PROVENANCE_DEPOSIT.json). Its DOI is
+intentionally null until the PI publishes the exact checksum-matched payload;
+the repository does not fabricate or pre-cite an unminted identifier.
+
 ## Quick start (CPU, numpy only)
 
 ```bash
@@ -218,4 +245,7 @@ group size, SFL's realized `(k/N)(1-k/N)` score is exactly
 `M_RLOO(k)(N-1)/(2N)`: SFL is already a realized count-law curriculum for RLOO,
 not a heuristic this work replaces. The remaining distinction is
 estimator-specific mass shape, coarse-unit pooling bias, variable-`N`
-semantics, and scoring cost.
+semantics, and scoring cost. Concretely, when SFL's sampled count `n` varies,
+its shipped `n/(n+1)` correction combines with
+`E[p̂(1−p̂)]=p(1−p)(n−1)/n`, leaving a level-dependent
+`(n−1)/(n+1)` factor.

@@ -257,6 +257,17 @@ succeeds. Both dead zones follow --- an all-fail task supplies no positive
 contrast, an all-success task no negative contrast --- as does why $N$ belongs
 in the curriculum's definition rather than its implementation.
 
+\begin{lemma}[Per-member relabeling is coefficient-degenerate]
+\label{lem:relabel}
+For the centered MaxRL, RLOO and GRPO estimators in Def.~\ref{def:geom},
+relabeling every member of an all-fail group to its own achieved goal changes
+$K=0$ to $K'=N$ but leaves realized coefficient activity exactly zero.
+\end{lemma}
+\noindent
+Thus hindsight creates a live contrast only if one goal is applied consistently
+across the group and yields $1\le K'<N$; this is necessary for activity, not
+evidence of learning utility. The two-line proof is in App.~\ref{app:proofs}.
+
 \begin{corollary}[Activity is reweighted learnability]
 \label{cor:factor}
 Write MaxRL's population gradient as $\nabla J_T=\mathbb E_x[w_T(p)\nabla p]$
@@ -307,22 +318,6 @@ globally.
 
 
 
-\paragraph{Across estimators.}
-The three masses differ in shape, zeros and tails rather than in a scale a
-learning rate could absorb: as $p\to0$ MaxRL carries $(N-1)$ times RLOO's, and
-sample-SD GRPO keeps relatively more on near-mastered prompts
-(Fig.~\ref{fig:regimes}B).
-
-\paragraph{Exact-probability counter-test.}
-The stronger test does not generalize the sampler mapping. A fresh 24-block
-Digits contextual bandit, computing each example's exact correct-class
-probability before every update, leaves its frozen estimator-by-sampler
-interaction unsupported ($+.016$, CI $[-.017,+.047]$, $p=.350$; 15/24): MaxRL
-favors $u_8$ over $p(1-p)$ by $+.208$ (23/24), but so does RLOO ($+.177$,
-24/24), reversing its prediction, and both matched samplers fall below uniform
---- the largest shape effect here and its sharpest negative in one study, under
-an internally hashed lock with no public pre-execution commit.
-
 \paragraph{Instantiation.}
 \label{sec:method}
 FrontierMax operationalizes the geometry without changing the within-group
@@ -340,17 +335,33 @@ tested fixed-pool teacher and an untested replay overlay;
 Table~\ref{tab:instantiations} in App.~\ref{app:algs} attaches a status to each
 object separately.
 
+\begin{algorithm}[t]
+\caption{Count-law curriculum step (fixed group size $N$)}
+\label{alg:countlaw}
+\begin{algorithmic}[1]
+\REQUIRE estimator $\mathcal E$, units $\mathcal Z$, decay $d$, floor $\epsilon$, concentration $\gamma$
+\STATE Write $X_z=(W_z,Z_z,S_z,S_{2,z})$ and initialize $X_z\leftarrow X_0$ from an i.i.d.-Binomial prior
+\STATE Retain the full count-bin posterior only for GRPO
+\STATE On observing count $k$: $X_z\leftarrow X_0+d(X_z-X_0)+(1,\mathbf1\{k=0\},k,k^2)$
+\STATE MaxRL: $a_z\leftarrow2(1-Z_z/W_z-S_z/(NW_z))$
+\STATE RLOO: $a_z\leftarrow2(NS_z-S_{2,z})/[W_zN(N-1)]$
+\STATE GRPO: $a_z\leftarrow\sum_k\widehat P_z(K=k)M_{\mathcal E}(k)$
+\STATE $v_z\leftarrow\max(a_z,0)^\gamma$; use uniform weights if $\sum_jv_j=0$
+\STATE $q(z)\leftarrow\epsilon/|\mathcal Z|+(1-\epsilon)v_z/\sum_jv_j$; sample $z\sim q$
+\end{algorithmic}
+\end{algorithm}
+
 \section{Evidence}
 \label{sec:evidence}
 
 Corollary~\ref{cor:gran} organizes what follows, and the organizing variable
 is not scale. The $p$-only reduction is exact when the curriculum's scored unit
-is the unit over which rollouts are i.i.d., and lossy otherwise. Three studies
-satisfy that condition --- the CPU chain scores a task with exact gradients,
-Acrobot scores a threshold predicate whose every rollout resets from a fresh
-seed, Digits scores one example whose exact class probability is recomputed
-each update --- and in all three the deployed-$N$ shape beats $p(1-p)$.
-MAZE-SCORE is the one study that violates it, drawing a single maze per group
+is the unit over which rollouts are i.i.d., and lossy otherwise. The CPU chain
+and Acrobot satisfy that condition, and the deployed-$N$ shape beats $p(1-p)$
+in both. An exact-probability Digits factorial is instead a boundary: its
+estimator-by-sampler interaction is unsupported and both matched samplers fall
+below uniform (App.~\ref{app:protocols}); it is not a replication. MAZE-SCORE
+violates the unit condition, drawing a single maze per group
 while the posterior pools over a level's many mazes, and it is the one study
 where the shape loses. We read this \emph{post hoc}, across studies not
 designed to test it. P0 then varied only the plug-in versus count-law
@@ -437,17 +448,12 @@ far better than $p(1-p)$ ($+.106$, 10 seeds, exact $p=.002$), while under RLOO
 --- whose mass \emph{is} $2p(1-p)$ --- the two are indistinguishable
 ($+.0001$). But $U_H$ peaks near $p\approx.02$, below both $p^\star_{16}$ and
 $p^\star_{64}$: activity ranks utility well and \emph{locates} it poorly.
+The mechanism is horizon: activity is a one-update coefficient envelope,
+whereas exact transfer-matrix utility compounds state changes over $H$ updates
+and can favor harder tasks (App.~\ref{app:protocols}).
 Local activity and downstream benefit are also reported to diverge across
 domains under GRPO \citep{tac}. Mechanism on 36 synthetic tasks, not evidence
 for a sampler.
-
-The contrast stays descriptively positive on sampled-group ($+.05294$) and
-optimizer-update ($+.05366$) axes, and $u_{16}$ receives 2.40 fewer groups and
-3.42 fewer updates per million transitions, so it did not win by receiving
-more updates; these non-confirmatory axes identify no causal mechanism.
-Native-success transition-AUC is $.31085$, $.30521$, $.37615$ across arms.
-App.~\ref{app:protocols} reports the near-equal observed mass means and the
-audited but RNG-confounded precursor.
 
 \subsection{Where the score is starved: activity as a PLR priority on AMaze}
 \label{sec:amaze}
@@ -567,8 +573,10 @@ Closed-form magnitudes for the standard-deviation-normalized branch peak at
 $p=.5$ independent of $N$ \citep{groupstd,actorcurator}; practical-MaxRL mass
 instead peaks as $\ln N/N$. LZE's LLM-scale study derives approximate
 $p(1-p)G/n$ GRPO gradient variance under atomic i.i.d., fixed-baseline and
-homogeneous-score assumptions, then adds history and momentum \citep{lze}; we
-derive exact coefficient activity under a count law, not gradient variance.
+homogeneous-score assumptions \citep{lze}; SPEED-RL motivates intermediate
+difficulty through estimator SNR, but its current arXiv record flags unresolved
+experimental bugs, so we cite its theoretical framing only \citep{speedrl}.
+We derive exact coefficient activity under a count law, not either quantity.
 F-GRPO treats rare correct modes omitted within a group by changing its
 weighting \citep{fgrpo}; we change task selection and expose coarse pooling.
 MoPPS establishes streaming Beta/Thompson selection \citep{mopps}; posterior
@@ -581,10 +589,11 @@ LILO \citep{lilo} prioritizes binary reward variance. More tightly, SFL's
 realized score $(k/N)(1-k/N)$ \citep{sfl} is exactly
 $M_{\mathrm{RLOO}}(k)(N-1)/(2N)$ at fixed $N$: our framework recovers SFL as
 the count-law curriculum for RLOO rather than replacing it as a heuristic.
-The surviving distinction is estimator-specific geometry (MaxRL peaks at
-$k=1$, RLOO/SFL at the middle), bias from pooling a nonlinear score over a
-coarse unit, variable-$N$ semantics (the fixed-$N$ rescaling then varies), and
-scoring cost. For practical MaxRL, $u_N=A_N/2$ is its
+When the sampled count $n$ varies, SFL's $n/(n+1)$ correction compounds
+$\mathbb E[\hat p(1-\hat p)]=p(1-p)(n-1)/n$, leaving a level-dependent
+$(n-1)/(n+1)$ factor. The surviving distinction is estimator-specific geometry
+(MaxRL peaks at $k=1$, RLOO/SFL at the middle), coarse-unit pooling, variable
+group size, and scoring cost. For practical MaxRL, $u_N=A_N/2$ is its
 arbitrary-$N$ expected half-mass. VCRL \citep{vcrl} thresholds realized group variance; PLR \citep{plr} and
 ALP-GMM \citep{alpgmm} use TD error, staleness or learning progress and so
 react to forgetting where instantaneous mass cannot --- our AMaze arm is robust
@@ -604,51 +613,26 @@ metric gain; its $T=N$ alignment retains $K=0$ via the direct estimator or a
 score-baseline control variate, while our $T=N-1$ statement is for the deployed
 hybrid that centers only when $K>0$.
 
-\paragraph{Coverage measurement.}
-RLVR can improve pass@1 while reducing high-$k$ coverage
-\citep{yue,yuan,passkinv}; entropy collapse is complementary evidence
-\citep{cui} and pass@$k$ objectives address the metric directly \citep{passk}.
-We ask whether an external curriculum changes that coverage under two
-estimators. Relabeling and subproblem decomposition \citep{scrl} sit outside
-the allocation ceiling of Fig.~\ref{fig:regimes}A: at $A_N=0$ no priority rule
-helps, and only creation adds signal.
-
-
-
 \section{Limitations}
 \label{sec:limits}
 
 Coefficient mass ignores score-gradient direction, parameter sharing,
-optimizer state, task transfer, and non-i.i.d.\ rollouts: it is a
-sampler-facing surrogate, not a learning guarantee. The $N$-sweep is
-post-guidance on one co-designed synthetic chain; Digits is a contextual
-bandit. Acrobot uses one fixed eight-threshold family, a 640-parameter learner,
-no held-out task distribution or native named-method implementation, and 20
-historically inherited rather than prospectively powered seeds; its exact test
-assumes sign exchangeability. The maze factorial uses one small transformer,
-one family and common learning rates; its easy-band mechanism is descriptive.
-The four families froze $\alpha=.05$ primaries separately, so no paper-level
-error rate is claimed; retained evaluations omit per-episode trajectories.
+optimizer state, transfer and non-i.i.d.\ rollouts: it is not a learning
+guarantee. The $N$-sweep is co-designed, Digits is a contextual bandit,
+Acrobot is one 640-parameter fixed pool with inherited seeds, and the maze
+factorial uses one small transformer and family. Separate $\alpha=.05$
+primaries imply no paper-wide error rate.
 
-MAZE-SCORE bounds one task family, architecture, $N$ and budget; because it
-also changes capacity, approximation, heterogeneity and granularity, it does
-not isolate scale. The post-hoc diagnosis exactly accounts for coefficient-mass
-calibration, not sole endpoint mediation, and its windows mix heterogeneity
-with learner nonstationarity. P0 isolates the score functional and confirms a
-$+.00666$ gain on the same task family and budget, but does not establish
-transfer, compare either arm with $p(1-p)$, or show that the correction alone
-mediates the earlier contrast. The PLR study is a development negative,
-not evidence of superiority to PLR, robust PLR, ACCEL or another
-\texttt{minimax} baseline. No robotics performance is reported; paid-probe,
-recycling, Countdown, gate and transfer records remain secondary
-(App.~\ref{app:protocols}).
+MAZE-SCORE bounds one family, architecture, $N$ and budget and does not isolate
+scale; its post-hoc diagnosis prices calibration, not endpoint mediation. P0
+isolates the score and confirms $+.00666$ there, but establishes neither
+transfer nor superiority of either arm to $p(1-p)$. The PLR study is a
+development negative, not named-baseline superiority; robotics and other
+secondary records remain in App.~\ref{app:protocols}.
 
-Registration timing remains a gap: the internally hashed Digits and Acrobot
-locks lack immutable public pre-execution commits, and the external maze
-wave-2 record has no vendored locking commit. Maze checkpoint trajectories
-remain external and the Digits replay payload has no download URI;
-App.~\ref{app:artifact} itemizes these gaps and the 55-row compact registry.
-They limit auditing and preclude a broad neural claim.
+Registration timing and raw-data availability remain incomplete for Digits,
+Acrobot and the maze records. App.~\ref{app:artifact} itemizes each gap and the
+55-row compact registry; they limit auditing and preclude a broad neural claim.
 
 \section{Conclusion}
 
@@ -676,7 +660,9 @@ records and receipt manifests remain documented in the appendix. Registration
 timing objects that remain external are disclosed rather than treated as
 locally auditable.
 The independent unit is stated for every central result; known raw-data gaps
-and secondary-study provenance are disclosed in App.~\ref{app:artifact}.
+and secondary-study provenance are disclosed in App.~\ref{app:artifact}. A
+deposit-ready checksum inventory binds the compact manifest, Acrobot lock and
+Digits descriptor; no DOI is claimed before that exact payload is deposited.
 
 \section*{AI use statement}
 AI assistants supported planning, implementation, debugging, literature
@@ -794,6 +780,9 @@ online predicted for accelerating RL finetuning of reasoning models?
 \emph{KDD}, 2026. arXiv:2507.04632.
 \bibitem[Cui(2026)]{lze} Cui, P. Learning-zone energy: online data
 selection for efficient RL post-training. arXiv:2605.17003, 2026.
+\bibitem[Zhang et al.(2025)]{speedrl} Zhang, R., Arora, D., Mei, S.,
+Zanette, A. SPEED-RL: faster training of reasoning models via online
+curriculum learning. arXiv:2506.09016, 2025.
 \bibitem[Plyusov et al.(2026)]{fgrpo} Plyusov, D., Gorbatovski, A., et al.
 F-GRPO: Don't let your policy learn the obvious and forget the rare.
 arXiv:2602.06717, 2026.
@@ -858,6 +847,13 @@ A_N(p)
 \]
 The peak follows from $u_N'(p)=N(1-p)^{N-1}-1$ and strict concavity for
 $N>1$.
+
+\paragraph{Per-member relabeling.}
+For each mass in Def.~\ref{def:geom}, direct substitution gives
+$M_{\mathcal E}(0)=M_{\mathcal E}(N)=0$. Per-member achieved-goal relabeling
+makes every member successful under its own goal and hence maps $K=0$ to
+$K'=N$, proving Lemma~\ref{lem:relabel}. A common group goal can instead yield
+$1\le K'<N$ and positive mass, but that algebra alone implies no utility.
 
 \paragraph{Posterior-integrated activity.}
 For $p\sim\operatorname{Beta}(a,b)$,
@@ -1053,6 +1049,12 @@ Every cell runs exactly 51,200 completions, with arms for uniform,
 $p(1-p)$, and $u_N$ sampling under the practical MaxRL estimator, no
 hindsight, and eight paired seeds. Checkpoints share a completion clock. The
 post-guidance analysis is descriptive.
+
+On the sampled-group and optimizer-update clocks, the $u_{16}-p(1-p)$
+contrasts remain descriptively positive ($+.05294$ and $+.05366$). The
+$u_{16}$ arm receives 2.40 fewer groups and 3.42 fewer updates per million
+transitions, while native-success transition-AUC is $.31085$, $.30521$ and
+$.37615$ across arms. These secondary axes identify no causal mechanism.
 
 \paragraph{Digits factorial (internally frozen negative).}
 On a stored 1,077/360/360 train/development/test split of
@@ -1270,4 +1272,7 @@ outcomes, and B1/B2 seed 3, so the clean 101-task tier-0 analysis cannot be
 reconstructed; the 1.375 GB paid-probe confirmatory raw (its
 content hash and per-run receipt manifest ship); and the Digits 5.08 GB replay payload (block
 contrasts and a content manifest ship). Compact inputs and checksums are in
-\texttt{paper/results/manifest.json} and fail closed.
+\texttt{paper/results/manifest.json} and fail closed. The deposit payload and
+its full SHA-256 digests are enumerated in
+\texttt{paper/PROVENANCE\_DEPOSIT.json}; its DOI remains unset pending the
+PI-controlled archival deposit, so this manuscript cites no placeholder.
