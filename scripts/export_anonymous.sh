@@ -130,7 +130,7 @@ import re
 root = Path(os.environ["SNAPSHOT"])
 
 host_path = re.compile(
-    r"/(?:Users|home|data|scratch)/[^/\s\"'`]+"
+    r"(?<![A-Za-z0-9_.-])/(?:Users|home|data|scratch)/[^/\s\"'`]+"
     r"(?:/[^\s\"'`\)\],;]*)*"
 )
 author_repo = re.compile(
@@ -259,7 +259,9 @@ import subprocess
 root = Path(os.environ["SNAPSHOT"])
 
 forbidden = {
-    "personal absolute path": re.compile(rb"/(?:Users|home|data|scratch)/[^/\s]+/"),
+    "personal absolute path": re.compile(
+        rb"(?<![A-Za-z0-9_.-])/(?:Users|home|data|scratch)/[^/\s]+/"
+    ),
     "author-owned GitHub repository": re.compile(
         rb"https?://(?:www\.)?github\.com/[^/\s]+/curriculum-maxrl",
         re.IGNORECASE,
