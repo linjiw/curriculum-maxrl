@@ -1,0 +1,28 @@
+# Explicit paths exported for double-blind review. Directories mean all files
+# tracked under that prefix at the source commit. Working-memory, scheduler,
+# raw-log, autoresearch, ICRA, and Git-history records are intentionally absent.
+README.md
+reproduce.sh
+GUIDANCE_RECONCILIATION_2026-08-19.md
+LITERATURE_POSITIONING.md
+EVIDENCE.md
+GUIDE.md
+paper
+docs/index.html
+docs/paper-iclr.pdf
+control_port
+curriculum_maxrl
+frontier_rl
+acrobot_u64
+granularity_flip
+hopper/MAZE_SCORE_ANALYSIS.json
+hopper/MAZE_SCORE_CALIBRATION.json
+hopper/MAZE_SCORE_GROUPLAW_AUDIT.json
+hopper/MAZE_SCORE_PREREG.md
+hopper/MAZE_SCORE_RESULT_2026-08-18.md
+hopper/requirements-maze-hopper.lock
+ued_benchmark/AMAZE_GATE_ANALYSIS.json
+ued_benchmark/AMAZE_GATE_CLOSURE_2026-08-26.md
+ued_benchmark/AMAZE_GATE_PREREG.md
+ued_benchmark/AMAZE_GATE_RESULT_2026-08-26.md
+ued_benchmark/scripts/analyze_gate_confirmatory.py
