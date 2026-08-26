@@ -5,14 +5,15 @@
 **Historical runbook snapshot below:** 2026-08-14 13:10 EDT
 
 The frozen count-law-flip campaign
-`group-law-flip-v1-20260820-001` is terminal and remains sealed. A marker-only
-check observed 48/48 final blocks, 48/48 `COMPLETE` files, 48/48 block
+`group-law-flip-v1-20260820-001` closed on 2026-08-26. Before unblinding, the
+gate verified 48/48 final blocks, 48/48 `COMPLETE` files, 48/48 block
 manifests, 96/96 arm receipts, zero invalid final blocks, zero incomplete
-quarantines, and no live campaign jobs. The canonical local retrieval and
-single-use analysis have not run, so this is scheduler/completion metadata,
-not intervention evidence. Do not open logs, result JSONL, telemetry, or
-endpoint summaries outside the frozen closure. Recheck without editing this
-snapshot via:
+quarantines, and no live campaign jobs. All remote block hashes and the local
+2×48 structural validation passed; the frozen analyzer was run once. The
+preregistered verdict is **supported**: `grouplaw - plugin` cov-AUC is
+`+.00666`, 95% CI `[+.00441,+.00887]`, exact paired `p=9.56e-7`, 40/48
+positive blocks, with delivered visit TV `.33597`. See
+`granularity_flip/GROUP_LAW_FLIP_RESULT_2026-08-26.md`.
 
 ```bash
 ./hopper/hopper.sh status 9419991
@@ -22,7 +23,8 @@ snapshot via:
   /scratch/lwang44/maxrl/group_law_flip/campaigns/group-law-flip-v1-20260820-001/incomplete/attempt-001
 ```
 
-Before the authorized single-use closure, run the non-mutating full gate:
+The following command is now a historical preflight record; the single-use
+claim prevents another analysis:
 
 ```bash
 ./hopper/close_group_law_flip.sh --preflight-only

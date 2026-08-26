@@ -64,11 +64,10 @@ is already where it sits.
 
 As of this week the perimeter is self-contained without the LLM rung: a proved
 group-law identity with its granularity corollary, a registered positive
-replicated three times, three registered boundaries, and a registered creation
-channel with a validated gate. The one open question inside the perimeter —
-whether scoring the estimator's own unit recovers the granularity loss — is
-preregistered, terminal, and still sealed pending its single-use analysis. A
-paper that claims less and demonstrates all of it
+reproduced on three platforms using one seed cohort, three registered
+boundaries, and a preregistered MAZE-SCORE intervention confirming that the
+count-law correction is causally relevant on that substrate. A paper that
+claims less and demonstrates all of it
 outscores one gesturing at LLM scale through gated-out runs.
 
 ## Recommendation to the PI, due 2026-08-26

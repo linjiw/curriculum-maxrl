@@ -32,10 +32,11 @@ water-filling on the marginal `p(1−p)^N`.
 ## Where the claim stands (read this before the ladder)
 
 Activity says where an update is *available*. It does not say where training has the most
-value. Four preregistered results draw that line:
+value. Five preregistered results draw that line:
 
 - **The shape helps.** In a fixed Acrobot pool at deployed N=16, `u_16` beats `p(1−p)` by
-  +.0480 (95% CI [+.0209, +.0738]), replicated on two further platforms (+.0322, +.0307).
+  +.0480 (95% CI [+.0209, +.0738]), reproduced on two further platforms using
+  the same seeds (+.0322, +.0307).
 - **The peak location does not.** Holding the estimator at N=16 and sweeping only the score
   exponent, performance keeps rising *past* N=16 (argmax at `u_64`). The harder-peaked
   shape is what helps — not the derived peak.
@@ -49,6 +50,14 @@ value. Four preregistered results draw that line:
   practically ruled out at the registered +.005 SESOI. Both adaptive samplers
   still beat uniform (`u_32` − uniform = +.0089), so curriculum sampling
   helps; what fails is the claim that the rollout-aware shape is the better one.
+- **The count-law correction matters on that substrate.** Holding the
+  estimator, N, warmstart, generator, budget, posterior, decay, floor, and 48
+  paired seeds fixed, replacing the i.i.d.-at-the-mean plug-in by realized
+  count-law activity improves cov-AUC by +.00666 (95% CI
+  [+.00441,+.00887], exact paired p=9.56e-7, 40/48 positive blocks). Visit TV
+  was .33597, so the treatment-delivery gate passed. This confirms causal
+  relevance there; it does not say the corollary predicted the learning sign
+  or that either arm beats `p(1−p)`.
 
 **Why, and it is a theorem rather than a diagnosis.** Realized group mass is
 the deterministic `M(K) = 2(1 − K/N)·1{K>0}`, so for **any** joint binary
@@ -91,13 +100,12 @@ consumed:
 | Digits | one example, exact class probability | yes | +.208, +.177 |
 | **MAZE-SCORE** | **level** — one maze per group, posterior pools over the level | **no** | **−.0032** |
 
-Read *post hoc*, across studies not designed to test it. The prospective P0 test
-holds the substrate, estimator, budget, seeds, and four-moment count-law posterior
-fixed and varies *only* the score functional: the i.i.d.-at-the-mean plug-in versus
-realized MaxRL count-law activity. Its 48 paired blocks (seeds 3001--3048) were
-frozen before launch and are terminal but still sealed; retrieval, hash
-validation, and the single-use analysis remain pending, so no endpoint is
-claimed here.
+Read *post hoc*, across studies not designed to test it. That pattern motivated
+P0 but did not determine its verdict. The frozen P0 intervention then held the
+substrate, estimator, budget, seeds, and four-moment count-law posterior fixed
+and varied *only* the score functional. Its supported result establishes causal
+relevance of the correction on this substrate, not retrospective prediction by
+the corollary.
 
 So: coefficient activity is an estimator-conditioned *source of curriculum
 hypotheses*, not a universal measure of learning utility — and a mean pass

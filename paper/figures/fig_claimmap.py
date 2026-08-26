@@ -6,15 +6,16 @@ Panel A  the identity  u_N(p) = p(1-p) * w_{N-1}(p):  the canonical
          the truncation the deployed estimator targets (Lemma 1, Cor. 1).
          The peak trajectory p*_N = 1 - N^{-1/(N-1)} moves toward harder
          tasks as the rollout budget grows.
-Panel B  what survives: every frozen and supporting shape contrast,
+Panel A  what survives: every frozen and supporting shape contrast,
          u_N vs its N=2 slice p(1-p), in native effect units.
-Panel C  where it stops: the two preregistered boundaries.
+Panel B  three boundaries and the preregistered coarse-unit correction.
 
 Every number is transcribed from body_iclr.tex and traceable to a study
-section; see CLAIM_TRACE_ICLR.md.  Panels B and C share the convention that
+section; see CLAIM_TRACE_ICLR.md.  Panels A and B share the convention that
 a filled marker is a frozen confirmatory primary and an open marker is a
 supporting or development read.
 """
+import json
 import os
 
 import matplotlib
@@ -24,6 +25,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+P0_ANALYSIS = os.path.join(
+    HERE, "..", "..", "curriculum_maxrl", "group_law_flip",
+    "GROUP_LAW_FLIP_ANALYSIS.json")
+with open(P0_ANALYSIS, encoding="utf-8") as handle:
+    p0 = json.load(handle)["primary_grouplaw_minus_plugin"]
 
 BLUE = "#2a78d6"
 GREEN = "#008300"
@@ -80,35 +86,40 @@ axB.set_xlabel("effect vs $p(1{-}p)$")
 axB.set_title("A   shape supported: scored unit = task", loc="left",
               color=BLUE, pad=8)
 
-# ------------------------------------------------------------------ Panel C
+# ------------------------------------------------------------------ Panel B
 stop = [
-    (-0.0113, -0.0297, 0.0057, "$u_{16}-u_{64}$  (A)", "10/20", True),
-    (-0.0128, -0.0284, 0.0024, "$u_{16}-u_{64}$  (B)", "7/20", True),
-    (-0.128, None, None, "AMaze: replace MaxMC", "0/5", False),
-    (-0.039, None, None, "AMaze: gate MaxMC", "1/5", False),
-    (-0.00324, -0.00543, -0.00111, "MAZE-SCORE: unit = level", "15/48", True),
+    (-0.0113, -0.0297, 0.0057, "$u_{16}-u_{64}$  (A)", "10/20", True, RED, False),
+    (-0.0128, -0.0284, 0.0024, "$u_{16}-u_{64}$  (B)", "7/20", True, RED, False),
+    (-0.128, None, None, "AMaze: replace MaxMC", "0/5", False, RED, False),
+    (-0.039, None, None, "AMaze: gate MaxMC", "1/5", False, RED, False),
+    (-0.00324, -0.00543, -0.00111, "MAZE-SCORE: $u_{32}-p(1-p)$", "15/48", True, RED, False),
+    (p0["mean"], *p0["bootstrap_ci_95"], "P0: count law $-$ plug-in",
+     f'{p0["positive_pairs"]}/48', True, BLUE, True),
 ]
-ys = np.array([5.0, 4.3, 2.6, 1.9, 0.2])
-for y, (m, lo, hi, lab, sup, hasci) in zip(ys, stop):
+ys = np.array([5.7, 5.0, 3.3, 2.6, 0.9, 0.1])
+for y, (m, lo, hi, lab, sup, hasci, color, filled) in zip(ys, stop):
     if hasci:
-        axC.plot([lo, hi], [y, y], color=RED, lw=1.5, solid_capstyle="round")
-    axC.plot([m], [y], "o", ms=4.5, color=RED, mfc="white", mew=1.3, zorder=5)
+        axC.plot([lo, hi], [y, y], color=color, lw=1.5, solid_capstyle="round")
+    axC.plot([m], [y], "o", ms=5.5 if filled else 4.5, color=color,
+             mfc=color if filled else "white", mew=1.3, zorder=5)
     axC.text(0.070, y, sup, fontsize=6.8, color=GRAY, va="center", ha="right")
 axC.axvline(0, color="black", lw=0.8)
 axC.set_yticks(ys)
 axC.set_yticklabels([s[3] for s in stop], fontsize=7.3)
 axC.tick_params(axis="y", length=0)
-axC.set_ylim(-0.35, 6.15)
+axC.set_ylim(-0.55, 6.85)
 axC.set_xlim(-0.158, 0.074)
 axC.set_xticks([-0.12, -0.06, 0])
 axC.set_xlabel("effect")
-axC.set_title("B   where it stops", loc="left", color=RED, pad=8)
-axC.text(0.070, 5.75, "peak location rejected", fontsize=6.9, color=RED,
+axC.set_title("B   boundaries, then correction", loc="left", color=RED, pad=8)
+axC.text(0.070, 6.40, "peak location rejected", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
-axC.text(0.070, 3.35, "standalone signal rejected", fontsize=6.9, color=RED,
+axC.text(0.070, 4.10, "standalone signal rejected", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
-axC.text(0.070, 0.95, "coarse scored unit rejected", fontsize=6.9, color=RED,
+axC.text(0.070, 1.75, "coarse plug-in diagnosed", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
+axC.text(0.070, 0.50, "count-law correction confirmed", fontsize=6.9,
+         color=BLUE, ha="right", va="center", style="italic")
 
 fig.tight_layout(pad=0.4, w_pad=1.5)
 fig.savefig(os.path.join(HERE, "fig_claimmap.pdf"))

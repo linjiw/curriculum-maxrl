@@ -107,13 +107,14 @@ per-timestep critic there, and there is no reason to expect it to here.
 
 ## 6 · Scope call
 
-This is next-paper work. ICLR is T-37 days; the perimeter ends at the neural
-maze, the one open in-perimeter question (P0) is registered and running, and the
-charter's discipline is to stop expanding. Opening a robotics lane now would
-trade the paper's main asset — that everything inside the perimeter is
-demonstrated — for a gesture at a second domain.
+This is next-paper work. The abstract deadline is T-23 days and the paper
+deadline is T-30 days; the perimeter ends at the neural maze. P0 closed on
+2026-08-26 with its preregistered supported verdict, and the charter's
+discipline is still to stop expanding. Opening a robotics lane now would trade
+the paper's main asset — that everything inside the perimeter is demonstrated
+— for a gesture at a second domain.
 
 Sequenced instead: let the AMaze confirmatory close the gated-priority question
-under its frozen rule; run P0 to settle whether the count law moves learning at
-all; and only then port to control, where the parallel simulator makes the group
-structure the theory needs actually available.
+under its frozen rule; preserve P0's bounded causal claim; and only then port to
+control, where the parallel simulator makes the group structure the theory
+needs actually available.

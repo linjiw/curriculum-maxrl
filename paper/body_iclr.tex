@@ -13,16 +13,16 @@ law, and the familiar $2(\passat{N}-\passat{1})$ is only its
 conditionally-i.i.d.\ atomic slice, which factors as $p(1-p)\cdot w_{N-1}(p)$
 and recovers $p(1-p)$ at $N{=}2$. For a coarse unit, plugging in the mean pass
 rate over-predicts activity by exactly twice its excess all-fail probability.
-Empirically, where the scored unit is the estimator's own, the deployed-$N$
-shape beats $p(1-p)$ by $+.0480$ (95\% paired-bootstrap CI $[+.0209,+.0738]$)
-and reproduces on two further platforms using the same seeds. Three
-preregistered follow-ups then
-bound it: performance rises \emph{past} the deployed $N$, the score is starved
-as a standalone replay priority, and where the curriculum scores a level
-aggregating heterogeneous tasks the contrast reverses ($-.0032$, CI
-$[-.0054,-.0011]$), with the coefficient-activity calibration error accounted
-for to floating point. The estimator defines the coefficient map; the curriculum defines the
-unit over which that map is averaged, and these operations do not commute.
+In a preregistered 48-block neural-maze intervention, replacing that plug-in
+with the shared-posterior count-law functional improves cov-AUC by $+.00666$
+(95\% CI $[+.00441,+.00887]$), confirming causal relevance on that substrate.
+Where the scored unit is the estimator's own, the deployed-$N$ shape beats
+$p(1-p)$ by $+.0480$ and reproduces on two further platforms using the same
+seeds. Three preregistered follow-ups bound it: performance rises \emph{past}
+the deployed $N$, the score is starved as a standalone replay priority, and on
+a level aggregating heterogeneous tasks the original contrast reverses
+($-.0032$). The estimator defines the coefficient map; the curriculum defines
+the unit over which that map is averaged, and these operations do not commute.
 Coefficient activity is a principled, estimator-conditioned source of
 curriculum hypotheses, not a measure of learning utility.
 \end{abstract}
@@ -71,7 +71,8 @@ truncation at $T=N-1$. All checked as code contracts against the deployed
 estimators.
 \item \textbf{Registered and confirmed.} In a fixed Acrobot pool at deployed
 $N{=}16$, $u_{16}$ beats $p(1-p)$ by $+.048$ under a frozen rule and
-replicates on two further platforms (\S\ref{sec:acrobot}).
+reproduces on two further platforms using the same seeds
+(\S\ref{sec:acrobot}).
 \item \textbf{Registered boundaries, reported as first-class results.}
 Sweeping only the score exponent, performance rises \emph{past} the deployed
 $N$ --- the harder-peaked shape helps, its peak location does not
@@ -84,12 +85,13 @@ a sign consistent with Cor.~\ref{cor:gran}, which predicts the
 \emph{calibration} bias and not the endpoint (\S\ref{sec:mazescore}).
 Granularity,
 not scale, separates these studies.
-\item \textbf{Named as open.} Whether replacing the mean-pass-rate plug-in by
-the realized count-law functional recovers that loss is preregistered and
-terminal but still sealed pending the single-use analysis, not claimed here;
-the LLM-scale interaction and
-the Countdown mechanism remain open and are confined to
-App.~\ref{app:protocols}.
+\item \textbf{Preregistered correction, confirmed.} On the same MAZE-SCORE
+substrate, replacing the mean-pass-rate plug-in by the shared-posterior
+count-law functional improves cov-AUC by $+.00666$ (95\% CI
+$[+.00441,+.00887]$; \S\ref{sec:mazescore}). This establishes causal relevance
+of the correction there, not that Cor.~\ref{cor:gran} predicted the learning
+sign or that either arm beats $p(1-p)$. The LLM-scale interaction and Countdown
+mechanism remain open and appendix-only.
 \end{enumerate}
 Throughout, curricula are evaluated with the estimator they ship.
 \vspace{-2pt}
@@ -113,11 +115,12 @@ $0.00$. Exact, not simulated.}
 \emph{(A)} Every measured shape contrast against the $N{=}2$ slice, in studies
 whose scored unit \emph{is} the i.i.d.\ unit; paired-bootstrap 95\% intervals,
 positive-pair counts, filled marker for the one frozen primary.
-\emph{(B)} The three preregistered boundaries, the last being the one study
-scoring a strict aggregate (Cor.~\ref{cor:gran}). Rows there are different
+\emph{(B)} Three preregistered boundaries plus the preregistered count-law
+correction on the same coarse-unit substrate. Rows there are different
 endpoints on their own studies' scales, shown together only to mark direction
-and interval; AMaze entries are five-seed development means at one-sixth
-budget and carry no interval.}
+and interval; the filled blue marker is the correction's frozen primary.
+AMaze entries are five-seed development means at one-sixth budget and carry no
+interval.}
 \label{fig:claimmap}
 \end{figure}
 
@@ -350,12 +353,11 @@ each update --- and in all three the deployed-$N$ shape beats $p(1-p)$.
 MAZE-SCORE is the one study that violates it, drawing a single maze per group
 while the posterior pools over a level's many mazes, and it is the one study
 where the shape loses. We read this \emph{post hoc}, across studies not
-designed to test it. The preregistered intervention in \S\ref{sec:limits}
-now varies only the plug-in versus count-law functional. All 48 blocks are
-terminal but remain sealed pending the single-use analysis; no outcome from it
-enters this draft. Figure~\ref{fig:claimmap} states for each contrast what it is and
-is not: one frozen primary, concordant supporting measurements, three
-preregistered boundaries.
+designed to test it. P0 then varied only the plug-in versus count-law
+functional and confirmed a learning gain on the same coarse-unit substrate
+(\S\ref{sec:mazescore}). Figure~\ref{fig:claimmap} states for each contrast
+what it is and is not: frozen primaries, supporting measurements, three
+preregistered boundaries, and the prospective correction.
 
 
 
@@ -417,7 +419,8 @@ deployed $u_{16}$, and Spearman rank correlation $+.93$ between exponent and
 mean. \textbf{The curve rises past the deployed $N$: peak-location specificity
 is not supported at this operating point.}
 
-The same campaigns replicate the shape effect. Against $p(1-p)$, $u_{16}$ wins
+The same campaigns reproduce the shape effect on the shared seeds. Against
+$p(1-p)$, $u_{16}$ wins
 by $+.0322$ ($[+.0198,+.0449]$, exact $p=.000105$, 17/20) and $+.0307$
 ($[+.0166,+.0453]$, $p=.000507$, 16/20), versus $+.0480$ in V2 --- the first
 reproductions outside the machine that produced V2, both with a smaller
@@ -471,7 +474,7 @@ most of the gap ($.590$; $-.039$ to upstream, $1/5$) without clearing it. The AM
 GAE and never forms binary rollout groups, so the faithful mapping is outside
 this evidence.
 
-\subsection{A coarser task unit: the $p$-only score does not transfer}
+\subsection{A coarser task unit: mean pass rate is insufficient}
 \label{sec:mazescore}
 
 Every positive above is at 640 or 4{,}810 parameters with exact or
@@ -508,34 +511,34 @@ p\approx.11$ the binomial predicts $2.2\%$ silent groups and $51.2\%$ are
 silent (Fig.~\ref{fig:mazescore}). Clustered on the 48 seed blocks, $u_{32}$
 realizes $.580$ $[.570,.590]$ of its prediction against $.703$ $[.691,.715]$
 for $p(1-p)$ (paired $-.123$, 48/48 blocks negative), losing $60.8\%$ of its
-groups to silence against $32.1\%$, the direction Cor.~\ref{cor:gran} gives for
-the harder-peaked score. The corollary bounds the \emph{activity} error, not
-the endpoint: it is consistent with the observed contrast, not a prediction
-of it. This exactly accounts for the mass prediction error and
-is consistent with the endpoint, but it is not an intervention and we claim no
-sole mediation. Post-hoc; no registered quantity changes.
+groups to silence against $32.1\%$. Corollary~\ref{cor:gran} predicts this
+activity-calibration gap, not either learning sign; the diagnosis is post-hoc.
+
+\paragraph{Prospective correction.}
+P0 then held the estimator, $N$, warmstart, task generator, budget, posterior,
+decay, floor and 48 paired seeds fixed, varying only the score applied to that
+posterior: the i.i.d.-at-the-mean plug-in versus realized count-law activity.
+The delivered intervention (mean visit TV $.33597$; frozen threshold $.05$)
+improves cov-AUC by $+.00666$ (95\% CI $[+.00441,+.00887]$, exact paired
+$p=9.56\times10^{-7}$, 40/48 positive blocks), exceeding the preregistered
+$+.005$ SESOI. The frozen verdict is \textbf{supported}: the correction is
+causally relevant on this substrate. This does not show that the algebra
+predicted the learning sign, that the correction alone explains the earlier
+contrast, or that either arm beats $p(1-p)$.
 
 \paragraph{Secondary records.}
-An externally recorded six-block factorial tests an \emph{estimator} ordering
-rather than the score: after its first wave rejected the stronger registered
-endpoint claim (3/6, 4/6), the re-registered wave-2 primary is positive in all
-six fresh blocks under \emph{each} sampler (block mean $+.0195$,
-$[+.0115,+.0275]$) --- an estimator-conditioned ordering, not universal
-estimator superiority. Where activity is zero no sampler can help and only relabeling adds signal; a
-registered probe-fed gate recovers $98\%$ of the frequency-to-oracle gap
-(10/10 seeds) and, descriptively, relabel group structure matters as much as
-relabeling itself. That record, with the $N$-sweep, paid-probe selection and
-the historical Countdown aggregate, is in App.~\ref{app:protocols} and
-supports no named-method superiority claim; their measurement lesson is that
-raw per-task outcomes are needed to separate mean accuracy from standard
-$\passat{k}$.
+The maze factorial, $N$-sweep, paid-probe, creation-channel and Countdown
+records remain in App.~\ref{app:protocols}; none supports named-method
+superiority. Their measurement lesson is to retain raw per-task outcomes so
+mean accuracy can be separated from standard $\passat{k}$.
 
 \takeaway{\textbf{If you are deploying this.}
 \emph{(i)} Score with $u_M$ for $M\ge$ your deployed $N$: the deployed $N$ is a
 floor on the score exponent, not an optimum (\S\ref{sec:peaktest}).
 \emph{(ii)} Score the unit your estimator consumes; if the curriculum names a
 coarser bucket, score it by the realized count law $\hat q_z-\hat p_z$ rather
-than by $u_N(\hat p_z)$. Both come free from group outcomes you already log.
+than by $u_N(\hat p_z)$. Both come free from group outcomes you already log;
+the preregistered MAZE-SCORE correction confirms this on one substrate.
 \emph{(iii)} Do not expect activity to replace a per-timestep regret signal; at
 one Bernoulli per visit it is a gate on a richer signal, not a signal
 (\S\ref{sec:amaze}).
@@ -631,9 +634,10 @@ MAZE-SCORE bounds one task family, architecture, $N$ and budget; because it
 also changes capacity, approximation, heterogeneity and granularity, it does
 not isolate scale. The post-hoc diagnosis exactly accounts for coefficient-mass
 calibration, not sole endpoint mediation, and its windows mix heterogeneity
-with learner nonstationarity. P0 isolates the score functional: both arms share
-one deterministic count-law posterior, prior, decay and floor, and it is
-terminal but still sealed, with no outcome claimed. The PLR study is a development negative,
+with learner nonstationarity. P0 isolates the score functional and confirms a
+$+.00666$ gain on the same task family and budget, but does not establish
+transfer, compare either arm with $p(1-p)$, or show that the correction alone
+mediates the earlier contrast. The PLR study is a development negative,
 not evidence of superiority to PLR, robust PLR, ACCEL or another
 \texttt{minimax} baseline. No robotics performance is reported; paid-probe,
 recycling, Countdown, gate and transfer records remain secondary
@@ -643,19 +647,19 @@ Registration timing remains a gap: the internally hashed Digits and Acrobot
 locks lack immutable public pre-execution commits, and the external maze
 wave-2 record has no vendored locking commit. Maze checkpoint trajectories
 remain external and the Digits replay payload has no download URI;
-App.~\ref{app:artifact} itemizes these gaps and the 53-row compact registry.
+App.~\ref{app:artifact} itemizes these gaps and the 54-row compact registry.
 They limit auditing and preclude a broad neural claim.
 
 \section{Conclusion}
 
 Estimator activity is a functional of the success-count law. Where the
 curriculum scores the estimator's own unit, the deployed-$N$ shape beat both
-$u_2$ and uniform sampling, twice replicated; three preregistered follow-ups
-then bounded it: the peak location is not what helps, the score is starved as a
-standalone replay priority, and on a level aggregating heterogeneous tasks the
-contrast reverses, its coefficient-mass error priced exactly by
-Cor.~\ref{cor:gran}. The estimator defines the coefficient map; the curriculum
-defines the unit over which it is averaged, and the two do not commute.
+$u_2$ and uniform sampling, reproduced twice with the same seeds; three
+preregistered follow-ups then bounded it. On the coarse-unit substrate where
+the original contrast reverses, a preregistered intervention confirms that
+replacing the mean-pass-rate plug-in by the count-law functional improves
+learning. The estimator defines the coefficient map; the curriculum defines
+the unit over which it is averaged, and the two do not commute.
 Evaluate data selection with the estimator it ships on, report $\passat{k}$
 from retained outcomes, and treat activity as a gate, not a law.
 
@@ -665,7 +669,7 @@ check, structured seed-block analyses, stored protocol and verdict documents,
 figure derivation scripts regenerating every figure from checksummed inputs
 (\texttt{paper/results/manifest.json}), a source-locked 60-run Acrobot
 tournament with deterministic retained-ledger reanalysis, a one-command
-\texttt{reproduce.sh}, and a generated 53-row compact registry
+\texttt{reproduce.sh}, and a generated 54-row compact registry
 (\texttt{curriculum\_maxrl/run\_registry.json}) indexing the maze, Countdown
 and GSM8K artifacts each cited number is drawn from. Secondary
 records and receipt manifests remain documented in the appendix. Registration
@@ -1247,7 +1251,8 @@ the operational recommendation targets.
 verifies declared manifest inputs and the local compact registry, runs stored
 endpoint spot checks, regenerates figures, and builds the canonical
 \texttt{main\_iclr2027.pdf} plus the extended \texttt{main.pdf}. The compact
-registry has 53 records: 35 maze, 11 Countdown, and 7 GSM8K. The broader
+registry has 54 records: 35 maze, 11 Countdown, 7 GSM8K, and one P0 analysis
+artifact. The broader
 562-row registry used during release-branch auditing is a different object; it
 is not copied over this checkout's registry and is not used for the local
 count.

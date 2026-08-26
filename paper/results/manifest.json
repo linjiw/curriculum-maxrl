@@ -33,6 +33,17 @@
   }
  },
  "figures": {
+  "fig_claimmap": {
+   "script": "paper/figures/fig_claimmap.py",
+   "inputs": [
+    "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json"
+   ],
+   "command": "python paper/figures/fig_claimmap.py",
+   "checksums": {
+    "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json": "c1e6dc3ead1ef11d"
+   },
+   "notes": "P0 row is read from the frozen single-use analysis; earlier rows remain transcribed and resolve through CLAIM_TRACE_ICLR.md pending the full compact-figure manifest rebuild."
+  },
   "fig1_utility": {
    "script": "paper/figures/fig1_utility.py",
    "inputs": [],

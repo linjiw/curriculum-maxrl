@@ -120,27 +120,18 @@ record before the first scientific run; an internal draft is not registered.
   `-.00324`, CI `[-.00543,-.00111]`. Its telemetry verifies the coefficient
   calibration gap to floating point. The telemetry does not prove mediation
   of the downstream endpoint.
+- P0 GROUP-LAW-FLIP is the registered causal positive on the same substrate:
+  replacing the i.i.d.-at-the-mean plug-in with the shared-posterior count-law
+  functional improves cov-AUC by `+.00666`, paired 95% CI
+  `[+.00441,+.00887]`, exact sign-flip `p=9.56e-7`, with 40/48 positive blocks
+  and delivered visit TV `.33597`. The frozen verdict is `supported` (Tier 2).
+  This establishes causal relevance of the correction on this substrate; it
+  does not show that the corollary predicted the learning sign, that the
+  correction alone explains the earlier contrast, or that either arm beats
+  `p(1-p)`.
 
 ### Open, and never to be described as running evidence
 
-- **P0 count-law flip is frozen, terminal, and still sealed.** The protocol was
-  frozen in commit `f27ba8a` before the first evidence submission. The clean
-  evidence manifest is `b0cf3d2d...f3a2c95a`; all 48 seed blocks are
-  structurally terminal with completion markers and no incomplete quarantine.
-  The canonical local retrieval and single-use analysis have not run, so this
-  remains Tier 4 and no endpoint is claimed. Do not open result JSONL or
-  endpoint summaries outside the frozen closure. Scheduler state, completion
-  receipts, hashes, and telemetry integrity are the permitted monitoring
-  surface. Standalone tests or the successful smoke `9419940` are not
-  intervention evidence.
-- P0 uses 48 paired blocks and requires the observed mean to be at least its
-  `+.005` SESOI. It is powered at `.901` for `+.0075` under the pessimistic
-  historical paired SD `.0135`; a true effect exactly at the SESOI still has
-  about `.503` support probability because of the point-estimate clause.
-- The prospective P0 verdict text must not say that Corollary 2 predicted a
-  downstream endpoint sign. A positive intervention can show that count-law
-  correction matters on this substrate; the corollary itself predicts only
-  coefficient-activity calibration.
 - The full-budget AMaze gate rerun in
   `/data/robotixx/ued_bench/gate-confirmatory-20260819` is terminal at 20/20
   training cells and 20/20 evaluations, but it is not yet a result. There are
@@ -172,7 +163,10 @@ README, and website before any external release.
 Work in this order. Do not start optional scale experiments while a higher
 item is red.
 
-### P0 — close the count-law intervention
+### P0 — count-law intervention closed
+
+**Status:** Complete on 2026-08-26 under the frozen `supported` branch. The
+numbered list below is retained as the acceptance record; all six items passed.
 
 1. Finish the P0 design review before freeze: full-rule power, powered-for
    effect, treatment-delivery estimand, missing-cell behavior, both calibrated
@@ -193,10 +187,10 @@ item is red.
 6. Integrate the result into the abstract, main evidence section, limitations,
    claim trace, registry, manifest, README, and website at the correct tier.
 
-P0 is the minimum missing scientific closure for this ICLR story. A 7B+ LLM
-training result would improve impact, but it is not allowed to displace this
-causal intervention. If extra compute remains, prefer a frozen-checkpoint
-LLM count-law calibration study before committing to full RL training.
+P0 supplies the minimum causal closure for this ICLR story. A 7B+ LLM training
+result is de-scoped and must not displace integration, AMaze closure, or
+artifact work. If extra compute remains, prefer a frozen-checkpoint LLM
+count-law calibration study before committing to full RL training.
 
 ### P1 — repair the manuscript's live state
 

@@ -10,6 +10,10 @@ I also ran the **marker-only** Hopper status commands from `HOPPER_STATUS.md`.
 No result JSONL, log, telemetry, or analyzer was opened. This file is advisory,
 not an evidence source (AGENTS.md §2.6).
 
+**Closure update:** P0 was unblinded under the frozen single-use path later on
+2026-08-26 and returned `supported`; §8 is the current addendum. Sections 0–7
+preserve the outcome-blind review state that preceded that action.
+
 ---
 
 ## 0. The one thing that matters today
@@ -280,7 +284,7 @@ roadmaps; treat them as archived. Nothing in them can land at Tier 2 before
 | date | milestone | status |
 |---|---|---|
 | 08-26 (today) | LLM go/no-go | **bound: (b) de-scope** (see §7) |
-| 08-26 | P0 closure | preflight green; **analyzer not yet run** (see §7) |
+| 08-26 | P0 closure | **supported; integrated at Tier 2** (see §8) |
 | 09-12 | freeze claim table / perimeter | reachable only if P0 + AMaze close this week |
 | 09-16 | OpenReview title + abstract | depends on P0 branch |
 | 09-18 AOE | abstract deadline | — |
@@ -336,3 +340,36 @@ yet (HEAD is still `b3d90b8`, 2026-08-20); all of the below is working tree.
 6. Rebuild PDF after every tex edit; the 9-page limit is currently at the edge.
 
 Calendar unchanged: perimeter freeze 09-12, title/abstract lock 09-16, abstract 09-18 AOE, paper 09-25 AOE.
+
+---
+
+## 8. Update 2026-08-26 (closure) — P0 supported
+
+The complete pre-unblinding tree was committed at `8349888`. The single-use
+closure then rechecked the 48-block terminal/marker conjunction, verified every
+remote block hash, retrieved the canonical campaign, passed the frozen 2×48
+structural validator, and invoked the hash-matched analyzer once.
+
+Frozen primary `grouplaw - plugin`:
+
+| quantity | result |
+|---|---:|
+| cov-AUC difference | **+.00666** |
+| paired-bootstrap 95% CI | **[+.00441,+.00887]** |
+| exact paired sign-flip p | **9.56e-7** |
+| positive / negative / tied blocks | **40 / 8 / 0** |
+| mean visit TV | **.33597** (gate ≥.05 passed) |
+| frozen verdict | **supported** |
+
+This is Tier 2: the count-law correction is causally relevant on the
+MAZE-SCORE substrate. It does not show that Corollary 2 predicted the learning
+sign, that the correction alone explains the earlier contrast, or that either
+arm beats `p(1-p)`. The result artifact is
+`curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json`; the calibrated
+memo is `granularity_flip/GROUP_LAW_FLIP_RESULT_2026-08-26.md`.
+
+The central empirical vulnerability in §2 R1 is therefore materially reduced:
+the paper now has a preregistered neural-scale causal intervention in addition
+to the Acrobot score-shape positive and the registered boundaries. The next
+red item is the outcome-blind AMaze gate closure, followed by the independent
+manuscript and artifact queue already listed in §7.

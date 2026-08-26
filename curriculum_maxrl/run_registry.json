@@ -1,7 +1,7 @@
 {
- "generated": "2026-08-05",
- "note": "one row per run/artifact; maze runs carry arm+seed parsed from filenames; the 9-run main-effect subset and its 5v4 composition are in permutation_reanalysis.json",
- "n_rows": 53,
+ "generated": "2026-08-26",
+ "note": "one row per run/artifact; maze runs carry arm+seed parsed from filenames; the 9-run main-effect subset and its 5v4 composition are in permutation_reanalysis.json; P0 is represented by its committed campaign-level frozen-analysis artifact while the validated raw 2x48 campaign remains external",
+ "n_rows": 54,
  "rows": [
   {
    "file": "matched_falp_maxrl_hs_s0.jsonl",
@@ -426,6 +426,16 @@
    "seed": 2,
    "n_eval_rows": 128,
    "protocol": "prereg run_reviewer_arms.sh (maxrl 79473b2); step-60 val, 16 samples/prompt; verdicts in countdown_reviewer_arms/PROVENANCE.md"
+  },
+  {
+   "file": "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json",
+   "suite": "group_law_flip",
+   "arm": "grouplaw-minus-plugin",
+   "seed": null,
+   "n_eval_rows": null,
+   "n_seed_blocks": 48,
+   "n_arm_runs": 96,
+   "protocol": "group_law_flip_v1; frozen paired primary; raw campaign external at the disclosed canonical path"
   }
  ]
 }

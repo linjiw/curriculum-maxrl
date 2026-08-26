@@ -186,7 +186,7 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
 <body>
 
 <header class="hero">
-  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-19</p>
+  <p class="eyebrow">Research notes · curriculum learning × MaxRL · updated 2026-08-26</p>
   <h1>The estimator defines activity</h1>
   <p class="lede" style="font-size:1.05rem;font-style:italic;opacity:.85">
     The estimator defines the coefficient map; the curriculum defines the unit over which that
@@ -244,12 +244,14 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
       </tbody>
     </table>
     <p style="margin:10px 0 0;font-size:.93rem;opacity:.85">Read <em>post hoc</em>, across studies not
-    designed to test it. The prospective P0 test holds the substrate, estimator, budget, seeds,
-    and four-moment count-law posterior fixed and varies <em>only</em> the score functional: the
-    i.i.d.-at-the-mean plug-in versus realized MaxRL count-law activity. Its 48 paired blocks
-    (seeds 3001--3048) were frozen before launch and are terminal but still sealed;
-    retrieval, hash validation, and the single-use analysis remain pending, so no
-    endpoint is claimed here.</p>
+    designed to test it. That pattern motivated P0 but did not determine its verdict. The frozen
+    48-block intervention held the substrate, estimator, budget, seeds, posterior, decay and floor
+    fixed and varied only the score functional. Replacing the i.i.d.-at-the-mean plug-in with
+    realized count-law activity improved cov-AUC by <strong>+.00666</strong> (95% CI
+    [+.00441,&nbsp;+.00887], exact paired p=9.56×10<sup>−7</sup>, 40/48 positive blocks),
+    with delivered visit TV .33597. The preregistered verdict is <strong>supported</strong>:
+    causal relevance on this substrate, not a claim that the corollary predicted the learning
+    sign or that either arm beats p(1−p).</p>
   </div>
 
   <div class="card" style="margin-top:18px">
@@ -742,7 +744,7 @@ interface contract in <code>frontier_rl</code>.</p>
         <td>2×2 complete + replication seed — <a href="#gsm8k">section 4b</a>: P-G2 landed on the registered run; seed 2 (weaker measured steering) did not reproduce it</td>
         <td class="num"><span class="status run">◐ 1 of 2 seeds</span></td></tr>
     <tr><td><strong>Peak-location specificity</strong> — does the score need to peak where the deployed N puts it? (Aug 15, preregistered, 2 campaigns, 240 runs)</td>
-        <td>Deployed estimator pinned at N=16, score exponent swept 2→128: performance rises <em>past</em> 16, argmax at u<sub>64</sub>, Spearman +0.93. Over-shooting arm u<sub>64</sub> does not lose to u<sub>16</sub> (−.011 and −.013 on two platforms, 10/20 and 7/20). <strong>Harder-peaked shape helps; the deployed-N peak location does not.</strong> The V2 Acrobot primary replicated cross-platform (+.032, +.031 vs +.048).</td>
+        <td>Deployed estimator pinned at N=16, score exponent swept 2→128: performance rises <em>past</em> 16, argmax at u<sub>64</sub>, Spearman +0.93. Over-shooting arm u<sub>64</sub> does not lose to u<sub>16</sub> (−.011 and −.013 on two platforms, 10/20 and 7/20). <strong>Harder-peaked shape helps; the deployed-N peak location does not.</strong> The V2 Acrobot primary reproduced cross-platform with the same seeds (+.032, +.031 vs +.048).</td>
         <td class="num"><span class="status no">✗ not supported</span></td></tr>
     <tr><td><strong>Coefficient activity as a PLR priority on AMaze</strong> — drop-in replacement for MaxMC in <span class="mono">minimax</span> robust PLR, shipped configs verbatim (Aug 16–17, development sweeps, 65 runs)</td>
         <td>Upstream robust PLR .629, no-curriculum control .539, every activity-priority variant below the control (.500 at N=8, 0/5 seeds beat MaxMC; .551 at N=16). Cause is signal, not shape: MaxMC reads the critic at every timestep, activity gets one Bernoulli per level visit. Same in ACCEL; 4×8 regrouping costs −.207 for MaxMC too. <strong>Gating</strong> MaxMC by activity instead of replacing it recovers most of the gap (.590; +.089 over replacement, 4/5 seeds; −.039 to upstream, 1/5) but does not clear it — the score's value there is as a shape on a richer signal.</td>
@@ -753,7 +755,7 @@ interface contract in <code>frontier_rl</code>.</p>
   </tbody>
 </table>
 
-<h3 id="position">Where the claim now stands (updated 2026-08-17)</h3>
+<h3 id="position">Where the claim now stands (updated 2026-08-26)</h3>
 <div class="cards">
   <div class="card">
     <h3>What survived</h3>
@@ -762,6 +764,15 @@ interface contract in <code>frontier_rl</code>.</p>
     u<sub>16</sub> beats p(1−p) is now reproduced on <strong>three platforms</strong> with the same
     seeds — the first reproduction outside the machine that produced it, both new runs with a
     smaller p than the original.</p>
+  </div>
+  <div class="card">
+    <h3>What P0 confirms</h3>
+    <p>On MAZE-SCORE, replacing the shared-posterior mean-pass-rate plug-in with
+    realized count-law activity improves cov-AUC by <strong>+.00666</strong>
+    ([+.00441,&nbsp;+.00887], 40/48 positive blocks) with delivered visit TV .33597.
+    This is a preregistered causal positive on that substrate. It does not say the
+    corollary predicted the learning sign, explain the earlier contrast by itself,
+    or compare either arm with p(1−p).</p>
   </div>
   <div class="card">
     <h3>What was cut</h3>
@@ -1252,12 +1263,14 @@ activity stops predicting learning.</em></p>
   <strong>2·(Pr(K&gt;0) − E[K]/N)</strong> under any joint law; the familiar
   <strong>2·(pass@N − pass@1)</strong> is only its conditionally-i.i.d. atomic slice. For a coarse
   unit, plugging in the mean pass rate over-predicts activity by exactly twice its excess all-fail
-  probability. Where the scored unit is the estimator's own, the deployed-N shape beats p(1−p) by
-  <strong>+.0480</strong> (95% paired-bootstrap CI [+.0209,&nbsp;+.0738]) and replicates on two
-  further platforms. Three preregistered follow-ups bound it: performance rises past the deployed
-  N, the score is starved as a standalone replay priority, and on a level aggregating heterogeneous
-  tasks the contrast reverses (−.0032, CI [−.0054,&nbsp;−.0011]), with the coefficient-mass error
-  accounted for to floating point. The estimator defines the coefficient map; the curriculum
+  probability. In a preregistered 48-block neural-maze intervention, replacing that plug-in with
+  the shared-posterior count-law functional improves cov-AUC by <strong>+.00666</strong> (95% CI
+  [+.00441,&nbsp;+.00887]), confirming causal relevance on that substrate. Where the scored unit is
+  the estimator's own, the deployed-N shape beats p(1−p) by <strong>+.0480</strong> and reproduces
+  on two further platforms using the same seeds. Three preregistered follow-ups bound it:
+  performance rises past the deployed N, the score is starved as a standalone replay priority,
+  and on a level aggregating heterogeneous tasks the original contrast reverses (−.0032). The
+  estimator defines the coefficient map; the curriculum
   defines the unit over which that map is averaged, and these operations do not commute.
   Coefficient activity is a principled, estimator-conditioned source of curriculum hypotheses,
   not a measure of learning utility.</p>
@@ -1279,17 +1292,16 @@ activity stops predicting learning.</em></p>
     ARM A dial refutation).</p>
   </div>
   <div class="card">
-    <h3>What's pending before submission (updated 2026-08-20)</h3>
+    <h3>What's pending before submission (updated 2026-08-26)</h3>
     <p>✅ E2c ran and closed by its own preregistered gate (inconclusive; the Aug 28
     training stop is satisfied early). ✅ Peak-location specificity tested and
     not supported; the paper now says so in a new subsection instead of conceding
     it was never run. ✅ AMaze development negative reported honestly. ✅ The current
-    published compact build places the conclusion on page 9; reproducibility begins
-    on page 9 and references follow on page 10.<br>
-    ⟳ <strong>P0 count-law correction</strong> (shared count-law posterior;
-    plug-in versus realized count-law functional) is frozen and terminal over
-    48 paired Hopper blocks, but remains sealed pending retrieval, hash validation,
-    and the single-use analysis. No endpoint has been opened. ⟳ Compact figure-manifest
+    published compact build places the conclusion on page 9; the uncounted
+    reproducibility statement and references begin on page 10.<br>
+    ✅ <strong>P0 count-law correction</strong> closed under its frozen supported branch:
+    +.00666 [+.00441,&nbsp;+.00887], 40/48 positive blocks, delivered visit TV .33597.
+    ⟳ Compact figure-manifest
     and portable reproduction repair. ⟳ Anonymous release-artifact and final PDF
     hashes.<br>
     Track: ICLR 2027 (abstract Sept 18, paper Sept 25). The ICRA navigation
