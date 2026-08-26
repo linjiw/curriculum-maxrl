@@ -22,16 +22,17 @@ fi
 echo "campaign : $OUT"
 echo "runs     : $(wc -l < "$OUT/jobs.tsv") x 30000 updates, $CONC concurrent"
 
-# ---- train (idempotent: skip xpids that already have a checkpoint) ----------
+# ---- train (idempotent: skip only explicitly completed xpids) ---------------
 launch () {
   local base=$1 name=$2 seed=$3 extra=$4
   local xpid="arm-${name}-s${seed}-u30000"
-  if [[ -f "$OUT/$xpid/checkpoint.pkl" ]]; then
-    echo "SKIP   $xpid (checkpoint present)" >> "$OUT/driver.log"; return
+  if [[ -f "$OUT/$xpid/DONE" ]]; then
+    echo "SKIP   $xpid (completed)" >> "$OUT/driver.log"; return
   fi
   # shellcheck disable=SC2086
   if bash "$ROOT/ued_benchmark/scripts/run_arm.sh" "$base" "$name" "$OUT" 30000 \
        "$seed" $extra >> "$OUT/driver.log" 2>&1; then
+    touch "$OUT/$xpid/DONE"
     echo "OK     $xpid" >> "$OUT/driver.log"
   else
     echo "FAILED $xpid" >> "$OUT/driver.log"
