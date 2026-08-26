@@ -35,7 +35,7 @@
       ],
       "command": "python paper/figures/fig_claimmap.py",
       "checksums": {
-        "paper/figures/fig_claimmap.py": "6b367edb3600e794",
+        "paper/figures/fig_claimmap.py": "0459f38398d101b2",
         "curriculum_maxrl/group_law_flip/GROUP_LAW_FLIP_ANALYSIS.json": "c1e6dc3ead1ef11d"
       },
       "notes": "P0 row is read from the frozen single-use analysis. Earlier transcribed rows resolve through paper/CLAIM_TRACE_ICLR.md."

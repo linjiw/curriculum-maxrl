@@ -11,8 +11,9 @@ E}(k)$, with closed-form $M_{\mathcal E}$ for MaxRL, RLOO and GRPO; for
 practical MaxRL it is $2\{\Pr(K{>}0)-\mathbb E[K]/N\}$ under \emph{any} joint
 law, and the familiar $2(\passat{N}-\passat{1})$ is only its
 conditionally-i.i.d.\ atomic slice, which factors as $p(1-p)\cdot w_{N-1}(p)$
-and recovers $p(1-p)$ at $N{=}2$. For a coarse unit, plugging in the mean pass
-rate over-predicts activity by exactly twice its excess all-fail probability.
+and recovers $p(1-p)$ at $N{=}2$. Under a shared-task conditional-i.i.d.\
+mixture, the coarse-mean plug-in over-predicts activity by twice its excess
+all-fail probability; the sign need not hold generally.
 In a preregistered 48-block neural-maze intervention, replacing that plug-in
 with the shared-posterior count-law functional improves cov-AUC by $+.00666$
 (95\% CI $[+.00441,+.00887]$), confirming causal relevance on that substrate.
@@ -69,7 +70,7 @@ exactly; the bridge $\mathbb E[\hat g\mid x]=u_N(p)(\mu_+-\mu_-)$ is why a
 coefficient surrogate is defensible; Lemma~\ref{lem:trunc} fixes the deployed
 truncation at $T=N-1$. All checked as code contracts against the deployed
 estimators.
-\item \textbf{Registered and confirmed.} In a fixed Acrobot pool at deployed
+\item \textbf{Prospectively source-locked and confirmed.} In a fixed Acrobot pool at deployed
 $N{=}16$, $u_{16}$ beats $p(1-p)$ by $+.048$ under a frozen rule and
 reproduces on two further platforms using the same seeds
 (\S\ref{sec:acrobot}).
@@ -173,6 +174,9 @@ M_{\text{GRPO}}(k)&=\tfrac{2}{N}\sqrt{\tfrac{N-1}{N}}\sqrt{k(N-k)},
 the last for the sample-SD convention at zero stabilizer.
 \end{definition}
 \noindent
+The RLOO and GRPO conventions follow their original method papers
+\citep{rloo,grpo}; all cross-estimator comparisons here retain the explicit
+normalizations above.
 \textbf{The sufficient statistic for estimator activity is the success-count
 law, not the mean pass rate.} Under conditionally i.i.d.\ rollouts
 $P(K\mid z)$ is Binomial$(N,p)$ and the sum collapses to a Bernstein polynomial
@@ -248,11 +252,12 @@ identity concerns coefficients, not gradient norm, signal-to-noise ratio, or
 expected improvement: score-gradient geometry can change its downstream
 effect.
 
-The bridge to the expected update is exact: with
-$\mu_\pm=\mathbb E[s_i\mid r_i{=}1/0,x]$ we have
-$\mathbb E[\hat g\mid x]=u_N(p)(\mu_+-\mu_-)$ for $u_N=A_N/2$, so $u_N$ is the
-estimator-controlled scalar factor in the expected update and the conditional
-score geometry stays outside the mass calculation. Under i.i.d.\ rollouts
+On the atomic conditionally-i.i.d.\ slice, if each score $s_i$ is independent
+of peer outcomes given $(r_i,x)$, the expected-update bridge is exact: with
+$\mu_\pm=\mathbb E[s_i\mid r_i{=}1/0,x]$,
+$\mathbb E[\hat g\mid x]=u_N(p)(\mu_+-\mu_-)$ for $u_N=A_N/2$. Outside this
+slice, score means may remain $K$-conditioned and no two-mean factorization is
+claimed. Under i.i.d.\ rollouts
 $u_N(p)=\Pr(r_1{=}0,\,K>0)=(1-p)\{1-(1-p)^{N-1}\}$: activity is the
 probability that one rollout fails while a peer in the purchased group
 succeeds. Both dead zones follow --- an all-fail task supplies no positive
@@ -295,9 +300,10 @@ $u_N$.
 
 \begin{corollary}[Task granularity]
 \label{cor:gran}
-Suppose a curriculum scores an aggregate $z$ (a level, template, or domain)
-whose concrete tasks are $X\sim\nu(\cdot\mid z)$ with conditionally i.i.d.\
-rollouts given $X$. Because $u_N''(p)=-N(N-1)(1-p)^{N-2}<0$, plugging the
+Suppose a curriculum scores an aggregate $z$ (a level, template, or domain),
+draws one concrete task $X\sim\nu(\cdot\mid z)$ once per group, and then draws
+all $N$ rollouts conditionally i.i.d.\ given that shared $X$. Because
+$u_N''(p)=-N(N-1)(1-p)^{N-2}<0$, plugging the
 aggregate's mean pass rate $\bar p_z$ into $u_N$ over-predicts its activity,
 and the gap is exactly the aggregate's excess all-fail probability:
 \[
@@ -327,7 +333,7 @@ estimator: each task keeps discounted Beta evidence, draws a posterior pass
 rate $\tilde p_x$, and is sampled with probability $q(x)=\epsilon/M+
 (1-\epsilon)[u_N(\tilde p_x)]^\gamma/\sum_j[u_N(\tilde p_j)]^\gamma$. The floor
 $\epsilon$, concentration $\gamma$, decay and posterior estimator remain
-empirical choices; the theory supplies the utility and its $N$-dependence, not
+empirical choices; the theory supplies the activity score and its $N$-dependence, not
 a parameter-free scheduler. An exact deterministic posterior priority is also
 available (App.~\ref{app:proofs}), which the AMaze arm uses; scoring the
 posterior \emph{mean} instead overstates activity by a closed-form uncertainty
@@ -436,8 +442,8 @@ The same campaigns reproduce the shape effect on the shared seeds. Against
 $p(1-p)$, $u_{16}$ wins
 by $+.0322$ ($[+.0198,+.0449]$, exact $p=.000105$, 17/20) and $+.0307$
 ($[+.0166,+.0453]$, $p=.000507$, 16/20), versus $+.0480$ in V2 --- the first
-reproductions outside the machine that produced V2, both with a smaller
-$p$-value than V2's own. Magnitude is platform-sensitive (about $35\%$
+reproductions outside the machine that produced V2. Magnitude is
+platform-sensitive (about $35\%$
 attenuation on identical seeds between architectures), so we attribute
 each number to its platform. Because the two new campaigns share seeds and a
 deterministic engine, their agreement is a portability check, not additional
@@ -533,9 +539,10 @@ $+.005$ SESOI. The frozen verdict is \textbf{supported}: the correction is
 causally relevant on this substrate. Arm means are $-.0043$ (plug-in) and
 $+.0024$ (count law) relative to their common post-SFT coverage $.280$: the
 plug-in arm's RL is net-negative for held-out coverage here, while the
-correction flips the sign. This does not show that the algebra
-predicted the learning sign, that the correction alone explains the earlier
-contrast, or that either arm beats $p(1-p)$.
+correction flips the sign. This identifies score-policy substitution---with
+visitation, hardness and exposure part of treatment---not activity mediation,
+a predicted sign, an explanation of the earlier contrast, or superiority to
+$p(1-p)$.
 
 \paragraph{Secondary records.}
 The maze factorial, $N$-sweep, paid-probe, creation-channel and Countdown
@@ -544,12 +551,14 @@ superiority. Their measurement lesson is to retain raw per-task outcomes so
 mean accuracy can be separated from standard $\passat{k}$.
 
 \takeaway{\textbf{If you are deploying this.}
-\emph{(i)} Score with $u_M$ for $M\ge$ your deployed $N$: the deployed $N$ is a
-floor on the score exponent, not an optimum (\S\ref{sec:peaktest}).
+\emph{(i)} Treat $u_N$ as estimator-matched, not optimal: harder $M>N$ helped
+in the tested Acrobot sweep, but $M$ is a tuning parameter, not a general floor
+(\S\ref{sec:peaktest}).
 \emph{(ii)} Score the unit your estimator consumes; if the curriculum names a
 coarser bucket, score it by the realized count law $\hat q_z-\hat p_z$ rather
-than by $u_N(\hat p_z)$. Both come free from group outcomes you already log;
-the preregistered MAZE-SCORE correction confirms this on one substrate.
+than by $u_N(\hat p_z)$. This requires no additional rollouts when grouped
+counts are retained, but state freshness and coverage are not free; the
+preregistered P0 correction confirms the score substitution on one substrate.
 \emph{(iii)} Do not expect activity to replace a per-timestep regret signal; at
 one Bernoulli per visit it is a gate on a richer signal, not a signal
 (\S\ref{sec:amaze}).
@@ -594,7 +603,8 @@ LILO \citep{lilo} prioritizes binary reward variance. More tightly, SFL's
 realized score $(k/N)(1-k/N)$ \citep{sfl} is exactly
 $M_{\mathrm{RLOO}}(k)(N-1)/(2N)$ at fixed $N$: our framework recovers SFL as
 the count-law curriculum for RLOO rather than replacing it as a heuristic.
-When the sampled count $n$ varies, SFL's $n/(n+1)$ correction compounds
+When the sampled count $n$ varies, SFL's shipped $n/(n+1)$ correction
+(source audit in App.~\ref{app:artifact}) compounds
 $\mathbb E[\hat p(1-\hat p)]=p(1-p)(n-1)/n$, leaving a level-dependent
 $(n-1)/(n+1)$ factor. The surviving distinction is estimator-specific geometry
 (MaxRL peaks at $k=1$, RLOO/SFL at the middle), coarse-unit pooling, variable
@@ -621,9 +631,10 @@ hybrid that centers only when $K>0$.
 \section{Limitations}
 \label{sec:limits}
 
-Coefficient mass ignores score-gradient direction, parameter sharing,
-optimizer state, transfer and non-i.i.d.\ rollouts: it is not a learning
-guarantee. The $N$-sweep is co-designed, Digits is a contextual bandit,
+Full count-law activity represents outcome dependence, but omits
+score-gradient direction, parameter sharing, optimizer state and transfer;
+only its scalar pass-rate reduction assumes conditionally i.i.d.\ rollouts.
+It is not a learning guarantee. The $N$-sweep is co-designed, Digits is a contextual bandit,
 Acrobot is one 640-parameter fixed pool with inherited seeds, and the maze
 factorial uses one small transformer and family. Separate $\alpha=.05$
 primaries imply no paper-wide error rate.
@@ -635,16 +646,19 @@ transfer nor superiority of either arm to $p(1-p)$. The PLR study is a
 development negative, not named-baseline superiority; robotics and other
 secondary records remain in App.~\ref{app:protocols}.
 
-Registration timing and raw-data availability remain incomplete for Digits,
-Acrobot and the maze records. App.~\ref{app:artifact} itemizes each gap and the
-55-row compact registry; they limit auditing and preclude a broad neural claim.
+Trusted public timing and raw-data availability remain incomplete for Digits,
+Acrobot and the pre-P0 maze records. P0's preregistration is bound to pre-run
+commit \texttt{f27ba8a}, while its complete $2\times48$ raw campaign remains
+external. App.~\ref{app:artifact} itemizes each boundary; they limit auditing
+and preclude a broad neural claim.
 
 \section{Conclusion}
 
-Estimator activity is a functional of the success-count law. Where the
-curriculum scores the estimator's own unit, the deployed-$N$ shape beat both
-$u_2$ and uniform sampling, reproduced twice with the same seeds; three
-preregistered follow-ups then bounded it. On the coarse-unit substrate where
+Estimator activity is a functional of the success-count law. In the Acrobot
+fixed pool, where the curriculum scores the estimator's own unit, the
+deployed-$N$ shape beat both $u_2$ and uniform sampling and reproduced twice
+with the same seeds; Digits shares that unit match yet loses to uniform, so
+correct granularity is not sufficient for learning utility. On the coarse-unit substrate where
 the original contrast reverses, a preregistered intervention confirms that
 replacing the mean-pass-rate plug-in by the count-law functional improves
 learning. The estimator defines the coefficient map; the curriculum defines
@@ -679,6 +693,12 @@ citations, and take responsibility for every claim.
 \begin{thebibliography}{9}\small
 \bibitem[Tajwar et al.(2026)]{maxrl} Tajwar, F., Zeng, G., et al.
 Maximum Likelihood Reinforcement Learning. \emph{ICML}, 2026.
+\bibitem[Ahmadian et al.(2024)]{rloo} Ahmadian, A., Cremer, C., Gall\'e,
+M., et al. Back to basics: revisiting REINFORCE-style optimization for
+learning from human feedback in LLMs. \emph{ACL}, 2024.
+\bibitem[Shao et al.(2024)]{grpo} Shao, Z., Wang, P., Zhu, Q., et al.
+DeepSeekMath: pushing the limits of mathematical reasoning in open language
+models. arXiv:2402.03300, 2024.
 \bibitem[Yue et al.(2025)]{yue} Yue, Y., et al. Does reinforcement learning really
 incentivize reasoning capacity in LLMs beyond the base model?
 \emph{NeurIPS} (oral), 2025.
@@ -976,6 +996,12 @@ policy already reaches \citep{her,gcsl}.
 \section{Experimental protocols and secondary results}
 \label{app:protocols}
 
+\paragraph{Inferential convention.}
+Every ``exact sign-flip'' value below is the exhaustive enumeration under a
+sign-exchangeability assumption for paired block differences; it is not
+design-based randomization inference unless treatment labels were randomized.
+Pairing and common random numbers alone do not guarantee that assumption.
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig_regimes}
@@ -1017,7 +1043,7 @@ ten-seed AUC means on the fixed chain pool, exploratory.
 frozen primary). Plug-in prediction evaluates $A_{32}$ at a level's mean pass
 rate, estimated leave-one-out from the other groups on that level so mass is
 never binned against its own $K$. Realized mass tracks the predicted
-\emph{shape} ($r=.90$, 288{,}000 group draws) but lies below it by exactly
+\emph{shape} ($r=.90$ across 10 bins; 288{,}000 contributing group draws) but lies below it by exactly
 twice the level's excess all-fail probability (Cor.~\ref{cor:gran}), a gap
 that widens as $p$ falls.}
 \label{fig:mazescore}
@@ -1320,9 +1346,60 @@ registry has 55 records: 35 maze, 11 Countdown, 7 GSM8K, one P0 analysis
 artifact, and one AMaze-gate analysis artifact. The broader
 562-row registry used during release-branch auditing is a different object; it
 is not copied over this checkout's registry and is not used for the local
-count.
+count. The SFL implementation statement was audited at Kinetix commit
+\texttt{67f89f45e32c}, \texttt{experiments/sfl.py} (file SHA-256
+\texttt{20168603...}).
 
-Missing external data are maze checkpoints; Countdown task manifests,
+\begin{table}[h]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.6pt}
+\caption{\textbf{Load-bearing provenance.} ``Local'' means present in the
+anonymous compact artifact; it does not imply that the underlying training
+run can be repeated there.}
+\label{tab:provenance}
+\begin{tabular}{@{}p{.13\linewidth}p{.27\linewidth}p{.17\linewidth}p{.35\linewidth}@{}}
+\toprule
+Study & prospective object and earned label & independent unit & local versus external boundary \\
+\midrule
+Acrobot V2 & source/runtime lock sealed 2026-08-08; prospectively locked,
+confirmed & 20 paired seeds & lock and analysis local; confirmatory raw bound
+by SHA-256 but external \\
+MAZE-SCORE & preregistration plus frozen analyzer; registered negative & 48
+paired blocks & analysis and calibration summaries local; campaign raw external \\
+P0 count law & preregistration frozen in pre-run commit \texttt{f27ba8a};
+preregistered, confirmed & 48 paired blocks & analysis, result memo and
+receipts local; complete $2\times48$ endpoints and telemetry external \\
+AMaze gate & frozen gate preregistration; inconclusive at $n=10$ & 10 paired
+seeds & closure and analysis local; checkpoints/evaluation raw external \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.8pt}
+\caption{\textbf{What the reproduction command establishes.}}
+\label{tab:reprolevels}
+\begin{tabular}{@{}p{.23\linewidth}p{.25\linewidth}p{.45\linewidth}@{}}
+\toprule
+Layer & local status & claim boundary \\
+\midrule
+Theory/implementation & complete & exact identities, parity tests and
+fail-closed analyzers run locally \\
+Stored-summary reproduction & complete & manifest inputs, endpoint spot
+checks, all figures and both manuscripts rebuild locally \\
+Raw endpoint reanalysis & mixed & only studies whose raw rows are present can
+be recomputed; P0 and several other headline campaigns remain external \\
+Training reproduction & not compact-local & requires disclosed environments,
+checkpoints, datasets and compute outside the anonymous artifact \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Missing external data include P0's complete paired endpoint, telemetry,
+receipt and terminal-training campaign; maze checkpoints; Countdown task manifests,
 outcomes, and B1/B2 seed 3, so the clean 101-task tier-0 analysis cannot be
 reconstructed; the 1.375 GB paid-probe confirmatory raw (its
 content hash and per-run receipt manifest ship); and the Digits 5.08 GB replay payload (block

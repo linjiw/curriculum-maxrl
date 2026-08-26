@@ -120,6 +120,8 @@ axC.text(0.070, 1.75, "coarse plug-in diagnosed", fontsize=6.9, color=RED,
          ha="right", va="center", style="italic")
 axC.text(0.070, 0.50, "count-law correction confirmed", fontsize=6.9,
          color=BLUE, ha="right", va="center", style="italic")
+axC.text(-0.156, -0.38, "different endpoint scales; direction only",
+         fontsize=5.9, color=GRAY, ha="left", va="center")
 
 fig.tight_layout(pad=0.4, w_pad=1.5)
 fig.savefig(os.path.join(HERE, "fig_claimmap.pdf"))

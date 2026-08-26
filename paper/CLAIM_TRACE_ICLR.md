@@ -1,7 +1,7 @@
 # Claim-to-artifact trace table for `paper/body_iclr.tex`
 
-**Purpose.** This bounded inventory traces 92 quantitative claim rows: 58
-base-table rows plus 34 dated addendum rows, covering every quantitative claim
+**Purpose.** This bounded inventory traces 97 quantitative claim rows: 58
+base-table rows plus 39 dated addendum rows, covering every quantitative claim
 in the main ICLR narrative and the previously audited secondary rows retained
 in the appendix. It is not an inventory of every appendix number.
 Compiled 2026-08-12 and re-audited 2026-08-14 after two static-only focus passes.
@@ -260,4 +260,13 @@ endpoint, threshold, hypothesis test, seed, or analysis.
 The secondary is Tier 2′ descriptive. Its weak rank association is consistent
 with, not evidence of, mediation; no p-value or decision rule is attached.
 
-**Current total through the 2026-08-26c addendum: 96/96 traced; 0 untraced.**
+## Addendum 2026-08-26d — calibration-bin count (row 97)
+
+This row makes the correlation's descriptive sample size explicit after the
+round-5 methodology review; it changes no analysis.
+
+| # | claim in `body_iclr.tex` | value | artifact | status |
+|---|---|---|---|---|
+| 97 | binned predicted-versus-observed correlation sample size | 10 bins; 288,000 contributing group draws | `hopper/MAZE_SCORE_CALIBRATION.json` `bins` (length 10), `.n_group_draws_used` (288000), and `.pearson_r_binned` (.8978) | TRACED |
+
+**Current total through the 2026-08-26d addendum: 97/97 traced; 0 untraced.**

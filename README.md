@@ -71,9 +71,10 @@ A_N(Q) = 2 ( Pr(K>0) − E[K]/N )
 ```
 
 The familiar `2(1 − p − (1−p)^N)` is only its conditional-i.i.d. slice. A group
-here repeats **one** concrete maze N times, so rollouts inside it *are* i.i.d.;
-what is coarse is the *scored* unit. Scoring an aggregate `z` by its mean pass
-rate therefore over-predicts activity by exactly twice its excess all-fail
+here draws **one** concrete maze once per group and repeats it N times, so
+rollouts inside it *are* conditionally i.i.d.; what is coarse is the *scored*
+unit. Under that shared-task mixture, scoring an aggregate `z` by its mean pass
+rate over-predicts activity by exactly twice its excess all-fail
 probability:
 
 ```

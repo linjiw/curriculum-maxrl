@@ -216,9 +216,10 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     A<sub>N</sub>(Q) = 2 · ( Pr(K&gt;0) − E[K]/N )</p>
     <p style="margin:0 0 10px">The familiar <span class="mono">2(1 − p − (1−p)<sup>N</sup>)</span> is
     only the conditional-i.i.d. slice. <strong>The identity never needed independence.</strong> What
-    needs it is the collapse to a single number <em>p</em> — and that is exactly what a curriculum
-    breaks when it scores a coarse unit. Scoring an aggregate <em>z</em> by its mean pass rate
-    over-predicts activity by <em>exactly</em> twice its excess all-fail probability:</p>
+    needs it is the collapse to a single number <em>p</em>. Under the shared-task mixture where
+    one atomic task is drawn once per group and its rollouts are conditionally i.i.d., scoring an
+    aggregate <em>z</em> by its mean pass rate over-predicts activity by <em>exactly</em> twice its
+    excess all-fail probability; a general dependent count law need not have that sign:</p>
     <p class="mono" style="margin:0 0 10px;text-align:center">
     A<sub>N</sub>(p̄<sub>z</sub>) − 2·E<sub>X</sub>[u<sub>N</sub>(p<sub>X</sub>)]
     = 2 [ Pr(K=0 | z) − (1−p̄<sub>z</sub>)<sup>N</sup> ] ≥ 0</p>
@@ -760,8 +761,8 @@ interface contract in <code>frontier_rl</code>.</p>
     <p>The exact identity <span class="mono">A<sub>N</sub>(p) = 2(pass@N − pass@1)</span>, T = N−1, and the
     closed-form Beta-posterior priority are untouched. The Acrobot result that
     u<sub>16</sub> beats p(1−p) is now reproduced on <strong>three platforms</strong> with the same
-    seeds — the first reproduction outside the machine that produced it, both new runs with a
-    smaller p than the original.</p>
+    seeds — the first reproduction outside the machine that produced it. Effect magnitude is
+    reported per platform; shared seeds do not form new independent cohorts.</p>
   </div>
   <div class="card">
     <h3>What P0 confirms</h3>
@@ -1264,9 +1265,10 @@ activity stops predicting learning.</em></p>
   activity is a functional of the <em>success-count law</em>, with closed-form count masses for
   MaxRL, RLOO and GRPO. For practical MaxRL it is
   <strong>2·(Pr(K&gt;0) − E[K]/N)</strong> under any joint law; the familiar
-  <strong>2·(pass@N − pass@1)</strong> is only its conditionally-i.i.d. atomic slice. For a coarse
-  unit, plugging in the mean pass rate over-predicts activity by exactly twice its excess all-fail
-  probability. In a preregistered 48-block neural-maze intervention, replacing that plug-in with
+  <strong>2·(pass@N − pass@1)</strong> is only its conditionally-i.i.d. atomic slice. In the
+  shared-atomic-task mixture regime, plugging a coarse unit's mean pass rate into that slice
+  over-predicts activity by exactly twice its excess all-fail probability; a general dependent
+  count law need not have that sign. In a preregistered 48-block neural-maze intervention, replacing that plug-in with
   the shared-posterior count-law functional improves cov-AUC by <strong>+.00666</strong> (95% CI
   [+.00441,&nbsp;+.00887]), confirming causal relevance on that substrate. Where the scored unit is
   the estimator's own, the deployed-N shape beats p(1−p) by <strong>+.0480</strong> and reproduces
