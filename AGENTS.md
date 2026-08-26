@@ -95,7 +95,7 @@ groups, are the replicate for training-method claims. Every `+/-` must name
 whether it is SD, SE, or an interval. “Registered” requires a frozen immutable
 record before the first scientific run; an internal draft is not registered.
 
-## 4. Scientific status as of 2026-08-20
+## 4. Scientific status as of 2026-08-26
 
 ### Established and usable
 
@@ -123,13 +123,16 @@ record before the first scientific run; an internal draft is not registered.
 
 ### Open, and never to be described as running evidence
 
-- **P0 count-law flip is frozen and running blind.** The protocol was frozen
-  in commit `f27ba8a` before the first evidence submission. The clean evidence
-  manifest is `b0cf3d2d...f3a2c95a`; Hopper array `9419991` covers seeds
-  3001–3024, while 3025–3048 waits only for queue capacity. Do not open result
-  JSONL or endpoint summaries. Scheduler state, completion receipts, hashes,
-  and telemetry integrity are the permitted monitoring surface. Standalone
-  tests or the successful smoke `9419940` are not intervention evidence.
+- **P0 count-law flip is frozen, terminal, and still sealed.** The protocol was
+  frozen in commit `f27ba8a` before the first evidence submission. The clean
+  evidence manifest is `b0cf3d2d...f3a2c95a`; all 48 seed blocks are
+  structurally terminal with completion markers and no incomplete quarantine.
+  The canonical local retrieval and single-use analysis have not run, so this
+  remains Tier 4 and no endpoint is claimed. Do not open result JSONL or
+  endpoint summaries outside the frozen closure. Scheduler state, completion
+  receipts, hashes, and telemetry integrity are the permitted monitoring
+  surface. Standalone tests or the successful smoke `9419940` are not
+  intervention evidence.
 - P0 uses 48 paired blocks and requires the observed mean to be at least its
   `+.005` SESOI. It is powered at `.901` for `+.0075` under the pessimistic
   historical paired SD `.0135`; a true effect exactly at the SESOI still has
@@ -147,10 +150,11 @@ record before the first scientific run; an internal draft is not registered.
   frozen analyzer is run once. Before reusing its driver, replace checkpoint
   presence as the restart predicate with an explicit completion marker.
 - The LLM teacher-by-estimator claim is `1-of-2 seeds,
-  treatment-intensity-dependent`, hence open. The precommitted go/no-go is due
-  2026-08-26. A second delivery-gate failure permanently de-scopes it. Do not
-  spend 40–80 A10G-hours unless a frozen-checkpoint smoke first shows that the
-  coarse-state treatment moves the delivery diagnostics.
+  treatment-intensity-dependent`, hence open. The 2026-08-26 go/no-go selected
+  option (b), de-scope, because no qualifying frozen-checkpoint delivery smoke
+  was recorded by the deadline. No 40–80 A10G-hour confirmatory rerun is
+  authorized; the existing delivery finding remains appendix-only at its
+  earned tier.
 
 ### Literature correction that must land before submission
 
@@ -232,7 +236,7 @@ LLM count-law calibration study before committing to full RL training.
 ### P3 — submission operations
 
 - By 2026-08-26: bind the LLM go/no-go and default to de-scope if delivery is
-  not demonstrated cheaply.
+  not demonstrated cheaply. **Done:** option (b) was bound on 2026-08-26.
 - By 2026-09-12: freeze the claim table and evidence perimeter.
 - By 2026-09-16: lock a genuine OpenReview abstract and title; confirm all
   authors, ordering, profiles, and reciprocal-reviewing eligibility.

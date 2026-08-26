@@ -15,12 +15,13 @@ and recovers $p(1-p)$ at $N{=}2$. For a coarse unit, plugging in the mean pass
 rate over-predicts activity by exactly twice its excess all-fail probability.
 Empirically, where the scored unit is the estimator's own, the deployed-$N$
 shape beats $p(1-p)$ by $+.0480$ (95\% paired-bootstrap CI $[+.0209,+.0738]$)
-and replicates on two further platforms. Three preregistered follow-ups then
+and reproduces on two further platforms using the same seeds. Three
+preregistered follow-ups then
 bound it: performance rises \emph{past} the deployed $N$, the score is starved
 as a standalone replay priority, and where the curriculum scores a level
 aggregating heterogeneous tasks the contrast reverses ($-.0032$, CI
-$[-.0054,-.0011]$), with the coefficient-mass error accounted for to floating
-point. The estimator defines the coefficient map; the curriculum defines the
+$[-.0054,-.0011]$), with the coefficient-activity calibration error accounted
+for to floating point. The estimator defines the coefficient map; the curriculum defines the
 unit over which that map is averaged, and these operations do not commute.
 Coefficient activity is a principled, estimator-conditioned source of
 curriculum hypotheses, not a measure of learning utility.
@@ -85,7 +86,8 @@ Granularity,
 not scale, separates these studies.
 \item \textbf{Named as open.} Whether replacing the mean-pass-rate plug-in by
 the realized count-law functional recovers that loss is preregistered and
-running blind, not claimed here; the LLM-scale interaction and
+terminal but still sealed pending the single-use analysis, not claimed here;
+the LLM-scale interaction and
 the Countdown mechanism remain open and are confined to
 App.~\ref{app:protocols}.
 \end{enumerate}
@@ -349,8 +351,9 @@ MAZE-SCORE is the one study that violates it, drawing a single maze per group
 while the posterior pools over a level's many mazes, and it is the one study
 where the shape loses. We read this \emph{post hoc}, across studies not
 designed to test it. The preregistered intervention in \S\ref{sec:limits}
-now varies only the plug-in versus count-law functional and is running blind;
-no outcome from it enters this draft. Figure~\ref{fig:claimmap} states for each contrast what it is and
+now varies only the plug-in versus count-law functional. All 48 blocks are
+terminal but remain sealed pending the single-use analysis; no outcome from it
+enters this draft. Figure~\ref{fig:claimmap} states for each contrast what it is and
 is not: one frozen primary, concordant supporting measurements, three
 preregistered boundaries.
 
@@ -536,8 +539,8 @@ than by $u_N(\hat p_z)$. Both come free from group outcomes you already log.
 \emph{(iii)} Do not expect activity to replace a per-timestep regret signal; at
 one Bernoulli per visit it is a gate on a richer signal, not a signal
 (\S\ref{sec:amaze}).
-\emph{(iv)} Outside the band, relabel rather than re-sample, and gate the
-relabels by estimated destination pass rate with one probe rollout per step
+\emph{(iv)} Treat relabeling as a separate creation channel; its appendix-only
+gate record does not support a deployment prescription here
 (App.~\ref{app:protocols}).
 \emph{(v)} Log the dead-group fraction and realized-versus-predicted mass
 beside $\passat{k}$: those two diagnosed \S\ref{sec:mazescore}.}
@@ -577,7 +580,8 @@ $M_{\mathrm{RLOO}}(k)(N-1)/(2N)$ at fixed $N$: our framework recovers SFL as
 the count-law curriculum for RLOO rather than replacing it as a heuristic.
 The surviving distinction is estimator-specific geometry (MaxRL peaks at
 $k=1$, RLOO/SFL at the middle), bias from pooling a nonlinear score over a
-coarse unit, and scoring cost. For practical MaxRL, $u_N=A_N/2$ is its
+coarse unit, variable-$N$ semantics (the fixed-$N$ rescaling then varies), and
+scoring cost. For practical MaxRL, $u_N=A_N/2$ is its
 arbitrary-$N$ expected half-mass. VCRL \citep{vcrl} thresholds realized group variance; PLR \citep{plr} and
 ALP-GMM \citep{alpgmm} use TD error, staleness or learning progress and so
 react to forgetting where instantaneous mass cannot --- our AMaze arm is robust
@@ -629,7 +633,7 @@ not isolate scale. The post-hoc diagnosis exactly accounts for coefficient-mass
 calibration, not sole endpoint mediation, and its windows mix heterogeneity
 with learner nonstationarity. P0 isolates the score functional: both arms share
 one deterministic count-law posterior, prior, decay and floor, and it is
-running blind with no outcome claimed. The PLR study is a development negative,
+terminal but still sealed, with no outcome claimed. The PLR study is a development negative,
 not evidence of superiority to PLR, robust PLR, ACCEL or another
 \texttt{minimax} baseline. No robotics performance is reported; paid-probe,
 recycling, Countdown, gate and transfer records remain secondary

@@ -1,6 +1,6 @@
 # GMU Hopper runbook
 
-**Last verified:** 2026-08-14
+**Last verified:** 2026-08-20
 
 **Login:** `lwang44@hopper.orc.gmu.edu`
 
@@ -12,6 +12,49 @@ This is the operational path for staging, submitting, monitoring, and
 retrieving this project's Hopper jobs. Run commands from the repository root
 on the lab machine unless a command explicitly says otherwise. Do not run
 training on a Hopper login node.
+
+## Operator quick start
+
+The wrapper defaults to the login and scratch root above. It stages an
+immutable copy of every submitted sbatch file and records local and remote
+receipts.
+
+```bash
+# Verify SSH, Slurm, partitions, and scratch access.
+./hopper/hopper.sh health
+
+# Submit an audited sbatch file. Keep resource settings inside the file.
+./hopper/hopper.sh submit hopper/sbatch/workflow_io_smoke.sbatch
+
+# View all live jobs, or one job's queue and accounting state.
+./hopper/hopper.sh status
+./hopper/hopper.sh status JOB_ID
+
+# Wait for terminal accounting without reading scientific output.
+./hopper/hopper.sh watch JOB_ID 120 604800
+
+# Inspect marker-only progress for a blinded multi-block campaign.
+./hopper/hopper.sh campaign-status \
+  /scratch/lwang44/maxrl/CAMPAIGN/attempts/attempt-001 EXPECTED_BLOCKS \
+  /scratch/lwang44/maxrl/CAMPAIGN/incomplete/attempt-001
+
+# Retrieve a terminal payload to a new path and verify its digest/manifest.
+./hopper/hopper.sh fetch REMOTE_PATH NEW_LOCAL_PATH
+```
+
+Use `logs JOB_ID` only for engineering jobs whose streams are known not to
+contain scientific endpoints. Maze evidence logs require the explicit
+`--allow-endpoints` acknowledgement. Frozen group-law-flip logs are always
+sealed: their only unblinding route is the experiment-specific complete-matrix
+retrieval validator followed by the single-use analyzer.
+
+The 2026-08-20 end-to-end wrapper regression used CPU I/O smoke job `9424207`:
+it completed `0:0`, produced a terminal accounting receipt, and fetched with a
+manifest-verified tree digest
+`301db5dd484cfbf7217af0072aa38134410c228bb5ea9c58fd1e29359511041c`.
+The verified engineering-only copy and its fetch/terminal receipts are at
+`/data/robotixx/hopper_smokes/9424207`. This smoke also verified Hopper's valid
+zero-second accounting form with a blank separate `StdErr` field.
 
 ## Non-negotiable boundaries
 

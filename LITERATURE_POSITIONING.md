@@ -50,7 +50,7 @@ an interpretation *inside* the estimator rather than as an external objective
 | 3 | **MoPPS** (arXiv:2507.04632 ⚠ MUST-READ) | streaming Beta posterior + Thompson prompt selection targeting p≈0.5 | "We adopt the same posterior machinery; the contribution is the utility — estimator-exact and budget-aware rather than a fixed intermediate-difficulty target." |
 | 4 | **Learning-Zone Energy** (arXiv:2605.17003 ⚠) | closed-form score "aligned with expected GRPO update magnitude" | same wedge as #1: p(1−p)-variance-based, N-flat. |
 | 5 | **F-GRPO** (arXiv:2602.06717 ⚠) | closed-form N-dependent group-composition analysis tied to pass@k collapse | "Analyzes rare-mode coverage loss and patches the weighting; we characterize where mass lands and select tasks, leaving the estimator intact." |
-| 6 | **SFL** (arXiv:2408.15099) + **LILO** (arXiv:2502.12272) + **ProCuRL** (arXiv:2304.12877) | p(1−p)-shaped scores (heuristic / idealized-learner-derived) | already cited; keep the "N=2 slice; derivation from the *deployed* estimator; peak moves with N" line. ProCuRL is the strongest prior "derived not heuristic" claim — name its derivation source (idealized-learner value improvement) explicitly. |
+| 6 | **SFL** (arXiv:2408.15099) + **LILO** (arXiv:2502.12272) + **ProCuRL** (arXiv:2304.12877) | p(1−p)-shaped scores (heuristic / idealized-learner-derived) | ⚠ **REWRITTEN — the old "heuristic we replace / N=2 slice" line is false for SFL and must not ship.** SFL's learnability *is* the count law for RLOO, exactly (see §SFL below). Our framework **derives** it, and the wedge is the estimator-specific mass shape, the pooling bias, and the scoring cost — not "ours is principled, theirs is a heuristic." ProCuRL remains the strongest prior "derived not heuristic" claim — name its derivation source (idealized-learner value improvement) explicitly. |
 | 7 | **LfH** (arXiv:2607.09042 ⚠ MUST-READ) + **AgentHER** (arXiv:2603.21357 ⚠) | group-based failed-rollout relabeling for VLAs / LLM agents | already cited (lfh); press: judge-scored vs verifier-exact; SFT/DPO-offline vs on-policy group-estimator loop; no estimator-derived placement rule; no coverage accounting. |
 | 8 | **Diversity-collapse-as-overtraining** (Yuan?, arXiv:2606.15455 ⚠) + **pass@k inversion** (arXiv:2607.20543 ⚠) | "saturated problems contribute nothing" ≈ u_N(p)→0 at p→1; mean-up/pass@k-down reported | cite as convergent diagnoses; ours is the estimator-derived, *prescriptive* form (predicts where relabels are wasted before training). |
 | 9 | **SPEED-RL** (arXiv:2506.09016 ⚠) | SNR-maximization theory for intermediate-difficulty selection | variance/SNR cousin of the identity; cite next to VIP in the allocation paragraph. |
@@ -239,3 +239,38 @@ estimator you already run."
 - [ ] After reconciliation compiles, run `/ars-reviewer` on the revised
       compact draft to check the reframing reads as calibrated rather than
       defensive, and confirm the conclusion still ends on page 9.
+
+---
+
+## SFL is the count law for RLOO — restate the wedge before a reviewer does
+
+Added 2026-08-19 alongside `RESEARCH_NOTE_PLR_CONTROL_PORT_2026-08-19.md`.
+Verified against source, not inferred: `kinetix-probe/experiments/sfl.py:91-99`.
+
+SFL (Rutherford et al., NeurIPS 2024) scores a level by `success_p*(1-success_p)`
+where `success_p = successes/total_episodes` over a group of rollouts run at a
+**frozen policy snapshot**. Writing `success_p = k/N`, that quantity is
+
+    (k/N)(1 - k/N)  ==  M_RLOO(k) * (N-1)/(2N),    M_RLOO(k) = 2k(N-k)/(N(N-1))
+
+exactly, at every `k`, verified constant to 1e-15 for N ∈ {4,8,10,16,32}
+(`control_port/verify_note_claims.py`). Ranking is scale-invariant, so **SFL is
+already the realized-count-law curriculum for the RLOO estimator.** It also
+already forms genuine conditionally-i.i.d. groups. Any sentence framing it as a
+heuristic that we replace is wrong and is the kind of error a reviewer who knows
+the paper will find first.
+
+The wedge that survives, and is stronger for being narrower:
+
+| claim | status |
+|---|---|
+| "The count law replaces heuristic p(1−p)" | **Retract.** It derives it. The identity is a positive result about SFL, and should be presented that way. |
+| **Estimator-specific mass shape** | **Holds.** `M_MaxRL(k) = 2(1−k/N)1{k>0}` peaks at **k=1**; `M_RLOO`/SFL peak at **k=N/2**. Different curricula, not a rescaling — so "which estimator do you deploy?" changes which levels are worth sampling. |
+| **Pooling bias** | **Holds.** `compute_learnability` divides `successes` by `total_episodes` and *then* applies the curve — the plug-in `f(p̄)` at whatever unit the counts were pooled over. Our corollary prices that error in closed form. |
+| **Variable-N defect** | **Holds, and is citable.** Under the shipped default `learnability_mode: "timesteps"`, `rollout_episodes` is forced to 1 (`sfl.py:126-127`), so N varies per level. The applied `correction = n/(n+1)` shrinks in the **wrong direction**: unbiasedness needs `n/(n−1)`, since `E[p̂(1−p̂)] = p(1−p)(n−1)/n`. Combined factor `(n−1)/(n+1)`, varying across levels. |
+| **Scoring cost** | **Holds.** SFL's periodic sweep spends env-steps no training arm is charged for. Any SFL baseline must be budget-matched on total env-steps or reported as advantaged. A count-law score read off the training groups costs zero extra steps. |
+
+Consequence for the related-work paragraph: lead with the identity as a
+*contribution* ("the framework recovers SFL's learnability as its RLOO
+instance"), then take the wedge on mass shape, pooling and cost. Do not lead
+with novelty over SFL.

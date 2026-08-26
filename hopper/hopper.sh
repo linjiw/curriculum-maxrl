@@ -4,6 +4,8 @@
 #   hopper.sh health                                  read-only SSH/Slurm/scratch checks
 #   hopper.sh submit <sbatch-file> [sbatch-args...]   stage + submit + write receipts
 #   hopper.sh status [jobid]                          queue/accounting status
+#   hopper.sh campaign-status <attempt> <expected> [incomplete]
+#                                                     marker-only campaign progress
 #   hopper.sh watch <jobid> [poll_s] [max_wait_s]     wait for a terminal state
 #   hopper.sh terminal-receipt <jobid> <new-local-file>
 #                                                     capture terminal sacct only
@@ -49,7 +51,7 @@ die() {
 }
 
 usage() {
-  sed -n '2,16p' "$0" >&2
+  sed -n '2,19p' "$0" >&2
 }
 
 ssh_hopper() {
@@ -344,6 +346,101 @@ REMOTE
     fi
     ;;
 
+  campaign-status)
+    (( $# >= 2 && $# <= 3 )) \
+      || die "usage: hopper.sh campaign-status <remote-attempt-path> <expected-blocks> [remote-incomplete-path]"
+    remote_attempt=$1
+    expected_blocks=$2
+    remote_incomplete=${3:--}
+    validate_safe_abs "$remote_attempt" \
+      || die "campaign attempt must be a safe absolute path"
+    case "$remote_attempt" in
+      "$SCRATCH"/*) ;;
+      *) die "campaign attempt must remain below $SCRATCH" ;;
+    esac
+    [[ "$expected_blocks" =~ ^[0-9]+$ ]] \
+      && (( expected_blocks >= 1 && expected_blocks <= 100000 )) \
+      || die "expected-blocks must be an integer from 1 to 100000"
+    if [[ "$remote_incomplete" != - ]]; then
+      validate_safe_abs "$remote_incomplete" \
+        || die "campaign incomplete path must be a safe absolute path"
+      case "$remote_incomplete" in
+        "$SCRATCH"/*) ;;
+        *) die "campaign incomplete path must remain below $SCRATCH" ;;
+      esac
+    fi
+
+    # Read only directory names and completion-file presence. Never open a
+    # result, telemetry, checkpoint, or log payload from a blinded campaign.
+    ssh_hopper bash -s -- \
+      "$remote_attempt" "$expected_blocks" "$remote_incomplete" <<'REMOTE'
+set -euo pipefail
+attempt=$1
+expected=$2
+incomplete=$3
+final_blocks=0
+complete_markers=0
+sha256_manifests=0
+arm_receipts=0
+invalid_final_blocks=0
+quarantines=0
+
+if [[ -d "$attempt" && ! -L "$attempt" ]]; then
+  while IFS= read -r -d '' block; do
+    ((final_blocks += 1))
+    valid=1
+    if [[ -f "$block/COMPLETE" && ! -L "$block/COMPLETE" ]]; then
+      ((complete_markers += 1))
+    else
+      valid=0
+    fi
+    if [[ -f "$block/SHA256SUMS" && ! -L "$block/SHA256SUMS" ]]; then
+      ((sha256_manifests += 1))
+    else
+      valid=0
+    fi
+    if [[ -d "$block/meta" && ! -L "$block/meta" ]]; then
+      while IFS= read -r -d '' receipt; do
+        ((arm_receipts += 1))
+      done < <(find "$block/meta" -mindepth 1 -maxdepth 1 -type f \
+        -name '*.DONE.json' -print0)
+    fi
+    (( valid == 1 )) || ((invalid_final_blocks += 1))
+  done < <(find "$attempt" -mindepth 1 -maxdepth 1 -type d \
+    -name 'seed-*' -print0)
+fi
+
+if [[ "$incomplete" != - && -d "$incomplete" && ! -L "$incomplete" ]]; then
+  while IFS= read -r -d '' quarantine; do
+    ((quarantines += 1))
+  done < <(find "$incomplete" -mindepth 1 -maxdepth 1 -type d \
+    -name 'seed-*.job-*' -print0)
+fi
+
+state=IN_PROGRESS
+if (( final_blocks == expected && complete_markers == expected \
+      && sha256_manifests == expected && invalid_final_blocks == 0 )); then
+  # Hashes and schemas still require the experiment-specific frozen retrieval
+  # validator. This state is intentionally not called "verified".
+  state=ALL_COMPLETION_MARKERS_PRESENT
+elif (( final_blocks > expected )); then
+  state=OVERCOMPLETE_FAIL_CLOSED
+elif (( invalid_final_blocks > 0 )); then
+  state=INVALID_FINAL_BLOCKS
+fi
+
+printf 'remote_attempt\t%s\n' "$attempt"
+printf 'expected_blocks\t%s\n' "$expected"
+printf 'final_blocks\t%s\n' "$final_blocks"
+printf 'complete_markers\t%s\n' "$complete_markers"
+printf 'sha256_manifests\t%s\n' "$sha256_manifests"
+printf 'arm_done_receipts\t%s\n' "$arm_receipts"
+printf 'invalid_final_blocks\t%s\n' "$invalid_final_blocks"
+printf 'incomplete_quarantines\t%s\n' "$quarantines"
+printf 'structural_state\t%s\n' "$state"
+REMOTE
+    ;;
+
   watch)
     (( $# >= 1 && $# <= 3 )) \
       || die "usage: hopper.sh watch <jobid> [poll_s] [max_wait_s]"
@@ -429,7 +526,7 @@ resource_header='JobIDRaw|MaxRSS|TRESUsageInMax'
 mapfile -t terminal_rows < <(
   sacct -j "$jid" -X -n -P \
     -o JobIDRaw,JobName,Partition,State,ExitCode,ElapsedRaw,AllocCPUS,ReqMem,NodeList,Submit,Start,End,AllocTRES,QOS,TimelimitRaw,Restarts,WorkDir,StdOut,StdErr,SubmitLine \
-    | sed -e 's/|$//' -e '/^[[:space:]]*$/d'
+    | sed -e '/^[[:space:]]*$/d'
 )
 (( ${#terminal_rows[@]} == 1 )) || {
   printf 'expected exactly one terminal allocation row for %s; got %s\n' \
@@ -451,11 +548,14 @@ IFS='|' read -r row_id job_name partition state exit_code elapsed_raw \
 [[ "$start" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$ ]]
 [[ "$end" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$ ]]
 [[ -n "$qos" && "$timelimit_raw" =~ ^[0-9]+$ && "$restarts" =~ ^[0-9]+$ ]]
-[[ -n "$work_dir" && -n "$stdout_path" && -n "$stderr_path" && -n "$submit_line" ]]
+# Hopper may leave StdErr empty when an sbatch file specifies only --output;
+# Slurm then retains a valid terminal allocation row with no separate error
+# path. StdOut and the immutable SubmitLine remain required.
+[[ -n "$work_dir" && -n "$stdout_path" && -n "$submit_line" ]]
 
 mapfile -t resource_rows < <(
   sacct -j "$jid" -n -P -o JobIDRaw,MaxRSS,TRESUsageInMax \
-    | sed -e 's/|$//' -e '/^[[:space:]]*$/d'
+    | sed -e '/^[[:space:]]*$/d'
 )
 (( ${#resource_rows[@]} >= 1 )) || {
   printf 'job %s has no accounting resource rows\n' "$jid" >&2
@@ -824,6 +924,11 @@ REMOTE
     [[ -n "$job_name" ]] \
       || die "could not identify job $jid; refusing blind log discovery"
     case "${job_name,,}" in
+      *group-law-flip*|*group_law_flip*)
+        # The frozen P0 path is the single-use campaign validator/analyzer.
+        # Direct log inspection is never an authorized unblinding route.
+        die "group-law-flip logs are sealed; use campaign-status, the frozen retrieval validator, and the single-use analyzer"
+        ;;
       *barn-evidence-safe-log*)
         # The audited BARN evidence sbatch redirects the runner and build logs
         # into the sealed attempt tree.  Slurm stdout contains provenance and

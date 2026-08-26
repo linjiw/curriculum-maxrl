@@ -1,6 +1,36 @@
 # Hopper status and launch gates
 
-**Snapshot:** 2026-08-14 13:10 EDT
+**Current ICLR P0 snapshot:** 2026-08-26
+
+**Historical runbook snapshot below:** 2026-08-14 13:10 EDT
+
+The frozen count-law-flip campaign
+`group-law-flip-v1-20260820-001` is terminal and remains sealed. A marker-only
+check observed 48/48 final blocks, 48/48 `COMPLETE` files, 48/48 block
+manifests, 96/96 arm receipts, zero invalid final blocks, zero incomplete
+quarantines, and no live campaign jobs. The canonical local retrieval and
+single-use analysis have not run, so this is scheduler/completion metadata,
+not intervention evidence. Do not open logs, result JSONL, telemetry, or
+endpoint summaries outside the frozen closure. Recheck without editing this
+snapshot via:
+
+```bash
+./hopper/hopper.sh status 9419991
+./hopper/hopper.sh status 9420095
+./hopper/hopper.sh campaign-status \
+  /scratch/lwang44/maxrl/group_law_flip/campaigns/group-law-flip-v1-20260820-001/attempts/attempt-001 48 \
+  /scratch/lwang44/maxrl/group_law_flip/campaigns/group-law-flip-v1-20260820-001/incomplete/attempt-001
+```
+
+Before the authorized single-use closure, run the non-mutating full gate:
+
+```bash
+./hopper/close_group_law_flip.sh --preflight-only
+```
+
+The remainder of this file is the preserved 2026-08-14 operational snapshot;
+where it says all paper-evidence submissions were on hold, the frozen P0 launch
+record and the current `AGENTS.md` status supersede it.
 
 **Overall:** the MAZE CPU/import/full-arm engineering ladder is verified through
 endpoint-blind cost and schema. Historical UED import job `9366896` and bounded

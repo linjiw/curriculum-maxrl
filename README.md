@@ -95,7 +95,9 @@ Read *post hoc*, across studies not designed to test it. The prospective P0 test
 holds the substrate, estimator, budget, seeds, and four-moment count-law posterior
 fixed and varies *only* the score functional: the i.i.d.-at-the-mean plug-in versus
 realized MaxRL count-law activity. Its 48 paired blocks (seeds 3001--3048) were
-frozen before launch and are running blind; no endpoint is claimed here.
+frozen before launch and are terminal but still sealed; retrieval, hash
+validation, and the single-use analysis remain pending, so no endpoint is
+claimed here.
 
 So: coefficient activity is an estimator-conditioned *source of curriculum
 hypotheses*, not a universal measure of learning utility — and a mean pass
@@ -134,7 +136,7 @@ Full LLM-experiment roadmap with novelty checks and differentiation map:
 | `GUIDE.md` | Design guide: approaches tried, verification status of each, and what's next |
 | `REPORT.md` | Full experiment report: math→algorithm→evidence chain, findings, goal assessment |
 | `SCHEDULE.md` | Live experiment tracking: executing queue, decision trees, next wave |
-| `curriculum_maxrl/THEORY.md` | Exact advantage-mass formulas per estimator (MC-verified), derived teacher utility, optimal allocation, adaptive-T negative result |
+| `curriculum_maxrl/THEORY.md` | Exact coefficient-activity formulas per estimator (MC-verified), derived teacher utility, optimal allocation, adaptive-T negative result |
 | `curriculum_maxrl/DESIGN.md` | Original integration design, hypotheses H1–H5, CPU validation tables |
 | `curriculum_maxrl/RESEARCH.md` | Deep-research synthesis of modern curriculum RL (PAIRED/PLR/ACCEL, ALP-GMM, SFL learnability, RLVR curricula) — 3-vote adversarially verified against primary sources |
 | `curriculum_maxrl/*.py` | CPU prototype: skill-chain testbed, 5 estimators, 5 teachers, experiment runners |
@@ -188,7 +190,7 @@ On the CPU skill-chain testbed (36 tasks, initial pass rates 10^-level, 5 seeds)
 - **MaxRL already does most of what a curriculum does on moderate distributions**
   (+0.01 from teacher) while GRPO needs the teacher badly (+0.23) — empirical support
   for the paper's "implicit curriculum" reading.
-- **The derived advantage-mass utility matches the hand-tuned ZPD band with zero
+- **The derived coefficient-activity utility matches the hand-tuned ZPD band with zero
   band hyperparameters.**
 
 On the GPU maze testbed: uniform sampling wastes ~65% of rollout groups (dead K=0);
@@ -200,4 +202,9 @@ Matched-wall-clock sweep in progress; see `curriculum_maxrl/maze_gpu/EXPERIMENTS
 Builds on the MaxRL paper and codebase (Tajwar, Zeng et al., ICML 2026). The
 curriculum design draws on PLR (Jiang et al.), PAIRED (Dennis et al.), ALP-GMM
 (Portelas et al.), and SFL learnability (Rutherford et al., NeurIPS 2024) — see
-`curriculum_maxrl/RESEARCH.md` for the verified literature synthesis.
+`curriculum_maxrl/RESEARCH.md` for the verified literature synthesis. At fixed
+group size, SFL's realized `(k/N)(1-k/N)` score is exactly
+`M_RLOO(k)(N-1)/(2N)`: SFL is already a realized count-law curriculum for RLOO,
+not a heuristic this work replaces. The remaining distinction is
+estimator-specific mass shape, coarse-unit pooling bias, variable-`N`
+semantics, and scoring cost.

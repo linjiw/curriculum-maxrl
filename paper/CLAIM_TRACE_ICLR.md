@@ -1,8 +1,9 @@
 # Claim-to-artifact trace table for `paper/body_iclr.tex`
 
-**Purpose.** This bounded inventory traces 62 quantitative claim rows: every
-quantitative claim in the main ICLR narrative plus the previously audited secondary
-rows retained in the appendix. It is not an inventory of every appendix number.
+**Purpose.** This bounded inventory traces 82 quantitative claim rows: 58
+base-table rows plus 24 dated addendum rows, covering every quantitative claim
+in the main ICLR narrative and the previously audited secondary rows retained
+in the appendix. It is not an inventory of every appendix number.
 Compiled 2026-08-12 and re-audited 2026-08-14 after two static-only focus passes.
 Those passes changed no quantitative value or supporting artifact. The paid-probe,
 Countdown, recycling, and gate details now appear only in the appendix; their trace
@@ -136,7 +137,7 @@ Two caveats deserve attention even though no claim is untraced:
 |---|---|---|---|
 | 62 | $\mathbb E[u_N(p)]=1-(b)_N/(a+b)_N-a/(a+b)$ for $p\sim\operatorname{Beta}(a,b)$, $\mathbb E[u_N(p)]\leq u_N(\mathbb E[p])$, and the printed closed-form gap (task-sampling method paragraph) | `curriculum_maxrl/test_mass_formulas.py` (`beta_expected_activity`, six independent 256-point Gauss--Legendre checks, Jensen assertions, and exact gap checks) | TRACED |
 
-**Complete count: 62/62 traced** (35 TRACED, 27 TRACED-ROUNDED;
+**Cumulative subtotal through 2026-08-14: 62/62 traced** (35 TRACED, 27 TRACED-ROUNDED;
 0 UNTRACED).
 
 ---
@@ -205,3 +206,5 @@ quantities with uncertainty clustered on the 48 seed blocks, which is the
 correct independent unit; the manuscript now cites the clustered figures
 (.580/.703 ratios, 60.8%/32.1% silent). The small differences are the change of
 aggregation unit, not of data. No frozen quantity is affected.
+
+**Current total through the 2026-08-18b addendum: 82/82 traced; 0 untraced.**

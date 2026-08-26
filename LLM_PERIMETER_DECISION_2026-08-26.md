@@ -1,7 +1,18 @@
-# P1 — LLM perimeter decision: the rule, pre-committed
+# P1 — LLM perimeter decision
 
-**Status:** PRE-COMMITMENT, recorded 2026-08-19, six days before the 2026-08-26
-go/no-go. Written before any new LLM run is launched or inspected.
+**Status:** OPTION (b), DE-SCOPE, bound 2026-08-26 under the pre-committed
+default. The rule below was recorded 2026-08-19, before any new LLM run was
+launched or inspected.
+
+## Decision record — 2026-08-26
+
+No qualifying frozen-checkpoint smoke was recorded by the deadline showing
+that the coarse-state treatment moves the delivery diagnostics. The default is
+therefore option (b): no 40--80 A10G-hour confirmatory rerun is authorized, and
+the LLM teacher-by-estimator interaction remains open and outside the ICLR
+claim perimeter. The existing delivery finding stays in the appendix at its
+earned tier. This scope decision creates no new scientific evidence and does
+not reinterpret the prior gate failure.
 
 ## The rule
 
@@ -45,9 +56,9 @@ worked.
 
 **(a) fails the gate, or (b) is chosen now.** §6.7 compresses to the delivery
 finding — that per-prompt posteriors are not deliverable at this pool size and
-budget — and the claim perimeter ends at the neural maze plus the creation
-channel. The LLM interaction is named as open in the contribution list and
-confined to the appendix, which is already where it sits.
+budget — and the claim perimeter ends at the neural maze. The LLM interaction
+is named as open in the contribution list and confined to the appendix, which
+is already where it sits.
 
 ## Why (b) is not a retreat
 
@@ -56,7 +67,8 @@ group-law identity with its granularity corollary, a registered positive
 replicated three times, three registered boundaries, and a registered creation
 channel with a validated gate. The one open question inside the perimeter —
 whether scoring the estimator's own unit recovers the granularity loss — is
-registered and running. A paper that claims less and demonstrates all of it
+preregistered, terminal, and still sealed pending its single-use analysis. A
+paper that claims less and demonstrates all of it
 outscores one gesturing at LLM scale through gated-out runs.
 
 ## Recommendation to the PI, due 2026-08-26

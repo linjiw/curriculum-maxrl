@@ -83,13 +83,13 @@ scontrol() {
 
 sacct() {
   if [[ " $* " == *' JobIDRaw,JobName,Partition,State,ExitCode,ElapsedRaw,AllocCPUS,ReqMem,NodeList,Submit,Start,End,AllocTRES,QOS,TimelimitRaw,Restarts,WorkDir,StdOut,StdErr,SubmitLine '* ]]; then
-    printf '%s\n' "${MOCK_TERMINAL_ROW:-424242|ued-minimax-terminal-chain|gpuq|COMPLETED|0:0|102|2|15G|gpu021|2026-08-14T00:00:00|2026-08-14T00:01:00|2026-08-14T00:02:42|billing=20,cpu=2,gres/gpu:1g.10gb=1,gres/gpu=1,mem=15G,node=1|gpu|30|0|/scratch/mock/maxrl|/scratch/%u/maxrl/tests/logs/%x_%j.out|/scratch/%u/maxrl/tests/logs/%x_%j.err|sbatch --parsable --export=ALL,X=Y /scratch/mock/maxrl/sbatch/terminal.sbatch|}"
+    printf '%s\n' "${MOCK_TERMINAL_ROW:-424242|ued-minimax-terminal-chain|gpuq|COMPLETED|0:0|102|2|15G|gpu021|2026-08-14T00:00:00|2026-08-14T00:01:00|2026-08-14T00:02:42|billing=20,cpu=2,gres/gpu:1g.10gb=1,gres/gpu=1,mem=15G,node=1|gpu|30|0|/scratch/mock/maxrl|/scratch/%u/maxrl/tests/logs/%x_%j.out||sbatch --parsable --export=ALL,X=Y /scratch/mock/maxrl/sbatch/terminal.sbatch}"
     if [[ -n "${MOCK_SECOND_TERMINAL_ROW:-}" ]]; then
       printf '%s\n' "$MOCK_SECOND_TERMINAL_ROW"
     fi
   elif [[ " $* " == *' JobIDRaw,MaxRSS,TRESUsageInMax '* ]]; then
-    printf '%s\n' "${MOCK_RESOURCE_ROWS:-424242|||
-424242.batch|123456K|cpu=00:01:30,gres/gpumem=2048M|}"
+    printf '%s\n' "${MOCK_RESOURCE_ROWS:-424242||
+424242.batch|123456K|cpu=00:01:30,gres/gpumem=2048M}"
   elif [[ " $* " == *' JobName,StdOut '* ]]; then
     printf '%s|%s|\n' "${MOCK_JOB_NAME:-maze-score}" \
       "${MOCK_SACCT_STDOUT:-/scratch/%u/maxrl/tests/logs/maze-score_424242.out}"
@@ -204,6 +204,42 @@ fi
 
 "$here/hopper.sh" health > "$test_root/health.out"
 grep -q $'scratch\tOK\t' "$test_root/health.out"
+
+campaign="$MOCK_REMOTE/maxrl/campaigns/example/attempts/attempt-001"
+incomplete="$MOCK_REMOTE/maxrl/campaigns/example/incomplete/attempt-001"
+mkdir -p -- "$campaign/seed-1/meta" "$campaign/seed-2/meta" \
+  "$incomplete/seed-3.job-777"
+printf 'complete\n' > "$campaign/seed-1/COMPLETE"
+printf 'manifest\n' > "$campaign/seed-1/SHA256SUMS"
+printf '{}\n' > "$campaign/seed-1/meta/plugin.DONE.json"
+printf '{}\n' > "$campaign/seed-1/meta/grouplaw.DONE.json"
+printf 'complete\n' > "$campaign/seed-2/COMPLETE"
+printf 'manifest\n' > "$campaign/seed-2/SHA256SUMS"
+"$here/hopper.sh" campaign-status \
+  /scratch/mock/maxrl/campaigns/example/attempts/attempt-001 3 \
+  /scratch/mock/maxrl/campaigns/example/incomplete/attempt-001 \
+  > "$test_root/campaign-status.out"
+grep -Fxq $'final_blocks\t2' "$test_root/campaign-status.out"
+grep -Fxq $'complete_markers\t2' "$test_root/campaign-status.out"
+grep -Fxq $'sha256_manifests\t2' "$test_root/campaign-status.out"
+grep -Fxq $'arm_done_receipts\t2' "$test_root/campaign-status.out"
+grep -Fxq $'incomplete_quarantines\t1' "$test_root/campaign-status.out"
+grep -Fxq $'structural_state\tIN_PROGRESS' "$test_root/campaign-status.out"
+if "$here/hopper.sh" campaign-status /tmp/outside 3 >/dev/null 2>&1; then
+  printf 'campaign status escaped Hopper scratch\n' >&2
+  exit 1
+fi
+
+export MOCK_SCONTROL_NAME=group-law-flip-v1
+export MOCK_SCONTROL_STDOUT=/scratch/mock/maxrl/group_law_flip/logs/group-law-flip-v1_424242.out
+if "$here/hopper.sh" logs 424242 --allow-endpoints \
+    >/dev/null 2> "$test_root/group-law-logs.err"; then
+  printf 'group-law-flip logs were not sealed\n' >&2
+  exit 1
+fi
+grep -q 'logs are sealed' "$test_root/group-law-logs.err"
+unset MOCK_SCONTROL_NAME MOCK_SCONTROL_STDOUT
+
 "$here/hopper.sh" watch 424242 5 5 > "$test_root/watch.out"
 grep -q 'job=424242 state=COMPLETED' "$test_root/watch.out"
 

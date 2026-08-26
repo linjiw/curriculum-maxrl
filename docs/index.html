@@ -197,11 +197,11 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     as successes of what they actually achieved). Both are usually treated as
     estimator-agnostic add-ons. <strong>They are not.</strong> Under the practical MaxRL
     convention, a prompt's expected absolute coefficient mass is exactly
-    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>: a rollout-budget-aware learnability
-    score, derived from the deployed estimator rather than imported as a heuristic,
-    whose two zeros partition difficulty into a dead zone, a learnable band, and a
-    mastered tail — and whose peak moves as the rollout budget N grows. The common
-    p(1−p) learnability score is its N=2 slice. We use the identity to find, measure,
+    <strong>2·(pass@N&nbsp;−&nbsp;pass@1)</strong>: a rollout-budget-aware coefficient
+    activity, derived for practical MaxRL, whose two zeros partition difficulty
+    into a dead zone, a learnable band, and a mastered tail — and whose peak moves
+    as the rollout budget N grows. The common p(1−p) score is both its N=2 slice
+    and RLOO/SFL's count-law shape. We use the identity to find, measure,
     and stress-test the failure modes of both interventions, <em>including our own
     claims</em>: the scoreboard below reports confirmations, refutations, and
     retractions with equal prominence, because each defines where the score can be
@@ -247,8 +247,9 @@ hr { border: none; border-top: 1px solid var(--grid); margin: 56px 0; }
     designed to test it. The prospective P0 test holds the substrate, estimator, budget, seeds,
     and four-moment count-law posterior fixed and varies <em>only</em> the score functional: the
     i.i.d.-at-the-mean plug-in versus realized MaxRL count-law activity. Its 48 paired blocks
-    (seeds 3001--3048) were frozen before launch and are running blind; no endpoint is claimed
-    here.</p>
+    (seeds 3001--3048) were frozen before launch and are terminal but still sealed;
+    retrieval, hash validation, and the single-use analysis remain pending, so no
+    endpoint is claimed here.</p>
   </div>
 
   <div class="card" style="margin-top:18px">
@@ -441,9 +442,9 @@ limit no finite-group trainer lives in.</p>
 <h2 id="idea">3 · Our proposal: read the curriculum off the estimator</h2>
 
 <p>Instead of importing a curriculum heuristic (difficulty bands, learning-progress bandits),
-we asked: <em>how much learning signal does the MaxRL estimator actually emit on a prompt, in
-expectation?</em> Define the <strong>advantage mass</strong> of a group as the total magnitude of
-its advantage weights, Σ|w|. For MaxRL's variance-reduced estimator
+we asked: <em>how much coefficient contrast does the MaxRL estimator make available on a prompt,
+in expectation?</em> Define <strong>coefficient activity</strong> (also called expected
+advantage mass) as the total magnitude of its coefficients, Σ|w|. For MaxRL's variance-reduced estimator
 (w<sub>succ</sub>&nbsp;=&nbsp;1/K&nbsp;−&nbsp;1/N, w<sub>fail</sub>&nbsp;=&nbsp;−1/N, group dropped at K=0),
 the algebra collapses to something exact and interpretable:</p>
 
@@ -469,10 +470,10 @@ sample is a separate empirical question, and our preregistered exponent sweep an
 (argmax at u<sub>64</sub>). The harder-peaked <em>shape</em> is what helps; the deployed-N
 peak <em>location</em> is not.</p>
 
-<!-- Chart 2: advantage mass -->
+<!-- Chart 2: coefficient activity -->
 <figure>
   <div class="chart-card" id="chart2card">
-    <p class="chart-title">The derived teacher utility: expected advantage mass vs. pass rate</p>
+    <p class="chart-title">The derived teacher utility: coefficient activity vs. pass rate</p>
     <p class="chart-sub">u(p) = pass@N − pass@1. Drag N and watch the ZPD band widen toward harder prompts; the dot marks the peak p<sup>★</sup> ≈ ln N / N.</p>
     <div class="slider-row">
       <label for="nSlider">Group size N</label>
@@ -480,15 +481,15 @@ peak <em>location</em> is not.</p>
       <span class="val" id="nVal">N = 32</span>
     </div>
     <div class="legend" id="legend2"></div>
-    <svg id="chart2" viewBox="0 0 800 420" role="img" aria-label="Line chart of the advantage-mass utility versus pass rate for a chosen group size N, compared with the learnability curve p times one minus p"></svg>
+    <svg id="chart2" viewBox="0 0 800 420" role="img" aria-label="Line chart of coefficient activity versus pass rate for a chosen group size N, compared with the learnability curve p times one minus p"></svg>
     <div class="tooltip" id="tt2"></div>
     <details><summary>Table view</summary><div id="table2"></div></details>
   </div>
   <figcaption>
     x is log-scaled to expose the low-p regime. The green reference is SFL's
-    “learnability” p(1−p) — exactly our utility at N=2 (u₁ ≡ 0), and (we prove) exactly ½ the advantage
-    mass of the RLOO estimator. The learnability-curriculum literature and the estimator algebra
-    are the same object seen from two sides.
+    “learnability” p(1−p). At fixed N its realized score (k/N)(1−k/N) is
+    exactly M<sub>RLOO</sub>(k)(N−1)/(2N), while p(1−p) is practical MaxRL's
+    N=2 slice. These are complementary identities, not a novelty claim over SFL.
   </figcaption>
 </figure>
 
@@ -1210,15 +1211,15 @@ numbers; the multiplier-grows-with-difficulty pattern is the finding.</p>
     <h3>Population curves mislead at finite N</h3>
     <p>The elegant w(p) table is an infinite-sample statement. Realized signal is throttled by
     pass@N for every estimator; on hard prompts GRPO delivers half of what its curve promises.
-    Curriculum design should target the finite-sample quantity — which is exactly what
-    advantage mass is.</p>
+    Curriculum design should target the finite-sample quantity — coefficient activity.</p>
   </div>
   <div class="card">
     <h3>Existing curricula are special cases</h3>
-    <p>SFL's learnability p(1−p) is our utility at N=2 and RLOO's exact advantage mass; SEC's
-    empirical-|advantage| bandit reward has our formulas as its exact expectation. The
-    advantage-mass teacher is “oracle SEC for MaxRL” — same target, computable from a posterior
-    before a prompt is ever visited.</p>
+    <p>At fixed N, SFL's realized score (k/N)(1−k/N) is exactly
+    M<sub>RLOO</sub>(k)(N−1)/(2N): SFL is already the realized count-law curriculum
+    for RLOO. The surviving wedge is estimator-specific mass shape, coarse-unit
+    pooling bias, variable-N semantics, and scoring cost. SEC's empirical-|advantage|
+    bandit reward has our formulas as its exact expectation.</p>
   </div>
 </div>
 
@@ -1286,8 +1287,9 @@ activity stops predicting learning.</em></p>
     published compact build places the conclusion on page 9; reproducibility begins
     on page 9 and references follow on page 10.<br>
     ⟳ <strong>P0 count-law correction</strong> (shared count-law posterior;
-    plug-in versus realized count-law functional) is frozen and running blind over
-    48 paired Hopper blocks. No endpoint has been opened. ⟳ Compact figure-manifest
+    plug-in versus realized count-law functional) is frozen and terminal over
+    48 paired Hopper blocks, but remains sealed pending retrieval, hash validation,
+    and the single-use analysis. No endpoint has been opened. ⟳ Compact figure-manifest
     and portable reproduction repair. ⟳ Anonymous release-artifact and final PDF
     hashes.<br>
     Track: ICLR 2027 (abstract Sept 18, paper Sept 25). The ICRA navigation
