@@ -30,6 +30,16 @@
    },
    "verification": "python -m unittest curriculum_maxrl.test_audit_countdown_sft_overlap",
    "notes": "The stored source audit reports 27/128 tier-0 SFT/evaluation overlap and zero in tiers 1-2. Historical source manifests and per-task outcomes are not vendored, so the 101-task numerical reanalysis remains blocked."
+  },
+  "amaze_gate_confirmatory": {
+   "inputs": [
+    "ued_benchmark/AMAZE_GATE_ANALYSIS.json"
+   ],
+   "checksums": {
+    "ued_benchmark/AMAZE_GATE_ANALYSIS.json": "c0162e9906507391"
+   },
+   "verification": "ued_benchmark/scripts/close_gate_confirmatory.sh (single-use; already consumed)",
+   "notes": "Frozen ten-pair full-budget gate primary; raw campaign and read-only checkpoint-budget receipt remain external at the disclosed canonical path. Verdict: inconclusive_at_n10."
   }
  },
  "figures": {

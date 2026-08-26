@@ -42,7 +42,10 @@ value. Five preregistered results draw that line:
   shape is what helps — not the derived peak.
 - **It is not a standalone signal.** Dropped into robust PLR on AMaze in place of MaxMC,
   activity does not beat upstream: one Bernoulli per level visit cannot replace a critic
-  read at every timestep.
+  read at every timestep. A separate full-budget, ten-seed preregistered test
+  of activity as a *gate* on MaxMC closed inconclusive (`+.0633`, 95% CI
+  `[+.0003,+.1410]`, exact paired `p=.1562`, 5/10 positive pairs), so the gate
+  is not promoted to confirmed evidence.
 - **The `p`-only score does not survive a coarser task unit.** MAZE-SCORE, 48
   preregistered blocks at 1.26M parameters and deployed N=32, where the
   curriculum scores a *level* that aggregates many concrete mazes: `u_32`

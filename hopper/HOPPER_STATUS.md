@@ -15,6 +15,14 @@ preregistered verdict is **supported**: `grouplaw - plugin` cov-AUC is
 positive blocks, with delivered visit TV `.33597`. See
 `granularity_flip/GROUP_LAW_FLIP_RESULT_2026-08-26.md`.
 
+The local full-budget AMaze gate rerun also closed on 2026-08-26 after its
+outcome-blind checkpoint-budget gate passed for 20/20 cells (stored updates
+29,960–29,997) and the frozen analyzer ran once. Its registered verdict is
+**inconclusive at n=10**: gate minus upstream solved rate `+.0633`, 95% CI
+`[+.0003,+.1410]`, exact paired `p=.1562`, 5/10 positive pairs. This is Tier 4
+and does not promote the development gate result. See
+`ued_benchmark/AMAZE_GATE_RESULT_2026-08-26.md`.
+
 ```bash
 ./hopper/hopper.sh status 9419991
 ./hopper/hopper.sh status 9420095

@@ -747,8 +747,8 @@ interface contract in <code>frontier_rl</code>.</p>
         <td>Deployed estimator pinned at N=16, score exponent swept 2→128: performance rises <em>past</em> 16, argmax at u<sub>64</sub>, Spearman +0.93. Over-shooting arm u<sub>64</sub> does not lose to u<sub>16</sub> (−.011 and −.013 on two platforms, 10/20 and 7/20). <strong>Harder-peaked shape helps; the deployed-N peak location does not.</strong> The V2 Acrobot primary reproduced cross-platform with the same seeds (+.032, +.031 vs +.048).</td>
         <td class="num"><span class="status no">✗ not supported</span></td></tr>
     <tr><td><strong>Coefficient activity as a PLR priority on AMaze</strong> — drop-in replacement for MaxMC in <span class="mono">minimax</span> robust PLR, shipped configs verbatim (Aug 16–17, development sweeps, 65 runs)</td>
-        <td>Upstream robust PLR .629, no-curriculum control .539, every activity-priority variant below the control (.500 at N=8, 0/5 seeds beat MaxMC; .551 at N=16). Cause is signal, not shape: MaxMC reads the critic at every timestep, activity gets one Bernoulli per level visit. Same in ACCEL; 4×8 regrouping costs −.207 for MaxMC too. <strong>Gating</strong> MaxMC by activity instead of replacing it recovers most of the gap (.590; +.089 over replacement, 4/5 seeds; −.039 to upstream, 1/5) but does not clear it — the score's value there is as a shape on a richer signal.</td>
-        <td class="num"><span class="status no">✗ negative</span></td></tr>
+        <td>Upstream robust PLR .629, no-curriculum control .539, every activity-priority variant below the control (.500 at N=8, 0/5 seeds beat MaxMC; .551 at N=16). Cause is signal, not shape: MaxMC reads the critic at every timestep, activity gets one Bernoulli per level visit. Same in ACCEL; 4×8 regrouping costs −.207 for MaxMC too. <strong>Gating</strong> MaxMC by activity instead of replacing it recovers most of the development gap (.590; +.089 over replacement, 4/5 seeds; −.039 to upstream, 1/5). The separate full-budget ten-seed gate test closed inconclusive: +.0633 [+.0003,&nbsp;+.1410], exact paired p=.1562, 5/10 positive pairs. The gate observation is not promoted.</td>
+        <td class="num"><span class="status no">✗ replacement negative<br>◐ gate inconclusive</span></td></tr>
     <tr><td>E2c immutable-reservoir replay control (Countdown)</td>
         <td>Ran Aug 14–15 after a driver repair; stopped at step 39 by preregistered gate 7 (optimizer-token mismatch 5.79% &gt; 5%). Drift is structural — source diversity collapses as the policy sharpens. <strong>Inconclusive by frozen rule</strong>; no endpoint.</td>
         <td class="num"><span class="status no">◐ inconclusive</span></td></tr>
@@ -786,9 +786,11 @@ interface contract in <code>frontier_rl</code>.</p>
     <p>As a <em>replacement</em> for a richer signal, u<sub>N</sub> is starved. It's also not the
     paper's mechanism there: the minimax student is PPO+GAE and never forms binary rollout
     groups. <em>Gating</em> MaxMC by activity instead of replacing it (keeping the per-timestep
-    signal, suppressing only mastered/hopeless levels) was tested and is our best AMaze arm —
-    it recovers most of the gap but does not clear it. The one live follow-up is giving the student
-    the MaxRL group estimator so score and learner share an algebra.</p>
+    signal, suppressing only mastered/hopeless levels) was the best development arm, but its
+    full-budget ten-seed confirmatory test closed <strong>inconclusive</strong> under the frozen rule
+    (+.0633 [+.0003,&nbsp;+.1410], p=.1562). It therefore remains a development observation.
+    The separate UED engineering lane gives the student the MaxRL group estimator so score and
+    learner share an algebra; it is not paper evidence.</p>
   </div>
 </div>
 
@@ -1296,7 +1298,9 @@ activity stops predicting learning.</em></p>
     <p>✅ E2c ran and closed by its own preregistered gate (inconclusive; the Aug 28
     training stop is satisfied early). ✅ Peak-location specificity tested and
     not supported; the paper now says so in a new subsection instead of conceding
-    it was never run. ✅ AMaze development negative reported honestly. ✅ The current
+    it was never run. ✅ AMaze development negative reported honestly. ✅ The full-budget
+    AMaze gate follow-up closed under its frozen <strong>inconclusive</strong> branch; it is not
+    promoted. ✅ The current
     published compact build places the conclusion on page 9; the uncounted
     reproducibility statement and references begin on page 10.<br>
     ✅ <strong>P0 count-law correction</strong> closed under its frozen supported branch:

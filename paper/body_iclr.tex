@@ -647,7 +647,7 @@ Registration timing remains a gap: the internally hashed Digits and Acrobot
 locks lack immutable public pre-execution commits, and the external maze
 wave-2 record has no vendored locking commit. Maze checkpoint trajectories
 remain external and the Digits replay payload has no download URI;
-App.~\ref{app:artifact} itemizes these gaps and the 54-row compact registry.
+App.~\ref{app:artifact} itemizes these gaps and the 55-row compact registry.
 They limit auditing and preclude a broad neural claim.
 
 \section{Conclusion}
@@ -669,9 +669,9 @@ check, structured seed-block analyses, stored protocol and verdict documents,
 figure derivation scripts regenerating every figure from checksummed inputs
 (\texttt{paper/results/manifest.json}), a source-locked 60-run Acrobot
 tournament with deterministic retained-ledger reanalysis, a one-command
-\texttt{reproduce.sh}, and a generated 54-row compact registry
+\texttt{reproduce.sh}, and a generated 55-row compact registry
 (\texttt{curriculum\_maxrl/run\_registry.json}) indexing the maze, Countdown
-and GSM8K artifacts each cited number is drawn from. Secondary
+GSM8K, P0, and AMaze-gate artifacts each cited number is drawn from. Secondary
 records and receipt manifests remain documented in the appendix. Registration
 timing objects that remain external are disclosed rather than treated as
 locally auditable.
@@ -949,6 +949,14 @@ with-replacement draws remain PLR mechanisms. Tie-aware ranking is shared with
 the matched MaxMC control. \S\ref{sec:amaze} reports the development sweep:
 the replacement priority does not beat upstream robust PLR, and no
 baseline-performance claim is made.
+
+A separate preregistered full-budget test kept MaxMC and gated it by activity.
+Across ten paired seeds, gate minus upstream solved rate was $+.0633$ (95\% CI
+$[+.0003,+.1410]$, exact sign-flip $p=.1562$, 5/10 positive). The frozen
+verdict is \textsc{Inconclusive at n=10}: the point estimate cleared the
+$+.02$ SESOI but not the p-value condition, while the interval did not trigger
+the negative branch. This appendix-only result does not promote the gate claim
+or alter the standalone-priority negative above.
 
 \paragraph{Relabeling (secondary).}
 For an all-fail request, a verified achieved goal can create an auxiliary
@@ -1251,8 +1259,8 @@ the operational recommendation targets.
 verifies declared manifest inputs and the local compact registry, runs stored
 endpoint spot checks, regenerates figures, and builds the canonical
 \texttt{main\_iclr2027.pdf} plus the extended \texttt{main.pdf}. The compact
-registry has 54 records: 35 maze, 11 Countdown, 7 GSM8K, and one P0 analysis
-artifact. The broader
+registry has 55 records: 35 maze, 11 Countdown, 7 GSM8K, one P0 analysis
+artifact, and one AMaze-gate analysis artifact. The broader
 562-row registry used during release-branch auditing is a different object; it
 is not copied over this checkout's registry and is not used for the local
 count.

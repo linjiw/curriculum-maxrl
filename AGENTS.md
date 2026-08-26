@@ -132,14 +132,13 @@ record before the first scientific run; an internal draft is not registered.
 
 ### Open, and never to be described as running evidence
 
-- The full-budget AMaze gate rerun in
-  `/data/robotixx/ued_bench/gate-confirmatory-20260819` is terminal at 20/20
-  training cells and 20/20 evaluations, but it is not yet a result. There are
-  no `ckpt_budget.json` receipts or `DONE` markers and no local
-  `AMAZE_GATE_ANALYSIS.json`. Do not inspect evaluation values or state a
-  verdict until the outcome-blind checkpoint-budget closure passes and the
-  frozen analyzer is run once. Before reusing its driver, replace checkpoint
-  presence as the restart predicate with an explicit completion marker.
+- The full-budget AMaze gate rerun closed with the frozen Tier-4 verdict
+  `inconclusive_at_n10`: gate minus upstream solved rate is `+.0633`, CI
+  `[+.0003,+.1410]`, exact sign-flip `p=.1562`, with 5/10 positive pairs. The
+  point estimate clears the `+.02` SESOI but the preregistered p-value
+  condition does not; the CI upper bound also prevents the registered negative
+  branch. It neither promotes the development gate result nor changes the
+  registered standalone-priority negative. Do not add seeds or rerun an arm.
 - The LLM teacher-by-estimator claim is `1-of-2 seeds,
   treatment-intensity-dependent`, hence open. The 2026-08-26 go/no-go selected
   option (b), de-scope, because no qualifying frozen-checkpoint delivery smoke

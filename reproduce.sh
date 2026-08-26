@@ -64,7 +64,10 @@ for section in sections:
 
 registry = json.load(open('curriculum_maxrl/run_registry.json'))
 rows = registry.get('rows')
-expected_suites = {'maze': 35, 'countdown': 11, 'gsm8k': 7, 'group_law_flip': 1}
+expected_suites = {
+  'maze': 35, 'countdown': 11, 'gsm8k': 7,
+  'group_law_flip': 1, 'amaze_gate': 1,
+}
 if not isinstance(rows, list):
   bad.append("compact registry rows is not a list")
   suite_counts = {}
@@ -72,8 +75,8 @@ else:
   suite_counts = dict(collections.Counter(row.get('suite') for row in rows))
   if registry.get('n_rows') != len(rows):
     bad.append(f"compact registry n_rows {registry.get('n_rows')!r} != {len(rows)} rows")
-if registry.get('n_rows') != 54:
-  bad.append(f"compact registry manuscript count {registry.get('n_rows')!r} != 54")
+if registry.get('n_rows') != 55:
+  bad.append(f"compact registry manuscript count {registry.get('n_rows')!r} != 55")
 if suite_counts != expected_suites:
   bad.append(f"compact registry suite counts {suite_counts!r} != {expected_suites!r}")
 print(f"  {sum(len(e.get('checksums',{})) for section in sections for e in section.values())} manifest inputs checked")

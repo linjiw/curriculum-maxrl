@@ -10,9 +10,10 @@ I also ran the **marker-only** Hopper status commands from `HOPPER_STATUS.md`.
 No result JSONL, log, telemetry, or analyzer was opened. This file is advisory,
 not an evidence source (AGENTS.md §2.6).
 
-**Closure update:** P0 was unblinded under the frozen single-use path later on
-2026-08-26 and returned `supported`; §8 is the current addendum. Sections 0–7
-preserve the outcome-blind review state that preceded that action.
+**Closure update:** P0 and the AMaze gate rerun were unblinded under their
+frozen single-use paths later on 2026-08-26; §§8–9 are the current addenda.
+Sections 0–7 preserve the outcome-blind review state that preceded those
+actions.
 
 ---
 
@@ -373,3 +374,36 @@ the paper now has a preregistered neural-scale causal intervention in addition
 to the Acrobot score-shape positive and the registered boundaries. The next
 red item is the outcome-blind AMaze gate closure, followed by the independent
 manuscript and artifact queue already listed in §7.
+
+---
+
+## 9. Update 2026-08-26 (closure) — AMaze gate inconclusive
+
+The outcome-blind closure required the exact 2×10 jobs matrix, 20/20 training
+receipts, 20/20 shipped-evaluation receipts, zero failures, all expected files,
+and stored checkpoint states above the frozen 29,900-update floor. All passed:
+the 20 checkpoints span 29,960–29,997 updates and paired arms match by seed.
+Only then were the `DONE` markers written and the frozen analyzer invoked once.
+
+Frozen primary `plrGate - plrMM`, mean held-out solved rate over three mazes:
+
+| quantity | result |
+|---|---:|
+| paired difference | **+.0633** |
+| paired-bootstrap 95% CI | **[+.0003,+.1410]** |
+| exact paired sign-flip p | **.1562** |
+| positive / negative / tied pairs | **5 / 3 / 2** |
+| SESOI | +.0200 |
+| frozen verdict | **`inconclusive_at_n10`** |
+
+The point estimate clears the SESOI, but the registered positive also required
+`p≤.05`; the interval upper bound prevents the registered negative. Therefore
+this is Tier 4, not a positive or a negative. It does not promote the
+development gate observation, upgrade takeaway (iii), or alter the separate
+standalone-priority negative. No seeds or reruns are authorized. The artifact
+is `ued_benchmark/AMAZE_GATE_ANALYSIS.json`; the calibrated memo is
+`ued_benchmark/AMAZE_GATE_RESULT_2026-08-26.md`.
+
+The next red items are now the P0-independent manuscript and artifact queue in
+§7: algorithm box, Digits relocation, relabel lemma, R4 sentence, DOI,
+manifest/reproduction repair, and anonymous-clone build.

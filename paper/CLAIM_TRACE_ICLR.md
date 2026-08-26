@@ -1,7 +1,7 @@
 # Claim-to-artifact trace table for `paper/body_iclr.tex`
 
-**Purpose.** This bounded inventory traces 88 quantitative claim rows: 58
-base-table rows plus 30 dated addendum rows, covering every quantitative claim
+**Purpose.** This bounded inventory traces 92 quantitative claim rows: 58
+base-table rows plus 34 dated addendum rows, covering every quantitative claim
 in the main ICLR narrative and the previously audited secondary rows retained
 in the appendix. It is not an inventory of every appendix number.
 Compiled 2026-08-12 and re-audited 2026-08-14 after two static-only focus passes.
@@ -13,8 +13,8 @@ rows remain below so moving a claim cannot erase its provenance.
 release branch `origin/codex/curriculum-maxrl-research`; rows still marked
 **[branch]** retain that provenance. Seven compact supporting artifacts were later
 vendored additively into this working tree, as detailed below. The release branch's
-562-row registry is intentionally not copied over the distinct 54-row compact
-registry in this checkout. The current manuscript claims the local 54-row count.
+562-row registry is intentionally not copied over the distinct 55-row compact
+registry in this checkout. The current manuscript claims the local 55-row count.
 Every cited object was opened and matched; nothing below is inferred from an
 unopened file.
 
@@ -90,7 +90,7 @@ unchanged.
 | 53 | "all three replay endpoints vendored" (L458) | curriculum_maxrl/countdown_reviewer_arms/armB_replay_s{1,2,3}.json | three per-seed endpoint files present in this working tree | TRACED |
 | 54 | "at most 12 auxiliary groups per 64 requested groups (18.75%)" (L460-461) | COUNTDOWN_ANALYSIS.md (cap=12 per amendment A2; "the dose rode its cap (12/12)"); GPU_EXPERIMENT_HANDOFF.md **[branch]** ("recycling affects at most 12 of 64 requested groups") | cap 12; 12/64 = 0.1875 exactly | TRACED (derived ratio) |
 | 55 | GSM8K cell "missed its ... treatment-delivery gate by .00148" (L580-581; App L999: ".601480 versus <.60") | curriculum_maxrl/run_registry.json **[branch]** (row `gsm8k-steering-controlled-g3p`); FINAL_ICLR_REVIEW_AND_COMPLETION_GUIDE_2026-08-07.md (L205-210, local) | run_mean_dead_sampled 0.60148 vs gate <0.60 -> miss 0.00148; guide records 0.601480 and "fails ... by 0.00148" | TRACED |
-| 56 | "54-row compact registry" with 35 maze, 11 Countdown, 7 GSM8K, and one P0 analysis artifact (Reproducibility; App artifact accounting) | `curriculum_maxrl/run_registry.json` (`n_rows`, `rows[*].suite`) | n_rows 54; actual rows 54; by_suite {maze 35, countdown 11, gsm8k 7, group_law_flip 1} | TRACED |
+| 56 | "55-row compact registry" with 35 maze, 11 Countdown, 7 GSM8K, one P0 analysis artifact, and one AMaze-gate analysis artifact (Reproducibility; App artifact accounting) | `curriculum_maxrl/run_registry.json` (`n_rows`, `rows[*].suite`) | n_rows 55; actual rows 55; by_suite {maze 35, countdown 11, gsm8k 7, group_law_flip 1, amaze_gate 1} | TRACED |
 | 57 | source-locked 60-run Acrobot tournament (Reproducibility) and 320 paid-probe runs (Appendix) | `frontier_rl/examples/ACROBOT_CURRICULUM_TOURNAMENT_RESULTS.md` (all 60 completed); `frontier_rl/examples/acrobot_procurl_selection_analysis.json` (`primary/n_pairs`, `arm_descriptives`) | 60 tournament runs; 80 paired seeds x 4 arms = 320 paid-probe runs | TRACED |
 | 58 | wave-2 AUC-multiverse anchors "(uniform 6/6, mean +.01496; FrontierMax 6/6, +.02404; sampler-averaged 6/6, +.01950)" (App L980-981; restates main-text L315/L322-326 numbers per sampler) | curriculum_maxrl/maze_gpu_factorial/block_reanalysis.json (`waves/wave2/repeated_sampler_contrasts`) | uniform cov_auc mean 0.01495726495726496 (6/6); frontier_un 0.024038461538461554 (6/6); block-level 0.01949786 (6/6) | TRACED-ROUNDED |
 
@@ -110,7 +110,7 @@ Two caveats deserve attention even though no claim is untraced:
    `paper/results/maze_factorial_block_analysis.json`) were vendored additively
    from that branch into `main`, so those numbers are now auditable from this
    tree. The release branch's 562-row registry remains a distinct, branch-only
-   audit object. It was not copied over the local 54-row compact registry; the
+   audit object. It was not copied over the local 55-row compact registry; the
    manuscript and row 56 now use only the verified local count.
 2. **Derived presentation conventions.** The Countdown ±SDs in the appendix are 3-seed
    *sample* SDs; `b_scoreboard_3seed.json` stores *population* SDs (conversion
@@ -228,4 +228,20 @@ this substrate. It does not show that Corollary 2 predicted the downstream
 sign, that the correction alone mediates the earlier MAZE-SCORE contrast, or
 that either arm beats `p(1-p)`.
 
-**Current total through the 2026-08-26 addendum: 88/88 traced; 0 untraced.**
+## Addendum 2026-08-26b — AMaze gate rows (89–92)
+
+Added after all 20 checkpoint-budget receipts passed and the frozen analyzer
+was invoked once. Analyzer SHA-256 `aaf54f22...51d755`; analysis artifact
+SHA-256 `c0162e99...c86774e`.
+
+| # | claim in `body_iclr.tex` | value | artifact | status |
+|---|---|---|---|---|
+| 89 | full-budget gate minus upstream solved rate | +.0633 | `ued_benchmark/AMAZE_GATE_ANALYSIS.json` `primary_mean_solved_rate.mean_paired_difference` (.063333334...) | TRACED-ROUNDED |
+| 90 | paired-bootstrap 95% CI | [+.0003,+.1410] | same, `.paired_bootstrap_ci95` [.000333334..., .141000001...] | TRACED-ROUNDED |
+| 91 | exact paired sign-flip p and positive pairs | .1562; 5/10 | same, `.exact_two_sided_sign_flip_p` (.15625), `.positive_pairs` (5), `.n` (10) | TRACED-ROUNDED |
+| 92 | frozen verdict | `inconclusive_at_n10`; point ≥+.02 but p>.05, CI upper >+.02 | same, top-level `.verdict`; frozen conjunction in `ued_benchmark/AMAZE_GATE_PREREG.md` | TRACED |
+
+This Tier-4 result neither promotes the development gate observation nor
+changes the separate registered standalone-priority negative.
+
+**Current total through the 2026-08-26b addendum: 92/92 traced; 0 untraced.**
